@@ -1,5 +1,7 @@
 ﻿namespace odata.tests
 {
+    using AbnfParser.CstNodes.Core;
+    using Root;
     using Root.OdataResourcePath.CombinatorParsers;
     using Root.OdataResourcePath.Transcribers;
     using Sprache;
@@ -31,24 +33,59 @@
         [TestMethod]
         public void Generate()
         {
-            var start = 0x3F;
-            var end = 0xFE;
+            var start = 0x30;
+            var end = 0x39;
+            var elementName = "Digit";
 
             var builder = new StringBuilder();
+            builder.AppendLine("public abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);");
+            builder.AppendLine();
+            builder.AppendLine("public abstract class Visitor<TResult, TContext>");
+            builder.AppendLine("{");
+            builder.AppendLine($"public TResult Visit({elementName} node, TContext context)");
+            builder.AppendLine("{");
+            builder.AppendLine("return node.Dispatch(this, context);");
+            builder.AppendLine("}");
+            builder.AppendLine();
+            GenerateAccepts(builder, start, end);
+            builder.AppendLine("}");
+            builder.AppendLine();
+            GenerateClasses(builder, elementName, start, end);
+
+
+            File.WriteAllText(@"C:\Users\gdebruin\code.txt", builder.ToString());
+        }
+
+        private void GenerateAccepts(StringBuilder builder, int start, int end)
+        {
             for (int i = start; i <= end; ++i)
             {
                 var className = $"x{i:X2}";
-                /*builder.AppendLine($"public static Parser<ProseVal.{className}> {className} {{ get; }} =");
-                builder.AppendLine($"\tfrom lessThan in x3CParser.Instance");
-                builder.AppendLine($"\tfrom value in {className}Parser.Instance");
-                builder.AppendLine($"\tfrom greaterThan in x3EParser.Instance");
-                builder.AppendLine($"\tselect new ProseVal.{className}(lessThan, value, greaterThan);");
-                builder.AppendLine();*/
-
-                builder.AppendLine($".Or({className})");
+                builder.AppendLine($"protected internal abstract TResult Accept({className} node, TContext context);");
             }
+        }
 
-            File.WriteAllText(@"C:\Users\gdebruin\code.txt", builder.ToString());
+        private void GenerateClasses(StringBuilder builder, string elementName, int start, int end)
+        {
+            for (int i = start; i <= end; ++i)
+            {
+                var className = $"x{i:X2}";
+                builder.AppendLine($"public sealed class {className} : {elementName}");
+                builder.AppendLine("{");
+                builder.AppendLine($"public {className}(Core.{className} value)");
+                builder.AppendLine("{");
+                builder.AppendLine("Value = value;");
+                builder.AppendLine("}");
+                builder.AppendLine();
+                builder.AppendLine($"public Core.{className} Value {{ get; }}");
+                builder.AppendLine();
+                builder.AppendLine($"public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)");
+                builder.AppendLine("{");
+                builder.AppendLine("return visitor.Accept(this, context);");
+                builder.AppendLine("}");
+                builder.AppendLine("}");
+                builder.AppendLine();
+            }
         }
 
         [TestMethod]

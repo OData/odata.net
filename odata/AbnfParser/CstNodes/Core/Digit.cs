@@ -5,6 +5,26 @@
         private Digit()
         {
         }
+        public abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(Digit node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+
+            protected internal abstract TResult Accept(x30 node, TContext context);
+            protected internal abstract TResult Accept(x31 node, TContext context);
+            protected internal abstract TResult Accept(x32 node, TContext context);
+            protected internal abstract TResult Accept(x33 node, TContext context);
+            protected internal abstract TResult Accept(x34 node, TContext context);
+            protected internal abstract TResult Accept(x35 node, TContext context);
+            protected internal abstract TResult Accept(x36 node, TContext context);
+            protected internal abstract TResult Accept(x37 node, TContext context);
+            protected internal abstract TResult Accept(x38 node, TContext context);
+            protected internal abstract TResult Accept(x39 node, TContext context);
+        }
 
         public sealed class x30 : Digit
         {
@@ -14,6 +34,12 @@
             }
 
             public Core.x30 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x31 : Digit
@@ -24,6 +50,12 @@
             }
 
             public Core.x31 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x32 : Digit
@@ -34,6 +66,12 @@
             }
 
             public Core.x32 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x33 : Digit
@@ -44,6 +82,12 @@
             }
 
             public Core.x33 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x34 : Digit
@@ -54,6 +98,12 @@
             }
 
             public Core.x34 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x35 : Digit
@@ -64,6 +114,12 @@
             }
 
             public Core.x35 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x36 : Digit
@@ -74,6 +130,12 @@
             }
 
             public Core.x36 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x37 : Digit
@@ -84,6 +146,12 @@
             }
 
             public Core.x37 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x38 : Digit
@@ -94,6 +162,12 @@
             }
 
             public Core.x38 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x39 : Digit
@@ -104,6 +178,12 @@
             }
 
             public Core.x39 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
     }
 }

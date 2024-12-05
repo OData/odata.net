@@ -7,6 +7,145 @@
         private Char()
         {
         }
+
+        public abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(Char node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+
+            protected internal abstract TResult Accept(x01 node, TContext context);
+            protected internal abstract TResult Accept(x02 node, TContext context);
+            protected internal abstract TResult Accept(x03 node, TContext context);
+            protected internal abstract TResult Accept(x04 node, TContext context);
+            protected internal abstract TResult Accept(x05 node, TContext context);
+            protected internal abstract TResult Accept(x06 node, TContext context);
+            protected internal abstract TResult Accept(x07 node, TContext context);
+            protected internal abstract TResult Accept(x08 node, TContext context);
+            protected internal abstract TResult Accept(x09 node, TContext context);
+            protected internal abstract TResult Accept(x0A node, TContext context);
+            protected internal abstract TResult Accept(x0B node, TContext context);
+            protected internal abstract TResult Accept(x0C node, TContext context);
+            protected internal abstract TResult Accept(x0D node, TContext context);
+            protected internal abstract TResult Accept(x0E node, TContext context);
+            protected internal abstract TResult Accept(x0F node, TContext context);
+            protected internal abstract TResult Accept(x10 node, TContext context);
+            protected internal abstract TResult Accept(x11 node, TContext context);
+            protected internal abstract TResult Accept(x12 node, TContext context);
+            protected internal abstract TResult Accept(x13 node, TContext context);
+            protected internal abstract TResult Accept(x14 node, TContext context);
+            protected internal abstract TResult Accept(x15 node, TContext context);
+            protected internal abstract TResult Accept(x16 node, TContext context);
+            protected internal abstract TResult Accept(x17 node, TContext context);
+            protected internal abstract TResult Accept(x18 node, TContext context);
+            protected internal abstract TResult Accept(x19 node, TContext context);
+            protected internal abstract TResult Accept(x1A node, TContext context);
+            protected internal abstract TResult Accept(x1B node, TContext context);
+            protected internal abstract TResult Accept(x1C node, TContext context);
+            protected internal abstract TResult Accept(x1D node, TContext context);
+            protected internal abstract TResult Accept(x1E node, TContext context);
+            protected internal abstract TResult Accept(x1F node, TContext context);
+            protected internal abstract TResult Accept(x20 node, TContext context);
+            protected internal abstract TResult Accept(x21 node, TContext context);
+            protected internal abstract TResult Accept(x22 node, TContext context);
+            protected internal abstract TResult Accept(x23 node, TContext context);
+            protected internal abstract TResult Accept(x24 node, TContext context);
+            protected internal abstract TResult Accept(x25 node, TContext context);
+            protected internal abstract TResult Accept(x26 node, TContext context);
+            protected internal abstract TResult Accept(x27 node, TContext context);
+            protected internal abstract TResult Accept(x28 node, TContext context);
+            protected internal abstract TResult Accept(x29 node, TContext context);
+            protected internal abstract TResult Accept(x2A node, TContext context);
+            protected internal abstract TResult Accept(x2B node, TContext context);
+            protected internal abstract TResult Accept(x2C node, TContext context);
+            protected internal abstract TResult Accept(x2D node, TContext context);
+            protected internal abstract TResult Accept(x2E node, TContext context);
+            protected internal abstract TResult Accept(x2F node, TContext context);
+            protected internal abstract TResult Accept(x30 node, TContext context);
+            protected internal abstract TResult Accept(x31 node, TContext context);
+            protected internal abstract TResult Accept(x32 node, TContext context);
+            protected internal abstract TResult Accept(x33 node, TContext context);
+            protected internal abstract TResult Accept(x34 node, TContext context);
+            protected internal abstract TResult Accept(x35 node, TContext context);
+            protected internal abstract TResult Accept(x36 node, TContext context);
+            protected internal abstract TResult Accept(x37 node, TContext context);
+            protected internal abstract TResult Accept(x38 node, TContext context);
+            protected internal abstract TResult Accept(x39 node, TContext context);
+            protected internal abstract TResult Accept(x3A node, TContext context);
+            protected internal abstract TResult Accept(x3B node, TContext context);
+            protected internal abstract TResult Accept(x3C node, TContext context);
+            protected internal abstract TResult Accept(x3D node, TContext context);
+            protected internal abstract TResult Accept(x3E node, TContext context);
+            protected internal abstract TResult Accept(x3F node, TContext context);
+            protected internal abstract TResult Accept(x40 node, TContext context);
+            protected internal abstract TResult Accept(x41 node, TContext context);
+            protected internal abstract TResult Accept(x42 node, TContext context);
+            protected internal abstract TResult Accept(x43 node, TContext context);
+            protected internal abstract TResult Accept(x44 node, TContext context);
+            protected internal abstract TResult Accept(x45 node, TContext context);
+            protected internal abstract TResult Accept(x46 node, TContext context);
+            protected internal abstract TResult Accept(x47 node, TContext context);
+            protected internal abstract TResult Accept(x48 node, TContext context);
+            protected internal abstract TResult Accept(x49 node, TContext context);
+            protected internal abstract TResult Accept(x4A node, TContext context);
+            protected internal abstract TResult Accept(x4B node, TContext context);
+            protected internal abstract TResult Accept(x4C node, TContext context);
+            protected internal abstract TResult Accept(x4D node, TContext context);
+            protected internal abstract TResult Accept(x4E node, TContext context);
+            protected internal abstract TResult Accept(x4F node, TContext context);
+            protected internal abstract TResult Accept(x50 node, TContext context);
+            protected internal abstract TResult Accept(x51 node, TContext context);
+            protected internal abstract TResult Accept(x52 node, TContext context);
+            protected internal abstract TResult Accept(x53 node, TContext context);
+            protected internal abstract TResult Accept(x54 node, TContext context);
+            protected internal abstract TResult Accept(x55 node, TContext context);
+            protected internal abstract TResult Accept(x56 node, TContext context);
+            protected internal abstract TResult Accept(x57 node, TContext context);
+            protected internal abstract TResult Accept(x58 node, TContext context);
+            protected internal abstract TResult Accept(x59 node, TContext context);
+            protected internal abstract TResult Accept(x5A node, TContext context);
+            protected internal abstract TResult Accept(x5B node, TContext context);
+            protected internal abstract TResult Accept(x5C node, TContext context);
+            protected internal abstract TResult Accept(x5D node, TContext context);
+            protected internal abstract TResult Accept(x5E node, TContext context);
+            protected internal abstract TResult Accept(x5F node, TContext context);
+            protected internal abstract TResult Accept(x60 node, TContext context);
+            protected internal abstract TResult Accept(x61 node, TContext context);
+            protected internal abstract TResult Accept(x62 node, TContext context);
+            protected internal abstract TResult Accept(x63 node, TContext context);
+            protected internal abstract TResult Accept(x64 node, TContext context);
+            protected internal abstract TResult Accept(x65 node, TContext context);
+            protected internal abstract TResult Accept(x66 node, TContext context);
+            protected internal abstract TResult Accept(x67 node, TContext context);
+            protected internal abstract TResult Accept(x68 node, TContext context);
+            protected internal abstract TResult Accept(x69 node, TContext context);
+            protected internal abstract TResult Accept(x6A node, TContext context);
+            protected internal abstract TResult Accept(x6B node, TContext context);
+            protected internal abstract TResult Accept(x6C node, TContext context);
+            protected internal abstract TResult Accept(x6D node, TContext context);
+            protected internal abstract TResult Accept(x6E node, TContext context);
+            protected internal abstract TResult Accept(x6F node, TContext context);
+            protected internal abstract TResult Accept(x70 node, TContext context);
+            protected internal abstract TResult Accept(x71 node, TContext context);
+            protected internal abstract TResult Accept(x72 node, TContext context);
+            protected internal abstract TResult Accept(x73 node, TContext context);
+            protected internal abstract TResult Accept(x74 node, TContext context);
+            protected internal abstract TResult Accept(x75 node, TContext context);
+            protected internal abstract TResult Accept(x76 node, TContext context);
+            protected internal abstract TResult Accept(x77 node, TContext context);
+            protected internal abstract TResult Accept(x78 node, TContext context);
+            protected internal abstract TResult Accept(x79 node, TContext context);
+            protected internal abstract TResult Accept(x7A node, TContext context);
+            protected internal abstract TResult Accept(x7B node, TContext context);
+            protected internal abstract TResult Accept(x7C node, TContext context);
+            protected internal abstract TResult Accept(x7D node, TContext context);
+            protected internal abstract TResult Accept(x7E node, TContext context);
+            protected internal abstract TResult Accept(x7F node, TContext context);
+        }
+
         public sealed class x01 : Char
         {
             public x01(Core.x01 value)
@@ -15,6 +154,12 @@
             }
 
             public Core.x01 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x02 : Char
@@ -25,6 +170,12 @@
             }
 
             public Core.x02 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x03 : Char
@@ -35,6 +186,12 @@
             }
 
             public Core.x03 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x04 : Char
@@ -45,6 +202,12 @@
             }
 
             public Core.x04 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x05 : Char
@@ -55,6 +218,12 @@
             }
 
             public Core.x05 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x06 : Char
@@ -65,6 +234,12 @@
             }
 
             public Core.x06 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x07 : Char
@@ -75,6 +250,12 @@
             }
 
             public Core.x07 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x08 : Char
@@ -85,6 +266,12 @@
             }
 
             public Core.x08 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x09 : Char
@@ -95,6 +282,12 @@
             }
 
             public Core.x09 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x0A : Char
@@ -105,6 +298,12 @@
             }
 
             public Core.x0A Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x0B : Char
@@ -115,6 +314,12 @@
             }
 
             public Core.x0B Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x0C : Char
@@ -125,6 +330,12 @@
             }
 
             public Core.x0C Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x0D : Char
@@ -135,6 +346,12 @@
             }
 
             public Core.x0D Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x0E : Char
@@ -145,6 +362,12 @@
             }
 
             public Core.x0E Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x0F : Char
@@ -155,6 +378,12 @@
             }
 
             public Core.x0F Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x10 : Char
@@ -165,6 +394,12 @@
             }
 
             public Core.x10 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x11 : Char
@@ -175,6 +410,12 @@
             }
 
             public Core.x11 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x12 : Char
@@ -185,6 +426,12 @@
             }
 
             public Core.x12 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x13 : Char
@@ -195,6 +442,12 @@
             }
 
             public Core.x13 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x14 : Char
@@ -205,6 +458,12 @@
             }
 
             public Core.x14 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x15 : Char
@@ -215,6 +474,12 @@
             }
 
             public Core.x15 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x16 : Char
@@ -225,6 +490,12 @@
             }
 
             public Core.x16 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x17 : Char
@@ -235,6 +506,12 @@
             }
 
             public Core.x17 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x18 : Char
@@ -245,6 +522,12 @@
             }
 
             public Core.x18 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x19 : Char
@@ -255,6 +538,12 @@
             }
 
             public Core.x19 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x1A : Char
@@ -265,6 +554,12 @@
             }
 
             public Core.x1A Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x1B : Char
@@ -275,6 +570,12 @@
             }
 
             public Core.x1B Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x1C : Char
@@ -285,6 +586,12 @@
             }
 
             public Core.x1C Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x1D : Char
@@ -295,6 +602,12 @@
             }
 
             public Core.x1D Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x1E : Char
@@ -305,6 +618,12 @@
             }
 
             public Core.x1E Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x1F : Char
@@ -315,6 +634,12 @@
             }
 
             public Core.x1F Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x20 : Char
@@ -325,6 +650,12 @@
             }
 
             public Core.x20 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x21 : Char
@@ -335,6 +666,12 @@
             }
 
             public Core.x21 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x22 : Char
@@ -345,6 +682,12 @@
             }
 
             public Core.x22 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x23 : Char
@@ -355,6 +698,12 @@
             }
 
             public Core.x23 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x24 : Char
@@ -365,6 +714,12 @@
             }
 
             public Core.x24 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x25 : Char
@@ -375,6 +730,12 @@
             }
 
             public Core.x25 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x26 : Char
@@ -385,6 +746,12 @@
             }
 
             public Core.x26 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x27 : Char
@@ -395,6 +762,12 @@
             }
 
             public Core.x27 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x28 : Char
@@ -405,6 +778,12 @@
             }
 
             public Core.x28 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x29 : Char
@@ -415,6 +794,12 @@
             }
 
             public Core.x29 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x2A : Char
@@ -425,6 +810,12 @@
             }
 
             public Core.x2A Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x2B : Char
@@ -435,6 +826,12 @@
             }
 
             public Core.x2B Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x2C : Char
@@ -445,6 +842,12 @@
             }
 
             public Core.x2C Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x2D : Char
@@ -455,6 +858,12 @@
             }
 
             public Core.x2D Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x2E : Char
@@ -465,6 +874,12 @@
             }
 
             public Core.x2E Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x2F : Char
@@ -475,6 +890,12 @@
             }
 
             public Core.x2F Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x30 : Char
@@ -485,6 +906,12 @@
             }
 
             public Core.x30 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x31 : Char
@@ -495,6 +922,12 @@
             }
 
             public Core.x31 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x32 : Char
@@ -505,6 +938,12 @@
             }
 
             public Core.x32 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x33 : Char
@@ -515,6 +954,12 @@
             }
 
             public Core.x33 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x34 : Char
@@ -525,6 +970,12 @@
             }
 
             public Core.x34 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x35 : Char
@@ -535,6 +986,12 @@
             }
 
             public Core.x35 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x36 : Char
@@ -545,6 +1002,12 @@
             }
 
             public Core.x36 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x37 : Char
@@ -555,6 +1018,12 @@
             }
 
             public Core.x37 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x38 : Char
@@ -565,6 +1034,12 @@
             }
 
             public Core.x38 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x39 : Char
@@ -575,6 +1050,12 @@
             }
 
             public Core.x39 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x3A : Char
@@ -585,6 +1066,12 @@
             }
 
             public Core.x3A Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x3B : Char
@@ -595,6 +1082,12 @@
             }
 
             public Core.x3B Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x3C : Char
@@ -605,6 +1098,12 @@
             }
 
             public Core.x3C Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x3D : Char
@@ -615,6 +1114,12 @@
             }
 
             public Core.x3D Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x3E : Char
@@ -625,6 +1130,12 @@
             }
 
             public Core.x3E Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x3F : Char
@@ -635,6 +1146,12 @@
             }
 
             public Core.x3F Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x40 : Char
@@ -645,6 +1162,12 @@
             }
 
             public Core.x40 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x41 : Char
@@ -655,6 +1178,12 @@
             }
 
             public Core.x41 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x42 : Char
@@ -665,6 +1194,12 @@
             }
 
             public Core.x42 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x43 : Char
@@ -675,6 +1210,12 @@
             }
 
             public Core.x43 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x44 : Char
@@ -685,6 +1226,12 @@
             }
 
             public Core.x44 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x45 : Char
@@ -695,6 +1242,12 @@
             }
 
             public Core.x45 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x46 : Char
@@ -705,6 +1258,12 @@
             }
 
             public Core.x46 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x47 : Char
@@ -715,6 +1274,12 @@
             }
 
             public Core.x47 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x48 : Char
@@ -725,6 +1290,12 @@
             }
 
             public Core.x48 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x49 : Char
@@ -735,6 +1306,12 @@
             }
 
             public Core.x49 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x4A : Char
@@ -745,6 +1322,12 @@
             }
 
             public Core.x4A Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x4B : Char
@@ -755,6 +1338,12 @@
             }
 
             public Core.x4B Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x4C : Char
@@ -765,6 +1354,12 @@
             }
 
             public Core.x4C Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x4D : Char
@@ -775,6 +1370,12 @@
             }
 
             public Core.x4D Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x4E : Char
@@ -785,6 +1386,12 @@
             }
 
             public Core.x4E Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x4F : Char
@@ -795,6 +1402,12 @@
             }
 
             public Core.x4F Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x50 : Char
@@ -805,6 +1418,12 @@
             }
 
             public Core.x50 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x51 : Char
@@ -815,6 +1434,12 @@
             }
 
             public Core.x51 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x52 : Char
@@ -825,6 +1450,12 @@
             }
 
             public Core.x52 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x53 : Char
@@ -835,6 +1466,12 @@
             }
 
             public Core.x53 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x54 : Char
@@ -845,6 +1482,12 @@
             }
 
             public Core.x54 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x55 : Char
@@ -855,6 +1498,12 @@
             }
 
             public Core.x55 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x56 : Char
@@ -865,6 +1514,12 @@
             }
 
             public Core.x56 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x57 : Char
@@ -875,6 +1530,12 @@
             }
 
             public Core.x57 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x58 : Char
@@ -885,6 +1546,12 @@
             }
 
             public Core.x58 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x59 : Char
@@ -895,6 +1562,12 @@
             }
 
             public Core.x59 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x5A : Char
@@ -905,6 +1578,12 @@
             }
 
             public Core.x5A Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x5B : Char
@@ -915,6 +1594,12 @@
             }
 
             public Core.x5B Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x5C : Char
@@ -925,6 +1610,12 @@
             }
 
             public Core.x5C Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x5D : Char
@@ -935,6 +1626,12 @@
             }
 
             public Core.x5D Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x5E : Char
@@ -945,6 +1642,12 @@
             }
 
             public Core.x5E Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x5F : Char
@@ -955,6 +1658,12 @@
             }
 
             public Core.x5F Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x60 : Char
@@ -965,6 +1674,12 @@
             }
 
             public Core.x60 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x61 : Char
@@ -975,6 +1690,12 @@
             }
 
             public Core.x61 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x62 : Char
@@ -985,6 +1706,12 @@
             }
 
             public Core.x62 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x63 : Char
@@ -995,6 +1722,12 @@
             }
 
             public Core.x63 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x64 : Char
@@ -1005,6 +1738,12 @@
             }
 
             public Core.x64 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x65 : Char
@@ -1015,6 +1754,12 @@
             }
 
             public Core.x65 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x66 : Char
@@ -1025,6 +1770,12 @@
             }
 
             public Core.x66 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x67 : Char
@@ -1035,6 +1786,12 @@
             }
 
             public Core.x67 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x68 : Char
@@ -1045,6 +1802,12 @@
             }
 
             public Core.x68 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x69 : Char
@@ -1055,6 +1818,12 @@
             }
 
             public Core.x69 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x6A : Char
@@ -1065,6 +1834,12 @@
             }
 
             public Core.x6A Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x6B : Char
@@ -1075,6 +1850,12 @@
             }
 
             public Core.x6B Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x6C : Char
@@ -1085,6 +1866,12 @@
             }
 
             public Core.x6C Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x6D : Char
@@ -1095,6 +1882,12 @@
             }
 
             public Core.x6D Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x6E : Char
@@ -1105,6 +1898,12 @@
             }
 
             public Core.x6E Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x6F : Char
@@ -1115,6 +1914,12 @@
             }
 
             public Core.x6F Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x70 : Char
@@ -1125,6 +1930,12 @@
             }
 
             public Core.x70 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x71 : Char
@@ -1135,6 +1946,12 @@
             }
 
             public Core.x71 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x72 : Char
@@ -1145,6 +1962,12 @@
             }
 
             public Core.x72 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x73 : Char
@@ -1155,6 +1978,12 @@
             }
 
             public Core.x73 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x74 : Char
@@ -1165,6 +1994,12 @@
             }
 
             public Core.x74 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x75 : Char
@@ -1175,6 +2010,12 @@
             }
 
             public Core.x75 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x76 : Char
@@ -1185,6 +2026,12 @@
             }
 
             public Core.x76 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x77 : Char
@@ -1195,6 +2042,12 @@
             }
 
             public Core.x77 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x78 : Char
@@ -1205,6 +2058,12 @@
             }
 
             public Core.x78 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x79 : Char
@@ -1215,6 +2074,12 @@
             }
 
             public Core.x79 Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x7A : Char
@@ -1225,6 +2090,12 @@
             }
 
             public Core.x7A Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x7B : Char
@@ -1235,6 +2106,12 @@
             }
 
             public Core.x7B Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x7C : Char
@@ -1245,6 +2122,12 @@
             }
 
             public Core.x7C Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x7D : Char
@@ -1255,6 +2138,12 @@
             }
 
             public Core.x7D Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x7E : Char
@@ -1265,6 +2154,12 @@
             }
 
             public Core.x7E Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
 
         public sealed class x7F : Char
@@ -1275,9 +2170,13 @@
             }
 
             public Core.x7F Value { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+
         }
-
-
     }
 
     public sealed class x01
