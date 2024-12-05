@@ -57,5 +57,14 @@
             var coreRulesText = File.ReadAllText(@"C:\github\odata.net\odata\AbnfParser\core.abnf");
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(coreRulesText);
         }
+
+        [TestMethod]
+        public void AbnfRules()
+        {
+            var coreRulesText = File.ReadAllText(@"C:\github\odata.net\odata\AbnfParser\core.abnf");
+            var abnfRulesText = File.ReadAllText(@"C:\github\odata.net\odata\AbnfParser\abnf.abnf");
+            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
+            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
+        }
     }
 }
