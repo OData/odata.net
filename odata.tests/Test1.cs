@@ -31,12 +31,66 @@
         }
 
         [TestMethod]
+        public void GenerateCharTranscribers()
+        {
+            var range = (0x01, 0x7E);
+
+            var builder = new StringBuilder();
+            for (int i = range.Item1; i <= range.Item2; ++i)
+            {
+                var className = $"x{i:X2}";
+                builder.AppendLine($"public sealed class {className}Transcriber");
+                builder.AppendLine("{");
+                builder.AppendLine($"private {className}Transcriber()");
+                builder.AppendLine("{");
+                builder.AppendLine("}");
+                builder.AppendLine();
+                builder.AppendLine($"public static {className}Transcriber Instance {{ get; }} = new {className}Transcriber();");
+                builder.AppendLine();
+                builder.AppendLine($"public Void Transcribe({className} node, StringBuilder context)");
+                builder.AppendLine("{");
+                builder.AppendLine($"context.Append((char)0{className});");
+                builder.AppendLine("return default;");
+                builder.AppendLine("}");
+                builder.AppendLine("}");
+            }
+
+            File.WriteAllText(@"C:\Users\gdebruin\code.txt", builder.ToString());
+        }
+
+        [TestMethod]
+        public void GenerateTranscriber()
+        {
+            var ranges = new[]
+            {
+                (0x41, 0x5A),
+                (0x61, 0x7A),
+            };
+            var elementName = "Alpha";
+
+            var builder = new StringBuilder();
+            builder.AppendLine($"public sealed class {elementName}Transcriber : {elementName}.Visitor<Root.Void, StringBuilder>");
+            builder.AppendLine("{");
+            builder.AppendLine($"private {elementName}Transcriber()");
+            builder.AppendLine("{");
+            builder.AppendLine("}");
+            builder.AppendLine();
+            builder.AppendLine($"public static {elementName}Transcriber Instance {{ get; }} = new {elementName}Transcriber();");
+            builder.AppendLine();
+
+        }
+
+        private void GenerateAccepts(StringBuilder builder, string elementName, int start, int end)
+        {
+        }
+
+        [TestMethod]
         public void Generate()
         {
             var ranges = new[]
             {
-                (0x20, 0x3D),
-                (0x3F, 0x7E),
+                (0x41, 0x5A),
+                (0x61, 0x7A),
             };
             var elementName = "ProseVal";
 
