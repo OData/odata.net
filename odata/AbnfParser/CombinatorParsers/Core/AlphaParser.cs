@@ -215,7 +215,8 @@
 
         public static Parser<Alpha> Instance { get; } =
             x41
-            .Or<Alpha>(x42).Or(x43)
+            .Or<Alpha>(x42)
+            .Or(x43)
             .Or(x44)
             .Or(x45)
             .Or(x46)
