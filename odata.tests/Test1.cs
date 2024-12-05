@@ -188,7 +188,8 @@
 
             var stringBuilder = new StringBuilder();
             AbnfParser.Transcribers.RuleListTranscriber.Instance.Transcribe(cst, stringBuilder);
-            File.WriteAllText(coreRulesPath, stringBuilder.ToString());
+            var transcribedText = stringBuilder.ToString();
+            Assert.AreEqual(coreRulesText, transcribedText);
         }
 
         [TestMethod]
