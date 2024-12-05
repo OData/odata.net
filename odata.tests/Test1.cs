@@ -35,10 +35,10 @@
         {
             var ranges = new[]
             {
-                (0x20, 0x21),
-                (0x23, 0x7E),
+                (0x20, 0x3D),
+                (0x3F, 0x7E),
             };
-            var elementName = "Inner";
+            var elementName = "ProseVal";
 
             var builder = new StringBuilder();
             builder.AppendLine("public abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);");
@@ -82,12 +82,16 @@
                 var className = $"x{i:X2}";
                 builder.AppendLine($"public sealed class {className} : {elementName}");
                 builder.AppendLine("{");
-                builder.AppendLine($"public {className}(Core.{className} value)");
+                builder.AppendLine($"public {className}(Core.x3C lessThan, Core.{className} value, Core.x3E greaterThan)");
                 builder.AppendLine("{");
+                builder.AppendLine("LessThan = lessThan;");
                 builder.AppendLine("Value = value;");
+                builder.AppendLine("GreaterThan = greaterThan;");
                 builder.AppendLine("}");
                 builder.AppendLine();
+                builder.AppendLine($"public Core.x3C LessThan {{ get; }}");
                 builder.AppendLine($"public Core.{className} Value {{ get; }}");
+                builder.AppendLine($"public Core.x3E GreaterThan {{ get; }}");
                 builder.AppendLine();
                 builder.AppendLine($"public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)");
                 builder.AppendLine("{");

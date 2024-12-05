@@ -8,6 +8,111 @@
         {
         }
 
+        public abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(ProseVal node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+
+            protected internal abstract TResult Accept(x20 node, TContext context);
+            protected internal abstract TResult Accept(x21 node, TContext context);
+            protected internal abstract TResult Accept(x22 node, TContext context);
+            protected internal abstract TResult Accept(x23 node, TContext context);
+            protected internal abstract TResult Accept(x24 node, TContext context);
+            protected internal abstract TResult Accept(x25 node, TContext context);
+            protected internal abstract TResult Accept(x26 node, TContext context);
+            protected internal abstract TResult Accept(x27 node, TContext context);
+            protected internal abstract TResult Accept(x28 node, TContext context);
+            protected internal abstract TResult Accept(x29 node, TContext context);
+            protected internal abstract TResult Accept(x2A node, TContext context);
+            protected internal abstract TResult Accept(x2B node, TContext context);
+            protected internal abstract TResult Accept(x2C node, TContext context);
+            protected internal abstract TResult Accept(x2D node, TContext context);
+            protected internal abstract TResult Accept(x2E node, TContext context);
+            protected internal abstract TResult Accept(x2F node, TContext context);
+            protected internal abstract TResult Accept(x30 node, TContext context);
+            protected internal abstract TResult Accept(x31 node, TContext context);
+            protected internal abstract TResult Accept(x32 node, TContext context);
+            protected internal abstract TResult Accept(x33 node, TContext context);
+            protected internal abstract TResult Accept(x34 node, TContext context);
+            protected internal abstract TResult Accept(x35 node, TContext context);
+            protected internal abstract TResult Accept(x36 node, TContext context);
+            protected internal abstract TResult Accept(x37 node, TContext context);
+            protected internal abstract TResult Accept(x38 node, TContext context);
+            protected internal abstract TResult Accept(x39 node, TContext context);
+            protected internal abstract TResult Accept(x3A node, TContext context);
+            protected internal abstract TResult Accept(x3B node, TContext context);
+            protected internal abstract TResult Accept(x3C node, TContext context);
+            protected internal abstract TResult Accept(x3D node, TContext context);
+            protected internal abstract TResult Accept(x3F node, TContext context);
+            protected internal abstract TResult Accept(x40 node, TContext context);
+            protected internal abstract TResult Accept(x41 node, TContext context);
+            protected internal abstract TResult Accept(x42 node, TContext context);
+            protected internal abstract TResult Accept(x43 node, TContext context);
+            protected internal abstract TResult Accept(x44 node, TContext context);
+            protected internal abstract TResult Accept(x45 node, TContext context);
+            protected internal abstract TResult Accept(x46 node, TContext context);
+            protected internal abstract TResult Accept(x47 node, TContext context);
+            protected internal abstract TResult Accept(x48 node, TContext context);
+            protected internal abstract TResult Accept(x49 node, TContext context);
+            protected internal abstract TResult Accept(x4A node, TContext context);
+            protected internal abstract TResult Accept(x4B node, TContext context);
+            protected internal abstract TResult Accept(x4C node, TContext context);
+            protected internal abstract TResult Accept(x4D node, TContext context);
+            protected internal abstract TResult Accept(x4E node, TContext context);
+            protected internal abstract TResult Accept(x4F node, TContext context);
+            protected internal abstract TResult Accept(x50 node, TContext context);
+            protected internal abstract TResult Accept(x51 node, TContext context);
+            protected internal abstract TResult Accept(x52 node, TContext context);
+            protected internal abstract TResult Accept(x53 node, TContext context);
+            protected internal abstract TResult Accept(x54 node, TContext context);
+            protected internal abstract TResult Accept(x55 node, TContext context);
+            protected internal abstract TResult Accept(x56 node, TContext context);
+            protected internal abstract TResult Accept(x57 node, TContext context);
+            protected internal abstract TResult Accept(x58 node, TContext context);
+            protected internal abstract TResult Accept(x59 node, TContext context);
+            protected internal abstract TResult Accept(x5A node, TContext context);
+            protected internal abstract TResult Accept(x5B node, TContext context);
+            protected internal abstract TResult Accept(x5C node, TContext context);
+            protected internal abstract TResult Accept(x5D node, TContext context);
+            protected internal abstract TResult Accept(x5E node, TContext context);
+            protected internal abstract TResult Accept(x5F node, TContext context);
+            protected internal abstract TResult Accept(x60 node, TContext context);
+            protected internal abstract TResult Accept(x61 node, TContext context);
+            protected internal abstract TResult Accept(x62 node, TContext context);
+            protected internal abstract TResult Accept(x63 node, TContext context);
+            protected internal abstract TResult Accept(x64 node, TContext context);
+            protected internal abstract TResult Accept(x65 node, TContext context);
+            protected internal abstract TResult Accept(x66 node, TContext context);
+            protected internal abstract TResult Accept(x67 node, TContext context);
+            protected internal abstract TResult Accept(x68 node, TContext context);
+            protected internal abstract TResult Accept(x69 node, TContext context);
+            protected internal abstract TResult Accept(x6A node, TContext context);
+            protected internal abstract TResult Accept(x6B node, TContext context);
+            protected internal abstract TResult Accept(x6C node, TContext context);
+            protected internal abstract TResult Accept(x6D node, TContext context);
+            protected internal abstract TResult Accept(x6E node, TContext context);
+            protected internal abstract TResult Accept(x6F node, TContext context);
+            protected internal abstract TResult Accept(x70 node, TContext context);
+            protected internal abstract TResult Accept(x71 node, TContext context);
+            protected internal abstract TResult Accept(x72 node, TContext context);
+            protected internal abstract TResult Accept(x73 node, TContext context);
+            protected internal abstract TResult Accept(x74 node, TContext context);
+            protected internal abstract TResult Accept(x75 node, TContext context);
+            protected internal abstract TResult Accept(x76 node, TContext context);
+            protected internal abstract TResult Accept(x77 node, TContext context);
+            protected internal abstract TResult Accept(x78 node, TContext context);
+            protected internal abstract TResult Accept(x79 node, TContext context);
+            protected internal abstract TResult Accept(x7A node, TContext context);
+            protected internal abstract TResult Accept(x7B node, TContext context);
+            protected internal abstract TResult Accept(x7C node, TContext context);
+            protected internal abstract TResult Accept(x7D node, TContext context);
+            protected internal abstract TResult Accept(x7E node, TContext context);
+        }
+
         public sealed class x20 : ProseVal
         {
             public x20(Core.x3C lessThan, Core.x20 value, Core.x3E greaterThan)
@@ -20,6 +125,11 @@
             public Core.x3C LessThan { get; }
             public Core.x20 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x21 : ProseVal
@@ -34,6 +144,11 @@
             public Core.x3C LessThan { get; }
             public Core.x21 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x22 : ProseVal
@@ -48,6 +163,11 @@
             public Core.x3C LessThan { get; }
             public Core.x22 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x23 : ProseVal
@@ -62,6 +182,11 @@
             public Core.x3C LessThan { get; }
             public Core.x23 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x24 : ProseVal
@@ -76,6 +201,11 @@
             public Core.x3C LessThan { get; }
             public Core.x24 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x25 : ProseVal
@@ -90,6 +220,11 @@
             public Core.x3C LessThan { get; }
             public Core.x25 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x26 : ProseVal
@@ -104,6 +239,11 @@
             public Core.x3C LessThan { get; }
             public Core.x26 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x27 : ProseVal
@@ -118,6 +258,11 @@
             public Core.x3C LessThan { get; }
             public Core.x27 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x28 : ProseVal
@@ -132,6 +277,11 @@
             public Core.x3C LessThan { get; }
             public Core.x28 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x29 : ProseVal
@@ -146,6 +296,11 @@
             public Core.x3C LessThan { get; }
             public Core.x29 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x2A : ProseVal
@@ -160,6 +315,11 @@
             public Core.x3C LessThan { get; }
             public Core.x2A Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x2B : ProseVal
@@ -174,6 +334,11 @@
             public Core.x3C LessThan { get; }
             public Core.x2B Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x2C : ProseVal
@@ -188,6 +353,11 @@
             public Core.x3C LessThan { get; }
             public Core.x2C Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x2D : ProseVal
@@ -202,6 +372,11 @@
             public Core.x3C LessThan { get; }
             public Core.x2D Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x2E : ProseVal
@@ -216,6 +391,11 @@
             public Core.x3C LessThan { get; }
             public Core.x2E Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x2F : ProseVal
@@ -230,6 +410,11 @@
             public Core.x3C LessThan { get; }
             public Core.x2F Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x30 : ProseVal
@@ -244,6 +429,11 @@
             public Core.x3C LessThan { get; }
             public Core.x30 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x31 : ProseVal
@@ -258,6 +448,11 @@
             public Core.x3C LessThan { get; }
             public Core.x31 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x32 : ProseVal
@@ -272,6 +467,11 @@
             public Core.x3C LessThan { get; }
             public Core.x32 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x33 : ProseVal
@@ -286,6 +486,11 @@
             public Core.x3C LessThan { get; }
             public Core.x33 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x34 : ProseVal
@@ -300,6 +505,11 @@
             public Core.x3C LessThan { get; }
             public Core.x34 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x35 : ProseVal
@@ -314,6 +524,11 @@
             public Core.x3C LessThan { get; }
             public Core.x35 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x36 : ProseVal
@@ -328,6 +543,11 @@
             public Core.x3C LessThan { get; }
             public Core.x36 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x37 : ProseVal
@@ -342,6 +562,11 @@
             public Core.x3C LessThan { get; }
             public Core.x37 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x38 : ProseVal
@@ -356,6 +581,11 @@
             public Core.x3C LessThan { get; }
             public Core.x38 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x39 : ProseVal
@@ -370,6 +600,11 @@
             public Core.x3C LessThan { get; }
             public Core.x39 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x3A : ProseVal
@@ -384,6 +619,11 @@
             public Core.x3C LessThan { get; }
             public Core.x3A Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x3B : ProseVal
@@ -398,6 +638,11 @@
             public Core.x3C LessThan { get; }
             public Core.x3B Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x3C : ProseVal
@@ -412,6 +657,11 @@
             public Core.x3C LessThan { get; }
             public Core.x3C Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x3D : ProseVal
@@ -426,6 +676,11 @@
             public Core.x3C LessThan { get; }
             public Core.x3D Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x3F : ProseVal
@@ -440,6 +695,11 @@
             public Core.x3C LessThan { get; }
             public Core.x3F Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x40 : ProseVal
@@ -454,6 +714,11 @@
             public Core.x3C LessThan { get; }
             public Core.x40 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x41 : ProseVal
@@ -468,6 +733,11 @@
             public Core.x3C LessThan { get; }
             public Core.x41 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x42 : ProseVal
@@ -482,6 +752,11 @@
             public Core.x3C LessThan { get; }
             public Core.x42 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x43 : ProseVal
@@ -496,6 +771,11 @@
             public Core.x3C LessThan { get; }
             public Core.x43 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x44 : ProseVal
@@ -510,6 +790,11 @@
             public Core.x3C LessThan { get; }
             public Core.x44 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x45 : ProseVal
@@ -524,6 +809,11 @@
             public Core.x3C LessThan { get; }
             public Core.x45 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x46 : ProseVal
@@ -538,6 +828,11 @@
             public Core.x3C LessThan { get; }
             public Core.x46 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x47 : ProseVal
@@ -552,6 +847,11 @@
             public Core.x3C LessThan { get; }
             public Core.x47 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x48 : ProseVal
@@ -566,6 +866,11 @@
             public Core.x3C LessThan { get; }
             public Core.x48 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x49 : ProseVal
@@ -580,6 +885,11 @@
             public Core.x3C LessThan { get; }
             public Core.x49 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x4A : ProseVal
@@ -594,6 +904,11 @@
             public Core.x3C LessThan { get; }
             public Core.x4A Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x4B : ProseVal
@@ -608,6 +923,11 @@
             public Core.x3C LessThan { get; }
             public Core.x4B Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x4C : ProseVal
@@ -622,6 +942,11 @@
             public Core.x3C LessThan { get; }
             public Core.x4C Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x4D : ProseVal
@@ -636,6 +961,11 @@
             public Core.x3C LessThan { get; }
             public Core.x4D Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x4E : ProseVal
@@ -650,6 +980,11 @@
             public Core.x3C LessThan { get; }
             public Core.x4E Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x4F : ProseVal
@@ -664,6 +999,11 @@
             public Core.x3C LessThan { get; }
             public Core.x4F Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x50 : ProseVal
@@ -678,6 +1018,11 @@
             public Core.x3C LessThan { get; }
             public Core.x50 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x51 : ProseVal
@@ -692,6 +1037,11 @@
             public Core.x3C LessThan { get; }
             public Core.x51 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x52 : ProseVal
@@ -706,6 +1056,11 @@
             public Core.x3C LessThan { get; }
             public Core.x52 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x53 : ProseVal
@@ -720,6 +1075,11 @@
             public Core.x3C LessThan { get; }
             public Core.x53 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x54 : ProseVal
@@ -734,6 +1094,11 @@
             public Core.x3C LessThan { get; }
             public Core.x54 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x55 : ProseVal
@@ -748,6 +1113,11 @@
             public Core.x3C LessThan { get; }
             public Core.x55 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x56 : ProseVal
@@ -762,6 +1132,11 @@
             public Core.x3C LessThan { get; }
             public Core.x56 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x57 : ProseVal
@@ -776,6 +1151,11 @@
             public Core.x3C LessThan { get; }
             public Core.x57 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x58 : ProseVal
@@ -790,6 +1170,11 @@
             public Core.x3C LessThan { get; }
             public Core.x58 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x59 : ProseVal
@@ -804,6 +1189,11 @@
             public Core.x3C LessThan { get; }
             public Core.x59 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x5A : ProseVal
@@ -818,6 +1208,11 @@
             public Core.x3C LessThan { get; }
             public Core.x5A Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x5B : ProseVal
@@ -832,6 +1227,11 @@
             public Core.x3C LessThan { get; }
             public Core.x5B Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x5C : ProseVal
@@ -846,6 +1246,11 @@
             public Core.x3C LessThan { get; }
             public Core.x5C Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x5D : ProseVal
@@ -860,6 +1265,11 @@
             public Core.x3C LessThan { get; }
             public Core.x5D Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x5E : ProseVal
@@ -874,6 +1284,11 @@
             public Core.x3C LessThan { get; }
             public Core.x5E Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x5F : ProseVal
@@ -888,6 +1303,11 @@
             public Core.x3C LessThan { get; }
             public Core.x5F Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x60 : ProseVal
@@ -902,6 +1322,11 @@
             public Core.x3C LessThan { get; }
             public Core.x60 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x61 : ProseVal
@@ -916,6 +1341,11 @@
             public Core.x3C LessThan { get; }
             public Core.x61 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x62 : ProseVal
@@ -930,6 +1360,11 @@
             public Core.x3C LessThan { get; }
             public Core.x62 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x63 : ProseVal
@@ -944,6 +1379,11 @@
             public Core.x3C LessThan { get; }
             public Core.x63 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x64 : ProseVal
@@ -958,6 +1398,11 @@
             public Core.x3C LessThan { get; }
             public Core.x64 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x65 : ProseVal
@@ -972,6 +1417,11 @@
             public Core.x3C LessThan { get; }
             public Core.x65 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x66 : ProseVal
@@ -986,6 +1436,11 @@
             public Core.x3C LessThan { get; }
             public Core.x66 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x67 : ProseVal
@@ -1000,6 +1455,11 @@
             public Core.x3C LessThan { get; }
             public Core.x67 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x68 : ProseVal
@@ -1014,6 +1474,11 @@
             public Core.x3C LessThan { get; }
             public Core.x68 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x69 : ProseVal
@@ -1028,6 +1493,11 @@
             public Core.x3C LessThan { get; }
             public Core.x69 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x6A : ProseVal
@@ -1042,6 +1512,11 @@
             public Core.x3C LessThan { get; }
             public Core.x6A Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x6B : ProseVal
@@ -1056,6 +1531,11 @@
             public Core.x3C LessThan { get; }
             public Core.x6B Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x6C : ProseVal
@@ -1070,6 +1550,11 @@
             public Core.x3C LessThan { get; }
             public Core.x6C Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x6D : ProseVal
@@ -1084,6 +1569,11 @@
             public Core.x3C LessThan { get; }
             public Core.x6D Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x6E : ProseVal
@@ -1098,6 +1588,11 @@
             public Core.x3C LessThan { get; }
             public Core.x6E Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x6F : ProseVal
@@ -1112,6 +1607,11 @@
             public Core.x3C LessThan { get; }
             public Core.x6F Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x70 : ProseVal
@@ -1126,6 +1626,11 @@
             public Core.x3C LessThan { get; }
             public Core.x70 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x71 : ProseVal
@@ -1140,6 +1645,11 @@
             public Core.x3C LessThan { get; }
             public Core.x71 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x72 : ProseVal
@@ -1154,6 +1664,11 @@
             public Core.x3C LessThan { get; }
             public Core.x72 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x73 : ProseVal
@@ -1168,6 +1683,11 @@
             public Core.x3C LessThan { get; }
             public Core.x73 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x74 : ProseVal
@@ -1182,6 +1702,11 @@
             public Core.x3C LessThan { get; }
             public Core.x74 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x75 : ProseVal
@@ -1196,6 +1721,11 @@
             public Core.x3C LessThan { get; }
             public Core.x75 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x76 : ProseVal
@@ -1210,6 +1740,11 @@
             public Core.x3C LessThan { get; }
             public Core.x76 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x77 : ProseVal
@@ -1224,6 +1759,11 @@
             public Core.x3C LessThan { get; }
             public Core.x77 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x78 : ProseVal
@@ -1238,6 +1778,11 @@
             public Core.x3C LessThan { get; }
             public Core.x78 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x79 : ProseVal
@@ -1252,6 +1797,11 @@
             public Core.x3C LessThan { get; }
             public Core.x79 Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x7A : ProseVal
@@ -1266,6 +1816,11 @@
             public Core.x3C LessThan { get; }
             public Core.x7A Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x7B : ProseVal
@@ -1280,6 +1835,11 @@
             public Core.x3C LessThan { get; }
             public Core.x7B Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x7C : ProseVal
@@ -1294,6 +1854,11 @@
             public Core.x3C LessThan { get; }
             public Core.x7C Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x7D : ProseVal
@@ -1308,6 +1873,11 @@
             public Core.x3C LessThan { get; }
             public Core.x7D Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class x7E : ProseVal
@@ -1322,8 +1892,11 @@
             public Core.x3C LessThan { get; }
             public Core.x7E Value { get; }
             public Core.x3E GreaterThan { get; }
+
+            public sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
-
-
     }
 }
