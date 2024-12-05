@@ -1206,8 +1206,8 @@ pct-encoded   = "%" HEXDIG HEXDIG
 unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
 ;reserved      = gen-delims / sub-delims
 ;gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
-;sub-delims    = "!" / "$" / "&" / """ / "(" / ")" / "*" / "+" / "," / ";" / "="
-sub-delims     =       "$" / "&" / """ /                                     "=" / other-delims
+;sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+sub-delims     =       "$" / "&" / "'" /                                     "=" / other-delims
 other-delims   = "!" /                   "(" / ")" / "*" / "+" / "," / ";"
 
 pchar-no-SQUOTE       = unreserved / pct-encoded-no-SQUOTE / other-delims / "$" / "&" / "=" / ":" / "@"
