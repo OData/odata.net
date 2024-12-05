@@ -38,9 +38,9 @@
             for (int i = start; i <= end; ++i)
             {
                 var className = $"x{i:X2}";
-                /*builder.AppendLine($"public static Parser<Vchar.{className}> {className} {{ get; }} =");
+                /*builder.AppendLine($"public static Parser<CharVal.Inner.{className}> {className} {{ get; }} =");
                 builder.AppendLine($"\tfrom value in {className}Parser.Instance");
-                builder.AppendLine($"\tselect new Vchar.{className}(value);");
+                builder.AppendLine($"\tselect new CharVal.Inner.{className}(value);");
                 builder.AppendLine();*/
 
                 builder.AppendLine($".Or({className})");
