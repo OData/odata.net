@@ -9,6 +9,20 @@
         {
         }
 
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(BinVal node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+
+            protected internal abstract TResult Accept(BitsOnly node, TContext context);
+            protected internal abstract TResult Accept(ConcatenatedBits node, TContext context);
+            protected internal abstract TResult Accept(Range node, TContext context);
+        }
+
         public sealed class BitsOnly : BinVal
         {
             public BitsOnly(x62 b, IEnumerable<Bit> bits)
@@ -19,6 +33,11 @@
 
             public x62 B { get; }
             public IEnumerable<Bit> Bits { get; }
+
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class ConcatenatedBits : BinVal
@@ -45,6 +64,11 @@
                 public x2E Dot { get; }
                 public IEnumerable<Bit> Bits { get; }
             }
+
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class Range : BinVal
@@ -70,6 +94,11 @@
 
                 public x2D Dash { get; }
                 public IEnumerable<Bit> Bits { get; }
+            }
+
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
             }
         }
     }
