@@ -31,20 +31,21 @@
         [TestMethod]
         public void Generate()
         {
-            var start = 0x01;
-            var end = 0x7F;
+            var start = 0x23;
+            var end = 0x7E;
 
             var builder = new StringBuilder();
             for (int i = start; i <= end; ++i)
             {
                 var className = $"x{i:X2}";
-                builder.AppendLine($"public sealed class {className}");
+                builder.AppendLine($"public sealed class {className} : Inner");
                 builder.AppendLine("{");
-                builder.AppendLine($"private {className}()");
+                builder.AppendLine($"public {className}(Core.{className} value)");
                 builder.AppendLine("{");
+                builder.AppendLine("Value = value;");
                 builder.AppendLine("}");
                 builder.AppendLine();
-                builder.AppendLine($"public static {className} Instance {{ get; }} = new {className}();");
+                builder.AppendLine($"public Core.{className} Value {{ get; }}");
                 builder.AppendLine("}");
                 builder.AppendLine();
             }

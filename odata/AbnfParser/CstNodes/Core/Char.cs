@@ -1,12 +1,1283 @@
 ﻿namespace AbnfParser.CstNodes.Core
 {
-    //// TODO do other core rules
+    //// TODO finish the core rules
 
     public abstract class Char
     {
         private Char()
         {
         }
+        public sealed class x01 : Char
+        {
+            public x01(Core.x01 value)
+            {
+                Value = value;
+            }
+
+            public Core.x01 Value { get; }
+        }
+
+        public sealed class x02 : Char
+        {
+            public x02(Core.x02 value)
+            {
+                Value = value;
+            }
+
+            public Core.x02 Value { get; }
+        }
+
+        public sealed class x03 : Char
+        {
+            public x03(Core.x03 value)
+            {
+                Value = value;
+            }
+
+            public Core.x03 Value { get; }
+        }
+
+        public sealed class x04 : Char
+        {
+            public x04(Core.x04 value)
+            {
+                Value = value;
+            }
+
+            public Core.x04 Value { get; }
+        }
+
+        public sealed class x05 : Char
+        {
+            public x05(Core.x05 value)
+            {
+                Value = value;
+            }
+
+            public Core.x05 Value { get; }
+        }
+
+        public sealed class x06 : Char
+        {
+            public x06(Core.x06 value)
+            {
+                Value = value;
+            }
+
+            public Core.x06 Value { get; }
+        }
+
+        public sealed class x07 : Char
+        {
+            public x07(Core.x07 value)
+            {
+                Value = value;
+            }
+
+            public Core.x07 Value { get; }
+        }
+
+        public sealed class x08 : Char
+        {
+            public x08(Core.x08 value)
+            {
+                Value = value;
+            }
+
+            public Core.x08 Value { get; }
+        }
+
+        public sealed class x09 : Char
+        {
+            public x09(Core.x09 value)
+            {
+                Value = value;
+            }
+
+            public Core.x09 Value { get; }
+        }
+
+        public sealed class x0A : Char
+        {
+            public x0A(Core.x0A value)
+            {
+                Value = value;
+            }
+
+            public Core.x0A Value { get; }
+        }
+
+        public sealed class x0B : Char
+        {
+            public x0B(Core.x0B value)
+            {
+                Value = value;
+            }
+
+            public Core.x0B Value { get; }
+        }
+
+        public sealed class x0C : Char
+        {
+            public x0C(Core.x0C value)
+            {
+                Value = value;
+            }
+
+            public Core.x0C Value { get; }
+        }
+
+        public sealed class x0D : Char
+        {
+            public x0D(Core.x0D value)
+            {
+                Value = value;
+            }
+
+            public Core.x0D Value { get; }
+        }
+
+        public sealed class x0E : Char
+        {
+            public x0E(Core.x0E value)
+            {
+                Value = value;
+            }
+
+            public Core.x0E Value { get; }
+        }
+
+        public sealed class x0F : Char
+        {
+            public x0F(Core.x0F value)
+            {
+                Value = value;
+            }
+
+            public Core.x0F Value { get; }
+        }
+
+        public sealed class x10 : Char
+        {
+            public x10(Core.x10 value)
+            {
+                Value = value;
+            }
+
+            public Core.x10 Value { get; }
+        }
+
+        public sealed class x11 : Char
+        {
+            public x11(Core.x11 value)
+            {
+                Value = value;
+            }
+
+            public Core.x11 Value { get; }
+        }
+
+        public sealed class x12 : Char
+        {
+            public x12(Core.x12 value)
+            {
+                Value = value;
+            }
+
+            public Core.x12 Value { get; }
+        }
+
+        public sealed class x13 : Char
+        {
+            public x13(Core.x13 value)
+            {
+                Value = value;
+            }
+
+            public Core.x13 Value { get; }
+        }
+
+        public sealed class x14 : Char
+        {
+            public x14(Core.x14 value)
+            {
+                Value = value;
+            }
+
+            public Core.x14 Value { get; }
+        }
+
+        public sealed class x15 : Char
+        {
+            public x15(Core.x15 value)
+            {
+                Value = value;
+            }
+
+            public Core.x15 Value { get; }
+        }
+
+        public sealed class x16 : Char
+        {
+            public x16(Core.x16 value)
+            {
+                Value = value;
+            }
+
+            public Core.x16 Value { get; }
+        }
+
+        public sealed class x17 : Char
+        {
+            public x17(Core.x17 value)
+            {
+                Value = value;
+            }
+
+            public Core.x17 Value { get; }
+        }
+
+        public sealed class x18 : Char
+        {
+            public x18(Core.x18 value)
+            {
+                Value = value;
+            }
+
+            public Core.x18 Value { get; }
+        }
+
+        public sealed class x19 : Char
+        {
+            public x19(Core.x19 value)
+            {
+                Value = value;
+            }
+
+            public Core.x19 Value { get; }
+        }
+
+        public sealed class x1A : Char
+        {
+            public x1A(Core.x1A value)
+            {
+                Value = value;
+            }
+
+            public Core.x1A Value { get; }
+        }
+
+        public sealed class x1B : Char
+        {
+            public x1B(Core.x1B value)
+            {
+                Value = value;
+            }
+
+            public Core.x1B Value { get; }
+        }
+
+        public sealed class x1C : Char
+        {
+            public x1C(Core.x1C value)
+            {
+                Value = value;
+            }
+
+            public Core.x1C Value { get; }
+        }
+
+        public sealed class x1D : Char
+        {
+            public x1D(Core.x1D value)
+            {
+                Value = value;
+            }
+
+            public Core.x1D Value { get; }
+        }
+
+        public sealed class x1E : Char
+        {
+            public x1E(Core.x1E value)
+            {
+                Value = value;
+            }
+
+            public Core.x1E Value { get; }
+        }
+
+        public sealed class x1F : Char
+        {
+            public x1F(Core.x1F value)
+            {
+                Value = value;
+            }
+
+            public Core.x1F Value { get; }
+        }
+
+        public sealed class x20 : Char
+        {
+            public x20(Core.x20 value)
+            {
+                Value = value;
+            }
+
+            public Core.x20 Value { get; }
+        }
+
+        public sealed class x21 : Char
+        {
+            public x21(Core.x21 value)
+            {
+                Value = value;
+            }
+
+            public Core.x21 Value { get; }
+        }
+
+        public sealed class x22 : Char
+        {
+            public x22(Core.x22 value)
+            {
+                Value = value;
+            }
+
+            public Core.x22 Value { get; }
+        }
+
+        public sealed class x23 : Char
+        {
+            public x23(Core.x23 value)
+            {
+                Value = value;
+            }
+
+            public Core.x23 Value { get; }
+        }
+
+        public sealed class x24 : Char
+        {
+            public x24(Core.x24 value)
+            {
+                Value = value;
+            }
+
+            public Core.x24 Value { get; }
+        }
+
+        public sealed class x25 : Char
+        {
+            public x25(Core.x25 value)
+            {
+                Value = value;
+            }
+
+            public Core.x25 Value { get; }
+        }
+
+        public sealed class x26 : Char
+        {
+            public x26(Core.x26 value)
+            {
+                Value = value;
+            }
+
+            public Core.x26 Value { get; }
+        }
+
+        public sealed class x27 : Char
+        {
+            public x27(Core.x27 value)
+            {
+                Value = value;
+            }
+
+            public Core.x27 Value { get; }
+        }
+
+        public sealed class x28 : Char
+        {
+            public x28(Core.x28 value)
+            {
+                Value = value;
+            }
+
+            public Core.x28 Value { get; }
+        }
+
+        public sealed class x29 : Char
+        {
+            public x29(Core.x29 value)
+            {
+                Value = value;
+            }
+
+            public Core.x29 Value { get; }
+        }
+
+        public sealed class x2A : Char
+        {
+            public x2A(Core.x2A value)
+            {
+                Value = value;
+            }
+
+            public Core.x2A Value { get; }
+        }
+
+        public sealed class x2B : Char
+        {
+            public x2B(Core.x2B value)
+            {
+                Value = value;
+            }
+
+            public Core.x2B Value { get; }
+        }
+
+        public sealed class x2C : Char
+        {
+            public x2C(Core.x2C value)
+            {
+                Value = value;
+            }
+
+            public Core.x2C Value { get; }
+        }
+
+        public sealed class x2D : Char
+        {
+            public x2D(Core.x2D value)
+            {
+                Value = value;
+            }
+
+            public Core.x2D Value { get; }
+        }
+
+        public sealed class x2E : Char
+        {
+            public x2E(Core.x2E value)
+            {
+                Value = value;
+            }
+
+            public Core.x2E Value { get; }
+        }
+
+        public sealed class x2F : Char
+        {
+            public x2F(Core.x2F value)
+            {
+                Value = value;
+            }
+
+            public Core.x2F Value { get; }
+        }
+
+        public sealed class x30 : Char
+        {
+            public x30(Core.x30 value)
+            {
+                Value = value;
+            }
+
+            public Core.x30 Value { get; }
+        }
+
+        public sealed class x31 : Char
+        {
+            public x31(Core.x31 value)
+            {
+                Value = value;
+            }
+
+            public Core.x31 Value { get; }
+        }
+
+        public sealed class x32 : Char
+        {
+            public x32(Core.x32 value)
+            {
+                Value = value;
+            }
+
+            public Core.x32 Value { get; }
+        }
+
+        public sealed class x33 : Char
+        {
+            public x33(Core.x33 value)
+            {
+                Value = value;
+            }
+
+            public Core.x33 Value { get; }
+        }
+
+        public sealed class x34 : Char
+        {
+            public x34(Core.x34 value)
+            {
+                Value = value;
+            }
+
+            public Core.x34 Value { get; }
+        }
+
+        public sealed class x35 : Char
+        {
+            public x35(Core.x35 value)
+            {
+                Value = value;
+            }
+
+            public Core.x35 Value { get; }
+        }
+
+        public sealed class x36 : Char
+        {
+            public x36(Core.x36 value)
+            {
+                Value = value;
+            }
+
+            public Core.x36 Value { get; }
+        }
+
+        public sealed class x37 : Char
+        {
+            public x37(Core.x37 value)
+            {
+                Value = value;
+            }
+
+            public Core.x37 Value { get; }
+        }
+
+        public sealed class x38 : Char
+        {
+            public x38(Core.x38 value)
+            {
+                Value = value;
+            }
+
+            public Core.x38 Value { get; }
+        }
+
+        public sealed class x39 : Char
+        {
+            public x39(Core.x39 value)
+            {
+                Value = value;
+            }
+
+            public Core.x39 Value { get; }
+        }
+
+        public sealed class x3A : Char
+        {
+            public x3A(Core.x3A value)
+            {
+                Value = value;
+            }
+
+            public Core.x3A Value { get; }
+        }
+
+        public sealed class x3B : Char
+        {
+            public x3B(Core.x3B value)
+            {
+                Value = value;
+            }
+
+            public Core.x3B Value { get; }
+        }
+
+        public sealed class x3C : Char
+        {
+            public x3C(Core.x3C value)
+            {
+                Value = value;
+            }
+
+            public Core.x3C Value { get; }
+        }
+
+        public sealed class x3D : Char
+        {
+            public x3D(Core.x3D value)
+            {
+                Value = value;
+            }
+
+            public Core.x3D Value { get; }
+        }
+
+        public sealed class x3E : Char
+        {
+            public x3E(Core.x3E value)
+            {
+                Value = value;
+            }
+
+            public Core.x3E Value { get; }
+        }
+
+        public sealed class x3F : Char
+        {
+            public x3F(Core.x3F value)
+            {
+                Value = value;
+            }
+
+            public Core.x3F Value { get; }
+        }
+
+        public sealed class x40 : Char
+        {
+            public x40(Core.x40 value)
+            {
+                Value = value;
+            }
+
+            public Core.x40 Value { get; }
+        }
+
+        public sealed class x41 : Char
+        {
+            public x41(Core.x41 value)
+            {
+                Value = value;
+            }
+
+            public Core.x41 Value { get; }
+        }
+
+        public sealed class x42 : Char
+        {
+            public x42(Core.x42 value)
+            {
+                Value = value;
+            }
+
+            public Core.x42 Value { get; }
+        }
+
+        public sealed class x43 : Char
+        {
+            public x43(Core.x43 value)
+            {
+                Value = value;
+            }
+
+            public Core.x43 Value { get; }
+        }
+
+        public sealed class x44 : Char
+        {
+            public x44(Core.x44 value)
+            {
+                Value = value;
+            }
+
+            public Core.x44 Value { get; }
+        }
+
+        public sealed class x45 : Char
+        {
+            public x45(Core.x45 value)
+            {
+                Value = value;
+            }
+
+            public Core.x45 Value { get; }
+        }
+
+        public sealed class x46 : Char
+        {
+            public x46(Core.x46 value)
+            {
+                Value = value;
+            }
+
+            public Core.x46 Value { get; }
+        }
+
+        public sealed class x47 : Char
+        {
+            public x47(Core.x47 value)
+            {
+                Value = value;
+            }
+
+            public Core.x47 Value { get; }
+        }
+
+        public sealed class x48 : Char
+        {
+            public x48(Core.x48 value)
+            {
+                Value = value;
+            }
+
+            public Core.x48 Value { get; }
+        }
+
+        public sealed class x49 : Char
+        {
+            public x49(Core.x49 value)
+            {
+                Value = value;
+            }
+
+            public Core.x49 Value { get; }
+        }
+
+        public sealed class x4A : Char
+        {
+            public x4A(Core.x4A value)
+            {
+                Value = value;
+            }
+
+            public Core.x4A Value { get; }
+        }
+
+        public sealed class x4B : Char
+        {
+            public x4B(Core.x4B value)
+            {
+                Value = value;
+            }
+
+            public Core.x4B Value { get; }
+        }
+
+        public sealed class x4C : Char
+        {
+            public x4C(Core.x4C value)
+            {
+                Value = value;
+            }
+
+            public Core.x4C Value { get; }
+        }
+
+        public sealed class x4D : Char
+        {
+            public x4D(Core.x4D value)
+            {
+                Value = value;
+            }
+
+            public Core.x4D Value { get; }
+        }
+
+        public sealed class x4E : Char
+        {
+            public x4E(Core.x4E value)
+            {
+                Value = value;
+            }
+
+            public Core.x4E Value { get; }
+        }
+
+        public sealed class x4F : Char
+        {
+            public x4F(Core.x4F value)
+            {
+                Value = value;
+            }
+
+            public Core.x4F Value { get; }
+        }
+
+        public sealed class x50 : Char
+        {
+            public x50(Core.x50 value)
+            {
+                Value = value;
+            }
+
+            public Core.x50 Value { get; }
+        }
+
+        public sealed class x51 : Char
+        {
+            public x51(Core.x51 value)
+            {
+                Value = value;
+            }
+
+            public Core.x51 Value { get; }
+        }
+
+        public sealed class x52 : Char
+        {
+            public x52(Core.x52 value)
+            {
+                Value = value;
+            }
+
+            public Core.x52 Value { get; }
+        }
+
+        public sealed class x53 : Char
+        {
+            public x53(Core.x53 value)
+            {
+                Value = value;
+            }
+
+            public Core.x53 Value { get; }
+        }
+
+        public sealed class x54 : Char
+        {
+            public x54(Core.x54 value)
+            {
+                Value = value;
+            }
+
+            public Core.x54 Value { get; }
+        }
+
+        public sealed class x55 : Char
+        {
+            public x55(Core.x55 value)
+            {
+                Value = value;
+            }
+
+            public Core.x55 Value { get; }
+        }
+
+        public sealed class x56 : Char
+        {
+            public x56(Core.x56 value)
+            {
+                Value = value;
+            }
+
+            public Core.x56 Value { get; }
+        }
+
+        public sealed class x57 : Char
+        {
+            public x57(Core.x57 value)
+            {
+                Value = value;
+            }
+
+            public Core.x57 Value { get; }
+        }
+
+        public sealed class x58 : Char
+        {
+            public x58(Core.x58 value)
+            {
+                Value = value;
+            }
+
+            public Core.x58 Value { get; }
+        }
+
+        public sealed class x59 : Char
+        {
+            public x59(Core.x59 value)
+            {
+                Value = value;
+            }
+
+            public Core.x59 Value { get; }
+        }
+
+        public sealed class x5A : Char
+        {
+            public x5A(Core.x5A value)
+            {
+                Value = value;
+            }
+
+            public Core.x5A Value { get; }
+        }
+
+        public sealed class x5B : Char
+        {
+            public x5B(Core.x5B value)
+            {
+                Value = value;
+            }
+
+            public Core.x5B Value { get; }
+        }
+
+        public sealed class x5C : Char
+        {
+            public x5C(Core.x5C value)
+            {
+                Value = value;
+            }
+
+            public Core.x5C Value { get; }
+        }
+
+        public sealed class x5D : Char
+        {
+            public x5D(Core.x5D value)
+            {
+                Value = value;
+            }
+
+            public Core.x5D Value { get; }
+        }
+
+        public sealed class x5E : Char
+        {
+            public x5E(Core.x5E value)
+            {
+                Value = value;
+            }
+
+            public Core.x5E Value { get; }
+        }
+
+        public sealed class x5F : Char
+        {
+            public x5F(Core.x5F value)
+            {
+                Value = value;
+            }
+
+            public Core.x5F Value { get; }
+        }
+
+        public sealed class x60 : Char
+        {
+            public x60(Core.x60 value)
+            {
+                Value = value;
+            }
+
+            public Core.x60 Value { get; }
+        }
+
+        public sealed class x61 : Char
+        {
+            public x61(Core.x61 value)
+            {
+                Value = value;
+            }
+
+            public Core.x61 Value { get; }
+        }
+
+        public sealed class x62 : Char
+        {
+            public x62(Core.x62 value)
+            {
+                Value = value;
+            }
+
+            public Core.x62 Value { get; }
+        }
+
+        public sealed class x63 : Char
+        {
+            public x63(Core.x63 value)
+            {
+                Value = value;
+            }
+
+            public Core.x63 Value { get; }
+        }
+
+        public sealed class x64 : Char
+        {
+            public x64(Core.x64 value)
+            {
+                Value = value;
+            }
+
+            public Core.x64 Value { get; }
+        }
+
+        public sealed class x65 : Char
+        {
+            public x65(Core.x65 value)
+            {
+                Value = value;
+            }
+
+            public Core.x65 Value { get; }
+        }
+
+        public sealed class x66 : Char
+        {
+            public x66(Core.x66 value)
+            {
+                Value = value;
+            }
+
+            public Core.x66 Value { get; }
+        }
+
+        public sealed class x67 : Char
+        {
+            public x67(Core.x67 value)
+            {
+                Value = value;
+            }
+
+            public Core.x67 Value { get; }
+        }
+
+        public sealed class x68 : Char
+        {
+            public x68(Core.x68 value)
+            {
+                Value = value;
+            }
+
+            public Core.x68 Value { get; }
+        }
+
+        public sealed class x69 : Char
+        {
+            public x69(Core.x69 value)
+            {
+                Value = value;
+            }
+
+            public Core.x69 Value { get; }
+        }
+
+        public sealed class x6A : Char
+        {
+            public x6A(Core.x6A value)
+            {
+                Value = value;
+            }
+
+            public Core.x6A Value { get; }
+        }
+
+        public sealed class x6B : Char
+        {
+            public x6B(Core.x6B value)
+            {
+                Value = value;
+            }
+
+            public Core.x6B Value { get; }
+        }
+
+        public sealed class x6C : Char
+        {
+            public x6C(Core.x6C value)
+            {
+                Value = value;
+            }
+
+            public Core.x6C Value { get; }
+        }
+
+        public sealed class x6D : Char
+        {
+            public x6D(Core.x6D value)
+            {
+                Value = value;
+            }
+
+            public Core.x6D Value { get; }
+        }
+
+        public sealed class x6E : Char
+        {
+            public x6E(Core.x6E value)
+            {
+                Value = value;
+            }
+
+            public Core.x6E Value { get; }
+        }
+
+        public sealed class x6F : Char
+        {
+            public x6F(Core.x6F value)
+            {
+                Value = value;
+            }
+
+            public Core.x6F Value { get; }
+        }
+
+        public sealed class x70 : Char
+        {
+            public x70(Core.x70 value)
+            {
+                Value = value;
+            }
+
+            public Core.x70 Value { get; }
+        }
+
+        public sealed class x71 : Char
+        {
+            public x71(Core.x71 value)
+            {
+                Value = value;
+            }
+
+            public Core.x71 Value { get; }
+        }
+
+        public sealed class x72 : Char
+        {
+            public x72(Core.x72 value)
+            {
+                Value = value;
+            }
+
+            public Core.x72 Value { get; }
+        }
+
+        public sealed class x73 : Char
+        {
+            public x73(Core.x73 value)
+            {
+                Value = value;
+            }
+
+            public Core.x73 Value { get; }
+        }
+
+        public sealed class x74 : Char
+        {
+            public x74(Core.x74 value)
+            {
+                Value = value;
+            }
+
+            public Core.x74 Value { get; }
+        }
+
+        public sealed class x75 : Char
+        {
+            public x75(Core.x75 value)
+            {
+                Value = value;
+            }
+
+            public Core.x75 Value { get; }
+        }
+
+        public sealed class x76 : Char
+        {
+            public x76(Core.x76 value)
+            {
+                Value = value;
+            }
+
+            public Core.x76 Value { get; }
+        }
+
+        public sealed class x77 : Char
+        {
+            public x77(Core.x77 value)
+            {
+                Value = value;
+            }
+
+            public Core.x77 Value { get; }
+        }
+
+        public sealed class x78 : Char
+        {
+            public x78(Core.x78 value)
+            {
+                Value = value;
+            }
+
+            public Core.x78 Value { get; }
+        }
+
+        public sealed class x79 : Char
+        {
+            public x79(Core.x79 value)
+            {
+                Value = value;
+            }
+
+            public Core.x79 Value { get; }
+        }
+
+        public sealed class x7A : Char
+        {
+            public x7A(Core.x7A value)
+            {
+                Value = value;
+            }
+
+            public Core.x7A Value { get; }
+        }
+
+        public sealed class x7B : Char
+        {
+            public x7B(Core.x7B value)
+            {
+                Value = value;
+            }
+
+            public Core.x7B Value { get; }
+        }
+
+        public sealed class x7C : Char
+        {
+            public x7C(Core.x7C value)
+            {
+                Value = value;
+            }
+
+            public Core.x7C Value { get; }
+        }
+
+        public sealed class x7D : Char
+        {
+            public x7D(Core.x7D value)
+            {
+                Value = value;
+            }
+
+            public Core.x7D Value { get; }
+        }
+
+        public sealed class x7E : Char
+        {
+            public x7E(Core.x7E value)
+            {
+                Value = value;
+            }
+
+            public Core.x7E Value { get; }
+        }
+
+        public sealed class x7F : Char
+        {
+            public x7F(Core.x7F value)
+            {
+                Value = value;
+            }
+
+            public Core.x7F Value { get; }
+        }
+
+
     }
 
     public sealed class x01
