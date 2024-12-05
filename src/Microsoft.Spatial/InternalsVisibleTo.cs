@@ -11,9 +11,3 @@
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("AstoriaUnitTests.TDDUnitTests" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.Spatial.TDDUnitTests" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.Spatial.Tests" + AssemblyRef.TestPublicKey)]
-
-// .NET Core
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.TestCommon.NetCore" + AssemblyRef.TestPublicKey)]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Edm.Tests.NetCore" + AssemblyRef.TestPublicKey)]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Core.Tests.NetCore" + AssemblyRef.TestPublicKey)]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.Spatial.Tests.NetCore" + AssemblyRef.TestPublicKey)]

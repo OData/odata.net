@@ -20,6 +20,4 @@
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.Test.Taupo.OData" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Core.Tests" + AssemblyRef.TestPublicKey)]
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Client.Tests" + AssemblyRef.TestPublicKey)]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.Test.OData.DependencyInjection.NetCore" + AssemblyRef.TestPublicKey)]
-[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("Microsoft.OData.Core.Tests.NetCore" + AssemblyRef.TestPublicKey)]
 #pragma warning restore 436
