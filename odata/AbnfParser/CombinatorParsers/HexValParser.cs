@@ -49,9 +49,9 @@
             }
         }
 
-        public static Parser<HexVal> Instance { get; } =
-            HexOnly
-            .Or<HexVal>(ConcatenatedHex)
-            .Or(Range);
+        public static Parser<HexVal> Instance { get; } = //// TODO you originally wrote this as hexonly.or(concatenated).or(range); how can you know to do it in this order instead?
+            ConcatenatedHex
+            .Or<HexVal>(Range)
+            .Or(HexOnly);
     }
 }
