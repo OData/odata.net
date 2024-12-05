@@ -926,6 +926,24 @@
             public Core.x7C Value { get; }
         }
 
+        public sealed class x7D : Vchar
+        {
+            public x7D(Core.x7D value)
+            {
+                Value = value;
+            }
 
+            public Core.x7D Value { get; }
+        }
+
+        public sealed class x7E : Vchar
+        {
+            public x7E(Core.x7E value)
+            {
+                Value = value;
+            }
+
+            public Core.x7E Value { get; }
+        }
     }
 }

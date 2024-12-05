@@ -31,16 +31,16 @@
         [TestMethod]
         public void Generate()
         {
-            var start = 0x61;
-            var end = 0x7A;
+            var start = 0x23;
+            var end = 0x7E;
 
             var builder = new StringBuilder();
             for (int i = start; i <= end; ++i)
             {
                 var className = $"x{i:X2}";
-                /*builder.AppendLine($"public static Parser<Alpha.{className}> {className} {{ get; }} =");
+                /*builder.AppendLine($"public static Parser<Vchar.{className}> {className} {{ get; }} =");
                 builder.AppendLine($"\tfrom value in {className}Parser.Instance");
-                builder.AppendLine($"\tselect new Alpha.{className}(value);");
+                builder.AppendLine($"\tselect new Vchar.{className}(value);");
                 builder.AppendLine();*/
 
                 builder.AppendLine($".Or({className})");
