@@ -17,7 +17,7 @@
             select new Repeat.Range(prefixDigits, asterisk, suffixDigits);
 
         public static Parser<Repeat> Instance { get; } =
-            Count
-            .Or<Repeat>(Range);
+            Range
+            .Or<Repeat>(Count); //// TODO reversing range and count breaks `rulelist = 1*( rule / (*c-wsp c-nl) )`
     }
 }
