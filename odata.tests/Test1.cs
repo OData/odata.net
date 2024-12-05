@@ -33,9 +33,9 @@
         [TestMethod]
         public void Generate()
         {
-            var start = 0x30;
-            var end = 0x39;
-            var elementName = "Digit";
+            var start = 0x21;
+            var end = 0x7E;
+            var elementName = "Vchar";
 
             var builder = new StringBuilder();
             builder.AppendLine("public abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);");
