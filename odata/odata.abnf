@@ -51,7 +51,7 @@
 ;
 ; Overview:
 ;   This grammar uses the ABNF defined in RFC5234 with one extension: literals 
-;   enclosed in single quotes (e.g. '$metadata') are treated case-sensitive. 
+;   enclosed in single quotes (e.g. "$metadata") are treated case-sensitive. 
 ;
 ;   The following rules assume that URIs have been percent-encoding normalized
 ;   as described in section 6.2.2.2 of RFC3986 
@@ -65,7 +65,7 @@
 ;   plain literal representation.
 ; 
 ;   One prominent example is the single quote that delimits OData primitive  
-;   type literals: %27 and ' are treated identically, so a single quote within 
+;   type literals: %27 and " are treated identically, so a single quote within 
 ;   a string literal is "encoded" as two consecutive single quotes in either
 ;   literal or percent-encoded representation.
 ;
@@ -96,10 +96,10 @@ serviceRoot = ( "https" / "http" )                    ; Note: case-insensitive
               "/" *( segment-nz "/" )
 
 ; Note: dollar-prefixed path segments are case-sensitive!
-odataRelativeUri = '$batch'  [ "?" batchOptions ]
-                 / '$entity' "?" entityOptions  
-                 / '$entity' "/" qualifiedEntityTypeName "?" entityCastOptions  
-                 / '$metadata' [ "?" metadataOptions ] [ context ]
+odataRelativeUri = "$batch"  [ "?" batchOptions ]
+                 / "$entity" "?" entityOptions  
+                 / "$entity" "/" qualifiedEntityTypeName "?" entityCastOptions  
+                 / "$metadata" [ "?" metadataOptions ] [ context ]
                  / resourcePath [ "?" queryOptions ]
 
 
@@ -118,7 +118,7 @@ resourcePath = entitySetName                  [ collectionNavigation ]
              / primitiveFunctionImportCall    [ primitivePath ] 
              / functionImportCallNoParens
              / crossjoin
-             / '$all'                         [ "/" qualifiedEntityTypeName ]
+             / "$all"                         [ "/" qualifiedEntityTypeName ]
 
 collectionNavigation = [ "/" qualifiedEntityTypeName ] [ collectionNavPath ]
 collectionNavPath    = keyPredicate [ singleNavigation ]
@@ -164,12 +164,12 @@ complexPath    = [ "/" qualifiedComplexTypeName ]
                  / boundOperation
                  ]
                  
-filterInPath = '/$filter' EQ parameterAlias
+filterInPath = "/$filter" EQ parameterAlias
 
-each  = '/$each'
-count = '/$count'
-ref   = '/$ref'
-value = '/$value'
+each  = "/$each"
+count = "/$count"
+ref   = "/$ref"
+value = "/$value"
 
 ordinalIndex = "/" 1*DIGIT
 
@@ -229,7 +229,7 @@ functionParameter  = parameterName EQ ( parameterAlias / primitiveLiteral )
 parameterName      = odataIdentifier
 parameterAlias     = AT odataIdentifier 
 
-crossjoin = '$crossjoin' OPEN
+crossjoin = "$crossjoin" OPEN
             entitySetName *( COMMA entitySetName )
             CLOSE
 
@@ -338,10 +338,10 @@ searchExpr = ( OPEN BWS searchExpr BWS CLOSE
                / searchAndExpr
                ]
 
-searchOrExpr  = RWS 'OR'  RWS searchExpr
-searchAndExpr = RWS [ 'AND' RWS ] searchExpr
+searchOrExpr  = RWS "OR"  RWS searchExpr
+searchAndExpr = RWS [ "AND" RWS ] searchExpr
 
-searchTerm   = [ 'NOT' RWS ] ( searchPhrase / searchWord )
+searchTerm   = [ "NOT" RWS ] ( searchPhrase / searchWord )
 searchPhrase = quotation-mark 1*qchar-no-AMP-DQUOTE quotation-mark
 
 ; A searchWord is a sequence of one or more letters, digits, commas, or dots.
@@ -400,15 +400,15 @@ customValue       = *( qchar-no-AMP )
 ;------------------------------------------------------------------------------
 
 context         = "#" contextFragment
-contextFragment = 'Collection($ref)'
-                / '$ref'
-                / 'Collection(Edm.EntityType)'
-                / 'Collection(Edm.ComplexType)'
+contextFragment = "Collection($ref)"
+                / "$ref"
+                / "Collection(Edm.EntityType)"
+                / "Collection(Edm.ComplexType)"
                 / singletonEntity [ navigation *( containmentNavigation ) [ "/" qualifiedEntityTypeName ] ] [ selectList ]
                 / qualifiedTypeName [ selectList ]
-                / entitySet ( '/$deletedEntity' / '/$link' / '/$deletedLink' )
+                / entitySet ( "/$deletedEntity" / "/$link" / "/$deletedLink" )
                 / entitySet keyPredicate "/" contextPropertyPath [ selectList ]
-                / entitySet [ selectList ] [ '/$entity' / '/$delta' ]
+                / entitySet [ selectList ] [ "/$entity" / "/$delta" ]
                 
 entitySet = entitySetName *( containmentNavigation ) [ "/" qualifiedEntityTypeName ]
             
@@ -474,7 +474,7 @@ commonExpr = ( primitiveLiteral
 
 boolCommonExpr = commonExpr ; resulting in a Boolean
 
-rootExpr = '$root/' ( entitySetName keyPredicate / singletonEntity ) [ singleNavigationExpr ]
+rootExpr = "$root/" ( entitySetName keyPredicate / singletonEntity ) [ singleNavigationExpr ]
 
 firstMemberExpr = memberExpr
                 / inscopeVariableExpr [ "/" memberExpr ]
@@ -501,14 +501,14 @@ annotationExpr = annotation
                  / primitivePathExpr
                  ]
                  
-annotation          = AT [ namespace "." ] termName [ '#' annotationQualifier ]
+annotation          = AT [ namespace "." ] termName [ "#" annotationQualifier ]
 annotationQualifier = odataIdentifier                
                    
 inscopeVariableExpr  = implicitVariableExpr 
                      / parameterAlias
                      / lambdaVariableExpr ; only allowed inside a lambdaPredicateExpr
-implicitVariableExpr = '$it'              ; the current instance of the resource identified by the resource path
-                     / '$this'            ; the instance on which the query option is evaluated
+implicitVariableExpr = "$it"              ; the current instance of the resource identified by the resource path
+                     / "$this"            ; the instance on which the query option is evaluated
 lambdaVariableExpr   = odataIdentifier
 
 collectionNavigationExpr = [ "/" qualifiedEntityTypeName ]
@@ -743,9 +743,9 @@ value-separator = BWS COMMA BWS
 
 primitiveLiteralInJSON = stringInJSON
                        / numberInJSON
-                       / 'true' 
-                       / 'false'
-                       / 'null'
+                       / "true" 
+                       / "false"
+                       / "null"
 
 stringInJSON = quotation-mark *charInJSON quotation-mark
 charInJSON   = qchar-unescaped  
@@ -753,12 +753,12 @@ charInJSON   = qchar-unescaped
              / escape ( quotation-mark 
                       / escape
                       / ( "/" / "%2F" ) ; solidus         U+002F - literal form is allowed in the query part of a URL
-                      / 'b'             ; backspace       U+0008                
-                      / 'f'             ; form feed       U+000C
-                      / 'n'             ; line feed       U+000A
-                      / 'r'             ; carriage return U+000D
-                      / 't'             ; tab             U+0009
-                      / 'u' 4HEXDIG     ;                 U+XXXX
+                      / "b"             ; backspace       U+0008                
+                      / "f"             ; form feed       U+000C
+                      / "n"             ; line feed       U+000A
+                      / "r"             ; carriage return U+000D
+                      / "t"             ; tab             U+0009
+                      / "u" 4HEXDIG     ;                 U+XXXX
                       )
 
 qchar-JSON-special = SP / ":" / "{" / "}" / "[" / "]" ; some agents put these unencoded into the query part of a URL
@@ -782,7 +782,7 @@ singleQualifiedTypeName = qualifiedEntityTypeName
                         / primitiveTypeName 
                   
 qualifiedTypeName = singleQualifiedTypeName                  
-                  / 'Collection' OPEN singleQualifiedTypeName CLOSE
+                  / "Collection" OPEN singleQualifiedTypeName CLOSE
 
 qualifiedEntityTypeName     = namespace "." entityTypeName
 qualifiedComplexTypeName    = namespace "." complexTypeName
@@ -807,34 +807,34 @@ odataIdentifier             = identifierLeadingCharacter *127identifierCharacter
 identifierLeadingCharacter  = ALPHA / "_"         ; plus Unicode characters from the categories L or Nl
 identifierCharacter         = ALPHA / "_" / DIGIT ; plus Unicode characters from the categories L, Nl, Nd, Mn, Mc, Pc, or Cf
 
-primitiveTypeName = 'Edm.' ( 'Binary'
-                           / 'Boolean'
-                           / 'Byte'
-                           / 'Date' 
-                           / 'DateTimeOffset'
-                           / 'Decimal'
-                           / 'Double'
-                           / 'Duration' 
-                           / 'Guid' 
-                           / 'Int16'
-                           / 'Int32'
-                           / 'Int64'
-                           / 'SByte'
-                           / 'Single'
-                           / 'Stream'
-                           / 'String'
-                           / 'TimeOfDay'
+primitiveTypeName = "Edm." ( "Binary"
+                           / "Boolean"
+                           / "Byte"
+                           / "Date" 
+                           / "DateTimeOffset"
+                           / "Decimal"
+                           / "Double"
+                           / "Duration" 
+                           / "Guid" 
+                           / "Int16"
+                           / "Int32"
+                           / "Int64"
+                           / "SByte"
+                           / "Single"
+                           / "Stream"
+                           / "String"
+                           / "TimeOfDay"
                            / abstractSpatialTypeName [ concreteSpatialTypeName ] 
                            )
-abstractSpatialTypeName = 'Geography'
-                        / 'Geometry'
-concreteSpatialTypeName = 'Collection'
-                        / 'LineString'
-                        / 'MultiLineString'
-                        / 'MultiPoint'
-                        / 'MultiPolygon'
-                        / 'Point'
-                        / 'Polygon'
+abstractSpatialTypeName = "Geography"
+                        / "Geometry"
+concreteSpatialTypeName = "Collection"
+                        / "LineString"
+                        / "MultiLineString"
+                        / "MultiPoint"
+                        / "MultiPolygon"
+                        / "Point"
+                        / "Polygon"
 
 primitiveProperty       = primitiveKeyProperty / primitiveNonKeyProperty
 primitiveKeyProperty    = odataIdentifier
@@ -939,13 +939,13 @@ primitiveValue = booleanValue
                ; - any XML string for strings in Atom and CSDL documents
                ; - any JSON string for JSON documents 
 
-nullValue = 'null' 
+nullValue = "null" 
 
 ; base64url encoding according to http://tools.ietf.org/html/rfc4648#section-5                                             
 binary      = "binary" SQUOTE binaryValue SQUOTE
 binaryValue = *(4base64char) [ base64b16  / base64b8 ]
-base64b16   = 2base64char ( 'A' / 'E' / 'I' / 'M' / 'Q' / 'U' / 'Y' / 'c' / 'g' / 'k' / 'o' / 's' / 'w' / '0' / '4' / '8' )   [ "=" ]
-base64b8    = base64char ( 'A' / 'Q' / 'g' / 'w' ) [ "==" ]
+base64b16   = 2base64char ( "A" / "E" / "I" / "M" / "Q" / "U" / "Y" / "c" / "g" / "k" / "o" / "s" / "w" / "0" / "4" / "8" )   [ "=" ]
+base64b8    = base64char ( "A" / "Q" / "g" / "w" ) [ "==" ]
 base64char  = ALPHA / DIGIT / "-" / "_"
 
 booleanValue = "true" / "false"
@@ -953,7 +953,7 @@ booleanValue = "true" / "false"
 decimalValue = [ SIGN ] 1*DIGIT [ "." 1*DIGIT ] [ "e" [ SIGN ] 1*DIGIT ] / nanInfinity
 doubleValue  = decimalValue ; IEEE 754 binary64 floating-point number (15-17 decimal digits)
 singleValue  = decimalValue ; IEEE 754 binary32 floating-point number (6-9 decimal digits)
-nanInfinity  = 'NaN' / '-INF' / 'INF'
+nanInfinity  = "NaN" / "-INF" / "INF"
 
 guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG 
 
@@ -1103,7 +1103,7 @@ maxpagesizePreference = [ "odata." ] "maxpagesize" EQ-h oneToNine *DIGIT
 
 respondAsyncPreference = "respond-async"
 
-returnPreference = "return" EQ-h ( 'representation' / 'minimal' )
+returnPreference = "return" EQ-h ( "representation" / "minimal" )
 
 trackChangesPreference = [ "odata." ] "track-changes"
 
@@ -1112,7 +1112,7 @@ waitPreference = "wait" EQ-h 1*DIGIT
 ;parameter      = token [ EQ-h word ]
 ;word           = token / quoted-string
 ;token          = 1*tchar
-;tchar          = "!" / "#" / "$" / "%" / "&" / "'" / "*"
+;tchar          = "!" / "#" / "$" / "%" / "&" / """ / "*"
 ;               / "+" / "-" / "." / "^" / "_" / "`" / "|" / "~"
 ;               / DIGIT / ALPHA
 ;quoted-string  = DQUOTE *( qdtext / quoted-pair ) DQUOTE
@@ -1139,7 +1139,7 @@ EQ     = "="
 SIGN   = "+" / "%2B" / "-"
 SEMI   = ";" / "%3B"
 STAR   = "*" / "%2A"
-SQUOTE = "'" / "%27"
+SQUOTE = """ / "%27"
 
 OPEN  = "(" / "%28"
 CLOSE = ")" / "%29"
@@ -1206,19 +1206,19 @@ pct-encoded   = "%" HEXDIG HEXDIG
 unreserved    = ALPHA / DIGIT / "-" / "." / "_" / "~"
 ;reserved      = gen-delims / sub-delims
 ;gen-delims    = ":" / "/" / "?" / "#" / "[" / "]" / "@"
-;sub-delims    = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-sub-delims     =       "$" / "&" / "'" /                                     "=" / other-delims
+;sub-delims    = "!" / "$" / "&" / """ / "(" / ")" / "*" / "+" / "," / ";" / "="
+sub-delims     =       "$" / "&" / """ /                                     "=" / other-delims
 other-delims   = "!" /                   "(" / ")" / "*" / "+" / "," / ";"
 
 pchar-no-SQUOTE       = unreserved / pct-encoded-no-SQUOTE / other-delims / "$" / "&" / "=" / ":" / "@"
 pct-encoded-no-SQUOTE = "%" ( "0" / "1" /   "3" / "4" / "5" / "6" / "8" / "9" / A-to-F ) HEXDIG 
                       / "%" "2" ( "0" / "1" / "2" / "3" / "4" / "5" / "6" /   "8" / "9" / A-to-F )
 
-qchar-no-AMP              = unreserved / pct-encoded / other-delims / ":" / "@" / "/" / "?" / "$" / "'" / "="
-qchar-no-AMP-EQ           = unreserved / pct-encoded / other-delims / ":" / "@" / "/" / "?" / "$" / "'"
-qchar-no-AMP-EQ-AT-DOLLAR = unreserved / pct-encoded / other-delims / ":" /       "/" / "?" /       "'"
+qchar-no-AMP              = unreserved / pct-encoded / other-delims / ":" / "@" / "/" / "?" / "$" / """ / "="
+qchar-no-AMP-EQ           = unreserved / pct-encoded / other-delims / ":" / "@" / "/" / "?" / "$" / """
+qchar-no-AMP-EQ-AT-DOLLAR = unreserved / pct-encoded / other-delims / ":" /       "/" / "?" /       """
 
-qchar-unescaped       = unreserved / pct-encoded-unescaped / other-delims / ":" / "@" / "/" / "?" / "$" / "'" / "="
+qchar-unescaped       = unreserved / pct-encoded-unescaped / other-delims / ":" / "@" / "/" / "?" / "$" / """ / "="
 pct-encoded-unescaped = "%" ( "0" / "1" /   "3" / "4" /   "6" / "7" / "8" / "9" / A-to-F ) HEXDIG 
                       / "%" "2" ( "0" / "1" /   "3" / "4" / "5" / "6" / "7" / "8" / "9" / A-to-F ) 
                       / "%" "5" ( DIGIT / "A" / "B" /   "D" / "E" / "F" )
