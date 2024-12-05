@@ -6,6 +6,7 @@
     <RootNamespace>Microsoft.OData.Edm</RootNamespace>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <DefineConstants>$(DefineConstants);SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
@@ -18,6 +19,10 @@
   
   <ItemGroup>
     <None Remove="Microsoft.OData.Edm.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+	 <None Include="README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>

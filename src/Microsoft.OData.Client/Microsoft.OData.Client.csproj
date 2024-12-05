@@ -5,6 +5,7 @@
     <RootNamespace>Microsoft.OData.Client</RootNamespace>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <DefineConstants>$(DefineConstants);ODATA_CLIENT;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
+	<PackageReadmeFile>README.md</PackageReadmeFile>
    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
@@ -145,6 +146,10 @@
     <Content Include="Microsoft.OData.Client.Desktop.txt" />
     <Content Include="Microsoft.OData.Client.txt" />
   </ItemGroup>
+
+  <ItemGroup>
+	<None Include="README.md" Pack="true" PackagePath="\"/>
+   </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Shipped.txt" />
