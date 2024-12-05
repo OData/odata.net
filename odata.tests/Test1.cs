@@ -184,6 +184,8 @@
             var coreRulesText = File.ReadAllText(coreRulesPath);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(coreRulesText);
 
+            //// TODO if the ABNF is missing a trailing newline, the last rule will be dropped
+
             var stringBuilder = new StringBuilder();
             AbnfParser.Transcribers.RuleListTranscriber.Instance.Transcribe(cst, stringBuilder);
             File.WriteAllText(coreRulesPath, stringBuilder.ToString());
