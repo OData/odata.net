@@ -31,16 +31,18 @@
         [TestMethod]
         public void Generate()
         {
-            var start = 0x23;
-            var end = 0x7E;
+            var start = 0x3F;
+            var end = 0xFE;
 
             var builder = new StringBuilder();
             for (int i = start; i <= end; ++i)
             {
                 var className = $"x{i:X2}";
-                /*builder.AppendLine($"public static Parser<CharVal.Inner.{className}> {className} {{ get; }} =");
+                /*builder.AppendLine($"public static Parser<ProseVal.{className}> {className} {{ get; }} =");
+                builder.AppendLine($"\tfrom lessThan in x3CParser.Instance");
                 builder.AppendLine($"\tfrom value in {className}Parser.Instance");
-                builder.AppendLine($"\tselect new CharVal.Inner.{className}(value);");
+                builder.AppendLine($"\tfrom greaterThan in x3EParser.Instance");
+                builder.AppendLine($"\tselect new ProseVal.{className}(lessThan, value, greaterThan);");
                 builder.AppendLine();*/
 
                 builder.AppendLine($".Or({className})");

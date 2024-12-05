@@ -848,6 +848,482 @@
             public Core.x3E GreaterThan { get; }
         }
 
+        public sealed class x5D : ProseVal
+        {
+            public x5D(Core.x3C lessThan, Core.x5D value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x5D Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x5E : ProseVal
+        {
+            public x5E(Core.x3C lessThan, Core.x5E value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x5E Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x5F : ProseVal
+        {
+            public x5F(Core.x3C lessThan, Core.x5F value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x5F Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x60 : ProseVal
+        {
+            public x60(Core.x3C lessThan, Core.x60 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x60 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x61 : ProseVal
+        {
+            public x61(Core.x3C lessThan, Core.x61 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x61 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x62 : ProseVal
+        {
+            public x62(Core.x3C lessThan, Core.x62 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x62 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x63 : ProseVal
+        {
+            public x63(Core.x3C lessThan, Core.x63 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x63 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x64 : ProseVal
+        {
+            public x64(Core.x3C lessThan, Core.x64 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x64 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x65 : ProseVal
+        {
+            public x65(Core.x3C lessThan, Core.x65 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x65 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x66 : ProseVal
+        {
+            public x66(Core.x3C lessThan, Core.x66 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x66 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x67 : ProseVal
+        {
+            public x67(Core.x3C lessThan, Core.x67 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x67 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x68 : ProseVal
+        {
+            public x68(Core.x3C lessThan, Core.x68 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x68 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x69 : ProseVal
+        {
+            public x69(Core.x3C lessThan, Core.x69 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x69 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x6A : ProseVal
+        {
+            public x6A(Core.x3C lessThan, Core.x6A value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x6A Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x6B : ProseVal
+        {
+            public x6B(Core.x3C lessThan, Core.x6B value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x6B Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x6C : ProseVal
+        {
+            public x6C(Core.x3C lessThan, Core.x6C value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x6C Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x6D : ProseVal
+        {
+            public x6D(Core.x3C lessThan, Core.x6D value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x6D Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x6E : ProseVal
+        {
+            public x6E(Core.x3C lessThan, Core.x6E value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x6E Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x6F : ProseVal
+        {
+            public x6F(Core.x3C lessThan, Core.x6F value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x6F Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x70 : ProseVal
+        {
+            public x70(Core.x3C lessThan, Core.x70 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x70 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x71 : ProseVal
+        {
+            public x71(Core.x3C lessThan, Core.x71 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x71 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x72 : ProseVal
+        {
+            public x72(Core.x3C lessThan, Core.x72 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x72 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x73 : ProseVal
+        {
+            public x73(Core.x3C lessThan, Core.x73 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x73 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x74 : ProseVal
+        {
+            public x74(Core.x3C lessThan, Core.x74 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x74 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x75 : ProseVal
+        {
+            public x75(Core.x3C lessThan, Core.x75 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x75 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x76 : ProseVal
+        {
+            public x76(Core.x3C lessThan, Core.x76 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x76 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x77 : ProseVal
+        {
+            public x77(Core.x3C lessThan, Core.x77 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x77 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x78 : ProseVal
+        {
+            public x78(Core.x3C lessThan, Core.x78 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x78 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x79 : ProseVal
+        {
+            public x79(Core.x3C lessThan, Core.x79 value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x79 Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x7A : ProseVal
+        {
+            public x7A(Core.x3C lessThan, Core.x7A value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x7A Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x7B : ProseVal
+        {
+            public x7B(Core.x3C lessThan, Core.x7B value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x7B Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x7C : ProseVal
+        {
+            public x7C(Core.x3C lessThan, Core.x7C value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x7C Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x7D : ProseVal
+        {
+            public x7D(Core.x3C lessThan, Core.x7D value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x7D Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
+        public sealed class x7E : ProseVal
+        {
+            public x7E(Core.x3C lessThan, Core.x7E value, Core.x3E greaterThan)
+            {
+                LessThan = lessThan;
+                Value = value;
+                GreaterThan = greaterThan;
+            }
+
+            public Core.x3C LessThan { get; }
+            public Core.x7E Value { get; }
+            public Core.x3E GreaterThan { get; }
+        }
+
 
     }
 }

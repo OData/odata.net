@@ -21,5 +21,21 @@
         public static Parser<Element.CharVal> CharVal { get; } =
             from value in CharValParser.Instance
             select new Element.CharVal(value);
+
+        public static Parser<Element.NumVal> NumVal { get; } =
+            from value in NumValParser.Instance
+            select new Element.NumVal(value);
+
+        public static Parser<Element.ProseVal> ProseVal { get; } =
+            from value in ProseValParser.Instance
+            select new Element.ProseVal(value);
+
+        public static Parser<Element> Instance { get; } =
+            RuleName
+            .Or<Element>(Group)
+            .Or(Option)
+            .Or(CharVal)
+            .Or(NumVal)
+            .Or(ProseVal);
     }
 }
