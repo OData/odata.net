@@ -211,8 +211,16 @@
         [TestMethod]
         public void OdataRules()
         {
-            var odataRulesText = File.ReadAllText(@"C:\github\odata.net\odata\odata.abnf");
+            var odataRulesPath = @"C:\github\odata.net\odata\odata.abnf";
+            var odataRulesText = File.ReadAllText(odataRulesPath);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(odataRulesText);
+
+            var stringBuilder = new StringBuilder();
+            AbnfParser.Transcribers.RuleListTranscriber.Instance.Transcribe(cst, stringBuilder);
+            var transcribedText = stringBuilder.ToString();
+
+            File.WriteAllText(odataRulesPath, transcribedText);
+            Assert.AreEqual(odataRulesText, transcribedText);
         }
     }
 }
