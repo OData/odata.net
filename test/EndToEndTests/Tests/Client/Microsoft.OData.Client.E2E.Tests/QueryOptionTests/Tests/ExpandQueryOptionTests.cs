@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Reflection.PortableExecutable;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,7 +17,6 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         private readonly Uri _baseUri;
         private readonly Container _context;
         private readonly IEdmModel _model;
-        private const string IncludeAnnotation = "odata.include-annotations";
 
         public class TestsStartup : TestStartupBase
         {
@@ -60,36 +58,15 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         [MemberData(nameof(MimeTypesData))]
         public async Task ExpandWithTopQueryOptionTestAsync(string mimeType)
         {
-            // Arrange
-            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            var requestMessage = CreateRequestMessage("Products(5)?$expand=Details($top=3)", mimeType);
-
-            // Act
-            var responseMessage = await requestMessage.GetResponseAsync();
+            // Arrange & Act
+            var queryText = "Products(5)?$expand=Details($top=3)";
+            var entries = await QueryEntries(queryText, mimeType);
 
             // Assert
-            Assert.Equal(200, responseMessage.StatusCode);
-
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
-                using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model))
-                {
-                    var reader = messageReader.CreateODataResourceReader();
-                    var entries = new List<ODataResource>();
-                    while (reader.Read())
-                    {
-                        if (reader.State == ODataReaderState.ResourceEnd)
-                        {
-                            if (reader.Item is ODataResource odataResource)
-                            {
-                                entries.Add(odataResource);
-                            }
-                        }
-                    }
-
-                    var details = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
-                    Assert.Equal(3, details.Count);
-                }
+                var details = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
+                Assert.Equal(3, details.Count);
             }
         }
 
@@ -101,19 +78,13 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         [MemberData(nameof(MimeTypesData))]
         public async Task ExpandWithSkipQueryOptionTestAsync(string mimeType)
         {
-            // Arrange
-            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            var requestMessage = CreateRequestMessage("Products(5)?$expand=Details($skip=2)", mimeType);
-
-            // Act
-            var responseMessage = await requestMessage.GetResponseAsync();
+            // Arrange & Act
+            var queryText = "Products(5)?$expand=Details($skip=2)";
+            var entries = await QueryEntries(queryText, mimeType);
 
             // Assert
-            Assert.Equal(200, responseMessage.StatusCode);
-
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
-                var entries = await QueryEntries(responseMessage, readerSettings);
                 var details = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
                 Assert.Equal(3, details.Count);
             }
@@ -127,19 +98,13 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         [MemberData(nameof(MimeTypesData))]
         public async Task ExpandWithOrderByQueryOptionTestAsync(string mimeType)
         {
-            // Arrange
-            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            var requestMessage = CreateRequestMessage("Products(5)?$expand=Details($orderby=Description desc)", mimeType);
-
-            // Act
-            var responseMessage = await requestMessage.GetResponseAsync();
+            // Arrange & Act
+            var queryText = "Products(5)?$expand=Details($orderby=Description desc)";
+            var entries = await QueryEntries(queryText, mimeType);
 
             // Assert
-            Assert.Equal(200, responseMessage.StatusCode);
-
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
-                var entries = await QueryEntries(responseMessage, readerSettings);
                 var details = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
                 var productIDProperty = details.First().Properties.Single(p => p.Name == "ProductDetailID") as ODataProperty;
                 var descriptionProperty = details.First().Properties.Single(p => p.Name == "Description") as ODataProperty;
@@ -163,19 +128,13 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         [MemberData(nameof(MimeTypesData))]
         public async Task ExpandWithFilterQueryOptionTestAsync(string mimeType)
         {
-            // Arrange
-            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            var requestMessage = CreateRequestMessage("Products(5)?$expand=Details($filter=Description eq 'spicy snack')", mimeType);
-
-            // Act
-            var responseMessage = await requestMessage.GetResponseAsync();
+            // Arrange & Act
+            var queryText = "Products(5)?$expand=Details($filter=Description eq 'spicy snack')";
+            var entries = await QueryEntries(queryText, mimeType);
 
             // Assert
-            Assert.Equal(200, responseMessage.StatusCode);
-
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
-                var entries = await QueryEntries(responseMessage, readerSettings);
                 var details = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
                 var productIDProperty = details.First().Properties.Single(p => p.Name == "ProductDetailID") as ODataProperty;
                 var productNameProperty = details.First().Properties.Single(p => p.Name == "ProductName") as ODataProperty;
@@ -196,19 +155,14 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         [MemberData(nameof(MimeTypesData))]
         public async Task ExpandWithCountQueryOptionTestAsync(string mimeType)
         {
-            // Arrange
-            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            var requestMessage = CreateRequestMessage("Products(5)?$expand=Details($count=true)", mimeType);
-
-            // Act
-            var responseMessage = await requestMessage.GetResponseAsync();
+            // Arrange & Act
+            var queryText = "Products(5)?$expand=Details($count=true)";
+            var feed = await QueryInnerFeed(queryText, mimeType);
 
             // Assert
-            Assert.Equal(200, responseMessage.StatusCode);
-
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata) && !mimeType.Contains(MimeTypes.ApplicationAtomXml))
             {
-                var feed = QueryInnerFeed(responseMessage, readerSettings);
+                Assert.NotNull(feed);
                 Assert.Equal(5, feed.Count);
             }
         }
@@ -221,19 +175,13 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         [MemberData(nameof(MimeTypesData))]
         public async Task ExpandWithSearchQueryOptionTestAsync(string mimeType)
         {
-            // Arrange
-            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            var requestMessage = CreateRequestMessage("Products(5)?$expand=Details($search=(spicy OR suger) AND NOT \"0\" )", mimeType);
-
-            // Act
-            var responseMessage = await requestMessage.GetResponseAsync();
+            // Arrange & Act
+            var queryText = "Products(5)?$expand=Details($search=(spicy OR suger) AND NOT \"0\" )";
+            var entries = await QueryEntries(queryText, mimeType);
 
             // Assert
-            Assert.Equal(200, responseMessage.StatusCode);
-
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
-                var entries = await QueryEntries(responseMessage, readerSettings);
                 var details = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
 
                 Assert.Equal(2, details.Count);
@@ -248,19 +196,13 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         [MemberData(nameof(MimeTypesData))]
         public async Task ExpandWithRefQueryOptionTestAsync(string mimeType)
         {
-            // Arrange
-            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            var requestMessage = CreateRequestMessage("Products(5)?$expand=Details/$ref", mimeType);
-
-            // Act
-            var responseMessage = await requestMessage.GetResponseAsync();
+            // Arrange & Act
+            var queryText = "Products(5)?$expand=Details/$ref";
+            var entries = await QueryEntries(queryText, mimeType);
 
             // Assert
-            Assert.Equal(200, responseMessage.StatusCode);
-
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
-                var entries = await QueryEntries(responseMessage, readerSettings);
                 var details = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
 
                 Assert.Equal(5, details.Count);
@@ -276,19 +218,13 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         [MemberData(nameof(MimeTypesData))]
         public async Task ExpandWithNestedRefQueryOptionTestAsync(string mimeType)
         {
-            // Arrange
-            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            var requestMessage = CreateRequestMessage("Products(5)?$expand=Details/$ref($orderby=Description desc)", mimeType);
-
-            // Act
-            var responseMessage = await requestMessage.GetResponseAsync();
+            // Arrange & Act
+            var queryText = "Products(5)?$expand=Details/$ref($orderby=Description desc)";
+            var entries = await QueryEntries(queryText, mimeType);
 
             // Assert
-            Assert.Equal(200, responseMessage.StatusCode);
-
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
-                var entries = await QueryEntries(responseMessage, readerSettings);
                 var details = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
 
                 Assert.Equal(5, details.Count);
@@ -303,17 +239,13 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         [MemberData(nameof(MimeTypesData))]
         public async Task ExpandWithOrderBySkipTopSelectQueryOptionTestAsync(string mimeType)
         {
-            // Arrange
-            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            var requestMessage = CreateRequestMessage("Products(5)?$expand=Details($orderby=Description;$skip=2;$top=1)", mimeType);
-
-            // Act
-            var responseMessage = await requestMessage.GetResponseAsync();
+            // Arrange & Act
+            var queryText = "Products(5)?$expand=Details($orderby=Description;$skip=2;$top=1)";
+            var entries = await QueryEntries(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
-                var entries = await QueryEntries(responseMessage, readerSettings);
                 var details = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
                 Assert.Single(details);
 
@@ -331,18 +263,13 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         [MemberData(nameof(MimeTypesData))]
         public async Task ExpandWithNestedExpandQueryOptionTestAsync(string mimeType)
         {
-            // Arrange
-            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            var requestMessage = CreateRequestMessage("Products(5)?$expand=Details($expand=Reviews($filter=contains(Comment,'good');$select=Comment))", mimeType);
-
-            // Act
-            var responseMessage = await requestMessage.GetResponseAsync();
+            // Arrange & Act
+            var queryText = "Products(5)?$expand=Details($expand=Reviews($filter=contains(Comment,'good');$select=Comment))";
+            var entries = await QueryEntries(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
-                var entries = await QueryEntries(responseMessage, readerSettings);
-
                 Assert.Equal(5, entries.Count);
                 var reviews = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductReviews"));
                 Assert.Equal(2, reviews.Count);
@@ -361,21 +288,17 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         [MemberData(nameof(MimeTypesData))]
         public async Task ExpandWithNestedExpandRefQueryOptionTestAsync(string mimeType)
         {
-            // Arrange
-            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            var requestMessage = CreateRequestMessage("Products(5)?$expand=Details($expand=Reviews/$ref)", mimeType);
-
-            // Act
-            var responseMessage = await requestMessage.GetResponseAsync();
+            // Arrange & Act
+            var queryText = "Products(5)?$expand=Details($expand=Reviews/$ref)";
+            var entries = await QueryEntries(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
-                var entries = await QueryEntries(responseMessage, readerSettings);
                 Assert.Equal(7, entries.Count);
 
                 var reviews = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductReviews"));
-                Assert.Equal(3, reviews.Count);
+                Assert.Single(reviews);
             }
         }
 
@@ -387,19 +310,14 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         [MemberData(nameof(MimeTypesData))]
         public async Task ExpandWithNestedSearchQueryOptionTestAsync(string mimeType)
         {
-            // Arrange
-            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            var requestMessage = CreateRequestMessage("Products(5)?$expand=Details($expand=Reviews($filter=contains(Comment, 'good'));$search=snack \"Cheese-flavored\")", mimeType);
-
-            // Act
-            var responseMessage = await requestMessage.GetResponseAsync();
+            // Arrange & Act
+            var queryText = "Products(5)?$expand=Details($expand=Reviews($filter=contains(Comment, 'good'));$search=snack \"Cheese-flavored\")";
+            var entries = await QueryEntries(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
-                var entries = await QueryEntries(responseMessage, readerSettings);
-
-                Assert.Equal(4, entries.Count);
+                Assert.Equal(6, entries.Count);
 
                 var reviews = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductReviews"));
                 Assert.Equal(2, reviews.Count);
@@ -420,24 +338,23 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
             _context.Execute(actionUri, "POST");
         }
 
-        private TestHttpClientRequestMessage CreateRequestMessage(string queryText, string mimeType)
+        private async Task<List<ODataResource>> QueryEntries(string queryText, string mimeType)
         {
+            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
             var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
 
             var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
             requestMessage.SetHeader("Accept", mimeType);
 
-            return requestMessage;
-        }
+            var responseMessage = await requestMessage.GetResponseAsync();
 
-        private async Task<List<ODataResource>> QueryEntries(IODataResponseMessageAsync responseMessage, ODataMessageReaderSettings readerSettings)
-        {
+            Assert.Equal(200, responseMessage.StatusCode);
+
             var entries = new List<ODataResource>();
-
-            using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model))
+            if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
-                var reader = await messageReader.CreateODataResourceSetReaderAsync();
-
+                using var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model);
+                var reader = await messageReader.CreateODataResourceReaderAsync();
                 while (await reader.ReadAsync())
                 {
                     if (reader.State == ODataReaderState.ResourceEnd)
@@ -448,20 +365,29 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
                         }
                     }
                 }
-
                 Assert.Equal(ODataReaderState.Completed, reader.State);
             }
-           
+
             return entries;
         }
 
-        private ODataResourceSet QueryInnerFeed(IODataResponseMessageAsync responseMessage, ODataMessageReaderSettings readerSettings)
+        private async Task<ODataResourceSet?> QueryInnerFeed(string queryText, string mimeType)
         {
-            using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model))
-            {
-                var reader = messageReader.CreateODataResourceReader();
+            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
+            var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
 
-                while (reader.Read())
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+            requestMessage.SetHeader("Accept", mimeType);
+
+            var responseMessage = await requestMessage.GetResponseAsync();
+
+            Assert.Equal(200, responseMessage.StatusCode);
+
+            if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
+            {
+                using var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model);
+                var reader = await messageReader.CreateODataResourceReaderAsync();
+                while (await reader.ReadAsync())
                 {
                     if (reader.State == ODataReaderState.ResourceSetEnd && reader.Item is ODataResourceSet oDataResourceSet)
                     {
