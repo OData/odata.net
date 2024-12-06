@@ -1,6 +1,7 @@
 ﻿using AbnfParser.CstNodes;
 using Root;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace AbnfParserGenerator.CstNodesGenerator
@@ -55,6 +56,15 @@ namespace AbnfParserGenerator.CstNodesGenerator
         /// TODO null means singleton
         /// </summary>
         public ConstructorParameters? ConstructorParameters { get; set; }
+
+        public List<Property> Properties { get; set; } = new List<Property>();
+    }
+
+    public sealed class Property
+    {
+        public Class? Type { get; set; }
+
+        public StringBuilder Name { get; set; } = new StringBuilder();
     }
 
     public sealed class ConstructorParameters

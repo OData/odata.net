@@ -39,25 +39,30 @@ namespace AbnfParserGenerator.CstNodesGenerator
             {
                 public void Convert(Alternation alternation, Class @class)
                 {
+                    var name = 0;
                     var duElement = new Class();
+                    duElement.Name.Append($"_{name}"); //// TODO this is a really bad name
+                    ++name;
                     new ConcatenationToDuElement().Convert(alternation.Concatenation, duElement);
                     @class.NestedClasses.Add(duElement);
                     foreach (var inner in alternation.Inners)
                     {
                         duElement = new Class();
-                        new InnerToDuElement().Convert(inner, duElement);
+                        duElement.Name.Append($"_{name}");
+                        ++name;
+                        //// TODO new InnerToDuElement().Convert(inner, duElement);
                         @class.NestedClasses.Add(duElement);
                     }
                 }
 
-                private sealed class InnerToDuElement
+                /*private sealed class InnerToDuElement
                 {
                     public void Convert(Alternation.Inner inner, Class @class)
                     {
                         //// TODO you are skipping comments that could possibly be leveraged
                         new ConcatenationToDuElement().Convert(inner.Concatenation, @class);
                     }
-                }
+                }*/
 
                 private sealed class ConcatenationToDuElement
                 {
