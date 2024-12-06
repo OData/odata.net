@@ -31,6 +31,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
         private void SetPropertyTypes(Classes classes, Class @class)
         {
+            //// TODO the `property.Type` property doesn't really need to be a `class` probably, so you could actually just set this at the time you set `property.name` if you change it to `string`
             foreach (var property in @class.Properties)
             {
                 try
