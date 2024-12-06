@@ -2,6 +2,7 @@
 using AbnfParser.CstNodes.Core;
 using Root;
 using System.Collections.Generic;
+using System.Net.Mime;
 using System.Text;
 
 namespace AbnfParserGenerator.CstNodesGenerator
@@ -61,45 +62,52 @@ namespace AbnfParserGenerator.CstNodesGenerator
                 {
                     public void Convert(Concatenation concatenation, Class @class)
                     {
-                        var property = new Property();
-                        new RepetitionToProperty().Visit(concatenation.Repetition, property);
-                        @class.Properties.Add(property);
+                        new RepetitionToProperty().Visit(concatenation.Repetition, @class);
 
                         //// TODO finish this
                     }
 
-                    private sealed class RepetitionToProperty : Repetition.Visitor<Void, Property>
+                    private sealed class RepetitionToProperty : Repetition.Visitor<Void, Class>
                     {
-                        protected internal override Void Accept(Repetition.ElementOnly node, Property context)
+                        protected internal override Void Accept(Repetition.ElementOnly node, Class context)
                         {
                             new ElementToProperty().Visit(node.Element, context);
                             return default;
                         }
 
-                        protected internal override Void Accept(Repetition.RepeatAndElement node, Property context)
+                        protected internal override Void Accept(Repetition.RepeatAndElement node, Class context)
                         {
                             //// TODO you are skipping repetitions
                             new ElementToProperty().Visit(node.Element, context);
                             return default;
                         }
 
-                        private sealed class ElementToProperty : Element.Visitor<Void, Property>
+                        private sealed class ElementToProperty : Element.Visitor<Void, Class>
                         {
-                            protected internal override Void Accept(Element.RuleName node, Property context)
+                            protected internal override Void Accept(Element.RuleName node, Class context)
                             {
                                 //// TODO what about a concatenation that has two repetitions that have an element of the same type?
-                                new RuleNameToString().Convert(node.Value, context.Name);
+                                var property = new Property();
+                                new RuleNameToString().Convert(node.Value, property.Name);
+                                context.Properties.Add(property);
                                 return default;
                             }
 
-                            protected internal override Void Accept(Element.Group node, Property context)
+                            protected internal override Void Accept(Element.Group node, Class context)
                             {
-                                //// TODO finish this
                                 var className = "Group0"; //// TODO you need to increment this name
                                 var @class = new Class();
                                 @class.Name.Append(className);
                                 new GroupToDu().Convert(node.Value, @class);
-                                //// TODO add this class to the nested class in the parent class
+
+                                context.NestedClasses.Add(@class);
+                                
+                                var property = new Property();
+                                property.Name = @class.Name;
+                                property.Type = @class;
+
+                                context.Properties.Add(property);
+
                                 return default;
                             }
 
@@ -112,25 +120,25 @@ namespace AbnfParserGenerator.CstNodesGenerator
                                 }
                             }
 
-                            protected internal override Void Accept(Element.Option node, Property context)
+                            protected internal override Void Accept(Element.Option node, Class context)
                             {
                                 //// TODO finish this
                                 return default;
                             }
 
-                            protected internal override Void Accept(Element.CharVal node, Property context)
+                            protected internal override Void Accept(Element.CharVal node, Class context)
                             {
                                 //// TODO finish this
                                 return default;
                             }
 
-                            protected internal override Void Accept(Element.NumVal node, Property context)
+                            protected internal override Void Accept(Element.NumVal node, Class context)
                             {
                                 //// TODO finish this
                                 return default;
                             }
 
-                            protected internal override Void Accept(Element.ProseVal node, Property context)
+                            protected internal override Void Accept(Element.ProseVal node, Class context)
                             {
                                 //// TODO finish this
                                 return default;
