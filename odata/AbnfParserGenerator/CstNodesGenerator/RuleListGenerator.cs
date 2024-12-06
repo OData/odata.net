@@ -1,6 +1,9 @@
 ﻿using AbnfParser.CstNodes;
 using Root;
+using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
@@ -8,25 +11,48 @@ namespace AbnfParserGenerator.CstNodesGenerator
 {
     public sealed class RuleListGenerator
     {
-        public Void Generate(RuleList node, Classes builder)
+        public Root.Void Generate(RuleList node, Classes builder)
         {
             foreach (var inner in node.Inners)
             {
                 new InnerGenerator().Visit(inner, builder);
             }
 
+            foreach (var @class in builder.Value)
+            {
+                foreach (var nestedClass in @class.NestedClasses)
+                {
+                    SetPropertyTypes(builder, nestedClass);
+                }
+            }
+
             return default;
         }
 
-        public sealed class InnerGenerator : RuleList.Inner.Visitor<Void, Classes>
+        private void SetPropertyTypes(Classes classes, Class @class)
         {
-            protected internal override Void Accept(RuleList.Inner.RuleInner node, Classes context)
+            foreach (var property in @class.Properties)
+            {
+                try
+                {
+                    property.Type = classes.Value.Single(_ => string.Equals(property.Name.ToString(), _.Name.ToString(), System.StringComparison.OrdinalIgnoreCase)); //// TODO the `tostring` calls here are really bad
+                }
+                catch (InvalidOperationException e)
+                {
+                    throw new Exception("TODO can't find property type", e);
+                }
+            }
+        }
+
+        public sealed class InnerGenerator : RuleList.Inner.Visitor<Root.Void, Classes>
+        {
+            protected internal override Root.Void Accept(RuleList.Inner.RuleInner node, Classes context)
             {
                 new RuleGenerator().Generate(node.Rule, context);
                 return default;
             }
 
-            protected internal override Void Accept(RuleList.Inner.CommentInner node, Classes context)
+            protected internal override Root.Void Accept(RuleList.Inner.CommentInner node, Classes context)
             {
                 //// TODO preserve the comments as xmldoc?
                 return default;

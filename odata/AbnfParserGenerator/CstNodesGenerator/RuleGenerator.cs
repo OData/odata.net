@@ -90,27 +90,32 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                             protected internal override Void Accept(Element.Group node, Property context)
                             {
-                                throw new System.NotImplementedException();
+                                //// TODO finish this
+                                return default;
                             }
 
                             protected internal override Void Accept(Element.Option node, Property context)
                             {
-                                throw new System.NotImplementedException();
+                                //// TODO finish this
+                                return default;
                             }
 
                             protected internal override Void Accept(Element.CharVal node, Property context)
                             {
-                                throw new System.NotImplementedException();
+                                //// TODO finish this
+                                return default;
                             }
 
                             protected internal override Void Accept(Element.NumVal node, Property context)
                             {
-                                throw new System.NotImplementedException();
+                                //// TODO finish this
+                                return default;
                             }
 
                             protected internal override Void Accept(Element.ProseVal node, Property context)
                             {
-                                throw new System.NotImplementedException();
+                                //// TODO finish this
+                                return default;
                             }
                         }
                     }
