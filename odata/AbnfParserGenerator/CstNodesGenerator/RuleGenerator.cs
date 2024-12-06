@@ -52,268 +52,320 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
             private sealed class AlphaToString : Alpha.Visitor<Void, StringBuilder>
             {
-                protected internal override Void Accept(Alpha.x41 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x41 node, StringBuilder context)
                 {
                     //// TODO traverse all the way down
                     context.Append((char)0x41);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x42 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x42 node, StringBuilder context)
                 {
-                    //// TODO actually implement these
+                    context.Append((char)0x42);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x43 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x43 node, StringBuilder context)
                 {
+                    context.Append((char)0x43);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x44 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x44 node, StringBuilder context)
                 {
+                    context.Append((char)0x44);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x45 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x45 node, StringBuilder context)
                 {
+                    context.Append((char)0x45);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x46 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x46 node, StringBuilder context)
                 {
+                    context.Append((char)0x46);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x47 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x47 node, StringBuilder context)
                 {
+                    context.Append((char)0x47);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x48 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x48 node, StringBuilder context)
                 {
+                    context.Append((char)0x48);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x49 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x49 node, StringBuilder context)
                 {
+                    context.Append((char)0x49);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x4A node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x4A node, StringBuilder context)
                 {
+                    context.Append((char)0x4A);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x4B node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x4B node, StringBuilder context)
                 {
+                    context.Append((char)0x4B);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x4C node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x4C node, StringBuilder context)
                 {
+                    context.Append((char)0x4C);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x4D node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x4D node, StringBuilder context)
                 {
+                    context.Append((char)0x4D);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x4E node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x4E node, StringBuilder context)
                 {
+                    context.Append((char)0x4E);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x4F node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x4F node, StringBuilder context)
                 {
+                    context.Append((char)0x4F);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x50 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x50 node, StringBuilder context)
                 {
+                    context.Append((char)0x50);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x51 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x51 node, StringBuilder context)
                 {
+                    context.Append((char)0x51);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x52 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x52 node, StringBuilder context)
                 {
+                    context.Append((char)0x52);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x53 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x53 node, StringBuilder context)
                 {
+                    context.Append((char)0x53);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x54 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x54 node, StringBuilder context)
                 {
+                    context.Append((char)0x54);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x55 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x55 node, StringBuilder context)
                 {
+                    context.Append((char)0x55);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x56 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x56 node, StringBuilder context)
                 {
+                    context.Append((char)0x56);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x57 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x57 node, StringBuilder context)
                 {
+                    context.Append((char)0x57);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x58 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x58 node, StringBuilder context)
                 {
+                    context.Append((char)0x58);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x59 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x59 node, StringBuilder context)
                 {
+                    context.Append((char)0x59);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x5A node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x5A node, StringBuilder context)
                 {
+                    context.Append((char)0x5A);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x61 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x61 node, StringBuilder context)
                 {
+                    context.Append((char)0x61);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x62 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x62 node, StringBuilder context)
                 {
+                    context.Append((char)0x62);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x63 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x63 node, StringBuilder context)
                 {
+                    context.Append((char)0x63);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x64 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x64 node, StringBuilder context)
                 {
+                    context.Append((char)0x64);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x65 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x65 node, StringBuilder context)
                 {
+                    context.Append((char)0x65);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x66 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x66 node, StringBuilder context)
                 {
+                    context.Append((char)0x66);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x67 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x67 node, StringBuilder context)
                 {
+                    context.Append((char)0x67);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x68 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x68 node, StringBuilder context)
                 {
+                    context.Append((char)0x68);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x69 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x69 node, StringBuilder context)
                 {
+                    context.Append((char)0x69);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x6A node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x6A node, StringBuilder context)
                 {
+                    context.Append((char)0x6A);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x6B node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x6B node, StringBuilder context)
                 {
+                    context.Append((char)0x6B);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x6C node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x6C node, StringBuilder context)
                 {
+                    context.Append((char)0x6C);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x6D node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x6D node, StringBuilder context)
                 {
+                    context.Append((char)0x6D);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x6E node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x6E node, StringBuilder context)
                 {
+                    context.Append((char)0x6E);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x6F node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x6F node, StringBuilder context)
                 {
+                    context.Append((char)0x6F);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x70 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x70 node, StringBuilder context)
                 {
+                    context.Append((char)0x70);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x71 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x71 node, StringBuilder context)
                 {
+                    context.Append((char)0x71);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x72 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x72 node, StringBuilder context)
                 {
+                    context.Append((char)0x72);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x73 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x73 node, StringBuilder context)
                 {
+                    context.Append((char)0x73);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x74 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x74 node, StringBuilder context)
                 {
+                    context.Append((char)0x74);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x75 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x75 node, StringBuilder context)
                 {
+                    context.Append((char)0x75);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x76 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x76 node, StringBuilder context)
                 {
+                    context.Append((char)0x76);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x77 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x77 node, StringBuilder context)
                 {
+                    context.Append((char)0x77);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x78 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x78 node, StringBuilder context)
                 {
+                    context.Append((char)0x78);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x79 node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x79 node, StringBuilder context)
                 {
+                    context.Append((char)0x79);
                     return default;
                 }
 
-                protected internal override Void Accept(Alpha.x7A node, StringBuilder context)
+                protected internal sealed override Void Accept(Alpha.x7A node, StringBuilder context)
                 {
+                    context.Append((char)0x7A);
                     return default;
                 }
+
+
             }
         }
     }

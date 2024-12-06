@@ -225,6 +225,33 @@
         }
 
         [TestMethod]
+        public void Helper()
+        {
+            var ranges = new[]
+            {
+                (0x41, 0x5A),
+                (0x61, 0x7A),
+            };
+
+            var builder = new StringBuilder();
+            foreach (var range in ranges)
+            {
+                for (int i = range.Item1; i <= range.Item2; ++i)
+                {
+                    var className = $"x{i:X2}";
+                    builder.AppendLine($"protected internal sealed override Void Accept(Alpha.{className} node, StringBuilder context)");
+                    builder.AppendLine("{");
+                    builder.AppendLine($"context.Append((char)0{className});");
+                    builder.AppendLine("return default;");
+                    builder.AppendLine("}");
+                    builder.AppendLine();
+                }
+            }
+
+            File.WriteAllText(@"C:\Users\gdebruin\code.txt", builder.ToString());
+        }
+
+        [TestMethod]
         public void CodeGenerator()
         {
             var coreRulesPath = @"C:\github\odata.net\odata\AbnfParser\core.abnf";
