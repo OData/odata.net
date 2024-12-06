@@ -148,8 +148,8 @@
   </ItemGroup>
 
   <ItemGroup>
-	<None Include="README.md" Pack="true" PackagePath="\"/>
-   </ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\"/>
+  </ItemGroup>
 
   <ItemGroup>
     <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Shipped.txt" />
