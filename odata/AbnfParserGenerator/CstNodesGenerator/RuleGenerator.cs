@@ -47,15 +47,25 @@ namespace AbnfParserGenerator.CstNodesGenerator
                     @class.NestedClasses.Add(duElement);
                     foreach (var inner in alternation.Inners)
                     {
+                        //// TODO probably this loop body should go in `innertoduelement`?
                         duElement = new Class();
                         duElement.Name.Append($"_{name}");
                         ++name;
-                        //// TODO finish this
+                        new InnerToDuElement().Convert(inner, duElement);
                         duElement.BaseClass = @class;
                         @class.NestedClasses.Add(duElement);
                     }
 
                     //// TODO add visitor
+                }
+
+                private sealed class InnerToDuElement
+                {
+                    public void Convert(Alternation.Inner inner, Class @class)
+                    {
+                        //// TODO you are skipping comments
+                        new ConcatenationToDuElement().Convert(inner.Concatenation, @class);
+                    }
                 }
 
                 private sealed class ConcatenationToDuElement
