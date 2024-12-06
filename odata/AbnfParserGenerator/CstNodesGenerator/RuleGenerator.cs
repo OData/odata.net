@@ -122,8 +122,29 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                             protected internal override Void Accept(Element.Option node, Class context)
                             {
-                                //// TODO finish this
+                                var className = "_Option0"; //// TODO you need to increment this name
+                                var @class = new Class();
+                                @class.Name.Append(className);
+                                new OptionToDu().Convert(node.Value, @class);
+
+                                context.NestedClasses.Add(@class);
+
+                                var property = new Property();
+                                property.Name = @class.Name;
+                                property.Type = @class;
+
+                                context.Properties.Add(property);
+
                                 return default;
+                            }
+
+                            private sealed class OptionToDu
+                            {
+                                public void Convert(Option option, Class @class)
+                                {
+                                    //// TODO you are skipping comments
+                                    new AlternationToDiscriminatedUnion().Convert(option.Alternation, @class);
+                                }
                             }
 
                             protected internal override Void Accept(Element.CharVal node, Class context)
