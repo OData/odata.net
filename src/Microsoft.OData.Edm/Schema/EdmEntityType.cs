@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Microsoft.OData.Edm
 {
@@ -19,7 +20,7 @@ namespace Microsoft.OData.Edm
         private readonly string name;
         private readonly string fullName;
         private readonly bool hasStream;
-        private List<IEdmStructuralProperty> declaredKey;
+        private List<IEdmPropertyRef> declaredKey;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmEntityType"/> class.
@@ -81,7 +82,12 @@ namespace Microsoft.OData.Edm
         /// </summary>
         public virtual IEnumerable<IEdmStructuralProperty> DeclaredKey
         {
-            get { return this.declaredKey; }
+            get { return this.declaredKey?.Select(k => k.ReferencedProperty); }
+        }
+
+        public virtual IEnumerable<IEdmPropertyRef> DeclaredKeyRef
+        {
+            get => this.declaredKey;
         }
 
         /// <summary>
@@ -133,6 +139,24 @@ namespace Microsoft.OData.Edm
             get { return hasStream || (this.BaseType != null && this.BaseEntityType().HasStream); }
         }
 
+        public void AddKeys(params IEdmPropertyRef[] keys)
+            => this.AddKeys((IEnumerable<IEdmPropertyRef>)keys);
+
+        public void AddKeys(IEnumerable<IEdmPropertyRef> keys)
+        {
+            EdmUtil.CheckArgumentNull(keys, "keys");
+
+            foreach (IEdmPropertyRef key in keys)
+            {
+                if (this.declaredKey == null)
+                {
+                    this.declaredKey = new List<IEdmPropertyRef>();
+                }
+
+                this.declaredKey.Add(key);
+            }
+        }
+
         /// <summary>
         /// Adds the <paramref name="keyProperties"/> to the key of this entity type.
         /// </summary>
@@ -148,17 +172,7 @@ namespace Microsoft.OData.Edm
         /// <param name="keyProperties">The key properties.</param>
         public void AddKeys(IEnumerable<IEdmStructuralProperty> keyProperties)
         {
-            EdmUtil.CheckArgumentNull(keyProperties, "keyProperties");
-
-            foreach (IEdmStructuralProperty property in keyProperties)
-            {
-                if (this.declaredKey == null)
-                {
-                    this.declaredKey = new List<IEdmStructuralProperty>();
-                }
-
-                this.declaredKey.Add(property);
-            }
+            this.AddKeys(keyProperties?.Select(key => new EdmPropertyRef(key)));
         }
 
         /// <summary>

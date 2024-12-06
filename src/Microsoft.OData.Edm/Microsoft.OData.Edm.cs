@@ -36,6 +36,7 @@ namespace Microsoft.OData.Edm
         internal const string ValueWriter_NonSerializableValue = "ValueWriter_NonSerializableValue";
         internal const string ValueHasAlreadyBeenSet = "ValueHasAlreadyBeenSet";
         internal const string PathSegmentMustNotContainSlash = "PathSegmentMustNotContainSlash";
+        internal const string PropertyPathMustEndingWithCorrectPropertyName = "PropertyPathMustEndingWithCorrectPropertyName";
         internal const string Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType = "Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType";
         internal const string EdmType_UnexpectedEdmType = "EdmType_UnexpectedEdmType";
         internal const string NavigationPropertyBinding_PathIsNotValid = "NavigationPropertyBinding_PathIsNotValid";
@@ -306,6 +307,7 @@ namespace Microsoft.OData.Edm
         internal const string Bad_UnresolvedParameter = "Bad_UnresolvedParameter";
         internal const string Bad_UnresolvedReturn = "Bad_UnresolvedReturn";
         internal const string Bad_UnresolvedLabeledElement = "Bad_UnresolvedLabeledElement";
+        internal const string Bad_UnresolvedPropertyRef = "Bad_UnresolvedPropertyRef";
         internal const string Bad_CyclicEntity = "Bad_CyclicEntity";
         internal const string Bad_CyclicComplex = "Bad_CyclicComplex";
         internal const string Bad_CyclicEntityContainer = "Bad_CyclicEntityContainer";

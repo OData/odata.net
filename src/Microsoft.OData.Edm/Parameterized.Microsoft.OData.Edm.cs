@@ -149,6 +149,14 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "Property Path '{0}' is not ended with '{1}'."
+        /// </summary>
+        internal static string PropertyPathMustEndingWithCorrectPropertyName(object p0, object p1)
+        {
+            return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.PropertyPathMustEndingWithCorrectPropertyName, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "The number of dependent properties must match the number of key properties on the principal entity type. '{0}' principal properties were provided, but {1} dependent properties were provided."
         /// </summary>
         internal static string Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType(object p0, object p1)
@@ -2456,6 +2464,14 @@ namespace Microsoft.OData.Edm {
         internal static string Bad_UnresolvedLabeledElement(object p0)
         {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.Bad_UnresolvedLabeledElement, p0);
+        }
+
+        /// <summary>
+        /// A string like "The property ref on type '{0}' with name '{1}' and alias '{2}' could not be resolved."
+        /// </summary>
+        internal static string Bad_UnresolvedPropertyRef(object p0, object p1, object p2)
+        {
+            return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.Bad_UnresolvedPropertyRef, p0, p1, p2);
         }
 
         /// <summary>
