@@ -1,5 +1,6 @@
 ﻿using AbnfParser.CstNodes;
 using Root;
+using System.Collections.Generic;
 using System.Text;
 
 namespace AbnfParserGenerator.CstNodesGenerator
@@ -30,5 +31,34 @@ namespace AbnfParserGenerator.CstNodesGenerator
                 return default;
             }
         }
+    }
+
+    public sealed class Classes
+    {
+        public List<Class> Value { get; set; } = new List<Class>();
+    }
+
+    public sealed class Class
+    {
+        public StringBuilder Name { get; set; } = new StringBuilder();
+
+        /// <summary>
+        /// TODO true -> abstract, false -> sealed, null -> neither
+        /// </summary>
+        public bool? IsAbstract { get; set; }
+
+        public Class? BaseClass { get; set; }
+
+        public List<Class> NestedClasses { get; set; } = new List<Class>();
+
+        /// <summary>
+        /// TODO null means singleton
+        /// </summary>
+        public ConstructorParameters? ConstructorParameters { get; set; }
+    }
+
+    public sealed class ConstructorParameters
+    {
+        public List<(Class type, string Name)> Value { get; set; } = new List<(Class type, string Name)>();
     }
 }

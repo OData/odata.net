@@ -12,11 +12,82 @@ namespace AbnfParserGenerator.CstNodesGenerator
         {
             //// TODO do a second attempt at implementing this once you've got this roughly fleshed out
             //// TODO singletons everywhere
+            
             var ruleNameBuilder = new StringBuilder();
             new RuleNameToString().Convert(node.RuleName, ruleNameBuilder);
-            var @class = new Class(ruleNameBuilder.ToString());
+            var @class = new Class();
+            @class.Name = ruleNameBuilder;
+
+            //// TODO skipping over node.DefinedAs means we are potentially skipping comments, if we care about that...
+
+            new ElementsToDiscriminatedUnion().Convert(node.Elements, @class);
+
+            //// TODO finish the `rule` implementation here
+
             builder.Value.Add(@class);
             return default;
+        }
+
+        private sealed class ElementsToDiscriminatedUnion
+        {
+            public void Convert(Elements elements, Class @class)
+            {
+                new AlternationToDiscriminatedUnion().Convert(elements.Alternation, @class);
+            }
+
+            private sealed class AlternationToDiscriminatedUnion
+            {
+                public void Convert(Alternation alternation, Class @class)
+                {
+                    var duElement = new Class();
+                    new ConcatenationToDuElement().Convert(alternation.Concatenation, duElement);
+                    @class.NestedClasses.Add(duElement);
+                    foreach (var inner in alternation.Inners)
+                    {
+                        duElement = new Class();
+                        new InnerToDuElement().Convert(inner, duElement);
+                        @class.NestedClasses.Add(duElement);
+                    }
+                }
+
+                private sealed class InnerToDuElement
+                {
+                    public void Convert(Alternation.Inner inner, Class @class)
+                    {
+                        //// TODO you are skipping comments that could possibly be leveraged
+                        new ConcatenationToDuElement().Convert(inner.Concatenation, @class);
+                    }
+                }
+
+                private sealed class ConcatenationToDuElement
+                {
+                    public void Convert(Concatenation concatenation, Class @class)
+                    {
+                        new RepetitionToDuElementNameEtAl().Convert(concatenation.Repetition, @class);
+                        foreach (var inner in concatenation.Inners)
+                        {
+                            new InnerToDuElement().Convert(inner, @class);
+                        }
+                    }
+
+                    private sealed class InnerToDuElement
+                    {
+                        public void Convert(Concatenation.Inner inner, Class @class)
+                        {
+                            //// TODO you are skipping comments here
+                            new RepetitionToDuElementNameEtAl().Convert(inner.Repetition, @class);
+                        }
+                    }
+
+                    private sealed class RepetitionToDuElementNameEtAl
+                    {
+                        public void Convert(Repetition repetition, Class @class)
+                        {
+                            //// TODO
+                        }
+                    }
+                }
+            }
         }
 
         private sealed class RuleNameToString
@@ -431,43 +502,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                     context.Append((char)0x7A);
                     return default;
                 }
-
-
             }
         }
-    }
-
-    public sealed class Classes
-    {
-        public List<Class> Value { get; set; } = new List<Class>();
-    }
-
-    public sealed class Class
-    {
-        public Class(string name)
-        {
-            this.Name = name;
-        }
-
-        public string Name { get; }
-
-        /// <summary>
-        /// TODO true -> abstract, false -> sealed, null -> neither
-        /// </summary>
-        public bool? IsAbstract { get; set; }
-
-        public Class? BaseClass { get; set; }
-
-        public List<Class>? NestedClasses { get; set; } = new List<Class>();
-
-        /// <summary>
-        /// TODO null means singleton
-        /// </summary>
-        public ConstructorParameters? ConstructorParameters { get; set; }
-    }
-
-    public sealed class ConstructorParameters
-    {
-        public List<(Class type, string Name)>? Value { get; set; }
     }
 }
