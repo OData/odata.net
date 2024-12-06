@@ -10,6 +10,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
     {
         public Void Generate(Rule node, Classes builder)
         {
+            //// TODO do a second attempt at implementing this once you've got this roughly fleshed out
             //// TODO singletons everywhere
             var ruleNameBuilder = new StringBuilder();
             new RuleNameToString().Convert(node.RuleName, ruleNameBuilder);
