@@ -95,7 +95,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                             protected internal override Void Accept(Element.Group node, Class context)
                             {
-                                var className = "Group0"; //// TODO you need to increment this name
+                                var className = "_Group0"; //// TODO you need to increment this name
                                 var @class = new Class();
                                 @class.Name.Append(className);
                                 new GroupToDu().Convert(node.Value, @class);
