@@ -256,7 +256,10 @@
         {
             var coreRulesPath = @"C:\github\odata.net\odata\AbnfParser\core.abnf";
             var coreRulesText = File.ReadAllText(coreRulesPath);
-            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(coreRulesText);
+            var abnfRulesPath = @"C:\github\odata.net\odata\AbnfParser\abnf.abnf";
+            var abnfRulesText = File.ReadAllText(abnfRulesPath);
+            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
+            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
 
             var classes = new Classes();
             new RuleListGenerator().Generate(cst, classes);
