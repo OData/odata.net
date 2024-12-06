@@ -96,6 +96,6 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
     public sealed class ConstructorParameters
     {
-        public List<(Class type, string Name)> Value { get; set; } = new List<(Class type, string Name)>();
+        public List<(Class Type, string Name)> Value { get; set; } = new List<(Class Type, string Name)>();
     }
 }

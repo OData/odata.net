@@ -263,6 +263,129 @@
 
             var classes = new Classes();
             new RuleListGenerator().Generate(cst, classes);
+
+            var builder = new StringBuilder();
+            new ClassTranscriber().Transcribe(classes.Value[16], builder, "  ");
+            var csharp = builder.ToString();
+        }
+
+        private sealed class ClassTranscriber
+        {
+            private sealed class Builder
+            {
+                private readonly StringBuilder builder;
+                private readonly string indent;
+                private string currentIndent;
+
+                public Builder(StringBuilder builder, string indent)
+                {
+                    this.builder = builder;
+                    this.indent = indent;
+
+                    this.currentIndent = string.Empty;
+                }
+
+                public Builder Append(string value)
+                {
+                    this.builder.Append(this.currentIndent).Append(value);
+                    return this;
+                }
+
+                public Builder AppendLine()
+                {
+                    this.builder.AppendLine();
+                    return this;
+                }
+
+                public Builder AppendLine(string value)
+                {
+                    this.builder.Append(this.currentIndent).AppendLine(value);
+                    return this;
+                }
+
+                public Builder AppendJoin(string separator, IEnumerable<string> values)
+                {
+                    this.builder.Append(this.currentIndent).AppendJoin(separator, values);
+                    return this;
+                }
+
+                public Builder Indent()
+                {
+                    this.currentIndent += this.indent;
+                    return this;
+                }
+
+                public Builder Unindent()
+                {
+                    this.currentIndent = this.currentIndent.Substring(this.indent.Length);
+                    return this;
+                }
+            }
+
+            public void Transcribe(Class @class, StringBuilder builder, string indent)
+            {
+                Transcribe(@class, new Builder(builder, indent));
+            }
+
+            private void Transcribe(Class @class, Builder builder)
+            {
+                builder.Append("public ");
+                if (@class.IsAbstract != null)
+                {
+                    if (@class.IsAbstract.Value)
+                    {
+                        builder.Append("abstract ");
+                    }
+                    else
+                    {
+                        builder.Append("sealed ");
+                    }
+                }
+                
+                builder.Append($"class {@class.Name}");
+                var baseClass = @class.BaseClass;
+                if (baseClass != null)
+                {
+                    builder.Append($" : {baseClass.Name}");
+                }
+
+                builder.AppendLine();
+                builder.AppendLine("{");
+                builder.Indent();
+                var constructorParameters = @class.ConstructorParameters;
+                if (constructorParameters != null)
+                {
+                    builder.Append($"public {@class.Name}(");
+                    builder.AppendJoin(
+                        ",", 
+                        constructorParameters
+                            .Value
+                            .Select(constructorParameter => $"{constructorParameter.Type} {constructorParameter.Name}"));
+                    builder.AppendLine(")");
+                    builder.AppendLine("{");
+                    //// TODO set values
+                    builder.AppendLine("}");
+                }
+
+                foreach (var property in @class.Properties)
+                {
+                    if (property.Type == null)
+                    {
+                        /// TODO throw new Exception("TODO");
+                    }
+
+                    //// TODO null propogation
+                    builder.AppendLine($"public {property.Type?.Name} {property.Name.ToString()} {{ get; }}");
+                }
+
+                foreach (var nestedClass in @class.NestedClasses)
+                {
+                    new ClassTranscriber().Transcribe(nestedClass, builder);
+                }
+
+                builder.Unindent();
+                builder.AppendLine("}");
+            }
         }
     }
 }

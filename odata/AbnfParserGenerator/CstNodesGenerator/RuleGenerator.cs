@@ -38,9 +38,12 @@ namespace AbnfParserGenerator.CstNodesGenerator
             {
                 public void Convert(Alternation alternation, Class @class)
                 {
+                    @class.IsAbstract = true; //// TODO is this the right place to set this?
+
                     var name = 0;
                     var duElement = new Class();
                     duElement.Name.Append($"_{name}"); //// TODO this is a really bad name
+                    duElement.IsAbstract = false;
                     ++name;
                     new ConcatenationToDuElement().Convert(alternation.Concatenation, duElement);
                     duElement.BaseClass = @class;
@@ -50,6 +53,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                         //// TODO probably this loop body should go in `innertoduelement`?
                         duElement = new Class();
                         duElement.Name.Append($"_{name}");
+                        duElement.IsAbstract = false;
                         ++name;
                         new InnerToDuElement().Convert(inner, duElement);
                         duElement.BaseClass = @class;
