@@ -63,8 +63,19 @@ namespace AbnfParserGenerator.CstNodesGenerator
                     public void Convert(Concatenation concatenation, Class @class)
                     {
                         new RepetitionToProperty().Visit(concatenation.Repetition, @class);
+                        foreach (var inner in concatenation.Inners)
+                        {
+                            new InnerToProperty().Convert(inner, @class);
+                        }
+                    }
 
-                        //// TODO finish this
+                    private sealed class InnerToProperty
+                    {
+                        public void Convert(Concatenation.Inner inner, Class @class)
+                        {
+                            //// TODO you are skipping comments
+                            new RepetitionToProperty().Visit(inner.Repetition, @class);
+                        }
                     }
 
                     private sealed class RepetitionToProperty : Repetition.Visitor<Void, Class>
