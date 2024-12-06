@@ -287,25 +287,25 @@
 
                 public Builder Append(string value)
                 {
-                    this.builder.Append(this.currentIndent).Append(value);
+                    this.builder.Append(value);
                     return this;
                 }
 
                 public Builder AppendLine()
                 {
-                    this.builder.AppendLine();
+                    this.builder.AppendLine().Append(this.currentIndent);
                     return this;
                 }
 
                 public Builder AppendLine(string value)
                 {
-                    this.builder.Append(this.currentIndent).AppendLine(value);
+                    this.builder.AppendLine(value).Append(this.currentIndent);
                     return this;
                 }
 
                 public Builder AppendJoin(string separator, IEnumerable<string> values)
                 {
-                    this.builder.Append(this.currentIndent).AppendJoin(separator, values);
+                    this.builder.AppendJoin(separator, values);
                     return this;
                 }
 
@@ -350,8 +350,8 @@
                 }
 
                 builder.AppendLine();
-                builder.AppendLine("{");
                 builder.Indent();
+                builder.AppendLine("{");
                 var constructorParameters = @class.ConstructorParameters;
                 if (constructorParameters != null)
                 {
