@@ -20,13 +20,20 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
             foreach (var @class in builder.Value)
             {
-                foreach (var nestedClass in @class.NestedClasses)
-                {
-                    SetPropertyTypes(builder, nestedClass);
-                }
+                TraverseClasses(builder, @class);
             }
 
             return default;
+        }
+
+        private void TraverseClasses(Classes classes, Class @class)
+        {
+            SetPropertyTypes(classes, @class);
+
+            foreach (var nestedClass in @class.NestedClasses)
+            {
+                TraverseClasses(classes, nestedClass);
+            }
         }
 
         private void SetPropertyTypes(Classes classes, Class @class)
@@ -34,13 +41,18 @@ namespace AbnfParserGenerator.CstNodesGenerator
             //// TODO the `property.Type` property doesn't really need to be a `class` probably, so you could actually just set this at the time you set `property.name` if you change it to `string`
             foreach (var property in @class.Properties)
             {
+                if (property.Type != null)
+                {
+                    continue;
+                }
+
                 try
                 {
                     property.Type = classes.Value.Single(_ => string.Equals(property.Name.ToString(), _.Name.ToString(), System.StringComparison.OrdinalIgnoreCase)); //// TODO the `tostring` calls here are really bad
                 }
                 catch (InvalidOperationException e)
                 {
-                    //// TODO throw new Exception("TODO can't find property type", e);
+                    throw new Exception("TODO can't find property type", e);
                 }
             }
         }
