@@ -41,11 +41,78 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                 protected internal override Void Accept(RuleName.Inner.DigitInner node, StringBuilder context)
                 {
+                    new DigitToString().Visit(node.Digit, context);
                     return default;
                 }
 
                 protected internal override Void Accept(RuleName.Inner.DashInner node, StringBuilder context)
                 {
+                    //// TODO traverse all the way down the sub-nodes
+                    context.Append((char)0x2D);
+                    return default;
+                }
+            }
+
+            private sealed class DigitToString : Digit.Visitor<Void, StringBuilder>
+            {
+                protected internal override Void Accept(Digit.x30 node, StringBuilder context)
+                {
+                    //// TODO traverse all the way down the sub-nodes
+                    context.Append((char)0x30);
+                    return default;
+                }
+
+                protected internal override Void Accept(Digit.x31 node, StringBuilder context)
+                {
+                    context.Append((char)0x31);
+                    return default;
+                }
+
+                protected internal override Void Accept(Digit.x32 node, StringBuilder context)
+                {
+                    context.Append((char)0x32);
+                    return default;
+                }
+
+                protected internal override Void Accept(Digit.x33 node, StringBuilder context)
+                {
+                    context.Append((char)0x33);
+                    return default;
+                }
+
+                protected internal override Void Accept(Digit.x34 node, StringBuilder context)
+                {
+                    context.Append((char)0x34);
+                    return default;
+                }
+
+                protected internal override Void Accept(Digit.x35 node, StringBuilder context)
+                {
+                    context.Append((char)0x35);
+                    return default;
+                }
+
+                protected internal override Void Accept(Digit.x36 node, StringBuilder context)
+                {
+                    context.Append((char)0x36);
+                    return default;
+                }
+
+                protected internal override Void Accept(Digit.x37 node, StringBuilder context)
+                {
+                    context.Append((char)0x37);
+                    return default;
+                }
+
+                protected internal override Void Accept(Digit.x38 node, StringBuilder context)
+                {
+                    context.Append((char)0x38);
+                    return default;
+                }
+
+                protected internal override Void Accept(Digit.x39 node, StringBuilder context)
+                {
+                    context.Append((char)0x39);
                     return default;
                 }
             }
@@ -54,7 +121,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
             {
                 protected internal sealed override Void Accept(Alpha.x41 node, StringBuilder context)
                 {
-                    //// TODO traverse all the way down
+                    //// TODO traverse all the way down the sub-nodes
                     context.Append((char)0x41);
                     return default;
                 }
