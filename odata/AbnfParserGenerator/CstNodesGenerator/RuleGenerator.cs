@@ -12,11 +12,9 @@ namespace AbnfParserGenerator.CstNodesGenerator
         {
             //// TODO do a second attempt at implementing this once you've got this roughly fleshed out
             //// TODO singletons everywhere
-            
-            var ruleNameBuilder = new StringBuilder();
-            new RuleNameToString().Convert(node.RuleName, ruleNameBuilder);
+
             var @class = new Class();
-            @class.Name = ruleNameBuilder;
+            new RuleNameToString().Convert(node.RuleName, @class.Name);
 
             //// TODO skipping over node.DefinedAs means we are potentially skipping comments, if we care about that...
 
@@ -50,45 +48,70 @@ namespace AbnfParserGenerator.CstNodesGenerator
                         duElement = new Class();
                         duElement.Name.Append($"_{name}");
                         ++name;
-                        //// TODO new InnerToDuElement().Convert(inner, duElement);
+                        //// TODO finish this
                         @class.NestedClasses.Add(duElement);
                     }
                 }
-
-                /*private sealed class InnerToDuElement
-                {
-                    public void Convert(Alternation.Inner inner, Class @class)
-                    {
-                        //// TODO you are skipping comments that could possibly be leveraged
-                        new ConcatenationToDuElement().Convert(inner.Concatenation, @class);
-                    }
-                }*/
 
                 private sealed class ConcatenationToDuElement
                 {
                     public void Convert(Concatenation concatenation, Class @class)
                     {
-                        new RepetitionToDuElementNameEtAl().Convert(concatenation.Repetition, @class);
-                        foreach (var inner in concatenation.Inners)
-                        {
-                            new InnerToDuElement().Convert(inner, @class);
-                        }
+                        var property = new Property();
+                        new RepetitionToProperty().Visit(concatenation.Repetition, property);
+                        @class.Properties.Add(property);
+
+                        //// TODO finish this
                     }
 
-                    private sealed class InnerToDuElement
+                    private sealed class RepetitionToProperty : Repetition.Visitor<Void, Property>
                     {
-                        public void Convert(Concatenation.Inner inner, Class @class)
+                        protected internal override Void Accept(Repetition.ElementOnly node, Property context)
                         {
-                            //// TODO you are skipping comments here
-                            new RepetitionToDuElementNameEtAl().Convert(inner.Repetition, @class);
+                            //// TODO new ElementToProperty().Visit(node.Element, context);
+                            return default;
                         }
-                    }
 
-                    private sealed class RepetitionToDuElementNameEtAl
-                    {
-                        public void Convert(Repetition repetition, Class @class)
+                        protected internal override Void Accept(Repetition.RepeatAndElement node, Property context)
                         {
-                            //// TODO
+                            //// TODO you are skipping repetitions
+                            //// TODO new ElementToProperty().Visit(node.Element, context);
+                            return default;
+                        }
+
+                        private sealed class ElementToProperty : Element.Visitor<Void, Property>
+                        {
+                            protected internal override Void Accept(Element.RuleName node, Property context)
+                            {
+                                //// TODO finish this
+                                new RuleNameToString().Convert(node.Value, context.Name);
+                                return default;
+                            }
+
+                            protected internal override Void Accept(Element.Group node, Property context)
+                            {
+                                throw new System.NotImplementedException();
+                            }
+
+                            protected internal override Void Accept(Element.Option node, Property context)
+                            {
+                                throw new System.NotImplementedException();
+                            }
+
+                            protected internal override Void Accept(Element.CharVal node, Property context)
+                            {
+                                throw new System.NotImplementedException();
+                            }
+
+                            protected internal override Void Accept(Element.NumVal node, Property context)
+                            {
+                                throw new System.NotImplementedException();
+                            }
+
+                            protected internal override Void Accept(Element.ProseVal node, Property context)
+                            {
+                                throw new System.NotImplementedException();
+                            }
                         }
                     }
                 }
