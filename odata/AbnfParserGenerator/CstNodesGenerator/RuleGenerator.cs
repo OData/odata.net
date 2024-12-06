@@ -68,14 +68,14 @@ namespace AbnfParserGenerator.CstNodesGenerator
                     {
                         protected internal override Void Accept(Repetition.ElementOnly node, Property context)
                         {
-                            //// TODO new ElementToProperty().Visit(node.Element, context);
+                            new ElementToProperty().Visit(node.Element, context);
                             return default;
                         }
 
                         protected internal override Void Accept(Repetition.RepeatAndElement node, Property context)
                         {
                             //// TODO you are skipping repetitions
-                            //// TODO new ElementToProperty().Visit(node.Element, context);
+                            new ElementToProperty().Visit(node.Element, context);
                             return default;
                         }
 
