@@ -15,7 +15,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
             //// TODO singletons everywhere
 
             var @class = new Class();
-            new RuleNameToString().Convert(node.RuleName, @class.Name);
+            new RuleNameToString().Convert(node.RuleName, @class.Name); //// TODO you need to ensure that dashes are stipping //// TODO you need to make sure the first character isn't a digit
 
             //// TODO skipping over node.DefinedAs means we are potentially skipping comments, if we care about that...
 
@@ -109,7 +109,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                             {
                                 //// TODO what about a concatenation that has two repetitions that have an element of the same type?
                                 var property = new Property();
-                                new RuleNameToString().Convert(node.Value, property.Name);
+                                new RuleNameToString().Convert(node.Value, property.Name); //// TODO you need to strip dashes from this //// TODO you need to make sure the beginning is not a digit
                                 context.Properties.Add(property);
                                 return default;
                             }
