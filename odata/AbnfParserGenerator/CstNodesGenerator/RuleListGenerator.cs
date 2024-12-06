@@ -40,7 +40,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                 }
                 catch (InvalidOperationException e)
                 {
-                    throw new Exception("TODO can't find property type", e);
+                    //// TODO throw new Exception("TODO can't find property type", e);
                 }
             }
         }

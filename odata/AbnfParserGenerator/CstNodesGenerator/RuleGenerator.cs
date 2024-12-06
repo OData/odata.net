@@ -42,6 +42,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                     duElement.Name.Append($"_{name}"); //// TODO this is a really bad name
                     ++name;
                     new ConcatenationToDuElement().Convert(alternation.Concatenation, duElement);
+                    duElement.BaseClass = @class;
                     @class.NestedClasses.Add(duElement);
                     foreach (var inner in alternation.Inners)
                     {
@@ -49,8 +50,11 @@ namespace AbnfParserGenerator.CstNodesGenerator
                         duElement.Name.Append($"_{name}");
                         ++name;
                         //// TODO finish this
+                        duElement.BaseClass = @class;
                         @class.NestedClasses.Add(duElement);
                     }
+
+                    //// TODO add visitor
                 }
 
                 private sealed class ConcatenationToDuElement
@@ -83,7 +87,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                         {
                             protected internal override Void Accept(Element.RuleName node, Property context)
                             {
-                                //// TODO finish this
+                                //// TODO what about a concatenation that has two repetitions that have an element of the same type?
                                 new RuleNameToString().Convert(node.Value, context.Name);
                                 return default;
                             }
@@ -91,7 +95,21 @@ namespace AbnfParserGenerator.CstNodesGenerator
                             protected internal override Void Accept(Element.Group node, Property context)
                             {
                                 //// TODO finish this
+                                var className = "Group0"; //// TODO you need to increment this name
+                                var @class = new Class();
+                                @class.Name.Append(className);
+                                new GroupToDu().Convert(node.Value, @class);
+                                //// TODO add this class to the nested class in the parent class
                                 return default;
+                            }
+
+                            private sealed class GroupToDu
+                            {
+                                public void Convert(Group group, Class @class)
+                                {
+                                    //// TODO you are skipping comments
+                                    new AlternationToDiscriminatedUnion().Convert(group.Alternation, @class);
+                                }
                             }
 
                             protected internal override Void Accept(Element.Option node, Property context)
