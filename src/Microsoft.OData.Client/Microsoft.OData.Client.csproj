@@ -4,8 +4,8 @@
     <AssemblyName>Microsoft.OData.Client</AssemblyName>
     <RootNamespace>Microsoft.OData.Client</RootNamespace>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <DefineConstants>$(DefineConstants);ODATA_CLIENT;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 

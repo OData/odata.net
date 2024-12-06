@@ -5,8 +5,8 @@
     <AssemblyName>Microsoft.OData.Edm</AssemblyName>
     <RootNamespace>Microsoft.OData.Edm</RootNamespace>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <DefineConstants>$(DefineConstants);SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE</DefineConstants>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
 
