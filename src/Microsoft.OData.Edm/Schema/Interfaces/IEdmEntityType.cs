@@ -4,8 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
-using Microsoft.OData.Edm.Vocabularies;
+using System.Linq;
 
 namespace Microsoft.OData.Edm
 {
@@ -23,5 +24,11 @@ namespace Microsoft.OData.Edm
         /// Gets the value indicating whether or not this type is a media entity.
         /// </summary>
         bool HasStream { get; }
+
+        /// <summary>
+        /// Gets the property refs of the entity type that make up the entity type.
+        /// In the next major release, should use this to replace the DeclaredKey.
+        /// </summary>
+        IEnumerable<IEdmPropertyRef> DeclaredKeyRef { get => DeclaredKey.Select(x => new EdmPropertyRef(x)); }
     }
 }

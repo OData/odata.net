@@ -37,7 +37,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
 
             var idProperty = new CsdlProperty("ID", new CsdlNamedTypeReference("Edm.Int32", false, null), null, null);
             var fkProperty = new CsdlProperty("FK", new CsdlNamedTypeReference("Edm.Int32", false, null), null, null);
-            this.csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, new CsdlKey(new[] { new CsdlPropertyReference("ID", null) }, null), new[] { idProperty, fkProperty }, new[] { collectionProperty, referenceProperty, navigationWithoutPartner }, null);
+            this.csdlEntityType = new CsdlEntityType("EntityType", null, false, false, false, new CsdlKey(new[] { new CsdlPropertyReference("ID", null, null) }, null), new[] { idProperty, fkProperty }, new[] { collectionProperty, referenceProperty, navigationWithoutPartner }, null);
 
             var csdlSchema = new CsdlSchema("FQ.NS", null, null, new[] { this.csdlEntityType }, Enumerable.Empty<CsdlEnumType>(), Enumerable.Empty<CsdlOperation>(),Enumerable.Empty<CsdlTerm>(),Enumerable.Empty<CsdlEntityContainer>(),Enumerable.Empty<CsdlAnnotations>(), Enumerable.Empty<CsdlTypeDefinition>(), null);
             var csdlModel = new CsdlModel();

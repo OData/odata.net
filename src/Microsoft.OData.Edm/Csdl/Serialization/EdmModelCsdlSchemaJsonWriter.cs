@@ -398,12 +398,21 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Write the Key property
         /// </summary>
         /// <param name="property">The Edm Structural Property.</param>
-        internal override void WritePropertyRefElement(IEdmStructuralProperty property)
+        internal override void WritePropertyRefElement(IEdmPropertyRef propertyRef)
         {
-            // Key properties without a key alias are represented as strings containing the property name.
-            // Key properties with a key alias are represented as objects with one member whose name is the key alias and whose value is a string containing the path to the property.
-            // TODO: It seems the second one is not supported.
-            this.jsonWriter.WriteStringValue(property.Name);
+            if (propertyRef.PropertyAlias != null && propertyRef.PropertyAlias != propertyRef.Path.Path)
+            {
+                // Key properties with a key alias are represented as objects with one member
+                // whose name is the key alias and whose value is a string containing the path to the property.
+                this.jsonWriter.WriteStartObject();
+                this.jsonWriter.WriteRequiredProperty(propertyRef.PropertyAlias, propertyRef.Path.Path);
+                this.jsonWriter.WriteEndObject();
+            }
+            else
+            {
+                // Key properties without a key alias are represented as strings containing the property name.
+                this.jsonWriter.WriteStringValue(propertyRef.Path.Path);
+            }
         }
 
         /// <summary>
@@ -411,11 +420,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <param name="property">The Edm Structural Property.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
-        internal override Task WritePropertyRefElementAsync(IEdmStructuralProperty property)
+        internal override Task WritePropertyRefElementAsync(IEdmPropertyRef propertyRef)
         {
             // Key properties without a key alias are represented as strings containing the property name.
             // Key properties with a key alias are represented as objects with one member whose name is the key alias and whose value is a string containing the path to the property.
-            this.jsonWriter.WriteStringValue(property.Name);
+            WritePropertyRefElement(propertyRef);
 
             return Task.CompletedTask;
         }
