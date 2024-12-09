@@ -47,7 +47,7 @@ namespace Microsoft.OData.Edm
 
             if (pathSegments.Any(segment => segment.Contains("/", StringComparison.Ordinal)))
             {
-                throw new ArgumentException(Strings.PathSegmentMustNotContainSlash);
+                throw new ArgumentException(SRResources.PathSegmentMustNotContainSlash);
             }
 
             this.pathSegments = pathSegments.ToList();

@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using System.Diagnostics;
 
@@ -22,7 +23,7 @@ namespace Microsoft.OData
         /// current system culture.
         /// </remarks>
         public ODataException()
-            : this(Strings.ODataException_GeneralError)
+            : this(SRResources.ODataException_GeneralError)
         {
         }
 

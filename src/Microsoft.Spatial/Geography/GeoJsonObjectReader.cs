@@ -138,13 +138,13 @@ namespace Microsoft.Spatial
             {
                 if (value == null)
                 {
-                    throw new FormatException(Strings.GeoJsonReader_InvalidNullElement);
+                    throw new FormatException(SRResources.GeoJsonReader_InvalidNullElement);
                 }
 
                 // At this point we are expecting them to only be numeric, so verify that.
                 if (value is String || value is IDictionary<string, object> || value is IEnumerable || value is bool)
                 {
-                    throw new FormatException(Strings.GeoJsonReader_ExpectedNumeric);
+                    throw new FormatException(SRResources.GeoJsonReader_ExpectedNumeric);
                 }
 
                 // value is already a numeric value at this point, so can safely convert it using InvariantCulture.
@@ -166,14 +166,14 @@ namespace Microsoft.Spatial
                 // need to be sure it isn't a string because string is also enumerable);
                 if (value is string)
                 {
-                    throw new FormatException(Strings.GeoJsonReader_ExpectedArray);
+                    throw new FormatException(SRResources.GeoJsonReader_ExpectedArray);
                 }
 
                 if (value is IDictionary || value is IDictionary<string, object>)
                 {
                     // These are typically signatures of json objects though they can be looked at as IEnumerable,
                     // but that would be a mistake, becuase we wouldn't know how to interpret the KeyValuePair
-                    throw new FormatException(Strings.GeoJsonReader_ExpectedArray);
+                    throw new FormatException(SRResources.GeoJsonReader_ExpectedArray);
                 }
 
                 IEnumerable array = value as IEnumerable;
@@ -182,7 +182,7 @@ namespace Microsoft.Spatial
                     return array;
                 }
 
-                throw new FormatException(Strings.GeoJsonReader_ExpectedArray);
+                throw new FormatException(SRResources.GeoJsonReader_ExpectedArray);
             }
 
             /// <summary>
@@ -203,7 +203,7 @@ namespace Microsoft.Spatial
                     return castValue;
                 }
 
-                throw new FormatException(Strings.JsonReaderExtensions_CannotReadValueAsJsonObject(value));
+                throw new FormatException(Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsJsonObject, value));
             }
 
             /// <summary>
@@ -225,7 +225,7 @@ namespace Microsoft.Spatial
                     return castValue;
                 }
 
-                throw new FormatException(Strings.JsonReaderExtensions_CannotReadPropertyValueAsString(value, propertyName));
+                throw new FormatException(Error.Format(SRResources.JsonReaderExtensions_CannotReadPropertyValueAsString, value, propertyName));
             }
 
             /// <summary>
@@ -242,7 +242,7 @@ namespace Microsoft.Spatial
                 }
                 else
                 {
-                    throw new FormatException(Strings.GeoJsonReader_MissingRequiredMember(GeoJsonConstants.TypeMemberName));
+                    throw new FormatException(Error.Format(SRResources.GeoJsonReader_MissingRequiredMember, GeoJsonConstants.TypeMemberName));
                 }
             }
 
@@ -277,7 +277,7 @@ namespace Microsoft.Spatial
                 object typeValue;
                 if (!crsJsonObject.TryGetValue(GeoJsonConstants.TypeMemberName, out typeValue))
                 {
-                    throw new FormatException(Strings.GeoJsonReader_MissingRequiredMember(GeoJsonConstants.TypeMemberName));
+                    throw new FormatException(Error.Format(SRResources.GeoJsonReader_MissingRequiredMember, GeoJsonConstants.TypeMemberName));
                 }
 
                 // we previously validated that the value was a string, so this cast is safe
@@ -286,14 +286,14 @@ namespace Microsoft.Spatial
                 // validate the type is supported
                 if (!string.Equals(typeString, GeoJsonConstants.CrsTypeMemberValue, StringComparison.Ordinal))
                 {
-                    throw new FormatException(Strings.GeoJsonReader_InvalidCrsType(typeString));
+                    throw new FormatException(Error.Format(SRResources.GeoJsonReader_InvalidCrsType, typeString));
                 }
 
                 // get the value of the 'properties' property
                 object propertiesValue;
                 if (!crsJsonObject.TryGetValue(GeoJsonConstants.CrsPropertiesMemberName, out propertiesValue))
                 {
-                    throw new FormatException(Strings.GeoJsonReader_MissingRequiredMember(GeoJsonConstants.CrsPropertiesMemberName));
+                    throw new FormatException(Error.Format(SRResources.GeoJsonReader_MissingRequiredMember, GeoJsonConstants.CrsPropertiesMemberName));
                 }
 
                 var properties = ValueAsJsonObject(propertiesValue);
@@ -302,7 +302,7 @@ namespace Microsoft.Spatial
                 object nameValue;
                 if (!properties.TryGetValue(GeoJsonConstants.CrsNameMemberName, out nameValue))
                 {
-                    throw new FormatException(Strings.GeoJsonReader_MissingRequiredMember(GeoJsonConstants.CrsNameMemberName));
+                    throw new FormatException(Error.Format(SRResources.GeoJsonReader_MissingRequiredMember, GeoJsonConstants.CrsNameMemberName));
                 }
 
                 // we previously validated that the value was a string
@@ -317,7 +317,7 @@ namespace Microsoft.Spatial
                     || nameString[offset] != ':'
                     || !int.TryParse(nameString.Substring(offset + 1), out epsgId))
                 {
-                    throw new FormatException(Strings.GeoJsonReader_InvalidCrsName(nameString));
+                    throw new FormatException(Error.Format(SRResources.GeoJsonReader_InvalidCrsName, nameString));
                 }
 
                 return epsgId;
@@ -338,7 +338,7 @@ namespace Microsoft.Spatial
                 }
                 else
                 {
-                    throw new FormatException(Strings.GeoJsonReader_MissingRequiredMember(memberName));
+                    throw new FormatException(Error.Format(SRResources.GeoJsonReader_MissingRequiredMember, memberName));
                 }
             }
 
@@ -377,7 +377,7 @@ namespace Microsoft.Spatial
                     case GeoJsonConstants.TypeMemberValueGeometryCollection:
                         return SpatialType.Collection;
                     default:
-                        throw new FormatException(Strings.GeoJsonReader_InvalidTypeName(typeName));
+                        throw new FormatException(Error.Format(SRResources.GeoJsonReader_InvalidTypeName, typeName));
                 }
             }
 
@@ -543,7 +543,7 @@ namespace Microsoft.Spatial
 
                 if (count < 2 || count > 4)
                 {
-                    throw new FormatException(Strings.GeoJsonReader_InvalidPosition);
+                    throw new FormatException(SRResources.GeoJsonReader_InvalidPosition);
                 }
 
                 if (first)

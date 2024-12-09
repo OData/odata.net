@@ -316,12 +316,12 @@ namespace Microsoft.OData.Client
             DataServiceQuery<T> dsq = query as DataServiceQuery<T>;
             if (dsq == null)
             {
-                throw new ArgumentException(Strings.DataServiceCollection_LoadAsyncRequiresDataServiceQuery, nameof(query));
+                throw new ArgumentException(SRResources.DataServiceCollection_LoadAsyncRequiresDataServiceQuery, nameof(query));
             }
 
             if (this.ongoingAsyncOperation != null)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
+                throw new InvalidOperationException(SRResources.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
             }
 
             if (this.trackingOnLoad)
@@ -358,12 +358,12 @@ namespace Microsoft.OData.Client
 
             if (!this.IsTracking)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_OperationForTrackedOnly);
+                throw new InvalidOperationException(SRResources.DataServiceCollection_OperationForTrackedOnly);
             }
 
             if (this.ongoingAsyncOperation != null)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
+                throw new InvalidOperationException(SRResources.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
             }
 
             DataServiceContext context = this.observer.Context;
@@ -392,19 +392,19 @@ namespace Microsoft.OData.Client
         {
             if (!this.IsTracking)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_OperationForTrackedOnly);
+                throw new InvalidOperationException(SRResources.DataServiceCollection_OperationForTrackedOnly);
             }
 
             object parent;
             string property;
             if (!this.observer.LookupParent(this, out parent, out property))
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity);
+                throw new InvalidOperationException(SRResources.DataServiceCollection_LoadAsyncNoParamsWithoutParentEntity);
             }
 
             if (this.ongoingAsyncOperation != null)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
+                throw new InvalidOperationException(SRResources.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
             }
 
             this.BeginLoadAsyncOperation(
@@ -428,12 +428,12 @@ namespace Microsoft.OData.Client
         {
             if (!this.IsTracking)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_OperationForTrackedOnly);
+                throw new InvalidOperationException(SRResources.DataServiceCollection_OperationForTrackedOnly);
             }
 
             if (this.ongoingAsyncOperation != null)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
+                throw new InvalidOperationException(SRResources.DataServiceCollection_MultipleLoadAsyncOperationsAtTheSameTime);
             }
 
             if (this.Continuation == null)
@@ -504,7 +504,7 @@ namespace Microsoft.OData.Client
         {
             if (!this.IsTracking)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_OperationForTrackedOnly);
+                throw new InvalidOperationException(SRResources.DataServiceCollection_OperationForTrackedOnly);
             }
 
             if (!stopTracking)
@@ -536,13 +536,13 @@ namespace Microsoft.OData.Client
         {
             if (!this.IsTracking)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_OperationForTrackedOnly);
+                throw new InvalidOperationException(SRResources.DataServiceCollection_OperationForTrackedOnly);
             }
 
             // Operation only allowed on root collections.
             if (!this.rootCollection)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_CannotStopTrackingChildCollection);
+                throw new InvalidOperationException(SRResources.DataServiceCollection_CannotStopTrackingChildCollection);
             }
 
             this.observer.StopTracking();
@@ -562,7 +562,7 @@ namespace Microsoft.OData.Client
         {
             if (this.trackingOnLoad)
             {
-                throw new InvalidOperationException(Strings.DataServiceCollection_InsertIntoTrackedButNotLoadedCollection);
+                throw new InvalidOperationException(SRResources.DataServiceCollection_InsertIntoTrackedButNotLoadedCollection);
             }
 
             if (this.IsTracking && item != null)
@@ -570,7 +570,7 @@ namespace Microsoft.OData.Client
                 INotifyPropertyChanged notify = item as INotifyPropertyChanged;
                 if (notify == null)
                 {
-                    throw new InvalidOperationException(Strings.DataBinding_NotifyPropertyChangedNotImpl(item.GetType()));
+                    throw new InvalidOperationException(Error.Format(SRResources.DataBinding_NotifyPropertyChangedNotImpl, item.GetType()));
                 }
             }
 
@@ -615,7 +615,7 @@ namespace Microsoft.OData.Client
                 return context;
             }
 
-            throw new ArgumentException(Strings.DataServiceCollection_CannotDetermineContextFromItems);
+            throw new ArgumentException(SRResources.DataServiceCollection_CannotDetermineContextFromItems);
         }
 
         /// <summary>
@@ -665,7 +665,7 @@ namespace Microsoft.OData.Client
                 // Observer must be present on the target collection which implies that the operation would fail on default constructed objects.
                 if (this.observer.Context == null)
                 {
-                    throw new InvalidOperationException(Strings.DataServiceCollection_LoadRequiresTargetCollectionObserved);
+                    throw new InvalidOperationException(SRResources.DataServiceCollection_LoadRequiresTargetCollectionObserved);
                 }
 
                 this.observer.AttachBehavior = true;
@@ -705,7 +705,7 @@ namespace Microsoft.OData.Client
             // Validate here before any items are added to the collection because if this fails we want to prevent the collection from being populated.
             if (!BindingEntityInfo.IsEntityType(typeof(T), context.Model))
             {
-                throw new ArgumentException(Strings.DataBinding_DataServiceCollectionArgumentMustHaveEntityType(typeof(T)));
+                throw new ArgumentException(Error.Format(SRResources.DataBinding_DataServiceCollectionArgumentMustHaveEntityType, typeof(T)));
             }
 
             // Set up the observer first because we want the collection to know it's supposed to be tracked while the items are being loaded.

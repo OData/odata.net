@@ -10,10 +10,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -2126,7 +2126,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonReader) => JsonReaderUtils.DoReadAsync(jsonReader),
                     isResponse: true));
 
-            Assert.Equal(ErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet("PrimitiveValue"),
+            Assert.Equal(Error.Format(SRResources.ODataJsonReader_CannotReadResourcesOfResourceSet, "PrimitiveValue"),
                 exception.Message);
         }
 
@@ -2148,7 +2148,7 @@ namespace Microsoft.OData.Tests.Json
                     this.customerEntityType,
                     (jsonReader) => JsonReaderUtils.DoReadAsync(jsonReader)));
 
-            Assert.Equal(ErrorStrings.ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet("PrimitiveValue"),
+            Assert.Equal(Error.Format(SRResources.ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet, "PrimitiveValue"),
                 exception.Message);
         }
 
@@ -2170,7 +2170,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonReader) => JsonReaderUtils.DoReadAsync(jsonReader)));
 
             Assert.Equal(
-                ErrorStrings.ReaderValidationUtils_NullNamedValueForNonNullableType("BillingAddress", "NS.Address"),
+                Error.Format(SRResources.ReaderValidationUtils_NullNamedValueForNonNullableType, "BillingAddress", "NS.Address"),
                 exception.Message);
         }
 

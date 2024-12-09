@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Json
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Diagnostics;
@@ -96,7 +97,7 @@ namespace Microsoft.OData.Json
                         // We cannot fully satisfy the read request since there are not enough bytes in the stream.
                         // This means that the content length of the stream was incorrect; this should never happen
                         // since the caller should already have checked this.
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReaderStreamBuffer_ReadWithLength));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReaderStreamBuffer_ReadWithLength));
                     }
                     else
                     {

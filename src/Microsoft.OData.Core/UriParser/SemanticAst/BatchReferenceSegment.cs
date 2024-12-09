@@ -7,10 +7,8 @@
 namespace Microsoft.OData.UriParser
 {
     #region Namespaces
-
-    using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -48,7 +46,7 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(contentId, "contentId");
             if (!ODataPathParser.ContentIdRegex.IsMatch(contentId))
             {
-                throw new ODataException(ODataErrorStrings.BatchReferenceSegment_InvalidContentID(contentId));
+                throw new ODataException(Error.Format(SRResources.BatchReferenceSegment_InvalidContentID, contentId));
             }
 
             this.edmType = edmType;

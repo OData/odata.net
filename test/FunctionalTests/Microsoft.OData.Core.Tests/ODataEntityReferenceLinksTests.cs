@@ -12,7 +12,7 @@ using System.Text;
 using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests
 {
@@ -249,9 +249,9 @@ namespace Microsoft.OData.Tests
             referencelinks.InstanceAnnotations.Add(new ODataInstanceAnnotation("TestNamespace.name", new ODataPrimitiveValue(654)));
             string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection($ref)\",\"@TestNamespace.name\":321,\"@TestNamespace.name\":654,\"value\":[{\"@odata.id\":\"http://host/Customers(1)\",\"@Is.New\":true},{\"@odata.id\":\"http://host/Customers(2)\",\"@TestNamespace.unknown\":123,\"@custom.annotation\":456}]}";
             Action writeResult = () => WriteAndValidate(referencelinks, expectedPayload, writingResponse: false);
-            writeResult.Throws<ODataException>(ODataErrorStrings.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("TestNamespace.name"));
+            writeResult.Throws<ODataException>(Error.Format(SRResources.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection, "TestNamespace.name"));
             writeResult = () => WriteAndValidate(referencelinks, expectedPayload, writingResponse: true);
-            writeResult.Throws<ODataException>(ODataErrorStrings.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("TestNamespace.name"));
+            writeResult.Throws<ODataException>(Error.Format(SRResources.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection, "TestNamespace.name"));
         }
 
         [Fact]

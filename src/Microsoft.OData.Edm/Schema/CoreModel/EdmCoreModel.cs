@@ -342,7 +342,7 @@ namespace Microsoft.OData.Edm
             }
             else
             {
-                throw new InvalidOperationException(Edm.Strings.EdmPrimitive_UnexpectedKind);
+                throw new InvalidOperationException(SRResources.EdmPrimitive_UnexpectedKind);
             }
         }
 
@@ -372,7 +372,7 @@ namespace Microsoft.OData.Edm
             }
             else
             {
-                throw new InvalidOperationException(Edm.Strings.EdmPath_UnexpectedKind);
+                throw new InvalidOperationException(SRResources.EdmPath_UnexpectedKind);
             }
         }
 
@@ -622,7 +622,7 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.TimeOfDay:
                     return new EdmTemporalTypeReference(this.GetCoreModelPrimitiveType(kind), isNullable, precision);
                 default:
-                    throw new InvalidOperationException(Edm.Strings.EdmPrimitive_UnexpectedKind);
+                    throw new InvalidOperationException(SRResources.EdmPrimitive_UnexpectedKind);
             }
         }
 
@@ -641,7 +641,7 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.TimeOfDay:
                     return new EdmTemporalTypeReference(this.GetCoreModelPrimitiveType(kind), isNullable);
                 default:
-                    throw new InvalidOperationException(Edm.Strings.EdmPrimitive_UnexpectedKind);
+                    throw new InvalidOperationException(SRResources.EdmPrimitive_UnexpectedKind);
             }
         }
 
@@ -696,7 +696,7 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.GeometryMultiPoint:
                     return new EdmSpatialTypeReference(this.GetCoreModelPrimitiveType(kind), isNullable, spatialReferenceIdentifier);
                 default:
-                    throw new InvalidOperationException(Edm.Strings.EdmPrimitive_UnexpectedKind);
+                    throw new InvalidOperationException(SRResources.EdmPrimitive_UnexpectedKind);
             }
         }
 
@@ -728,7 +728,7 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.GeometryMultiPoint:
                     return new EdmSpatialTypeReference(this.GetCoreModelPrimitiveType(kind), isNullable);
                 default:
-                    throw new InvalidOperationException(Edm.Strings.EdmPrimitive_UnexpectedKind);
+                    throw new InvalidOperationException(SRResources.EdmPrimitive_UnexpectedKind);
             }
         }
 

@@ -123,7 +123,7 @@ namespace Microsoft.OData.Client
         {
             if (this.ServiceModel == null)
             {
-                throw new InvalidOperationException(Strings.DataServiceClientFormat_LoadServiceModelRequired);
+                throw new InvalidOperationException(SRResources.DataServiceClientFormat_LoadServiceModelRequired);
             }
 
             this.ODataFormat = ODataFormat.Json;

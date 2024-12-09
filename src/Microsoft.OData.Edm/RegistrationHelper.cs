@@ -31,7 +31,7 @@ namespace Microsoft.OData.Edm
                     // Only one entity container can be added.
                     if (containerDictionary.Count > 0)
                     {
-                        throw new InvalidOperationException(Edm.Strings.EdmModel_CannotAddMoreThanOneEntityContainerToOneEdmModel);
+                        throw new InvalidOperationException(SRResources.EdmModel_CannotAddMoreThanOneEntityContainerToOneEdmModel);
                     }
 
                     IEdmEntityContainer container = (IEdmEntityContainer)element;
@@ -40,9 +40,9 @@ namespace Microsoft.OData.Edm
 
                     break;
                 case EdmSchemaElementKind.None:
-                    throw new InvalidOperationException(Edm.Strings.EdmModel_CannotUseElementWithTypeNone);
+                    throw new InvalidOperationException(SRResources.EdmModel_CannotUseElementWithTypeNone);
                 default:
-                    throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_SchemaElementKind(element.SchemaElementKind));
+                    throw new InvalidOperationException(Error.Format(SRResources.UnknownEnumVal_SchemaElementKind, element.SchemaElementKind));
             }
         }
 

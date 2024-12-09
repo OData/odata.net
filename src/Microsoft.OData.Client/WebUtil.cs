@@ -223,7 +223,7 @@ namespace Microsoft.OData.Client
             if (!PrimitiveType.IsKnownNullableType(collectionItemType) &&
                 collectionItemType.GetInterfaces().SingleOrDefault(t => t == typeof(IEnumerable)) != null)
             {
-                throw Error.InvalidOperation(Strings.ClientType_CollectionOfCollectionNotSupported);
+                throw Error.InvalidOperation(SRResources.ClientType_CollectionOfCollectionNotSupported);
             }
 
             if (propertyValue == null)
@@ -232,12 +232,12 @@ namespace Microsoft.OData.Client
                 {
                     if (!isDynamicProperty)
                     {
-                        throw Error.InvalidOperation(Strings.Collection_NullCollectionNotSupported(propertyName));
+                        throw Error.InvalidOperation(Error.Format(SRResources.Collection_NullCollectionNotSupported, propertyName));
                     }
                 }
                 else
                 {
-                    throw Error.InvalidOperation(Strings.Collection_NullNonPropertyCollectionNotSupported(collectionItemType));
+                    throw Error.InvalidOperation(Error.Format(SRResources.Collection_NullNonPropertyCollectionNotSupported, collectionItemType));
                 }
             }
         }
@@ -258,18 +258,18 @@ namespace Microsoft.OData.Client
 
             if (!PrimitiveType.IsKnownNullableType(itemValueType))
             {
-                throw Error.InvalidOperation(Strings.Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed);
+                throw Error.InvalidOperation(SRResources.Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed);
             }
 
             if (!collectionItemType.IsAssignableFrom(itemValueType))
             {
                 if (propertyName != null)
                 {
-                    throw Error.InvalidOperation(Strings.WebUtil_TypeMismatchInCollection(propertyName));
+                    throw Error.InvalidOperation(Error.Format(SRResources.WebUtil_TypeMismatchInCollection, propertyName));
                 }
                 else
                 {
-                    throw Error.InvalidOperation(Strings.WebUtil_TypeMismatchInNonPropertyCollection(collectionItemType));
+                    throw Error.InvalidOperation(Error.Format(SRResources.WebUtil_TypeMismatchInNonPropertyCollection, collectionItemType));
                 }
             }
         }
@@ -290,18 +290,18 @@ namespace Microsoft.OData.Client
 
             if (PrimitiveType.IsKnownNullableType(itemValueType))
             {
-                throw Error.InvalidOperation(Strings.Collection_PrimitiveTypesInCollectionOfComplexTypesNotAllowed);
+                throw Error.InvalidOperation(SRResources.Collection_PrimitiveTypesInCollectionOfComplexTypesNotAllowed);
             }
 
             if (!collectionItemType.IsAssignableFrom(itemValueType))
             {
                 if (propertyName != null)
                 {
-                    throw Error.InvalidOperation(Strings.WebUtil_TypeMismatchInCollection(propertyName));
+                    throw Error.InvalidOperation(Error.Format(SRResources.WebUtil_TypeMismatchInCollection, propertyName));
                 }
                 else
                 {
-                    throw Error.InvalidOperation(Strings.WebUtil_TypeMismatchInNonPropertyCollection(collectionItemType));
+                    throw Error.InvalidOperation(Error.Format(SRResources.WebUtil_TypeMismatchInNonPropertyCollection, collectionItemType));
                 }
             }
         }
@@ -324,7 +324,7 @@ namespace Microsoft.OData.Client
             }
             catch (FormatException)
             {
-                throw Error.InvalidOperation(Strings.Context_TrackingExpectsAbsoluteUri);
+                throw Error.InvalidOperation(SRResources.Context_TrackingExpectsAbsoluteUri);
             }
 
             return identity;
@@ -342,7 +342,7 @@ namespace Microsoft.OData.Client
             Uri locationUri = UriUtil.CreateUri(location, UriKind.RelativeOrAbsolute);
             if (!locationUri.IsAbsoluteUri)
             {
-                throw Error.InvalidOperation(Strings.Context_LocationHeaderExpectsAbsoluteUri);
+                throw Error.InvalidOperation(SRResources.Context_LocationHeaderExpectsAbsoluteUri);
             }
 
             return locationUri;

@@ -12,8 +12,10 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
+    using Microsoft.VisualBasic;
     #endregion Namespaces
 
     /// <summary>
@@ -32,12 +34,12 @@ namespace Microsoft.OData
 
             if (messageWriterSettings.BaseUri != null && !messageWriterSettings.BaseUri.IsAbsoluteUri)
             {
-                throw new ODataException(Strings.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute(UriUtils.UriToString(messageWriterSettings.BaseUri)));
+                throw new ODataException(Error.Format(SRResources.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute, UriUtils.UriToString(messageWriterSettings.BaseUri)));
             }
 
             if (messageWriterSettings.HasJsonPaddingFunction() && !writingResponse)
             {
-                throw new ODataException(Strings.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
+                throw new ODataException(SRResources.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
             }
         }
 
@@ -49,7 +51,7 @@ namespace Microsoft.OData
         {
             if (property == null)
             {
-                throw new ODataException(Strings.WriterValidationUtils_PropertyMustNotBeNull);
+                throw new ODataException(SRResources.WriterValidationUtils_PropertyMustNotBeNull);
             }
         }
 
@@ -62,7 +64,7 @@ namespace Microsoft.OData
             // Properties must have a non-empty name
             if (string.IsNullOrEmpty(propertyName))
             {
-                throw new ODataException(Strings.WriterValidationUtils_PropertiesMustHaveNonEmptyName);
+                throw new ODataException(SRResources.WriterValidationUtils_PropertiesMustHaveNonEmptyName);
             }
 
             ValidationUtils.ValidatePropertyName(propertyName);
@@ -94,7 +96,7 @@ namespace Microsoft.OData
 
             if (throwOnUndeclaredProperty && !owningStructuredType.IsOpen && property == null)
             {
-                throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_PropertyDoesNotExistOnType, propertyName, owningStructuredType.FullTypeName()));
             }
 
             return property;
@@ -114,7 +116,7 @@ namespace Microsoft.OData
 
             if (throwOnUndeclaredProperty && propertyInfo.MetadataType.IsUndeclaredProperty && !propertyInfo.MetadataType.IsOpenProperty)
             {
-                throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyInfo.PropertyName, propertyInfo.MetadataType.OwningType.FullTypeName()));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_PropertyDoesNotExistOnType, propertyInfo.PropertyName, propertyInfo.MetadataType.OwningType.FullTypeName()));
             }
         }
 
@@ -145,7 +147,7 @@ namespace Microsoft.OData
             if (property.PropertyKind != EdmPropertyKind.Navigation)
             {
                 // The property must be a navigation property
-                throw new ODataException(Strings.ValidationUtils_NavigationPropertyExpected(propertyName, owningType.FullTypeName(), property.PropertyKind.ToString()));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_NavigationPropertyExpected, propertyName, owningType.FullTypeName(), property.PropertyKind.ToString()));
             }
 
             return (IEdmNavigationProperty)property;
@@ -168,7 +170,7 @@ namespace Microsoft.OData
             // Make sure the entity types are compatible
             if (!parentNavigationPropertyType.IsAssignableFrom(resourceType))
             {
-                throw new ODataException(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType(resourceType.FullTypeName(), parentNavigationPropertyType.FullTypeName()));
+                throw new ODataException(Error.Format(SRResources.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType, resourceType.FullTypeName(), parentNavigationPropertyType.FullTypeName()));
             }
         }
 
@@ -184,7 +186,7 @@ namespace Microsoft.OData
             // Operations are only valid in responses; we fail on them in requests
             if (!writingResponse)
             {
-                throw new ODataException(Strings.WriterValidationUtils_OperationInRequest(operation.Metadata));
+                throw new ODataException(Error.Format(SRResources.WriterValidationUtils_OperationInRequest, operation.Metadata));
             }
         }
 
@@ -203,7 +205,7 @@ namespace Microsoft.OData
                 // Check that NextPageLink is not set for requests
                 if (writingRequest)
                 {
-                    throw new ODataException(Strings.WriterValidationUtils_NextPageLinkInRequest);
+                    throw new ODataException(SRResources.WriterValidationUtils_NextPageLinkInRequest);
                 }
             }
         }
@@ -223,7 +225,7 @@ namespace Microsoft.OData
                 // Check that NextPageLink is not set for requests
                 if (writingRequest)
                 {
-                    throw new ODataException(Strings.WriterValidationUtils_NextPageLinkInRequest);
+                    throw new ODataException(SRResources.WriterValidationUtils_NextPageLinkInRequest);
                 }
             }
         }
@@ -266,17 +268,17 @@ namespace Microsoft.OData
 
             if (streamReference.ContentType != null && streamReference.ContentType.Length == 0)
             {
-                throw new ODataException(Strings.WriterValidationUtils_StreamReferenceValueEmptyContentType);
+                throw new ODataException(SRResources.WriterValidationUtils_StreamReferenceValueEmptyContentType);
             }
 
             if (isDefaultStream && streamReference.ReadLink == null && streamReference.ContentType != null)
             {
-                throw new ODataException(Strings.WriterValidationUtils_DefaultStreamWithContentTypeWithoutReadLink);
+                throw new ODataException(SRResources.WriterValidationUtils_DefaultStreamWithContentTypeWithoutReadLink);
             }
 
             if (isDefaultStream && streamReference.ReadLink != null && streamReference.ContentType == null)
             {
-                throw new ODataException(Strings.WriterValidationUtils_DefaultStreamWithReadLinkWithoutContentType);
+                throw new ODataException(SRResources.WriterValidationUtils_DefaultStreamWithReadLinkWithoutContentType);
             }
 
             // Default stream can be completely empty (no links or anything)
@@ -287,12 +289,12 @@ namespace Microsoft.OData
             // That will cause the writer to write the properties outside the content without producing any content element.
             if (streamReference.EditLink == null && streamReference.ReadLink == null && !isDefaultStream)
             {
-                throw new ODataException(Strings.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkOrReadLink);
+                throw new ODataException(SRResources.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkOrReadLink);
             }
 
             if (streamReference.EditLink == null && streamReference.ETag != null)
             {
-                throw new ODataException(Strings.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkToHaveETag);
+                throw new ODataException(SRResources.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkToHaveETag);
             }
         }
 
@@ -315,7 +317,7 @@ namespace Microsoft.OData
                 // Read/Write links and ETags on Stream properties are only valid in responses; writers fail if they encounter them in requests.
                 if (streamPropertyInfo != null && streamPropertyInfo.EditLink != null || streamPropertyInfo.ReadLink != null || streamPropertyInfo.ETag != null)
                 {
-                    throw new ODataException(Strings.WriterValidationUtils_StreamPropertyInRequest(propertyName));
+                    throw new ODataException(Error.Format(SRResources.WriterValidationUtils_StreamPropertyInRequest, propertyName));
                 }
             }
         }
@@ -362,7 +364,7 @@ namespace Microsoft.OData
                 }
             }
 
-            throw new ODataException(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "property", propertySerializationInfo.PropertyName));
+            throw new ODataException(Error.Format(SRResources.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, fullTypeName, "property", propertySerializationInfo.PropertyName));
         }
 
         /// <summary>
@@ -374,7 +376,7 @@ namespace Microsoft.OData
         {
             if (entityReferenceLink == null)
             {
-                throw new ODataException(Strings.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull);
+                throw new ODataException(SRResources.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull);
             }
         }
 
@@ -388,7 +390,7 @@ namespace Microsoft.OData
 
             if (entityReferenceLink.Url == null)
             {
-                throw new ODataException(Strings.WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull);
+                throw new ODataException(SRResources.WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull);
             }
         }
 
@@ -418,7 +420,7 @@ namespace Microsoft.OData
             // Navigation link must have a non-empty name
             if (string.IsNullOrEmpty(nestedResourceInfo.Name))
             {
-                throw new ODataException(Strings.ValidationUtils_LinkMustSpecifyName);
+                throw new ODataException(SRResources.ValidationUtils_LinkMustSpecifyName);
             }
 
             // If we write an entity reference link, don't validate the multiplicity of the IsCollection
@@ -438,8 +440,8 @@ namespace Microsoft.OData
                 if (isResourceSetPayload != nestedResourceInfo.IsCollection.Value)
                 {
                     errorTemplate = expandedPayloadKind.Value == ODataPayloadKind.ResourceSet
-                        ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent
-                        : Strings.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent;
+                        ? (object obj) => Error.Format(SRResources.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent, obj)
+                        : (_) => SRResources.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent;
                 }
             }
 
@@ -459,8 +461,8 @@ namespace Microsoft.OData
                         if (!(nestedResourceInfo.IsCollection == false && isEntityReferenceLinkPayload))
                         {
                             errorTemplate = isCollectionType
-                                ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata
-                                : Strings.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata;
+                                ? (object obj) => Error.Format(SRResources.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata, obj)
+                                : (_) => SRResources.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata;
                         }
                     }
 
@@ -469,8 +471,8 @@ namespace Microsoft.OData
                     if (!isEntityReferenceLinkPayload && expandedPayloadKind.HasValue && isCollectionType != isResourceSetPayload)
                     {
                         errorTemplate = isCollectionType
-                            ? (Func<object, string>)Strings.WriterValidationUtils_ExpandedLinkWithResourcePayloadAndResourceSetMetadata
-                            : Strings.WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata;
+                            ? (object obj) => Error.Format(SRResources.WriterValidationUtils_ExpandedLinkWithResourcePayloadAndResourceSetMetadata, obj)
+                            : (_) => SRResources.WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata;
                     }
                 }
             }
@@ -510,7 +512,7 @@ namespace Microsoft.OData
                 }
             }
 
-            throw new ODataException(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, itemKind, itemName));
+            throw new ODataException(Error.Format(SRResources.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, fullTypeName, itemKind, itemName));
         }
 
         /// <summary>
@@ -523,7 +525,7 @@ namespace Microsoft.OData
 
             if (!nestedResourceInfo.IsCollection.HasValue)
             {
-                throw new ODataException(Strings.WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection(nestedResourceInfo.Name));
+                throw new ODataException(Error.Format(SRResources.WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection, nestedResourceInfo.Name));
             }
         }
 
@@ -541,27 +543,27 @@ namespace Microsoft.OData
             {
                 if (expectedPropertyTypeReference.IsNonEntityCollectionType())
                 {
-                    throw new ODataException(Strings.WriterValidationUtils_CollectionPropertiesMustNotHaveNullValue(propertyName));
+                    throw new ODataException(Error.Format(SRResources.WriterValidationUtils_CollectionPropertiesMustNotHaveNullValue, propertyName));
                 }
 
                 if (expectedPropertyTypeReference.IsODataPrimitiveTypeKind() && !expectedPropertyTypeReference.IsNullable)
                 {
-                    throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
+                    throw new ODataException(Error.Format(SRResources.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue, propertyName, expectedPropertyTypeReference.FullName()));
                 }
                 else if (expectedPropertyTypeReference.IsODataEnumTypeKind() && !expectedPropertyTypeReference.IsNullable)
                 {
-                    throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
+                    throw new ODataException(Error.Format(SRResources.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue, propertyName, expectedPropertyTypeReference.FullName()));
                 }
                 else if (expectedPropertyTypeReference.IsStream())
                 {
-                    throw new ODataException(Strings.WriterValidationUtils_StreamPropertiesMustNotHaveNullValue(propertyName));
+                    throw new ODataException(Error.Format(SRResources.WriterValidationUtils_StreamPropertiesMustNotHaveNullValue, propertyName));
                 }
                 else if (expectedPropertyTypeReference.IsODataComplexTypeKind())
                 {
                     IEdmComplexTypeReference complexTypeReference = expectedPropertyTypeReference.AsComplex();
                     if (!complexTypeReference.IsNullable)
                     {
-                        throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
+                        throw new ODataException(Error.Format(SRResources.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue, propertyName, expectedPropertyTypeReference.FullName()));
                     }
                 }
             }
@@ -577,7 +579,7 @@ namespace Microsoft.OData
             // TODO: it always passes. Will add more validation or remove the validation after supporting relative Uri.
             if (id != null && UriUtils.UriToString(id).Length == 0)
             {
-                throw new ODataException(Strings.WriterValidationUtils_EntriesMustHaveNonEmptyId);
+                throw new ODataException(SRResources.WriterValidationUtils_EntriesMustHaveNonEmptyId);
             }
         }
     }

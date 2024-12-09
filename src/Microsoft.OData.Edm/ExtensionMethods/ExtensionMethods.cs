@@ -2058,7 +2058,7 @@ namespace Microsoft.OData.Edm
                 {
                     if (edmProperty != null)
                     {
-                        throw new InvalidOperationException(Edm.Strings.MultipleMatchingPropertiesFound(propertyName, structuredType.FullTypeName()));
+                        throw new InvalidOperationException(Error.Format(SRResources.MultipleMatchingPropertiesFound, propertyName, structuredType.FullTypeName()));
                     }
 
                     edmProperty = property;
@@ -2602,7 +2602,7 @@ namespace Microsoft.OData.Edm
                     new EdmError(
                         operation.Location(),
                         EdmErrorCode.OperationCannotHaveEntitySetPathWithUnBoundOperation,
-                        Strings.EdmModel_Validator_Semantic_OperationCannotHaveEntitySetPathWithUnBoundOperation(operation.Name)));
+                        Error.Format(SRResources.EdmModel_Validator_Semantic_OperationCannotHaveEntitySetPathWithUnBoundOperation, operation.Name)));
             }
 
             return TryGetRelativeEntitySetPath(operation, foundErrors, operation.EntitySetPath, model, operation.Parameters, out parameter, out relativeNavigations, out lastEntityType);
@@ -2988,14 +2988,14 @@ namespace Microsoft.OData.Edm
 
             if (container == null)
             {
-                throw new InvalidOperationException(Strings.TargetPath_FirstSegmentMustBeIEdmEntityContainer);
+                throw new InvalidOperationException(SRResources.TargetPath_FirstSegmentMustBeIEdmEntityContainer);
             }
 
             IEdmEntityContainerElement containerElement = targetPath.Segments[1] as IEdmEntityContainerElement;
 
             if (containerElement == null)
             {
-                throw new InvalidOperationException(Strings.TargetPath_SecondSegmentMustBeIEdmEntityContainerElement);
+                throw new InvalidOperationException(SRResources.TargetPath_SecondSegmentMustBeIEdmEntityContainerElement);
             }
 
             string[] segments = new string[targetPath.Segments.Count];
@@ -3162,7 +3162,7 @@ namespace Microsoft.OData.Edm
 
             if (bindingParameterName == null)
             {
-                foundErrors.Add(new EdmError(element.Location(), EdmErrorCode.OperationWithInvalidEntitySetPathMissingCompletePath, Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathMissingBindingParameterName(CsdlConstants.Attribute_EntitySetPath)));
+                foundErrors.Add(new EdmError(element.Location(), EdmErrorCode.OperationWithInvalidEntitySetPathMissingCompletePath, Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathMissingBindingParameterName, CsdlConstants.Attribute_EntitySetPath)));
                 return false;
             }
 
@@ -3181,7 +3181,7 @@ namespace Microsoft.OData.Edm
                     new EdmError(
                         element.Location(),
                         EdmErrorCode.InvalidPathFirstPathParameterNotMatchingFirstParameterName,
-                        Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathWithFirstPathParameterNotMatchingFirstParameterName(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), bindingParameterName, parameter.Name)));
+                        Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathWithFirstPathParameterNotMatchingFirstParameterName, CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), bindingParameterName, parameter.Name)));
 
                 foundRelativePath = false;
             }
@@ -3200,7 +3200,7 @@ namespace Microsoft.OData.Edm
                         new EdmError(
                             element.Location(),
                             EdmErrorCode.InvalidPathWithNonEntityBindingParameter,
-                            Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathWithNonEntityBindingParameter(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), bindingParameterName)));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathWithNonEntityBindingParameter, CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), bindingParameterName)));
 
                     return false;
                 }
@@ -3223,7 +3223,7 @@ namespace Microsoft.OData.Edm
                             new EdmError(
                                 element.Location(),
                                 EdmErrorCode.InvalidPathUnknownTypeCastSegment,
-                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), pathSegment)));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment, CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), pathSegment)));
 
                         foundRelativePath = false;
                         break;
@@ -3237,7 +3237,7 @@ namespace Microsoft.OData.Edm
                             new EdmError(
                                 element.Location(),
                                 EdmErrorCode.InvalidPathTypeCastSegmentMustBeEntityType,
-                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathTypeCastSegmentMustBeEntityType(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), foundType.FullName())));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathTypeCastSegmentMustBeEntityType, CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), foundType.FullName())));
 
                         foundRelativePath = false;
                         break;
@@ -3249,7 +3249,7 @@ namespace Microsoft.OData.Edm
                             new EdmError(
                                 element.Location(),
                                 EdmErrorCode.InvalidPathInvalidTypeCastSegment,
-                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathInvalidTypeCastSegment(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), lastEntityType.FullName(), foundEntityTypeCast.FullName())));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathInvalidTypeCastSegment, CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), lastEntityType.FullName(), foundEntityTypeCast.FullName())));
 
                         foundRelativePath = false;
                         break;
@@ -3266,7 +3266,7 @@ namespace Microsoft.OData.Edm
                             new EdmError(
                                 element.Location(),
                                 EdmErrorCode.InvalidPathUnknownNavigationProperty,
-                                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownNavigationProperty(CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), pathSegment)));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownNavigationProperty, CsdlConstants.Attribute_EntitySetPath, EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments), pathSegment)));
 
                         foundRelativePath = false;
                         break;
@@ -3307,7 +3307,7 @@ namespace Microsoft.OData.Edm
         {
             if (depth <= 0)
             {
-                throw new InvalidOperationException(Edm.Strings.Bad_CyclicEntityContainer(container.FullName()));
+                throw new InvalidOperationException(Error.Format(SRResources.Bad_CyclicEntityContainer, container.FullName()));
             }
 
             CsdlSemanticsEntityContainer semanticsEntityContainer = container as CsdlSemanticsEntityContainer;
@@ -3631,7 +3631,7 @@ namespace Microsoft.OData.Edm
 
             if (annotations.Count() != 1)
             {
-                throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_NoValueAnnotationOnType(contextType.ToTraceString(), term.ToTraceString()));
+                throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_NoValueAnnotationOnType, contextType.ToTraceString(), term.ToTraceString()));
             }
 
             return evaluator(annotations.Single().Value, context, term.Type);
@@ -3643,7 +3643,7 @@ namespace Microsoft.OData.Edm
 
             if (annotations.Count() != 1)
             {
-                throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_NoValueAnnotationOnType(contextType.ToTraceString(), termName));
+                throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_NoValueAnnotationOnType, contextType.ToTraceString(), termName));
             }
 
             IEdmVocabularyAnnotation valueAnnotation = annotations.Single();
@@ -3656,7 +3656,7 @@ namespace Microsoft.OData.Edm
 
             if (annotations.Count() != 1)
             {
-                throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_NoValueAnnotationOnElement(term.ToTraceString()));
+                throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_NoValueAnnotationOnElement, term.ToTraceString()));
             }
 
             return evaluator(annotations.Single().Value, null, term.Type);
@@ -3668,7 +3668,7 @@ namespace Microsoft.OData.Edm
 
             if (annotations.Count() != 1)
             {
-                throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_NoValueAnnotationOnElement(termName));
+                throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_NoValueAnnotationOnElement, termName));
             }
 
             IEdmVocabularyAnnotation valueAnnotation = annotations.Single();
@@ -3691,7 +3691,7 @@ namespace Microsoft.OData.Edm
             if (depth <= 0)
             {
                 // TODO: p2 add a new string resource for the error message
-                throw new InvalidOperationException(Edm.Strings.Bad_CyclicEntityContainer(container.FullName()));
+                throw new InvalidOperationException(Error.Format(SRResources.Bad_CyclicEntityContainer, container.FullName()));
             }
 
             T ret = finderFunc(container, simpleName);
@@ -3726,7 +3726,7 @@ namespace Microsoft.OData.Edm
                     // [EdmLib] AnnotationValue extension method should use the Clr converter to map annotation value to T.
                 }
 
-                throw new InvalidOperationException(Edm.Strings.Annotations_TypeMismatch(annotation.GetType().Name, typeof(T).Name));
+                throw new InvalidOperationException(Error.Format(SRResources.Annotations_TypeMismatch, annotation.GetType().Name, typeof(T).Name));
             }
 
             return null;

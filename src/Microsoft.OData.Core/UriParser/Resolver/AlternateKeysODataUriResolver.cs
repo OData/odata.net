@@ -9,6 +9,7 @@ namespace Microsoft.OData.UriParser
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -46,7 +47,7 @@ namespace Microsoft.OData.UriParser
 
             if (!TryResolveAlternateKeys(type, namedValues, convertFunc, out IEnumerable<KeyValuePair<string, object>> alternateConvertedPairs))
             {
-                throw ExceptionUtil.CreateBadRequestError(Strings.BadRequest_KeyOrAlternateKeyMismatch(type.FullName()));
+                throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.BadRequest_KeyOrAlternateKeyMismatch, type.FullName()));
             }
 
             return alternateConvertedPairs;
@@ -111,7 +112,7 @@ namespace Microsoft.OData.UriParser
                     var list = namedValues.Keys.Where(key => string.Equals(kvp.Key, key, StringComparison.OrdinalIgnoreCase)).ToList();
                     if (list.Count > 1)
                     {
-                        throw new ODataException(Strings.UriParserMetadata_MultipleMatchingKeysFound(kvp.Key));
+                        throw new ODataException(Error.Format(SRResources.UriParserMetadata_MultipleMatchingKeysFound, kvp.Key));
                     }
                     else if (list.Count == 0)
                     {

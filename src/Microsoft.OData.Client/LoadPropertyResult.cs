@@ -70,7 +70,7 @@ namespace Microsoft.OData.Client
 
             if (EntityStates.Added == box.State)
             {
-                throw Error.InvalidOperation(Strings.Context_NoLoadWithInsertEnd);
+                throw Error.InvalidOperation(SRResources.Context_NoLoadWithInsertEnd);
             }
 
             ClientPropertyAnnotation property = type.GetProperty(this.propertyName, UndeclaredPropertyBehavior.ThrowException);
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Client
                 if (response != null)
                 {
                     response.Error = ex;
-                    throw new DataServiceQueryException(Strings.DataServiceException_GeneralError, ex, response);
+                    throw new DataServiceQueryException(SRResources.DataServiceException_GeneralError, ex, response);
                 }
 
                 throw;
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Client
                 int r = responseStream.Read(buffer, read, totalLength - read);
                 if (r <= 0)
                 {
-                    throw Error.InvalidOperation(Strings.Context_UnexpectedZeroRawRead);
+                    throw Error.InvalidOperation(SRResources.Context_UnexpectedZeroRawRead);
                 }
 
                 read += r;

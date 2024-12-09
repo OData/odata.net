@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
     using System.Linq;
     using System.Text;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Class that knows how to bind the In operator.
@@ -87,7 +87,7 @@ namespace Microsoft.OData.UriParser
             SingleValueNode operand = this.bindMethod(queryToken) as SingleValueNode;
             if (operand == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_LeftOperandNotSingleValue);
+                throw new ODataException(SRResources.MetadataBinder_LeftOperandNotSingleValue);
             }
 
             return operand;
@@ -177,7 +177,7 @@ namespace Microsoft.OData.UriParser
 
             if (operand == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_RightOperandNotCollectionValue);
+                throw new ODataException(SRResources.MetadataBinder_RightOperandNotCollectionValue);
             }
 
             return operand;
@@ -240,14 +240,14 @@ namespace Microsoft.OData.UriParser
                         }
                         else
                         {
-                            throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(subStr));
+                            throw new ODataException(Error.Format(SRResources.StringItemShouldBeQuoted, subStr));
                         }
 
                         break;
 
                     default:
                         // any other character between items is not valid.
-                        throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(ch));
+                        throw new ODataException(Error.Format(SRResources.StringItemShouldBeQuoted, ch));
                 }
             }
 

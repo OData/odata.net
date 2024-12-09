@@ -8,7 +8,6 @@ using System;
 using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Json
 {

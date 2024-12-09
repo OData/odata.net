@@ -30,7 +30,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                             context.AddError(
                                 typeReference.Location(),
                                 EdmErrorCode.ReferencedTypeMustHaveValidName,
-                                Strings.Serializer_ReferencedTypeMustHaveValidName(schemaType.FullName()));
+                                Error.Format(SRResources.Serializer_ReferencedTypeMustHaveValidName, schemaType.FullName()));
                         }
                     }
                 });
@@ -47,7 +47,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                         context.AddError(
                             entityReference.Location(),
                             EdmErrorCode.ReferencedTypeMustHaveValidName,
-                            Strings.Serializer_ReferencedTypeMustHaveValidName(entityReference.EntityType.FullName()));
+                            Error.Format(SRResources.Serializer_ReferencedTypeMustHaveValidName, entityReference.EntityType.FullName()));
                     }
                 });
 
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                         context.AddError(
                             set.Location(),
                             EdmErrorCode.ReferencedTypeMustHaveValidName,
-                            Strings.Serializer_ReferencedTypeMustHaveValidName(set.EntityType.FullName()));
+                            Error.Format(SRResources.Serializer_ReferencedTypeMustHaveValidName, set.EntityType.FullName()));
                     }
                 });
 
@@ -82,7 +82,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                             context.AddError(
                                 type.Location(),
                                 EdmErrorCode.ReferencedTypeMustHaveValidName,
-                                Strings.Serializer_ReferencedTypeMustHaveValidName(schemaBaseType.FullName()));
+                                Error.Format(SRResources.Serializer_ReferencedTypeMustHaveValidName, schemaBaseType.FullName()));
                         }
                     }
                 });
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                         context.AddError(
                             annotation.Location(),
                             EdmErrorCode.InvalidName,
-                            Strings.Serializer_OutOfLineAnnotationTargetMustHaveValidName(EdmUtil.FullyQualifiedName(annotation.Target)));
+                            Error.Format(SRResources.Serializer_OutOfLineAnnotationTargetMustHaveValidName, EdmUtil.FullyQualifiedName(annotation.Target)));
                     }
                 });
 
@@ -115,7 +115,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                         context.AddError(
                             annotation.Location(),
                             EdmErrorCode.InvalidName,
-                            Strings.Serializer_OutOfLineAnnotationTargetMustHaveValidName(annotation.Term.FullName()));
+                            Error.Format(SRResources.Serializer_OutOfLineAnnotationTargetMustHaveValidName, annotation.Term.FullName()));
                     }
                 });
 

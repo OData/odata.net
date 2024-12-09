@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -1036,7 +1037,7 @@ namespace Microsoft.OData.Tests.Json
                     }
                 };
 
-                readPartialStream.Throws<ODataException>(Strings.ODataReaderCore_ReadCalledWithOpenStream);
+                readPartialStream.Throws<ODataException>(SRResources.ODataReaderCore_ReadCalledWithOpenStream);
             }
         }
 
@@ -1070,7 +1071,7 @@ namespace Microsoft.OData.Tests.Json
                     }
                 };
 
-                readPartialStream.Throws<ODataException>(Strings.ODataReaderCore_ReadCalledWithOpenStream);
+                readPartialStream.Throws<ODataException>(SRResources.ODataReaderCore_ReadCalledWithOpenStream);
             }
         }
 
@@ -1336,7 +1337,7 @@ namespace Microsoft.OData.Tests.Json
                     }
                 };
 
-                action.Throws<ODataException>(Strings.ODataReaderCore_ReadCalledWithOpenStream);
+                action.Throws<ODataException>(SRResources.ODataReaderCore_ReadCalledWithOpenStream);
             }
         }
 

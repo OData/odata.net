@@ -307,10 +307,10 @@ namespace Microsoft.OData.Evaluation
                 return new InvalidOperationException(Microsoft.OData.Service.Strings.Serializer_CannotConvertValue(value));
 #endif
 #if ODATA_CLIENT
-                return Error.InvalidOperation(Client.Strings.Context_CannotConvertKey(value));
+                return Error.InvalidOperation(Error.Format(SRResources.Context_CannotConvertKey, value));
 #endif
 #if ODATA_CORE
-                return new ODataException(Strings.ODataUriUtils_ConvertToUriLiteralUnsupportedType(value.GetType().ToString()));
+                return new ODataException(Core.Error.Format(Core.SRResources.ODataUriUtils_ConvertToUriLiteralUnsupportedType, value.GetType().ToString()));
 #endif
             }
 

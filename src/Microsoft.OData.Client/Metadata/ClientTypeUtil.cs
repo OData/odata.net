@@ -264,7 +264,7 @@ namespace Microsoft.OData.Client.Metadata
                         }
                         else
                         {   // Multiple implementations (e.g. ICollection<int> and ICollection<int?>)
-                            throw Client.Error.NotSupported(Client.Strings.ClientType_MultipleImplementationNotSupported);
+                            throw Client.Error.NotSupported(SRResources.ClientType_MultipleImplementationNotSupported);
                         }
                     }
                 }
@@ -561,7 +561,7 @@ namespace Microsoft.OData.Client.Metadata
                 MemberInfo member = enumType.GetField(enumValue);
                 if (member == null)
                 {
-                    throw new NotSupportedException(Strings.Serializer_InvalidEnumMemberValue(enumType.Name, enumValue));
+                    throw new NotSupportedException(Error.Format(SRResources.Serializer_InvalidEnumMemberValue, enumType.Name, enumValue));
                 }
 
                 memberValues.Add(ClientTypeUtil.GetServerDefinedName(member));

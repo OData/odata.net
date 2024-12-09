@@ -12,9 +12,9 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion
 
     /// <summary>
@@ -171,7 +171,7 @@ namespace Microsoft.OData
                 if (expectedType != null && !expectedType.IsNullable)
                 {
                     throw new ODataException(
-                        ODataErrorStrings.JsonInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation(
+                        Error.Format(SRResources.JsonInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation,
                             instanceAnnotation.Name, expectedType.FullName()));
                 }
 
@@ -384,7 +384,7 @@ namespace Microsoft.OData
                 if (expectedType != null && !expectedType.IsNullable)
                 {
                     throw new ODataException(
-                        ODataErrorStrings.JsonInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation(
+                        Error.Format(SRResources.JsonInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation,
                             annotationName, expectedType.FullName()));
                 }
 
@@ -495,7 +495,7 @@ namespace Microsoft.OData
 
             if (!instanceAnnotationNames.Add(annotation.Name))
             {
-                throw new ODataException(ODataErrorStrings.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(annotation.Name));
+                throw new ODataException(Error.Format(SRResources.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection, annotation.Name));
             }
 
             if (!tracker.IsAnnotationWritten(annotation.Name)
@@ -550,7 +550,7 @@ namespace Microsoft.OData
         {
             if (!instanceAnnotationNames.Add(annotation.Name))
             {
-                throw new ODataException(ODataErrorStrings.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(annotation.Name));
+                throw new ODataException(Error.Format(SRResources.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection, annotation.Name));
             }
 
             if (!tracker.IsAnnotationWritten(annotation.Name)

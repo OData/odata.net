@@ -16,7 +16,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private static readonly Func<UnresolvedReturn, IEdmTypeReference> ComputeTypeFunc = (me) => me.ComputeType();
 
         public UnresolvedReturn(IEdmOperation declaringOperation, EdmLocation location)
-            : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedReturn, Edm.Strings.Bad_UnresolvedReturn(declaringOperation.Name)) })
+            : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedReturn, Error.Format(SRResources.Bad_UnresolvedReturn, declaringOperation.Name)) })
         {
             this.DeclaringOperation = declaringOperation;
         }

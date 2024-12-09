@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Edm;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -82,7 +82,7 @@ namespace Microsoft.OData.UriParser
 
                 if (parentOpenPropertyNode == null)
                 {
-                    throw new ODataException(ODataErrorStrings.MetadataBinder_LambdaParentMustBeCollection);
+                    throw new ODataException(SRResources.MetadataBinder_LambdaParentMustBeCollection);
                 }
 
                 // support open collection properties
@@ -102,14 +102,14 @@ namespace Microsoft.OData.UriParser
             SingleValueNode expression = this.bindMethod(queryToken) as SingleValueNode;
             if (expression == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_AnyAllExpressionNotSingleValue);
+                throw new ODataException(SRResources.MetadataBinder_AnyAllExpressionNotSingleValue);
             }
 
             // type reference is allowed to be null for open properties.
             IEdmTypeReference expressionTypeReference = expression.GetEdmTypeReference();
             if (expressionTypeReference != null && !expressionTypeReference.AsPrimitive().IsBoolean())
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_AnyAllExpressionNotSingleValue);
+                throw new ODataException(SRResources.MetadataBinder_AnyAllExpressionNotSingleValue);
             }
 
             return expression;

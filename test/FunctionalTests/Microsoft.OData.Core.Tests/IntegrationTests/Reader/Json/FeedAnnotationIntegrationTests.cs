@@ -8,10 +8,10 @@ using System;
 using System.IO;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core;
 using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 {
@@ -169,7 +169,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 Assert.Equal(ODataReaderState.ResourceSetStart, entryReader.State);
                 Assert.Equal(new Uri("http://nextLink"), (entryReader.Item as ODataResourceSet).NextPageLink);
                 Action read = () => entryReader.Read();
-                read.Throws<ODataException>(ErrorStrings.DuplicateAnnotationNotAllowed("odata.nextLink"));
+                read.Throws<ODataException>(Error.Format(SRResources.DuplicateAnnotationNotAllowed, "odata.nextLink"));
             }
         }
 
@@ -188,7 +188,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 Assert.Equal(ODataReaderState.ResourceSetStart, entryReader.State);
                 Assert.Equal(new Uri("http://deltaLink"), (entryReader.Item as ODataResourceSet).DeltaLink);
                 Action read = () => entryReader.Read();
-                read.Throws<ODataException>(ErrorStrings.DuplicateAnnotationNotAllowed("odata.deltaLink"));
+                read.Throws<ODataException>(Error.Format(SRResources.DuplicateAnnotationNotAllowed, "odata.deltaLink"));
             }
         }
 
@@ -250,7 +250,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             Assert.Equal(ODataReaderState.ResourceSetStart, entryReader.State);
             Assert.Equal(0, (entryReader.Item as ODataResourceSet).Count);
             Action read = () => entryReader.Read();
-            read.Throws<ODataException>(ErrorStrings.ODataJsonResourceDeserializer_DuplicateNestedResourceSetAnnotation("odata.count", "NavProp"));
+            read.Throws<ODataException>(Error.Format(SRResources.ODataJsonResourceDeserializer_DuplicateNestedResourceSetAnnotation, "odata.count", "NavProp"));
         }
 
         [Fact]
@@ -359,7 +359,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             Assert.Equal(ODataReaderState.ResourceSetStart, entryReader.State);
             Assert.Equal(2, (entryReader.Item as ODataResourceSet).Count);
             Action read = () => entryReader.Read();
-            read.Throws<ODataException>(ErrorStrings.ODataJsonResourceDeserializer_DuplicateNestedResourceSetAnnotation("odata.count", "NavProp"));
+            read.Throws<ODataException>(Error.Format(SRResources.ODataJsonResourceDeserializer_DuplicateNestedResourceSetAnnotation, "odata.count", "NavProp"));
         }
 
         [Fact]
@@ -385,7 +385,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             entryReader.Read();
             Assert.Equal(ODataReaderState.NestedResourceInfoEnd, entryReader.State);
             Action read = () => entryReader.Read();
-            read.Throws<ODataException>(ErrorStrings.PropertyAnnotationAfterTheProperty("odata.count", "NavProp"));
+            read.Throws<ODataException>(Error.Format(SRResources.PropertyAnnotationAfterTheProperty, "odata.count", "NavProp"));
         }
 
         [Fact]
@@ -414,7 +414,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             var entryReader = GetEntryReader(entryText, isResponse: false);
             Action test = () => entryReader.Read();
-            test.Throws<ODataException>(ErrorStrings.ODataJsonResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation("NavProp", "odata.nextLink", "odata.bind"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation, "NavProp", "odata.nextLink", "odata.bind"));
         }
 
         [Fact]
@@ -429,7 +429,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
                 var entryReader = GetEntryReader(entryText, isResponse);
                 Action test = () => entryReader.Read();
-                test.Throws<ODataException>(ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.deltaLink"));
+                test.Throws<ODataException>(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, "odata.deltaLink"));
             }
         }
 
@@ -450,7 +450,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             Assert.Equal(ODataReaderState.ResourceSetStart, entryReader.State);
             Assert.Equal(new Uri("http://nextLink"), (entryReader.Item as ODataResourceSet).NextPageLink);
             Action read = () => entryReader.Read();
-            read.Throws<ODataException>(ErrorStrings.ODataJsonResourceDeserializer_DuplicateNestedResourceSetAnnotation("odata.nextLink", "NavProp"));
+            read.Throws<ODataException>(Error.Format(SRResources.ODataJsonResourceDeserializer_DuplicateNestedResourceSetAnnotation, "odata.nextLink", "NavProp"));
         }
 
         [Fact]
@@ -489,7 +489,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             Assert.Equal(ODataReaderState.ResourceSetStart, entryReader.State);
             Assert.Null((entryReader.Item as ODataResourceSet).NextPageLink);
             Action test = () => entryReader.Read();
-            test.Throws<ODataException>(ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedPropertyAnnotation("NavProp", "odata.nextLink"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedPropertyAnnotation, "NavProp", "odata.nextLink"));
         }
 
         [Fact]
@@ -510,7 +510,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 Assert.Equal(ODataReaderState.ResourceSetStart, entryReader.State);
                 Assert.Null((entryReader.Item as ODataResourceSet).NextPageLink);
                 Action test = () => entryReader.Read();
-                string expectedErrorMsg = isResponse ? ErrorStrings.ODataJsonResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet("odata.deltaLink", "NavProp") : ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedPropertyAnnotation("NavProp", "odata.deltaLink");
+                string expectedErrorMsg = isResponse ? Error.Format(SRResources.ODataJsonResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet, "odata.deltaLink", "NavProp") : Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedPropertyAnnotation, "NavProp", "odata.deltaLink");
                 test.Throws<ODataException>(expectedErrorMsg);
             }
         }

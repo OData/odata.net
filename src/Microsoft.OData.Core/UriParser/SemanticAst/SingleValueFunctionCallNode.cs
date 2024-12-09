@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
     using System;
     using System.Collections.ObjectModel;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -81,7 +81,7 @@ namespace Microsoft.OData.UriParser
                 if (returnedTypeReference.IsCollection()
                     || !(returnedTypeReference.IsComplex() || returnedTypeReference.IsPrimitive() || returnedTypeReference.IsEnum()))
                 {
-                    throw new ArgumentException(ODataErrorStrings.Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
+                    throw new ArgumentException(SRResources.Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
                 }
             }
 

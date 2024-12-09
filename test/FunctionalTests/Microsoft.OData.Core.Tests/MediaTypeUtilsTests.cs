@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using System.Linq;
 using System.Text;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests
 {
@@ -392,7 +392,7 @@ namespace Microsoft.OData.Tests
         {
             const string original = "application/atom+xml";
             Action target = () => MediaTypeUtils.AlterContentTypeForJsonPadding(original);
-            target.Throws<ODataException>(Strings.ODataMessageWriter_JsonPaddingOnInvalidContentType("application/atom+xml"));
+            target.Throws<ODataException>(Error.Format(SRResources.ODataMessageWriter_JsonPaddingOnInvalidContentType, "application/atom+xml"));
         }
 
         [Fact]
@@ -432,7 +432,7 @@ namespace Microsoft.OData.Tests
         {
             const string original = "tricky/application/json";
             Action target = () => MediaTypeUtils.AlterContentTypeForJsonPadding(original);
-            target.Throws<ODataException>(Strings.ODataMessageWriter_JsonPaddingOnInvalidContentType("tricky/application/json"));
+            target.Throws<ODataException>(Error.Format(SRResources.ODataMessageWriter_JsonPaddingOnInvalidContentType, "tricky/application/json"));
         }
 
         [Fact]

@@ -9,11 +9,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.Spatial;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 using PropertyParsingResult = Microsoft.OData.Json.ODataJsonDeserializer.PropertyParsingResult;
 
 namespace Microsoft.OData.Tests.Json
@@ -206,7 +206,7 @@ namespace Microsoft.OData.Tests.Json
         {
             Action action = () => this.RunPropertyParsingTest("{\"" + JsonUtils.GetPropertyAnnotationName("property", ODataAnnotationNames.ODataType) + "\":\"typename\",\"" + JsonUtils.GetPropertyAnnotationName("property", ODataAnnotationNames.ODataType) + "\":\"typename2\"}", PropertyParsingResult.EndOfObject, null,
                 null, this.ReadODataTypePropertyAnnotation);
-            action.Throws<ODataException>(ErrorStrings.DuplicateAnnotationForPropertyNotAllowed(ODataAnnotationNames.ODataType, "property"));
+            action.Throws<ODataException>(Error.Format(SRResources.DuplicateAnnotationForPropertyNotAllowed, ODataAnnotationNames.ODataType, "property"));
         }
 
         [Fact]
@@ -349,14 +349,14 @@ namespace Microsoft.OData.Tests.Json
         public void ParsingODataTypeWithoutTheTargetingInstanceAnnotationAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"odata.deltaLink@odata.type\":\"#typename\"}", PropertyParsingResult.PropertyWithoutValue, "odata.deltaLink", null, this.ReadODataTypePropertyAnnotation);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue("odata.type", "odata.deltaLink"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, "odata.type", "odata.deltaLink"));
         }
 
         [Fact]
         public void ParsingODataTypeWithoutTheTargetingCustomInstanceAnnotationAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"custom.instance@odata.type\":\"#typename\"}", PropertyParsingResult.PropertyWithoutValue, "custom.instance", null, this.ReadODataTypePropertyAnnotation);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue("odata.type", "custom.instance"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, "odata.type", "custom.instance"));
         }
 
         [Fact]
@@ -398,98 +398,98 @@ namespace Microsoft.OData.Tests.Json
         public void ParsingODataAnnotationTargetingODataInstanceAnnotationAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"odata.deltaLink@odata.unknown\":42,\"@odata.deltaLink\":42}", PropertyParsingResult.ODataInstanceAnnotation, "odata.deltaLink");
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation("odata.unknown", "odata.deltaLink", "odata.type"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation, "odata.unknown", "odata.deltaLink", "odata.type"));
         }
 
         [Fact]
         public void ParsingCustomAnnotationTargetingODataInstanceAnnotationAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"odata.deltaLink@custom.annotation\":42,\"@odata.deltaLink\":42}", PropertyParsingResult.ODataInstanceAnnotation, "odata.deltaLink");
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation("custom.annotation", "odata.deltaLink", "odata.type"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation, "custom.annotation", "odata.deltaLink", "odata.type"));
         }
 
         [Fact]
         public void ParsingODataAnnotationTargetingCustomInstanceAnnotationAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"custom.instance@odata.unknown\":42,\"@custom.instance\":42}", PropertyParsingResult.CustomInstanceAnnotation, "custom.instance");
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation("odata.unknown", "custom.instance", "odata.type"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation, "odata.unknown", "custom.instance", "odata.type"));
         }
 
         [Fact]
         public void ParsingCustomAnnotationTargetingCustomInstanceAnnotationAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"custom.instance@custom.annotation\":42,\"@custom.instance\":42}", PropertyParsingResult.CustomInstanceAnnotation, "custom.instance");
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation("custom.annotation", "custom.instance", "odata.type"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation, "custom.annotation", "custom.instance", "odata.type"));
         }
 
         [Fact]
         public void ParsingODataTypeTargetingODataInstanceAnnotationWithDifferentPropertyAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"odata.deltaLink@odata.type\":\"#typename\",\"foo\":42}", PropertyParsingResult.ODataInstanceAnnotation, ODataAnnotationNames.ODataType, null, this.ReadODataTypePropertyAnnotation);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue("odata.type", "odata.deltaLink"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, "odata.type", "odata.deltaLink"));
         }
 
         [Fact]
         public void ParsingODataTypeTargetingCustomInstanceAnnotationWithDifferentPropertyAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"custom.instance@odata.type\":\"#typename\",\"foo\":42}", PropertyParsingResult.CustomInstanceAnnotation, "custom.instance", null, this.ReadODataTypePropertyAnnotation);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue("odata.type", "custom.instance"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, "odata.type", "custom.instance"));
         }
 
         [Fact]
         public void ParsingODataTypeTargetingODataInstanceAnnotationWithDifferentPropertyAnnotationAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"odata.unknown@odata.type\":\"#typename\",\"foo@odata.type\":\"#typename\"}", PropertyParsingResult.ODataInstanceAnnotation, "odata.unknown", null, this.ReadODataTypePropertyAnnotation);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue("odata.type", "odata.unknown"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, "odata.type", "odata.unknown"));
         }
 
         [Fact]
         public void ParsingODataTypeTargetingCustomInstanceAnnotationWithDifferentPropertyAnnotationAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"custom.instance@odata.type\":\"#typename\",\"foo@odata.type\":\"#typename\"}", PropertyParsingResult.CustomInstanceAnnotation, "custom.instance", null, this.ReadODataTypePropertyAnnotation);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue("odata.type", "custom.instance"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, "odata.type", "custom.instance"));
         }
 
         [Fact]
         public void ParsingODataTypeTargetingODataInstanceAnnotationWithDifferentInstanceAnnotationAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"odata.unknown@odata.type\":\"#typename\",\"@custom.instance\":42}", PropertyParsingResult.ODataInstanceAnnotation, "odata.unknown", null, this.ReadODataTypePropertyAnnotation);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue("odata.type", "odata.unknown"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, "odata.type", "odata.unknown"));
         }
 
         [Fact]
         public void ParsingODataTypeTargetingCustomInstanceAnnotationWithDifferentInstanceAnnotationAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"custom.instance@odata.type\":\"#typename\",\"@odata.unknown\":42}", PropertyParsingResult.CustomInstanceAnnotation, "custom.instance", null, this.ReadODataTypePropertyAnnotation);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue("odata.type", "custom.instance"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, "odata.type", "custom.instance"));
         }
 
         [Fact]
         public void ParsingODataTypeTargetingODataInstanceAnnotationWithDifferentAnnotationTargetingAnnotationAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"odata.unknown@odata.type\":\"#typename\",\"custom.instance@odata.type\":\"#typename\"}", PropertyParsingResult.ODataInstanceAnnotation, "odata.unknown", null, this.ReadODataTypePropertyAnnotation);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue("odata.type", "odata.unknown"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, "odata.type", "odata.unknown"));
         }
 
         [Fact]
         public void ParsingODataTypeTargetingCustomInstanceAnnotationWithDifferentAnnotationTargetingAnnotationAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"custom.instance@odata.type\":\"#typename\",\"odata.unknown@odata.type\":\"#typename\"}", PropertyParsingResult.CustomInstanceAnnotation, "custom.instance", null, this.ReadODataTypePropertyAnnotation);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue("odata.type", "custom.instance"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, "odata.type", "custom.instance"));
         }
 
         [Fact]
         public void ParsingODataTypeTargetingODataInstanceAnnotationWithMetadataReferencePropertyAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"odata.unknown@odata.type\":\"#typename\",\"@namespace.name\":42}", PropertyParsingResult.ODataInstanceAnnotation, "odata.unknown", null, this.ReadODataTypePropertyAnnotation);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue("odata.type", "odata.unknown"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, "odata.type", "odata.unknown"));
         }
 
         [Fact]
         public void ParsingODataTypeTargetingCustomInstanceAnnotationWithMetadataReferencePropertyAfterItShouldFail()
         {
             Action action = () => this.RunPropertyParsingTest("{\"custom.instance@odata.type\":\"#typename\",\"@namespace.name\":42}", PropertyParsingResult.CustomInstanceAnnotation, "custom.instance", null, this.ReadODataTypePropertyAnnotation);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue("odata.type", "custom.instance"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, "odata.type", "custom.instance"));
         }
 
         [Fact]
@@ -499,7 +499,7 @@ namespace Microsoft.OData.Tests.Json
             Action action = () => this.RunPropertyParsingTest("{\"@odata.deltaLink\":\"url\",\"@odata.deltaLink\":\"url\"}", PropertyParsingResult.ODataInstanceAnnotation, "odata.deltaLink",
                 null, this.ReadODataTypePropertyAnnotation, propertyAndAnnotationCollector);
             action();
-            action.Throws<ODataException>(ErrorStrings.DuplicateAnnotationNotAllowed("odata.deltaLink"));
+            action.Throws<ODataException>(Error.Format(SRResources.DuplicateAnnotationNotAllowed, "odata.deltaLink"));
         }
 
         [Fact]
@@ -528,7 +528,7 @@ namespace Microsoft.OData.Tests.Json
             var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
             Action action = () => this.RunPropertyParsingTest("{\"odata.annotation@odata.type\":\"#typename\",\"odata.annotation@odata.type\":\"#typename\"}", PropertyParsingResult.CustomInstanceAnnotation, "custom.type",
                 null, this.ReadODataTypePropertyAnnotation, propertyAndAnnotationCollector);
-            action.Throws<ODataException>(ErrorStrings.DuplicateAnnotationForInstanceAnnotationNotAllowed("odata.type", "odata.annotation"));
+            action.Throws<ODataException>(Error.Format(SRResources.DuplicateAnnotationForInstanceAnnotationNotAllowed, "odata.type", "odata.annotation"));
         }
 
         [Fact]
@@ -537,7 +537,7 @@ namespace Microsoft.OData.Tests.Json
             var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
             Action action = () => this.RunPropertyParsingTest("{\"custom.annotation@odata.type\":\"#typename\",\"custom.annotation@odata.type\":\"#typename\"}", PropertyParsingResult.CustomInstanceAnnotation, "custom.type",
                 null, this.ReadODataTypePropertyAnnotation, propertyAndAnnotationCollector);
-            action.Throws<ODataException>(ErrorStrings.DuplicateAnnotationForInstanceAnnotationNotAllowed("odata.type", "custom.annotation"));
+            action.Throws<ODataException>(Error.Format(SRResources.DuplicateAnnotationForInstanceAnnotationNotAllowed, "odata.type", "custom.annotation"));
         }
 
         #endregion Instance Annotation tests
@@ -731,7 +731,7 @@ namespace Microsoft.OData.Tests.Json
                     (propertyName) => null,
                     (propertyParsingResult, propertyName) => { });
 
-                readDuplicateProperty.Throws<ODataException>(ErrorStrings.DuplicatePropertyNamesNotAllowed("#action"));
+                readDuplicateProperty.Throws<ODataException>(Error.Format(SRResources.DuplicatePropertyNamesNotAllowed, "#action"));
             }
         }
 
@@ -748,7 +748,7 @@ namespace Microsoft.OData.Tests.Json
                 Action readEntryContentAction = () => deserializer.ReadResourceContent(new TestJsonReaderEntryState());
 
                 var exception = Assert.Throws<ODataException>(readEntryContentAction);
-                Assert.Equal(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty(propertyName), exception.Message);
+                Assert.Equal(Error.Format(SRResources.ValidationUtils_InvalidMetadataReferenceProperty, propertyName), exception.Message);
             }
         }
         #endregion MetadataReferenceProperty tests
@@ -769,7 +769,7 @@ namespace Microsoft.OData.Tests.Json
                 /*isTopLevelPropertyValue*/ true,
                 /*insideResourceValue*/ false,
                 /*propertyName*/ null);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter("Edm.Int64"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter, "Edm.Int64"));
         }
 
         [Fact]
@@ -893,7 +893,7 @@ namespace Microsoft.OData.Tests.Json
             this.messageReaderSettings = new ODataMessageReaderSettings { ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
             ODataJsonPropertyAndValueDeserializer deserializer = new ODataJsonPropertyAndValueDeserializer(this.CreateJsonInputContext("{\"@odata.context\":\"http://odata.org/test/$metadata#Customers(1)/Name\",\"@odata.count\":123,\"value\":\"Joe\"}", model));
             Action action = () => deserializer.ReadTopLevelProperty(primitiveTypeRef);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.count"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, "odata.count"));
         }
 
         [Fact]
@@ -1047,7 +1047,7 @@ namespace Microsoft.OData.Tests.Json
                 while (odataReader.Read()) ;
             };
 
-            action.Throws<ODataException>(ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.count"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, "odata.count"));
         }
 
         [Fact]
@@ -1155,7 +1155,7 @@ namespace Microsoft.OData.Tests.Json
                 }
             };
 
-            action.Throws<ODataException>(ErrorStrings.JsonReaderExtensions_UnexpectedNodeDetected("StartObject", "PrimitiveValue"));
+            action.Throws<ODataException>(Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetected, "StartObject", "PrimitiveValue"));
         }
 
         #region Async Tests
@@ -1271,7 +1271,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty,
+                SRResources.ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty,
                 exception.Message);
         }
 
@@ -1534,7 +1534,7 @@ namespace Microsoft.OData.Tests.Json
                     isIeee754Compatible: isIeee754Compatible));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter("Edm.Int64"),
+                Error.Format(SRResources.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter, "Edm.Int64"),
                 exception.Message);
         }
 
@@ -1552,7 +1552,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunProcessPropertyTestAsync(payload));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation(
+                Error.Format(SRResources.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation,
                     annotation, targetedAnnotation, "odata.type"),
                 exception.Message);
         }
@@ -1584,7 +1584,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunProcessPropertyTestAsync(payload));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue("odata.type", targetAnnotation),
+                Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, "odata.type", targetAnnotation),
                 exception.Message);
         }
 
@@ -1629,7 +1629,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonPropertyAndValueDeserializerAndRunProcessPropertyTestAsync(payload));
 
-            Assert.Equal(ErrorStrings.DuplicateAnnotationNotAllowed("odata.unknown"),
+            Assert.Equal(Error.Format(SRResources.DuplicateAnnotationNotAllowed, "odata.unknown"),
                 exception.Message);
         }
 
@@ -1657,7 +1657,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunProcessPropertyTestAsync(payload));
 
             Assert.Equal(
-                ErrorStrings.DuplicateAnnotationForInstanceAnnotationNotAllowed("odata.type", annotationProperty),
+                Error.Format(SRResources.DuplicateAnnotationForInstanceAnnotationNotAllowed, "odata.type", annotationProperty),
                 exception.Message);
         }
 
@@ -1760,7 +1760,7 @@ namespace Microsoft.OData.Tests.Json
                     isIeee754Compatible: isIeee754Compatible));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter(edmProperty.Type.FullName()),
+                Error.Format(SRResources.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter, edmProperty.Type.FullName()),
                 exception.Message);
         }
 
@@ -1781,7 +1781,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
-                    ErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName("PrimitiveValue", "StartObject", "value"),
+                    Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName, "PrimitiveValue", "StartObject", "value"),
                     exception.Message);
         }
 
@@ -1791,15 +1791,15 @@ namespace Microsoft.OData.Tests.Json
             {
                 new object[] {
                     "\"@odata.id\":\"#1\",\"value\":13",
-                    ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.id")
+                    Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, "odata.id")
                 },
                 new object[] {
                     "\"#action\":\"Action\"",
-                    ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#action")
+                    Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, "#action")
                 },
                 new object[] {
                     "\"value@custom.annotation\":\"foobar\"",
-                    ErrorStrings.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty("value")
+                    Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty, "value")
                 }
             };
         }
@@ -1989,25 +1989,25 @@ namespace Microsoft.OData.Tests.Json
             yield return new object[]
             {
                 "\"#action\":\"Action\"",
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#action")
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, "#action")
             };
 
             yield return new object[]
             {
                 "\"Street@custom.annotation\":\"foobar\"",
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_ResourceValuePropertyAnnotationWithoutProperty("Street")
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_ResourceValuePropertyAnnotationWithoutProperty, "Street")
             };
 
             yield return new object[]
             {
                 "\"@odata.id\":\"#1\"",
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.id")
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, "odata.id")
             };
 
             yield return new object[]
             {
                 "\"Street\":\"S1\",\"@odata.type\":\"#Edm.Int32\"",
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_ResourceTypeAnnotationNotFirst
+                SRResources.ODataJsonPropertyAndValueDeserializer_ResourceTypeAnnotationNotFirst
             };
         }
 
@@ -2077,7 +2077,7 @@ namespace Microsoft.OData.Tests.Json
                 (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTypeName(null),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTypeName, "null"),
                 exception.Message);
         }
 
@@ -2099,7 +2099,7 @@ namespace Microsoft.OData.Tests.Json
                 (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.etag"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, "odata.etag"),
                 exception.Message);
         }
 
@@ -2185,7 +2185,7 @@ namespace Microsoft.OData.Tests.Json
                 (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
-                ErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName("PrimitiveValue", "StartObject", "value"),
+                Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName, "PrimitiveValue", "StartObject", "value"),
                 exception.Message);
         }
 
@@ -2247,31 +2247,31 @@ namespace Microsoft.OData.Tests.Json
             yield return new object[]
             {
                 "\"@odata.null\":true,\"value\":\"foobar\"",
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload("value")
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload, "value")
             };
 
             yield return new object[]
             {
                 "\"@odata.null\":true,\"TempProperty@odata.type\":\"#Edm.String\"",
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation("odata.type")
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation, "odata.type")
             };
 
             yield return new object[]
             {
                 "\"@odata.null\":true,\"TempProperty@custom.annotation\":\"foobar\"",
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty("TempProperty")
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty, "TempProperty")
             };
 
             yield return new object[]
             {
                 "\"@odata.null\":true,\"#action\":\"Action\"",
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#action")
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, "#action")
             };
 
             yield return new object[]
             {
                 "\"@odata.null\":true,\"@odata.type\":\"#Edm.String\"",
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.type")
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, "odata.type")
             };
         }
 
@@ -2313,7 +2313,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonReaderUtils_InvalidValueForODataNullAnnotation("odata.null", "true"),
+                Error.Format(SRResources.ODataJsonReaderUtils_InvalidValueForODataNullAnnotation, "odata.null", "true"),
                 exception.Message);
         }
 
@@ -2334,7 +2334,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
-                ErrorStrings.ValidationUtils_IncorrectTypeKind("Collection(Edm.Int32)", "Primitive", "Collection"),
+                Error.Format(SRResources.ValidationUtils_IncorrectTypeKind, "Collection(Edm.Int32)", "Primitive", "Collection"),
                 exception.Message);
         }
 
@@ -2356,7 +2356,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation("odata.type"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation, "odata.type"),
                 exception.Message);
         }
 
@@ -2377,7 +2377,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_TypePropertyAfterValueProperty("odata.type", "value"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_TypePropertyAfterValueProperty, "odata.type", "value"),
                 exception.Message);
         }
 
@@ -2396,7 +2396,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload,
+                SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload,
                 exception.Message);
         }
 
@@ -2416,7 +2416,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyName("foobar", "value"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyName, "foobar", "value"),
                 exception.Message);
         }
 
@@ -2439,7 +2439,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
-                ErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName("StartArray", "StartObject", "value"),
+                Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName, "StartArray", "StartObject", "value"),
                 exception.Message);
         }
 
@@ -2498,7 +2498,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_ODataResourceExpectedForProperty("HomeAddress", "PrimitiveValue", "NS.Address"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_ODataResourceExpectedForProperty, "HomeAddress", "PrimitiveValue", "NS.Address"),
                 exception.Message);
         }
 

@@ -21,9 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Microsoft.Spatial.tt" />
     <None Remove="Microsoft.Spatial.xml" />
-    <None Remove="Parameterized.Microsoft.Spatial.tt" />
   </ItemGroup>
 
   <ItemGroup>
@@ -56,39 +54,17 @@
   </ItemGroup>
 
   <ItemGroup>
-    <TextStringResource Include="Microsoft.Spatial.txt">
-      <ResFile>Microsoft.Spatial</ResFile>
-      <Sealed>true</Sealed>
-      <Parameterize>true</Parameterize>
-      <Visibility>internal</Visibility>
-      <GenerateResource>true</GenerateResource>
-      <FullClassName>Microsoft.Spatial.TextRes</FullClassName>
-      <SupportsAssemblyReferences>false</SupportsAssemblyReferences>
-      <SkipSRAttributes>true</SkipSRAttributes>
-    </TextStringResource>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Resource Include="Microsoft.Spatial.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Microsoft.Spatial.cs</LastGenOutput>
-    </Resource>
-    <Resource Include="Parameterized.Microsoft.Spatial.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Parameterized.Microsoft.Spatial.cs</LastGenOutput>
-    </Resource>
+    <Compile Update="SRResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SRResources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   
   <ItemGroup>
-    <Compile Update="Microsoft.Spatial.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Microsoft.Spatial.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Parameterized.Microsoft.Spatial.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Parameterized.Microsoft.Spatial.tt</DependentUpon>
-    </Compile>
+    <EmbeddedResource Update="SRResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>SRResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

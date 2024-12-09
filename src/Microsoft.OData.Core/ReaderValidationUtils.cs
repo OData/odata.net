@@ -11,6 +11,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
@@ -32,7 +33,7 @@ namespace Microsoft.OData
 
             if (messageReaderSettings.BaseUri != null && !messageReaderSettings.BaseUri.IsAbsoluteUri)
             {
-                throw new ODataException(Strings.ReaderValidationUtils_MessageReaderSettingsBaseUriMustBeNullOrAbsolute(UriUtils.UriToString(messageReaderSettings.BaseUri)));
+                throw new ODataException(Error.Format(SRResources.ReaderValidationUtils_MessageReaderSettingsBaseUriMustBeNullOrAbsolute, UriUtils.UriToString(messageReaderSettings.BaseUri)));
             }
         }
 
@@ -46,7 +47,7 @@ namespace Microsoft.OData
 
             if (link.Url == null)
             {
-                throw new ODataException(Strings.ReaderValidationUtils_EntityReferenceLinkMissingUri);
+                throw new ODataException(SRResources.ReaderValidationUtils_EntityReferenceLinkMissingUri);
             }
         }
 
@@ -70,7 +71,7 @@ namespace Microsoft.OData
             {
                 if (streamEdmProperty == null && throwOnUndeclaredLinkProperty)
                 {
-                    throw new ODataException(Strings.ValidationUtils_OpenStreamProperty(propertyName));
+                    throw new ODataException(Error.Format(SRResources.ValidationUtils_OpenStreamProperty, propertyName));
                 }
             }
         }
@@ -140,7 +141,7 @@ namespace Microsoft.OData
             {
                 if (throwOnUndeclaredPropertyForNonOpenType)
                 {
-                    throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
+                    throw new ODataException(Error.Format(SRResources.ValidationUtils_PropertyDoesNotExistOnType, propertyName, owningStructuredType.FullTypeName()));
                 }
             }
 
@@ -158,7 +159,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(targetTypeReference != null, "targetTypeReference != null");
 
-            return new ODataException(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue(stringValue, targetTypeReference.FullName()), innerException);
+            return new ODataException(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, stringValue, targetTypeReference.FullName()), innerException);
         }
 
         /// <summary>
@@ -419,7 +420,7 @@ namespace Microsoft.OData
                     (IEdmPrimitiveType)payloadType.AsActualType(),
                     (IEdmPrimitiveType)(expectedTypeReference.Definition)))
                 {
-                    throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadTypeName, expectedTypeReference.FullName()));
+                    throw new ODataException(Error.Format(SRResources.ValidationUtils_IncompatibleType, payloadTypeName, expectedTypeReference.FullName()));
                 }
 
                 if (expectedTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.PrimitiveType)
@@ -544,7 +545,7 @@ namespace Microsoft.OData
             {
                 // TODO: Batch reader does not support multi codepoint encodings
                 // We decided to not support multi-byte encodings other than UTF8 for now.
-                throw new ODataException(Strings.ODataBatchReaderStream_MultiByteEncodingsNotSupported(encoding.WebName));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_MultiByteEncodingsNotSupported, encoding.WebName));
             }
         }
 
@@ -559,7 +560,7 @@ namespace Microsoft.OData
             if (string.CompareOrdinal(Encoding.UTF8.WebName, encoding.WebName) != 0)
             {
                 // We decided to not support multi-byte encodings other than UTF8 for now.
-                throw new ODataException(Strings.ODataAsyncReader_MultiByteEncodingsNotSupported(encoding.WebName));
+                throw new ODataException(Error.Format(SRResources.ODataAsyncReader_MultiByteEncodingsNotSupported, encoding.WebName));
             }
         }
 
@@ -590,7 +591,7 @@ namespace Microsoft.OData
             }
             else if (contextUriParseResult.NavigationSource != null && string.CompareOrdinal(scope.NavigationSource.FullNavigationSourceName(), contextUriParseResult.NavigationSource.FullNavigationSourceName()) != 0)
             {
-                throw new ODataException(Strings.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet(
+                throw new ODataException(Error.Format(SRResources.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet,
                     UriUtils.UriToString(contextUriParseResult.ContextUri),
                     contextUriParseResult.NavigationSource.FullNavigationSourceName(),
                     scope.NavigationSource.FullNavigationSourceName()));
@@ -621,7 +622,7 @@ namespace Microsoft.OData
             }
             else if (!payloadEntityType.IsAssignableFrom(scope.ResourceType))
             {
-                throw new ODataException(Strings.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntityType(
+                throw new ODataException(Error.Format(SRResources.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntityType,
                     UriUtils.UriToString(contextUriParseResult.ContextUri),
                     contextUriParseResult.EdmType.FullTypeName(),
                     scope.ResourceType.FullTypeName()));
@@ -653,7 +654,7 @@ namespace Microsoft.OData
                     // We allow co-variance in collection types (e.g., expecting the item type of Geography from a payload of Collection(GeographyPoint).
                     if (!expectedItemTypeReference.IsAssignableFrom(actualCollectionType.ElementType))
                     {
-                        throw new ODataException(Strings.ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType(
+                        throw new ODataException(Error.Format(SRResources.ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType,
                             UriUtils.UriToString(contextUriParseResult.ContextUri),
                             actualCollectionType.ElementType.FullName(),
                             expectedItemTypeReference.FullName()));
@@ -667,7 +668,7 @@ namespace Microsoft.OData
                 "contextUriParseResult.EdmType is IEdmComplexType");
             if (expectedItemTypeReference != null && !expectedItemTypeReference.Definition.IsAssignableFrom(contextUriParseResult.EdmType))
             {
-                throw new ODataException(Strings.ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType(
+                throw new ODataException(Error.Format(SRResources.ReaderValidationUtils_ContextUriDoesNotReferTypeAssignableToExpectedType,
                     UriUtils.UriToString(contextUriParseResult.ContextUri),
                     contextUriParseResult.EdmType.FullTypeName(),
                     expectedItemTypeReference.Definition.FullTypeName()));
@@ -690,7 +691,7 @@ namespace Microsoft.OData
 
             if (propertyValue == null)
             {
-                throw new ODataException(Strings.ODataJsonOperationsDeserializerUtils_OperationPropertyCannotBeNull(
+                throw new ODataException(Error.Format(SRResources.ODataJsonOperationsDeserializerUtils_OperationPropertyCannotBeNull,
                     propertyName,
                     metadata,
                     operationsHeader));
@@ -713,7 +714,7 @@ namespace Microsoft.OData
             {
                 if (expectedTypeKind == EdmTypeKind.Entity)
                 {
-                    throw new ODataException(Strings.ReaderValidationUtils_ResourceWithoutType);
+                    throw new ODataException(SRResources.ReaderValidationUtils_ResourceWithoutType);
                 }
 
                 return null; // supports undeclared property
@@ -786,7 +787,7 @@ namespace Microsoft.OData
 
                     break;
                 default:
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ReaderValidationUtils_ResolveAndValidateTypeName_Strict_TypeKind));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ReaderValidationUtils_ResolveAndValidateTypeName_Strict_TypeKind));
             }
 
             // Either there's no payload type, in which case use the expected one, or the payload one and the expected one are equal.
@@ -840,7 +841,7 @@ namespace Microsoft.OData
                 case EdmTypeKind.Enum:
                     if (!expectedTypeReference.IsUntyped() && payloadType != null && string.CompareOrdinal(payloadType.FullTypeName(), expectedTypeReference.FullName()) != 0)
                     {
-                        throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadType.FullTypeName(), expectedTypeReference.FullName()));
+                        throw new ODataException(Error.Format(SRResources.ValidationUtils_IncompatibleType, payloadType.FullTypeName(), expectedTypeReference.FullName()));
                     }
 
                     break;
@@ -851,21 +852,21 @@ namespace Microsoft.OData
                     {
                         VerifyCollectionComplexItemType(expectedTypeReference, payloadType);
 
-                        throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadType.FullTypeName(), expectedTypeReference.FullName()));
+                        throw new ODataException(Error.Format(SRResources.ValidationUtils_IncompatibleType, payloadType.FullTypeName(), expectedTypeReference.FullName()));
                     }
 
                     break;
                 case EdmTypeKind.TypeDefinition:
                     if (payloadType != null && !expectedTypeReference.Definition.IsAssignableFrom(payloadType))
                     {
-                        throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadType.FullTypeName(), expectedTypeReference.FullName()));
+                        throw new ODataException(Error.Format(SRResources.ValidationUtils_IncompatibleType, payloadType.FullTypeName(), expectedTypeReference.FullName()));
                     }
 
                     break;
                 case EdmTypeKind.Untyped:
                     break;
                 default:
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ReaderValidationUtils_ResolveAndValidateTypeName_Strict_TypeKind));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ReaderValidationUtils_ResolveAndValidateTypeName_Strict_TypeKind));
             }
 
             // Either there's no payload type, in which case use the expected one, or the payload one and the expected one are equal.
@@ -881,7 +882,7 @@ namespace Microsoft.OData
         {
             if (payloadTypeName != null && payloadType == null)
             {
-                throw new ODataException(Strings.ValidationUtils_UnrecognizedTypeName(payloadTypeName));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_UnrecognizedTypeName, payloadTypeName));
             }
         }
 
@@ -910,7 +911,7 @@ namespace Microsoft.OData
                 if (failIfNotRelated)
                 {
                     // And now the generic one when the types are not related at all.
-                    throw new ODataException(Strings.ValidationUtils_IncompatibleType(structuredPayloadType.FullTypeName(), structuredExpectedType.FullTypeName()));
+                    throw new ODataException(Error.Format(SRResources.ValidationUtils_IncompatibleType, structuredPayloadType.FullTypeName(), structuredExpectedType.FullTypeName()));
                 }
             }
         }
@@ -1156,10 +1157,10 @@ namespace Microsoft.OData
         {
             if (string.IsNullOrEmpty(propertyName))
             {
-                throw new ODataException(Strings.ReaderValidationUtils_NullValueForNonNullableType(expectedValueTypeReference.FullName()));
+                throw new ODataException(Error.Format(SRResources.ReaderValidationUtils_NullValueForNonNullableType, expectedValueTypeReference.FullName()));
             }
 
-            throw new ODataException(Strings.ReaderValidationUtils_NullNamedValueForNonNullableType(propertyName, expectedValueTypeReference.FullName()));
+            throw new ODataException(Error.Format(SRResources.ReaderValidationUtils_NullNamedValueForNonNullableType, propertyName, expectedValueTypeReference.FullName()));
         }
 
         /// <summary>
@@ -1171,10 +1172,10 @@ namespace Microsoft.OData
         {
             if (string.IsNullOrEmpty(propertyName))
             {
-                throw new ODataException(Strings.ReaderValidationUtils_NullValueForNullableType(expectedValueTypeReference.FullName()));
+                throw new ODataException(Error.Format(SRResources.ReaderValidationUtils_NullValueForNullableType, expectedValueTypeReference.FullName()));
             }
 
-            throw new ODataException(Strings.ReaderValidationUtils_NullNamedValueForNullableType(propertyName, expectedValueTypeReference.FullName()));
+            throw new ODataException(Error.Format(SRResources.ReaderValidationUtils_NullNamedValueForNullableType, propertyName, expectedValueTypeReference.FullName()));
         }
 
 

@@ -120,7 +120,7 @@ namespace Microsoft.OData.Client.Metadata
             {
                 if (existing != null)
                 {
-                    throw Client.Error.InvalidOperation(Client.Strings.ClientType_Ambiguous(wireClassName, userType));
+                    throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientType_Ambiguous, wireClassName, userType));
                 }
 
                 existing = type;

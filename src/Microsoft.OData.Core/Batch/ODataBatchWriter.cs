@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -960,7 +961,7 @@ namespace Microsoft.OData
             // want to fail on the duplicate.
             if (contentId != null && this.payloadUriConverter.ContainsContentId(contentId))
             {
-                throw new ODataException(Strings.ODataBatchWriter_DuplicateContentIDsNotAllowed(contentId));
+                throw new ODataException(Error.Format(SRResources.ODataBatchWriter_DuplicateContentIDsNotAllowed, contentId));
             }
 
             // Set the current content ID. If no Content-ID header is found in the message,
@@ -977,7 +978,7 @@ namespace Microsoft.OData
 
             if (this.currentBatchSize > this.outputContext.MessageWriterSettings.MessageQuotas.MaxPartsPerBatch)
             {
-                throw new ODataException(Strings.ODataBatchWriter_MaxBatchSizeExceeded(this.outputContext.MessageWriterSettings.MessageQuotas.MaxPartsPerBatch));
+                throw new ODataException(Error.Format(SRResources.ODataBatchWriter_MaxBatchSizeExceeded, this.outputContext.MessageWriterSettings.MessageQuotas.MaxPartsPerBatch));
             }
         }
 
@@ -990,7 +991,7 @@ namespace Microsoft.OData
 
             if (this.currentChangeSetSize > this.outputContext.MessageWriterSettings.MessageQuotas.MaxOperationsPerChangeset)
             {
-                throw new ODataException(Strings.ODataBatchWriter_MaxChangeSetSizeExceeded(this.outputContext.MessageWriterSettings.MessageQuotas.MaxOperationsPerChangeset));
+                throw new ODataException(Error.Format(SRResources.ODataBatchWriter_MaxChangeSetSizeExceeded, this.outputContext.MessageWriterSettings.MessageQuotas.MaxOperationsPerChangeset));
             }
         }
 
@@ -1012,14 +1013,14 @@ namespace Microsoft.OData
             {
                 if (!this.outputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataBatchWriter_SyncCallOnAsyncWriter);
+                    throw new ODataException(SRResources.ODataBatchWriter_SyncCallOnAsyncWriter);
                 }
             }
             else
             {
                 if (this.outputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataBatchWriter_AsyncCallOnSyncWriter);
+                    throw new ODataException(SRResources.ODataBatchWriter_AsyncCallOnSyncWriter);
                 }
             }
         }
@@ -1043,12 +1044,12 @@ namespace Microsoft.OData
             {
                 if (HttpUtils.IsQueryMethod(method))
                 {
-                    this.ThrowODataException(Strings.ODataBatch_InvalidHttpMethodForChangeSetRequest(method));
+                    this.ThrowODataException(Error.Format(SRResources.ODataBatch_InvalidHttpMethodForChangeSetRequest, method));
                 }
 
                 if (string.IsNullOrEmpty(contentId))
                 {
-                    this.ThrowODataException(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound(ODataConstants.ContentIdHeader));
+                    this.ThrowODataException(Error.Format(SRResources.ODataBatchOperationHeaderDictionary_KeyNotFound, ODataConstants.ContentIdHeader));
                 }
             }
 
@@ -1058,7 +1059,7 @@ namespace Microsoft.OData
 
             if (this.outputContext.WritingResponse)
             {
-                this.ThrowODataException(Strings.ODataBatchWriter_CannotCreateRequestOperationWhenWritingResponse);
+                this.ThrowODataException(SRResources.ODataBatchWriter_CannotCreateRequestOperationWhenWritingResponse);
             }
         }
 
@@ -1072,7 +1073,7 @@ namespace Microsoft.OData
             this.VerifyCallAllowed(synchronousCall);
             if (this.state == BatchWriterState.OperationStreamRequested)
             {
-                this.ThrowODataException(Strings.ODataBatchWriter_FlushOrFlushAsyncCalledInStreamRequestedState);
+                this.ThrowODataException(SRResources.ODataBatchWriter_FlushOrFlushAsyncCalledInStreamRequestedState);
             }
         }
 
@@ -1086,7 +1087,7 @@ namespace Microsoft.OData
             // If the operation stream was requested but not yet disposed, the writer can't be used to do anything.
             if (this.state == BatchWriterState.OperationStreamRequested)
             {
-                throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamRequested);
+                throw new ODataException(SRResources.ODataBatchWriter_InvalidTransitionFromOperationContentStreamRequested);
             }
         }
 
@@ -1152,7 +1153,7 @@ namespace Microsoft.OData
 
             if (!this.outputContext.WritingResponse)
             {
-                this.ThrowODataException(Strings.ODataBatchWriter_CannotCreateResponseOperationWhenWritingRequest);
+                this.ThrowODataException(SRResources.ODataBatchWriter_CannotCreateResponseOperationWhenWritingRequest);
             }
         }
 
@@ -1175,7 +1176,7 @@ namespace Microsoft.OData
                     // make sure that we are not starting a changeset when one is already active
                     if (this.isInChangeset)
                     {
-                        throw new ODataException(Strings.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet);
+                        throw new ODataException(SRResources.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet);
                     }
 
                     break;
@@ -1183,7 +1184,7 @@ namespace Microsoft.OData
                     // make sure that we are not completing a changeset without an active changeset
                     if (!this.isInChangeset)
                     {
-                        throw new ODataException(Strings.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet);
+                        throw new ODataException(SRResources.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet);
                     }
 
                     break;
@@ -1191,7 +1192,7 @@ namespace Microsoft.OData
                     // make sure that we are not completing a batch while a changeset is still active
                     if (this.isInChangeset)
                     {
-                        throw new ODataException(Strings.ODataBatchWriter_CannotCompleteBatchWithActiveChangeSet);
+                        throw new ODataException(SRResources.ODataBatchWriter_CannotCompleteBatchWithActiveChangeSet);
                     }
 
                     break;
@@ -1202,21 +1203,21 @@ namespace Microsoft.OData
                 case BatchWriterState.Start:
                     if (newState != BatchWriterState.BatchStarted)
                     {
-                        throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromStart);
+                        throw new ODataException(SRResources.ODataBatchWriter_InvalidTransitionFromStart);
                     }
 
                     break;
                 case BatchWriterState.BatchStarted:
                     if (newState != BatchWriterState.ChangesetStarted && newState != BatchWriterState.OperationCreated && newState != BatchWriterState.BatchCompleted)
                     {
-                        throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromBatchStarted);
+                        throw new ODataException(SRResources.ODataBatchWriter_InvalidTransitionFromBatchStarted);
                     }
 
                     break;
                 case BatchWriterState.ChangesetStarted:
                     if (newState != BatchWriterState.OperationCreated && newState != BatchWriterState.ChangesetCompleted)
                     {
-                        throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromChangeSetStarted);
+                        throw new ODataException(SRResources.ODataBatchWriter_InvalidTransitionFromChangeSetStarted);
                     }
 
                     break;
@@ -1227,7 +1228,7 @@ namespace Microsoft.OData
                         newState != BatchWriterState.ChangesetCompleted &&
                         newState != BatchWriterState.BatchCompleted)
                     {
-                        throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromOperationCreated);
+                        throw new ODataException(SRResources.ODataBatchWriter_InvalidTransitionFromOperationCreated);
                     }
 
                     Debug.Assert(newState != BatchWriterState.OperationStreamDisposed, "newState != BatchWriterState.OperationStreamDisposed");
@@ -1236,7 +1237,7 @@ namespace Microsoft.OData
                 case BatchWriterState.OperationStreamRequested:
                     if (newState != BatchWriterState.OperationStreamDisposed)
                     {
-                        throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamRequested);
+                        throw new ODataException(SRResources.ODataBatchWriter_InvalidTransitionFromOperationContentStreamRequested);
                     }
 
                     break;
@@ -1246,7 +1247,7 @@ namespace Microsoft.OData
                         newState != BatchWriterState.ChangesetCompleted &&
                         newState != BatchWriterState.BatchCompleted)
                     {
-                        throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamDisposed);
+                        throw new ODataException(SRResources.ODataBatchWriter_InvalidTransitionFromOperationContentStreamDisposed);
                     }
 
                     break;
@@ -1255,24 +1256,24 @@ namespace Microsoft.OData
                         newState != BatchWriterState.ChangesetStarted &&
                         newState != BatchWriterState.OperationCreated)
                     {
-                        throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromChangeSetCompleted);
+                        throw new ODataException(SRResources.ODataBatchWriter_InvalidTransitionFromChangeSetCompleted);
                     }
 
                     break;
                 case BatchWriterState.BatchCompleted:
                     // no more state transitions should happen once in completed state
-                    throw new ODataException(Strings.ODataBatchWriter_InvalidTransitionFromBatchCompleted);
+                    throw new ODataException(SRResources.ODataBatchWriter_InvalidTransitionFromBatchCompleted);
 
                 case BatchWriterState.Error:
                     if (newState != BatchWriterState.Error)
                     {
                         // No more state transitions once we are in error state except for the fatal error
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromError(this.state.ToString(), newState.ToString()));
+                        throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromError, this.state.ToString(), newState.ToString()));
                     }
 
                     break;
                 default:
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchWriter_ValidateTransition_UnreachableCodePath));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchWriter_ValidateTransition_UnreachableCodePath));
             }
         }
     }

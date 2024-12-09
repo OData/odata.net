@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -70,7 +71,7 @@ namespace Microsoft.OData
                 return;
             }
 
-            throw new ODataException(Strings.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(resourceTypeName, resourceKind, resourceName));
+            throw new ODataException(Error.Format(SRResources.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, resourceTypeName, resourceKind, resourceName));
         }
     }
 }

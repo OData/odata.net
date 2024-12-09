@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
@@ -15,7 +16,6 @@ using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Validation;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -65,15 +65,15 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Empty(results.SelectedItems);
             Assert.Null(uriParser.ParseOrderBy());
             Action action = () => uriParser.ParseTop();
-            action.Throws<ODataException>(Strings.SyntacticTree_InvalidTopQueryOptionValue(""));
+            action.Throws<ODataException>(Error.Format(SRResources.SyntacticTree_InvalidTopQueryOptionValue, ""));
             action = () => uriParser.ParseSkip();
-            action.Throws<ODataException>(Strings.SyntacticTree_InvalidSkipQueryOptionValue(""));
+            action.Throws<ODataException>(Error.Format(SRResources.SyntacticTree_InvalidSkipQueryOptionValue, ""));
             action = () => uriParser.ParseIndex();
-            action.Throws<ODataException>(Strings.SyntacticTree_InvalidIndexQueryOptionValue(""));
+            action.Throws<ODataException>(Error.Format(SRResources.SyntacticTree_InvalidIndexQueryOptionValue, ""));
             action = () => uriParser.ParseCount();
-            action.Throws<ODataException>(Strings.ODataUriParser_InvalidCount(""));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataUriParser_InvalidCount, ""));
             action = () => uriParser.ParseSearch();
-            action.Throws<ODataException>(Strings.UriQueryExpressionParser_ExpressionExpected(0, ""));
+            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 0, ""));
             Assert.Empty(uriParser.ParseSkipToken());
             Assert.Empty(uriParser.ParseDeltaToken());
         }
@@ -112,7 +112,7 @@ namespace Microsoft.OData.Tests.UriParser
             path.LastSegment.ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
             Action action  = () => uriParser.ParseFilter();
             action.Throws<ODataException>(
-                ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "@my.annotation"));
+                Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "Fully.Qualified.Namespace.Person", "@my.annotation"));
         }
 
         [Fact]
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Tests.UriParser
                         new Uri(FullUri, "?$filter=UserName eq 'Tom'&nonODataQuery=foo&$select=Emails&nonODataQuery=bar"));
                 var nonODataqueryOptions = uriParserProcessingDupCustomQuery.CustomQueryOptions;
 
-                action.Throws<ODataException>(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$filter"));
+                action.Throws<ODataException>(Error.Format(SRResources.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce, "$filter"));
                 Assert.Equal(2, nonODataqueryOptions.Count);
                 Assert.True(nonODataqueryOptions[0].Key.Equals("nonODataQuery") &&
                             nonODataqueryOptions[1].Key.Equals("nonODataQuery"));
@@ -185,14 +185,14 @@ namespace Microsoft.OData.Tests.UriParser
         public void MaxExpandDepthCannotBeNegative()
         {
             Action setNegative = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).Settings.MaximumExpansionDepth = -1;
-            setNegative.Throws<ODataException>(ODataErrorStrings.UriParser_NegativeLimit);
+            setNegative.Throws<ODataException>(SRResources.UriParser_NegativeLimit);
         }
 
         [Fact]
         public void MaxExpandCountCannotBeNegative()
         {
             Action setNegative = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri).Settings.MaximumExpansionCount = -1;
-            setNegative.Throws<ODataException>(ODataErrorStrings.UriParser_NegativeLimit);
+            setNegative.Throws<ODataException>(SRResources.UriParser_NegativeLimit);
         }
         #endregion
 
@@ -213,7 +213,7 @@ namespace Microsoft.OData.Tests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { FilterLimit = 0 } };
             parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseFilter();
-            parseWithLimit.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            parseWithLimit.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         [Theory]
@@ -225,14 +225,14 @@ namespace Microsoft.OData.Tests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { FilterLimit = 5 } };
             parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseFilter();
-            parseWithLimit.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            parseWithLimit.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
         public void NegativeFilterLimitThrows()
         {
             Action negativeLimit = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri) { Settings = { FilterLimit = -98798 } };
-            negativeLimit.Throws<ODataException>(ODataErrorStrings.UriParser_NegativeLimit);
+            negativeLimit.Throws<ODataException>(SRResources.UriParser_NegativeLimit);
         }
 
         [Fact]
@@ -251,7 +251,7 @@ namespace Microsoft.OData.Tests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { OrderByLimit = 0 } };
             parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseOrderBy();
-            parseWithLimit.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            parseWithLimit.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         [Theory]
@@ -263,14 +263,14 @@ namespace Microsoft.OData.Tests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { OrderByLimit = 5 } };
             parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseOrderBy();
-            parseWithLimit.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            parseWithLimit.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
         public void OrderByLimitCannotBeNegative()
         {
             Action parseWithNegativeLimit = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri) { Settings = { OrderByLimit = -9879 } };
-            parseWithNegativeLimit.Throws<ODataException>(ODataErrorStrings.UriParser_NegativeLimit);
+            parseWithNegativeLimit.Throws<ODataException>(SRResources.UriParser_NegativeLimit);
         }
 
         [Fact]
@@ -285,14 +285,14 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldygook/", UriKind.Absolute), new Uri("http://gobbldygook/path/to/something", UriKind.Absolute)) { Settings = { PathLimit = 0 } };
             Action parseWithLimit = () => parser.ParsePath();
-            parseWithLimit.Throws<ODataException>(ODataErrorStrings.UriQueryPathParser_TooManySegments);
+            parseWithLimit.Throws<ODataException>(SRResources.UriQueryPathParser_TooManySegments);
         }
 
         [Fact]
         public void PathLimitCannotBeNegative()
         {
             Action parseWithNegativeLimit = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri) { Settings = { PathLimit = -8768 } };
-            parseWithNegativeLimit.Throws<ODataException>(ODataErrorStrings.UriParser_NegativeLimit);
+            parseWithNegativeLimit.Throws<ODataException>(SRResources.UriParser_NegativeLimit);
         }
 
         [Fact]
@@ -311,14 +311,14 @@ namespace Microsoft.OData.Tests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri(fullUriString)) { Settings = { SelectExpandLimit = 0 } };
             parser.EnableNoDollarQueryOptions = enableNoDollarQueryOptions;
             Action parseWithLimit = () => parser.ParseSelectAndExpand();
-            parseWithLimit.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            parseWithLimit.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
         public void NegativeSelectExpandLimitIsRespected()
         {
             Action parseWithNegativeLimit = () => new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, FullUri) { Settings = { SelectExpandLimit = -87657 } };
-            parseWithNegativeLimit.Throws<ODataException>(ODataErrorStrings.UriParser_NegativeLimit);
+            parseWithNegativeLimit.Throws<ODataException>(SRResources.UriParser_NegativeLimit);
         }
         #endregion
 
@@ -377,7 +377,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void AbsoluteUriInConstructorShouldThrow()
         {
             Action action = () => new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host/People(1)"));
-            action.Throws<ODataException>(Strings.UriParser_RelativeUriMustBeRelative);
+            action.Throws<ODataException>(SRResources.UriParser_RelativeUriMustBeRelative);
         }
 
         [Fact]
@@ -429,7 +429,7 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
             }.ParsePath();
 
-            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyOrAlternateKeyMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
+            action.Throws<ODataException>(Error.Format(SRResources.BadRequest_KeyOrAlternateKeyMismatch, HardCodedTestModel.GetPersonType().FullTypeName()));
         }
 
         [Fact]
@@ -441,7 +441,7 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new AlternateKeysODataUriResolver(HardCodedTestModel.TestModel)
             }.ParsePath();
 
-            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyOrAlternateKeyMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
+            action.Throws<ODataException>(Error.Format(SRResources.BadRequest_KeyOrAlternateKeyMismatch, HardCodedTestModel.GetPersonType().FullTypeName()));
         }
 
         [Fact]
@@ -453,7 +453,7 @@ namespace Microsoft.OData.Tests.UriParser
                 Resolver = new ODataUriResolver()
             }.ParsePath();
 
-            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyMismatch(HardCodedTestModel.GetPersonType().FullTypeName()));
+            action.Throws<ODataException>(Error.Format(SRResources.BadRequest_KeyMismatch, HardCodedTestModel.GetPersonType().FullTypeName()));
         }
 
         [Fact]
@@ -524,7 +524,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri(relativeUriString, UriKind.Relative));
             Action action = () => parser.ParseSelectAndExpand();
-            action.Throws<ODataException>(ODataErrorStrings.UriSelectParser_TermIsNotValid(term));
+            action.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_TermIsNotValid, term));
         }
 
         [Fact]
@@ -624,7 +624,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             if (shouldThrow)
             {
-                action.Throws<ODataException>(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(
+                action.Throws<ODataException>(Error.Format(SRResources.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce,
                     enableNoDollarQueryOptions ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", queryOptionName) : queryOptionName));
             }
             else
@@ -930,7 +930,7 @@ namespace Microsoft.OData.Tests.UriParser
             Uri url = new Uri("http://host/Paintings?$compute=nonsense");
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, url);
             Action action = () => parser.ParseCompute();
-            action.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_AsExpected(8, "nonsense"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_AsExpected, 8, "nonsense"));
         }
 
         [Fact]
@@ -1385,7 +1385,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             // Assert
             var odataException = Assert.Throws<ODataUnrecognizedPathException>(test);
-            Assert.Equal(ODataErrorStrings.RequestUriProcessor_ResourceNotFound("root:"), odataException.Message);
+            Assert.Equal(Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "root:"), odataException.Message);
         }
 
         [Fact]
@@ -1401,7 +1401,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             // Assert
             var odataException = Assert.Throws<ODataException>(test);
-            Assert.Equal(ODataErrorStrings.RequestUriProcessor_NoBoundEscapeFunctionSupported("NS.OneDrive"), odataException.Message);
+            Assert.Equal(Error.Format(SRResources.RequestUriProcessor_NoBoundEscapeFunctionSupported, "NS.OneDrive"), odataException.Message);
         }
 
         internal static IEdmModel GetEdmModelWithEscapeFunction(bool escape, bool multipleParameter = false)
@@ -1551,7 +1551,7 @@ namespace Microsoft.OData.Tests.UriParser
 
             // Assert
             var odataException = Assert.Throws<ODataException>(test);
-            Assert.Equal(ODataErrorStrings.RequestUriProcessor_NoBoundEscapeFunctionSupported("Collection(NS.Order)"), odataException.Message);
+            Assert.Equal(Error.Format(SRResources.RequestUriProcessor_NoBoundEscapeFunctionSupported, "Collection(NS.Order)"), odataException.Message);
         }
 
         [Theory]

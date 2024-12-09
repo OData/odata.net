@@ -13,6 +13,7 @@ namespace Microsoft.OData
     using System.Linq;
     using Microsoft.OData.UriParser.Aggregation;
     using Microsoft.OData.UriParser;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -112,7 +113,7 @@ namespace Microsoft.OData
 
                 if (!value.IsAbsoluteUri)
                 {
-                    throw new ODataException(Strings.WriterValidationUtils_MessageWriterSettingsServiceDocumentUriMustBeNullOrAbsolute(UriUtils.UriToString(value)));
+                    throw new ODataException(Error.Format(SRResources.WriterValidationUtils_MessageWriterSettingsServiceDocumentUriMustBeNullOrAbsolute, UriUtils.UriToString(value)));
                 }
 
                 this.serviceRoot = UriUtils.EnsureTaillingSlash(value);

@@ -11,6 +11,7 @@ using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -96,7 +97,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // Arrange & Act & Assert
             Action action = () => this.Run("MyContainedDog($skip=SKIP)", PersonType, PeopleSet);
-            action.Throws<ODataException>(Strings.UriSelectParser_InvalidSkipOption("SKIP"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_InvalidSkipOption, "SKIP"));
         }
 
         [Fact]
@@ -124,11 +125,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // Arrange & Act & Assert
             Action action = () => this.Run("MyContainedDog($top=TOP)", PersonType, PeopleSet);
-            action.Throws<ODataException>(Strings.UriSelectParser_InvalidTopOption("TOP"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_InvalidTopOption, "TOP"));
 
             // Arrange & Act & Assert
             action = () => this.Run("MyContainedDog($top=-1)", PersonType, PeopleSet);
-            action.Throws<ODataException>(Strings.UriSelectParser_InvalidTopOption("-1"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_InvalidTopOption, "-1"));
         }
 
         [Fact]
@@ -147,11 +148,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // Arrange & Act & Assert
             Action action = () => this.RunSelect("PreviousAddresses($top=TOP)", PersonType, PeopleSet);
-            action.Throws<ODataException>(Strings.UriSelectParser_InvalidTopOption("TOP"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_InvalidTopOption, "TOP"));
 
             // Arrange & Act & Assert
             action = () => this.RunSelect("PreviousAddresses($top=-1)", PersonType, PeopleSet);
-            action.Throws<ODataException>(Strings.UriSelectParser_InvalidTopOption("-1"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_InvalidTopOption, "-1"));
         }
         #endregion $top
 
@@ -167,10 +168,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void CountWithInvalidValue()
         {
             Action action = () => this.Run("MyContainedDog($count=COUNT)", PersonType, PeopleSet);
-            action.Throws<ODataException>(Strings.UriSelectParser_InvalidCountOption("COUNT"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_InvalidCountOption, "COUNT"));
 
             action = () => this.Run("MyContainedDog($count=-2)", PersonType, PeopleSet);
-            action.Throws<ODataException>(Strings.UriSelectParser_InvalidCountOption("-2"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_InvalidCountOption, "-2"));
         }
         #endregion $count
 
@@ -202,21 +203,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void LevelsWithNegativeValueShouldThrow()
         {
             Action action = () => this.Run("Fully.Qualified.Namespace.Manager/DirectReports($levels=-1)", PersonType, PeopleSet);
-            action.Throws<ODataException>(Strings.UriSelectParser_InvalidLevelsOption("-1"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_InvalidLevelsOption, "-1"));
         }
 
         [Fact]
         public void LevelsWithInvalidValue()
         {
             Action action = () => this.Run("Fully.Qualified.Namespace.Manager/DirectReports($levels=LEVEL)", PersonType, PeopleSet);
-            action.Throws<ODataException>(Strings.UriSelectParser_InvalidLevelsOption("LEVEL"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_InvalidLevelsOption, "LEVEL"));
         }
 
         [Fact]
         public void LevelsOnInvalidNavigationProperty()
         {
             Action action = () => this.Run("MyPaintings($levels=6)", PersonType, PeopleSet);
-            action.Throws<ODataException>(Strings.ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType("MyPaintings", "Fully.Qualified.Namespace.Painting", "Fully.Qualified.Namespace.Person"));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType, "MyPaintings", "Fully.Qualified.Namespace.Painting", "Fully.Qualified.Namespace.Person"));
         }
         #endregion $levels
 

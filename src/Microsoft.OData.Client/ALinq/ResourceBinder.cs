@@ -120,7 +120,7 @@ namespace Microsoft.OData.Client
         {
             if (IsMissingKeyPredicates(e))
             {
-                throw new NotSupportedException(Strings.ALinq_CantNavigateWithoutKeyPredicate);
+                throw new NotSupportedException(SRResources.ALinq_CantNavigateWithoutKeyPredicate);
             }
         }
 
@@ -143,12 +143,12 @@ namespace Microsoft.OData.Client
                     MethodCallExpression call = StripTo<MethodCallExpression>(projection.Selector.Body);
                     if (call != null && call.Method.Name == "SelectMany")
                     {
-                        throw new NotSupportedException(Strings.ALinq_UnsupportedExpression(call));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_UnsupportedExpression, call));
                     }
                 }
                 else if (resourceExpression.HasTransparentScope)
                 {
-                    throw new NotSupportedException(Strings.ALinq_UnsupportedExpression(resourceExpression));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_UnsupportedExpression, resourceExpression));
                 }
             }
         }
@@ -353,7 +353,7 @@ namespace Microsoft.OData.Client
                     {
                         // UNSUPPORTED: <property1> = <value1> AND <property1> = <value2> are multiple key predicates and
                         // cannot be represented as a resource path.
-                        throw Error.NotSupported(Strings.ALinq_CanOnlyApplyOneKeyPredicate);
+                        throw Error.NotSupported(SRResources.ALinq_CanOnlyApplyOneKeyPredicate);
                     }
 
                     keyValuesFromPredicates.Add(property, constantValue);
@@ -1021,7 +1021,7 @@ namespace Microsoft.OData.Client
 
                 if (filteredType == null)
                 {
-                    throw new InvalidOperationException(Strings.ALinq_OfTypeArgumentNotAvailable);
+                    throw new InvalidOperationException(SRResources.ALinq_OfTypeArgumentNotAvailable);
                 }
 
                 if (filteredType.IsAssignableFrom(rse.ResourceType))
@@ -1032,7 +1032,7 @@ namespace Microsoft.OData.Client
                 {
                     if (rse.ResourceTypeAs != null)
                     {
-                        throw new NotSupportedException(Strings.ALinq_CannotUseTypeFiltersMultipleTimes);
+                        throw new NotSupportedException(SRResources.ALinq_CannotUseTypeFiltersMultipleTimes);
                     }
 
                     // only apply the OfType filter if it is not redundant
@@ -1396,7 +1396,7 @@ namespace Microsoft.OData.Client
                                 // Note 1: this also means that we do not support multiple downcasts as these are redundant,
                                 //   e.g., ((p as Employee) as Manager)
                                 //         from e in p.OfType<Employee>() select e as Manager
-                                throw new NotSupportedException(Strings.ALinq_CannotUseTypeFiltersMultipleTimes);
+                                throw new NotSupportedException(SRResources.ALinq_CannotUseTypeFiltersMultipleTimes);
                             }
                             else
                             {
@@ -1503,35 +1503,35 @@ namespace Microsoft.OData.Client
                 case (ExpressionType)ResourceExpressionType.FilterQueryOption:
                     if (rse.Skip != null)
                     {
-                        throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("filter", "skip"));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_QueryOptionOutOfOrder, "filter", "skip"));
                     }
                     else if (rse.Take != null)
                     {
-                        throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("filter", "top"));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_QueryOptionOutOfOrder, "filter", "top"));
                     }
                     else if (rse.Projection != null)
                     {
-                        throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("filter", "select"));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_QueryOptionOutOfOrder, "filter", "select"));
                     }
                     break;
                 case (ExpressionType)ResourceExpressionType.OrderByQueryOption:
                     if (rse.Skip != null)
                     {
-                        throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("orderby", "skip"));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_QueryOptionOutOfOrder, "orderby", "skip"));
                     }
                     else if (rse.Take != null)
                     {
-                        throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("orderby", "top"));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_QueryOptionOutOfOrder, "orderby", "top"));
                     }
                     else if (rse.Projection != null)
                     {
-                        throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("orderby", "select"));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_QueryOptionOutOfOrder, "orderby", "select"));
                     }
                     break;
                 case (ExpressionType)ResourceExpressionType.SkipQueryOption:
                     if (rse.Take != null)
                     {
-                        throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("skip", "top"));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_QueryOptionOutOfOrder, "skip", "top"));
                     }
                     break;
                 default:
@@ -2754,13 +2754,13 @@ namespace Microsoft.OData.Client
                 QueryableResourceExpression resourceExpression = e as QueryableResourceExpression;
                 if (resourceExpression != null && resourceExpression.HasSequenceQueryOptions)
                 {
-                    throw new NotSupportedException(Strings.ALinq_QueryOptionsOnlyAllowedOnLeafNodes);
+                    throw new NotSupportedException(SRResources.ALinq_QueryOptionsOnlyAllowedOnLeafNodes);
                 }
 
                 ResourceExpression resource;
                 if (PatternRules.MatchResource(e, out resource) && resource.Projection != null)
                 {
-                    throw new NotSupportedException(Strings.ALinq_ProjectionOnlyAllowedOnLeafNodes);
+                    throw new NotSupportedException(SRResources.ALinq_ProjectionOnlyAllowedOnLeafNodes);
                 }
             }
 
@@ -2769,17 +2769,17 @@ namespace Microsoft.OData.Client
                 ResourceExpression re = (ResourceExpression)e;
                 if (!PatternRules.MatchResource(e, out re))
                 {
-                    throw new NotSupportedException(Strings.ALinq_CanOnlyProjectTheLeaf);
+                    throw new NotSupportedException(SRResources.ALinq_CanOnlyProjectTheLeaf);
                 }
 
                 if (re.Projection != null)
                 {
-                    throw new NotSupportedException(Strings.ALinq_ProjectionCanOnlyHaveOneProjection);
+                    throw new NotSupportedException(SRResources.ALinq_ProjectionCanOnlyHaveOneProjection);
                 }
 
                 if (re.ExpandPaths.Count > 0)
                 {
-                    throw new NotSupportedException(Strings.ALinq_CannotProjectWithExplicitExpansion);
+                    throw new NotSupportedException(SRResources.ALinq_CannotProjectWithExplicitExpansion);
                 }
             }
 
@@ -2788,12 +2788,12 @@ namespace Microsoft.OData.Client
                 ResourceExpression re = (ResourceExpression)e;
                 if (!PatternRules.MatchResource(e, out re))
                 {
-                    throw new NotSupportedException(Strings.ALinq_CantExpand);
+                    throw new NotSupportedException(SRResources.ALinq_CantExpand);
                 }
 
                 if (re.Projection != null)
                 {
-                    throw new NotSupportedException(Strings.ALinq_CannotProjectWithExplicitExpansion);
+                    throw new NotSupportedException(SRResources.ALinq_CannotProjectWithExplicitExpansion);
                 }
             }
 
@@ -2802,13 +2802,13 @@ namespace Microsoft.OData.Client
                 ResourceExpression re = (ResourceExpression)e;
                 if (!PatternRules.MatchResource(e, out re))
                 {
-                    throw new NotSupportedException(Strings.ALinq_CannotAddCountOption);
+                    throw new NotSupportedException(SRResources.ALinq_CannotAddCountOption);
                 }
 
                 // do we already have a count option?
                 if (re.CountOption != CountOption.None)
                 {
-                    throw new NotSupportedException(Strings.ALinq_CannotAddCountOptionConflict);
+                    throw new NotSupportedException(SRResources.ALinq_CannotAddCountOptionConflict);
                 }
             }
 
@@ -2817,7 +2817,7 @@ namespace Microsoft.OData.Client
                 ResourceExpression re = (ResourceExpression)e;
                 if (!PatternRules.MatchResource(e, out re))
                 {
-                    throw new NotSupportedException(Strings.ALinq_CantAddQueryOption);
+                    throw new NotSupportedException(SRResources.ALinq_CantAddQueryOption);
                 }
             }
 
@@ -2826,7 +2826,7 @@ namespace Microsoft.OData.Client
                 ResourceExpression re = e as ResourceExpression;
                 if (re != null && re.IsSingleton)
                 {
-                    throw new NotSupportedException(Strings.ALinq_QueryOptionsOnlyAllowedOnSingletons);
+                    throw new NotSupportedException(SRResources.ALinq_QueryOptionsOnlyAllowedOnSingletons);
                 }
             }
 
@@ -2839,7 +2839,7 @@ namespace Microsoft.OData.Client
                     if (target.CustomQueryOptions.Any(c => (string)c.Key.Value == name))
                     {
                         // don't allow dups in Astoria $ namespace.
-                        throw new NotSupportedException(Strings.ALinq_CantAddDuplicateQueryOption(name));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_CantAddDuplicateQueryOption, name));
                     }
 
                     QueryableResourceExpression rse = target as QueryableResourceExpression;
@@ -2850,12 +2850,12 @@ namespace Microsoft.OData.Client
                             case UriHelper.OPTIONFILTER:
                                 if (rse.Filter != null)
                                 {
-                                    throw new NotSupportedException(Strings.ALinq_CantAddAstoriaQueryOption(name));
+                                    throw new NotSupportedException(Error.Format(SRResources.ALinq_CantAddAstoriaQueryOption, name));
                                 }
                                 break;
                             case UriHelper.OPTIONORDERBY:
                                 if (rse.OrderBy != null)
-                                    throw new NotSupportedException(Strings.ALinq_CantAddAstoriaQueryOption(name));
+                                    throw new NotSupportedException(Error.Format(SRResources.ALinq_CantAddAstoriaQueryOption, name));
                                 break;
                             case UriHelper.OPTIONEXPAND:
                                 // how did we get here?
@@ -2863,21 +2863,21 @@ namespace Microsoft.OData.Client
                                 break;
                             case UriHelper.OPTIONSKIP:
                                 if (rse.Skip != null)
-                                    throw new NotSupportedException(Strings.ALinq_CantAddAstoriaQueryOption(name));
+                                    throw new NotSupportedException(Error.Format(SRResources.ALinq_CantAddAstoriaQueryOption, name));
                                 break;
                             case UriHelper.OPTIONTOP:
                                 if (rse.Take != null)
-                                    throw new NotSupportedException(Strings.ALinq_CantAddAstoriaQueryOption(name));
+                                    throw new NotSupportedException(Error.Format(SRResources.ALinq_CantAddAstoriaQueryOption, name));
                                 break;
                             case UriHelper.OPTIONCOUNT:
                                 // cannot add count if any counting already exists
                                 if (rse.CountOption != CountOption.None)
-                                    throw new NotSupportedException(Strings.ALinq_CantAddAstoriaQueryOption(name));
+                                    throw new NotSupportedException(Error.Format(SRResources.ALinq_CantAddAstoriaQueryOption, name));
                                 break;
                             case UriHelper.OPTIONSELECT:
                                 if (rse.Projection != null)
                                 {
-                                    throw new NotSupportedException(Strings.ALinq_CantAddAstoriaQueryOption(name));
+                                    throw new NotSupportedException(Error.Format(SRResources.ALinq_CantAddAstoriaQueryOption, name));
                                 }
                                 // DEVNOTE(pqian):
                                 // while the normal projection analyzer does not allow expansions, we must allow it here
@@ -2889,10 +2889,10 @@ namespace Microsoft.OData.Client
                                 break;
                             case UriHelper.OPTIONAPPLY:
                                 if (rse.Apply != null)
-                                    throw new NotSupportedException(Strings.ALinq_CantAddAstoriaQueryOption(name));
+                                    throw new NotSupportedException(Error.Format(SRResources.ALinq_CantAddAstoriaQueryOption, name));
                                 break;
                             default:
-                                throw new NotSupportedException(Strings.ALinq_QueryOptionNotSupported(name));
+                                throw new NotSupportedException(Error.Format(SRResources.ALinq_QueryOptionNotSupported, name));
                         }
                     }
                 }
@@ -2904,7 +2904,7 @@ namespace Microsoft.OData.Client
             [SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "DataServiceContext", Justification = "The spelling is correct.")]
             private static void ThrowNotSupportedExceptionForTheFormatOption()
             {
-                throw new NotSupportedException(Strings.ALinq_FormatQueryOptionNotSupported);
+                throw new NotSupportedException(SRResources.ALinq_FormatQueryOptionNotSupported);
             }
 
             /// <summary>
@@ -2930,7 +2930,7 @@ namespace Microsoft.OData.Client
                     {
                         if (this.checkedMethod == SequenceMethod.OrderBy)
                         {
-                            throw new NotSupportedException(Strings.ALinq_AnyAllNotSupportedInOrderBy(mce.Method.Name));
+                            throw new NotSupportedException(Error.Format(SRResources.ALinq_AnyAllNotSupportedInOrderBy, mce.Method.Name));
                         }
 
                         Type filteredType = mce.Method.GetGenericArguments().SingleOrDefault();
@@ -2944,7 +2944,7 @@ namespace Microsoft.OData.Client
                                 !PatternRules.MatchNonPrivateReadableProperty(me, out pi, out boundTarget) ||
                                 !WebUtil.IsCLRTypeCollection(pi.PropertyType, this.model))
                             {
-                                throw new NotSupportedException(Strings.ALinq_InvalidSourceForAnyAll(mce.Method.Name));
+                                throw new NotSupportedException(Error.Format(SRResources.ALinq_InvalidSourceForAnyAll, mce.Method.Name));
                             }
                         }
 
@@ -2985,17 +2985,17 @@ namespace Microsoft.OData.Client
                         {
                             if (this.checkedMethod == SequenceMethod.Where)
                             {
-                                throw new NotSupportedException(Strings.ALinq_CollectionPropertyNotSupportedInWhere(pi.Name));
+                                throw new NotSupportedException(Error.Format(SRResources.ALinq_CollectionPropertyNotSupportedInWhere, pi.Name));
                             }
                             else
                             {
-                                throw new NotSupportedException(Strings.ALinq_CollectionPropertyNotSupportedInOrderBy(pi.Name));
+                                throw new NotSupportedException(Error.Format(SRResources.ALinq_CollectionPropertyNotSupportedInOrderBy, pi.Name));
                             }
                         }
 
                         if (typeof(DataServiceStreamLink).IsAssignableFrom(pi.PropertyType))
                         {
-                            throw new NotSupportedException(Strings.ALinq_LinkPropertyNotSupportedInExpression(pi.Name));
+                            throw new NotSupportedException(Error.Format(SRResources.ALinq_LinkPropertyNotSupportedInExpression, pi.Name));
                         }
                     }
 
@@ -3033,7 +3033,7 @@ namespace Microsoft.OData.Client
                 {
                     if (WebUtil.IsCLRTypeCollection(me.Expression.Type, model))
                     {
-                        throw new NotSupportedException(Strings.ALinq_CollectionMemberAccessNotSupportedInNavigation(me.Member.Name));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_CollectionMemberAccessNotSupportedInNavigation, me.Member.Name));
                     }
 
                     me = StripTo<MemberExpression>(me.Expression);
@@ -3054,7 +3054,7 @@ namespace Microsoft.OData.Client
                 Expression e = ResourceBinder.StripTo<UnaryExpression>(exp);
                 if (e != null && e.NodeType == ExpressionType.TypeAs)
                 {
-                    throw new NotSupportedException(Strings.ALinq_ExpressionCannotEndWithTypeAs(exp.ToString(), method));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionCannotEndWithTypeAs, exp.ToString(), method));
                 }
             }
 
@@ -3098,7 +3098,7 @@ namespace Microsoft.OData.Client
 
                 }
 
-                throw new NotSupportedException(Strings.ALinq_InvalidExpressionInNavigationPath(input));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_InvalidExpressionInNavigationPath, input));
             }
 
             /// <summary>
@@ -3122,14 +3122,14 @@ namespace Microsoft.OData.Client
                 // member expression will result into `memberExpr` being assigned a value of null.
                 if (memberExpr == null)
                 {
-                    throw new NotSupportedException(Strings.ALinq_InvalidAggregateExpression(expr));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_InvalidAggregateExpression, expr));
                 }
 
                 // Validate that property is aggregatable. Applies to CountDistinct() since Queryable 
                 // aggregation methods (Average, Sum, Min, Max) validate that the property is aggregatable
                 if (!PrimitiveType.IsKnownNullableType(memberExpr.Type))
                 {
-                    throw new NotSupportedException(Strings.ALinq_InvalidAggregateExpression(expr));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_InvalidAggregateExpression, expr));
                 }
 
                 // Member access expressions involving properties of known primitive types 
@@ -3144,13 +3144,13 @@ namespace Microsoft.OData.Client
                 {
                     if (PrimitiveType.IsKnownNullableType(parentExpr.Type))
                     {
-                        throw new NotSupportedException(Strings.ALinq_InvalidAggregateExpression(expr));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_InvalidAggregateExpression, expr));
                     }
 
                     Type collectionType = ClientTypeUtil.GetImplementationType(parentExpr.Type, typeof(ICollection<>));
                     if (collectionType != null)
                     {
-                        throw new NotSupportedException(Strings.ALinq_InvalidAggregateExpression(expr));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_InvalidAggregateExpression, expr));
                     }
                 }
             }
@@ -3177,13 +3177,13 @@ namespace Microsoft.OData.Client
                 {
                     if (PrimitiveType.IsKnownNullableType(containingExpr.Type))
                     {
-                        throw new NotSupportedException(Strings.ALinq_InvalidGroupingExpression(memberExpr));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_InvalidGroupingExpression, memberExpr));
                     }
 
                     Type collectionType = ClientTypeUtil.GetImplementationType(containingExpr.Type, typeof(ICollection<>));
                     if (collectionType != null)
                     {
-                        throw new NotSupportedException(Strings.ALinq_InvalidGroupingExpression(memberExpr));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_InvalidGroupingExpression, memberExpr));
                     }
                 }
 
@@ -3191,7 +3191,7 @@ namespace Microsoft.OData.Client
                 // Due to feature gap in OData WebApi
                 if (!PrimitiveType.IsKnownNullableType(memberExpr.Type))
                 {
-                    throw new NotSupportedException(Strings.ALinq_InvalidGroupingExpression(memberExpr));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_InvalidGroupingExpression, memberExpr));
                 }
             }
         }

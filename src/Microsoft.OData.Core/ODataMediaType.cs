@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
 
     using System.Collections.Generic;
@@ -224,7 +225,7 @@ namespace Microsoft.OData
             Encoding result = HttpUtils.GetEncodingFromCharsetName(name);
             if (result == null)
             {
-                throw new ODataException(Strings.MediaType_EncodingNotSupported(name));
+                throw new ODataException(Error.Format(SRResources.MediaType_EncodingNotSupported, name));
             }
 
             return result;

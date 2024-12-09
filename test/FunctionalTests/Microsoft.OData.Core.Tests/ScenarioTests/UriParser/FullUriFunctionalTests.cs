@@ -12,7 +12,7 @@ using Microsoft.OData.Tests.UriParser.Binders;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People(1)/Name?$select=Name"));
             Action parseWithNonEntity = () => parser.ParseUri();
-            parseWithNonEntity.Throws<ODataException>(ODataErrorStrings.UriParser_TypeInvalidForSelectExpand("Edm.String"));
+            parseWithNonEntity.Throws<ODataException>(Error.Format(SRResources.UriParser_TypeInvalidForSelectExpand, "Edm.String"));
         }
 
         [Fact]

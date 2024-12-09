@@ -8,6 +8,7 @@ using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -88,7 +89,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var unaryOperatorToken = new UnaryOperatorToken(UnaryOperatorKind.Negate, new LiteralToken("foo"));
             Action bind = () => this.unaryOperatorBinder.BindUnaryOperator(unaryOperatorToken);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_UnaryOperatorOperandNotSingleValue(UnaryOperatorKind.Negate.ToString()));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_UnaryOperatorOperandNotSingleValue, UnaryOperatorKind.Negate.ToString()));
         }
 
         [Fact]
@@ -99,7 +100,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var unaryOperatorQueryToken = new UnaryOperatorToken(UnaryOperatorKind.Negate, new LiteralToken("foo"));
             Action bind = () => this.unaryOperatorBinder.BindUnaryOperator(unaryOperatorQueryToken);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_IncompatibleOperandError("Edm.DateTimeOffset", UnaryOperatorKind.Negate));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_IncompatibleOperandError, "Edm.DateTimeOffset", UnaryOperatorKind.Negate));
         }
 
         /// <summary>

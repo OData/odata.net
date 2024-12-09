@@ -13,7 +13,7 @@ using System.Xml;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -235,7 +235,7 @@ namespace Microsoft.OData.UriParser
 
                             break;
                         default:
-                            throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.UriPrimitiveTypeParser_TryUriStringToPrimitive));
+                            throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.UriPrimitiveTypeParser_TryUriStringToPrimitive));
                     }
 
                     return true;
@@ -254,7 +254,7 @@ namespace Microsoft.OData.UriParser
             catch (Exception primitiveParserException)
             {
                 exception = new UriLiteralParsingException(
-                    string.Format(CultureInfo.InvariantCulture, ODataErrorStrings.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue(text, targetType),
+                    string.Format(CultureInfo.InvariantCulture, Error.Format(SRResources.UriPrimitiveTypeParsers_FailedToParseTextToPrimitiveValue, text, targetType),
                                                         primitiveParserException));
                 targetValue = null;
                 return false;

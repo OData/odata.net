@@ -16,9 +16,9 @@ using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Microsoft.Spatial;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Core.Tests.DependencyInjection;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -362,7 +362,7 @@ namespace Microsoft.OData.Tests.Json
 
             string term = "My.Namespace.NotNullable";
             Action action = () => this.jsonInstanceAnnotationWriter.WriteInstanceAnnotation(new ODataInstanceAnnotation(term, new ODataNullValue()));
-            action.Throws<ODataException>(ODataErrorStrings.JsonInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation(term, "Edm.Int32"));
+            action.Throws<ODataException>(Error.Format(SRResources.JsonInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation, term, "Edm.Int32"));
         }
 
         [Fact]
@@ -450,7 +450,7 @@ namespace Microsoft.OData.Tests.Json
             this.valueWriter.WritePrimitiveVerifier = (value, reference) => verifierCalls++;
 
             Action test = () => this.jsonInstanceAnnotationWriter.WriteInstanceAnnotations(annotations);
-            test.Throws<ODataException>(Strings.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("term.one"));
+            test.Throws<ODataException>(Error.Format(SRResources.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection, "term.one"));
         }
 
         [Fact]
@@ -485,7 +485,7 @@ namespace Microsoft.OData.Tests.Json
 
             annotations.Add(new ODataInstanceAnnotation("term.one", new ODataPrimitiveValue(456)));
             Action test = () => this.jsonInstanceAnnotationWriter.WriteInstanceAnnotations(annotations, tracker);
-            test.Throws<ODataException>(Strings.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("term.one"));
+            test.Throws<ODataException>(Error.Format(SRResources.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection, "term.one"));
         }
 
         [Fact]
@@ -649,7 +649,7 @@ namespace Microsoft.OData.Tests.Json
                 new ODataInstanceAnnotation("custom.namespace.MyDateTimeOffsetTerm", new ODataPrimitiveValue(Guid.Empty)),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
-            testSubject.Throws<ODataException>(ODataErrorStrings.ValidationUtils_IncompatiblePrimitiveItemType("Edm.Guid", /*nullability*/ "False", "Edm.DateTimeOffset", /*nullability*/ "True"));
+            testSubject.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_IncompatiblePrimitiveItemType, "Edm.Guid", /*nullability*/ "False", "Edm.DateTimeOffset", /*nullability*/ "True"));
         }
 
         [Fact]
@@ -719,7 +719,7 @@ namespace Microsoft.OData.Tests.Json
                 new ODataInstanceAnnotation("custom.namespace.AddressTerm", new ODataResourceValue() { TypeName = "custom.namespace.Address", Properties = Enumerable.Empty<ODataProperty>() }),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
-            testSubject.Throws<ODataException>(ODataErrorStrings.ValidationUtils_UnrecognizedTypeName("custom.namespace.Address"));
+            testSubject.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_UnrecognizedTypeName, "custom.namespace.Address"));
         }
 
         [Fact]
@@ -732,7 +732,7 @@ namespace Microsoft.OData.Tests.Json
                 new ODataInstanceAnnotation("custom.namespace.CollectionOfAddressTerm", new ODataCollectionValue { Items = Enumerable.Empty<ODataResourceValue>(), TypeName = "Collection(custom.namespace.Address)" }),
                 TestUtils.WrapReferencedModelsToMainModel(edmModel));
 
-            testSubject.Throws<ODataException>(ODataErrorStrings.ValidationUtils_UnrecognizedTypeName("Collection(custom.namespace.Address)"));
+            testSubject.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_UnrecognizedTypeName, "Collection(custom.namespace.Address)"));
         }
 
         private static string WriteInstanceAnnotation(ODataInstanceAnnotation instanceAnnotation, IEdmModel model)

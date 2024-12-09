@@ -9,7 +9,7 @@ namespace Microsoft.OData.UriParser
     #region Namespaces
     using System;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -51,7 +51,7 @@ namespace Microsoft.OData.UriParser
                 {
                     // TODO: update message #644
                     throw new ArgumentException(
-                        ODataErrorStrings.Nodes_NonentityParameterQueryNodeWithEntityType(typeReference.FullName()));
+                        Error.Format(SRResources.Nodes_NonentityParameterQueryNodeWithEntityType, typeReference.FullName()));
                 }
             }
 

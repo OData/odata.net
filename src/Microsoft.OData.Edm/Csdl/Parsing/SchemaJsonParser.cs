@@ -91,7 +91,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             if (schema.EntityContainers.Count() > 1)
             {
                 context.ReportError(EdmErrorCode.SchemaCannotHaveMoreThanOneEntityContainer,
-                    Strings.CsdlJsonParser_SchemaCannotHaveMoreThanOneEntityContainer(context.Path));
+                    Error.Format(SRResources.CsdlJsonParser_SchemaCannotHaveMoreThanOneEntityContainer, context.Path));
             }
 
             return schema;
@@ -1103,7 +1103,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     case "$BaseTerm":
                         // The value of $BaseTerm is the qualified name of the base term.
                         // Skip it because it's not supported
-                        context.ReportError(EdmErrorCode.UnexpectedElement, Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, element.ValueKind));
+                        context.ReportError(EdmErrorCode.UnexpectedElement, Error.Format(SRResources.CsdlJsonParser_UnexpectedJsonMember, context.Path, element.ValueKind));
                         break;
 
                     case "$DefaultValue":
@@ -1250,7 +1250,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                         // The value of $Parameter is an array. The array contains one object per parameter.
                         if (propertyValue.ValueKind != JsonValueKind.Array)
                         {
-                            context.ReportError(EdmErrorCode.UnexpectedValueKind, Strings.CsdlJsonParser_UnexpectedJsonValueKind(element.ValueKind, context.Path, "Array"));
+                            context.ReportError(EdmErrorCode.UnexpectedValueKind, Error.Format(SRResources.CsdlJsonParser_UnexpectedJsonValueKind, element.ValueKind, context.Path, "Array"));
                         }
                         else
                         {
@@ -1487,13 +1487,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             }
             else
             {
-                context.ReportError(EdmErrorCode.UnexpectedElement, Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, element.ValueKind));
+                context.ReportError(EdmErrorCode.UnexpectedElement, Error.Format(SRResources.CsdlJsonParser_UnexpectedJsonMember, context.Path, element.ValueKind));
             }
         }
 
         private static void ReportUnexpectedElement(JsonElement element, JsonParserContext context)
         {
-            context.ReportError(EdmErrorCode.UnexpectedElement, Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, element.ValueKind));
+            context.ReportError(EdmErrorCode.UnexpectedElement, Error.Format(SRResources.CsdlJsonParser_UnexpectedJsonMember, context.Path, element.ValueKind));
         }
 
         private static void ValidateKind(JsonElement element, JsonParserContext context, string expectedKind, bool required)
@@ -1514,7 +1514,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 return;
             }
 
-            context.ReportError(EdmErrorCode.MissingRequiredProperty, Strings.CsdlJsonParser_MissingKindMember(context.Path, expectedKind));
+            context.ReportError(EdmErrorCode.MissingRequiredProperty, Error.Format(SRResources.CsdlJsonParser_MissingKindMember, context.Path, expectedKind));
         }
 
         /// <summary>

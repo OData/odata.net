@@ -1876,7 +1876,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     this.customerEntityType));
 
             Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "NestedResourceInfo"),
+                Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromStart, "Start", "NestedResourceInfo"),
                 exception.Message);
         }
 
@@ -1891,7 +1891,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     this.customerEntitySet,
                     this.customerEntityType));
 
-            Assert.Equal(Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "Property"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromStart, "Start", "Property"), exception.Message);
         }
 
         [Fact]
@@ -1914,7 +1914,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 this.orderEntityType));
 
             Assert.Equal(
-                Strings.ODataWriterCore_PropertyValueAlreadyWritten(stateProperty.Name),
+                Error.Format(SRResources.ODataWriterCore_PropertyValueAlreadyWritten, stateProperty.Name),
                 exception.Message);
         }
 
@@ -1937,7 +1937,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 this.orderEntityType));
 
             Assert.Equal(
-                Strings.ODataWriterCore_InvalidStateTransition("Property", "Resource"),
+                Error.Format(SRResources.ODataWriterCore_InvalidStateTransition, "Property", "Resource"),
                 exception.Message);
         }
 
@@ -1953,7 +1953,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     this.customerEntityType,
                     writingResourceSet: false));
 
-            Assert.Equal(Strings.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter, exception.Message);
+            Assert.Equal(SRResources.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter, exception.Message);
         }
 
         [Fact]
@@ -1968,7 +1968,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     this.customerEntityType,
                     writingResourceSet: true));
 
-            Assert.Equal(Strings.ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter, exception.Message);
+            Assert.Equal(SRResources.ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter, exception.Message);
         }
 
         [Fact]
@@ -1985,7 +1985,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     writingDelta: true));
 
             Assert.Equal(
-                Strings.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter,
+                SRResources.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter,
                 exception.Message);
         }
 
@@ -2006,7 +2006,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     writingResourceSet: false,
                     writingDelta: false));
 
-            Assert.Equal(Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "DeltaLink"),
+            Assert.Equal(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromStart, "Start", "DeltaLink"),
                 exception.Message);
         }
 
@@ -2027,7 +2027,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     writingResourceSet: false,
                     writingDelta: false));
 
-            Assert.Equal(Strings.ODataWriterCore_InvalidTransitionFromStart("Start", "DeltaDeletedLink"),
+            Assert.Equal(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromStart, "Start", "DeltaDeletedLink"),
                 exception.Message);
         }
 
@@ -2047,7 +2047,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     this.customerEntityType));
 
             Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromNullResource("Resource", "NestedResourceInfo"),
+                Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromNullResource, "Resource", "NestedResourceInfo"),
                 exception.Message);
         }
 
@@ -2068,7 +2068,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     this.orderEntityType));
 
             Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromResource("Resource", "Resource"),
+                Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromResource, "Resource", "Resource"),
                 exception.Message);
         }
 
@@ -2089,7 +2089,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     this.customerEntityType));
 
             Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromResource("Resource", "ResourceSet"),
+                Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromResource, "Resource", "ResourceSet"),
                 exception.Message);
         }
 
@@ -2118,7 +2118,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 writingDelta: true));
 
             Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromExpandedLink("NestedResourceInfoWithContent", "DeletedResource"),
+                Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromExpandedLink, "NestedResourceInfoWithContent", "DeletedResource"),
                 exception.Message);
         }
 
@@ -2141,7 +2141,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     writingDelta: true));
 
             Assert.Equal(
-                Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter,
+                SRResources.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter,
                 exception.Message);
         }
 
@@ -2166,7 +2166,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     writingDelta: true));
 
             Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromExpandedLink("NestedResourceInfoWithContent", "DeltaResourceSet"),
+                Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromExpandedLink, "NestedResourceInfoWithContent", "DeltaResourceSet"),
                 exception.Message);
         }
 
@@ -2186,7 +2186,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 writingParameter: false,
                 writingRequest: true));
 
-            Assert.Equal(Strings.ODataWriterCore_QueryCountInRequest, exception.Message);
+            Assert.Equal(SRResources.ODataWriterCore_QueryCountInRequest, exception.Message);
         }
 
         [Fact]
@@ -2205,7 +2205,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 writingParameter: false,
                 writingRequest: true));
 
-            Assert.Equal(Strings.ODataWriterCore_QueryNextLinkInRequest, exception.Message);
+            Assert.Equal(SRResources.ODataWriterCore_QueryNextLinkInRequest, exception.Message);
         }
 
         [Fact]
@@ -2224,7 +2224,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 writingParameter: false,
                 writingRequest: true));
 
-            Assert.Equal(Strings.ODataWriterCore_QueryDeltaLinkInRequest, exception.Message);
+            Assert.Equal(SRResources.ODataWriterCore_QueryDeltaLinkInRequest, exception.Message);
         }
 
         [Fact]
@@ -2252,7 +2252,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 writingParameter: false,
                 writingRequest: true));
 
-            Assert.Equal(Strings.ODataWriterCore_DeferredLinkInRequest, exception.Message);
+            Assert.Equal(SRResources.ODataWriterCore_DeferredLinkInRequest, exception.Message);
         }
 
         [Fact]
@@ -2274,7 +2274,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     this.customerEntityType));
 
             Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromCompleted("Completed", "Resource"),
+                Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromCompleted, "Completed", "Resource"),
                 exception.Message);
         }
 
@@ -2296,7 +2296,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     this.customerEntitySet,
                     this.customerEntityType));
 
-            Assert.Equal(Strings.ODataWriterCore_WriteEndCalledInInvalidState("Completed"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataWriterCore_WriteEndCalledInInvalidState, "Completed"), exception.Message);
         }
 
         [Fact]
@@ -2331,7 +2331,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 this.orderEntitySet,
                 this.orderEntityType));
 
-            Assert.Equal(Strings.ODataWriterCore_StreamNotDisposed, exception.Message);
+            Assert.Equal(SRResources.ODataWriterCore_StreamNotDisposed, exception.Message);
         }
 
         #endregion Exception Cases

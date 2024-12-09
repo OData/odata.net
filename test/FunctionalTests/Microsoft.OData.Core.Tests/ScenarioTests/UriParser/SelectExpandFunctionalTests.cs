@@ -12,8 +12,8 @@ using Microsoft.OData.Tests.UriParser.Binders;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 using Microsoft.OData.UriParser.Aggregation;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -57,14 +57,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SelectPropertiesWithRefOperationThrows()
         {
             Action readResult = () => RunParseSelectExpand("MyLions/$ref", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            readResult.Throws<ODataException>(ODataErrorStrings.UriSelectParser_SystemTokenInSelectExpand("$ref", "MyLions/$ref"));
+            readResult.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_SystemTokenInSelectExpand, "$ref", "MyLions/$ref"));
         }
 
         [Fact]
         public void SelectPropertiesWithDollarCountOperationThrows()
         {
             Action readResult = () => RunParseSelectExpand("MyLions/$count", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            readResult.Throws<ODataException>(ODataErrorStrings.ExpressionToken_DollarCountNotAllowedInSelect);
+            readResult.Throws<ODataException>(SRResources.ExpressionToken_DollarCountNotAllowedInSelect);
         }
 
         [Fact]
@@ -128,7 +128,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SelectComplexPropertyWithWrongCast()
         {
             Action parse = () => ParseSingleSelectForPerson("MyAddress/Fully.Qualified.Namespace.OpenAddress");
-            parse.Throws<ODataException>(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+            parse.Throws<ODataException>(SRResources.SelectBinder_MultiLevelPathInSelect);
         }
 
         [Fact]
@@ -142,7 +142,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SelectComplexCollectionPropertyWrongSubProp()
         {
             Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/WrongProp");
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Address", "WrongProp"));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "Fully.Qualified.Namespace.Address", "WrongProp"));
         }
 
         [Fact]
@@ -159,7 +159,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SelectComplexCollectionPropertyWithWrongCast()
         {
             Action parse = () => ParseSingleSelectForPerson("PreviousAddresses/Fully.Qualified.Namespace.OpenAddress");
-            parse.Throws<ODataException>(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+            parse.Throws<ODataException>(SRResources.SelectBinder_MultiLevelPathInSelect);
         }
 
         [Fact]
@@ -245,7 +245,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void CallingAFunctionIsNotRecognizedInSelect()
         {
             Action test = () => ParseSingleSelectForPerson("HasDog(inOffice=true)");
-            test.Throws<ODataException>(ODataErrorStrings.UriSelectParser_TermIsNotValid("(inOffice=true)"));
+            test.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_TermIsNotValid, "(inOffice=true)"));
         }
 
         [Fact]
@@ -448,7 +448,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => RunParseSelectExpand("SomeOpenProperty", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetPersonType(), "SomeOpenProperty"));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, HardCodedTestModel.GetPersonType(), "SomeOpenProperty"));
         }
 
         [Fact]
@@ -474,14 +474,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => RunParseSelectExpand("MyDog/Color", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
-            parse.Throws<ODataException>(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+            parse.Throws<ODataException>(SRResources.SelectBinder_MultiLevelPathInSelect);
         }
 
         [Fact]
         public void NonPathExpressionThrowsInSelect()
         {
             Action parseWithExpressionInSelect = () => RunParseSelectExpand("Name eq 'Name'", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseWithExpressionInSelect.Throws<ODataException>(ODataErrorStrings.UriSelectParser_TermIsNotValid("Name eq 'Name'"));
+            parseWithExpressionInSelect.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_TermIsNotValid, "Name eq 'Name'"));
         }
 
         [Fact]
@@ -498,7 +498,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // regression coverage for: [URIParser] ArgumentNullException instead of Incorrect Type
             Action parseWithNullExpand = () => RunParseSelectExpand("NonExistingProperty", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseWithNullExpand.Throws<ODataException>(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "NonExistingProperty"));
+            parseWithNullExpand.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "Fully.Qualified.Namespace.Person", "NonExistingProperty"));
         }
 
         [Fact]
@@ -506,7 +506,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // regression test for: [Fuzz] UriParser NulRefs in Select and Expand
             Action parseInvalidWithDollarSign = () => RunParseSelectExpand("Name$(comma)", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseInvalidWithDollarSign.Throws<ODataException>(ODataErrorStrings.UriSelectParser_TermIsNotValid("Name$(comma)"));
+            parseInvalidWithDollarSign.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_TermIsNotValid, "Name$(comma)"));
         }
 
         [Fact]
@@ -554,14 +554,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => RunParseSelectExpand(null, "MyDog/MyPeople", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
-            parse.Throws<ODataException>(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
+            parse.Throws<ODataException>(SRResources.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
         }
 
         [Fact]
         public void MultipleNestedQueryOptionsMustBeSeparatedBySemiColon()
         {
             Action parseWithNonSemiColonTerminatedQueryOptions = () => RunParseSelectExpand(null, "MyDog($select=Color,$expand=MyPeople)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseWithNonSemiColonTerminatedQueryOptions.Throws<ODataException>(ODataErrorStrings.UriSelectParser_SystemTokenInSelectExpand("$expand", "Color,$expand=MyPeople"));
+            parseWithNonSemiColonTerminatedQueryOptions.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_SystemTokenInSelectExpand, "$expand", "Color,$expand=MyPeople"));
         }
 
         [Fact]
@@ -576,7 +576,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             const string expandClauseText = "MyDog/$ref/MyPeople";
             Action readResult = () => RunParseSelectExpand(null, expandClauseText, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            readResult.Throws<ODataException>(ODataErrorStrings.ExpressionToken_NoPropAllowedAfterRef);
+            readResult.Throws<ODataException>(SRResources.ExpressionToken_NoPropAllowedAfterRef);
         }
 
         [Fact]
@@ -584,7 +584,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             const string expandClauseText = "MyDog/$count/MyPeople";
             Action readResult = () => RunParseSelectExpand(null, expandClauseText, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            readResult.Throws<ODataException>(ODataErrorStrings.ExpressionToken_NoPropAllowedAfterDollarCount);
+            readResult.Throws<ODataException>(SRResources.ExpressionToken_NoPropAllowedAfterDollarCount);
         }
 
         [Fact]
@@ -647,7 +647,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void NonPathExpressionThrowsInExpand()
         {
             Action parseWithExpressionInExpand = () => RunParseSelectExpand(null, "Name eq 'Name'", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseWithExpressionInExpand.Throws<ODataException>(ODataErrorStrings.UriSelectParser_TermIsNotValid("Name eq 'Name'"));
+            parseWithExpressionInExpand.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_TermIsNotValid, "Name eq 'Name'"));
         }
 
         [Fact]
@@ -782,7 +782,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host/"), new Uri("http://host/People?$expand=MyDog($expand=MyPeople;)"));
             parser.Settings.MaximumExpansionDepth = 1;
             Action parse = () => parser.ParseSelectAndExpand();
-            parse.Throws<ODataException>(ODataErrorStrings.UriParser_ExpandDepthExceeded(2, 1));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriParser_ExpandDepthExceeded, 2, 1));
         }
 
         [Fact]
@@ -791,7 +791,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host/"), new Uri("http://host/People?$expand=MyDog,MyLions"));
             parser.Settings.MaximumExpansionCount = 1;
             Action parse = () => parser.ParseSelectAndExpand();
-            parse.Throws<ODataException>(ODataErrorStrings.UriParser_ExpandCountExceeded(2, 1));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriParser_ExpandCountExceeded, 2, 1));
         }
 
         [Theory]
@@ -856,7 +856,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => RunParseSelectExpand("MyPeople/Name", "MyPeople", HardCodedTestModel.GetDogType(), HardCodedTestModel.GetDogsSet());
 
-            parse.Throws<ODataException>(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+            parse.Throws<ODataException>(SRResources.SelectBinder_MultiLevelPathInSelect);
         }
 
         [Fact]
@@ -1111,7 +1111,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // regression coverage for: [UriParser] Error message wrong when term not valid in expand part of select expand
             // regression coverage for: [URIParser] Change UriSelectParser_TermIsNotValid error message for expand
             Action createWithExpandSyntaxError = () => RunParseSelectExpand(null, "Microsoft.Test.Taupo.OData.WCFService.Customer/Orders('id')", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            createWithExpandSyntaxError.Throws<ODataException>(Strings.UriSelectParser_TermIsNotValid("('id')"));
+            createWithExpandSyntaxError.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_TermIsNotValid, "('id')"));
         }
 
         [Fact]
@@ -1234,7 +1234,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void NestedOptionsWithoutClosingParenthesisThrows()
         {
             Action parse = () => RunParseSelectExpand(null, "MyPaintings($filter=true", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPaintingsSet());
-            parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression);
+            parse.Throws<ODataException>(SRResources.ExpressionLexer_UnbalancedBracketExpression);
         }
 
         [Fact]
@@ -1587,7 +1587,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void SelectAndExpandShouldFailOnSelectWrongComplexProperties()
         {
             Action parse = () => RunParseSelectExpand("Name,MyAddress/City/Street,MyDog", "MyDog($select=Color)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.Throws<ODataException>(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+            parse.Throws<ODataException>(SRResources.SelectBinder_MultiLevelPathInSelect);
         }
 
         [Fact]
@@ -1595,7 +1595,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => RunParseSelectExpand("Name,MyAddress/Fully.Qualified.Namespace.OpenAddress/HomeNO,MyDog", "MyDog($select=Color)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
-            parse.Throws<ODataException>(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+            parse.Throws<ODataException>(SRResources.SelectBinder_MultiLevelPathInSelect);
         }
 
         // TODO: Tests cases with query options
@@ -1870,7 +1870,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // Assert
 
             // Exception: The type Fully.Qualified.Namespace.UndefinedType is not defined in the model.
-            action.Throws<ODataException>(ODataErrorStrings.ExpandItemBinder_CannotFindType("Fully.Qualified.Namespace.UndefinedType"));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpandItemBinder_CannotFindType, "Fully.Qualified.Namespace.UndefinedType"));
         }
 
         // $expand=navProp/fully.qualified.type($filter=prop)
@@ -2215,7 +2215,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             odataQueryOptionParser.ParseApply();
             Action action = () => odataQueryOptionParser.ParseSelectAndExpand();
 
-            action.Throws<ODataException>(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue("FavoriteNumber"));
+            action.Throws<ODataException>(Error.Format(SRResources.ApplyBinder_GroupByPropertyNotPropertyAccessValue, "FavoriteNumber"));
         }
 
         [Fact]
@@ -2321,7 +2321,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             Action action = () => odataQueryOptionParser.ParseSelectAndExpand();
 
-            action.Throws<ODataException>(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue("Color"));
+            action.Throws<ODataException>(Error.Format(SRResources.ApplyBinder_GroupByPropertyNotPropertyAccessValue, "Color"));
         }
 
         #endregion

@@ -74,14 +74,14 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             {
                 if (!EdmEnumValueParser.TryParseJsonEnumMember(this.expression.EnumMemberPath, this.expression.EnumType, this.Location, out member))
                 {
-                    return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidEnumMemberPath, Edm.Strings.CsdlParser_InvalidEnumMemberPath(this.expression.EnumMemberPath)) };
+                    return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidEnumMemberPath, Error.Format(SRResources.CsdlParser_InvalidEnumMemberPath, this.expression.EnumMemberPath)) };
                 }
             }
             else
             {
                 if (!EdmEnumValueParser.TryParseEnumMember(this.expression.EnumMemberPath, this.Schema.Model, this.Location, out member))
                 {
-                    return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidEnumMemberPath, Edm.Strings.CsdlParser_InvalidEnumMemberPath(this.expression.EnumMemberPath)) };
+                    return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidEnumMemberPath, Error.Format(SRResources.CsdlParser_InvalidEnumMemberPath, this.expression.EnumMemberPath)) };
                 }
             }
 

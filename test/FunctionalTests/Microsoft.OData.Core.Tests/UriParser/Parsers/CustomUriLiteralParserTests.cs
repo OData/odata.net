@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -143,7 +144,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Action addCustomUriLiteralParser = () =>
                     CustomUriLiteralParsers.AddCustomUriLiteralParser(customBooleanUriTypePraser);
 
-                addCustomUriLiteralParser.Throws<ODataException>(Strings.UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists);
+                addCustomUriLiteralParser.Throws<ODataException>(SRResources    .UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists);
             }
             finally
             {
@@ -212,7 +213,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Action addCustomUriLiteralParser = () =>
                     CustomUriLiteralParsers.AddCustomUriLiteralParser(booleanTypeReference, customBooleanUriTypePraser);
 
-                addCustomUriLiteralParser.Throws<ODataException>(Strings.UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists(booleanTypeReference.FullName()));
+                addCustomUriLiteralParser.Throws<ODataException>(Error.Format(SRResources.UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists, booleanTypeReference.FullName()));
             }
             finally
             {

@@ -114,7 +114,7 @@ namespace Microsoft.OData.Client
                 return UriUtil.CreateUri(this.baseUriWithSlash, UriUtil.CreateUri(entitySetName, UriKind.Relative));
             }
 
-            throw Error.InvalidOperation(Strings.Context_ResolveEntitySetOrBaseUriRequired(entitySetName));
+            throw Error.InvalidOperation(Error.Format(SRResources.Context_ResolveEntitySetOrBaseUriRequired, entitySetName));
         }
 
         /// <summary>
@@ -125,7 +125,7 @@ namespace Microsoft.OData.Client
         /// <returns>The BaseUri property with a slash.</returns>
         internal Uri GetBaseUriWithSlash()
         {
-            return this.GetBaseUriWithSlash(() => Strings.Context_BaseUriRequired);
+            return this.GetBaseUriWithSlash(() => SRResources.Context_BaseUriRequired);
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Microsoft.OData.Client
             Util.CheckArgumentNull(requestUri, "requestUri");
             if (!requestUri.IsAbsoluteUri)
             {
-                return UriUtil.CreateUri(this.GetBaseUriWithSlash(() => Strings.Context_RequestUriIsRelativeBaseUriRequired), requestUri);
+                return UriUtil.CreateUri(this.GetBaseUriWithSlash(() => SRResources.Context_RequestUriIsRelativeBaseUriRequired), requestUri);
             }
 
             return requestUri;
@@ -157,10 +157,10 @@ namespace Microsoft.OData.Client
             {
                 if (parameterName != null)
                 {
-                    throw Error.Argument(Strings.Context_BaseUri, parameterName);
+                    throw Error.Argument(SRResources.Context_BaseUri, parameterName);
                 }
 
-                throw Error.InvalidOperation(Strings.Context_BaseUri);
+                throw Error.InvalidOperation(SRResources.Context_BaseUri);
             }
         }
 
@@ -285,7 +285,7 @@ namespace Microsoft.OData.Client
                         return resolved;
                     }
 
-                    throw Error.InvalidOperation(Strings.Context_ResolveReturnedInvalidUri);
+                    throw Error.InvalidOperation(SRResources.Context_ResolveReturnedInvalidUri);
                 }
             }
 

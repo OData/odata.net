@@ -8,7 +8,7 @@ using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -110,7 +110,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             // NonFlagShape can't OR 2 member values 'Rectangle,foursquare'
             var castToken = new DottedIdentifierToken("Fully.Qualified.Namespace.NonFlagShape'Rectangle,foursquare'", new DummyToken());
             Action parse = () => this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
-            parse.Throws<ODataException>(ODataErrorStrings.Binder_IsNotValidEnumConstant("Fully.Qualified.Namespace.NonFlagShape'Rectangle,foursquare'"));
+            parse.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, "Fully.Qualified.Namespace.NonFlagShape'Rectangle,foursquare'"));
         }
 
         [Fact]
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var castToken = new DottedIdentifierToken("Fully.Qualified.Namespace.Lion", null);
             Action bind = () => this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_HierarchyNotFollowed(HardCodedTestModel.GetLionType().FullName(), HardCodedTestModel.GetPersonType().FullName()));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_HierarchyNotFollowed, HardCodedTestModel.GetLionType().FullName(), HardCodedTestModel.GetPersonType().FullName()));
 
         }
 
@@ -131,7 +131,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var castToken = new DottedIdentifierToken("Fully.Qualified.Namespace.Lion", new EndPathToken("Critics", new DummyToken()));
             Action bind = () => this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_HierarchyNotFollowed(HardCodedTestModel.GetLionType().FullName(), "<null>"));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_HierarchyNotFollowed, HardCodedTestModel.GetLionType().FullName(), "<null>"));
         }
 
         [Fact]
@@ -140,7 +140,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var castToken = new DottedIdentifierToken("Missing.Type", null);
             Action bind = () => this.dottedIdentifierBinder.BindDottedIdentifier(castToken);
 
-            bind.Throws<ODataException>(Strings.CastBinder_ChildTypeIsNotEntity("Missing.Type"));
+            bind.Throws<ODataException>(Error.Format(SRResources.CastBinder_ChildTypeIsNotEntity, "Missing.Type"));
         }
 
         [Fact]

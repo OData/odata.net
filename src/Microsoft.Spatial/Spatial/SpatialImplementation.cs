@@ -74,7 +74,7 @@ namespace Microsoft.Spatial
             var operations = this.Operations;
             if (operations == null)
             {
-                throw new NotImplementedException(Strings.SpatialImplementation_NoRegisteredOperations);
+                throw new NotImplementedException(SRResources.SpatialImplementation_NoRegisteredOperations);
             }
 
             return operations;

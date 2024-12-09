@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -72,15 +73,15 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Null(uriParser.ParseOrderBy());
             Assert.Null(uriParser.ParseCompute());
             Action action = () => uriParser.ParseTop();
-            action.Throws<ODataException>(Strings.SyntacticTree_InvalidTopQueryOptionValue(""));
+            action.Throws<ODataException>(Error.Format(SRResources.SyntacticTree_InvalidTopQueryOptionValue, ""));
             action = () => uriParser.ParseSkip();
-            action.Throws<ODataException>(Strings.SyntacticTree_InvalidSkipQueryOptionValue(""));
+            action.Throws<ODataException>(Error.Format(SRResources.SyntacticTree_InvalidSkipQueryOptionValue, ""));
             action = () => uriParser.ParseIndex();
-            action.Throws<ODataException>(Strings.SyntacticTree_InvalidIndexQueryOptionValue(""));
+            action.Throws<ODataException>(Error.Format(SRResources.SyntacticTree_InvalidIndexQueryOptionValue, ""));
             action = () => uriParser.ParseCount();
-            action.Throws<ODataException>(Strings.ODataUriParser_InvalidCount(""));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataUriParser_InvalidCount, ""));
             action = () => uriParser.ParseSearch();
-            action.Throws<ODataException>(Strings.UriQueryExpressionParser_ExpressionExpected(0, ""));
+            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 0, ""));
         }
 
         [Fact]

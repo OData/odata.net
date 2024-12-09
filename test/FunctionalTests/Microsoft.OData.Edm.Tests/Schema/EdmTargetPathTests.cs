@@ -43,7 +43,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Action action = () => new EdmTargetPath(customer, nameProperty);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
-            Assert.Equal(Strings.TargetPath_FirstSegmentMustBeIEdmEntityContainer, exception.Message);
+            Assert.Equal(SRResources.TargetPath_FirstSegmentMustBeIEdmEntityContainer, exception.Message);
         }
 
         [Fact]
@@ -57,7 +57,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Action action = () => new EdmTargetPath(container,customer);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
-            Assert.Equal(Strings.TargetPath_SecondSegmentMustBeIEdmEntityContainerElement, exception.Message);
+            Assert.Equal(SRResources.TargetPath_SecondSegmentMustBeIEdmEntityContainerElement, exception.Message);
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Action action = () => new EdmTargetPath(container, null, customer);
 
             ArgumentException exception = Assert.Throws<ArgumentException>(action);
-            Assert.Equal(Strings.TargetPath_SegmentsMustNotContainNullSegment, exception.Message);
+            Assert.Equal(SRResources.TargetPath_SegmentsMustNotContainNullSegment, exception.Message);
         }
 
         [Fact]

@@ -12,6 +12,7 @@ namespace Microsoft.OData
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -52,7 +53,7 @@ namespace Microsoft.OData
                 && typeKind != EdmTypeKind.Collection
                 && typeKind != EdmTypeKind.Untyped)
             {
-                throw new ODataException(Strings.ValidationUtils_IncorrectValueTypeKind(typeName, typeKind.ToString()));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_IncorrectValueTypeKind, typeName, typeKind.ToString()));
             }
         }
 
@@ -67,7 +68,7 @@ namespace Microsoft.OData
 
             if (itemTypeName == null)
             {
-                throw new ODataException(Strings.ValidationUtils_InvalidCollectionTypeName(collectionTypeName));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_InvalidCollectionTypeName, collectionTypeName));
             }
 
             return itemTypeName;
@@ -87,7 +88,7 @@ namespace Microsoft.OData
             // Entity types must be assignable
             if (!EdmLibraryExtensions.IsAssignableFrom(expectedEntityTypeReference.EntityDefinition(), payloadEntityTypeReference.EntityDefinition()))
             {
-                throw new ODataException(Strings.ValidationUtils_ResourceTypeNotAssignableToExpectedType(payloadEntityTypeReference.FullName(), expectedEntityTypeReference.FullName()));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_ResourceTypeNotAssignableToExpectedType, payloadEntityTypeReference.FullName(), expectedEntityTypeReference.FullName()));
             }
         }
 
@@ -105,7 +106,7 @@ namespace Microsoft.OData
             // Complex types could be assignable
             if (!EdmLibraryExtensions.IsAssignableFrom(expectedComplexType, payloadComplexType))
             {
-                throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadComplexType.FullTypeName(), expectedComplexType.FullTypeName()));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_IncompatibleType, payloadComplexType.FullTypeName(), expectedComplexType.FullTypeName()));
             }
         }
 
@@ -120,7 +121,7 @@ namespace Microsoft.OData
 
             if (collectionTypeReference != null && !typeReference.IsNonEntityCollectionType())
             {
-                throw new ODataException(Strings.ValidationUtils_InvalidCollectionTypeReference(typeReference.TypeKind()));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_InvalidCollectionTypeReference, typeReference.TypeKind()));
             }
 
             return collectionTypeReference;
@@ -135,17 +136,17 @@ namespace Microsoft.OData
         {
             if (!isNullable && item == null)
             {
-                throw new ODataException(Strings.ValidationUtils_NonNullableCollectionElementsMustNotBeNull);
+                throw new ODataException(SRResources.ValidationUtils_NonNullableCollectionElementsMustNotBeNull);
             }
 
             if (item is ODataCollectionValue)
             {
-                throw new ODataException(Strings.ValidationUtils_NestedCollectionsAreNotSupported);
+                throw new ODataException(SRResources.ValidationUtils_NestedCollectionsAreNotSupported);
             }
 
             if (item is ODataStreamReferenceValue)
             {
-                throw new ODataException(Strings.ValidationUtils_StreamReferenceValuesNotSupportedInCollections);
+                throw new ODataException(SRResources.ValidationUtils_StreamReferenceValuesNotSupportedInCollections);
             }
         }
 
@@ -157,7 +158,7 @@ namespace Microsoft.OData
         {
             if (expectedItemType != null && expectedItemType.IsODataPrimitiveTypeKind() && !expectedItemType.IsNullable)
             {
-                throw new ODataException(Strings.ValidationUtils_NullCollectionItemForNonNullableType(expectedItemType.FullName()));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_NullCollectionItemForNonNullableType, expectedItemType.FullName()));
             }
         }
 
@@ -172,7 +173,7 @@ namespace Microsoft.OData
             Debug.Assert(streamInfo != null, "streamInfo != null");
             if (edmProperty != null && !edmProperty.Type.IsStream())
             {
-                throw new ODataException(Strings.ValidationUtils_MismatchPropertyKindForStreamProperty(propertyName));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_MismatchPropertyKindForStreamProperty, propertyName));
             }
         }
 
@@ -186,7 +187,7 @@ namespace Microsoft.OData
             recursionDepth++;
             if (recursionDepth > maxDepth)
             {
-                throw new ODataException(Strings.ValidationUtils_RecursionDepthLimitReached(maxDepth));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_RecursionDepthLimitReached, maxDepth));
             }
         }
 
@@ -201,7 +202,7 @@ namespace Microsoft.OData
             if (operation == null)
             {
                 string enumerableName = isAction ? "ODataResource.Actions" : "ODataResource.Functions";
-                throw new ODataException(Strings.ValidationUtils_EnumerableContainsANullItem(enumerableName));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_EnumerableContainsANullItem, enumerableName));
             }
         }
 
@@ -216,7 +217,7 @@ namespace Microsoft.OData
             // ODataOperation must have a Metadata property.
             if (operation.Metadata == null)
             {
-                throw new ODataException(Strings.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata(operation.GetType().Name));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata, operation.GetType().Name));
             }
         }
 
@@ -231,7 +232,7 @@ namespace Microsoft.OData
             // ODataOperation must have a Target property.
             if (operation.Target == null)
             {
-                throw new ODataException(Strings.ValidationUtils_ActionsAndFunctionsMustSpecifyTarget(operation.GetType().Name));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_ActionsAndFunctionsMustSpecifyTarget, operation.GetType().Name));
             }
         }
 
@@ -251,14 +252,14 @@ namespace Microsoft.OData
                 {
                     if (resourceType.HasStream)
                     {
-                        throw new ODataException(Strings.ValidationUtils_ResourceWithoutMediaResourceAndMLEType(resourceType.FullTypeName()));
+                        throw new ODataException(Error.Format(SRResources.ValidationUtils_ResourceWithoutMediaResourceAndMLEType, resourceType.FullTypeName()));
                     }
                 }
                 else
                 {
                     if (!resourceType.HasStream)
                     {
-                        throw new ODataException(Strings.ValidationUtils_ResourceWithMediaResourceAndNonMLEType(resourceType.FullTypeName()));
+                        throw new ODataException(Error.Format(SRResources.ValidationUtils_ResourceWithMediaResourceAndNonMLEType, resourceType.FullTypeName()));
                     }
                 }
             }
@@ -298,7 +299,7 @@ namespace Microsoft.OData
 
             if (valuePrimitiveTypeReference == null)
             {
-                throw new ODataException(Strings.ValidationUtils_UnsupportedPrimitiveType(value.GetType().FullName));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_UnsupportedPrimitiveType, value.GetType().FullName));
             }
 
             Debug.Assert(valuePrimitiveTypeReference.IsEquivalentTo(EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType())), "The value and valuePrimitiveTypeReference don't match.");
@@ -312,7 +313,7 @@ namespace Microsoft.OData
             if (!expectedTypeReference.IsODataPrimitiveTypeKind() && !expectedTypeReference.IsODataTypeDefinitionTypeKind())
             {
                 // non-primitive type found for primitive value.
-                throw new ODataException(Strings.ValidationUtils_NonPrimitiveTypeForPrimitiveValue(expectedTypeReference.FullName()));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_NonPrimitiveTypeForPrimitiveValue, expectedTypeReference.FullName()));
             }
 
             ValidateMetadataPrimitiveType(expectedTypeReference, valuePrimitiveTypeReference);
@@ -345,7 +346,7 @@ namespace Microsoft.OData
             if (!nullableCompatible || !typeCompatible)
             {
                 // incompatible type name for value!
-                throw new ODataException(Strings.ValidationUtils_IncompatiblePrimitiveItemType(
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_IncompatiblePrimitiveItemType,
                     typeReferenceFromValue.FullName(),
                     typeReferenceFromValue.IsNullable,
                     expectedTypeReference.FullName(),
@@ -362,18 +363,18 @@ namespace Microsoft.OData
         {
             if (serviceDocumentElement == null)
             {
-                throw new ODataException(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
+                throw new ODataException(SRResources.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
             }
 
             // The resource collection URL must not be null;
             if (serviceDocumentElement.Url == null)
             {
-                throw new ODataException(Strings.ValidationUtils_ResourceMustSpecifyUrl);
+                throw new ODataException(SRResources.ValidationUtils_ResourceMustSpecifyUrl);
             }
 
             if (format == ODataFormat.Json && string.IsNullOrEmpty(serviceDocumentElement.Name))
             {
-                throw new ODataException(Strings.ValidationUtils_ResourceMustSpecifyName(serviceDocumentElement.Url.ToString()));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_ResourceMustSpecifyName, serviceDocumentElement.Url.ToString()));
             }
         }
 
@@ -386,7 +387,7 @@ namespace Microsoft.OData
             // The service document URL must not be null or empty;
             if (serviceDocumentUrl == null)
             {
-                throw new ODataException(Strings.ValidationUtils_ServiceDocumentElementUrlMustNotBeNull);
+                throw new ODataException(SRResources.ValidationUtils_ServiceDocumentElementUrlMustNotBeNull);
             }
         }
 
@@ -411,7 +412,7 @@ namespace Microsoft.OData
             {
                 if (typeName == null)
                 {
-                    throw new ODataException(Strings.ValidationUtils_IncorrectTypeKindNoTypeName(actualTypeKind.ToString(), expectedTypeKind.ToString()));
+                    throw new ODataException(Error.Format(SRResources.ValidationUtils_IncorrectTypeKindNoTypeName, actualTypeKind.ToString(), expectedTypeKind.ToString()));
                 }
 
                 if (actualTypeKind == EdmTypeKind.TypeDefinition && expectedTypeKind == EdmTypeKind.Primitive
@@ -421,7 +422,7 @@ namespace Microsoft.OData
                     return;
                 }
 
-                throw new ODataException(Strings.ValidationUtils_IncorrectTypeKind(typeName, expectedTypeKind.ToString(), actualTypeKind.ToString()));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_IncorrectTypeKind, typeName, expectedTypeKind.ToString(), actualTypeKind.ToString()));
             }
         }
 
@@ -434,7 +435,7 @@ namespace Microsoft.OData
             // Boundary string must have at least 1 and no more than 70 characters.
             if (boundary == null || boundary.Length == 0 || boundary.Length > MaxBoundaryLength)
             {
-                throw new ODataException(Strings.ValidationUtils_InvalidBatchBoundaryDelimiterLength(boundary, MaxBoundaryLength));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_InvalidBatchBoundaryDelimiterLength, boundary, MaxBoundaryLength));
             }
 
             //// NOTE: we do not have to check the validity of the characters in the boundary string
@@ -467,7 +468,7 @@ namespace Microsoft.OData
                 string invalidChars = string.Join(
                     ", ",
                     ValidationUtils.InvalidCharactersInPropertyNames.Select(c => string.Format(CultureInfo.InvariantCulture, "'{0}'", c)).ToArray());
-                throw new ODataException(Strings.ValidationUtils_PropertiesMustNotContainReservedChars(propertyName, invalidChars));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_PropertiesMustNotContainReservedChars, propertyName, invalidChars));
             }
         }
     }

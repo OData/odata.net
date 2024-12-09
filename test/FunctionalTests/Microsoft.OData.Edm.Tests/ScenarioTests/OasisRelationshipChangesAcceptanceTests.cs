@@ -12,7 +12,6 @@ using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Edm.Strings;
 
 namespace Microsoft.OData.Edm.Tests.ScenarioTests
 {
@@ -229,7 +228,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             this.ValidateBindingWithExpectedErrors(
                 @"<NavigationPropertyBinding Path=""NonExistent"" Target=""EntitySet"" />",
                 EdmErrorCode.BadUnresolvedNavigationPropertyPath,
-                ErrorStrings.Bad_UnresolvedNavigationPropertyPath("NonExistent", "Test.EntityType"));
+                Error.Format(SRResources.Bad_UnresolvedNavigationPropertyPath, "NonExistent", "Test.EntityType"));
         }
 
         [Fact]
@@ -238,7 +237,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             this.ValidateBindingWithExpectedErrors(
                 @"<NavigationPropertyBinding Path=""Navigation"" Target=""NonExistent"" />",
                 EdmErrorCode.BadUnresolvedEntitySet,
-                ErrorStrings.Bad_UnresolvedEntitySet("NonExistent"));
+                Error.Format(SRResources.Bad_UnresolvedEntitySet, "NonExistent"));
         }
 
         [Fact]
@@ -247,7 +246,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             this.ValidateBindingWithExpectedErrors(
                 @"<NavigationPropertyBinding Path=""DerivedNavigation"" Target=""EntitySet"" />",
                 EdmErrorCode.BadUnresolvedNavigationPropertyPath,
-                ErrorStrings.Bad_UnresolvedNavigationPropertyPath("DerivedNavigation", "Test.EntityType"));
+                Error.Format(SRResources.Bad_UnresolvedNavigationPropertyPath, "DerivedNavigation", "Test.EntityType"));
         }
 
         [Fact]
@@ -256,7 +255,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             this.ValidateBindingWithExpectedErrors(
                 @"<NavigationPropertyBinding Path=""Test.DerivedEntityType/NonExistent"" Target=""EntitySet"" />",
                 EdmErrorCode.BadUnresolvedNavigationPropertyPath,
-                ErrorStrings.Bad_UnresolvedNavigationPropertyPath("Test.DerivedEntityType/NonExistent", "Test.EntityType"));
+                Error.Format(SRResources.Bad_UnresolvedNavigationPropertyPath, "Test.DerivedEntityType/NonExistent", "Test.EntityType"));
         }
 
         [Fact]
@@ -265,7 +264,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             this.ParseBindingWithExpectedErrors(
                 @"<NavigationPropertyBinding Path=""Navigation"" />",
                 EdmErrorCode.MissingAttribute,
-                ErrorStrings.XmlParser_MissingAttribute("Target", "NavigationPropertyBinding"));
+                Error.Format(SRResources.XmlParser_MissingAttribute, "Target", "NavigationPropertyBinding"));
         }
 
         [Fact]
@@ -274,7 +273,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             this.ParseBindingWithExpectedErrors(
                 @"<NavigationPropertyBinding Target=""EntitySet"" />",
                 EdmErrorCode.MissingAttribute,
-                ErrorStrings.XmlParser_MissingAttribute("Path", "NavigationPropertyBinding"));
+                Error.Format(SRResources.XmlParser_MissingAttribute, "Path", "NavigationPropertyBinding"));
         }
 
         [Fact]
@@ -283,8 +282,8 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             this.ParseBindingWithExpectedErrors(
                 @"<NavigationPropertyBinding Path=""Navigation"" Target=""EntitySet"" Something=""else"" Foo=""bar"" />",
                 EdmErrorCode.UnexpectedXmlAttribute,
-                ErrorStrings.XmlParser_UnexpectedAttribute("Something"),
-                ErrorStrings.XmlParser_UnexpectedAttribute("Foo"));
+                Error.Format(SRResources.XmlParser_UnexpectedAttribute, "Something"),
+                Error.Format(SRResources.XmlParser_UnexpectedAttribute, "Foo"));
         }
 
         [Fact]
@@ -304,7 +303,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             this.ParseReferentialConstraintWithExpectedErrors(
                 @"<ReferentialConstraint ReferencedProperty=""ID1"" />",
                 EdmErrorCode.MissingAttribute,
-                ErrorStrings.XmlParser_MissingAttribute("Property", "ReferentialConstraint"));
+                Error.Format(SRResources.XmlParser_MissingAttribute, "Property", "ReferentialConstraint"));
         }
 
         [Fact]
@@ -313,7 +312,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             this.ParseReferentialConstraintWithExpectedErrors(
                 @"<ReferentialConstraint Property=""ForeignKeyId1"" />",
                 EdmErrorCode.MissingAttribute,
-                ErrorStrings.XmlParser_MissingAttribute("ReferencedProperty", "ReferentialConstraint"));
+                Error.Format(SRResources.XmlParser_MissingAttribute, "ReferencedProperty", "ReferentialConstraint"));
         }
 
         [Fact]
@@ -323,8 +322,8 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
                 @"
               <ReferentialConstraint Property=""ForeignKeyId1"" ReferencedProperty=""ID1"" Something=""else"" Foo=""bar"" />",
                 EdmErrorCode.UnexpectedXmlAttribute,
-                ErrorStrings.XmlParser_UnexpectedAttribute("Something"),
-                ErrorStrings.XmlParser_UnexpectedAttribute("Foo"));
+                Error.Format(SRResources.XmlParser_UnexpectedAttribute, "Something"),
+                Error.Format(SRResources.XmlParser_UnexpectedAttribute, "Foo"));
         }
 
         [Fact]
@@ -344,7 +343,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             this.ValidateReferentialConstraintWithExpectedErrors(
                 @"<ReferentialConstraint Property=""NonExistent"" ReferencedProperty=""ID1"" />",
                 EdmErrorCode.BadUnresolvedProperty,
-                ErrorStrings.Bad_UnresolvedProperty("NonExistent")
+                Error.Format(SRResources.Bad_UnresolvedProperty, "NonExistent")
                 );
         }
 
@@ -354,7 +353,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             this.ValidateReferentialConstraintWithExpectedErrors(
                 @"<ReferentialConstraint Property=""ForeignKeyId1"" ReferencedProperty=""NonExistent"" />",
                 EdmErrorCode.BadUnresolvedProperty,
-                ErrorStrings.Bad_UnresolvedProperty("NonExistent"));
+                Error.Format(SRResources.Bad_UnresolvedProperty, "NonExistent"));
         }
 
         [Fact]
@@ -366,7 +365,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
                     <OnDelete Action=""None"" />
                   </NavigationProperty>",
                 EdmErrorCode.UnexpectedXmlElement,
-                ErrorStrings.XmlParser_UnusedElement("OnDelete"));
+                Error.Format(SRResources.XmlParser_UnusedElement, "OnDelete"));
         }
 
         [Fact]
@@ -377,7 +376,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
                     <OnDelete Action=""Foo"" />
                   </NavigationProperty>",
                 EdmErrorCode.InvalidOnDelete,
-                ErrorStrings.CsdlParser_InvalidDeleteAction("Foo"));
+                Error.Format(SRResources.CsdlParser_InvalidDeleteAction, "Foo"));
         }
 
         [Fact]
@@ -386,7 +385,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             this.ParseNavigationExpectedErrors(
                 @"<NavigationProperty Name=""Navigation"" />",
                 EdmErrorCode.MissingAttribute,
-                ErrorStrings.XmlParser_MissingAttribute("Type", "NavigationProperty"));
+                Error.Format(SRResources.XmlParser_MissingAttribute, "Type", "NavigationProperty"));
         }
 
         [Fact]
@@ -400,7 +399,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         {
             this.ParseNavigationExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type="""" />",
                 EdmErrorCode.InvalidTypeName,
-                ErrorStrings.CsdlParser_InvalidTypeName(""));
+                Error.Format(SRResources.CsdlParser_InvalidTypeName, ""));
         }
 
         [Fact]
@@ -408,7 +407,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         {
             this.ParseNavigationExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type=""Test.EntityType"" Nullable=""""/>",
                 EdmErrorCode.InvalidBoolean,
-                ErrorStrings.ValueParser_InvalidBoolean(""));
+                Error.Format(SRResources.ValueParser_InvalidBoolean, ""));
         }
 
         [Fact]
@@ -416,7 +415,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         {
             this.ParseNavigationExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type=""Test.EntityType"" Nullable=""foo""/>",
                 EdmErrorCode.InvalidBoolean,
-                ErrorStrings.ValueParser_InvalidBoolean("foo"));
+                Error.Format(SRResources.ValueParser_InvalidBoolean, "foo"));
         }
 
         [Fact]
@@ -424,7 +423,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         {
             this.ValidateNavigationWithExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type=""Collection(Test.EntityType)"" Nullable=""false""/>",
                 EdmErrorCode.NavigationPropertyWithCollectionTypeCannotHaveNullableAttribute,
-                ErrorStrings.CsdlParser_CannotSpecifyNullableAttributeForNavigationPropertyWithCollectionType);
+                SRResources.CsdlParser_CannotSpecifyNullableAttributeForNavigationPropertyWithCollectionType);
         }
 
         [Fact]
@@ -432,7 +431,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         {
             this.ValidateNavigationWithExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type=""Edm.Int32"" />",
                 EdmErrorCode.BadUnresolvedEntityType,
-                ErrorStrings.Bad_UnresolvedEntityType("Edm.Int32"));
+                Error.Format(SRResources.Bad_UnresolvedEntityType, "Edm.Int32"));
         }
 
         [Fact]
@@ -440,7 +439,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         {
             this.ValidateNavigationWithExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type=""Collection(Edm.Int32)"" />",
                 EdmErrorCode.BadUnresolvedEntityType,
-                ErrorStrings.Bad_UnresolvedEntityType("Edm.Int32"));
+                Error.Format(SRResources.Bad_UnresolvedEntityType, "Edm.Int32"));
         }
 
         [Fact]
@@ -448,7 +447,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         {
             this.ValidateNavigationWithExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type=""Fake.Nonexistent"" />",
                 EdmErrorCode.BadUnresolvedEntityType,
-                ErrorStrings.Bad_UnresolvedEntityType("Fake.Nonexistent"));
+                Error.Format(SRResources.Bad_UnresolvedEntityType, "Fake.Nonexistent"));
         }
 
         [Fact]
@@ -456,7 +455,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
         {
             this.ValidateNavigationWithExpectedErrors(@"<NavigationProperty Name=""Navigation"" Type=""Collection(Fake.Nonexistent)"" />",
                 EdmErrorCode.BadUnresolvedEntityType,
-                ErrorStrings.Bad_UnresolvedEntityType("Fake.Nonexistent"));
+                Error.Format(SRResources.Bad_UnresolvedEntityType, "Fake.Nonexistent"));
         }
 
         [Fact]
@@ -470,7 +469,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
                 },
                 new[]
                 {
-                    ErrorStrings.Bad_UnresolvedNavigationPropertyPath("Nonexistent", "Test.EntityType"),
+                    Error.Format(SRResources.Bad_UnresolvedNavigationPropertyPath, "Nonexistent", "Test.EntityType"),
                     string.Format("Cannot resolve partner path for navigation property '{0}'.", "Navigation")
                 });
         }
@@ -483,7 +482,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             Assert.False(model.Validate(out errors));
             var error = Assert.Single(errors);
             Assert.Equal(EdmErrorCode.BadUnresolvedEnumMember, error.ErrorCode);
-            Assert.Equal(ErrorStrings.Bad_UnresolvedEnumMember("Blue"), error.ErrorMessage);
+            Assert.Equal(Error.Format(SRResources.Bad_UnresolvedEnumMember, "Blue"), error.ErrorMessage);
         }
 
         [Fact]
@@ -501,7 +500,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             Assert.False(model.Validate(out errors));
             Assert.Equal(2, errors.Count());
             Assert.Contains(errors, e => e.ErrorCode == EdmErrorCode.InvalidEnumMemberPath &&
-            e.ErrorMessage == ErrorStrings.CsdlParser_InvalidEnumMemberPath("TestNS2.Color/UnknownMember"));
+            e.ErrorMessage == Error.Format(SRResources.CsdlParser_InvalidEnumMemberPath, "TestNS2.Color/UnknownMember"));
         }
 
         [Fact]

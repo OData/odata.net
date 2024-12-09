@@ -351,15 +351,15 @@ namespace Microsoft.OData.Client
         {
             if (this.Skip != null)
             {
-                throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("filter", "skip"));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_QueryOptionOutOfOrder, "filter", "skip"));
             }
             else if (this.Take != null)
             {
-                throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("filter", "top"));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_QueryOptionOutOfOrder, "filter", "top"));
             }
             else if (this.Projection != null)
             {
-                throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("filter", "select"));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_QueryOptionOutOfOrder, "filter", "select"));
             }
 
             if (this.Filter == null)
@@ -392,7 +392,7 @@ namespace Microsoft.OData.Client
 
             if (this.OrderBy != null)
             {
-                throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("apply", "orderby"));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_QueryOptionOutOfOrder, "apply", "orderby"));
             }
             else if (this.Skip != null)
             {
@@ -400,11 +400,11 @@ namespace Microsoft.OData.Client
                 // However, support for rollup is currently not implemented in OData WebApi
                 // If $skip and/or $top appears before $apply, its currently ignored. 
                 // Makes sense to throw an exception to avoid giving a false impression.
-                throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("apply", "skip"));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_QueryOptionOutOfOrder, "apply", "skip"));
             }
             else if (this.Take != null)
             {
-                throw new NotSupportedException(Strings.ALinq_QueryOptionOutOfOrder("apply", "top"));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_QueryOptionOutOfOrder, "apply", "top"));
             }
 
             if (this.Apply == null)

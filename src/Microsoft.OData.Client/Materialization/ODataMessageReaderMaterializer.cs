@@ -12,7 +12,6 @@ namespace Microsoft.OData.Client.Materialization
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData;
-    using ClientStrings = Microsoft.OData.Client.Strings;
 
     /// <summary>
     /// Used to materialize a value from an <see cref="ODataMessageReader"/>.
@@ -80,7 +79,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>The count value returned from the server</returns>
         internal override long CountValue
         {
-            get { throw new InvalidOperationException(ClientStrings.MaterializeFromObject_CountNotPresent); }
+            get { throw new InvalidOperationException(SRResources.MaterializeFromObject_CountNotPresent); }
         }
 
         /// <summary>
@@ -148,7 +147,7 @@ namespace Microsoft.OData.Client.Materialization
                 }
                 catch (ODataErrorException e)
                 {
-                    throw new DataServiceClientException(ClientStrings.Deserialize_ServerException(e.Error.Message), e);
+                    throw new DataServiceClientException(Error.Format(SRResources.Deserialize_ServerException, e.Error.Message), e);
                 }
                 catch (ODataException e)
                 {

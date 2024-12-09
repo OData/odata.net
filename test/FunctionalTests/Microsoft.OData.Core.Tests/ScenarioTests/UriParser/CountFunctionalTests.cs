@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -50,21 +50,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void EmptyInputCase()
         {
             Action createWithInvalidInput = () => ParseCount("");
-            createWithInvalidInput.Throws<ODataException>(ODataErrorStrings.ODataUriParser_InvalidCount(""));
+            createWithInvalidInput.Throws<ODataException>(Error.Format(SRResources.ODataUriParser_InvalidCount, ""));
         }
 
         [Fact]
         public void InvalidCaseThrows()
         {
             Action createWithInvalidInput = () => ParseCount("True");
-            createWithInvalidInput.Throws<ODataException>(ODataErrorStrings.ODataUriParser_InvalidCount("True"));
+            createWithInvalidInput.Throws<ODataException>(Error.Format(SRResources.ODataUriParser_InvalidCount, "True"));
         }
 
         [Fact]
         public void InvalidThrows()
         {
             Action createWithInvalidInput = () => ParseCount("fasle");
-            createWithInvalidInput.Throws<ODataException>(ODataErrorStrings.ODataUriParser_InvalidCount("fasle"));
+            createWithInvalidInput.Throws<ODataException>(Error.Format(SRResources.ODataUriParser_InvalidCount, "fasle"));
         }
 
         private static bool? ParseCount(string p)

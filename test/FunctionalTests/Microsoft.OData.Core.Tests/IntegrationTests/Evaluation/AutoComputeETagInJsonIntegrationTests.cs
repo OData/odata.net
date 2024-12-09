@@ -6,11 +6,11 @@
 
 using System;
 using System.IO;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 {
@@ -195,7 +195,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             };
 
             Action action = () => GetWriterOutputForContentTypeAndKnobValue(entry, model, peopleSet, personType);
-            action.Throws<ODataException>(ErrorStrings.EdmValueUtils_PropertyDoesntExist("MyNs.Person", "NameName"));
+            action.Throws<ODataException>(Error.Format(SRResources.EdmValueUtils_PropertyDoesntExist, "MyNs.Person", "NameName"));
         }
 
         private string GetWriterOutputForContentTypeAndKnobValue(ODataResource entry, EdmModel model, IEdmEntitySetBase entitySet, EdmEntityType entityType)

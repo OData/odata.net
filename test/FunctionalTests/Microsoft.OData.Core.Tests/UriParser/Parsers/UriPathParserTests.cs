@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -200,7 +201,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var absoluteUri = new Uri("http://www.example.com/EntitySet/");
 
             Action enumerate = () => this.pathParser.ParsePathIntoSegments(absoluteUri, this.baseUri);
-            enumerate.Throws<ODataException>(Strings.UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri(absoluteUri, baseUri));
+            enumerate.Throws<ODataException>(Error.Format(SRResources.UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri, absoluteUri, baseUri));
         }
 
         [Fact]
@@ -208,7 +209,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             this.pathParser = new UriPathParser(new ODataUriParserSettings() { PathLimit = 2});
             Action enumerate = () => this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two/Three"), this.baseUri);
-            enumerate.Throws<ODataException>(Strings.UriQueryPathParser_TooManySegments);
+            enumerate.Throws<ODataException>(SRResources.UriQueryPathParser_TooManySegments);
         }
 
         [Fact]

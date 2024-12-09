@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.MultipartMixed;
 using Xunit;
@@ -639,7 +640,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                         // Try to create operation request message with null content id
                     }));
 
-            Assert.Equal(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound(ODataConstants.ContentIdHeader), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataBatchOperationHeaderDictionary_KeyNotFound, ODataConstants.ContentIdHeader), exception.Message);
         }
 
         [Fact]
@@ -661,7 +662,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                             "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
                     }));
 
-            Assert.Equal(Strings.ODataBatchReader_DependsOnIdNotFound("3", "2"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, "3", "2"), exception.Message);
         }
 
         [Fact]
@@ -671,7 +672,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 () => SetupMultipartMixedBatchWriterAndRunTestAsync(
                     (multipartMixedBatchWriter) => multipartMixedBatchWriter.OnInStreamErrorAsync()));
 
-            Assert.Equal(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_CannotWriteInStreamErrorForBatch, exception.Message);
         }
 
         #endregion

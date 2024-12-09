@@ -49,7 +49,7 @@ namespace Microsoft.OData.Client
             {
                 if (ClientTypeUtil.TypeOrElementTypeIsEntity(le.Body.Type))
                 {
-                    throw new NotSupportedException(Strings.ALinq_CannotCreateConstantEntity);
+                    throw new NotSupportedException(SRResources.ALinq_CannotCreateConstantEntity);
                 }
 
                 re.Projection = new ProjectionQueryOptionExpression(le.Body.Type, le, new List<string>());
@@ -98,9 +98,9 @@ namespace Microsoft.OData.Client
                         EntityProjectionAnalyzer.Analyze((MemberInitExpression)e.Body, pb, context);
                         break;
                     case ExpressionType.New:
-                        throw new NotSupportedException(Strings.ALinq_CannotConstructKnownEntityTypes);
+                        throw new NotSupportedException(SRResources.ALinq_CannotConstructKnownEntityTypes);
                     case ExpressionType.Constant:
-                        throw new NotSupportedException(Strings.ALinq_CannotCreateConstantEntity);
+                        throw new NotSupportedException(SRResources.ALinq_CannotCreateConstantEntity);
                     default:
                         // ExpressionType.MemberAccess as a top-level expression is correctly
                         // processed here, as the lambda isn't being member-initialized.
@@ -145,7 +145,7 @@ namespace Microsoft.OData.Client
                 MethodCallExpression insideCall = ResourceBinder.StripTo<MethodCallExpression>(call.Arguments[0]);
                 if (insideCall != null && (ReflectionUtil.IsSequenceSelectMethod(insideCall.Method)))
                 {
-                    throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(type, call.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, type, call.ToString()));
                 }
             }
         }
@@ -342,7 +342,7 @@ namespace Microsoft.OData.Client
                         Expression[] lastExpressions = analysis.GetExpressionsBeyondTargetEntity();
                         if (lastExpressions.Length == 0)
                         {
-                            throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(targetType, ma.Expression));
+                            throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjectionToEntity, targetType, ma.Expression));
                         }
 
                         MemberExpression lastExpression = lastExpressions[lastExpressions.Length - 1] as MemberExpression;
@@ -362,7 +362,7 @@ namespace Microsoft.OData.Client
                         {
                             if (lastExpression.Member.Name != ma.Member.Name)
                             {
-                                throw new NotSupportedException(Strings.ALinq_PropertyNamesMustMatchInProjections(lastExpression.Member.Name, ma.Member.Name));
+                                throw new NotSupportedException(Error.Format(SRResources.ALinq_PropertyNamesMustMatchInProjections, lastExpression.Member.Name, ma.Member.Name));
                             }
 
                             // Unless we're initializing an entity, we should not traverse into the parameter in scope.
@@ -370,7 +370,7 @@ namespace Microsoft.OData.Client
                             bool sourceIsEntity = ClientTypeUtil.TypeOrElementTypeIsEntity(lastExpression.Type);
                             if (sourceIsEntity && !targetIsEntity)
                             {
-                                throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(targetType, ma.Expression));
+                                throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, targetType, ma.Expression));
                             }
                         }
                     }
@@ -403,17 +403,17 @@ namespace Microsoft.OData.Client
                 // In V3 while we support TypeAs conversions, we only support TypeAs before a MemberAccess and not TypeAs as the last operation
                 // i.e. we support "Manager = (p as Employee).Manager" (see VisitMemberAccess for detail), but we don't support "Manager = (p as Manager)"
                 // Note that the server also doesn't support a property path which ends with a type identifier.
-                throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(this.type, u.ToString()));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjectionToEntity, this.type, u.ToString()));
             }
 
             internal override Expression VisitBinary(BinaryExpression b)
             {
-                throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(this.type, b.ToString()));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjectionToEntity, this.type, b.ToString()));
             }
 
             internal override Expression VisitTypeIs(TypeBinaryExpression b)
             {
-                throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(this.type, b.ToString()));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjectionToEntity, this.type, b.ToString()));
             }
 
             internal override Expression VisitConditional(ConditionalExpression c)
@@ -425,12 +425,12 @@ namespace Microsoft.OData.Client
                     return c;
                 }
 
-                throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(this.type, c.ToString()));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjectionToEntity, this.type, c.ToString()));
             }
 
             internal override Expression VisitConstant(ConstantExpression c)
             {
-                throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(this.type, c.ToString()));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjectionToEntity, this.type, c.ToString()));
             }
 
             internal override Expression VisitMemberAccess(MemberExpression m)
@@ -443,7 +443,7 @@ namespace Microsoft.OData.Client
                 if (!ClientTypeUtil.TypeOrElementTypeIsEntity(m.Expression.Type) ||
                     IsCollectionProducingExpression(m.Expression))
                 {
-                    throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(this.type, m.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjectionToEntity, this.type, m.ToString()));
                 }
 
                 PropertyInfo pi;
@@ -459,7 +459,7 @@ namespace Microsoft.OData.Client
                     return e;
                 }
 
-                throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(this.type, m.ToString()));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjectionToEntity, this.type, m.ToString()));
             }
 
             internal override Expression VisitMethodCall(MethodCallExpression m)
@@ -470,7 +470,7 @@ namespace Microsoft.OData.Client
                     || m.Arguments.Any(a => IsDisallowedExpressionForMethodCall(a, this.context.Model))
                     || (m.Object == null && !ClientTypeUtil.TypeOrElementTypeIsEntity(m.Arguments[0].Type)))
                 {
-                    throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, m.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, this.type, m.ToString()));
                 }
 
                 if (ProjectionAnalyzer.IsMethodCallAllowedEntitySequence(m))
@@ -482,12 +482,12 @@ namespace Microsoft.OData.Client
                     return base.VisitMethodCall(m);
                 }
 
-                throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(this.type, m.ToString()));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjectionToEntity, this.type, m.ToString()));
             }
 
             internal override Expression VisitInvocation(InvocationExpression iv)
             {
-                throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(this.type, iv.ToString()));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjectionToEntity, this.type, iv.ToString()));
             }
 
             internal override Expression VisitLambda(LambdaExpression lambda)
@@ -498,12 +498,12 @@ namespace Microsoft.OData.Client
 
             internal override Expression VisitListInit(ListInitExpression init)
             {
-                throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(this.type, init.ToString()));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjectionToEntity, this.type, init.ToString()));
             }
 
             internal override Expression VisitNewArray(NewArrayExpression na)
             {
-                throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(this.type, na.ToString()));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjectionToEntity, this.type, na.ToString()));
             }
 
             internal override Expression VisitMemberInit(MemberInitExpression init)
@@ -511,7 +511,7 @@ namespace Microsoft.OData.Client
                 if (!ClientTypeUtil.TypeOrElementTypeIsEntity(init.Type))
                 {
                     // MemberInit to a complex type is not supported on entity types.
-                    throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(this.type, init.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjectionToEntity, this.type, init.ToString()));
                 }
 
                 ProjectionAnalyzer.Analyze(init, this.builder, this.context);
@@ -557,14 +557,14 @@ namespace Microsoft.OData.Client
                     }
                 }
 
-                throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjectionToEntity(this.type, nex.ToString()));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjectionToEntity, this.type, nex.ToString()));
             }
 
             internal override Expression VisitParameter(ParameterExpression p)
             {
                 if (p != this.builder.ParamExpressionInScope)
                 {
-                    throw new NotSupportedException(Strings.ALinq_CanOnlyProjectTheLeaf);
+                    throw new NotSupportedException(SRResources.ALinq_CanOnlyProjectTheLeaf);
                 }
 
                 this.builder.StartNewPath();
@@ -633,7 +633,7 @@ namespace Microsoft.OData.Client
 
                     if (ClientTypeUtil.TypeOrElementTypeIsEntity(u.Operand.Type))
                     {
-                        throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, u.ToString()));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, this.type, u.ToString()));
                     }
                 }
 
@@ -646,7 +646,7 @@ namespace Microsoft.OData.Client
                     ClientTypeUtil.TypeOrElementTypeIsEntity(b.Right.Type) ||
                     IsCollectionProducingExpression(b.Left) || IsCollectionProducingExpression(b.Right))
                 {
-                    throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, b.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, this.type, b.ToString()));
                 }
 
                 return base.VisitBinary(b);
@@ -656,7 +656,7 @@ namespace Microsoft.OData.Client
             {
                 if (ClientTypeUtil.TypeOrElementTypeIsEntity(b.Expression.Type) || IsCollectionProducingExpression(b.Expression))
                 {
-                    throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, b.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, this.type, b.ToString()));
                 }
 
                 return base.VisitTypeIs(b);
@@ -676,7 +676,7 @@ namespace Microsoft.OData.Client
                     ClientTypeUtil.TypeOrElementTypeIsEntity(c.IfFalse.Type)
                     || IsCollectionProducingExpression(c.Test) || IsCollectionProducingExpression(c.IfTrue) || IsCollectionProducingExpression(c.IfFalse))
                 {
-                    throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, c.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, this.type, c.ToString()));
                 }
 
                 return base.VisitConditional(c);
@@ -718,7 +718,7 @@ namespace Microsoft.OData.Client
                 //           and changing IsCollectionProducingExpression seems risky at this point as it's used in a lot of places.
                 if (IsCollectionProducingExpression(m.Expression))
                 {
-                    throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, m.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, this.type, m.ToString()));
                 }
 
                 PropertyInfo pi;
@@ -737,7 +737,7 @@ namespace Microsoft.OData.Client
                     return e;
                 }
 
-                throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, m.ToString()));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, this.type, m.ToString()));
             }
 
             internal override Expression VisitMethodCall(MethodCallExpression m)
@@ -745,7 +745,7 @@ namespace Microsoft.OData.Client
                 if ((m.Object != null && IsDisallowedExpressionForMethodCall(m.Object, this.context.Model))
                     || m.Arguments.Any(a => IsDisallowedExpressionForMethodCall(a, this.context.Model)))
                 {
-                    throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, m.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, this.type, m.ToString()));
                 }
 
                 CheckChainedSequence(m, this.type);
@@ -758,7 +758,7 @@ namespace Microsoft.OData.Client
                 if ((m.Object != null ? ClientTypeUtil.TypeOrElementTypeIsEntity(m.Object.Type) : false)
                     || m.Arguments.Any(a => ClientTypeUtil.TypeOrElementTypeIsEntity(a.Type)))
                 {
-                    throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, m.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, this.type, m.ToString()));
                 }
 
                 return base.VisitMethodCall(m);
@@ -770,7 +770,7 @@ namespace Microsoft.OData.Client
                     IsCollectionProducingExpression(iv.Expression) ||
                     iv.Arguments.Any(a => ClientTypeUtil.TypeOrElementTypeIsEntity(a.Type) || IsCollectionProducingExpression(a)))
                 {
-                    throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, iv.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, this.type, iv.ToString()));
                 }
 
                 return base.VisitInvocation(iv);
@@ -794,7 +794,7 @@ namespace Microsoft.OData.Client
                 if (ClientTypeUtil.TypeOrElementTypeIsEntity(nex.Type) &&
                     !ResourceBinder.PatternRules.MatchNewDataServiceCollectionOfT(nex))
                 {
-                    throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, nex.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, this.type, nex.ToString()));
                 }
 
                 return base.VisitNew(nex);
@@ -806,7 +806,7 @@ namespace Microsoft.OData.Client
                 {
                     if (p != this.builder.ParamExpressionInScope)
                     {
-                        throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, p.ToString()));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, this.type, p.ToString()));
                     }
 
                     this.builder.StartNewPath();
@@ -818,7 +818,7 @@ namespace Microsoft.OData.Client
             {
                 if (ClientTypeUtil.TypeOrElementTypeIsEntity(c.Type))
                 {
-                    throw new NotSupportedException(Strings.ALinq_ExpressionNotSupportedInProjection(this.type, c.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_ExpressionNotSupportedInProjection, this.type, c.ToString()));
                 }
 
                 return base.VisitConstant(c);

@@ -6,9 +6,9 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var tokenizer = this.GetIdentifierTokenizerWithRealFunctionParser("stuff");
             RangeVariableToken rangeVariableToken = new RangeVariableToken(ExpressionConstants.It);
             Action createWithNonStarToken = () => tokenizer.ParseStarMemberAccess(rangeVariableToken);
-            createWithNonStarToken.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_CannotCreateStarTokenFromNonStar("stuff"));
+            createWithNonStarToken.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_CannotCreateStarTokenFromNonStar, "stuff"));
         }
 
         // Helpers

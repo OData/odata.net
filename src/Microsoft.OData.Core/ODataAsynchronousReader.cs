@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
 
     using System;
@@ -92,14 +93,14 @@ namespace Microsoft.OData
             {
                 if (!this.rawInputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataAsyncReader_SyncCallOnAsyncReader);
+                    throw new ODataException(SRResources.ODataAsyncReader_SyncCallOnAsyncReader);
                 }
             }
             else
             {
                 if (this.rawInputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataAsyncReader_AsyncCallOnSyncReader);
+                    throw new ODataException(SRResources.ODataAsyncReader_AsyncCallOnSyncReader);
                 }
             }
         }
@@ -115,7 +116,7 @@ namespace Microsoft.OData
 
             if (!this.rawInputContext.ReadingResponse)
             {
-                throw new ODataException(Strings.ODataAsyncReader_CannotCreateResponseWhenNotReadingResponse);
+                throw new ODataException(SRResources.ODataAsyncReader_CannotCreateResponseWhenNotReadingResponse);
             }
         }
 
@@ -177,14 +178,14 @@ namespace Microsoft.OData
             if (responseLine.Length == 0)
             {
                 // empty line
-                throw new ODataException(Strings.ODataAsyncReader_InvalidResponseLine(responseLine));
+                throw new ODataException(Error.Format(SRResources.ODataAsyncReader_InvalidResponseLine, responseLine));
             }
 
             int firstSpaceIndex = responseLine.IndexOf(' ', StringComparison.Ordinal);
             if (firstSpaceIndex <= 0 || responseLine.Length - 3 <= firstSpaceIndex)
             {
                 // only 1 segment or empty first segment or not enough left for 2nd and 3rd segments
-                throw new ODataException(Strings.ODataAsyncReader_InvalidResponseLine(responseLine));
+                throw new ODataException(Error.Format(SRResources.ODataAsyncReader_InvalidResponseLine, responseLine));
             }
 
             int secondSpaceIndex = responseLine.IndexOf(' ', firstSpaceIndex + 1);
@@ -192,7 +193,7 @@ namespace Microsoft.OData
             {
                 // only 2 segments or empty 2nd or 3rd segments
                 // only 1 segment or empty first segment or not enough left for 2nd and 3rd segments
-                throw new ODataException(Strings.ODataAsyncReader_InvalidResponseLine(responseLine));
+                throw new ODataException(Error.Format(SRResources.ODataAsyncReader_InvalidResponseLine, responseLine));
             }
 
             string httpVersionSegment = responseLine.Substring(0, firstSpaceIndex);
@@ -201,13 +202,13 @@ namespace Microsoft.OData
             // Validate HttpVersion
             if (string.CompareOrdinal(ODataConstants.HttpVersionInAsync, httpVersionSegment) != 0)
             {
-                throw new ODataException(Strings.ODataAsyncReader_InvalidHttpVersionSpecified(httpVersionSegment, ODataConstants.HttpVersionInAsync));
+                throw new ODataException(Error.Format(SRResources.ODataAsyncReader_InvalidHttpVersionSpecified, httpVersionSegment, ODataConstants.HttpVersionInAsync));
             }
 
             int intResult;
             if (!Int32.TryParse(statusCodeSegment, out intResult))
             {
-                throw new ODataException(Strings.ODataAsyncReader_NonIntegerHttpStatusCode(statusCodeSegment));
+                throw new ODataException(Error.Format(SRResources.ODataAsyncReader_NonIntegerHttpStatusCode, statusCodeSegment));
             }
 
             return intResult;
@@ -230,7 +231,7 @@ namespace Microsoft.OData
 
                 if (headers.ContainsKey(headerName))
                 {
-                    throw new ODataException(Strings.ODataAsyncReader_DuplicateHeaderFound(headerName));
+                    throw new ODataException(Error.Format(SRResources.ODataAsyncReader_DuplicateHeaderFound, headerName));
                 }
 
                 headers.Add(headerName, headerValue);
@@ -253,7 +254,7 @@ namespace Microsoft.OData
             int colon = headerLine.IndexOf(':', StringComparison.Ordinal);
             if (colon <= 0)
             {
-                throw new ODataException(Strings.ODataAsyncReader_InvalidHeaderSpecified(headerLine));
+                throw new ODataException(Error.Format(SRResources.ODataAsyncReader_InvalidHeaderSpecified, headerLine));
             }
 
             headerName = headerLine.Substring(0, colon).Trim();
@@ -274,7 +275,7 @@ namespace Microsoft.OData
             {
                 if (ch == '\n')
                 {
-                    throw new ODataException(Strings.ODataAsyncReader_InvalidNewLineEncountered('\n'));
+                    throw new ODataException(Error.Format(SRResources.ODataAsyncReader_InvalidNewLineEncountered, '\n'));
                 }
 
                 if (ch == '\r')
@@ -283,7 +284,7 @@ namespace Microsoft.OData
 
                     if (ch != '\n')
                     {
-                        throw new ODataException(Strings.ODataAsyncReader_InvalidNewLineEncountered('\r'));
+                        throw new ODataException(Error.Format(SRResources.ODataAsyncReader_InvalidNewLineEncountered, '\r'));
                     }
 
                     return lineBuilder.ToString();
@@ -293,7 +294,7 @@ namespace Microsoft.OData
                 ch = this.ReadByte();
             }
 
-            throw new ODataException(Strings.ODataAsyncReader_UnexpectedEndOfInput);
+            throw new ODataException(SRResources.ODataAsyncReader_UnexpectedEndOfInput);
         }
 
         /// <summary>
@@ -389,7 +390,7 @@ namespace Microsoft.OData
 
                 if (headers.ContainsKey(headerName))
                 {
-                    throw new ODataException(Strings.ODataAsyncReader_DuplicateHeaderFound(headerName));
+                    throw new ODataException(Error.Format(SRResources.ODataAsyncReader_DuplicateHeaderFound, headerName));
                 }
 
                 headers.Add(headerName, headerValue);
@@ -418,7 +419,7 @@ namespace Microsoft.OData
             {
                 if (ch == '\n')
                 {
-                    throw new ODataException(Strings.ODataAsyncReader_InvalidNewLineEncountered('\n'));
+                    throw new ODataException(Error.Format(SRResources.ODataAsyncReader_InvalidNewLineEncountered, '\n'));
                 }
 
                 if (ch == '\r')
@@ -428,7 +429,7 @@ namespace Microsoft.OData
 
                     if (ch != '\n')
                     {
-                        throw new ODataException(Strings.ODataAsyncReader_InvalidNewLineEncountered('\r'));
+                        throw new ODataException(Error.Format(SRResources.ODataAsyncReader_InvalidNewLineEncountered, '\r'));
                     }
 
                     return lineBuilder.ToString();
@@ -439,7 +440,7 @@ namespace Microsoft.OData
                     .ConfigureAwait(false);
             }
 
-            throw new ODataException(Strings.ODataAsyncReader_UnexpectedEndOfInput);
+            throw new ODataException(SRResources.ODataAsyncReader_UnexpectedEndOfInput);
         }
 
         /// <summary>

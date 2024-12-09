@@ -8,6 +8,7 @@ using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -92,7 +93,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var allToken = this.CreateTestAllQueryToken();
 
             Action bind = () => binder.BindLambdaToken(allToken, state);
-            bind.Throws<ODataException>(Strings.MetadataBinder_LambdaParentMustBeCollection);
+            bind.Throws<ODataException>(SRResources.MetadataBinder_LambdaParentMustBeCollection);
         }
 
         [Fact]
@@ -116,7 +117,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var allToken = this.CreateTestAllQueryToken();
 
             Action bind = () => binder.BindLambdaToken(allToken, state);
-            bind.Throws<ODataException>(Strings.MetadataBinder_AnyAllExpressionNotSingleValue);
+            bind.Throws<ODataException>(SRResources.MetadataBinder_AnyAllExpressionNotSingleValue);
         }
 
         [Fact]
@@ -128,7 +129,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var allToken = this.CreateTestAnyQueryToken();
 
             Action bind = () => binder.BindLambdaToken(allToken, state);
-            bind.Throws<ODataException>(Strings.MetadataBinder_AnyAllExpressionNotSingleValue);
+            bind.Throws<ODataException>(SRResources.MetadataBinder_AnyAllExpressionNotSingleValue);
         }
 
         /// <summary>
