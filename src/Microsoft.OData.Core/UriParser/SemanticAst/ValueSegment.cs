@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Edm;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -31,7 +31,7 @@ namespace Microsoft.OData.UriParser
 
             if (previousType is IEdmCollectionType)
             {
-                throw new ODataException(ODataErrorStrings.PathParser_CannotUseValueOnCollection);
+                throw new ODataException(SRResources.PathParser_CannotUseValueOnCollection);
             }
 
             if (previousType is IEdmEntityType)

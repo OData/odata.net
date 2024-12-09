@@ -73,7 +73,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             double? value;
             if (!EdmValueParser.TryParseFloat(this.expression.Value, out value))
             {
-                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidFloatingPoint, Edm.Strings.ValueParser_InvalidFloatingPoint(this.expression.Value)) };
+                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidFloatingPoint, Error.Format(SRResources.ValueParser_InvalidFloatingPoint, this.expression.Value)) };
             }
             else
             {

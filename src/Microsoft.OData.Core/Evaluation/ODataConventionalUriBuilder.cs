@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using Microsoft.OData.Core;
 using Microsoft.OData.Json;
 
 namespace Microsoft.OData.Evaluation
@@ -257,7 +258,7 @@ namespace Microsoft.OData.Evaluation
         {
             if (keyPropertyValue == null)
             {
-                throw new ODataException(Strings.ODataConventionalUriBuilder_NullKeyValue(keyPropertyName, entityTypeName));
+                throw new ODataException(Error.Format(SRResources.ODataConventionalUriBuilder_NullKeyValue, keyPropertyName, entityTypeName));
             }
 
             return keyPropertyValue;
@@ -276,7 +277,7 @@ namespace Microsoft.OData.Evaluation
 
             if (!keyProperties.Any())
             {
-                throw new ODataException(Strings.ODataConventionalUriBuilder_EntityTypeWithNoKeyProperties(entityTypeName));
+                throw new ODataException(Error.Format(SRResources.ODataConventionalUriBuilder_EntityTypeWithNoKeyProperties, entityTypeName));
             }
 
             this.keySerializer.AppendKeyExpression(builder, keyProperties, p => p.Key, p => ValidateKeyValue(p.Key, p.Value, entityTypeName));

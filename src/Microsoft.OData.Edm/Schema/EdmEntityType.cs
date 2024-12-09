@@ -175,7 +175,7 @@ namespace Microsoft.OData.Edm
             EdmEntityType targetType = propertyInfo.Target as EdmEntityType;
             if (targetType == null)
             {
-                throw new ArgumentException(Strings.Constructable_TargetMustBeStock(typeof(EdmEntityType).FullName), "propertyInfo.Target");
+                throw new ArgumentException(Error.Format(SRResources.Constructable_TargetMustBeStock, typeof(EdmEntityType).FullName), "propertyInfo.Target");
             }
 
             EdmNavigationProperty property = EdmNavigationProperty.CreateNavigationPropertyWithPartner(propertyInfo, this.FixUpDefaultPartnerInfo(propertyInfo, partnerInfo));

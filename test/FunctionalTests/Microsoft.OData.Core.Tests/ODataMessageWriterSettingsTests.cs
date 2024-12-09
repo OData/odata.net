@@ -10,7 +10,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests
 {
@@ -492,7 +492,7 @@ namespace Microsoft.OData.Tests
         {
             Action testSubject = () => this.settings.MessageQuotas.MaxPartsPerBatch = -1;
             var exception = Assert.Throws<ArgumentOutOfRangeException>(testSubject);
-            Assert.StartsWith(ODataErrorStrings.ExceptionUtils_CheckIntegerNotNegative(-1), exception.Message);
+            Assert.StartsWith(Error.Format(SRResources.ExceptionUtils_CheckIntegerNotNegative, -1), exception.Message);
         }
 
         [Fact]
@@ -500,7 +500,7 @@ namespace Microsoft.OData.Tests
         {
             Action testSubject = () => this.settings.MessageQuotas.MaxOperationsPerChangeset = -1;
             var exception = Assert.Throws<ArgumentOutOfRangeException>(testSubject);
-            Assert.StartsWith(ODataErrorStrings.ExceptionUtils_CheckIntegerNotNegative(-1), exception.Message);
+            Assert.StartsWith(Error.Format(SRResources.ExceptionUtils_CheckIntegerNotNegative, -1), exception.Message);
         }
 
         [Fact]
@@ -508,7 +508,7 @@ namespace Microsoft.OData.Tests
         {
             Action testSubject = () => this.settings.MessageQuotas.MaxNestingDepth = 0;
             var exception = Assert.Throws<ArgumentOutOfRangeException>(testSubject);
-            Assert.StartsWith(ODataErrorStrings.ExceptionUtils_CheckIntegerPositive(0), exception.Message);
+            Assert.StartsWith(Error.Format(SRResources.ExceptionUtils_CheckIntegerPositive, 0), exception.Message);
         }
         #endregion Error tests
 

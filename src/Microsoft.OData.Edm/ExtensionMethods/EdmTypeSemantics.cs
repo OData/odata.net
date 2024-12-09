@@ -1362,7 +1362,7 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.GeometryMultiPoint:
                     return new EdmSpatialTypeReference(type, isNullable);
                 default:
-                    throw new InvalidOperationException(Edm.Strings.EdmPrimitive_UnexpectedKind);
+                    throw new InvalidOperationException(SRResources.EdmPrimitive_UnexpectedKind);
             }
         }
 
@@ -1398,7 +1398,7 @@ namespace Microsoft.OData.Edm
                 return new EdmPathTypeReference(pathType, isNullable);
             }
 
-            throw new InvalidOperationException(Edm.Strings.EdmType_UnexpectedEdmType);
+            throw new InvalidOperationException(SRResources.EdmType_UnexpectedEdmType);
         }
 
         internal static IEdmPrimitiveType UnderlyingType(this IEdmType type)
@@ -1446,7 +1446,7 @@ namespace Microsoft.OData.Edm
 
         private static IEnumerable<EdmError> ConversionError(EdmLocation location, string typeName, string typeKindName)
         {
-            return new[] { new EdmError(location, EdmErrorCode.TypeSemanticsCouldNotConvertTypeReference, Edm.Strings.TypeSemantics_CouldNotConvertTypeReference(typeName ?? EdmConstants.Value_UnnamedType, typeKindName)) };
+            return new[] { new EdmError(location, EdmErrorCode.TypeSemanticsCouldNotConvertTypeReference, Error.Format(SRResources.TypeSemantics_CouldNotConvertTypeReference, typeName ?? EdmConstants.Value_UnnamedType, typeKindName)) };
         }
     }
 }

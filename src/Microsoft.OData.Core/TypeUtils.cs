@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Diagnostics;
@@ -105,7 +106,7 @@ namespace Microsoft.OData
             int separator = qualifiedTypeName.LastIndexOf(".", StringComparison.Ordinal);
             if (separator == -1)
             {
-                throw new ODataException(Strings.TypeUtils_TypeNameIsNotQualified(qualifiedTypeName));
+                throw new ODataException(Error.Format(SRResources.TypeUtils_TypeNameIsNotQualified, qualifiedTypeName));
             }
 
             namespaceName = qualifiedTypeName.Substring(0, separator);

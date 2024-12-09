@@ -40,7 +40,7 @@ namespace Microsoft.OData.Edm.Vocabularies
             IEdmExpression value = term.GetDefaultValueExpression();
             if (value == null)
             {
-                throw new InvalidOperationException(Strings.EdmVocabularyAnnotations_DidNotFindDefaultValue(term.Type));
+                throw new InvalidOperationException(Error.Format(SRResources.EdmVocabularyAnnotations_DidNotFindDefaultValue, term.Type));
             }
 
             return new EdmVocabularyAnnotation(target, term, qualifier, value)
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                 case EdmTypeKind.EntityReference:
                 case EdmTypeKind.Untyped:
                 default:
-                    throw new NotSupportedException(Strings.EdmVocabularyAnnotations_TermTypeNotSupported(edmType.FullTypeName()));
+                    throw new NotSupportedException(Error.Format(SRResources.EdmVocabularyAnnotations_TermTypeNotSupported, edmType.FullTypeName()));
             }
         }
 
@@ -142,7 +142,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmBinaryConstant(binary);
                     }
 
-                    throw new FormatException(Strings.ValueParser_InvalidBinary(value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidBinary, value));
 
                 case EdmPrimitiveTypeKind.Boolean:
                     if (EdmValueParser.TryParseBool(value, out bool? bl))
@@ -150,7 +150,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmBooleanConstant(bl.Value);
                     }
 
-                    throw new FormatException(Strings.ValueParser_InvalidBoolean(value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidBoolean, value));
 
                 case EdmPrimitiveTypeKind.Date:
                     if (EdmValueParser.TryParseDate(value, out Date? dt))
@@ -158,7 +158,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmDateConstant(dt.Value);
                     }
 
-                    throw new FormatException(Strings.ValueParser_InvalidDate(value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidDate, value));
 
                 case EdmPrimitiveTypeKind.DateTimeOffset:
                     if (EdmValueParser.TryParseDateTimeOffset(value, out DateTimeOffset? dto))
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmDateTimeOffsetConstant(dto.Value);
                     }
 
-                    throw new FormatException(Strings.ValueParser_InvalidDateTimeOffset(value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidDateTimeOffset, value));
 
                 case EdmPrimitiveTypeKind.Decimal:
                     if (EdmValueParser.TryParseDecimal(value, out decimal? dec))
@@ -174,7 +174,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmDecimalConstant(dec.Value);
                     }
 
-                    throw new FormatException(Strings.ValueParser_InvalidDecimal(value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidDecimal, value));
 
                 case EdmPrimitiveTypeKind.Duration:
                     if (EdmValueParser.TryParseDuration(value, out TimeSpan? ts))
@@ -182,7 +182,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmDurationConstant(ts.Value);
                     }
 
-                    throw new FormatException(Strings.ValueParser_InvalidDuration(value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidDuration, value));
 
                 case EdmPrimitiveTypeKind.Single:
                 case EdmPrimitiveTypeKind.Double:
@@ -191,7 +191,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmFloatingConstant(dbl.Value);
                     }
 
-                    throw new FormatException(Strings.ValueParser_InvalidFloatingPoint(value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidFloatingPoint, value));
 
                 case EdmPrimitiveTypeKind.Guid:
                     if (EdmValueParser.TryParseGuid(value, out Guid? gd))
@@ -199,7 +199,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmGuidConstant(gd.Value);
                     }
 
-                    throw new FormatException(Strings.ValueParser_InvalidGuid(value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidGuid, value));
 
                 case EdmPrimitiveTypeKind.Int16:
                 case EdmPrimitiveTypeKind.Int32:
@@ -208,7 +208,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmIntegerConstant(intNum.Value);
                     }
 
-                    throw new FormatException(Strings.ValueParser_InvalidInteger(value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidInteger, value));
 
                 case EdmPrimitiveTypeKind.Int64:
                     if (EdmValueParser.TryParseLong(value, out long? longNum))
@@ -216,7 +216,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmIntegerConstant(longNum.Value);
                     }
 
-                    throw new FormatException(Strings.ValueParser_InvalidLong(value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidLong, value));
 
                 case EdmPrimitiveTypeKind.String:
                     return new EdmStringConstant(value);
@@ -227,10 +227,10 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return new EdmTimeOfDayConstant(tod.Value);
                     }
 
-                    throw new FormatException(Strings.ValueParser_InvalidTimeOfDay(value));
+                    throw new FormatException(Error.Format(SRResources.ValueParser_InvalidTimeOfDay, value));
             }
 
-            throw new NotSupportedException(Strings.EdmVocabularyAnnotations_TermTypeNotSupported(typeReference.FullName()));
+            throw new NotSupportedException(Error.Format(SRResources.EdmVocabularyAnnotations_TermTypeNotSupported, typeReference.FullName()));
         }
 
         /// <summary>

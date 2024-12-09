@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
@@ -731,7 +732,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                Strings.ODataParameterWriterCore_DuplicatedParameterNameNotAllowed("LuckyNumber"),
+                Error.Format(SRResources.ODataParameterWriterCore_DuplicatedParameterNameNotAllowed, "LuckyNumber"),
                 exception.Message);
         }
 
@@ -748,7 +749,7 @@ namespace Microsoft.OData.Tests.Json
                     writingResponse: false));
 
             Assert.Equal(
-                Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation("prodId", "GetRating"),
+                Error.Format(SRResources.ODataParameterWriterCore_ParameterNameNotFoundInOperation, "prodId", "GetRating"),
                 exception.Message);
         }
 
@@ -764,7 +765,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                Strings.ODataParameterWriterCore_CannotWriteInErrorOrCompletedState,
+                SRResources.ODataParameterWriterCore_CannotWriteInErrorOrCompletedState,
                 exception.Message);
         }
 
@@ -781,7 +782,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                Strings.ODataParameterWriterCore_CannotWriteParameter,
+                SRResources.ODataParameterWriterCore_CannotWriteParameter,
                 exception.Message);
         }
 
@@ -802,7 +803,7 @@ namespace Microsoft.OData.Tests.Json
                     writingResponse: false));
 
             Assert.Equal(
-                Strings.ODataParameterWriterCore_CannotCreateCollectionWriterOnNonCollectionTypeKind("product", "Entity"),
+                Error.Format(SRResources.ODataParameterWriterCore_CannotCreateCollectionWriterOnNonCollectionTypeKind, "product", "Entity"),
                 exception.Message);
         }
 
@@ -823,7 +824,7 @@ namespace Microsoft.OData.Tests.Json
                     writingResponse: false));
 
             Assert.Equal(
-                Strings.ODataParameterWriterCore_CannotCreateResourceWriterOnNonEntityOrComplexTypeKind("color", "Enum"),
+                Error.Format(SRResources.ODataParameterWriterCore_CannotCreateResourceWriterOnNonEntityOrComplexTypeKind, "color", "Enum"),
                 exception.Message);
         }
 
@@ -844,7 +845,7 @@ namespace Microsoft.OData.Tests.Json
                     writingResponse: false));
 
             Assert.Equal(
-                Strings.ODataParameterWriterCore_CannotCreateResourceSetWriterOnNonStructuredCollectionTypeKind("color", "Enum"),
+                Error.Format(SRResources.ODataParameterWriterCore_CannotCreateResourceSetWriterOnNonStructuredCollectionTypeKind, "color", "Enum"),
                 exception.Message);
         }
 
@@ -862,7 +863,7 @@ namespace Microsoft.OData.Tests.Json
                     writingResponse: false));
 
             Assert.Equal(
-                Strings.ODataParameterWriterCore_MissingParameterInParameterPayload("'b'", "Add"),
+                Error.Format(SRResources.ODataParameterWriterCore_MissingParameterInParameterPayload, "'b'", "Add"),
                 exception.Message);
         }
 
@@ -911,7 +912,7 @@ namespace Microsoft.OData.Tests.Json
                     await jsonParameterWriter.WriteStartAsync();
                 });
 
-            Assert.Equal(Strings.ODataParameterWriterCore_CannotWriteStart, exception.Message);
+            Assert.Equal(SRResources.ODataParameterWriterCore_CannotWriteStart, exception.Message);
         }
 
         [Fact]
@@ -926,7 +927,7 @@ namespace Microsoft.OData.Tests.Json
                     await jsonParameterWriter.WriteEndAsync();
                 });
 
-            Assert.Equal(Strings.ODataParameterWriterCore_CannotWriteEnd, exception.Message);
+            Assert.Equal(SRResources.ODataParameterWriterCore_CannotWriteEnd, exception.Message);
         }
 
         /// <summary>

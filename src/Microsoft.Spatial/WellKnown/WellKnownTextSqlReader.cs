@@ -214,12 +214,12 @@ namespace Microsoft.Spatial
 
                 if (this.TryReadOptionalNullableDouble(out z) && allowOnlyTwoDimensions)
                 {
-                    throw new FormatException(Strings.WellKnownText_TooManyDimensions);
+                    throw new FormatException(SRResources.WellKnownText_TooManyDimensions);
                 }
 
                 if (this.TryReadOptionalNullableDouble(out m) && allowOnlyTwoDimensions)
                 {
-                    throw new FormatException(Strings.WellKnownText_TooManyDimensions);
+                    throw new FormatException(SRResources.WellKnownText_TooManyDimensions);
                 }
 
                 if (firstFigure)
@@ -305,7 +305,7 @@ namespace Microsoft.Spatial
                 // <geometrycollection tagged text> ::= geometrycollection <geometrycollection text>
                 if (!this.NextToken())
                 {
-                    throw new FormatException(Strings.WellKnownText_UnknownTaggedText(String.Empty));
+                    throw new FormatException(Error.Format(SRResources.WellKnownText_UnknownTaggedText, string.Empty));
                 }
 
                 switch (this.lexer.CurrentToken.Text.ToUpperInvariant())
@@ -350,7 +350,7 @@ namespace Microsoft.Spatial
                         this.pipeline.EndGeo();
                         break;
                     default:
-                        throw new FormatException(Strings.WellKnownText_UnknownTaggedText(this.lexer.CurrentToken.Text));
+                        throw new FormatException(Error.Format(SRResources.WellKnownText_UnknownTaggedText, this.lexer.CurrentToken.Text));
                 }
             }
 
@@ -460,7 +460,7 @@ namespace Microsoft.Spatial
             {
                 if (!(this.NextToken() && this.IsTokenMatch(type, text)))
                 {
-                    throw new FormatException(Strings.WellKnownText_UnexpectedToken(type, text, this.lexer.CurrentToken));
+                    throw new FormatException(Error.Format(SRResources.WellKnownText_UnexpectedToken, type, text, this.lexer.CurrentToken));
                 }
             }
         }

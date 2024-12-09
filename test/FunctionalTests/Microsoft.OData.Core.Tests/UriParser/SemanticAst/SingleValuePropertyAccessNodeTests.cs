@@ -5,9 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -65,14 +65,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void SingleValuePropertyAccessCannotTakeANavigationProperty()
         {
             Action create = () => new SingleValuePropertyAccessNode(new ConstantNode(null), HardCodedTestModel.GetPersonMyDogNavProp());
-            create.Throws<ArgumentException>(Strings.Nodes_PropertyAccessShouldBeNonEntityProperty("MyDog"));
+            create.Throws<ArgumentException>(Error.Format(SRResources.Nodes_PropertyAccessShouldBeNonEntityProperty, "MyDog"));
         }
 
         [Fact]
         public void SingleValuePropertyAccessCannotTakeACollectionProperty()
         {
             Action create = () => new SingleValuePropertyAccessNode(new ConstantNode(null), HardCodedTestModel.GetDogNicknamesProperty());
-            create.Throws<ArgumentException>(Strings.Nodes_PropertyAccessTypeShouldNotBeCollection("Nicknames"));
+            create.Throws<ArgumentException>(Error.Format(SRResources.Nodes_PropertyAccessTypeShouldNotBeCollection, "Nicknames"));
         }
     }
 }

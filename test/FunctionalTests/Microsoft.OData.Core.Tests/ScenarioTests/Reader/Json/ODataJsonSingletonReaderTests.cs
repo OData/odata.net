@@ -7,6 +7,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
@@ -96,7 +97,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
                "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton(10)\"}";
 
             Action readResult = () => this.ReadSingleton(payload);
-            readResult.Throws<ODataException>(Strings.ODataJsonContextUriParser_LastSegmentIsKeySegment("http://odata.org/test/$metadata#MySingleton(10)"));
+            readResult.Throws<ODataException>(Error.Format(SRResources.ODataJsonContextUriParser_LastSegmentIsKeySegment, "http://odata.org/test/$metadata#MySingleton(10)"));
         }
 
         [Fact]

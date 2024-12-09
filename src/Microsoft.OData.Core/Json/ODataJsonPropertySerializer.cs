@@ -13,6 +13,7 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Evaluation;
     #endregion Namespaces
@@ -195,7 +196,7 @@ namespace Microsoft.OData.Json
             {
                 if (isTopLevel)
                 {
-                    throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                    throw new ODataException(Error.Format(SRResources.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue, property.Name));
                 }
 
                 this.WriteResourceProperty(property, resourceValue, isOpenPropertyType);
@@ -209,7 +210,7 @@ namespace Microsoft.OData.Json
                 {
                     if (collectionValue.Items != null && collectionValue.Items.Any(i => i is ODataResourceValue))
                     {
-                        throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                        throw new ODataException(Error.Format(SRResources.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue, property.Name));
                     }
                 }
 
@@ -416,7 +417,7 @@ namespace Microsoft.OData.Json
             {
                 if (isTopLevel)
                 {
-                    throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                    throw new ODataException(Error.Format(SRResources.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue, property.Name));
                 }
 
                 await this.WriteResourcePropertyAsync(property, resourceValue, isOpenPropertyType)
@@ -431,7 +432,7 @@ namespace Microsoft.OData.Json
                 {
                     if (collectionValue.Items != null && collectionValue.Items.Any(i => i is ODataResourceValue))
                     {
-                        throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                        throw new ODataException(Error.Format(SRResources.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue, property.Name));
                     }
                 }
 
@@ -662,7 +663,7 @@ namespace Microsoft.OData.Json
                     // ...
                     // If the property is single-valued and has the null value, the service responds with 204 No Content.
                     // ...
-                    throw new ODataException(Strings.ODataMessageWriter_CannotWriteTopLevelNull);
+                    throw new ODataException(SRResources.ODataMessageWriter_CannotWriteTopLevelNull);
                 }
             }
             else
@@ -1100,7 +1101,7 @@ namespace Microsoft.OData.Json
                     // ...
                     // If the property is single-valued and has the null value, the service responds with 204 No Content.
                     // ...
-                    throw new ODataException(Strings.ODataMessageWriter_CannotWriteTopLevelNull);
+                    throw new ODataException(SRResources.ODataMessageWriter_CannotWriteTopLevelNull);
                 }
             }
             else

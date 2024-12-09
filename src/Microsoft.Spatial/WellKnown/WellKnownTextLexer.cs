@@ -93,7 +93,7 @@ namespace Microsoft.Spatial
                         return false;
                     }
 
-                    throw new FormatException(Strings.WellKnownText_UnexpectedCharacter(nextChar));
+                    throw new FormatException(Error.Format(SRResources.WellKnownText_UnexpectedCharacter, nextChar));
             }
         }
     }

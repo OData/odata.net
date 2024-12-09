@@ -214,13 +214,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             {
                 if (filterKind == EdmSchemaElementKind.Action)
                 {
-                    var action = new UnresolvedAction(operationImport.SchemaOperationQualifiedTypeName, Edm.Strings.Bad_UnresolvedOperation(operationImport.SchemaOperationQualifiedTypeName), operationImport.Location);
+                    var action = new UnresolvedAction(operationImport.SchemaOperationQualifiedTypeName, Error.Format(SRResources.Bad_UnresolvedOperation, operationImport.SchemaOperationQualifiedTypeName), operationImport.Location);
                     semanticsOperation = new CsdlSemanticsActionImport(this, actionImport, action);
                 }
                 else
                 {
                     Debug.Assert(filterKind == EdmSchemaElementKind.Function, "Should be a function");
-                    var function = new UnresolvedFunction(operationImport.SchemaOperationQualifiedTypeName, Edm.Strings.Bad_UnresolvedOperation(operationImport.SchemaOperationQualifiedTypeName), operationImport.Location);
+                    var function = new UnresolvedFunction(operationImport.SchemaOperationQualifiedTypeName, Error.Format(SRResources.Bad_UnresolvedOperation, operationImport.SchemaOperationQualifiedTypeName), operationImport.Location);
                     semanticsOperation = new CsdlSemanticsFunctionImport(this, functionImport, function);
                 }
 

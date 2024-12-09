@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -67,7 +68,7 @@ namespace Microsoft.OData.Tests
             var asyncWriter = this.TestInit();
             asyncWriter.CreateResponseMessage();
             Action test = () => asyncWriter.CreateResponseMessage();
-            test.Throws<ODataException>(Strings.ODataAsyncWriter_CannotCreateResponseMoreThanOnce);
+            test.Throws<ODataException>(SRResources.ODataAsyncWriter_CannotCreateResponseMoreThanOnce);
         }
 
         [Fact]
@@ -125,7 +126,7 @@ OData-Version: 4.0
                         await asynchronousWriter.CreateResponseMessageAsync();
                     }));
 
-            Assert.Equal(Strings.ODataAsyncWriter_CannotCreateResponseMoreThanOnce, exception.Message);
+            Assert.Equal(SRResources.ODataAsyncWriter_CannotCreateResponseMoreThanOnce, exception.Message);
         }
 
         [Fact]
@@ -135,7 +136,7 @@ OData-Version: 4.0
                 () => SetupAsynchronousWriterAndRunTestAsync(
                     (asynchronousWriter) => ((IODataOutputInStreamErrorListener)asynchronousWriter).OnInStreamErrorAsync()));
 
-            Assert.Equal(Strings.ODataAsyncWriter_CannotWriteInStreamErrorForAsync, exception.Message);
+            Assert.Equal(SRResources.ODataAsyncWriter_CannotWriteInStreamErrorForAsync, exception.Message);
         }
 
         private ODataAsynchronousWriter TestInit()

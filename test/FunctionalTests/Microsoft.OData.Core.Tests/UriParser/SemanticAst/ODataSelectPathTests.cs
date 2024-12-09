@@ -6,9 +6,9 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -18,14 +18,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void SelectPathShouldNotAllowCountSegment()
         {
             Action buildWithCountSegment = () => new ODataSelectPath(CountSegment.Instance);
-            buildWithCountSegment.Throws<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType("CountSegment"));
+            buildWithCountSegment.Throws<ODataException>(Error.Format(SRResources.ODataSelectPath_InvalidSelectPathSegmentType, "CountSegment"));
         }
 
         [Fact]
         public void SelectPathShouldNotAllowValueSegment()
         {
             Action buildWithCountSegment = () => new ODataSelectPath(new ValueSegment(ModelBuildingHelpers.BuildValidEntityType()));
-            buildWithCountSegment.Throws<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType("ValueSegment"));
+            buildWithCountSegment.Throws<ODataException>(Error.Format(SRResources.ODataSelectPath_InvalidSelectPathSegmentType, "ValueSegment"));
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             List<ODataPathSegment> typeSegments = new List<ODataPathSegment>() { new TypeSegment(HardCodedTestModel.GetPersonType(), null) };
             Action createWithTypeAsLastSegment = () => new ODataSelectPath(typeSegments);
-            createWithTypeAsLastSegment.Throws<ODataException>(ODataErrorStrings.ODataSelectPath_CannotOnlyHaveTypeSegment);
+            createWithTypeAsLastSegment.Throws<ODataException>(SRResources.ODataSelectPath_CannotOnlyHaveTypeSegment);
         }
 
         [Fact]
@@ -48,7 +48,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             List<ODataPathSegment> typeSegments = new List<ODataPathSegment>() { new TypeSegment(HardCodedTestModel.GetPersonType(), null), new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), null), new PropertySegment(HardCodedTestModel.GetDogColorProp()) };
             Action createWithInteriorNavProp = () => new ODataSelectPath(typeSegments);
-            createWithInteriorNavProp.Throws<ODataException>(ODataErrorStrings.ODataSelectPath_NavPropSegmentCanOnlyBeLastSegment);
+            createWithInteriorNavProp.Throws<ODataException>(SRResources.ODataSelectPath_NavPropSegmentCanOnlyBeLastSegment);
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             List<ODataPathSegment> typeSegments = new List<ODataPathSegment>() { new TypeSegment(HardCodedTestModel.GetPersonType(), null), new OperationSegment(HardCodedTestModel.GetFunctionForGetCoolPeople(), HardCodedTestModel.GetPeopleSet()), new PropertySegment(HardCodedTestModel.GetDogColorProp()) };
             Action createWithInteriorNavProp = () => new ODataSelectPath(typeSegments);
-            createWithInteriorNavProp.Throws<ODataException>(ODataErrorStrings.ODataSelectPath_OperationSegmentCanOnlyBeLastSegment);
+            createWithInteriorNavProp.Throws<ODataException>(SRResources.ODataSelectPath_OperationSegmentCanOnlyBeLastSegment);
         }
 
         [Fact]
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             List<ODataPathSegment> typeSegments = new List<ODataPathSegment>() { new OperationImportSegment(HardCodedTestModel.GetFunctionImportForGetCoolestPerson(), HardCodedTestModel.GetPeopleSet())};
             Action createWithInteriorNavProp = () => new ODataSelectPath(typeSegments);
-            createWithInteriorNavProp.Throws<ODataException>(ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType(typeof(OperationImportSegment).Name));
+            createWithInteriorNavProp.Throws<ODataException>(Error.Format(SRResources.ODataSelectPath_InvalidSelectPathSegmentType, typeof(OperationImportSegment).Name));
         }
     }
 }

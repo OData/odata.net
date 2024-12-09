@@ -124,7 +124,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(annotation, "annotation");
             if (annotation.Target == null)
             {
-                throw new InvalidOperationException(Strings.Constructable_VocabularyAnnotationMustHaveTarget);
+                throw new InvalidOperationException(SRResources.Constructable_VocabularyAnnotationMustHaveTarget);
             }
 
             List<IEdmVocabularyAnnotation> elementAnnotations;
@@ -173,7 +173,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(annotation, "annotation");
             if (annotation.Target == null)
             {
-                throw new InvalidOperationException(Strings.Constructable_VocabularyAnnotationMustHaveTarget);
+                throw new InvalidOperationException(SRResources.Constructable_VocabularyAnnotationMustHaveTarget);
             }
 
             List<IEdmVocabularyAnnotation> elementAnnotations;

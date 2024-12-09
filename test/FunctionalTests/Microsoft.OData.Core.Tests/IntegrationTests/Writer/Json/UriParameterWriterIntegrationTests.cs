@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -180,7 +181,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             var resource = CreateAddress(0);
             resource.Resource.TypeName = "Person";
             Action action = () => WriteParameter(resource, true, null);
-            action.Throws<ODataException>(Strings.ValidationUtils_UnrecognizedTypeName("Person"));
+            action.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_UnrecognizedTypeName, "Person"));
         }
 
         [Fact]

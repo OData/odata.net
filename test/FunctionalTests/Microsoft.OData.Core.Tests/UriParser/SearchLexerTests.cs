@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -96,22 +97,22 @@ namespace Microsoft.OData.Tests.UriParser
             ValidateTokenKind(lexer, ExpressionTokenKind.End);
 
             Action action = () => new SearchLexer("b\\\"cd a3").NextToken();
-            action.Throws<ODataException>(Strings.ExpressionLexer_InvalidCharacter("\\", 1, "b\\\"cd a3"));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "\\", 1, "b\\\"cd a3"));
             action = () => new SearchLexer("bcd za3").NextToken();
-            action.Throws<ODataException>(Strings.ExpressionLexer_InvalidCharacter("3", 6, "bcd za3"));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "3", 6, "bcd za3"));
             action = () => new SearchLexer("\" za\"\\").NextToken();
-            action.Throws<ODataException>(Strings.ExpressionLexer_InvalidCharacter("\\", 5, "\" za\"\\"));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "\\", 5, "\" za\"\\"));
         }
 
         [Fact]
         public void InvalidEscapeTest()
         {
             Action action = () => new SearchLexer("\"t a\\A\"").NextToken();
-            action.Throws<ODataException>(Strings.ExpressionLexer_InvalidEscapeSequence("A", 5, "\"t a\\A\""));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidEscapeSequence, "A", 5, "\"t a\\A\""));
             action = () => new SearchLexer("\"a\\A t\"");
-            action.Throws<ODataException>(Strings.ExpressionLexer_InvalidEscapeSequence("A", 3, "\"a\\A t\""));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidEscapeSequence, "A", 3, "\"a\\A t\""));
             action = () => new SearchLexer("\"\\Aa t\"");
-            action.Throws<ODataException>(Strings.ExpressionLexer_InvalidEscapeSequence("A", 2, "\"\\Aa t\""));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidEscapeSequence, "A", 2, "\"\\Aa t\""));
         }
 
         [Fact]
@@ -126,9 +127,9 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new SearchLexer("A \"\"");
             Action action = () => lexer.NextToken();
-            action.Throws<ODataException>(Strings.ExpressionToken_IdentifierExpected((2)));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, 2));
             action = () => new SearchLexer("\"\" A");
-            action.Throws<ODataException>(Strings.ExpressionToken_IdentifierExpected((0)));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, 0));
         }
 
         [Fact]

@@ -7,6 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -55,7 +56,7 @@ namespace Microsoft.OData.UriParser
                 // If the parentType is an open property, parentType will be null and can't have an ODataFullName.
                 string parentTypeName = (parentType != null) ? parentType.FullTypeName() : "<null>";
                 string childTypeName = (childType != null) ? childType.FullTypeName() : "<null>";
-                throw new ODataException(Strings.MetadataBinder_HierarchyNotFollowed(childTypeName, parentTypeName));
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_HierarchyNotFollowed, childTypeName, parentTypeName));
             }
         }
 
@@ -85,13 +86,13 @@ namespace Microsoft.OData.UriParser
                 navPropSegment = currentSegment as NavigationPropertySegment;
                 if (typeSegment == null && navPropSegment == null)
                 {
-                    throw new ODataException(Strings.ExpandItemBinder_TypeSegmentNotFollowedByPath);
+                    throw new ODataException(SRResources.ExpandItemBinder_TypeSegmentNotFollowedByPath);
                 }
             }
 
             if (navPropSegment == null)
             {
-                throw new ODataException(Strings.ExpandItemBinder_TypeSegmentNotFollowedByPath);
+                throw new ODataException(SRResources.ExpandItemBinder_TypeSegmentNotFollowedByPath);
             }
             else
             {

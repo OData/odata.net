@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.MultipartMixed
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -76,7 +77,7 @@ namespace Microsoft.OData.MultipartMixed
                 {
                     if (boundaryPairFound)
                     {
-                        throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(mediaType.ToText(), ODataConstants.HttpMultipartBoundary));
+                        throw new ODataException(Error.Format(SRResources.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads, mediaType.ToText(), ODataConstants.HttpMultipartBoundary));
                     }
 
                     boundaryPair = pair;
@@ -86,7 +87,7 @@ namespace Microsoft.OData.MultipartMixed
 
             if (boundaryPair.Key == null)
             {
-                throw new ODataException(Strings.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads(mediaType.ToText(), ODataConstants.HttpMultipartBoundary));
+                throw new ODataException(Error.Format(SRResources.MediaTypeUtils_BoundaryMustBeSpecifiedForBatchPayloads, mediaType.ToText(), ODataConstants.HttpMultipartBoundary));
             }
 
             batchBoundary = boundaryPair.Value;

@@ -459,7 +459,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     }
 
                     string qualifiedOperationName = containerName + "/" + operationName;
-                    UnresolvedOperation unresolvedOperation = new UnresolvedOperation(qualifiedOperationName, Edm.Strings.Bad_UnresolvedOperation(qualifiedOperationName), this.Location);
+                    UnresolvedOperation unresolvedOperation = new UnresolvedOperation(qualifiedOperationName, Error.Format(SRResources.Bad_UnresolvedOperation, qualifiedOperationName), this.Location);
                     if (parameterName == CsdlConstants.OperationReturnExternalTarget)
                     {
                         return new UnresolvedReturn(unresolvedOperation, this.Location);
@@ -482,7 +482,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     return new UnresolvedProperty(new UnresolvedEntityType(this.model.ReplaceAlias(targetSegments[targetSegments.Length - 2]), this.Location), targetSegments[targetSegments.Length - 1], this.Location);
                 }
 
-                return new BadElement(new EdmError[] { new EdmError(this.Location, EdmErrorCode.ImpossibleAnnotationsTarget, Edm.Strings.CsdlSemantics_ImpossibleAnnotationsTarget(target)) });
+                return new BadElement(new EdmError[] { new EdmError(this.Location, EdmErrorCode.ImpossibleAnnotationsTarget, Error.Format(SRResources.CsdlSemantics_ImpossibleAnnotationsTarget, target)) });
             }
         }
 

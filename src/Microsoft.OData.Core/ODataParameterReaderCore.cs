@@ -14,6 +14,7 @@ namespace Microsoft.OData
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
 
@@ -235,7 +236,7 @@ this.State == ODataParameterReaderState.Collection,
             IEdmOperationParameter parameter = this.Operation.FindParameter(parameterName);
             if (parameter == null)
             {
-                throw new ODataException(Strings.ODataParameterReaderCore_ParameterNameNotInMetadata(parameterName, this.Operation.Name));
+                throw new ODataException(Error.Format(SRResources.ODataParameterReaderCore_ParameterNameNotInMetadata, parameterName, this.Operation.Name));
             }
 
             return this.inputContext.EdmTypeResolver.GetParameterType(parameter);
@@ -254,7 +255,7 @@ this.State == ODataParameterReaderState.Collection,
             {
                 if (value != null && !EdmLibraryExtensions.IsPrimitiveType(value.GetType()) && !(value is ODataEnumValue))
                 {
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterReaderCore_ValueMustBePrimitiveOrNull));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataParameterReaderCore_ValueMustBePrimitiveOrNull));
                 }
             }
 
@@ -291,7 +292,7 @@ this.State == ODataParameterReaderState.Collection,
                     if (missingParameters.Count > 0)
                     {
                         this.scopes.Push(new Scope(ODataParameterReaderState.Exception, null, null));
-                        throw new ODataException(Strings.ODataParameterReaderCore_ParametersMissingInPayload(this.Operation.Name, string.Join(",", missingParameters.ToArray())));
+                        throw new ODataException(Error.Format(SRResources.ODataParameterReaderCore_ParametersMissingInPayload, this.Operation.Name, string.Join(",", missingParameters.ToArray())));
                     }
                 }
                 else if (name != null)
@@ -299,7 +300,7 @@ this.State == ODataParameterReaderState.Collection,
                     // Record the parameter names we read and check for duplicates.
                     if (this.parametersRead.Contains(name))
                     {
-                        throw new ODataException(Strings.ODataParameterReaderCore_DuplicateParametersInPayload(name));
+                        throw new ODataException(Error.Format(SRResources.ODataParameterReaderCore_DuplicateParametersInPayload, name));
                     }
 
                     this.parametersRead.Add(name);
@@ -370,11 +371,11 @@ this.State == ODataParameterReaderState.Collection,
                 case ODataParameterReaderState.Exception:    // fall through
                 case ODataParameterReaderState.Completed:
                     Debug.Assert(false, "This case should have been caught earlier.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterReaderCore_ReadImplementation));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataParameterReaderCore_ReadImplementation));
 
                 default:
                     Debug.Assert(false, "Unsupported parameter reader state " + this.State + " detected.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterReaderCore_ReadImplementation));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataParameterReaderCore_ReadImplementation));
             }
 
             return result;
@@ -445,13 +446,13 @@ this.State == ODataParameterReaderState.Collection,
 
             if (this.State != expectedState)
             {
-                throw new ODataException(Strings.ODataParameterReaderCore_InvalidCreateReaderMethodCalledForState(ODataParameterReaderCore.GetCreateReaderMethodName(expectedState), this.State));
+                throw new ODataException(Error.Format(SRResources.ODataParameterReaderCore_InvalidCreateReaderMethodCalledForState, ODataParameterReaderCore.GetCreateReaderMethodName(expectedState), this.State));
             }
 
             if (this.subReaderState != SubReaderState.None)
             {
                 Debug.Assert(this.Name != null, "this.Name != null");
-                throw new ODataException(Strings.ODataParameterReaderCore_CreateReaderAlreadyCalled(ODataParameterReaderCore.GetCreateReaderMethodName(expectedState), this.Name));
+                throw new ODataException(Error.Format(SRResources.ODataParameterReaderCore_CreateReaderAlreadyCalled, ODataParameterReaderCore.GetCreateReaderMethodName(expectedState), this.Name));
             }
         }
 
@@ -528,18 +529,18 @@ this.State == ODataParameterReaderState.Collection,
 
             if (this.State == ODataParameterReaderState.Exception || this.State == ODataParameterReaderState.Completed)
             {
-                throw new ODataException(Strings.ODataParameterReaderCore_ReadOrReadAsyncCalledInInvalidState(this.State));
+                throw new ODataException(Error.Format(SRResources.ODataParameterReaderCore_ReadOrReadAsyncCalledInInvalidState, this.State));
             }
 
             if (this.State == ODataParameterReaderState.Resource || this.State == ODataParameterReaderState.ResourceSet || this.State == ODataParameterReaderState.Collection)
             {
                 if (this.subReaderState == SubReaderState.None)
                 {
-                    throw new ODataException(Strings.ODataParameterReaderCore_SubReaderMustBeCreatedAndReadToCompletionBeforeTheNextReadOrReadAsyncCall(this.State, ODataParameterReaderCore.GetCreateReaderMethodName(this.State)));
+                    throw new ODataException(Error.Format(SRResources.ODataParameterReaderCore_SubReaderMustBeCreatedAndReadToCompletionBeforeTheNextReadOrReadAsyncCall, this.State, ODataParameterReaderCore.GetCreateReaderMethodName(this.State)));
                 }
                 else if (this.subReaderState == SubReaderState.Active)
                 {
-                    throw new ODataException(Strings.ODataParameterReaderCore_SubReaderMustBeInCompletedStateBeforeTheNextReadOrReadAsyncCall(this.State, ODataParameterReaderCore.GetCreateReaderMethodName(this.State)));
+                    throw new ODataException(Error.Format(SRResources.ODataParameterReaderCore_SubReaderMustBeInCompletedStateBeforeTheNextReadOrReadAsyncCall, this.State, ODataParameterReaderCore.GetCreateReaderMethodName(this.State)));
                 }
             }
         }
@@ -567,7 +568,7 @@ this.State == ODataParameterReaderState.Collection,
         {
             if (!this.inputContext.Synchronous)
             {
-                throw new ODataException(Strings.ODataParameterReaderCore_SyncCallOnAsyncReader);
+                throw new ODataException(SRResources.ODataParameterReaderCore_SyncCallOnAsyncReader);
             }
         }
 
@@ -578,7 +579,7 @@ this.State == ODataParameterReaderState.Collection,
         {
             if (this.inputContext.Synchronous)
             {
-                throw new ODataException(Strings.ODataParameterReaderCore_AsyncCallOnSyncReader);
+                throw new ODataException(SRResources.ODataParameterReaderCore_AsyncCallOnSyncReader);
             }
         }
 

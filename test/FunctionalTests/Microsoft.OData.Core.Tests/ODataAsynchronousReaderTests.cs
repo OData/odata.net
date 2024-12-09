@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -72,7 +73,7 @@ namespace Microsoft.OData.Tests
             var asyncReader = this.CreateAsyncReader(payload);
             asyncReader.CreateResponseMessage();
             Action test = () => asyncReader.CreateResponseMessage();
-            test.Throws<ODataException>(Strings.ODataAsyncReader_UnexpectedEndOfInput);
+            test.Throws<ODataException>(SRResources.ODataAsyncReader_UnexpectedEndOfInput);
         }
 
         [Fact]
@@ -81,7 +82,7 @@ namespace Microsoft.OData.Tests
             string payload = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nOData-Version: 4.0\r\n";
             var asyncReader = this.CreateAsyncReader(payload);
             Action test = () => asyncReader.CreateResponseMessage();
-            test.Throws<ODataException>(Strings.ODataAsyncReader_UnexpectedEndOfInput);
+            test.Throws<ODataException>(SRResources.ODataAsyncReader_UnexpectedEndOfInput);
         }
 
         [Fact]
@@ -90,7 +91,7 @@ namespace Microsoft.OData.Tests
             string payload = "HTTP/1.1 200.1 OK\r\nContent-Type: application/json\r\nOData-Version: 4.0\r\n\r\n{\"@odata.context\":\"http://host/service/$metadata#MySingleton\",\"Id\":1}";
             var asyncReader = this.CreateAsyncReader(payload);
             Action test = () => asyncReader.CreateResponseMessage();
-            test.Throws<ODataException>(Strings.ODataAsyncReader_NonIntegerHttpStatusCode("200.1"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataAsyncReader_NonIntegerHttpStatusCode, "200.1"));
         }
 
         [Fact]
@@ -99,7 +100,7 @@ namespace Microsoft.OData.Tests
             string payload = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nOData-Version: 4.0\r\n\n{\"@odata.context\":\"http://host/service/$metadata#MySingleton\",\"Id\":1}";
             var asyncReader = this.CreateAsyncReader(payload);
             Action test = () => asyncReader.CreateResponseMessage();
-            test.Throws<ODataException>(Strings.ODataAsyncReader_InvalidNewLineEncountered('\n'));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataAsyncReader_InvalidNewLineEncountered, '\n'));
         }
 
         [Fact]
@@ -108,7 +109,7 @@ namespace Microsoft.OData.Tests
             string payload = "HTTP/1.0 200 OK\r\nContent-Type: application/json\r\nOData-Version: 4.0\r\n\r\n{\"@odata.context\":\"http://host/service/$metadata#MySingleton\",\"Id\":1}";
             var asyncReader = this.CreateAsyncReader(payload);
             Action test = () => asyncReader.CreateResponseMessage();
-            test.Throws<ODataException>(Strings.ODataAsyncReader_InvalidHttpVersionSpecified("HTTP/1.0", ODataConstants.HttpVersionInAsync));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataAsyncReader_InvalidHttpVersionSpecified, "HTTP/1.0", ODataConstants.HttpVersionInAsync));
         }
 
         [Fact]
@@ -117,7 +118,7 @@ namespace Microsoft.OData.Tests
             string payload = "HTTP/1.1 200OK\r\nContent-Type: application/json\r\nOData-Version: 4.0\r\n\r\n{\"@odata.context\":\"http://host/service/$metadata#MySingleton\",\"Id\":1}";
             var asyncReader = this.CreateAsyncReader(payload);
             Action test = () => asyncReader.CreateResponseMessage();
-            test.Throws<ODataException>(Strings.ODataAsyncReader_InvalidResponseLine("HTTP/1.1 200OK"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataAsyncReader_InvalidResponseLine, "HTTP/1.1 200OK"));
         }
 
         private ODataAsynchronousReader CreateAsyncReader(string payload)

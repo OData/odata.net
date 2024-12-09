@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -17,14 +18,14 @@ namespace Microsoft.OData.Tests
         public void ServiceDocumentElementIsNotNullShouldThrow()
         {
             Action test = () => ValidationUtils.ValidateServiceDocumentElement(null, ODataFormat.Json);
-            test.Throws<ODataException>(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
+            test.Throws<ODataException>(SRResources.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
         }
 
         [Fact]
         public void ServiceDocumentElementHasNullUrlShouldThrow()
         {
             Action test = () => ValidationUtils.ValidateServiceDocumentElement(new ODataFunctionImportInfo() { Name = "good" }, ODataFormat.Json);
-            test.Throws<ODataException>(Strings.ValidationUtils_ResourceMustSpecifyUrl);
+            test.Throws<ODataException>(SRResources.ValidationUtils_ResourceMustSpecifyUrl);
         }
 
         [Fact]
@@ -32,7 +33,7 @@ namespace Microsoft.OData.Tests
         {
             var uri = new Uri("http://link/foo");
             Action test = () => ValidationUtils.ValidateServiceDocumentElement(new ODataFunctionImportInfo() { Url = uri }, ODataFormat.Json);
-            test.Throws<ODataException>(Strings.ValidationUtils_ResourceMustSpecifyName(uri.OriginalString));
+            test.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_ResourceMustSpecifyName, uri.OriginalString));
         }
 
         [Fact]
@@ -58,7 +59,7 @@ namespace Microsoft.OData.Tests
             test2.DoesNotThrow();
 
             Action test3 = () => ValidationUtils.ValidateComplexTypeIsAssignable(type1, type3);
-            test3.Throws<ODataException>(Strings.ValidationUtils_IncompatibleType("NS.Type3", "NS.Type1"));
+            test3.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_IncompatibleType, "NS.Type3", "NS.Type1"));
         }
         #endregion
     }

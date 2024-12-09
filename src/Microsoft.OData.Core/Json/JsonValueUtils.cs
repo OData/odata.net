@@ -15,6 +15,7 @@ namespace Microsoft.OData.Json
     using System.Text;
     using System.Xml;
     using Microsoft.OData.Buffers;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -249,7 +250,7 @@ namespace Microsoft.OData.Json
                         return FormatDateTimeAsJsonTicksString(value);
                     }
                 default:
-                    throw new ODataException(Strings.ODataJsonWriter_UnsupportedDateTimeFormat);
+                    throw new ODataException(SRResources.ODataJsonWriter_UnsupportedDateTimeFormat);
             }
         }
 

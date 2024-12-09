@@ -51,7 +51,7 @@ namespace Microsoft.OData.Edm
             var principalPropertyList = new List<IEdmStructuralProperty>(principalProperties);
             if (dependentPropertyList.Count != principalPropertyList.Count)
             {
-                throw new ArgumentException(Strings.Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType(principalPropertyList.Count, dependentPropertyList.Count));
+                throw new ArgumentException(Error.Format(SRResources.Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType, principalPropertyList.Count, dependentPropertyList.Count));
             }
 
             return new EdmReferentialConstraint(dependentPropertyList.Select((d, i) => new EdmReferentialConstraintPropertyPair(d, principalPropertyList[i])));

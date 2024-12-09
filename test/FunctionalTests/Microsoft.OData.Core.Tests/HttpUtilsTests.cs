@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using Xunit;
 
@@ -62,7 +63,7 @@ namespace Microsoft.OData.Tests
             Action test = () => HttpUtils.ReadTokenOrQuotedStringValue(headerName, headerValue, ref textIndex, out isQuotedString, (s) => new Exception(s));
 
             Exception exception = Assert.Throws<Exception>(test);
-            Assert.Equal(Strings.HttpUtils_EscapeCharWithoutQuotes(headerName, headerValue, 5, ch), exception.Message);
+            Assert.Equal(Error.Format(SRResources.HttpUtils_EscapeCharWithoutQuotes, headerName, headerValue, 5, ch), exception.Message);
         }
 
         [Theory]
@@ -105,7 +106,7 @@ namespace Microsoft.OData.Tests
             Action test = () => HttpUtils.ReadTokenOrQuotedStringValue(headerName, headerValue, ref textIndex, out _, (s) => new Exception(s));
 
             Exception exception = Assert.Throws<Exception>(test);
-            Assert.Equal(Strings.HttpUtils_EscapeCharAtEnd(headerName, headerValue, 7, '\\'), exception.Message);
+            Assert.Equal(Error.Format(SRResources.HttpUtils_EscapeCharAtEnd, headerName, headerValue, 7, '\\'), exception.Message);
         }
 
         [Fact]
@@ -117,7 +118,7 @@ namespace Microsoft.OData.Tests
             Action test = () => HttpUtils.ReadTokenOrQuotedStringValue(headerName, headerValue, ref textIndex, out _, (s) => new Exception(s));
 
             Exception exception = Assert.Throws<Exception>(test);
-            Assert.Equal(Strings.HttpUtils_InvalidCharacterInQuotedParameterValue(headerName, headerValue, 4, '\u001b'), exception.Message);
+            Assert.Equal(Error.Format(SRResources.HttpUtils_InvalidCharacterInQuotedParameterValue, headerName, headerValue, 4, '\u001b'), exception.Message);
         }
 
         [Fact]
@@ -129,7 +130,7 @@ namespace Microsoft.OData.Tests
             Action test = () => HttpUtils.ReadTokenOrQuotedStringValue(headerName, headerValue, ref textIndex, out _, (s) => new Exception(s));
 
             Exception exception = Assert.Throws<Exception>(test);
-            Assert.Equal(Strings.HttpUtils_ClosingQuoteNotFound(headerName, headerValue, 6), exception.Message);
+            Assert.Equal(Error.Format(SRResources.HttpUtils_ClosingQuoteNotFound, headerName, headerValue, 6), exception.Message);
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -23,7 +23,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             // Repro for: Syntactic parsing for Any/All allows an arbitrary token between range variable and expression
             Action parse = () => this.testSubject.ParseFilter("Things/any(a,true)");
-            parse.Throws<ODataException>(ErrorStrings.ExpressionLexer_SyntaxError("13", "Things/any(a,true)"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, "13", "Things/any(a,true)"));
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             // Repro for: Syntactic parser fails to block $it as a range variable name
             Action parse = () => this.testSubject.ParseFilter("Things/any($it:true)");
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_RangeVariableAlreadyDeclared("$it"));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_RangeVariableAlreadyDeclared, "$it"));
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             // Repro for: Semantic binding fails with useless error message when a range variable is redefined within a nested any/all
             Action parse = () => this.testSubject.ParseFilter("Things/any(o:o/Things/any(o:true))");
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_RangeVariableAlreadyDeclared("o"));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_RangeVariableAlreadyDeclared, "o"));
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "invalid(UnitPrice with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby|compute|expand", 0,apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_KeywordOrIdentifierExpected, "aggregate|filter|groupby|compute|expand", 0,apply));
         }
 
         [Fact]
@@ -140,7 +140,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "aggregate(UnitPrice with sum as TotalPrice),";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.ExpressionLexer_SyntaxError(apply.Length, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, apply.Length, apply));
         }
 
         [Fact]
@@ -216,7 +216,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string apply = "aggregate($count with sum as Count)";
 
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_AsExpected(17, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_AsExpected, 17, apply));
         }
 
         [Fact]
@@ -243,7 +243,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "aggregate UnitPrice with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_OpenParenExpected(10, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, 10, apply));
         }
 
         [Fact]
@@ -251,7 +251,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "aggregate(UnitPrice with sum as TotalPrice";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, apply.Length, apply));
         }
 
         [Fact]
@@ -259,7 +259,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "aggregate()";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, apply.Length - 1, apply));
         }
 
         [Fact]
@@ -267,7 +267,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "groupby((UnitPrice))/aggregate()";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, apply.Length - 1, apply));
         }
 
         [Fact]
@@ -275,7 +275,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "aggregate(UnitPrice sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_WithExpected(20, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_WithExpected, 20, apply));
         }
 
         [Fact]
@@ -283,7 +283,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "aggregate(UnitPrice mul with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_WithExpected(29, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_WithExpected, 29, apply));
         }
 
         [Fact]
@@ -291,7 +291,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "aggregate(UnitPrice with invalid as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_UnrecognizedWithMethod("invalid", 25, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_UnrecognizedWithMethod, "invalid", 25, apply));
         }
 
         [Fact]
@@ -299,7 +299,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "aggregate(UnitPrice with sum TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_AsExpected(29, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_AsExpected, 29, apply));
         }
 
         [Fact]
@@ -307,7 +307,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "aggregate(UnitPrice with sum as)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, apply.Length, apply));
         }
 
         private static void VerifyGroupByTokenProperties(IEnumerable<string> expectedEndPathIdentifiers, GroupByToken actual)
@@ -392,7 +392,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "groupby (UnitPrice))";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_OpenParenExpected(9, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, 9, apply));
         }
 
         [Fact]
@@ -400,7 +400,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "groupby((UnitPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(apply.Length, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, apply.Length, apply));
         }
 
         [Fact]
@@ -408,7 +408,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "groupBy((UnitPrice), aggregate(UnitPrice with sum as TotalPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate|filter|groupby|compute|expand", 0, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_KeywordOrIdentifierExpected, "aggregate|filter|groupby|compute|expand", 0, apply));
         }
 
         [Fact]
@@ -416,7 +416,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "groupby()";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_OpenParenExpected(8, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, 8, apply));
         }
 
         [Fact]
@@ -424,7 +424,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "groupby(UnitPrice)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_OpenParenExpected(8, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, 8, apply));
         }
 
         [Fact]
@@ -432,7 +432,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "groupby(())";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_ExpressionExpected(9, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 9, apply));
         }
 
         [Fact]
@@ -440,7 +440,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "groupby((UnitPrice), groupby((UnitPrice)))";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected("aggregate", 21, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_KeywordOrIdentifierExpected, "aggregate", 21, apply));
         }
 
 
@@ -476,7 +476,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "filter UnitPrice eq 5)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_OpenParenExpected(7, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, 7, apply));
         }
 
         [Fact]
@@ -484,7 +484,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "filter(UnitPrice eq 5";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(apply.Length, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrOperatorExpected, apply.Length, apply));
         }
 
         [Fact]
@@ -492,7 +492,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "filter()";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_ExpressionExpected(7, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 7, apply));
         }
 
         [Fact]
@@ -500,7 +500,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "filter(UnitPrice eq)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_ExpressionExpected(apply.Length - 1, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, apply.Length - 1, apply));
         }
 
 
@@ -706,7 +706,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "expand(Sales)";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(apply.Length - 1, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_InnerMostExpandRequireFilter, apply.Length - 1, apply));
         }
 
         [Fact]
@@ -773,7 +773,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "expand(Sales, expand(Customers))";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(apply.Length - 2, apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_InnerMostExpandRequireFilter, apply.Length - 2, apply));
         }
 
 
@@ -782,7 +782,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string apply = "expand(Sales, expand(Customers), expand(Cashiers))";
             Action parse = () => this.testSubject.ParseApply(apply);
-            parse.Throws<ODataException>(ErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(apply.IndexOf(")"), apply));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_InnerMostExpandRequireFilter, apply.IndexOf(")"), apply));
 
         }
 

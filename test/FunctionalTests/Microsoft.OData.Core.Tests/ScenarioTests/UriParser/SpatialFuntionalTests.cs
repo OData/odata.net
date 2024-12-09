@@ -11,7 +11,7 @@ using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 ParseFilter("GeographyPoint eq geography'POINT(10 30)'", HardCodedTestModel.TestModel,
                                            HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filterWithGeography.Throws<ODataException>(
-                ODataErrorStrings.MetadataBinder_IncompatibleOperandsError(
+                Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError,
                     EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true).FullName(),
                     EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyPoint, true).FullName(),
                     BinaryOperatorKind.Equal));
@@ -42,7 +42,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 ParseFilter("GeometryPoint eq geometry'POINT(10 30)'", HardCodedTestModel.TestModel,
                                            HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             filterWithGeography.Throws<ODataException>(
-                ODataErrorStrings.MetadataBinder_IncompatibleOperandsError(
+                Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError,
                     EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, true).FullName(),
                     EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeometryPoint, true).FullName(),
                     BinaryOperatorKind.Equal));
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             BuiltInUriFunctions.TryGetBuiltInFunction(functionName, out signatures);
 
             Action parseDistanceWithNonPointOperand = () => ParseFilter("geo.distance(GeometryLineString, geometry'POINT(10 30)') eq 2", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseDistanceWithNonPointOperand.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(functionName, UriFunctionsHelper.BuildFunctionSignatureListDescription(functionName, signatures)));
+            parseDistanceWithNonPointOperand.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound, functionName, UriFunctionsHelper.BuildFunctionSignatureListDescription(functionName, signatures)));
         }
 
         [Fact]

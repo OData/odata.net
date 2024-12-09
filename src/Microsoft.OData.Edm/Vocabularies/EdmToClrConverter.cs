@@ -628,12 +628,12 @@ namespace Microsoft.OData.Edm.Vocabularies
                         if (memberValue != null
                             && !TryConvertEnumType(underlyingType, memberValue.Value, out clrValue))
                         {
-                            throw new InvalidCastException(Strings.EdmToClr_UnsupportedType(underlyingType));
+                            throw new InvalidCastException(Error.Format(SRResources.EdmToClr_UnsupportedType, underlyingType));
                         }
                     }
                     else if (!TryConvertAsNonGuidPrimitiveType(underlyingType, edmValue, out clrValue))
                     {
-                        throw new InvalidCastException(Strings.EdmToClr_UnsupportedType(underlyingType));
+                        throw new InvalidCastException(Error.Format(SRResources.EdmToClr_UnsupportedType, underlyingType));
                     }
 
                     // In case of enums, because the converter returns a primitive type value we want to convert it to the CLR enum type.
@@ -643,7 +643,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                 object nonEnumclrValue = null;
                 if (!TryConvertAsNonGuidPrimitiveType(clrType, edmValue, out nonEnumclrValue))
                 {
-                        throw new InvalidCastException(Strings.EdmToClr_UnsupportedType(clrType));
+                        throw new InvalidCastException(Error.Format(SRResources.EdmToClr_UnsupportedType, clrType));
                 }
 
                 return nonEnumclrValue;
@@ -778,11 +778,11 @@ namespace Microsoft.OData.Edm.Vocabularies
             {
                 if (edmValue is IEdmCollectionValue)
                 {
-                    throw new InvalidCastException(Strings.EdmToClr_CannotConvertEdmCollectionValueToClrType(clrObjectType.FullName));
+                    throw new InvalidCastException(Error.Format(SRResources.EdmToClr_CannotConvertEdmCollectionValueToClrType, clrObjectType.FullName));
                 }
                 else
                 {
-                    throw new InvalidCastException(Strings.EdmToClr_CannotConvertEdmValueToClrType(GetEdmValueInterfaceName(edmValue), clrObjectType.FullName));
+                    throw new InvalidCastException(Error.Format(SRResources.EdmToClr_CannotConvertEdmValueToClrType, GetEdmValueInterfaceName(edmValue), clrObjectType.FullName));
                 }
             }
 
@@ -796,7 +796,7 @@ namespace Microsoft.OData.Edm.Vocabularies
             // By convention we only support mapping structured values to a CLR class.
             if (!clrObjectType.IsClass())
             {
-                throw new InvalidCastException(Strings.EdmToClr_StructuredValueMappedToNonClass);
+                throw new InvalidCastException(SRResources.EdmToClr_StructuredValueMappedToNonClass);
             }
 
             // Try user-defined logic before the default logic.
@@ -809,7 +809,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                     Type newClrObjectType = clrObject.GetType();
                     if (!clrObjectType.IsAssignableFrom(newClrObjectType))
                     {
-                        throw new InvalidCastException(Strings.EdmToClr_TryCreateObjectInstanceReturnedWrongObject(newClrObjectType.FullName, clrObjectType.FullName));
+                        throw new InvalidCastException(Error.Format(SRResources.EdmToClr_TryCreateObjectInstanceReturnedWrongObject, newClrObjectType.FullName, clrObjectType.FullName));
                     }
 
                     clrObjectType = newClrObjectType;
@@ -848,7 +848,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                 {
                     if (populatedProperties.Contains(propertyValue.Name))
                     {
-                        throw new InvalidCastException(Strings.EdmToClr_StructuredPropertyDuplicateValue(propertyValue.Name));
+                        throw new InvalidCastException(Error.Format(SRResources.EdmToClr_StructuredPropertyDuplicateValue, propertyValue.Name));
                     }
 
                     if (!this.TrySetCollectionProperty(clrProperty, clrObject, propertyValue))
@@ -910,7 +910,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         if (genericTypeDefinitionIsIEnumerableOfT)
                         {
                             // Cannot add elements to an existing value of type IEnumerable<T>.
-                            throw new InvalidCastException(Strings.EdmToClr_IEnumerableOfTPropertyAlreadyHasValue(clrProperty.Name, clrProperty.DeclaringType.FullName));
+                            throw new InvalidCastException(Error.Format(SRResources.EdmToClr_IEnumerableOfTPropertyAlreadyHasValue, clrProperty.Name, clrProperty.DeclaringType.FullName));
                         }
 
                         clrPropertyValueType = clrPropertyValue.GetType();

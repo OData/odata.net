@@ -5,9 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -42,7 +42,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void ValidatorShouldThrowOnTreeThatIsTooDeep()
         {
-            ValidatorShouldThrow(this.treeWithDepth2, ODataErrorStrings.UriParser_ExpandDepthExceeded(2, 1), maxDepth: 1);
+            ValidatorShouldThrow(this.treeWithDepth2, Error.Format(SRResources.UriParser_ExpandDepthExceeded, 2, 1), maxDepth: 1);
         }
 
         [Fact]
@@ -66,13 +66,13 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void ValidatorShouldFailIfDepthExceedsCount()
         {
-            ValidatorShouldThrow(this.treeWithDepth2, ODataErrorStrings.UriParser_ExpandCountExceeded(2, 1), maxCount: 1);
+            ValidatorShouldThrow(this.treeWithDepth2, Error.Format(SRResources.UriParser_ExpandCountExceeded, 2, 1), maxCount: 1);
         }
 
         [Fact]
         public void ValidatorShouldFailIfNumberOfExpandItemsExceedsSetting()
         {
-            ValidatorShouldThrow(this.treeWithWidth2, ODataErrorStrings.UriParser_ExpandCountExceeded(2, 1), maxCount: 1);
+            ValidatorShouldThrow(this.treeWithWidth2, Error.Format(SRResources.UriParser_ExpandCountExceeded, 2, 1), maxCount: 1);
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void ValidatorShouldFailIfNumberOfExpandItemsExceedsSettingWhichWithRefOption()
         {
-            ValidatorShouldThrow(this.treeWithWidth2AndWithRefOption , ODataErrorStrings.UriParser_ExpandCountExceeded(2, 1), maxCount: 1);
+            ValidatorShouldThrow(this.treeWithWidth2AndWithRefOption , Error.Format(SRResources.UriParser_ExpandCountExceeded, 2, 1), maxCount: 1);
         }
 
         [Fact]
@@ -102,19 +102,19 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void ValidatorShouldCountParentNodesTowardsLimit()
         {
-            ValidatorShouldThrow(this.treeWithDepthAndWidth2WithRepeatedParent, ODataErrorStrings.UriParser_ExpandCountExceeded(3, 2), maxCount: 2);
+            ValidatorShouldThrow(this.treeWithDepthAndWidth2WithRepeatedParent, Error.Format(SRResources.UriParser_ExpandCountExceeded, 3, 2), maxCount: 2);
         }
 
         [Fact]
         public void ValidatorShouldFailOnBigComplexTreeIfDepthExceedsLimit()
         {
-            ValidatorShouldThrow(this.bigComplexTree, ODataErrorStrings.UriParser_ExpandDepthExceeded(3, 2), maxDepth: 2);
+            ValidatorShouldThrow(this.bigComplexTree, Error.Format(SRResources.UriParser_ExpandDepthExceeded, 3, 2), maxDepth: 2);
         }
 
         [Fact]
         public void ValidatorShouldFailOnBigComplexTreeIfCountExceedsLimit()
         {
-            ValidatorShouldThrow(this.bigComplexTree, ODataErrorStrings.UriParser_ExpandCountExceeded(6, 5), maxCount: 5);
+            ValidatorShouldThrow(this.bigComplexTree, Error.Format(SRResources.UriParser_ExpandCountExceeded, 6, 5), maxCount: 5);
         }
 
         [Fact]
@@ -133,14 +133,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ValidatorShouldFailImmediatelyIfTheCountLimitIsExceeded()
         {
             // note that size is 2 but the error message only says it found 1, since it stopped at that point.
-            ValidatorShouldThrow(this.treeWithWidth2, ODataErrorStrings.UriParser_ExpandCountExceeded(1, 0), maxCount: 0);
+            ValidatorShouldThrow(this.treeWithWidth2, Error.Format(SRResources.UriParser_ExpandCountExceeded, 1, 0), maxCount: 0);
         }
 
         [Fact]
         public void ValidatorShouldFailImmediatelyIfTheDepthLimitIsExceeded()
         {
             // note that size is 2 but the error message only says it found 1, since it stopped at that point.
-            ValidatorShouldThrow(this.treeWithDepth2, ODataErrorStrings.UriParser_ExpandDepthExceeded(1, 0), maxDepth: 0);
+            ValidatorShouldThrow(this.treeWithDepth2, Error.Format(SRResources.UriParser_ExpandDepthExceeded, 1, 0), maxDepth: 0);
         }
 
         private static void ValidatorShouldThrow(SelectExpandClause selectExpandClause, string expectedMessage, int maxDepth = 100, int maxCount = 100)

@@ -11,13 +11,12 @@ using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
     public class ParameterAliasFunctionalTests
     {
-
         #region alias in path
         [Fact]
         public void ParsePath_AliasInFunctionImport()
@@ -119,7 +118,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidCharacter("!", 5, "id=@p!1"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "!", 5, "id=@p!1"));
         }
 
         [Fact]
@@ -203,7 +202,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     Assert.Equal("Edm.Int16", constNode.TypeReference.FullName());
                 });
             // TODO: This is a bug repro. Remove this assertion after the bug is fixed.
-            parseUri.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.Int16"));
+            parseUri.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Int32", "Edm.Int16"));
         }
 
         [Theory]
@@ -346,7 +345,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            parse.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
@@ -423,7 +422,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(Strings.RequestUriProcessor_SyntaxError);
+            parse.Throws<ODataException>(SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -434,7 +433,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_CannotApplyFilterOnSingleEntities("Boss"));
+            parse.Throws<ODataException>(Error.Format(SRResources.RequestUriProcessor_CannotApplyFilterOnSingleEntities, "Boss"));
         }
 
         [Fact]
@@ -445,7 +444,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_CannotApplyFilterOnSingleEntities("People"));
+            parse.Throws<ODataException>(Error.Format(SRResources.RequestUriProcessor_CannotApplyFilterOnSingleEntities, "People"));
         }
 
         [Fact]
@@ -521,7 +520,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidCharacter("!", 2, "@p!1"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "!", 2, "@p!1"));
         }
 
         [Fact]
@@ -532,7 +531,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_FilterExpressionNotSingleValue);
+            parse.Throws<ODataException>(SRResources.MetadataBinder_FilterExpressionNotSingleValue);
         }
 
         [Fact]
@@ -564,7 +563,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            parse.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
@@ -575,7 +574,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            parse.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
@@ -681,7 +680,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                 });
 
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_FilterExpressionNotSingleValue);
+            parse.Throws<ODataException>(SRResources.MetadataBinder_FilterExpressionNotSingleValue);
         }
 
         [Fact]
@@ -693,7 +692,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                 });
 
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_FilterExpressionNotSingleValue);
+            parse.Throws<ODataException>(SRResources.MetadataBinder_FilterExpressionNotSingleValue);
         }
 
         [Fact]
@@ -817,7 +816,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataUnrecognizedPathException>(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$ref"));
+            parse.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "$ref"));
         }
 
         [Fact]
@@ -849,7 +848,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataUnrecognizedPathException>(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$count"));
+            parse.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "$count"));
         }
 
         // NOTE: Per OData 4.01 spec, the $filter query option must not be used in conjunction with both
@@ -951,7 +950,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.AdoptShibaInu"));
+            parse.Throws<ODataException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "Fully.Qualified.Namespace.AdoptShibaInu"));
         }
 
         [Fact]

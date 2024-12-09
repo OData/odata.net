@@ -68,7 +68,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                         this.ProcessEntityContainerElement(element);
                         break;
                     default:
-                        throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_ContainerElementKind(element.ContainerElementKind.ToString()));
+                        throw new InvalidOperationException(Error.Format(SRResources.UnknownEnumVal_ContainerElementKind, element.ContainerElementKind.ToString()));
                 }
             }
         }
@@ -121,7 +121,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                         await this.ProcessEntityContainerElementAsync(element).ConfigureAwait(false);
                         break;
                     default:
-                        throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_ContainerElementKind(element.ContainerElementKind.ToString()));
+                        throw new InvalidOperationException(Error.Format(SRResources.UnknownEnumVal_ContainerElementKind, element.ContainerElementKind.ToString()));
                 }
             }
         }

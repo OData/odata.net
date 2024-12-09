@@ -97,7 +97,7 @@ namespace Microsoft.OData.Client
                 case ExpressionType.ListInit:
                     return this.VisitListInit((ListInitExpression)exp);
                 default:
-                    throw new NotSupportedException(Strings.ALinq_UnsupportedExpression(exp.NodeType.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_UnsupportedExpression, exp.NodeType.ToString()));
             }
         }
 
@@ -117,7 +117,7 @@ namespace Microsoft.OData.Client
                 case MemberBindingType.ListBinding:
                     return this.VisitMemberListBinding((MemberListBinding)binding);
                 default:
-                    throw new NotSupportedException(Strings.ALinq_UnsupportedExpression(binding.BindingType.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_UnsupportedExpression, binding.BindingType.ToString()));
             }
         }
 

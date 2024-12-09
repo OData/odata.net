@@ -10,11 +10,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core;
 using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Tests.Json;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 {
@@ -279,7 +279,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
             ODataResource entry = null;
             Action test = () => this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; }, false);
-            test.Throws<ODataException>(ODataErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter("Edm.Int64"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter, "Edm.Int64"));
         }
 
         [Fact]
@@ -305,7 +305,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             IEdmModel mainModel = TestUtils.WrapReferencedModelsToMainModel("EntityNs", "MyContainer", model);
             ODataResource entry = null;
             Action test = () => this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            test.Throws<ODataException>(ODataErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter("Edm.Decimal"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter, "Edm.Decimal"));
         }
 
         [Fact]
@@ -634,7 +634,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 "}";
 
             Action read = () => this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { });
-            read.Throws<ODataException>(Strings.ValidationUtils_IncompatibleType("Edm.String", "NS.Weight"));
+            read.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_IncompatibleType, "Edm.String", "NS.Weight"));
         }
 
         [Fact]
@@ -671,7 +671,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 "}";
 
             Action read = () => this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { });
-            read.Throws<ODataException>(Strings.ValidationUtils_IncompatibleType("NS.Height", "NS.Weight"));
+            read.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_IncompatibleType, "NS.Height", "NS.Weight"));
         }
 
         [Fact]
@@ -702,7 +702,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 "}";
 
             Action read = () => this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { });
-            read.Throws<ODataException>(Strings.ValidationUtils_IncompatibleType("NS.Weight", "Edm.Int32"));
+            read.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_IncompatibleType, "NS.Weight", "Edm.Int32"));
         }
 
         [Fact]

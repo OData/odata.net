@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.MultipartMixed
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -85,7 +86,7 @@ namespace Microsoft.OData.MultipartMixed
 
                     if (this.currentContentId == null)
                     {
-                        throw new ODataException(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound(ODataConstants.ContentIdHeader));
+                        throw new ODataException(Error.Format(SRResources.ODataBatchOperationHeaderDictionary_KeyNotFound, ODataConstants.ContentIdHeader));
                     }
                 }
             }
@@ -178,7 +179,7 @@ namespace Microsoft.OData.MultipartMixed
         {
             if (this.batchStream.ChangeSetBoundary == null)
             {
-                ThrowODataException(Strings.ODataBatchReader_ReaderStreamChangesetBoundaryCannotBeNull);
+                ThrowODataException(SRResources.ODataBatchReader_ReaderStreamChangesetBoundaryCannotBeNull);
             }
 
             this.dependsOnIdsTracker.ChangeSetStarted();
@@ -208,7 +209,7 @@ namespace Microsoft.OData.MultipartMixed
             {
                 if (!this.PayloadUriConverter.ContainsContentId(id))
                 {
-                    throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(id, contentId));
+                    throw new ODataException(Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, id, contentId));
                 }
             }
         }
@@ -246,15 +247,15 @@ namespace Microsoft.OData.MultipartMixed
 
                 case ODataBatchReaderState.Completed:
                     // We should never get here when in Completed state.
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_GetEndBoundary_Completed));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReader_GetEndBoundary_Completed));
 
                 case ODataBatchReaderState.Exception:
                     // We should never get here when in Exception state.
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_GetEndBoundary_Exception));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReader_GetEndBoundary_Exception));
 
                 default:
                     // Invalid enum value
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_GetEndBoundary_UnknownValue));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReader_GetEndBoundary_UnknownValue));
             }
         }
 
@@ -279,7 +280,7 @@ namespace Microsoft.OData.MultipartMixed
             if (firstSpaceIndex <= 0 || requestLine.Length - 3 <= firstSpaceIndex)
             {
                 // only 1 segment or empty first segment or not enough left for 2nd and 3rd segments
-                throw new ODataException(Strings.ODataBatchReaderStream_InvalidRequestLine(requestLine));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_InvalidRequestLine, requestLine));
             }
 
             int lastSpaceIndex = requestLine.LastIndexOf(' ');
@@ -287,7 +288,7 @@ namespace Microsoft.OData.MultipartMixed
             {
                 // only 2 segments or empty 2nd or 3rd segments
                 // only 1 segment or empty first segment or not enough left for 2nd and 3rd segments
-                throw new ODataException(Strings.ODataBatchReaderStream_InvalidRequestLine(requestLine));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_InvalidRequestLine, requestLine));
             }
 
             httpMethod = requestLine.Substring(0, firstSpaceIndex);               // Request - Http method
@@ -297,7 +298,7 @@ namespace Microsoft.OData.MultipartMixed
             // Validate HttpVersion
             if (string.CompareOrdinal(ODataConstants.HttpVersionInBatching, httpVersionSegment) != 0)
             {
-                throw new ODataException(Strings.ODataBatchReaderStream_InvalidHttpVersionSpecified(httpVersionSegment, ODataConstants.HttpVersionInBatching));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_InvalidHttpVersionSpecified, httpVersionSegment, ODataConstants.HttpVersionInBatching));
             }
 
             // NOTE: this method will throw if the method is not recognized.
@@ -309,7 +310,7 @@ namespace Microsoft.OData.MultipartMixed
                 // allow all methods except for GET
                 if (HttpUtils.IsQueryMethod(httpMethod))
                 {
-                    throw new ODataException(Strings.ODataBatch_InvalidHttpMethodForChangeSetRequest(httpMethod));
+                    throw new ODataException(Error.Format(SRResources.ODataBatch_InvalidHttpMethodForChangeSetRequest, httpMethod));
                 }
             }
 
@@ -334,7 +335,7 @@ namespace Microsoft.OData.MultipartMixed
             if (firstSpaceIndex <= 0 || responseLine.Length - 3 <= firstSpaceIndex)
             {
                 // only 1 segment or empty first segment or not enough left for 2nd and 3rd segments
-                throw new ODataException(Strings.ODataBatchReaderStream_InvalidResponseLine(responseLine));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_InvalidResponseLine, responseLine));
             }
 
             int secondSpaceIndex = responseLine.IndexOf(' ', firstSpaceIndex + 1);
@@ -342,7 +343,7 @@ namespace Microsoft.OData.MultipartMixed
             {
                 // only 2 segments or empty 2nd or 3rd segments
                 // only 1 segment or empty first segment or not enough left for 2nd and 3rd segments
-                throw new ODataException(Strings.ODataBatchReaderStream_InvalidResponseLine(responseLine));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_InvalidResponseLine, responseLine));
             }
 
             string httpVersionSegment = responseLine.Substring(0, firstSpaceIndex);
@@ -351,13 +352,13 @@ namespace Microsoft.OData.MultipartMixed
             // Validate HttpVersion
             if (string.CompareOrdinal(ODataConstants.HttpVersionInBatching, httpVersionSegment) != 0)
             {
-                throw new ODataException(Strings.ODataBatchReaderStream_InvalidHttpVersionSpecified(httpVersionSegment, ODataConstants.HttpVersionInBatching));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_InvalidHttpVersionSpecified, httpVersionSegment, ODataConstants.HttpVersionInBatching));
             }
 
             int intResult;
             if (!Int32.TryParse(statusCodeSegment, out intResult))
             {
-                throw new ODataException(Strings.ODataBatchReaderStream_NonIntegerHttpStatusCode(statusCodeSegment));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_NonIntegerHttpStatusCode, statusCodeSegment));
             }
 
             return intResult;

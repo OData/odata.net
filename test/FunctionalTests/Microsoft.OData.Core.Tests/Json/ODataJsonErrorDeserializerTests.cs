@@ -8,10 +8,10 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -307,7 +307,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonReaderUtils_MultipleErrorPropertiesWithSameName("error"),
+                Error.Format(SRResources.ODataJsonReaderUtils_MultipleErrorPropertiesWithSameName, "error"),
                 exception.Message);
         }
 
@@ -322,7 +322,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonErrorDeserializer_TopLevelErrorWithInvalidProperty("UnexpectedProp"),
+                Error.Format(SRResources.ODataJsonErrorDeserializer_TopLevelErrorWithInvalidProperty, "UnexpectedProp"),
                 exception.Message);
         }
 
@@ -338,7 +338,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonErrorDeserializer_InstanceAnnotationNotAllowedInErrorPayload("odata.type"),
+                Error.Format(SRResources.ODataJsonErrorDeserializer_InstanceAnnotationNotAllowedInErrorPayload, "odata.type"),
                 exception.Message);
         }
 
@@ -354,7 +354,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonErrorDeserializer_PropertyAnnotationWithoutPropertyForError("target"),
+                Error.Format(SRResources.ODataJsonErrorDeserializer_PropertyAnnotationWithoutPropertyForError, "target"),
                 exception.Message);
         }
 
@@ -370,7 +370,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.ResolveError"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, "#NS.ResolveError"),
                 exception.Message);
         }
 
@@ -387,7 +387,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonErrorDeserializer_PropertyAnnotationNotAllowedInErrorPayload("odata.etag"),
+                Error.Format(SRResources.ODataJsonErrorDeserializer_PropertyAnnotationNotAllowedInErrorPayload, "odata.etag"),
                 exception.Message);
         }
 
@@ -404,7 +404,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTypeName("odata.type"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTypeName, "odata.type"),
                 exception.Message);
         }
 
@@ -420,7 +420,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonErrorDeserializer_TopLevelErrorValueWithInvalidProperty("UnexpectedProp"),
+                Error.Format(SRResources.ODataJsonErrorDeserializer_TopLevelErrorValueWithInvalidProperty, "UnexpectedProp"),
                 exception.Message);
         }
 

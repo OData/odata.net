@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
@@ -253,8 +254,8 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
 ";
 
-            Assert.Equal(Strings.ODataAsyncWriter_CannotWriteInStreamErrorForAsync, asyncException.Message);
-            Assert.Equal(Strings.ODataAsyncWriter_CannotWriteInStreamErrorForAsync, syncException.Message);
+            Assert.Equal(SRResources.ODataAsyncWriter_CannotWriteInStreamErrorForAsync, asyncException.Message);
+            Assert.Equal(SRResources.ODataAsyncWriter_CannotWriteInStreamErrorForAsync, syncException.Message);
             Assert.Equal(expected, asyncResult);
             Assert.Equal(expected, syncResult);
         }

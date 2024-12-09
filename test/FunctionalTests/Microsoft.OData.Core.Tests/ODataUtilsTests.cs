@@ -6,6 +6,7 @@
 
 using System;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -171,7 +172,7 @@ namespace Microsoft.OData.Tests
         public void TestServiceDocumentWhenNoContainer()
         {
             Action action = () => (new EdmModel()).GenerateServiceDocument();
-            action.Throws<ODataException>(Strings.ODataUtils_ModelDoesNotHaveContainer);
+            action.Throws<ODataException>(SRResources.ODataUtils_ModelDoesNotHaveContainer);
         }
 
         private IEdmModel CreateTestModel()

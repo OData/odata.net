@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -19,7 +20,7 @@ namespace Microsoft.OData.UriParser
         internal static ODataException CreateResourceNotFoundError(string identifier)
         {
             // 404: Not Found
-            return ResourceNotFoundError(Strings.RequestUriProcessor_ResourceNotFound(identifier));
+            return ResourceNotFoundError(Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, identifier));
         }
 
         /// <summary>Creates a new "Resource Not Found" exception.</summary>
@@ -35,7 +36,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>A new exception to indicate a syntax error.</returns>
         internal static ODataException CreateSyntaxError()
         {
-            return CreateBadRequestError(Strings.RequestUriProcessor_SyntaxError);
+            return CreateBadRequestError(SRResources.RequestUriProcessor_SyntaxError);
         }
 
         /// <summary>
@@ -59,7 +60,7 @@ namespace Microsoft.OData.UriParser
         {
             if (!UriEdmHelpers.IsRelatedTo(type.AsElementType(), secondType.AsElementType()))
             {
-                throw new ODataException(Strings.PathParser_TypeMustBeRelatedToSet(type, secondType, segmentName));
+                throw new ODataException(Error.Format(SRResources.PathParser_TypeMustBeRelatedToSet, type, secondType, segmentName));
             }
         }
     }

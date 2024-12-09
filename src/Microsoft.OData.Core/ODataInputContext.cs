@@ -12,6 +12,7 @@ namespace Microsoft.OData
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
     using System.Xml;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
 
@@ -634,7 +635,7 @@ namespace Microsoft.OData
         /// <returns>An exception to throw.</returns>
         private ODataException CreatePayloadKindNotSupportedException(ODataPayloadKind payloadKind)
         {
-            return new ODataException(Strings.ODataInputContext_UnsupportedPayloadKindForFormat(this.format.ToString(), payloadKind.ToString()));
+            return new ODataException(Error.Format(SRResources.ODataInputContext_UnsupportedPayloadKindForFormat, this.format.ToString(), payloadKind.ToString()));
         }
     }
 }

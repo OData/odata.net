@@ -203,7 +203,7 @@ namespace Microsoft.OData.Client
             InvalidOperationException failure = null;
             if (!CanHandleResponseVersion(responseVersion, out parsedResponseVersion))
             {
-                string description = Strings.Context_VersionNotSupported(responseVersion, SerializeSupportedVersions());
+                string description = Error.Format(SRResources.Context_VersionNotSupported, responseVersion, SerializeSupportedVersions());
                 failure = Error.InvalidOperation(description);
             }
 
@@ -593,7 +593,7 @@ namespace Microsoft.OData.Client
                               // Except for preflight requests
                              if (headers.HasHeader("Content-Type") && statusCode != HttpStatusCode.Created)
                              {
-                                throw Error.NotSupported(Strings.Deserialize_NoLocationHeader);
+                                throw Error.NotSupported(SRResources.Deserialize_NoLocationHeader);
                              }
                         }
 
@@ -606,7 +606,7 @@ namespace Microsoft.OData.Client
                             odataId = WebUtil.ValidateIdentityValue(odataEntityId);
                             if (location == null)
                             {
-                                throw Error.NotSupported(Strings.Context_BothLocationAndIdMustBeSpecified);
+                                throw Error.NotSupported(SRResources.Context_BothLocationAndIdMustBeSpecified);
                             }
                         }
                         else
@@ -1065,14 +1065,14 @@ namespace Microsoft.OData.Client
             {
                 binding.ContentGeneratedForSave = true;
                 Debug.Assert(EntityStates.Added == sourceResource.State, "expected added state");
-                throw Error.InvalidOperation(Strings.Context_LinkResourceInsertFailure, sourceResource.SaveError);
+                throw Error.InvalidOperation(SRResources.Context_LinkResourceInsertFailure, sourceResource.SaveError);
             }
 
             if (targetResource != null && targetResource.GetLatestIdentity() == null)
             {
                 binding.ContentGeneratedForSave = true;
                 Debug.Assert(targetResource.State == EntityStates.Added, "expected added state");
-                throw Error.InvalidOperation(Strings.Context_LinkResourceInsertFailure, targetResource.SaveError);
+                throw Error.InvalidOperation(SRResources.Context_LinkResourceInsertFailure, targetResource.SaveError);
             }
         }
 

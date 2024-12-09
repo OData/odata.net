@@ -103,7 +103,7 @@ namespace Microsoft.OData.Client
             EntityDescriptor entityDescriptor = this.TryGetEntityDescriptor(resource);
             if (entityDescriptor == null)
             {
-                throw Error.InvalidOperation(Strings.Context_EntityNotContained);
+                throw Error.InvalidOperation(SRResources.Context_EntityNotContained);
             }
 
             return entityDescriptor;
@@ -138,7 +138,7 @@ namespace Microsoft.OData.Client
             }
             catch (ArgumentException)
             {
-                throw Error.InvalidOperation(Strings.Context_EntityAlreadyContained);
+                throw Error.InvalidOperation(SRResources.Context_EntityAlreadyContained);
             }
         }
 
@@ -238,7 +238,7 @@ namespace Microsoft.OData.Client
                         break;
 
                     case MergeOption.NoTracking: // public API point should throw if link exists
-                        throw Error.InvalidOperation(Strings.Context_RelationAlreadyContained);
+                        throw Error.InvalidOperation(SRResources.Context_RelationAlreadyContained);
                 }
             }
             else
@@ -307,7 +307,7 @@ namespace Microsoft.OData.Client
             }
             catch (ArgumentException)
             {
-                throw Error.InvalidOperation(Strings.Context_RelationAlreadyContained);
+                throw Error.InvalidOperation(SRResources.Context_RelationAlreadyContained);
             }
         }
 
@@ -355,7 +355,7 @@ namespace Microsoft.OData.Client
                        (parentOfTarget.State != EntityStates.Deleted ||
                         parentOfTarget.State != EntityStates.Detached))
                     {
-                        throw new InvalidOperationException(Strings.Context_ChildResourceExists);
+                        throw new InvalidOperationException(SRResources.Context_ChildResourceExists);
                     }
                 }
             }
@@ -465,11 +465,11 @@ namespace Microsoft.OData.Client
             // identity existing & pointing to something else
             if (failIfDuplicated && (trackedEntityDescriptor != null))
             {
-                throw Error.InvalidOperation(Strings.Context_EntityAlreadyContained);
+                throw Error.InvalidOperation(SRResources.Context_EntityAlreadyContained);
             }
             else if (trackedEntityDescriptor != existing)
             {
-                throw Error.InvalidOperation(Strings.Context_DifferentEntityAlreadyContained);
+                throw Error.InvalidOperation(SRResources.Context_DifferentEntityAlreadyContained);
             }
             else if (trackedEntityDescriptor == null)
             {
@@ -549,7 +549,7 @@ namespace Microsoft.OData.Client
             {
                 // we checked the state because we do not remove the deleted/detached entity descriptor from the dictionary until we have finished processing all changes
                 // So for instance if you delete one entity and add back one with the same ID, they will be a temporary conflict in the dictionary.
-                throw Error.InvalidOperation(Strings.Context_DifferentEntityAlreadyContained);
+                throw Error.InvalidOperation(SRResources.Context_DifferentEntityAlreadyContained);
             }
         }
     }

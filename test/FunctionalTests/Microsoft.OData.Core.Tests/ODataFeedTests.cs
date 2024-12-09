@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -70,7 +71,7 @@ namespace Microsoft.OData.Tests
         {
             this.odataFeed.NextPageLink = new Uri("http://www.example.com/nextPageLink");
             Action test = () => this.odataFeed.DeltaLink = new Uri("http://www.example.com/deltaLink");
-            test.Throws<ODataException>(Strings.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
+            test.Throws<ODataException>(SRResources.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
         }
 
         [Fact]
@@ -78,7 +79,7 @@ namespace Microsoft.OData.Tests
         {
             this.odataFeed.DeltaLink = new Uri("http://www.example.com/deltaLink");
             Action test = () => this.odataFeed.NextPageLink = new Uri("http://www.example.com/nextPageLink");
-            test.Throws<ODataException>(Strings.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
+            test.Throws<ODataException>(SRResources.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
         }
 
         [Fact]

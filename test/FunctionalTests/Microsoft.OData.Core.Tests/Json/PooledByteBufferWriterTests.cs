@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Core;
 using Microsoft.OData.Json;
 using Xunit;
 
@@ -127,7 +128,7 @@ namespace Microsoft.OData.Tests.Json
 
             Action action = () => bufferWriter.GetSpan(PooledByteBufferWriter.MaximumBufferSize);
             int newSize = initialBufferSize + PooledByteBufferWriter.MaximumBufferSize;
-            action.Throws<OutOfMemoryException>(Strings.ODataMessageWriter_Buffer_Maximum_Size_Exceeded(newSize));
+            action.Throws<OutOfMemoryException>(Error.Format(SRResources.ODataMessageWriter_Buffer_Maximum_Size_Exceeded, newSize));
         }
 
         [Fact]
@@ -138,7 +139,7 @@ namespace Microsoft.OData.Tests.Json
 
             Action action = () => bufferWriter.GetMemory(PooledByteBufferWriter.MaximumBufferSize);
             int newSize = initialBufferSize + PooledByteBufferWriter.MaximumBufferSize;
-            action.Throws<OutOfMemoryException>(Strings.ODataMessageWriter_Buffer_Maximum_Size_Exceeded(newSize));
+            action.Throws<OutOfMemoryException>(Error.Format(SRResources.ODataMessageWriter_Buffer_Maximum_Size_Exceeded, newSize));
         }
 
         [Fact]

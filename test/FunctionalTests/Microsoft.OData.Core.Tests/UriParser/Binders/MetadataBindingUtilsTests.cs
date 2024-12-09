@@ -8,8 +8,7 @@ using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
-using System.Linq;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -49,7 +48,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             SingleValueNode node = new ConstantNode(7);
             var targetType = EdmCoreModel.Instance.GetSpatial(EdmPrimitiveTypeKind.GeographyMultiLineString, false);
             Action convertMethod = () => MetadataBindingUtils.ConvertToTypeIfNeeded(node, targetType);
-            convertMethod.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CannotConvertToType(node.TypeReference.FullName(), targetType.FullName()));
+            convertMethod.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, node.TypeReference.FullName(), targetType.FullName()));
         }
 
         [Fact]
@@ -174,7 +173,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Action convertIfNeeded = () => MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference);
 
             // Assert
-            convertIfNeeded.Throws<ODataException>(ODataErrorStrings.Binder_IsNotValidEnumConstant(enumValue.ToString()));
+            convertIfNeeded.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, enumValue.ToString()));
         }
 
         [Fact]
@@ -192,7 +191,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 Action convertIfNeeded = () => MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference);
 
                 // Assert
-                convertIfNeeded.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CannotConvertToType(source.TypeReference.FullName(), targetTypeReference.FullName()));
+                convertIfNeeded.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, source.TypeReference.FullName(), targetTypeReference.FullName()));
             }
         }
 
@@ -211,7 +210,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 Action convertIfNeeded = () => MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference);
 
                 // Assert
-                convertIfNeeded.Throws<ODataException>(ODataErrorStrings.Binder_IsNotValidEnumConstant(enumValue));
+                convertIfNeeded.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, enumValue));
             }
         }
 

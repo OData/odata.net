@@ -70,7 +70,7 @@ namespace Microsoft.OData.Client.Materialization
         public object MaterializePrimitiveDataValueCollectionElement(Type collectionItemType, string wireTypeName, object item)
         {
             object materializedValue = null;
-            this.MaterializePrimitiveDataValue(collectionItemType, wireTypeName, item, () => DSClient.Strings.Collection_NullCollectionItemsNotSupported, out materializedValue);
+            this.MaterializePrimitiveDataValue(collectionItemType, wireTypeName, item, () => SRResources.Collection_NullCollectionItemsNotSupported, out materializedValue);
 
             return materializedValue;
         }

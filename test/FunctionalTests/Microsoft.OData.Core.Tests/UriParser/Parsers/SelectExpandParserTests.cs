@@ -9,7 +9,7 @@ using System.Linq;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => parser.ParseSelect();
 
             // Assert
-            test.Throws<ODataException>(ODataErrorStrings.ExpressionToken_IdentifierExpected("4"));
+            test.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, "4"));
         }
 
         [Fact]
@@ -79,7 +79,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => parser.ParseSelect();
 
             // Assert
-            test.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            test.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => parser.ParseSelect();
 
             // Assert
-            test.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidCharacter(";", 3, "one;two"));
+            test.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, ";", 3, "one;two"));
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => parser.ParseSelect();
 
             // Assert
-            test.Throws<ODataException>(Strings.UriSelectParser_TermIsNotValid("what happens here/foo"));
+            test.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_TermIsNotValid, "what happens here/foo"));
         }
 
         #endregion
@@ -151,7 +151,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => parser.ParseExpand();
 
             // Assert
-            test.Throws<ODataException>(ODataErrorStrings.ExpressionToken_IdentifierExpected("4"));
+            test.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, "4"));
         }
 
         [Fact]
@@ -181,7 +181,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => parser.ParseExpand();
 
             // Assert
-            test.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression);
+            test.Throws<ODataException>(SRResources.ExpressionLexer_UnbalancedBracketExpression);
         }
 
         [Fact]
@@ -194,7 +194,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => parser.ParseExpand();
 
             // Assert
-            test.Throws<ODataException>(ODataErrorStrings.UriSelectParser_TermIsNotValid("one($filter=true)), two"));
+            test.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_TermIsNotValid, "one($filter=true)), two"));
         }
 
         [Fact]
@@ -207,7 +207,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => parser.ParseExpand();
 
             // Assert
-            test.Throws<ODataException>(ODataErrorStrings.UriParser_MissingExpandOption("NavProp"));
+            test.Throws<ODataException>(Error.Format(SRResources.UriParser_MissingExpandOption, "NavProp"));
         }
 
         [Fact]
@@ -220,7 +220,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => parser.ParseExpand();
 
             // Assert
-            test.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+            test.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
@@ -233,7 +233,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => parser.ParseExpand();
 
             // Assert
-            test.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidCharacter(";", 3, "one;two"));
+            test.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, ";", 3, "one;two"));
         }
 
         [Fact]
@@ -246,7 +246,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => parser.ParseExpand();
 
             // Assert
-            test.Throws<ODataException>(Strings.UriSelectParser_TermIsNotValid("what happens here/foo"));
+            test.Throws<ODataException>(Error.Format(SRResources.UriSelectParser_TermIsNotValid, "what happens here/foo"));
         }
 
         [Fact]
@@ -666,7 +666,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => this.StarExpandTesting("*($select=*)", "Person");
 
             // Assert
-            test.Throws<ODataException>(Strings.UriExpandParser_TermIsNotValidForStar("($select=*)"));
+            test.Throws<ODataException>(Error.Format(SRResources.UriExpandParser_TermIsNotValidForStar, "($select=*)"));
         }
 
         [Fact]
@@ -676,7 +676,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => this.StarExpandTesting("*/$ref($levels=2)", "Person");
 
             // Assert
-            test.Throws<ODataException>(Strings.UriExpandParser_TermIsNotValidForStarRef("($levels=2)"));
+            test.Throws<ODataException>(Error.Format(SRResources.UriExpandParser_TermIsNotValidForStarRef, "($levels=2)"));
         }
 
         [Fact]
@@ -686,7 +686,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => this.StarExpandTesting("*, Friend, */$ref", "Person");
 
             // Assert
-            test.Throws<ODataException>(Strings.UriExpandParser_TermWithMultipleStarNotAllowed("*, Friend, */$ref"));
+            test.Throws<ODataException>(Error.Format(SRResources.UriExpandParser_TermWithMultipleStarNotAllowed, "*, Friend, */$ref"));
         }
 
         private ExpandToken StarExpandTesting(string expand, string typeName, IEdmModel model = null)
@@ -735,7 +735,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action test = () => expandParser.ParseExpand();
 
             // Assert
-            test.Throws<ODataException>(Strings.UriExpandParser_ParentStructuredTypeIsNull(""));
+            test.Throws<ODataException>(Error.Format(SRResources.UriExpandParser_ParentStructuredTypeIsNull, ""));
         }
         #endregion
 
@@ -746,11 +746,11 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             // Arrange & Act & Assert
             this.LimitationTest("d1/d2", null);
             Action test = () => this.LimitationTest("d1/d2/d3", null);
-            test.Throws<ODataException>(Strings.UriQueryExpressionParser_TooDeep);
+            test.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
 
             this.LimitationTest(null, "d1/d2");
             test = () => this.LimitationTest(null,"d1/d2/d3");
-            test.Throws<ODataException>(Strings.UriQueryExpressionParser_TooDeep);
+            test.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
@@ -759,7 +759,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             // Arrange & Act & Assert
             this.LimitationTest(null, "d1($filter=a or b and c)");
             Action test = () => this.LimitationTest(null, "d1($filter=(a or b) and c)");
-            test.Throws<ODataException>(Strings.UriQueryExpressionParser_TooDeep);
+            test.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
@@ -768,7 +768,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             // Arrange & Act & Assert
             this.LimitationTest(null, "d1($orderby=a or b and c)");
             Action test = () => this.LimitationTest(null, "d1($orderby=(a or b) and c)");
-            test.Throws<ODataException>(Strings.UriQueryExpressionParser_TooDeep);
+            test.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
@@ -777,7 +777,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             // Arrange & Act & Assert
             this.LimitationTest(null, "d1($search=a OR b AND c)");
             Action test = () => this.LimitationTest(null, "d1($search=(a OR b) AND c)");
-            test.Throws<ODataException>(Strings.UriQueryExpressionParser_TooDeep);
+            test.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         [Fact]
@@ -786,7 +786,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             // Arrange & Act & Assert
             this.LimitationTest(null, "d1($expand=d2($expand=d3($expand=d4($expand=d5))))");
             Action test = () => this.LimitationTest(null, "d1($expand=d2($expand=d3($expand=d4($expand=d5($expand=d6)))))");
-            test.Throws<ODataException>(Strings.UriQueryExpressionParser_TooDeep);
+            test.Throws<ODataException>(SRResources.UriQueryExpressionParser_TooDeep);
         }
 
         private void LimitationTest(string select, string expand)

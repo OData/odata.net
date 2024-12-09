@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace Microsoft.OData
             ReadOnlyEnumerable<T> readonlyCollection = source as ReadOnlyEnumerable<T>;
             if (readonlyCollection == null)
             {
-                throw new ODataException(Strings.ReaderUtils_EnumerableModified(collectionName));
+                throw new ODataException(Error.Format(SRResources.ReaderUtils_EnumerableModified, collectionName));
             }
 
             return readonlyCollection;

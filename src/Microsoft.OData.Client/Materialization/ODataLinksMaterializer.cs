@@ -50,7 +50,7 @@ namespace Microsoft.OData.Client.Materialization
                     return this.links.Count.Value;
                 }
 
-                throw new InvalidOperationException(DSClient.Strings.MaterializeFromObject_CountNotPresent);
+                throw new InvalidOperationException(SRResources.MaterializeFromObject_CountNotPresent);
             }
         }
 
@@ -91,11 +91,11 @@ namespace Microsoft.OData.Client.Materialization
             // this is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
             if (targetType.IsEntityType)
             {
-                throw DSClient.Error.InvalidOperation(DSClient.Strings.Materializer_InvalidEntityType(targetType.ElementTypeName));
+                throw DSClient.Error.InvalidOperation(Error.Format(SRResources.Materializer_InvalidEntityType, targetType.ElementTypeName));
             }
             else
             {
-                throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MixedTextWithComment);
+                throw DSClient.Error.InvalidOperation(SRResources.Deserialize_MixedTextWithComment);
             }
         }
 
@@ -113,7 +113,7 @@ namespace Microsoft.OData.Client.Materialization
             }
             catch (ODataErrorException e)
             {
-                throw new DataServiceClientException(DSClient.Strings.Deserialize_ServerException(e.Error.Message), e);
+                throw new DataServiceClientException(Error.Format(SRResources.Deserialize_ServerException, e.Error.Message), e);
             }
             catch (ODataException e)
             {

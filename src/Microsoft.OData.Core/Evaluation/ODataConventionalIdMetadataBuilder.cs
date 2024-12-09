@@ -14,6 +14,7 @@ namespace Microsoft.OData.Evaluation
     using Microsoft.OData.Metadata;
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Core;
     #endregion
 
     /// <summary>
@@ -181,7 +182,7 @@ namespace Microsoft.OData.Evaluation
 
                 if (odataPath == null || odataPath.Count == 0)
                 {
-                    throw new ODataException(Strings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
+                    throw new ODataException(SRResources.ODataMetadataBuilder_MissingParentIdOrContextUrl);
                 }
 
                 uri = this.GetContainingEntitySetUri(uri, odataPath);

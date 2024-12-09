@@ -24,7 +24,7 @@ namespace Microsoft.OData.Client
         {
             if (String.IsNullOrEmpty(entitySetName))
             {
-                throw new InvalidOperationException(Strings.DataBinding_Util_UnknownEntitySetName(entity.GetType().FullName));
+                throw new InvalidOperationException(Error.Format(SRResources.DataBinding_Util_UnknownEntitySetName, entity.GetType().FullName));
             }
         }
 
@@ -72,7 +72,7 @@ namespace Microsoft.OData.Client
 
             if (typedCollection.Observer != null)
             {
-                throw new InvalidOperationException(Strings.DataBinding_CollectionPropertySetterValueHasObserver(sourceProperty, sourceType));
+                throw new InvalidOperationException(Error.Format(SRResources.DataBinding_CollectionPropertySetterValueHasObserver, sourceProperty, sourceType));
             }
         }
     }

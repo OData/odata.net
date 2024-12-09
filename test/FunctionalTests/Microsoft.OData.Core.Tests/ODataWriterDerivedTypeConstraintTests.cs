@@ -7,6 +7,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
@@ -173,7 +174,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writeNormalCustomerAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "navigation source", "Me"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.NormalCustomer", "navigation source", "Me"), exception.Message);
         }
         #endregion
 
@@ -255,7 +256,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writeCustomersAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "navigation source", "Customers"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.NormalCustomer", "navigation source", "Customers"), exception.Message);
         }
         #endregion
 
@@ -321,7 +322,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writeCustomersAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "navigation source", "Customers"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.NormalCustomer", "navigation source", "Customers"), exception.Message);
         }
         #endregion
 
@@ -447,7 +448,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writeNavigationPropertyAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "property", "FriendCustomer"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.NormalCustomer", "property", "FriendCustomer"), exception.Message);
         }
 
         [Fact]
@@ -491,7 +492,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writeNavigationPropertyAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.VipCustomer", "property", "FriendCustomers"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.VipCustomer", "property", "FriendCustomers"), exception.Message);
         }
         #endregion
 
@@ -597,7 +598,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writePropertyAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.CnAddress", "property", "Location"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.CnAddress", "property", "Location"), exception.Message);
         }
 
         [Fact]
@@ -636,7 +637,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writePropertyAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.UsAddress", "property", "Locations"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.UsAddress", "property", "Locations"), exception.Message);
         }
         #endregion
 
@@ -700,7 +701,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => GetWriterOutput(this.edmModel, writeAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("Edm.Double", "property", "Data"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "Edm.Double", "property", "Data"), exception.Message);
         }
         #endregion
 
@@ -790,7 +791,7 @@ namespace Microsoft.OData.Tests
             // Act & Assert
             Action test = () => GetWriterOutput(model, writeAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes("microsoft.graph.contact", "microsoft.graph.directoryObject"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes, "microsoft.graph.contact", "microsoft.graph.directoryObject"), exception.Message);
         }
 
         [Fact]
@@ -819,7 +820,7 @@ namespace Microsoft.OData.Tests
             // Act & Assert
             Action test = () => GetWriterOutput(model, writeAction);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes("microsoft.graph.directoryObject", "microsoft.graph.group"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes, "microsoft.graph.directoryObject", "microsoft.graph.group"), exception.Message);
         }
 
         private static IEdmModel GetGraphModel()

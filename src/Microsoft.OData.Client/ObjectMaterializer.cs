@@ -429,7 +429,7 @@ namespace Microsoft.OData.Client
                 {
                     // expectingSingleValue && !moved : haven't started parsing single value (single value should not have next link anyway)
                     // !expectingSingleValue && !IsEndOfStream : collection type feed did not finish parsing yet
-                    throw new InvalidOperationException(Strings.MaterializeFromObject_TopLevelLinkNotAvailable);
+                    throw new InvalidOperationException(SRResources.MaterializeFromObject_TopLevelLinkNotAvailable);
                 }
 
                 // we have already moved to the end of stream
@@ -451,7 +451,7 @@ namespace Microsoft.OData.Client
                 if (!this.materializer.NextLinkTable.TryGetValue(key, out result))
                 {
                     // someone has asked for a collection that's "out of scope" or doesn't exist
-                    throw new ArgumentException(Strings.MaterializeFromObject_CollectionKeyNotPresentInLinkTable);
+                    throw new ArgumentException(SRResources.MaterializeFromObject_CollectionKeyNotPresentInLinkTable);
                 }
             }
 
@@ -463,7 +463,7 @@ namespace Microsoft.OData.Client
         {
             if (this.calledGetEnumerator)
             {
-                throw Error.NotSupported(Strings.Deserialize_GetEnumerator);
+                throw Error.NotSupported(SRResources.Deserialize_GetEnumerator);
             }
 
             this.calledGetEnumerator = true;
@@ -495,7 +495,7 @@ namespace Microsoft.OData.Client
                     case XmlNodeType.SignificantWhitespace:
                         if (result != null)
                         {
-                            throw Error.InvalidOperation(Strings.Deserialize_MixedTextWithComment);
+                            throw Error.InvalidOperation(SRResources.Deserialize_MixedTextWithComment);
                         }
 
                         result = reader.Value;
@@ -509,13 +509,13 @@ namespace Microsoft.OData.Client
                         goto default;
 
                     default:
-                        throw Error.InvalidOperation(Strings.Deserialize_ExpectingSimpleValue);
+                        throw Error.InvalidOperation(SRResources.Deserialize_ExpectingSimpleValue);
                     #endregion
                 }
             }
 
             // xml ended before EndElement?
-            throw Error.InvalidOperation(Strings.Deserialize_ExpectingSimpleValue);
+            throw Error.InvalidOperation(SRResources.Deserialize_ExpectingSimpleValue);
         }
 
         /// <summary>
@@ -573,7 +573,7 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    throw new InvalidOperationException(Strings.MaterializeFromObject_GetNestLinkForFlatCollection);
+                    throw new InvalidOperationException(SRResources.MaterializeFromObject_GetNestLinkForFlatCollection);
                 }
             }
 

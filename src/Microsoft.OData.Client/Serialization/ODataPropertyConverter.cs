@@ -155,12 +155,12 @@ namespace Microsoft.OData.Client
             {
                 if (propertyName != null)
                 {
-                    throw Error.InvalidOperation(Strings.Serializer_LoopsNotAllowedInComplexTypes(propertyName));
+                    throw Error.InvalidOperation(Error.Format(SRResources.Serializer_LoopsNotAllowedInComplexTypes, propertyName));
                 }
                 else
                 {
                     Debug.Assert(complexTypeAnnotation.ElementTypeName != null, "complexTypeAnnotation.ElementTypeName != null");
-                    throw Error.InvalidOperation(Strings.Serializer_LoopsNotAllowedInNonPropertyComplexTypes(complexTypeAnnotation.ElementTypeName));
+                    throw Error.InvalidOperation(Error.Format(SRResources.Serializer_LoopsNotAllowedInNonPropertyComplexTypes, complexTypeAnnotation.ElementTypeName));
                 }
             }
 
@@ -592,7 +592,7 @@ namespace Microsoft.OData.Client
                 // don't support reverse mappings for these types in this version
                 // allows us to add real server support in the future without a
                 // "breaking change" in the future client
-                throw new NotSupportedException(Strings.ALinq_CantCastToUnsupportedPrimitive(propertyType.Name));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_CantCastToUnsupportedPrimitive, propertyType.Name));
             }
 
             return propertyValue;

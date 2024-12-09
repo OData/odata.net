@@ -438,7 +438,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 model,
                 function,
                 EdmErrorCode.OperationCannotHaveEntitySetPathWithUnBoundOperation,
-                Strings.EdmModel_Validator_Semantic_OperationCannotHaveEntitySetPathWithUnBoundOperation(function.Name));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationCannotHaveEntitySetPathWithUnBoundOperation, function.Name));
         }
 
         [Fact]
@@ -453,7 +453,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 model,
                 function,
                 EdmErrorCode.InvalidPathFirstPathParameterNotMatchingFirstParameterName,
-                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathWithFirstPathParameterNotMatchingFirstParameterName("EntitySetPath", "incorrectBindingParameterName/path2", "incorrectBindingParameterName", "bindingParameter"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathWithFirstPathParameterNotMatchingFirstParameterName, "EntitySetPath", "incorrectBindingParameterName/path2", "incorrectBindingParameterName", "bindingParameter"));
         }
 
         [Fact]
@@ -467,7 +467,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 model,
                 function,
                 EdmErrorCode.OperationWithInvalidEntitySetPathMissingCompletePath,
-                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathMissingBindingParameterName("EntitySetPath"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathMissingBindingParameterName, "EntitySetPath"));
         }
 
         [Fact]
@@ -485,7 +485,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 model,
                 function,
                 EdmErrorCode.InvalidPathWithNonEntityBindingParameter,
-                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathWithNonEntityBindingParameter("EntitySetPath", "complexParam/People", "complexParam"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathWithNonEntityBindingParameter, "EntitySetPath", "complexParam/People", "complexParam"));
         }
 
         [Fact]
@@ -502,7 +502,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 model,
                 function,
                 EdmErrorCode.InvalidPathWithNonEntityBindingParameter,
-                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathWithNonEntityBindingParameter("EntitySetPath", "collectionComplexParam/People", "collectionComplexParam"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathWithNonEntityBindingParameter, "EntitySetPath", "collectionComplexParam/People", "collectionComplexParam"));
         }
 
         [Fact]
@@ -519,7 +519,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 model,
                 function,
                 EdmErrorCode.InvalidPathUnknownNavigationProperty,
-                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownNavigationProperty("EntitySetPath", "bindingEntity/People", "People"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownNavigationProperty, "EntitySetPath", "bindingEntity/People", "People"));
         }
 
         [Fact]
@@ -536,7 +536,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 model,
                 function,
                 EdmErrorCode.InvalidPathUnknownTypeCastSegment,
-                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment("EntitySetPath", "bindingEntity/unknown.EntityType", "unknown.EntityType"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment, "EntitySetPath", "bindingEntity/unknown.EntityType", "unknown.EntityType"));
         }
 
         [Fact]
@@ -556,7 +556,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 model,
                 function,
                 EdmErrorCode.InvalidPathTypeCastSegmentMustBeEntityType,
-                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathTypeCastSegmentMustBeEntityType("EntitySetPath", "bindingEntity/ds.s.complexType", "ds.s.complexType"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathTypeCastSegmentMustBeEntityType, "EntitySetPath", "bindingEntity/ds.s.complexType", "ds.s.complexType"));
         }
 
         [Fact]
@@ -576,7 +576,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 model,
                 function,
                 EdmErrorCode.InvalidPathInvalidTypeCastSegment,
-                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathInvalidTypeCastSegment("EntitySetPath", "bindingEntity/ds.s.otherEntityType", entityType.FullName(), otherEntityType.FullName()));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathInvalidTypeCastSegment, "EntitySetPath", "bindingEntity/ds.s.otherEntityType", entityType.FullName(), otherEntityType.FullName()));
         }
 
         [Fact]
@@ -658,7 +658,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 testModelContainer.Model,
                 function,
                 EdmErrorCode.InvalidPathUnknownNavigationProperty,
-                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownNavigationProperty("EntitySetPath", "bindingEntity/Bunk.T1/UnknownNav", "UnknownNav"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownNavigationProperty, "EntitySetPath", "bindingEntity/Bunk.T1/UnknownNav", "UnknownNav"));
         }
 
         [Fact]
@@ -673,7 +673,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 testModelContainer.Model,
                 function,
                 EdmErrorCode.InvalidPathUnknownTypeCastSegment,
-                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment("EntitySetPath", "bindingEntity/Nav1/Bunk.T1Foo", "Bunk.T1Foo"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathUnknownTypeCastSegment, "EntitySetPath", "bindingEntity/Nav1/Bunk.T1Foo", "Bunk.T1Foo"));
         }
 
         internal class OperationOperationEntitySetPathMustBeValidValidTestModel

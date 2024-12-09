@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -211,7 +212,7 @@ namespace Microsoft.OData
         {
             if (this.contentStreamCreatorFunc == null)
             {
-                throw new ODataException(Strings.ODataBatchOperationMessage_VerifyNotCompleted);
+                throw new ODataException(SRResources.ODataBatchOperationMessage_VerifyNotCompleted);
             }
         }
     }

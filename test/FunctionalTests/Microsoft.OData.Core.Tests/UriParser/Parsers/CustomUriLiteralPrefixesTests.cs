@@ -8,6 +8,7 @@ using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -60,7 +61,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action addCustomUriLiteralPrefix = () =>
                 CustomUriLiteralPrefixes.AddCustomLiteralPrefix(literalPrefix, EdmCoreModel.Instance.GetBoolean(false));
 
-            addCustomUriLiteralPrefix.Throws<ArgumentException>(Strings.UriParserHelper_InvalidPrefixLiteral(literalPrefix));
+            addCustomUriLiteralPrefix.Throws<ArgumentException>(Error.Format(SRResources.UriParserHelper_InvalidPrefixLiteral, literalPrefix));
         }
 
         [Theory]
@@ -93,7 +94,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Action addCustomUriLiteralPrefix = () =>
                     CustomUriLiteralPrefixes.AddCustomLiteralPrefix(LITERAL_PREFIX, booleanTypeReference);
 
-                addCustomUriLiteralPrefix.Throws<ODataException>(Strings.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists(LITERAL_PREFIX));
+                addCustomUriLiteralPrefix.Throws<ODataException>(Error.Format(SRResources.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists, LITERAL_PREFIX));
             }
             finally
             {
@@ -117,7 +118,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 Action addCustomUriLiteralPrefix = () =>
                     CustomUriLiteralPrefixes.AddCustomLiteralPrefix(LITERAL_PREFIX, intTypeReference);
 
-                addCustomUriLiteralPrefix.Throws<ODataException>(Strings.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists(LITERAL_PREFIX));
+                addCustomUriLiteralPrefix.Throws<ODataException>(Error.Format(SRResources.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists, LITERAL_PREFIX));
             }
             finally
             {
@@ -224,7 +225,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Action addCustomUriLiteralPrefix = () =>
                 CustomUriLiteralPrefixes.RemoveCustomLiteralPrefix(literalPrefix);
 
-            addCustomUriLiteralPrefix.Throws<ArgumentException>(Strings.UriParserHelper_InvalidPrefixLiteral(literalPrefix));
+            addCustomUriLiteralPrefix.Throws<ArgumentException>(Error.Format(SRResources.UriParserHelper_InvalidPrefixLiteral, literalPrefix));
         }
 
         [Theory]
@@ -321,7 +322,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             }
             catch (ODataException e)
             {
-                if (!String.Equals(e.Message, Strings.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists(
+                if (!String.Equals(e.Message, Error.Format(SRResources.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists,
                     CustomUriLiteralParserUnitTests.BOOLEAN_LITERAL_PREFIX), StringComparison.Ordinal))
                 {
                     // unexpected exception, re-throw.

@@ -214,7 +214,7 @@ namespace Microsoft.OData.Client
                 else
                 {
                     // unsupported primitive type
-                    throw new NotSupportedException(Strings.ALinq_CantCastToUnsupportedPrimitive(type.Name));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_CantCastToUnsupportedPrimitive, type.Name));
                 }
             }
             else
@@ -235,12 +235,12 @@ namespace Microsoft.OData.Client
 
             if (context.MaxProtocolVersionAsVersion < Util.ODataVersion4)
             {
-                throw new NotSupportedException(Strings.ALinq_TypeAsNotSupportedForMaxDataServiceVersionLessThan3);
+                throw new NotSupportedException(SRResources.ALinq_TypeAsNotSupportedForMaxDataServiceVersionLessThan3);
             }
 
             if (!ClientTypeUtil.TypeOrElementTypeIsEntity(type))
             {
-                throw new NotSupportedException(Strings.ALinq_TypeAsArgumentNotEntityType(type.FullName));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_TypeAsArgumentNotEntityType, type.FullName));
             }
 
             // Raise the uriVersion each time we write the type segment on the uri.

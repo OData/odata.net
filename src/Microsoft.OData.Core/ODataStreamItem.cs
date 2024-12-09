@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using Edm;
+    using Microsoft.OData.Core;
     #endregion
 
     /// <summary>
@@ -59,7 +60,7 @@ namespace Microsoft.OData
                     typeKind != EdmPrimitiveTypeKind.Binary &&
                     typeKind != EdmPrimitiveTypeKind.None)
                 {
-                    throw new ODataException(Strings.StreamItemInvalidPrimitiveKind(value));
+                    throw new ODataException(Error.Format(SRResources.StreamItemInvalidPrimitiveKind, value));
                 }
 
                 this.typeKind = value;

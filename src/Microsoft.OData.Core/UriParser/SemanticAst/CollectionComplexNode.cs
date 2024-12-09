@@ -6,7 +6,7 @@
 
 using System;
 using Microsoft.OData.Edm;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -66,7 +66,7 @@ namespace Microsoft.OData.UriParser
 
             if (property.PropertyKind != EdmPropertyKind.Structural)
             {
-                throw new ArgumentException(ODataErrorStrings.Nodes_PropertyAccessShouldBeNonEntityProperty(property.Name));
+                throw new ArgumentException(Error.Format(SRResources.Nodes_PropertyAccessShouldBeNonEntityProperty, property.Name));
             }
 
             this.property = property;

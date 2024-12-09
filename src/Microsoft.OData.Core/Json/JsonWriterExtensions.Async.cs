@@ -14,7 +14,7 @@ namespace Microsoft.OData.Json
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     internal static partial class JsonWriterExtensions
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Json
             }
 
             return TaskUtils.GetFaultedTask(
-                new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(value.GetType().FullName)));
+                new ODataException(Error.Format(SRResources.ODataJsonWriter_UnsupportedValueType, value.GetType().FullName)));
         }
 
         /// <summary>
@@ -218,7 +218,7 @@ namespace Microsoft.OData.Json
                         }
                         else
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueInCollection);
+                            throw new ODataException(SRResources.ODataJsonWriter_UnsupportedValueInCollection);
                         }
                     }
 
@@ -227,7 +227,7 @@ namespace Microsoft.OData.Json
             }
 
             return TaskUtils.GetFaultedTask(
-                new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(odataValue.GetType().FullName)));
+                new ODataException(Error.Format(SRResources.ODataJsonWriter_UnsupportedValueType, odataValue.GetType().FullName)));
         }
 
         /// <summary>

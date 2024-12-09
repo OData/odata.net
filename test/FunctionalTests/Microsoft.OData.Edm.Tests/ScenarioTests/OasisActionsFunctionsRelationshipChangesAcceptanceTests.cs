@@ -355,7 +355,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             var errorsList = errors.ToList();
             var error = Assert.Single(errorsList);
             Assert.Equal(EdmErrorCode.InvalidEntitySetPath, error.ErrorCode);
-            Assert.Equal(Strings.CsdlParser_InvalidEntitySetPathWithUnboundAction(CsdlConstants.Element_Action, "Add"), error.ErrorMessage);
+            Assert.Equal(Error.Format(SRResources.CsdlParser_InvalidEntitySetPathWithUnboundAction, CsdlConstants.Element_Action, "Add"), error.ErrorMessage);
         }
 
         [Fact]
@@ -395,7 +395,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
 
             Action test = () => CsdlReader.Parse(XElement.Parse(errorDocument).CreateReader());
             var exception = Assert.Throws<EdmParseException>(test);
-            Assert.Contains(Strings.XmlParser_MissingAttribute("Action", "ActionImport"), exception.Message);
+            Assert.Contains(Error.Format(SRResources.XmlParser_MissingAttribute, "Action", "ActionImport"), exception.Message);
         }
 
         [Fact]

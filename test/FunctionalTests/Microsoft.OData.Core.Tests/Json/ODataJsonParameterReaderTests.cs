@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.Test.OData.Utils.ODataLibTest;
@@ -78,7 +79,7 @@ namespace Microsoft.OData.Tests.Json
             const string payload = "{ }";
 
             Action test = () => this.RunParameterReaderTest(payload);
-            test.Throws<ODataException>(Strings.ODataParameterReaderCore_ParametersMissingInPayload("ActionImport", "days"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataParameterReaderCore_ParametersMissingInPayload, "ActionImport", "days"));
         }
 
         [Fact]
@@ -724,7 +725,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonParameterReader) => DoReadAsync(jsonParameterReader)));
 
             Assert.Equal(
-                Strings.ODataParameterReaderCore_ParametersMissingInPayload("ActionImport", "rating"),
+                Error.Format(SRResources.ODataParameterReaderCore_ParametersMissingInPayload, "ActionImport", "rating"),
                 exception.Message);
         }
 

@@ -49,7 +49,7 @@ namespace Microsoft.OData.Client
                 Util.CheckArgumentNull(value, "value");
                 if (!(value is System.Net.HttpWebRequest))
                 {
-                    throw Error.Argument(Strings.Context_SendingRequestEventArgsNotHttp, "value");
+                    throw Error.Argument(SRResources.Context_SendingRequestEventArgsNotHttp, "value");
                 }
 
                 this.request = value;

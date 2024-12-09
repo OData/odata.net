@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System.Diagnostics;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -55,13 +56,13 @@ namespace Microsoft.OData
 
             if (structuredType == null || thisStructuredType == null)
             {
-                throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(itemType.FullTypeName(), this.itemType.FullTypeName()));
+                throw new ODataException(Error.Format(SRResources.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes, itemType.FullTypeName(), this.itemType.FullTypeName()));
             }
 
             // Make sure the resource types is same or derived type of expected type
             if (!this.itemType.IsAssignableFrom(itemType))
             {
-                throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(itemType.FullTypeName(), this.itemType.FullTypeName()));
+                throw new ODataException(Error.Format(SRResources.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes, itemType.FullTypeName(), this.itemType.FullTypeName()));
             }
         }
     }

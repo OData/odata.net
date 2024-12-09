@@ -156,7 +156,7 @@ namespace Microsoft.OData.Client
         {
             if (value != null && value.Length == 0)
             {
-                throw Error.Argument(Strings.Util_EmptyString, parameterName);
+                throw Error.Argument(SRResources.Util_EmptyString, parameterName);
             }
         }
 
@@ -174,14 +174,14 @@ namespace Microsoft.OData.Client
             CheckArgumentNull(value, parameterName);
             if (value.Length == 0)
             {
-                throw Error.Argument(Strings.Util_EmptyArray, parameterName);
+                throw Error.Argument(SRResources.Util_EmptyArray, parameterName);
             }
 
             for (int i = 0; i < value.Length; ++i)
             {
                 if (Object.ReferenceEquals(value[i], null))
                 {
-                    throw Error.Argument(Strings.Util_NullArrayElement, parameterName);
+                    throw Error.Argument(SRResources.Util_NullArrayElement, parameterName);
                 }
             }
         }

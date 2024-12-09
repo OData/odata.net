@@ -10,6 +10,7 @@ namespace Microsoft.OData
 
     using System.Diagnostics;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
@@ -175,11 +176,11 @@ namespace Microsoft.OData
                 case ODataParameterReaderState.Exception:    // fall through
                 case ODataParameterReaderState.Completed:
                     Debug.Assert(false, "This case should have been caught earlier.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterReaderCoreAsync_ReadAsynchronously));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataParameterReaderCoreAsync_ReadAsynchronously));
 
                 default:
                     Debug.Assert(false, "Unsupported parameter reader state " + this.State + " detected.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterReaderCoreAsync_ReadAsynchronously));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataParameterReaderCoreAsync_ReadAsynchronously));
             }
         }
     }

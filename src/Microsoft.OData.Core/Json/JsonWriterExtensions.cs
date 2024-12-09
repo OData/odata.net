@@ -13,7 +13,7 @@ namespace Microsoft.OData.Json
     using System.Diagnostics;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Json
                 return;
             }
 
-            throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(value.GetType().FullName));
+            throw new ODataException(Error.Format(SRResources.ODataJsonWriter_UnsupportedValueType, value.GetType().FullName));
         }
 
         /// <summary>
@@ -221,7 +221,7 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueInCollection);
+                        throw new ODataException(SRResources.ODataJsonWriter_UnsupportedValueInCollection);
                     }
                 }
 
@@ -231,7 +231,7 @@ namespace Microsoft.OData.Json
             }
 
             throw new ODataException(
-                ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(odataValue.GetType().FullName));
+                Error.Format(SRResources.ODataJsonWriter_UnsupportedValueType, odataValue.GetType().FullName));
         }
 
         /// <summary>

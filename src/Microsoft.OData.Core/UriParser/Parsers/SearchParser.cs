@@ -9,7 +9,7 @@ namespace Microsoft.OData.UriParser
     #region Namespaces
     using System;
     using System.Diagnostics;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -167,7 +167,7 @@ namespace Microsoft.OData.UriParser
                     this.lexer.NextToken();
                     break;
                 default:
-                    throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_ExpressionExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                    throw new ODataException(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.RecurseLeave();
@@ -182,14 +182,14 @@ namespace Microsoft.OData.UriParser
         {
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
             QueryToken result = this.ParseExpression();
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrOperatorExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -218,7 +218,7 @@ namespace Microsoft.OData.UriParser
             this.recursionDepth++;
             if (this.recursionDepth > this.maxDepth)
             {
-                throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+                throw new ODataException(SRResources.UriQueryExpressionParser_TooDeep);
             }
         }
 

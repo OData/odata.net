@@ -303,7 +303,7 @@ namespace Microsoft.Spatial.Tests
 
             Exception ex = SpatialTestUtils.RunCatching<ParseErrorException>(() => readGeography(wktValue));
             Assert.NotNull(ex);
-            Assert.Equal(Strings.WellKnownText_TooManyDimensions, ex.Message);
+            Assert.Equal(SRResources.WellKnownText_TooManyDimensions, ex.Message);
         }
 
         [Fact]
@@ -315,11 +315,11 @@ namespace Microsoft.Spatial.Tests
 
             Exception ex = SpatialTestUtils.RunCatching<ParseErrorException>(() => readGeography("SRID=1234;FOO(10 20)"));
             Assert.NotNull(ex);
-            Assert.Equal(Strings.WellKnownText_UnknownTaggedText("FOO"), ex.Message);
+            Assert.Equal(Error.Format(SRResources.WellKnownText_UnknownTaggedText, "FOO"), ex.Message);
 
             ex = SpatialTestUtils.RunCatching<ParseErrorException>(() => readGeography("FOO"));
             Assert.NotNull(ex);
-            Assert.Equal(Strings.WellKnownText_UnknownTaggedText("FOO"), ex.Message);
+            Assert.Equal(Error.Format(SRResources.WellKnownText_UnknownTaggedText, "FOO"), ex.Message);
         }
 
         [Fact]
@@ -331,7 +331,7 @@ namespace Microsoft.Spatial.Tests
 
             Exception ex = SpatialTestUtils.RunCatching<ParseErrorException>(() => readGeography("POINT:10 20"));
             Assert.NotNull(ex);
-            Assert.Equal(Strings.WellKnownText_UnexpectedCharacter(":"), ex.Message);
+            Assert.Equal(Error.Format(SRResources.WellKnownText_UnexpectedCharacter, ":"), ex.Message);
         }
 
         [Fact]
@@ -343,7 +343,7 @@ namespace Microsoft.Spatial.Tests
 
             Exception ex = SpatialTestUtils.RunCatching<ParseErrorException>(() => readGeography(""));
             Assert.NotNull(ex);
-            Assert.Equal(Strings.WellKnownText_UnknownTaggedText(""), ex.Message);
+            Assert.Equal(Error.Format(SRResources.WellKnownText_UnknownTaggedText, ""), ex.Message);
         }
 
         [Fact]
@@ -355,7 +355,7 @@ namespace Microsoft.Spatial.Tests
 
             Exception ex = SpatialTestUtils.RunCatching<ParseErrorException>(() => readGeography("POINT(10,20)"));
             Assert.NotNull(ex);
-            Assert.Equal(Strings.WellKnownText_UnexpectedToken("Number", "", "Type:[7] Text:[,]"), ex.Message);
+            Assert.Equal(Error.Format(SRResources.WellKnownText_UnexpectedToken, "Number", "", "Type:[7] Text:[,]"), ex.Message);
         }
 
         [Fact]

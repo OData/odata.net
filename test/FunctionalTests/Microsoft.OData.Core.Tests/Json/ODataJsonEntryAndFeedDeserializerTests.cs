@@ -12,7 +12,7 @@ using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Tests.Json
             propertyAndAnnotationCollector.AddODataPropertyAnnotation("custom.DateTimeOffsetAnnotation", "odata.type", "Edm.String");
 
             Action testSubject = () => deserializer.ReadCustomInstanceAnnotationValue(propertyAndAnnotationCollector, "custom.DateTimeOffsetAnnotation");
-            testSubject.Throws<ODataException>(ErrorStrings.ValidationUtils_IncompatibleType("Edm.String", "Edm.DateTimeOffset"));
+            testSubject.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_IncompatibleType, "Edm.String", "Edm.DateTimeOffset"));
         }
 
         //[Fact(Skip="Complex instance annotation is not supported")]
@@ -290,7 +290,7 @@ namespace Microsoft.OData.Tests.Json
             AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
             ODataResourceSet feed = new ODataResourceSet();
             Action test = () => deserializer.ReadAndApplyResourceSetInstanceAnnotationValue("odata.count", feed, null /*propertyAndAnnotationCollector*/);
-            test.Throws<ODataException>(ErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter("Edm.Int64"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter, "Edm.Int64"));
         }
 
         [Fact]
@@ -341,7 +341,7 @@ namespace Microsoft.OData.Tests.Json
             var deserializer = this.CreateJsonEntryAndFeedDeserializer("{\"@odata.count\":\"123\"}");
             AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
             Action action = () => deserializer.ReadEntryInstanceAnnotation("odata.count", false /*anyPropertyFound*/, true /*typeAnnotationFound*/, null /*propertyAndAnnotationCollector*/);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.count"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, "odata.count"));
         }
 
         [Fact]
@@ -364,7 +364,7 @@ namespace Microsoft.OData.Tests.Json
             var deserializer = this.CreateJsonEntryAndFeedDeserializer("{\"@odata.count\":\"123\"}");
             AdvanceReaderToFirstPropertyValue(deserializer.JsonReader);
             Action action = () => deserializer.ApplyEntryInstanceAnnotation(new TestJsonReaderEntryState(), "odata.count", 123);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.count"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, "odata.count"));
         }
 
         [Fact]

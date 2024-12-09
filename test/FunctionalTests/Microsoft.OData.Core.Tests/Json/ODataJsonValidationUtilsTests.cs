@@ -5,9 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Core;
 using Microsoft.OData.Json;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -25,7 +25,7 @@ namespace Microsoft.OData.Tests.Json
         public void ValidateMetadataReferencePropertyNameShouldThrowWhenNameIsOpenMetadataReferenceProperty()
         {
             Action action = () => ODataJsonValidationUtils.ValidateMetadataReferencePropertyName(metadataDocumentUri, "http://www.example.com/$metadata#foo");
-            action.Throws<ODataException>(ErrorStrings.ODataJsonValidationUtils_OpenMetadataReferencePropertyNotSupported("http://www.example.com/$metadata#foo", metadataDocumentUri.AbsoluteUri));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonValidationUtils_OpenMetadataReferencePropertyNotSupported, "http://www.example.com/$metadata#foo", metadataDocumentUri.AbsoluteUri));
         }
         
         [Fact]
@@ -38,28 +38,28 @@ namespace Microsoft.OData.Tests.Json
         public void ValidateMetadataReferencePropertyNameShouldThrowWhenNameIsWithoutHash()
         {
             Action action = () => ODataJsonValidationUtils.ValidateMetadataReferencePropertyName(metadataDocumentUri, "bar");
-            action.Throws<ODataException>(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("bar"));
+            action.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_InvalidMetadataReferenceProperty, "bar"));
         }
 
         [Fact]
         public void ValidateMetadataReferencePropertyNameShouldThrowWhenNameIsAbsoluteUriWithoutHash()
         {
             Action action = () => ODataJsonValidationUtils.ValidateMetadataReferencePropertyName(metadataDocumentUri, "http://www.example.com/foo");
-            action.Throws<ODataException>(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("http://www.example.com/foo"));
+            action.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_InvalidMetadataReferenceProperty, "http://www.example.com/foo"));
         }
 
         [Fact]
         public void ValidateMetadataReferencePropertyNameShouldThrowWhenNameIsIdentifierHashIdentifier()
         {
             Action action = () => ODataJsonValidationUtils.ValidateMetadataReferencePropertyName(metadataDocumentUri, "foo#baz");
-            action.Throws<ODataException>(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("foo#baz"));
+            action.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_InvalidMetadataReferenceProperty, "foo#baz"));
         }
 
         [Fact]
         public void ValidateMetadataReferencePropertyNameShouldThrowWhenNameIsJustHash()
         {
             Action action = () => ODataJsonValidationUtils.ValidateMetadataReferencePropertyName(metadataDocumentUri, "#");
-            action.Throws<ODataException>(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("#"));
+            action.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_InvalidMetadataReferenceProperty, "#"));
         }
 
         [Fact]
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Tests.Json
         {
             ODataOperation operation = new ODataAction();
             Action action = () => ODataJsonValidationUtils.ValidateOperation(metadataDocumentUri, operation);
-            action.Throws<ODataException>(ErrorStrings.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata(operation.GetType().Name));
+            action.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata, operation.GetType().Name));
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace Microsoft.OData.Tests.Json
         {
             ODataOperation operation = new ODataAction {Metadata = new Uri("foobaz", UriKind.Relative)};
             Action action = () => ODataJsonValidationUtils.ValidateOperation(metadataDocumentUri, operation);
-            action.Throws<ODataException>(ErrorStrings.ValidationUtils_InvalidMetadataReferenceProperty("foobaz"));
+            action.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_InvalidMetadataReferenceProperty, "foobaz"));
         }
 
         [Fact]
@@ -115,7 +115,7 @@ namespace Microsoft.OData.Tests.Json
         {
             ODataOperation operation = new ODataAction {Metadata = new Uri("http://www.example.com/foo#baz")};
             Action action = () => ODataJsonValidationUtils.ValidateOperation(metadataDocumentUri, operation);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonValidationUtils_OpenMetadataReferencePropertyNotSupported("http://www.example.com/foo#baz", metadataDocumentUri.AbsoluteUri));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonValidationUtils_OpenMetadataReferencePropertyNotSupported, "http://www.example.com/foo#baz", metadataDocumentUri.AbsoluteUri));
         }
 
         [Fact]
@@ -123,7 +123,7 @@ namespace Microsoft.OData.Tests.Json
         {
             ODataOperation operation = new ODataAction {Metadata = new Uri("http://www.example.com/foo#baz"), Target = new Uri("http://www.example.com")};
             Action action = () => ODataJsonValidationUtils.ValidateOperation(metadataDocumentUri, operation);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonValidationUtils_OpenMetadataReferencePropertyNotSupported("http://www.example.com/foo#baz", metadataDocumentUri.AbsoluteUri));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonValidationUtils_OpenMetadataReferencePropertyNotSupported, "http://www.example.com/foo#baz", metadataDocumentUri.AbsoluteUri));
         }
 
         [Fact]
@@ -137,7 +137,7 @@ namespace Microsoft.OData.Tests.Json
         public void ValidateOperationPropertyShouldThrowWhenPropertyValueIsNull()
         {
             Action action = () => ODataJsonValidationUtils.ValidateOperationPropertyValueIsNotNull(null, "target", "#action1");
-            action.Throws<ODataException>(ErrorStrings.ODataJsonValidationUtils_OperationPropertyCannotBeNull("target", "#action1"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonValidationUtils_OperationPropertyCannotBeNull, "target", "#action1"));
         }
 
         [Fact]

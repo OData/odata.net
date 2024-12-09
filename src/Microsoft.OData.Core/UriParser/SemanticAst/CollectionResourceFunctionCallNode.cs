@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Node to represent a function call that returns a collection of entities.
@@ -81,7 +81,7 @@ namespace Microsoft.OData.UriParser
             if (this.structuredTypeReference == null)
             {
                 // TODO: Update error message #644
-                throw new ArgumentException(ODataErrorStrings.Nodes_EntityCollectionFunctionCallNode_ItemTypeMustBeAnEntity);
+                throw new ArgumentException(SRResources.Nodes_EntityCollectionFunctionCallNode_ItemTypeMustBeAnEntity);
             }
 
             this.source = source;

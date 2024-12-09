@@ -11,6 +11,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
@@ -253,7 +254,7 @@ namespace Microsoft.OData
             // introduce another top-level element in XML)
             if (this.State == CollectionWriterState.Completed)
             {
-                throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), CollectionWriterState.Error.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromCompleted, this.State.ToString(), CollectionWriterState.Error.ToString()));
             }
 
             this.StartPayloadInStartState();
@@ -269,7 +270,7 @@ namespace Microsoft.OData
             // We can't write error after the payload was finished as it might introduce another top-level element in XML
             if (this.State == CollectionWriterState.Completed)
             {
-                throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), CollectionWriterState.Error.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromCompleted, this.State.ToString(), CollectionWriterState.Error.ToString()));
             }
 
             await this.StartPayloadInStartStateAsync()
@@ -461,9 +462,9 @@ namespace Microsoft.OData
                         case CollectionWriterState.Start:                 // fall through
                         case CollectionWriterState.Completed:             // fall through
                         case CollectionWriterState.Error:                 // fall through
-                            throw new ODataException(Strings.ODataCollectionWriterCore_WriteEndCalledInInvalidState(currentScope.State.ToString()));
+                            throw new ODataException(Error.Format(SRResources.ODataCollectionWriterCore_WriteEndCalledInInvalidState, currentScope.State.ToString()));
                         default:
-                            throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionWriterCore_WriteEnd_UnreachableCodePath));
+                            throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataCollectionWriterCore_WriteEnd_UnreachableCodePath));
                     }
 
                     thisParam.LeaveScope();
@@ -490,14 +491,14 @@ namespace Microsoft.OData
             {
                 if (!this.outputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataCollectionWriterCore_SyncCallOnAsyncWriter);
+                    throw new ODataException(SRResources.ODataCollectionWriterCore_SyncCallOnAsyncWriter);
                 }
             }
             else
             {
                 if (this.outputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataCollectionWriterCore_AsyncCallOnSyncWriter);
+                    throw new ODataException(SRResources.ODataCollectionWriterCore_AsyncCallOnSyncWriter);
                 }
             }
         }
@@ -651,37 +652,37 @@ namespace Microsoft.OData
                 case CollectionWriterState.Start:
                     if (newState != CollectionWriterState.Collection && newState != CollectionWriterState.Completed)
                     {
-                        throw new ODataException(Strings.ODataCollectionWriterCore_InvalidTransitionFromStart(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Error.Format(SRResources.ODataCollectionWriterCore_InvalidTransitionFromStart, this.State.ToString(), newState.ToString()));
                     }
 
                     break;
                 case CollectionWriterState.Collection:
                     if (newState != CollectionWriterState.Item && newState != CollectionWriterState.Completed)
                     {
-                        throw new ODataException(Strings.ODataCollectionWriterCore_InvalidTransitionFromCollection(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Error.Format(SRResources.ODataCollectionWriterCore_InvalidTransitionFromCollection, this.State.ToString(), newState.ToString()));
                     }
 
                     break;
                 case CollectionWriterState.Item:
                     if (newState != CollectionWriterState.Completed)
                     {
-                        throw new ODataException(Strings.ODataCollectionWriterCore_InvalidTransitionFromItem(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Error.Format(SRResources.ODataCollectionWriterCore_InvalidTransitionFromItem, this.State.ToString(), newState.ToString()));
                     }
 
                     break;
                 case CollectionWriterState.Completed:
                     // we should never see a state transition when in state 'Completed'
-                    throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), newState.ToString()));
+                    throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromCompleted, this.State.ToString(), newState.ToString()));
                 case CollectionWriterState.Error:
                     if (newState != CollectionWriterState.Error)
                     {
                         // No more state transitions once we are in error state
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromError(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromError, this.State.ToString(), newState.ToString()));
                     }
 
                     break;
                 default:
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionWriterCore_ValidateTransition_UnreachableCodePath));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataCollectionWriterCore_ValidateTransition_UnreachableCodePath));
             }
         }
 
@@ -804,9 +805,9 @@ namespace Microsoft.OData
                     case CollectionWriterState.Start:                 // fall through
                     case CollectionWriterState.Completed:             // fall through
                     case CollectionWriterState.Error:                 // fall through
-                        throw new ODataException(Strings.ODataCollectionWriterCore_WriteEndCalledInInvalidState(currentScope.State.ToString()));
+                        throw new ODataException(Error.Format(SRResources.ODataCollectionWriterCore_WriteEndCalledInInvalidState, currentScope.State.ToString()));
                     default:
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionWriterCore_WriteEnd_UnreachableCodePath));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataCollectionWriterCore_WriteEnd_UnreachableCodePath));
                 }
 
                 await thisParam.LeaveScopeAsync().ConfigureAwait(false);

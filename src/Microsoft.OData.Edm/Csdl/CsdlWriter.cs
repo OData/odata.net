@@ -243,7 +243,7 @@ namespace Microsoft.OData.Edm.Csdl
                 {
                     errors = new EdmError[]
                     {
-                        new EdmError(new CsdlLocation(0, 0), EdmErrorCode.UnknownEdmxVersion, Strings.Serializer_UnknownEdmxVersion(edmxVersion.ToString()))
+                        new EdmError(new CsdlLocation(0, 0), EdmErrorCode.UnknownEdmxVersion, Error.Format(SRResources.Serializer_UnknownEdmxVersion, edmxVersion.ToString()))
                     };
 
                     return false;
@@ -256,7 +256,7 @@ namespace Microsoft.OData.Edm.Csdl
                 {
                     errors = new EdmError[]
                     {
-                        new EdmError(new CsdlLocation(0, 0), EdmErrorCode.UnknownEdmVersion, Strings.Serializer_UnknownEdmVersion(edmVersion.ToString()))
+                        new EdmError(new CsdlLocation(0, 0), EdmErrorCode.UnknownEdmVersion, Error.Format(SRResources.Serializer_UnknownEdmVersion, edmVersion.ToString()))
                     };
 
                     return false;
