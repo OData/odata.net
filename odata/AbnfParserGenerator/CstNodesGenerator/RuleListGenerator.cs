@@ -11,16 +11,21 @@ namespace AbnfParserGenerator.CstNodesGenerator
 {
     public sealed class RuleListGenerator
     {
-        public Root.Void Generate(RuleList node, Classes builder)
+        public Classes Generate(RuleList node, Root.Void context)
         {
+            var classes = new Classes();
             foreach (var inner in node.Inners)
             {
-                new InnerGenerator().Visit(inner, builder);
+                var @class = new InnerGenerator().Visit(inner, default);
+                if (@class != null)
+                {
+                    classes.Value.Add(@class);
+                }
             }
 
-            foreach (var @class in builder.Value)
+            foreach (var @class in classes.Value)
             {
-                TraverseClasses(builder, @class);
+                TraverseClasses(classes, @class);
             }
 
             return default;
@@ -57,15 +62,14 @@ namespace AbnfParserGenerator.CstNodesGenerator
             }
         }
 
-        public sealed class InnerGenerator : RuleList.Inner.Visitor<Root.Void, Classes>
+        public sealed class InnerGenerator : RuleList.Inner.Visitor<Class, Root.Void>
         {
-            protected internal override Root.Void Accept(RuleList.Inner.RuleInner node, Classes context)
+            protected internal override Class Accept(RuleList.Inner.RuleInner node, Root.Void context)
             {
-                new RuleGenerator().Generate(node.Rule, context);
-                return default;
+                return new RuleGenerator().Generate(node.Rule, context);
             }
 
-            protected internal override Root.Void Accept(RuleList.Inner.CommentInner node, Classes context)
+            protected internal override Class Accept(RuleList.Inner.CommentInner node, Root.Void context)
             {
                 //// TODO preserve the comments as xmldoc?
                 return default;

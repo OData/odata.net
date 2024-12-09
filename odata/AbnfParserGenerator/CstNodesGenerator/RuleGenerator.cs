@@ -9,7 +9,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
 {
     public sealed class RuleGenerator
     {
-        public Void Generate(Rule node, Classes builder)
+        public Class Generate(Rule node, Root.Void)
         {
             //// TODO do a second attempt at implementing this once you've got this roughly fleshed out
             //// TODO singletons everywhere
