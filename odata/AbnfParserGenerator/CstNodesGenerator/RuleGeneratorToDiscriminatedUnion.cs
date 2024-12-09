@@ -2,6 +2,7 @@
 using AbnfParser.CstNodes.Core;
 using Root;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Mime;
 using System.Text;
 
@@ -14,41 +15,70 @@ namespace AbnfParserGenerator.CstNodesGenerator
             className.Replace("-", "_").Insert(0, "_");
         }
 
-        public Class Generate(Rule node, Root.Void context)
+        public Class2 Generate(Rule node, Root.Void context)
         {
             //// TODO do a second attempt at implementing this once you've got this roughly fleshed out
 
-            var @class = new Class();
-            new RuleNameToString().Convert(node.RuleName, @class.Name);
-            NormalizeClassName(@class.Name);
-            @class.IsAbstract = true;
-            @class.ConstructorDefinitions.Add(new ConstructorDefinition(AccessModifier.Private, new ConstructorParameters()));
-            var dispatchMethod = new MethodDefinition(
-                AccessModifier.Protected,
+            //// TODO this method skips over all of the comments if you care about that
+
+            var ruleNameBuilder = new StringBuilder();
+            new RuleNameToString().Convert(node.RuleName, ruleNameBuilder);
+            NormalizeClassName(ruleNameBuilder);
+            var ruleName = ruleNameBuilder.ToString();
+
+            var discriminatedUnionElements = ElementsToDiscriminatedUnionElements.Instance.Convert(node.Elements, ruleName);
+            return new Class2(
+                AccessModifier.Public,
                 true,
-                "TResult",
+                ruleName,
+                Enumerable.Empty<string>(),
                 new[]
                 {
-                    "TResult",
-                    "TContext",
+                    new ConstructorDefinition(AccessModifier.Private, Enumerable.Empty<MethodParameter>()),
                 },
                 new[]
                 {
-                    new MethodParameter("TODO pick up here")
-                });
-
-
-            //// TODO add dispatch method
-            //// TODO add visitor
-
-            //// TODO skipping over node.DefinedAs means we are potentially skipping comments, if we care about that...
-
-            var duElements = ElementsToDiscriminatedUnionElements.Instance.Convert(node.Elements, @class);
-            @class.NestedClasses.AddRange(duElements);
-
-            //// TODO skipping over `node.cnl` skips comments if you care
-
-            return @class;
+                    new MethodDefinition(
+                        AccessModifier.Protected,
+                        true,
+                        "TResult",
+                        new[]
+                        {
+                            "TResult",
+                            "TContext",
+                        },
+                        "Dispatch",
+                        new[]
+                        {
+                            new MethodParameter("Visitor<TResult, TContext>", "visitor"),
+                            new MethodParameter("TContext", "context"),
+                        }),
+                },
+                discriminatedUnionElements
+                    .Prepend(
+                        new Class2(
+                            AccessModifier.Public,
+                            true,
+                            "Visitor",
+                            new[]
+                            {
+                                "TResult",
+                                "TContext",
+                            },
+                            Enumerable.Empty<ConstructorDefinition>(),
+                            discriminatedUnionElements.Select(discriminatedUnionElement =>
+                                new MethodDefinition(
+                                    AccessModifier.Protected | AccessModifier.Internal, 
+                                    true, 
+                                    "TResult", 
+                                    Enumerable.Empty<string>(),
+                                    "Accept",
+                                    new[] 
+                                    {
+                                        new MethodParameter(discriminatedUnionElement.Name, "node"),
+                                        new MethodParameter("TContext", "context"),
+                                    })),
+                            Enumerable.Empty<Class2>())));
         }
 
         private sealed class ElementsToDiscriminatedUnionElements
@@ -59,9 +89,8 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
             public static ElementsToDiscriminatedUnionElements Instance { get; } = new ElementsToDiscriminatedUnionElements();
 
-            public IEnumerable<Class> Convert(Elements elements, Class baseType)
+            public IEnumerable<Class2> Convert(Elements elements, string baseType)
             {
-                // `baseType` should be treated as immutable
                 return AlternationToDiscriminatedUnionElements.Instance.Convert(elements.Alternation, baseType);
             }
 
@@ -73,10 +102,8 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                 public static AlternationToDiscriminatedUnionElements Instance { get; } = new AlternationToDiscriminatedUnionElements();
 
-                public IEnumerable<Class> Convert(Alternation alternation, Class baseType)
+                public IEnumerable<Class2> Convert(Alternation alternation, string baseType)
                 {
-                    // `baseType` should be treated as immutable
-
                     yield return ConcatenationToDuElement.Instance.Convert(alternation.Concatenation, baseType);
                     foreach (var inner in alternation.Inners)
                     {

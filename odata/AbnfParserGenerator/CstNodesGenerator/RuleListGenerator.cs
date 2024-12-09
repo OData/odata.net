@@ -98,6 +98,43 @@ namespace AbnfParserGenerator.CstNodesGenerator
         public List<ConstructorDefinition> ConstructorDefinitions { get; set; } = new List<ConstructorDefinition>();
 
         public List<Property> Properties { get; set; } = new List<Property>();
+
+        public List<MethodDefinition> Methods { get; ; set; } = new List<MethodDefinition>();
+    }
+
+    public sealed class Class2
+    {
+        public Class2(
+            AccessModifier accessModifier,
+            bool? isAbstract,
+            string name,
+            IEnumerable<string> genericTypeParameters,
+            IEnumerable<ConstructorDefinition> constructors,
+            IEnumerable<MethodDefinition> methods,
+            IEnumerable<Class2> nestedClasses)
+        {
+            AccessModifier = accessModifier;
+            IsAbstract = isAbstract;
+            Name = name;
+            GenericTypeParameters = genericTypeParameters;
+            Constructors = constructors;
+            this.Methods = methods;
+            this.NestedClasses = nestedClasses;
+        }
+
+        public AccessModifier AccessModifier { get; }
+
+        public bool? IsAbstract { get; }
+
+        public string Name { get; }
+
+        public IEnumerable<string> GenericTypeParameters { get; }
+
+        public IEnumerable<ConstructorDefinition> Constructors { get; }
+
+        public IEnumerable<MethodDefinition> Methods { get; }
+
+        public IEnumerable<Class2> NestedClasses { get; }
     }
 
     public sealed class Property
@@ -109,12 +146,13 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
     public sealed class MethodDefinition
     {
-        public MethodDefinition(AccessModifier accessModifier, bool? isAbstract, string returnType, IEnumerable<string> genericTypeParameters, IEnumerable<MethodParameter> parameters)
+        public MethodDefinition(AccessModifier accessModifier, bool? isAbstract, string returnType, IEnumerable<string> genericTypeParameters, string methodName, IEnumerable<MethodParameter> parameters)
         {
             AccessModifier = accessModifier;
             IsAbstract = isAbstract;
             ReturnType = returnType;
             GenericTypeParameters = genericTypeParameters;
+            MethodName = methodName;
             Parameters = parameters;
         }
 
@@ -125,6 +163,8 @@ namespace AbnfParserGenerator.CstNodesGenerator
         public string ReturnType { get; }
 
         public IEnumerable<string> GenericTypeParameters { get; }
+
+        public string MethodName { get; }
 
         public IEnumerable<MethodParameter> Parameters { get; }
     }
@@ -144,22 +184,18 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
     public sealed class ConstructorDefinition
     {
-        public ConstructorDefinition(AccessModifier accessModifier, ConstructorParameters constructorParameters)
+        public ConstructorDefinition(AccessModifier accessModifier, IEnumerable<MethodParameter> parameters)
         {
             this.AccessModifier = accessModifier;
-            this.ConstructorParameters = constructorParameters;
+            this.Parameters = parameters;
         }
 
         public AccessModifier AccessModifier { get; }
 
-        public ConstructorParameters ConstructorParameters { get; }
+        public IEnumerable<MethodParameter> Parameters { get; }
     }
 
-    public sealed class ConstructorParameters
-    {
-        public List<(Class Type, string Name)> Value { get; set; } = new List<(Class Type, string Name)>();
-    }
-
+    [Flags]
     public enum AccessModifier
     {
         Public = 0,
