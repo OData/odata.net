@@ -13,63 +13,27 @@ namespace AbnfParserGenerator.CstNodesGenerator
     {
         public Classes Generate(RuleList node, Root.Void context)
         {
-            var classes = new Classes();
-            foreach (var inner in node.Inners)
-            {
-                var @class = new InnerGenerator().Visit(inner, default);
-                if (@class != null)
-                {
-                    classes.Value.Add(@class);
-                }
-            }
-
-            foreach (var @class in classes.Value)
-            {
-                TraverseClasses(classes, @class);
-            }
-
-            return default;
+            return new Classes(
+                node
+                    .Inners
+                    .Select(inner => InnerToDiscriminatedUnion.Instance.Visit(inner, default))
+                    .OfType<Class>());
         }
 
-        private void TraverseClasses(Classes classes, Class @class)
+        private sealed class InnerToDiscriminatedUnion : RuleList.Inner.Visitor<Class?, Root.Void>
         {
-            SetPropertyTypes(classes, @class);
-
-            foreach (var nestedClass in @class.NestedClasses)
+            private InnerToDiscriminatedUnion()
             {
-                TraverseClasses(classes, nestedClass);
-            }
-        }
-
-        private void SetPropertyTypes(Classes classes, Class @class)
-        {
-            //// TODO the `property.Type` property doesn't really need to be a `class` probably, so you could actually just set this at the time you set `property.name` if you change it to `string`
-            foreach (var property in @class.Properties)
-            {
-                if (property.Type != null)
-                {
-                    continue;
-                }
-
-                try
-                {
-                    property.Type = classes.Value.Single(_ => string.Equals(property.Name.ToString(), _.Name.ToString(), System.StringComparison.OrdinalIgnoreCase)); //// TODO the `tostring` calls here are really bad
-                }
-                catch (InvalidOperationException e)
-                {
-                    throw new Exception("TODO can't find property type", e);
-                }
-            }
-        }
-
-        public sealed class InnerGenerator : RuleList.Inner.Visitor<Class, Root.Void>
-        {
-            protected internal override Class Accept(RuleList.Inner.RuleInner node, Root.Void context)
-            {
-                return new RuleGeneratorToDiscriminatedUnion().Generate(node.Rule, context);
             }
 
-            protected internal override Class Accept(RuleList.Inner.CommentInner node, Root.Void context)
+            public static InnerToDiscriminatedUnion Instance { get; } = new InnerToDiscriminatedUnion();
+
+            protected internal override Class? Accept(RuleList.Inner.RuleInner node, Root.Void context)
+            {
+                return RuleToDiscriminatedUnion.Instance.Generate(node.Rule, context);
+            }
+
+            protected internal override Class? Accept(RuleList.Inner.CommentInner node, Root.Void context)
             {
                 //// TODO preserve the comments as xmldoc?
                 return default;
@@ -79,32 +43,17 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
     public sealed class Classes
     {
-        public List<Class> Value { get; set; } = new List<Class>();
+        public Classes(IEnumerable<Class> value)
+        {
+            this.Value = value;
+        }
+
+        public IEnumerable<Class> Value { get; }
     }
 
     public sealed class Class
     {
-        public StringBuilder Name { get; set; } = new StringBuilder();
-
-        /// <summary>
-        /// TODO true -> abstract, false -> sealed, null -> neither
-        /// </summary>
-        public bool? IsAbstract { get; set; }
-
-        public Class? BaseClass { get; set; }
-
-        public List<Class> NestedClasses { get; set; } = new List<Class>();
-
-        public List<ConstructorDefinition> ConstructorDefinitions { get; set; } = new List<ConstructorDefinition>();
-
-        public List<Property> Properties { get; set; } = new List<Property>();
-
-        public List<MethodDefinition> Methods { get; set; } = new List<MethodDefinition>();
-    }
-
-    public sealed class Class2
-    {
-        public Class2(
+        public Class(
             AccessModifier accessModifier,
             bool? isAbstract,
             string name,
@@ -112,7 +61,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
             string? baseType,
             IEnumerable<ConstructorDefinition> constructors,
             IEnumerable<MethodDefinition> methods,
-            IEnumerable<Class2> nestedClasses,
+            IEnumerable<Class> nestedClasses,
             IEnumerable<PropertyDefinition> properties)
         {
             AccessModifier = accessModifier;
@@ -140,16 +89,9 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
         public IEnumerable<MethodDefinition> Methods { get; }
 
-        public IEnumerable<Class2> NestedClasses { get; }
+        public IEnumerable<Class> NestedClasses { get; }
 
         public IEnumerable<PropertyDefinition> Properties { get; }
-    }
-
-    public sealed class Property
-    {
-        public Class? Type { get; set; }
-
-        public StringBuilder Name { get; set; } = new StringBuilder();
     }
 
     public sealed class PropertyDefinition
