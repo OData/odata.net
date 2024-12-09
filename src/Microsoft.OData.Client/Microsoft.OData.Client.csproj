@@ -102,12 +102,6 @@
     <Compile Include="..\Microsoft.OData.Core\UriParser\SyntacticAst\CountSegmentToken.cs" Link="ALinq\UriParser\SyntacticAst\CountSegmentToken.cs" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Content Include="Microsoft.OData.Client.Common.txt" />
-    <Content Include="Microsoft.OData.Client.Desktop.txt" />
-  </ItemGroup>
-
   <ItemGroup>
     <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Shipped.txt" />
     <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Unshipped.txt" />
