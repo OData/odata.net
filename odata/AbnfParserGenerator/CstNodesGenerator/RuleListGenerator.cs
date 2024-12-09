@@ -66,7 +66,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
         {
             protected internal override Class Accept(RuleList.Inner.RuleInner node, Root.Void context)
             {
-                return new RuleGenerator().Generate(node.Rule, context);
+                return new RuleGeneratorToDiscriminatedUnion().Generate(node.Rule, context);
             }
 
             protected internal override Class Accept(RuleList.Inner.CommentInner node, Root.Void context)
@@ -95,10 +95,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
         public List<Class> NestedClasses { get; set; } = new List<Class>();
 
-        /// <summary>
-        /// TODO null means singleton
-        /// </summary>
-        public ConstructorParameters? ConstructorParameters { get; set; }
+        public List<ConstructorDefinition> ConstructorDefinitions { get; set; } = new List<ConstructorDefinition>();
 
         public List<Property> Properties { get; set; } = new List<Property>();
     }
@@ -110,8 +107,64 @@ namespace AbnfParserGenerator.CstNodesGenerator
         public StringBuilder Name { get; set; } = new StringBuilder();
     }
 
+    public sealed class MethodDefinition
+    {
+        public MethodDefinition(AccessModifier accessModifier, bool? isAbstract, string returnType, IEnumerable<string> genericTypeParameters, IEnumerable<MethodParameter> parameters)
+        {
+            AccessModifier = accessModifier;
+            IsAbstract = isAbstract;
+            ReturnType = returnType;
+            GenericTypeParameters = genericTypeParameters;
+            Parameters = parameters;
+        }
+
+        public AccessModifier AccessModifier { get; }
+
+        public bool? IsAbstract { get; }
+
+        public string ReturnType { get; }
+
+        public IEnumerable<string> GenericTypeParameters { get; }
+
+        public IEnumerable<MethodParameter> Parameters { get; }
+    }
+
+    public sealed class MethodParameter
+    {
+        public MethodParameter(string type, string name)
+        {
+            Type = type;
+            Name = name;
+        }
+
+        public string Type { get; }
+
+        public string Name { get; }
+    }
+
+    public sealed class ConstructorDefinition
+    {
+        public ConstructorDefinition(AccessModifier accessModifier, ConstructorParameters constructorParameters)
+        {
+            this.AccessModifier = accessModifier;
+            this.ConstructorParameters = constructorParameters;
+        }
+
+        public AccessModifier AccessModifier { get; }
+
+        public ConstructorParameters ConstructorParameters { get; }
+    }
+
     public sealed class ConstructorParameters
     {
         public List<(Class Type, string Name)> Value { get; set; } = new List<(Class Type, string Name)>();
+    }
+
+    public enum AccessModifier
+    {
+        Public = 0,
+        Internal = 1,
+        Protected = 2,
+        Private = 3,
     }
 }

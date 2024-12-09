@@ -7,38 +7,83 @@ using System.Text;
 
 namespace AbnfParserGenerator.CstNodesGenerator
 {
-    public sealed class RuleGenerator
+    public sealed class RuleGeneratorToDiscriminatedUnion
     {
-        public Class Generate(Rule node, Root.Void)
+        private static void NormalizeClassName(StringBuilder className)
+        {
+            className.Replace("-", "_").Insert(0, "_");
+        }
+
+        public Class Generate(Rule node, Root.Void context)
         {
             //// TODO do a second attempt at implementing this once you've got this roughly fleshed out
-            //// TODO singletons everywhere
 
             var @class = new Class();
-            new RuleNameToString().Convert(node.RuleName, @class.Name); //// TODO you need to ensure that dashes are stipping //// TODO you need to make sure the first character isn't a digit
+            new RuleNameToString().Convert(node.RuleName, @class.Name);
+            NormalizeClassName(@class.Name);
+            @class.IsAbstract = true;
+            @class.ConstructorDefinitions.Add(new ConstructorDefinition(AccessModifier.Private, new ConstructorParameters()));
+            var dispatchMethod = new MethodDefinition(
+                AccessModifier.Protected,
+                true,
+                "TResult",
+                new[]
+                {
+                    "TResult",
+                    "TContext",
+                },
+                new[]
+                {
+                    new MethodParameter("TODO pick up here")
+                });
+
+
+            //// TODO add dispatch method
+            //// TODO add visitor
 
             //// TODO skipping over node.DefinedAs means we are potentially skipping comments, if we care about that...
 
-            new ElementsToDiscriminatedUnion().Convert(node.Elements, @class);
+            var duElements = ElementsToDiscriminatedUnionElements.Instance.Convert(node.Elements, @class);
+            @class.NestedClasses.AddRange(duElements);
 
-            //// TODO finish the `rule` implementation here
+            //// TODO skipping over `node.cnl` skips comments if you care
 
-            builder.Value.Add(@class);
-            return default;
+            return @class;
         }
 
-        private sealed class ElementsToDiscriminatedUnion
+        private sealed class ElementsToDiscriminatedUnionElements
         {
-            public void Convert(Elements elements, Class @class)
+            private ElementsToDiscriminatedUnionElements()
             {
-                new AlternationToDiscriminatedUnion().Convert(elements.Alternation, @class);
             }
 
-            private sealed class AlternationToDiscriminatedUnion
+            public static ElementsToDiscriminatedUnionElements Instance { get; } = new ElementsToDiscriminatedUnionElements();
+
+            public IEnumerable<Class> Convert(Elements elements, Class baseType)
             {
-                public void Convert(Alternation alternation, Class @class)
+                // `baseType` should be treated as immutable
+                return AlternationToDiscriminatedUnionElements.Instance.Convert(elements.Alternation, baseType);
+            }
+
+            private sealed class AlternationToDiscriminatedUnionElements
+            {
+                private AlternationToDiscriminatedUnionElements()
                 {
-                    @class.IsAbstract = true; //// TODO is this the right place to set this?
+                }
+
+                public static AlternationToDiscriminatedUnionElements Instance { get; } = new AlternationToDiscriminatedUnionElements();
+
+                public IEnumerable<Class> Convert(Alternation alternation, Class baseType)
+                {
+                    // `baseType` should be treated as immutable
+
+                    yield return ConcatenationToDuElement.Instance.Convert(alternation.Concatenation, baseType);
+                    foreach (var inner in alternation.Inners)
+                    {
+                        yield return InnerToDuElement.Instance.Convert(inner, baseType);
+                    }
+                    
+
 
                     var name = 0;
                     var duElement = new Class();
@@ -63,25 +108,43 @@ namespace AbnfParserGenerator.CstNodesGenerator
                     //// TODO add visitor
                 }
 
-                private sealed class InnerToDuElement
-                {
-                    public void Convert(Alternation.Inner inner, Class @class)
-                    {
-                        //// TODO you are skipping comments
-                        new ConcatenationToDuElement().Convert(inner.Concatenation, @class);
-                    }
-                }
-
                 private sealed class ConcatenationToDuElement
                 {
-                    public void Convert(Concatenation concatenation, Class @class)
+                    private ConcatenationToDuElement()
                     {
+                    }
+
+                    public static ConcatenationToDuElement Instance { get; } = new ConcatenationToDuElement();
+
+                    public Class Convert(Concatenation concatenation, Class baseType)
+                    {
+                        // `baseType` should be treated as immutable
+                        var duElement = new Class();
+                        duElement.IsAbstract = false;
+                        ConcatenationToDuElementName.Instance.Convert(concatenation, duElement.Name);
+
+
                         new RepetitionToProperty().Visit(concatenation.Repetition, @class);
                         foreach (var inner in concatenation.Inners)
                         {
                             new InnerToProperty().Convert(inner, @class);
                         }
                     }
+
+                    private sealed class ConcatenationToDuElementName
+                    {
+                        private ConcatenationToDuElementName()
+                        {
+                        }
+
+                        public static ConcatenationToDuElementName Instance { get; } = new ConcatenationToDuElementName();
+
+                        public void Convert(Concatenation concatenation, StringBuilder duElementName)
+                        {
+                            throw new System.Exception("tODO");
+                        }
+                    }
+
 
                     private sealed class InnerToProperty
                     {
@@ -141,7 +204,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                                 public void Convert(Group group, Class @class)
                                 {
                                     //// TODO you are skipping comments
-                                    new AlternationToDiscriminatedUnion().Convert(group.Alternation, @class);
+                                    new AlternationToDiscriminatedUnionElements().Convert(group.Alternation, @class);
                                 }
                             }
 
@@ -168,7 +231,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                                 public void Convert(Option option, Class @class)
                                 {
                                     //// TODO you are skipping comments
-                                    new AlternationToDiscriminatedUnion().Convert(option.Alternation, @class);
+                                    new AlternationToDiscriminatedUnionElements().Convert(option.Alternation, @class);
                                 }
                             }
 
@@ -192,6 +255,24 @@ namespace AbnfParserGenerator.CstNodesGenerator
                         }
                     }
                 }
+
+                private sealed class InnerToDuElement
+                {
+                    private InnerToDuElement()
+                    {
+                    }
+
+                    public static InnerToDuElement Instance { get; } = new InnerToDuElement();
+
+                    public Class Convert(Alternation.Inner inner, Class baseType)
+                    {
+                        // `baseType` should be treated as immutable
+
+                        //// TODO you are skipping comments
+                        new ConcatenationToDuElement().Convert(inner.Concatenation, @class);
+                    }
+                }
+
             }
         }
 
