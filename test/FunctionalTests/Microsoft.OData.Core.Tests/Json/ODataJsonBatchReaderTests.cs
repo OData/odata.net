@@ -13,7 +13,6 @@ using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Core.Tests.Json
 {
@@ -465,7 +464,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 isResponse: false));
 
             // Verify that the correct duplicate property has raised the ODataException
-            Assert.Equal(Strings.ODataJsonBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch("ATOMICITYGROUP"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataJsonBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch, "ATOMICITYGROUP"), exception.Message);
         }
 
         [Fact]
@@ -498,7 +497,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 isResponse: false));
 
             // Verify that the correct duplicate property has raised the ODataException
-            Assert.Equal(Strings.ODataJsonBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch("ATOMICITYGROUP"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataJsonBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch, "ATOMICITYGROUP"), exception.Message);
         }
 
         [Fact]
@@ -529,7 +528,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 isResponse: false));
 
             // Verify that the correct duplicate header has raised the ODataException
-            Assert.Equal(Strings.ODataJsonBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch("duplicate-header"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataJsonBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch, "duplicate-header"), exception.Message);
         }
 
         [Fact]
@@ -560,7 +559,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 isResponse: false));
 
             // Verify that the correct duplicate header has raised the ODataException
-            Assert.Equal(Strings.ODataJsonBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch("duplicate-header"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataJsonBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch, "duplicate-header"), exception.Message);
         }
 
         [Fact]
@@ -973,7 +972,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     isResponse: false));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch("FORBIDDEN"),
+                Error.Format(SRResources.ODataJsonBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch, "FORBIDDEN"),
                 exception.Message);
         }
 
@@ -994,7 +993,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     isResponse: false));
 
             Assert.Equal(
-                ErrorStrings.ODataBatchReader_JsonBatchTopLevelPropertyMissing,
+                SRResources.ODataBatchReader_JsonBatchTopLevelPropertyMissing,
                 exception.Message);
         }
 
@@ -1021,7 +1020,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     isResponse: false));
 
             Assert.Equal(
-                ErrorStrings.ODataBatchReader_NoMessageWasCreatedForOperation,
+                SRResources.ODataBatchReader_NoMessageWasCreatedForOperation,
                 exception.Message);
         }
 
@@ -1068,7 +1067,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     isResponse: false));
 
             Assert.Equal(
-                ErrorStrings.ODataBatchReader_DuplicateContentIDsNotAllowed("1"),
+                Error.Format(SRResources.ODataBatchReader_DuplicateContentIDsNotAllowed, "1"),
                 exception.Message);
         }
 
@@ -1104,7 +1103,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     isResponse: false));
 
             Assert.Equal(
-                ErrorStrings.ODataBatchReader_DependsOnIdNotFound("0", "1"),
+                Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, "0", "1"),
                 exception.Message);
         }
 
@@ -1140,7 +1139,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     isResponse: false));
 
             Assert.Equal(
-                ErrorStrings.ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed("1", "1"),
+                Error.Format(SRResources.ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed, "1", "1"),
                 exception.Message);
         }
 

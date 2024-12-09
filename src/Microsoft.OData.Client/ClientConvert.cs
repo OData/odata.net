@@ -42,12 +42,12 @@ namespace Microsoft.OData.Client
                 catch (FormatException ex)
                 {
                     propertyValue = propertyValue.Length == 0 ? "String.Empty" : "String";
-                    throw Error.InvalidOperation(Strings.Deserialize_Current(propertyType.ToString(), propertyValue), ex);
+                    throw Error.InvalidOperation(Error.Format(SRResources.Deserialize_Current, propertyType.ToString(), propertyValue), ex);
                 }
                 catch (OverflowException ex)
                 {
                     propertyValue = propertyValue.Length == 0 ? "String.Empty" : "String";
-                    throw Error.InvalidOperation(Strings.Deserialize_Current(propertyType.ToString(), propertyValue), ex);
+                    throw Error.InvalidOperation(Error.Format(SRResources.Deserialize_Current, propertyType.ToString(), propertyValue), ex);
                 }
             }
             else
@@ -163,7 +163,7 @@ namespace Microsoft.OData.Client
                     // don't support reverse mappings for these types in this version
                     // allows us to add real server support in the future without a
                     // "breaking change" in the future client
-                    throw new NotSupportedException(Strings.ALinq_CantCastToUnsupportedPrimitive(propertyType.Name));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_CantCastToUnsupportedPrimitive, propertyType.Name));
                 }
             }
             else

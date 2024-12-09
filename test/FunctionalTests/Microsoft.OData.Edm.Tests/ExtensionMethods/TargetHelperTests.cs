@@ -141,7 +141,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             Action action = () => edmModel.GetTargetSegments(targetPath.Split('/'), true).ToList();
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
-            Assert.Equal(Strings.TypeCast_HierarchyNotFollowed(sampleModel.EntitySet, sampleModel.City), exception.Message);
+            Assert.Equal(Error.Format(SRResources.TypeCast_HierarchyNotFollowed, sampleModel.EntitySet, sampleModel.City), exception.Message);
         }
 
         [Fact]
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             Action action = () => edmModel.GetTargetSegments(targetPath.Split('/'), true).ToList();
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
-            Assert.Equal(Strings.TypeCast_HierarchyNotFollowed(sampleModel.VipCustomer, sampleModel.City), exception.Message);
+            Assert.Equal(Error.Format(SRResources.TypeCast_HierarchyNotFollowed, sampleModel.VipCustomer, sampleModel.City), exception.Message);
         }
     }
 

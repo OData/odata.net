@@ -6,6 +6,7 @@
 
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -92,7 +93,7 @@ namespace Microsoft.OData.UriParser
             if (result == null)
             {
                 // TODO: add string resource
-                throw new ODataException(Strings.MetadataBinder_ParameterAliasValueExpressionNotSingleValue);
+                throw new ODataException(SRResources.MetadataBinder_ParameterAliasValueExpressionNotSingleValue);
             }
 
             return result;

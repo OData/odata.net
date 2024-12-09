@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
@@ -23,7 +24,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People(1)/FindPencil(pid=2)",
                 parser => parser.ParsePath(),
                 path => path.LastSegment.ShouldBeOperationSegment(FindPencil2P),
-                Strings.RequestUriProcessor_ResourceNotFound("FindPencil"));
+                Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "FindPencil"));
         }
 
         [Fact]
@@ -34,7 +35,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People(1)/FindPencil",
                 parser => parser.ParsePath(),
                 path => path.LastSegment.ShouldBeOperationSegment(FindPencil1P),
-                Strings.RequestUriProcessor_ResourceNotFound("FindPencil"));
+                Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "FindPencil"));
         }
 
         [Fact]
@@ -45,7 +46,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People(1)/Addr/ChangeZip",
                 parser => parser.ParsePath(),
                 path => path.LastSegment.ShouldBeOperationSegment(ChangeZip),
-                Strings.RequestUriProcessor_ResourceNotFound("ChangeZip"));
+                Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "ChangeZip"));
         }
 
         [Fact]
@@ -54,7 +55,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseUnqualifiedNotExist(
                 "People(1)/Addr/ChangeZipEE",
                 parser => parser.ParsePath(),
-                Strings.RequestUriProcessor_ResourceNotFound("ChangeZipEE"));
+                Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "ChangeZipEE"));
         }
 
         [Fact]
@@ -63,7 +64,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseUnqualifiedConflict(
                 "People(1)/FindPencilsCon",
                 parser => parser.ParsePath(),
-                Strings.FunctionOverloadResolver_NoSingleMatchFound("FindPencilsCon", ""));
+                Error.Format(SRResources.FunctionOverloadResolver_NoSingleMatchFound, "FindPencilsCon", ""));
         }
 
         [Fact]
@@ -74,7 +75,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=FindPencil(pid=2)/Id",
                 parser => parser.ParseOrderBy(),
                 clause => clause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(PencilId).Source.ShouldBeSingleResourceFunctionCallNode("TestNS.FindPencil"),
-                Strings.MetadataBinder_UnknownFunction("FindPencil"));
+                Error.Format(SRResources.MetadataBinder_UnknownFunction, "FindPencil"));
         }
 
         [Fact]
@@ -85,7 +86,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=FindPencil/Id",
                 parser => parser.ParseOrderBy(),
                 clause => clause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(PencilId).Source.ShouldBeSingleResourceFunctionCallNode("TestNS.FindPencil"),
-                Strings.MetadataBinder_PropertyNotDeclared("TestNS.Person", "FindPencil"));
+                Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "TestNS.Person", "FindPencil"));
         }
 
         [Fact]
@@ -97,7 +98,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 parser => parser.ParseOrderBy(),
                 clause =>
                     clause.Expression.ShouldBeSingleValueFunctionCallQueryNode("TestNS.GetZip").Source.ShouldBeSingleComplexNode(AddrProperty),
-                Strings.MetadataBinder_PropertyNotDeclared("TestNS.Address", "GetZip"));
+                Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "TestNS.Address", "GetZip"));
         }
 
         [Fact]
@@ -106,7 +107,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseUnqualifiedNotExist(
                 "People?$orderby=FindPencilEE/Id",
                 parser => parser.ParseOrderBy(),
-                Strings.MetadataBinder_PropertyNotDeclared("TestNS.Person", "FindPencilEE"));
+                Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "TestNS.Person", "FindPencilEE"));
         }
 
         [Fact]
@@ -116,7 +117,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseUnqualifiedConflict(
                 "People?$orderby=FindPencilsCon",
                 parser => parser.ParseOrderBy(),
-                Strings.FunctionOverloadResolver_NoSingleMatchFound("FindPencilsCon", ""));
+                Error.Format(SRResources.FunctionOverloadResolver_NoSingleMatchFound, "FindPencilsCon", ""));
         }
 
         [Fact]
@@ -127,7 +128,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "PetSet(KeY1=1, KeY2='aStr')",
                 parser => parser.ParsePath(),
                 _ => { /*no-op*/ },
-                Strings.BadRequest_KeyMismatch(PetType.FullTypeName()),
+                Error.Format(SRResources.BadRequest_KeyMismatch, PetType.FullTypeName()),
                 Model,
                 parser => parser.Resolver = new UnqualifiedODataUriResolver() {EnableCaseInsensitive = true});
         }
@@ -141,7 +142,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 Resolver = new UnqualifiedODataUriResolver() {EnableCaseInsensitive = false}
             };
             Action action = () => parser.ParsePath();
-            action.Throws<ODataException>(Strings.BadRequest_KeyMismatch("TestNS.Pet"));
+            action.Throws<ODataException>(Error.Format(SRResources.BadRequest_KeyMismatch, "TestNS.Pet"));
         }
 
         [Fact]
@@ -150,7 +151,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             Uri uriUnmatchedKeysCount = new Uri("PetSet(key1=1, key2='aStr', nonExistingKey='bStr')", UriKind.Relative);
             ODataUriParser parser = new ODataUriParser(Model, uriUnmatchedKeysCount);
             Action action = () => parser.ParsePath();
-            action.Throws<ODataException>(Strings.BadRequest_KeyMismatch("TestNS.Pet"));
+            action.Throws<ODataException>(Error.Format(SRResources.BadRequest_KeyMismatch, "TestNS.Pet"));
         }
 
         private void TestUnqualified<TResult>(

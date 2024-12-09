@@ -17,7 +17,7 @@ namespace Microsoft.OData.Json
     using System.Text;
     using System.Threading.Tasks;
     // ReSharper disable RedundantUsingDirective
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     // ReSharper restore RedundantUsingDirective
     #endregion Namespaces
@@ -646,7 +646,7 @@ namespace Microsoft.OData.Json
 
             if (operation == null)
             {
-                throw new ArgumentNullException(nameof(operation), ODataErrorStrings.ODataJsonInputContext_OperationCannotBeNullForCreateParameterReader("operation"));
+                throw new ArgumentNullException(nameof(operation), Error.Format(SRResources.ODataJsonInputContext_OperationCannotBeNullForCreateParameterReader, "operation"));
             }
         }
 
@@ -667,7 +667,7 @@ namespace Microsoft.OData.Json
                 // TODO: check for entity only
                 if (navigationSource == null && (structuredType != null && structuredType.IsODataEntityTypeKind()))
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonInputContext_NoEntitySetForRequest);
+                    throw new ODataException(SRResources.ODataJsonInputContext_NoEntitySetForRequest);
                 }
             }
 
@@ -676,7 +676,7 @@ namespace Microsoft.OData.Json
             IEdmEntityType entitySetElementType = this.EdmTypeResolver.GetElementType(navigationSource);
             if (navigationSource != null && structuredType != null && !structuredType.IsOrInheritsFrom(entitySetElementType))
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType(structuredType.FullTypeName(), entitySetElementType.FullName(), navigationSource.FullNavigationSourceName()));
+                throw new ODataException(Error.Format(SRResources.ODataJsonInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType, structuredType.FullTypeName(), entitySetElementType.FullName(), navigationSource.FullNavigationSourceName()));
             }
         }
 
@@ -693,7 +693,7 @@ namespace Microsoft.OData.Json
 
                 if (expectedItemTypeReference == null)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonInputContext_ItemTypeRequiredForCollectionReaderInRequests);
+                    throw new ODataException(SRResources.ODataJsonInputContext_ItemTypeRequiredForCollectionReaderInRequests);
                 }
             }
         }
@@ -729,7 +729,7 @@ namespace Microsoft.OData.Json
         {
             if (!this.ReadingResponse)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonInputContext_PayloadKindDetectionForRequest);
+                throw new ODataException(SRResources.ODataJsonInputContext_PayloadKindDetectionForRequest);
             }
         }
 
@@ -740,7 +740,7 @@ namespace Microsoft.OData.Json
         {
             if (!this.Model.IsUserModel())
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonInputContext_ModelRequiredForReading);
+                throw new ODataException(SRResources.ODataJsonInputContext_ModelRequiredForReading);
             }
         }
 

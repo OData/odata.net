@@ -37,7 +37,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                             annotation.Location(),
                             EdmErrorCode.DuplicateDirectValueAnnotationFullName,
-                            Strings.EdmModel_Validator_Semantic_ElementDirectValueAnnotationFullNameMustBeUnique(annotation.NamespaceUri, annotation.Name));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_ElementDirectValueAnnotationFullNameMustBeUnique, annotation.NamespaceUri, annotation.Name));
                         }
                     }
                 });
@@ -58,7 +58,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             item.Location(),
                             EdmErrorCode.InvalidName,
-                            Strings.EdmModel_Validator_Syntactic_MissingName);
+                            SRResources.EdmModel_Validator_Syntactic_MissingName);
                     }
                 });
 
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             item.Location(),
                             EdmErrorCode.NameTooLong,
-                            Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong(item.Name));
+                            Error.Format(SRResources.EdmModel_Validator_Syntactic_EdmModel_NameIsTooLong, item.Name));
                     }
                 });
 
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 item.Location(),
                                 EdmErrorCode.InvalidName,
-                                Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed(item.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed, item.Name));
                         }
                     }
                 });
@@ -120,7 +120,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             item.Location(),
                             EdmErrorCode.InvalidNamespaceName,
-                            Strings.EdmModel_Validator_Syntactic_MissingNamespaceName);
+                            SRResources.EdmModel_Validator_Syntactic_MissingNamespaceName);
                     }
                 });
 
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             item.Location(),
                             EdmErrorCode.InvalidNamespaceName,
-                            Strings.EdmModel_Validator_Syntactic_EdmModel_NamespaceNameIsTooLong(item.Namespace));
+                            Error.Format(SRResources.EdmModel_Validator_Syntactic_EdmModel_NamespaceNameIsTooLong, item.Namespace));
                     }
                 });
 
@@ -155,7 +155,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 item.Location(),
                                 EdmErrorCode.InvalidNamespaceName,
-                                Strings.EdmModel_Validator_Syntactic_EdmModel_NamespaceNameIsNotAllowed(item.Namespace));
+                                Error.Format(SRResources.EdmModel_Validator_Syntactic_EdmModel_NamespaceNameIsNotAllowed, item.Namespace));
                         }
                     }
                 });
@@ -172,7 +172,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             element.Location(),
                             EdmErrorCode.SystemNamespaceEncountered,
-                            Strings.EdmModel_Validator_Semantic_SystemNamespaceEncountered(element.Namespace));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_SystemNamespaceEncountered, element.Namespace));
                     }
                 });
 
@@ -188,7 +188,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                         element.Location(),
                         EdmErrorCode.SchemaElementMustNotHaveKindOfNone,
-                        Strings.EdmModel_Validator_Semantic_SchemaElementMustNotHaveKindOfNone(element.FullName()));
+                        Error.Format(SRResources.EdmModel_Validator_Semantic_SchemaElementMustNotHaveKindOfNone, element.FullName()));
                     }
                 });
 
@@ -208,7 +208,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                         element.Location(),
                         EdmErrorCode.EntityContainerElementMustNotHaveKindOfNone,
-                        Strings.EdmModel_Validator_Semantic_EntityContainerElementMustNotHaveKindOfNone(element.Container.FullName() + '/' + element.Name));
+                        Error.Format(SRResources.EdmModel_Validator_Semantic_EntityContainerElementMustNotHaveKindOfNone, element.Container.FullName() + '/' + element.Name));
                     }
                 });
 
@@ -276,7 +276,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 item.Location(),
                                 EdmErrorCode.DuplicateEntityContainerMemberName,
-                                Strings.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName(item.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName, item.Name));
                         }
                     }
                 });
@@ -308,7 +308,7 @@ namespace Microsoft.OData.Edm.Validation
 
                     if ((entityType.Key() == null || !entityType.Key().Any()) && !context.IsBad(entityType))
                     {
-                        string errorMessage = Strings.EdmModel_Validator_Semantic_NavigationSourceTypeHasNoKeys(
+                        string errorMessage = Error.Format(SRResources.EdmModel_Validator_Semantic_NavigationSourceTypeHasNoKeys,
                             navigationSource.Name,
                             entityType.Name);
 
@@ -338,8 +338,8 @@ namespace Microsoft.OData.Edm.Validation
                     {
                         string name = navigationSource is IEdmSingleton ? "singleton" : "entity set";
 
-                        string errorMessage = Strings
-                            .EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty(entityType.FullName(), name, navigationSource.Name);
+                        string errorMessage = Error.Format(SRResources.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty,
+                            entityType.FullName(), name, navigationSource.Name);
 
                         context.AddError(
                             navigationSource.Location(),
@@ -378,7 +378,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 navigationSource.Location(),
                                 EdmErrorCode.DuplicateNavigationPropertyMapping,
-                                Strings.EdmModel_Validator_Semantic_DuplicateNavigationPropertyMapping(navigationSource.Name, mapping.NavigationProperty.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_DuplicateNavigationPropertyMapping, navigationSource.Name, mapping.NavigationProperty.Name));
                         }
                     }
                 });
@@ -403,7 +403,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 navigationSource.Location(),
                                 EdmErrorCode.NavigationPropertyMappingMustPointToValidTargetForProperty,
-                                Strings.EdmModel_Validator_Semantic_NavigationPropertyMappingMustPointToValidTargetForProperty(mapping.NavigationProperty.Name, mapping.Target.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_NavigationPropertyMappingMustPointToValidTargetForProperty, mapping.NavigationProperty.Name, mapping.Target.Name));
                         }
 
                         if (mapping.Target is IEdmSingleton && mapping.NavigationProperty.Type.Definition.TypeKind == EdmTypeKind.Collection)
@@ -411,7 +411,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 navigationSource.Location(),
                                 EdmErrorCode.NavigationPropertyOfCollectionTypeMustNotTargetToSingleton,
-                                Strings.EdmModel_Validator_Semantic_NavigationPropertyOfCollectionTypeMustNotTargetToSingleton(mapping.NavigationProperty.Name, mapping.Target.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_NavigationPropertyOfCollectionTypeMustNotTargetToSingleton, mapping.NavigationProperty.Name, mapping.Target.Name));
                         }
                     }
                 });
@@ -472,7 +472,7 @@ namespace Microsoft.OData.Edm.Validation
                                     context.AddError(
                                         set.Location(),
                                         EdmErrorCode.EntitySetCanOnlyBeContainedByASingleNavigationProperty,
-                                        Strings.EdmModel_Validator_Semantic_EntitySetCanOnlyBeContainedByASingleNavigationProperty(set.Container.FullName() + "." + set.Name));
+                                        Error.Format(SRResources.EdmModel_Validator_Semantic_EntitySetCanOnlyBeContainedByASingleNavigationProperty, set.Container.FullName() + "." + set.Name));
                                 }
 
                                 containmentFound = true;
@@ -508,7 +508,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 navigationSource.Location(),
                                 EdmErrorCode.NavigationMappingMustBeBidirectional,
-                                Strings.EdmModel_Validator_Semantic_NavigationMappingMustBeBidirectional(navigationSource.Name, property.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_NavigationMappingMustBeBidirectional, navigationSource.Name, property.Name));
                         }
                     }
                 });
@@ -529,7 +529,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 set.Location(),
                                 EdmErrorCode.EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet,
-                                Strings.EdmModel_Validator_Semantic_EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet(mapping.NavigationProperty, set.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_EntitySetRecursiveNavigationPropertyMappingsMustPointBackToSourceEntitySet, mapping.NavigationProperty, set.Name));
                         }
                     }
                 });
@@ -551,7 +551,7 @@ namespace Microsoft.OData.Edm.Validation
 
                     if (!isCollectionOfEntityType)
                     {
-                        string errorMessage = Strings.EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType(entitySet.Type.FullTypeName(), entitySet.Name);
+                        string errorMessage = Error.Format(SRResources.EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType, entitySet.Type.FullTypeName(), entitySet.Name);
 
                         context.AddError(
                             entitySet.Location(),
@@ -572,7 +572,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                            entitySet.Location(),
                            EdmErrorCode.EntityTypeOfEntitySetCannotBeEdmEntityType,
-                           Strings.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet(entitySet.Name));
+                           Error.Format(SRResources.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet, entitySet.Name));
                     }
                 });
         #endregion
@@ -589,7 +589,7 @@ namespace Microsoft.OData.Edm.Validation
                     if (!(singleton.Type is IEdmEntityType))
                     {
                         string errorMessage =
-                            Strings.EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType(
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType,
                                 singleton.Type.FullTypeName(), singleton.Name);
 
                         context.AddError(
@@ -611,7 +611,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                            singleton.Location(),
                            EdmErrorCode.EntityTypeOfSingletonCannotBeEdmEntityType,
-                           Strings.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton(singleton.Name));
+                           Error.Format(SRResources.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton, singleton.Name));
                     }
                 });
         #endregion
@@ -637,7 +637,7 @@ namespace Microsoft.OData.Edm.Validation
                                     context.AddError(
                                     property.Location(),
                                     EdmErrorCode.BadProperty,
-                                    Strings.EdmModel_Validator_Semantic_InvalidMemberNameMatchesTypeName(property.Name));
+                                    Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidMemberNameMatchesTypeName, property.Name));
                                 }
                             }
                         }
@@ -662,7 +662,7 @@ namespace Microsoft.OData.Edm.Validation
                                 propertyNames,
                                 context,
                                 EdmErrorCode.AlreadyDefined,
-                                Strings.EdmModel_Validator_Semantic_PropertyNameAlreadyDefined(property.Name),
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_PropertyNameAlreadyDefined, property.Name),
                                 /*supressError*/ !structuredType.DeclaredProperties.Contains(property));
                         }
                     }
@@ -683,7 +683,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 structuredType.Location(),
                                 (structuredType.TypeKind == EdmTypeKind.Entity) ? EdmErrorCode.EntityMustHaveEntityBaseType : EdmErrorCode.ComplexTypeMustHaveComplexBaseType,
-                                Strings.EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind);
+                                SRResources.EdmModel_Validator_Semantic_BaseTypeMustHaveSameTypeKind);
                         }
                     }
                 });
@@ -705,7 +705,7 @@ namespace Microsoft.OData.Edm.Validation
                             (structuredType.TypeKind == EdmTypeKind.Entity)
                                 ? EdmErrorCode.EntityTypeBaseTypeCannotBeEdmEntityType
                                 : EdmErrorCode.ComplexTypeBaseTypeCannotBeEdmComplexType,
-                            Strings.EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType(
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType,
                                 structuredType.BaseType.FullTypeName(), typeKind, structuredType.FullTypeName()));
                     }
                 });
@@ -740,7 +740,7 @@ namespace Microsoft.OData.Edm.Validation
                                 context.AddError(
                                 property.Location(),
                                 EdmErrorCode.DeclaringTypeMustBeCorrect,
-                                Strings.EdmModel_Validator_Semantic_DeclaringTypeMustBeCorrect(property.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_DeclaringTypeMustBeCorrect, property.Name));
                             }
                         }
                     }
@@ -768,7 +768,7 @@ namespace Microsoft.OData.Edm.Validation
                                 memberNames,
                                 context,
                                 EdmErrorCode.AlreadyDefined,
-                                Strings.EdmModel_Validator_Semantic_EnumMemberNameAlreadyDefined(member.Name),
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_EnumMemberNameAlreadyDefined, member.Name),
                                 /*supressError*/ false);
                         }
                     }
@@ -786,7 +786,7 @@ namespace Microsoft.OData.Edm.Validation
                        context.AddError(
                            enumType.Location(),
                            EdmErrorCode.EnumMustHaveIntegerUnderlyingType,
-                           Strings.EdmModel_Validator_Semantic_EnumMustHaveIntegralUnderlyingType(enumType.FullName()));
+                           Error.Format(SRResources.EdmModel_Validator_Semantic_EnumMustHaveIntegralUnderlyingType, enumType.FullName()));
                    }
                });
 
@@ -802,7 +802,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             enumType.Location(),
                             EdmErrorCode.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
-                            Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType("enumeration", enumType.FullName()));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType, "enumeration", enumType.FullName()));
                     }
                 });
         #endregion
@@ -827,7 +827,7 @@ namespace Microsoft.OData.Edm.Validation
                            context.AddError(
                            enumMember.Location(),
                            EdmErrorCode.EnumMemberValueOutOfRange,
-                           Strings.EdmModel_Validator_Semantic_EnumMemberValueOutOfRange(enumMember.Name));
+                           Error.Format(SRResources.EdmModel_Validator_Semantic_EnumMemberValueOutOfRange, enumMember.Name));
                        }
                    }
                });
@@ -848,7 +848,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             typeDefinition.Location(),
                             EdmErrorCode.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
-                            Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType("type definition", typeDefinition.FullName()));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType, "type definition", typeDefinition.FullName()));
                     }
                 });
         #endregion
@@ -872,7 +872,7 @@ namespace Microsoft.OData.Edm.Validation
                                 keyPropertyNameList,
                                 context,
                                 EdmErrorCode.DuplicatePropertySpecifiedInEntityKey,
-                                Strings.EdmModel_Validator_Semantic_DuplicatePropertyNameSpecifiedInEntityKey(entityType.Name, item.Name),
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_DuplicatePropertyNameSpecifiedInEntityKey, entityType.Name, item.Name),
                                 /*supressError*/ false);
                         }
                     }
@@ -896,7 +896,7 @@ namespace Microsoft.OData.Edm.Validation
                                     context.AddError(
                                     key.Location(),
                                     EdmErrorCode.InvalidKey,
-                                    Strings.EdmModel_Validator_Semantic_InvalidKeyNullablePart(key.Name, entityType.Name));
+                                    Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidKeyNullablePart, key.Name, entityType.Name));
                                 }
                             }
                         }
@@ -919,7 +919,7 @@ namespace Microsoft.OData.Edm.Validation
                                 context.AddError(
                                 key.Location(),
                                 EdmErrorCode.EntityKeyMustBeScalar,
-                                Strings.EdmModel_Validator_Semantic_EntityKeyMustBeScalar(key.Name, entityType.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_EntityKeyMustBeScalar, key.Name, entityType.Name));
                             }
                         }
                     }
@@ -938,12 +938,12 @@ namespace Microsoft.OData.Edm.Validation
                     {
                         if (baseType.DeclaredKey != null)
                         {
-                            if(foundKey)
+                            if (foundKey)
                             {
                                 context.AddError(
                                 entityType.Location(),
                                 EdmErrorCode.InvalidKey,
-                                Strings.EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass(entityType.Name, baseType.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass, entityType.Name, baseType.Name));
                                 break;
                             }
 
@@ -969,7 +969,7 @@ namespace Microsoft.OData.Edm.Validation
                                 context.AddError(
                                 entityType.Location(),
                                 EdmErrorCode.KeyPropertyMustBelongToEntity,
-                                Strings.EdmModel_Validator_Semantic_KeyPropertyMustBelongToEntity(key.Name, entityType.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_KeyPropertyMustBelongToEntity, key.Name, entityType.Name));
                             }
                         }
                     }
@@ -991,7 +991,7 @@ namespace Microsoft.OData.Edm.Validation
                                 context.AddError(
                                     entityType.Location(),
                                     EdmErrorCode.KeyPropertyTypeCannotBeEdmPrimitiveType,
-                                    Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey(
+                                    Error.Format(SRResources.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey,
                                         key.Name, entityType.FullName()));
                             }
                         }
@@ -1030,7 +1030,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                                 entityType.Location(),
                                 EdmErrorCode.EntityComposableBoundEscapeFunctionMustBeLessOne,
-                                Strings.EdmModel_Validator_Semantic_EntityComposableBoundEscapeFunctionMustBeLessOne(entityType.FullName(), escapeFunctionString));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_EntityComposableBoundEscapeFunctionMustBeLessOne, entityType.FullName(), escapeFunctionString));
                     }
 
                     if (nonComposableEscapeFunctions.Count > 1)
@@ -1039,7 +1039,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                                 entityType.Location(),
                                 EdmErrorCode.EntityNoncomposableBoundEscapeFunctionMustBeLessOne,
-                                Strings.EdmModel_Validator_Semantic_EntityNoncomposableBoundEscapeFunctionMustBeLessOne(entityType.FullName(), escapeFunctionString));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_EntityNoncomposableBoundEscapeFunctionMustBeLessOne, entityType.FullName(), escapeFunctionString));
                     }
                 });
         #endregion
@@ -1075,7 +1075,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                         type.Location(),
                         EdmErrorCode.TypeMustNotHaveKindOfNone,
-                        Strings.EdmModel_Validator_Semantic_TypeMustNotHaveKindOfNone);
+                        SRResources.EdmModel_Validator_Semantic_TypeMustNotHaveKindOfNone);
                     }
                 });
         #endregion
@@ -1094,7 +1094,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                         type.Location(),
                         EdmErrorCode.PrimitiveTypeMustNotHaveKindOfNone,
-                        Strings.EdmModel_Validator_Semantic_PrimitiveTypeMustNotHaveKindOfNone(type.FullName()));
+                        Error.Format(SRResources.EdmModel_Validator_Semantic_PrimitiveTypeMustNotHaveKindOfNone, type.FullName()));
                     }
                 });
 
@@ -1114,7 +1114,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             complexType.Location(),
                             EdmErrorCode.InvalidAbstractComplexType,
-                            Strings.EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen(complexType.FullName()));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_BaseTypeOfOpenTypeMustBeOpen, complexType.FullName()));
                     }
                 });
 
@@ -1145,7 +1145,7 @@ namespace Microsoft.OData.Edm.Validation
                         && validatedType.TypeKind != EdmTypeKind.TypeDefinition
                         && !context.IsBad(validatedType))
                     {
-                        context.AddError(property.Location(), EdmErrorCode.InvalidPropertyType, Strings.EdmModel_Validator_Semantic_InvalidPropertyType(property.Type.TypeKind().ToString()));
+                        context.AddError(property.Location(), EdmErrorCode.InvalidPropertyType, Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidPropertyType, property.Type.TypeKind().ToString()));
                     }
                 });
 
@@ -1175,7 +1175,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 property.Location(),
                                 EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
-                                Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional(property.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional, property.Name));
                         }
                     }
                 });
@@ -1196,7 +1196,7 @@ namespace Microsoft.OData.Edm.Validation
                        context.AddError(
                            navigationProperty.Location(),
                            EdmErrorCode.InvalidAction,
-                           Strings.EdmModel_Validator_Semantic_InvalidOperationMultipleEndsInAssociation);
+                           SRResources.EdmModel_Validator_Semantic_InvalidOperationMultipleEndsInAssociation);
                    }
                });
 
@@ -1213,7 +1213,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             property.Location(),
                             EdmErrorCode.InvalidNavigationPropertyType,
-                            Strings.EdmModel_Validator_Semantic_InvalidNavigationPropertyType(property.Name));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidNavigationPropertyType, property.Name));
                         return;
                     }
 
@@ -1229,7 +1229,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             property.Location(),
                             EdmErrorCode.InvalidNavigationPropertyType,
-                            Strings.EdmModel_Validator_Semantic_InvalidNavigationPropertyType(property.Name));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidNavigationPropertyType, property.Name));
                     }
                 });
 
@@ -1253,7 +1253,7 @@ namespace Microsoft.OData.Edm.Validation
                                     propertyNames,
                                     context,
                                     EdmErrorCode.DuplicateDependentProperty,
-                                    Strings.EdmModel_Validator_Semantic_DuplicateDependentProperty(property.Name, navigationProperty.Name),
+                                    Error.Format(SRResources.EdmModel_Validator_Semantic_DuplicateDependentProperty, property.Name, navigationProperty.Name),
                                     /*supressError*/ false);
                             }
                         }
@@ -1292,7 +1292,7 @@ namespace Microsoft.OData.Edm.Validation
                               context.AddError(
                                   navigationProperty.Location(),
                                   EdmErrorCode.InvalidMultiplicityOfPrincipalEnd,
-                                  Strings.EdmModel_Validator_Semantic_InvalidMultiplicityOfPrincipalEndDependentPropertiesAllNullable(navigationProperty.Name));
+                                  Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidMultiplicityOfPrincipalEndDependentPropertiesAllNullable, navigationProperty.Name));
                           }
                       }
                       else if (!ValidationHelper.HasNullableProperty(dependentProperties))
@@ -1302,7 +1302,7 @@ namespace Microsoft.OData.Edm.Validation
                               context.AddError(
                                   navigationProperty.Location(),
                                   EdmErrorCode.InvalidMultiplicityOfPrincipalEnd,
-                                  Strings.EdmModel_Validator_Semantic_InvalidMultiplicityOfPrincipalEndDependentPropertiesAllNonnullable(navigationProperty.Name));
+                                  Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidMultiplicityOfPrincipalEndDependentPropertiesAllNonnullable, navigationProperty.Name));
                           }
                       }
                       else
@@ -1313,7 +1313,7 @@ namespace Microsoft.OData.Edm.Validation
                               context.AddError(
                                   navigationProperty.Location(),
                                   EdmErrorCode.InvalidMultiplicityOfPrincipalEnd,
-                                  Strings.EdmModel_Validator_Semantic_NavigationPropertyPrincipalEndMultiplicityUpperBoundMustBeOne(navigationProperty.Name));
+                                  Error.Format(SRResources.EdmModel_Validator_Semantic_NavigationPropertyPrincipalEndMultiplicityUpperBoundMustBeOne, navigationProperty.Name));
                           }
                       }
                   }
@@ -1345,7 +1345,7 @@ namespace Microsoft.OData.Edm.Validation
                               context.AddError(
                                   navigationProperty.Location(),
                                   EdmErrorCode.InvalidMultiplicityOfDependentEnd,
-                                  Strings.EdmModel_Validator_Semantic_InvalidMultiplicityOfDependentEndMustBeZeroOneOrOne(navigationProperty.Name));
+                                  Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidMultiplicityOfDependentEndMustBeZeroOneOrOne, navigationProperty.Name));
                           }
                       }
                       else if (!navigationProperty.Partner.Type.IsCollection())
@@ -1353,7 +1353,7 @@ namespace Microsoft.OData.Edm.Validation
                           context.AddError(
                               navigationProperty.Location(),
                               EdmErrorCode.InvalidMultiplicityOfDependentEnd,
-                              Strings.EdmModel_Validator_Semantic_InvalidMultiplicityOfDependentEndMustBeMany(navigationProperty.Name));
+                              Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidMultiplicityOfDependentEndMustBeMany, navigationProperty.Name));
                       }
                   }
               });
@@ -1381,7 +1381,7 @@ namespace Microsoft.OData.Edm.Validation
                                    context.AddError(
                                        navigationProperty.Location(),
                                        EdmErrorCode.DependentPropertiesMustBelongToDependentEntity,
-                                       Strings.EdmModel_Validator_Semantic_DependentPropertiesMustBelongToDependentEntity(dependantProperty.Name, dependentEntity.Name));
+                                       Error.Format(SRResources.EdmModel_Validator_Semantic_DependentPropertiesMustBelongToDependentEntity, dependantProperty.Name, dependentEntity.Name));
                                }
                            }
                        }
@@ -1401,7 +1401,7 @@ namespace Microsoft.OData.Edm.Validation
                        end.Partner.Type.IsCollection() &&
                        end.OnDelete != EdmOnDeleteAction.None)
                    {
-                       string errorMessage = Strings.EdmModel_Validator_Semantic_EndWithManyMultiplicityCannotHaveOperationsSpecified(end.Name);
+                       string errorMessage = Error.Format(SRResources.EdmModel_Validator_Semantic_EndWithManyMultiplicityCannotHaveOperationsSpecified, end.Name);
 
                        context.AddError(
                            end.Location(),
@@ -1450,7 +1450,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                         property.Location(),
                         EdmErrorCode.NavigationPropertyWithRecursiveContainmentTargetMustBeOptional,
-                        Strings.EdmModel_Validator_Semantic_NavigationPropertyWithRecursiveContainmentTargetMustBeOptional(property.Name));
+                        Error.Format(SRResources.EdmModel_Validator_Semantic_NavigationPropertyWithRecursiveContainmentTargetMustBeOptional, property.Name));
                     }
                 });
 
@@ -1471,7 +1471,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                         property.Location(),
                         EdmErrorCode.NavigationPropertyWithRecursiveContainmentSourceMustBeFromZeroOrOne,
-                        Strings.EdmModel_Validator_Semantic_NavigationPropertyWithRecursiveContainmentSourceMustBeFromZeroOrOne(property.Name));
+                        Error.Format(SRResources.EdmModel_Validator_Semantic_NavigationPropertyWithRecursiveContainmentSourceMustBeFromZeroOrOne, property.Name));
                     }
                 });
 
@@ -1491,7 +1491,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             property.Location(),
                             EdmErrorCode.NavigationPropertyWithNonRecursiveContainmentSourceMustBeFromOne,
-                            Strings.EdmModel_Validator_Semantic_NavigationPropertyWithNonRecursiveContainmentSourceMustBeFromOne(property.Name));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_NavigationPropertyWithNonRecursiveContainmentSourceMustBeFromOne, property.Name));
                     }
                 });
 
@@ -1510,7 +1510,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 property.Location(),
                                 EdmErrorCode.NavigationPropertyEntityMustNotIndirectlyContainItself,
-                                Strings.EdmModel_Validator_Semantic_NavigationPropertyEntityMustNotIndirectlyContainItself(property.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_NavigationPropertyEntityMustNotIndirectlyContainItself, property.Name));
                         }
                     }
                 });
@@ -1537,8 +1537,8 @@ namespace Microsoft.OData.Edm.Validation
                     IList<IEdmStructuredType> visited = new List<IEdmStructuredType>();
                     if (HasPathTypeProperty(structuredType, visited))
                     {
-                        string errorMessage = Strings
-                            .EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty(property.Type.FullName(), property.Name, property.DeclaringType.FullTypeName());
+                        string errorMessage = Error.Format(SRResources
+                            .EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty, property.Type.FullName(), property.Name, property.DeclaringType.FullTypeName());
 
                         context.AddError(
                             property.Location(),
@@ -1568,7 +1568,7 @@ namespace Microsoft.OData.Edm.Validation
                               var principalType = principalProperties.ElementAtOrDefault(i).Type.Definition;
                               if (!(dependentType is BadType) && !(principalType is BadType) && !dependentType.IsEquivalentTo(principalType))
                               {
-                                  string errorMessage = Strings.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint(navigationProperty.DependentProperties().ToList()[i].Name, navigationProperty.DeclaringEntityType().FullName(), principalProperties.ToList()[i].Name, principalEntityType.Name);
+                                  string errorMessage = Error.Format(SRResources.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint, navigationProperty.DependentProperties().ToList()[i].Name, navigationProperty.DeclaringEntityType().FullName(), principalProperties.ToList()[i].Name, principalEntityType.Name);
 
                                   context.AddError(navigationProperty.Location(), EdmErrorCode.TypeMismatchRelationshipConstraint, errorMessage);
                               }
@@ -1593,7 +1593,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             property.Location(),
                             EdmErrorCode.PropertyMustNotHaveKindOfNone,
-                            Strings.EdmModel_Validator_Semantic_PropertyMustNotHaveKindOfNone(property.Name));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_PropertyMustNotHaveKindOfNone, property.Name));
                     }
                 });
 
@@ -1613,7 +1613,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 property.Location(),
                                 EdmErrorCode.PropertyTypeCannotBeCollectionOfAbstractType,
-                                Strings.EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType(
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType,
                                     property.Type.FullName(), property.Name));
                         }
                     }
@@ -1635,7 +1635,7 @@ namespace Microsoft.OData.Edm.Validation
                        context.AddError(
                            operationImport.Location(),
                            EdmErrorCode.OperationImportCannotImportBoundOperation,
-                           Strings.EdmModel_Validator_Semantic_OperationImportCannotImportBoundOperation(operationImport.Name, operationImport.Operation.Name));
+                           Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportCannotImportBoundOperation, operationImport.Name, operationImport.Operation.Name));
                    }
                });
 
@@ -1653,7 +1653,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 operationImport.Location(),
                                 EdmErrorCode.OperationImportEntitySetExpressionIsInvalid,
-                                Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionKindIsInvalid(operationImport.Name, operationImport.EntitySet.ExpressionKind));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionKindIsInvalid, operationImport.Name, operationImport.EntitySet.ExpressionKind));
                         }
                         else
                         {
@@ -1664,7 +1664,7 @@ namespace Microsoft.OData.Edm.Validation
                                 context.AddError(
                                     operationImport.Location(),
                                     EdmErrorCode.OperationImportEntitySetExpressionIsInvalid,
-                                    Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(operationImport.Name));
+                                    Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid, operationImport.Name));
                             }
                             else
                             {
@@ -1678,7 +1678,7 @@ namespace Microsoft.OData.Edm.Validation
                                         context.AddError(
                                             operationImport.Location(),
                                             EdmErrorCode.OperationImportEntitySetExpressionIsInvalid,
-                                            Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(operationImport.Name));
+                                            Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid, operationImport.Name));
                                     }
                                 }
                             }
@@ -1709,7 +1709,7 @@ namespace Microsoft.OData.Edm.Validation
                                 IEdmEntityType entitySetElementType = entitySet.EntityType;
                                 if (!returnedEntityType.IsOrInheritsFrom(entitySetElementType) && !context.IsBad(returnedEntityType) && !context.IsBad(entitySet) && !context.IsBad(entitySetElementType))
                                 {
-                                    string errorMessage = Strings.EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet(
+                                    string errorMessage = Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet,
                                         operationImport.Name,
                                         returnedEntityType.FullName(),
                                         entitySet.Name);
@@ -1730,7 +1730,7 @@ namespace Microsoft.OData.Edm.Validation
                                     context.AddError(
                                         operationImport.Location(),
                                         EdmErrorCode.OperationImportEntityTypeDoesNotMatchEntitySet,
-                                        Strings.EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet2(operationImport.Name, elementType.FullName()));
+                                        Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet2, operationImport.Name, elementType.FullName()));
                                 }
                             }
 
@@ -1741,7 +1741,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 operationImport.Location(),
                                 EdmErrorCode.OperationImportSpecifiesEntitySetButDoesNotReturnEntityType,
-                                Strings.EdmModel_Validator_Semantic_OperationImportSpecifiesEntitySetButNotEntityType(operationImport.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportSpecifiesEntitySetButNotEntityType, operationImport.Name));
                         }
                     }
                 });
@@ -1763,7 +1763,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             functionImport.Location(),
                             EdmErrorCode.FunctionImportWithParameterShouldNotBeIncludedInServiceDocument,
-                            Strings.EdmModel_Validator_Semantic_FunctionImportWithParameterShouldNotBeIncludedInServiceDocument(functionImport.Name));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_FunctionImportWithParameterShouldNotBeIncludedInServiceDocument, functionImport.Name));
                     }
                 });
 
@@ -1783,7 +1783,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             function.Location(),
                             EdmErrorCode.FunctionMustHaveReturnType,
-                            Strings.EdmModel_Validator_Semantic_FunctionMustHaveReturnType(function.Name));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_FunctionMustHaveReturnType, function.Name));
                     }
                 });
 
@@ -1805,7 +1805,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             function.Location(),
                             EdmErrorCode.UrlEscapeFunctionMustBeBoundFunction,
-                            Strings.EdmModel_Validator_Semantic_UrlEscapeFunctionMustBoundFunction(function.Name));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_UrlEscapeFunctionMustBoundFunction, function.Name));
                     }
                 });
 
@@ -1829,7 +1829,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             function.Location(),
                             EdmErrorCode.UrlEscapeFunctionMustHaveOnlyOneEdmStringParameter,
-                            Strings.EdmModel_Validator_Semantic_UrlEscapeFunctionMustHaveOneStringParameter(function.Name));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_UrlEscapeFunctionMustHaveOneStringParameter, function.Name));
                     }
                 });
         #endregion
@@ -1852,7 +1852,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                 operation.Location(),
                                 EdmErrorCode.OperationImportUnsupportedReturnType,
-                                Strings.EdmModel_Validator_Semantic_OperationWithUnsupportedReturnType(operation.Name));
+                                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationWithUnsupportedReturnType, operation.Name));
                         }
                     }
                 });
@@ -1874,7 +1874,7 @@ namespace Microsoft.OData.Edm.Validation
                                parameterList,
                                context,
                                EdmErrorCode.AlreadyDefined,
-                               Strings.EdmModel_Validator_Semantic_ParameterNameAlreadyDefinedDuplicate(parameter.Name),
+                               Error.Format(SRResources.EdmModel_Validator_Semantic_ParameterNameAlreadyDefinedDuplicate, parameter.Name),
                                /*supressError*/ false);
                        }
                    }
@@ -1892,7 +1892,7 @@ namespace Microsoft.OData.Edm.Validation
                        context.AddError(
                            operation.Location(),
                            EdmErrorCode.BoundOperationMustHaveParameters,
-                           Strings.EdmModel_Validator_Semantic_BoundOperationMustHaveParameters(operation.Name));
+                           Error.Format(SRResources.EdmModel_Validator_Semantic_BoundOperationMustHaveParameters, operation.Name));
                    }
                });
 
@@ -1915,7 +1915,7 @@ namespace Microsoft.OData.Edm.Validation
                            context.AddError(
                                operation.Location(),
                                EdmErrorCode.RequiredParametersMustPrecedeOptional,
-                               Strings.EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional(parameter.Name));
+                               Error.Format(SRResources.EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional, parameter.Name));
                        }
                    }
                });
@@ -1973,7 +1973,7 @@ namespace Microsoft.OData.Edm.Validation
 
                    if (!isEntity || context.IsBad(elementType))
                    {
-                       context.AddError(operation.Location(), EdmErrorCode.OperationWithEntitySetPathReturnTypeInvalid, Strings.EdmModel_Validator_Semantic_OperationWithEntitySetPathReturnTypeInvalid(operation.Name));
+                       context.AddError(operation.Location(), EdmErrorCode.OperationWithEntitySetPathReturnTypeInvalid, Error.Format(SRResources.EdmModel_Validator_Semantic_OperationWithEntitySetPathReturnTypeInvalid, operation.Name));
                    }
 
                    IEdmNavigationProperty navProp = null;
@@ -1986,13 +1986,13 @@ namespace Microsoft.OData.Edm.Validation
                    {
                        if (returnCollectionType != null)
                        {
-                           context.AddError(operation.Location(), EdmErrorCode.OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType, Strings.EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType(operation.Name));
+                           context.AddError(operation.Location(), EdmErrorCode.OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType, Error.Format(SRResources.EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType, operation.Name));
                        }
                    }
 
                    if (lastEntityType != null && elementType != null && !elementType.IsOrInheritsFrom(lastEntityType))
                    {
-                       context.AddError(operation.Location(), EdmErrorCode.OperationWithEntitySetPathAndReturnTypeTypeNotAssignable, Strings.EdmModel_Validator_Semantic_OperationWithEntitySetPathAndReturnTypeTypeNotAssignable(operation.Name, elementType.FullName(), lastEntityType.FullName()));
+                       context.AddError(operation.Location(), EdmErrorCode.OperationWithEntitySetPathAndReturnTypeTypeNotAssignable, Error.Format(SRResources.EdmModel_Validator_Semantic_OperationWithEntitySetPathAndReturnTypeTypeNotAssignable, operation.Name, elementType.FullName(), lastEntityType.FullName()));
                    }
                }
            });
@@ -2013,7 +2013,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             operation.Location(),
                             EdmErrorCode.OperationWithCollectionOfAbstractReturnTypeInvalid,
-                            Strings.EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType(operation.ReturnType.FullName(), operation.FullName()));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType, operation.ReturnType.FullName(), operation.FullName()));
                     }
                 }
             });
@@ -2052,7 +2052,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             type.Location(),
                             EdmErrorCode.ScaleOutOfRange,
-                            Strings.EdmModel_Validator_Semantic_ScaleOutOfRange);
+                            SRResources.EdmModel_Validator_Semantic_ScaleOutOfRange);
                     }
                 });
 
@@ -2068,7 +2068,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             type.Location(),
                             EdmErrorCode.PrecisionOutOfRange,
-                            Strings.EdmModel_Validator_Semantic_PrecisionOutOfRange);
+                            SRResources.EdmModel_Validator_Semantic_PrecisionOutOfRange);
                     }
                 });
 
@@ -2088,7 +2088,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             type.Location(),
                             EdmErrorCode.MaxLengthOutOfRange,
-                            Strings.EdmModel_Validator_Semantic_StringMaxLengthOutOfRange);
+                            SRResources.EdmModel_Validator_Semantic_StringMaxLengthOutOfRange);
                     }
                 });
 
@@ -2104,7 +2104,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             type.Location(),
                             EdmErrorCode.IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull,
-                            Strings.EdmModel_Validator_Semantic_IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull);
+                            SRResources.EdmModel_Validator_Semantic_IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull);
                     }
                 });
 
@@ -2124,7 +2124,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             type.Location(),
                             EdmErrorCode.MaxLengthOutOfRange,
-                            Strings.EdmModel_Validator_Semantic_MaxLengthOutOfRange);
+                            SRResources.EdmModel_Validator_Semantic_MaxLengthOutOfRange);
                     }
                 });
 
@@ -2140,7 +2140,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             type.Location(),
                             EdmErrorCode.IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull,
-                            Strings.EdmModel_Validator_Semantic_IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull);
+                            SRResources.EdmModel_Validator_Semantic_IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull);
                     }
                 });
 
@@ -2160,7 +2160,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             type.Location(),
                             EdmErrorCode.PrecisionOutOfRange,
-                            Strings.EdmModel_Validator_Semantic_PrecisionOutOfRange);
+                            SRResources.EdmModel_Validator_Semantic_PrecisionOutOfRange);
                     }
                 });
 
@@ -2227,7 +2227,7 @@ namespace Microsoft.OData.Edm.Validation
                            context.AddError(
                                        item.Location(),
                                        EdmErrorCode.AlreadyDefined,
-                                       Strings.EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined(fullName));
+                                       Error.Format(SRResources.EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined, fullName));
                        }
                    }
                });
@@ -2248,7 +2248,7 @@ namespace Microsoft.OData.Edm.Validation
                             entityContainerNameList,
                             context,
                             EdmErrorCode.DuplicateEntityContainerName,
-                            Strings.EdmModel_Validator_Semantic_DuplicateEntityContainerName(container.Name),
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_DuplicateEntityContainerName, container.Name),
                             /*supressError*/ false);
                     }
                 });
@@ -2284,7 +2284,7 @@ namespace Microsoft.OData.Edm.Validation
                                     context.AddError(
                                         function.Location(),
                                         EdmErrorCode.BoundFunctionOverloadsMustHaveSameReturnType,
-                                        Strings.EdmModel_Validator_Semantic_BoundFunctionOverloadsMustHaveSameReturnType(function.Name, expectedReturnType.FullName()));
+                                        Error.Format(SRResources.EdmModel_Validator_Semantic_BoundFunctionOverloadsMustHaveSameReturnType, function.Name, expectedReturnType.FullName()));
                                 }
                             }
                         }
@@ -2311,7 +2311,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(
                                        function.Location(),
                                        EdmErrorCode.UnboundFunctionOverloadHasIncorrectReturnType,
-                                       Strings.EdmModel_Validator_Semantic_UnboundFunctionOverloadHasIncorrectReturnType(function.Name));
+                                       Error.Format(SRResources.EdmModel_Validator_Semantic_UnboundFunctionOverloadHasIncorrectReturnType, function.Name));
                         }
                     }
                 }
@@ -2338,7 +2338,7 @@ namespace Microsoft.OData.Edm.Validation
                                 context.AddError(
                                    annotation.Location(),
                                    EdmErrorCode.InvalidElementAnnotation,
-                                   Strings.EdmModel_Validator_Semantic_InvalidElementAnnotationMismatchedTerm);
+                                   SRResources.EdmModel_Validator_Semantic_InvalidElementAnnotationMismatchedTerm);
                             }
                         }
                     }
@@ -2386,7 +2386,7 @@ namespace Microsoft.OData.Edm.Validation
                         {
                             IEdmValue value = annotation.Value as IEdmValue;
                             EdmLocation errorLocation = value == null ? null : value.Location();
-                            context.AddError(new EdmError(errorLocation, EdmErrorCode.InvalidName, Edm.Strings.EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed(annotation.Name)));
+                            context.AddError(new EdmError(errorLocation, EdmErrorCode.InvalidName, Error.Format(SRResources.EdmModel_Validator_Syntactic_EdmModel_NameIsNotAllowed, annotation.Name)));
                         }
                     }
                 });
@@ -2494,7 +2494,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             annotation.Location(),
                             EdmErrorCode.BadUnresolvedTarget,
-                            Strings.EdmModel_Validator_Semantic_InaccessibleTarget(EdmUtil.FullyQualifiedName(target)));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_InaccessibleTarget, EdmUtil.FullyQualifiedName(target)));
                     }
                 });
 
@@ -2533,7 +2533,7 @@ namespace Microsoft.OData.Edm.Validation
                         context.AddError(
                             annotation.Location(),
                             EdmErrorCode.BadUnresolvedTerm,
-                            Strings.EdmModel_Validator_Semantic_InaccessibleTerm(annotation.Term.FullName()));
+                            Error.Format(SRResources.EdmModel_Validator_Semantic_InaccessibleTerm, annotation.Term.FullName()));
                     }
                 });
 
@@ -2561,7 +2561,7 @@ namespace Microsoft.OData.Edm.Validation
                     context.AddError(
                         annotation.Location(),
                         EdmErrorCode.AnnotationApplyToNotAllowedAnnotatable,
-                        Strings.EdmModel_Validator_Semantic_VocabularyAnnotationApplyToNotAllowedAnnotatable(EdmUtil.FullyQualifiedName(annotation.Target), term.AppliesTo, term.FullName()));
+                        Error.Format(SRResources.EdmModel_Validator_Semantic_VocabularyAnnotationApplyToNotAllowedAnnotatable, EdmUtil.FullyQualifiedName(annotation.Target), term.AppliesTo, term.FullName()));
                 });
         #endregion
 
@@ -2670,7 +2670,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(new EdmError(
                                     expression.Location(),
                                     EdmErrorCode.IncorrectNumberOfArguments,
-                                    Edm.Strings.EdmModel_Validator_Semantic_IncorrectNumberOfArguments(expression.Arguments.Count(), appliedFunction.FullName(), appliedFunction.Parameters.Count())));
+                                    Error.Format(SRResources.EdmModel_Validator_Semantic_IncorrectNumberOfArguments, expression.Arguments.Count(), appliedFunction.FullName(), appliedFunction.Parameters.Count())));
                         }
 
                         IEnumerator<IEdmExpression> parameterExpressionEnumerator = expression.Arguments.GetEnumerator();
@@ -2708,7 +2708,7 @@ namespace Microsoft.OData.Edm.Validation
                             context.AddError(new EdmError(
                                     annotation.Location(),
                                     EdmErrorCode.DuplicateAnnotation,
-                                    Edm.Strings.EdmModel_Validator_Semantic_DuplicateAnnotation(EdmUtil.FullyQualifiedName(annotatable), annotation.Term.FullName(), annotation.Qualifier)));
+                                    Error.Format(SRResources.EdmModel_Validator_Semantic_DuplicateAnnotation, EdmUtil.FullyQualifiedName(annotatable), annotation.Term.FullName(), annotation.Qualifier)));
                         }
                     }
                 });
@@ -2745,14 +2745,14 @@ namespace Microsoft.OData.Edm.Validation
                 context.AddError(
                     location,
                     EdmErrorCode.BadAmbiguousElementBinding,
-                    Strings.EdmModel_Validator_Semantic_AmbiguousType(type.FullName()));
+                    Error.Format(SRResources.EdmModel_Validator_Semantic_AmbiguousType, type.FullName()));
             }
             else if (!foundType.IsEquivalentTo(type))
             {
                 context.AddError(
                     location,
                     EdmErrorCode.BadUnresolvedType,
-                    Strings.EdmModel_Validator_Semantic_InaccessibleType(type.FullName()));
+                    Error.Format(SRResources.EdmModel_Validator_Semantic_InaccessibleType, type.FullName()));
             }
         }
 

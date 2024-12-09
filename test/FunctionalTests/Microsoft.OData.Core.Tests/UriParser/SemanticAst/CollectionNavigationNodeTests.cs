@@ -8,7 +8,7 @@ using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -82,7 +82,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var source = FakeSingleEntityNode.CreateFakeSingleEntityNodeForPerson();
             Action create = () => new CollectionNavigationNode(source, HardCodedTestModel.GetPersonMyDogNavProp(), new EdmPathExpression("MyDog"));
 
-            create.Throws<ArgumentException>(ODataErrorStrings.Nodes_CollectionNavigationNode_MustHaveManyMultiplicity);
+            create.Throws<ArgumentException>(SRResources.Nodes_CollectionNavigationNode_MustHaveManyMultiplicity);
         }
 
         [Fact]

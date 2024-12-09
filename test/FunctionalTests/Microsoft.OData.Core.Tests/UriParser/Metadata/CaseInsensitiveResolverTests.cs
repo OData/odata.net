@@ -11,6 +11,7 @@ using Microsoft.OData.Tests.UriParser.Binders;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Metadata
 {
@@ -29,7 +30,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People/TesTNS.PERsON",
                 parser => parser.ParsePath(),
                 path => path.LastSegment.ShouldBeTypeSegment(new EdmCollectionType(new EdmEntityTypeReference(PersonType, false))),
-                Strings.RequestUriProcessor_SyntaxError);
+                SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -40,7 +41,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People(1)/Addr/TestNS.ADDress",
                 parser => parser.ParsePath(),
                 path => path.LastSegment.ShouldBeTypeSegment(AddrType),
-                Strings.RequestUriProcessor_ResourceNotFound("TestNS.ADDress"));
+                Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "TestNS.ADDress"));
         }
         
         [Fact]
@@ -60,7 +61,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                 "People/NS.WHY",
                 parser => parser.ParsePath(),
-                Strings.RequestUriProcessor_SyntaxError);
+                SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -76,7 +77,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                     new TypeSegment(PersonType, PeopleSet),
                     new PropertySegment(PersonNameProp),
                 })),
-               Strings.ExpandItemBinder_CannotFindType("TesTNS.PERsON"));
+               Error.Format(SRResources.ExpandItemBinder_CannotFindType, "TesTNS.PERsON"));
         }
 
         [Fact]
@@ -92,7 +93,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                     new PropertySegment(AddrProperty),
                     new TypeSegment(AddrType, null),
                 })),
-               Strings.SelectBinder_MultiLevelPathInSelect);
+               SRResources.SelectBinder_MultiLevelPathInSelect);
         }
 
         [Fact]
@@ -117,7 +118,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                 "People?$select=NS.WHY/Supername",
                 parser => parser.ParseSelectAndExpand(),
-                Strings.ExpandItemBinder_CannotFindType("NS.WHY"));
+                Error.Format(SRResources.ExpandItemBinder_CannotFindType, "NS.WHY"));
         }
 
         [Fact]
@@ -128,7 +129,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People?$orderby=TesTNS.PERsON/Name",
                (parser) => parser.ParseOrderBy(),
                (clause) => clause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(PersonNameProp),
-               Strings.CastBinder_ChildTypeIsNotEntity("TesTNS.PERsON"));
+               Error.Format(SRResources.CastBinder_ChildTypeIsNotEntity, "TesTNS.PERsON"));
         }
 
         [Fact]
@@ -139,7 +140,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People?$filter=TestNS.Person/Addr/TestNS.AddrESS/ZipCode eq '550'",
                parser => parser.ParseFilter(),
                clause => clause.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal).Left.ShouldBeSingleValuePropertyAccessQueryNode(ZipCodeProperty),
-               Strings.CastBinder_ChildTypeIsNotEntity("TestNS.AddrESS"));
+               Error.Format(SRResources.CastBinder_ChildTypeIsNotEntity, "TestNS.AddrESS"));
         }
 
         //[Fact(Skip = "#582: Do not support built-in type name case insensitive. EnumValue's type name case insensitve also not supported.")]
@@ -174,7 +175,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                 "People?$orderby=NS.WHY/Supername",
                 parser => parser.ParseOrderBy(),
-                Strings.CastBinder_ChildTypeIsNotEntity("NS.WHY"));
+                Error.Format(SRResources.CastBinder_ChildTypeIsNotEntity, "NS.WHY"));
         }
         #endregion
 
@@ -187,7 +188,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "PeoplE",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeEntitySetSegment(PeopleSet),
-               Strings.RequestUriProcessor_ResourceNotFound("PeoplE"));
+               Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "PeoplE"));
         }
 
         [Fact]
@@ -209,7 +210,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "BOSS",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeSingletonSegment(Boss),
-               Strings.RequestUriProcessor_ResourceNotFound("BOSS"));
+               Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "BOSS"));
         }
 
         [Fact]
@@ -229,7 +230,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                "WUKONG",
                parser => parser.ParsePath(),
-               Strings.RequestUriProcessor_ResourceNotFound("WUKONG"));
+               Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "WUKONG"));
         }
 
         [Fact]
@@ -240,7 +241,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "PetSet(key1=1, KEY2='stm')",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("key1", 1), new KeyValuePair<string, object>("key2", "stm")),
-               Strings.BadRequest_KeyMismatch(PetType.FullTypeName()));
+               Error.Format(SRResources.BadRequest_KeyMismatch, PetType.FullTypeName()));
         }
 
         [Fact]
@@ -251,7 +252,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "PetSetCon(KeY=1, kEy='stm')",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("key", 1), new KeyValuePair<string, object>("KEY", "stm")),
-               Strings.BadRequest_KeyMismatch(PetCon.FullTypeName()));
+               Error.Format(SRResources.BadRequest_KeyMismatch, PetCon.FullTypeName()));
         }
 
         [Fact]
@@ -260,7 +261,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                "PetSet(key1=1, key3='stm')",
                parser => parser.ParsePath(),
-               Strings.BadRequest_KeyMismatch(PetType.FullTypeName()));
+               Error.Format(SRResources.BadRequest_KeyMismatch, PetType.FullTypeName()));
         }
         #endregion
 
@@ -273,7 +274,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People(1)/nAmE",
                (parser) => parser.ParsePath(),
                (path) => path.LastSegment.ShouldBePropertySegment(PersonNameProp),
-               Strings.RequestUriProcessor_ResourceNotFound("nAmE"));
+               Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "nAmE"));
         }
 
         [Fact]
@@ -282,7 +283,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                 "People(1)/Name1",
                 parser => parser.ParsePath(),
-                Strings.RequestUriProcessor_ResourceNotFound("Name1"));
+                Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "Name1"));
         }
 
         [Fact]
@@ -293,7 +294,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People(1)/pEn",
                 parser => parser.ParsePath(),
                 path => path.LastSegment.ShouldBeNavigationPropertySegment(PersonNavPen),
-                Strings.UriParserMetadata_MultipleMatchingPropertiesFound("pEn", "TestNS.Person"));
+                Error.Format(SRResources.UriParserMetadata_MultipleMatchingPropertiesFound, "pEn", "TestNS.Person"));
         }
 
         [Fact]
@@ -304,7 +305,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People(1)/addr/zipcode",
                (parser) => parser.ParsePath(),
                (path) => path.LastSegment.ShouldBePropertySegment(ZipCodeProperty),
-               Strings.RequestUriProcessor_ResourceNotFound("addr"));
+               Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "addr"));
         }
 
         [Fact]
@@ -320,7 +321,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                         new PropertySegment(AddrProperty),
                         new PropertySegment(ZipCodeProperty),
                     })),
-                Strings.MetadataBinder_PropertyNotDeclared("TestNS.Person", "ADDR"));
+                Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "TestNS.Person", "ADDR"));
         }
 
         [Fact]
@@ -329,7 +330,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                 "People?$select=Name1",
                 parser => parser.ParseSelectAndExpand(),
-                Strings.MetadataBinder_PropertyNotDeclared("TestNS.Person", "Name1"));
+                Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "TestNS.Person", "Name1"));
         }
 
         [Fact]
@@ -340,7 +341,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People(1)?$expand=PeN",
                 parser => parser.ParseSelectAndExpand(),
                 clause => clause.SelectedItems.Single().ShouldBeExpansionFor(PersonNavPen),
-                Strings.UriParserMetadata_MultipleMatchingPropertiesFound("PeN", "TestNS.Person"));
+                Error.Format(SRResources.UriParserMetadata_MultipleMatchingPropertiesFound, "PeN", "TestNS.Person"));
         }
 
         [Fact]
@@ -351,7 +352,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=nAmE",
                 (parser) => parser.ParseOrderBy(),
                 (clause) => clause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(PersonNameProp),
-                Strings.MetadataBinder_PropertyNotDeclared("TestNS.Person", "nAmE"));
+                Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "TestNS.Person", "nAmE"));
         }
 
         [Fact]
@@ -360,7 +361,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                 "People?$orderby=Nam2e",
                 (parser) => parser.ParseOrderBy(),
-                Strings.MetadataBinder_PropertyNotDeclared("TestNS.Person", "Nam2e"));
+                Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "TestNS.Person", "Nam2e"));
         }
 
         [Fact]
@@ -389,7 +390,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                     parameters[0].ShouldBeSingleValuePropertyAccessQueryNode(ZipCodeProperty);
                     parameters[1].ShouldBeConstantQueryNode("2");
                 },
-                Strings.MetadataBinder_PropertyNotDeclared("TestNS.Person", "ADDR"));
+                Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "TestNS.Person", "ADDR"));
         }
         #endregion
 
@@ -402,7 +403,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People(1)/TestNS.FindPENCIL",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeOperationSegment(FindPencil1P),
-               Strings.RequestUriProcessor_ResourceNotFound("TestNS.FindPENCIL"));
+               Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "TestNS.FindPENCIL"));
         }
 
         [Fact]
@@ -413,7 +414,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People(1)/TestNS.FinDPenCilsCoN",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeOperationSegment(FindPencilsCon),
-               Strings.FunctionOverloadResolver_NoSingleMatchFound("TestNS.FinDPenCilsCoN", ""));
+               Error.Format(SRResources.FunctionOverloadResolver_NoSingleMatchFound, "TestNS.FinDPenCilsCoN", ""));
         }
 
         [Fact]
@@ -422,7 +423,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                "People(1)/TestNS.FindPencilEx",
                parser => parser.ParsePath(),
-               Strings.RequestUriProcessor_ResourceNotFound("TestNS.FindPencilEx"));
+               Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "TestNS.FindPencilEx"));
         }
 
         [Fact]
@@ -433,7 +434,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People(1)/TestNS.FindPENCIL(piD=5)",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeOperationSegment(FindPencil2P),
-               Strings.RequestUriProcessor_ResourceNotFound("TestNS.FindPENCIL"));
+               Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "TestNS.FindPENCIL"));
         }
 
         [Fact]
@@ -453,7 +454,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                 "People(1)/TestNS.FindPencil(piT=5)",
                 parser => parser.ParsePath(),
-                Strings.RequestUriProcessor_ResourceNotFound("TestNS.FindPencil"));
+                Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "TestNS.FindPencil"));
         }
 
         [Fact]
@@ -464,7 +465,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People?$orderby=TestNS.FindPencil(PID=5)/Id",
                parser => parser.ParseOrderBy(),
                clause => clause.Expression.ShouldBeSingleValuePropertyAccessQueryNode(PencilId),
-               Strings.MetadataBinder_UnknownFunction("TestNS.FindPencil"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "TestNS.FindPencil"));
         }
         #endregion
 
@@ -477,7 +478,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "FEED",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeOperationImportSegment(FeedImport),
-               Strings.RequestUriProcessor_ResourceNotFound("FEED"));
+               Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "FEED"));
         }
 
         [Fact]
@@ -488,7 +489,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "fEEdCon",
                parser => parser.ParsePath(),
                path => path.LastSegment.ShouldBeOperationImportSegment(FeedConImport),
-               Strings.FunctionOverloadResolver_MultipleActionImportOverloads("fEEdCon"));
+               Error.Format(SRResources.FunctionOverloadResolver_MultipleActionImportOverloads, "fEEdCon"));
         }
 
         [Fact]
@@ -497,7 +498,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             this.TestCaseInsensitiveNotExist(
                "FeedSheep",
                parser => parser.ParsePath(),
-               Strings.RequestUriProcessor_ResourceNotFound("FeedSheep"));
+               Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "FeedSheep"));
         }
         #endregion
 

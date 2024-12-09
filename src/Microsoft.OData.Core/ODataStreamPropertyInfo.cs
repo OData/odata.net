@@ -7,6 +7,7 @@
 namespace Microsoft.OData
 {
     using System;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Evaluation;
 
@@ -106,7 +107,7 @@ namespace Microsoft.OData
                     value != EdmPrimitiveTypeKind.String &&
                     value != EdmPrimitiveTypeKind.None)
                 {
-                    throw new ODataException(Strings.StreamItemInvalidPrimitiveKind(value));
+                    throw new ODataException(Error.Format(SRResources.StreamItemInvalidPrimitiveKind, value));
                 }
 
                 this.primitiveTypeKind = value;

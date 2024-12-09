@@ -8,7 +8,7 @@ namespace Microsoft.OData.UriParser
 {
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Walk down a chain of type segments, checking that we find the correct type at each level.
@@ -32,7 +32,7 @@ namespace Microsoft.OData.UriParser
 
             if (!firstTypeToken.IsNamespaceOrContainerQualified())
             {
-                throw new ODataException(ODataErrorStrings.SelectExpandPathBinder_FollowNonTypeSegment(firstTypeToken.Identifier));
+                throw new ODataException(Error.Format(SRResources.SelectExpandPathBinder_FollowNonTypeSegment, firstTypeToken.Identifier));
             }
 
             int index = 0;
@@ -45,7 +45,7 @@ namespace Microsoft.OData.UriParser
                 if (currentLevelType == null)
                 {
                     // TODO: fix this error message?
-                    throw new ODataException(ODataErrorStrings.ExpandItemBinder_CannotFindType(currentToken.Identifier));
+                    throw new ODataException(Error.Format(SRResources.ExpandItemBinder_CannotFindType, currentToken.Identifier));
                 }
 
                 UriEdmHelpers.CheckRelatedTo(previousLevelEntityType, currentLevelType);
@@ -56,7 +56,7 @@ namespace Microsoft.OData.UriParser
 
                 if (index >= maxDepth)
                 {
-                    throw new ODataException(ODataErrorStrings.ExpandItemBinder_PathTooDeep);
+                    throw new ODataException(SRResources.ExpandItemBinder_PathTooDeep);
                 }
             }
 

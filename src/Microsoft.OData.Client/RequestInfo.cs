@@ -349,7 +349,7 @@ namespace Microsoft.OData.Client
         {
             if (responseVersion != null && responseVersion > this.Context.MaxProtocolVersionAsVersion)
             {
-                string message = Strings.Context_ResponseVersionIsBiggerThanProtocolVersion(
+                string message = Error.Format(SRResources.Context_ResponseVersionIsBiggerThanProtocolVersion,
                     responseVersion.ToString(),
                     this.Context.MaxProtocolVersion.ToString());
                 return Error.InvalidOperation(message);
@@ -436,7 +436,7 @@ namespace Microsoft.OData.Client
                 clientRequestMessage = this.Configurations.RequestPipeline.OnMessageCreating(clientRequestMessageArgs);
                 if (clientRequestMessage == null)
                 {
-                    throw Error.InvalidOperation(Strings.Context_OnMessageCreatingReturningNull);
+                    throw Error.InvalidOperation(SRResources.Context_OnMessageCreatingReturningNull);
                 }
             }
             else

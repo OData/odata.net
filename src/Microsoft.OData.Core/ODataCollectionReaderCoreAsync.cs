@@ -10,6 +10,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -80,7 +81,7 @@ namespace Microsoft.OData
 
                 default:
                     Debug.Assert(false, "Unsupported collection reader state " + this.State + " detected.");
-                    return TaskUtils.GetFaultedTask<bool>(new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionReaderCoreAsync_ReadAsynchronously)));
+                    return TaskUtils.GetFaultedTask<bool>(new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataCollectionReaderCoreAsync_ReadAsynchronously)));
             }
         }
     }

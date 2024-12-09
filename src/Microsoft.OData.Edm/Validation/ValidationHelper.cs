@@ -79,7 +79,7 @@ namespace Microsoft.OData.Edm.Validation
             IEdmStringValue edmStringValue = value as IEdmStringValue;
             if (edmStringValue == null)
             {
-                error = new EdmError(value.Location(), EdmErrorCode.InvalidElementAnnotation, Edm.Strings.EdmModel_Validator_Semantic_InvalidElementAnnotationNotIEdmStringValue);
+                error = new EdmError(value.Location(), EdmErrorCode.InvalidElementAnnotation, SRResources.EdmModel_Validator_Semantic_InvalidElementAnnotationNotIEdmStringValue);
                 return false;
             }
 
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Edm.Validation
                 // The annotation must be an element.
                 if (reader.EOF)
                 {
-                    error = new EdmError(value.Location(), EdmErrorCode.InvalidElementAnnotation, Edm.Strings.EdmModel_Validator_Semantic_InvalidElementAnnotationValueInvalidXml);
+                    error = new EdmError(value.Location(), EdmErrorCode.InvalidElementAnnotation, SRResources.EdmModel_Validator_Semantic_InvalidElementAnnotationValueInvalidXml);
                     return false;
                 }
 
@@ -110,13 +110,13 @@ namespace Microsoft.OData.Edm.Validation
 
                 if (EdmUtil.IsNullOrWhiteSpaceInternal(elementNamespace) || EdmUtil.IsNullOrWhiteSpaceInternal(elementName))
                 {
-                    error = new EdmError(value.Location(), EdmErrorCode.InvalidElementAnnotation, Edm.Strings.EdmModel_Validator_Semantic_InvalidElementAnnotationNullNamespaceOrName);
+                    error = new EdmError(value.Location(), EdmErrorCode.InvalidElementAnnotation, SRResources.EdmModel_Validator_Semantic_InvalidElementAnnotationNullNamespaceOrName);
                     return false;
                 }
 
                 if (!((annotationNamespace == null || elementNamespace == annotationNamespace) && (annotationName == null || elementName == annotationName)))
                 {
-                    error = new EdmError(value.Location(), EdmErrorCode.InvalidElementAnnotation, Edm.Strings.EdmModel_Validator_Semantic_InvalidElementAnnotationMismatchedTerm);
+                    error = new EdmError(value.Location(), EdmErrorCode.InvalidElementAnnotation, SRResources.EdmModel_Validator_Semantic_InvalidElementAnnotationMismatchedTerm);
                     return false;
                 }
 
@@ -130,7 +130,7 @@ namespace Microsoft.OData.Edm.Validation
             }
             catch (XmlException)
             {
-                error = new EdmError(value.Location(), EdmErrorCode.InvalidElementAnnotation, Edm.Strings.EdmModel_Validator_Semantic_InvalidElementAnnotationValueInvalidXml);
+                error = new EdmError(value.Location(), EdmErrorCode.InvalidElementAnnotation, SRResources.EdmModel_Validator_Semantic_InvalidElementAnnotationValueInvalidXml);
                 return false;
             }
         }

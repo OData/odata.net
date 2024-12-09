@@ -74,7 +74,7 @@ namespace Microsoft.OData.Client
   
             if (edmEntitySet == null)
             {
-                throw Error.InvalidOperation(Strings.DataBinding_Util_UnknownEntitySetName(entityDescriptor.Entity.GetType().FullName));
+                throw Error.InvalidOperation(Error.Format(SRResources.DataBinding_Util_UnknownEntitySetName, entityDescriptor.Entity.GetType().FullName));
             }
 
             return new ODataWriterWrapper(messageWriter.CreateODataDeltaResourceSetWriter(edmEntitySet, entityType), requestPipeline);

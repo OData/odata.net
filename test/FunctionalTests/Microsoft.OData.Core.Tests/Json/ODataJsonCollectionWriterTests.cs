@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
@@ -375,7 +376,7 @@ namespace Microsoft.OData.Tests.Json
                     EdmCoreModel.Instance.GetString(true)));
 
             Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromCompleted("Completed", "Collection"),
+                Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromCompleted, "Completed", "Collection"),
                 exception.Message);
         }
 
@@ -395,7 +396,7 @@ namespace Microsoft.OData.Tests.Json
                     EdmCoreModel.Instance.GetString(true)));
 
             Assert.Equal(
-                Strings.ODataCollectionWriterCore_InvalidTransitionFromCollection("Collection", "Collection"),
+                Error.Format(SRResources.ODataCollectionWriterCore_InvalidTransitionFromCollection, "Collection", "Collection"),
                 exception.Message);
         }
 
@@ -416,7 +417,7 @@ namespace Microsoft.OData.Tests.Json
                     EdmCoreModel.Instance.GetString(true)));
 
             Assert.Equal(
-                Strings.ODataCollectionWriterCore_InvalidTransitionFromItem("Item", "Collection"),
+                Error.Format(SRResources.ODataCollectionWriterCore_InvalidTransitionFromItem, "Item", "Collection"),
                 exception.Message);
         }
 
@@ -437,7 +438,7 @@ namespace Microsoft.OData.Tests.Json
                     EdmCoreModel.Instance.GetString(true)));
 
             Assert.Equal(
-                Strings.ODataWriterCore_InvalidTransitionFromCompleted("Completed", "Item"),
+                Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromCompleted, "Completed", "Item"),
                 exception.Message);
         }
 
@@ -456,7 +457,7 @@ namespace Microsoft.OData.Tests.Json
                     EdmCoreModel.Instance.GetString(true)));
 
             Assert.Equal(
-                Strings.ODataCollectionWriterCore_InvalidTransitionFromStart("Start", "Item"),
+                Error.Format(SRResources.ODataCollectionWriterCore_InvalidTransitionFromStart, "Start", "Item"),
                 exception.Message);
         }
 
@@ -477,7 +478,7 @@ namespace Microsoft.OData.Tests.Json
                     EdmCoreModel.Instance.GetString(true)));
 
             Assert.Equal(
-                Strings.ODataCollectionWriterCore_WriteEndCalledInInvalidState("Completed"),
+                Error.Format(SRResources.ODataCollectionWriterCore_WriteEndCalledInInvalidState, "Completed"),
                 exception.Message);
         }
 
@@ -496,7 +497,7 @@ namespace Microsoft.OData.Tests.Json
                     EdmCoreModel.Instance.GetString(true)));
 
             Assert.Equal(
-                Strings.ODataCollectionWriterCore_WriteEndCalledInInvalidState("Start"),
+                Error.Format(SRResources.ODataCollectionWriterCore_WriteEndCalledInInvalidState, "Start"),
                 exception.Message);
         }
 

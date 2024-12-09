@@ -48,7 +48,7 @@ namespace Microsoft.Spatial
             {
                 if (this.lastConstructedNode == null || this.lastConstructedNode.Instance == null || this.lastConstructedNode.Parent != null)
                 {
-                    throw new InvalidOperationException(Strings.SpatialBuilder_CannotCreateBeforeDrawn);
+                    throw new InvalidOperationException(SRResources.SpatialBuilder_CannotCreateBeforeDrawn);
                 }
 
                 return this.lastConstructedNode.Instance;

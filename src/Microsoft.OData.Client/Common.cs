@@ -95,9 +95,9 @@ namespace Microsoft.OData.Service
                 if (isNested)
                 {
 #if ODATA_CLIENT
-                    throw Error.InvalidOperation(Strings.ClientType_CollectionOfCollectionNotSupported);
+                    throw Error.InvalidOperation(SRResources.ClientType_CollectionOfCollectionNotSupported);
 #else
-                    throw DataServiceException.CreateBadRequestError(Strings.BadRequest_CollectionOfCollectionNotSupported);
+                    throw DataServiceException.CreateBadRequestError(SRResources.BadRequest_CollectionOfCollectionNotSupported);
 #endif
                 }
 

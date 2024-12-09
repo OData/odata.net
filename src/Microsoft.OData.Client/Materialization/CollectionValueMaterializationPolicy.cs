@@ -84,7 +84,7 @@ namespace Microsoft.OData.Client.Materialization
             // get a ClientType instance for the Collection property. This determines what type will be used later when creating the actual Collection instance
             ClientTypeAnnotation collectionClientType = this.materializerContext.ResolveTypeForMaterialization(userCollectionType, collectionValue.TypeName);
 
-            return this.CreateCollectionInstance(collectionClientType.EdmTypeReference as IEdmCollectionTypeReference, collectionClientType.ElementType, () => DSClient.Strings.Materializer_NoParameterlessCtorForCollectionProperty(collectionProperty.Name, collectionClientType.ElementTypeName));
+            return this.CreateCollectionInstance(collectionClientType.EdmTypeReference as IEdmCollectionTypeReference, collectionClientType.ElementType, () => Error.Format(SRResources.Materializer_NoParameterlessCtorForCollectionProperty, collectionProperty.Name, collectionClientType.ElementTypeName));
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             Debug.Assert(edmCollectionTypeReference != null, "edmCollectionTypeReference!=null");
             Debug.Assert(clientCollectionType != null, "clientCollectionType!=null");
-            return CreateCollectionInstance(edmCollectionTypeReference, clientCollectionType, () => DSClient.Strings.Materializer_MaterializationTypeError(clientCollectionType.FullName));
+            return CreateCollectionInstance(edmCollectionTypeReference, clientCollectionType, () => Error.Format(SRResources.Materializer_MaterializationTypeError, clientCollectionType.FullName));
         }
 
         /// <summary>
@@ -171,7 +171,7 @@ namespace Microsoft.OData.Client.Materialization
                 {
                     if (!isElementNullable && item == null)
                     {
-                        throw DSClient.Error.InvalidOperation(DSClient.Strings.Collection_NullCollectionItemsNotSupported);
+                        throw DSClient.Error.InvalidOperation(SRResources.Collection_NullCollectionItemsNotSupported);
                     }
 
                     ODataEnumValue enumVal = null;
@@ -181,7 +181,7 @@ namespace Microsoft.OData.Client.Materialization
                     {
                         if (item is ODataCollectionValue)
                         {
-                            throw DSClient.Error.InvalidOperation(DSClient.Strings.Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed);
+                            throw DSClient.Error.InvalidOperation(SRResources.Collection_CollectionTypesInCollectionOfPrimitiveTypesNotAllowed);
                         }
 
                         object materializedValue = this.primitiveValueMaterializationPolicy.MaterializePrimitiveDataValueCollectionElement(collectionItemType, wireTypeName, item);
@@ -198,7 +198,7 @@ namespace Microsoft.OData.Client.Materialization
                     {
                         if (item != null)
                         {
-                            throw DSClient.Error.InvalidOperation(DSClient.Strings.Collection_PrimitiveTypesInCollectionOfComplexTypesNotAllowed);
+                            throw DSClient.Error.InvalidOperation(SRResources.Collection_PrimitiveTypesInCollectionOfComplexTypesNotAllowed);
                         }
 
                         addValueToBackingICollectionInstance(collectionInstance, null);
@@ -225,7 +225,7 @@ namespace Microsoft.OData.Client.Materialization
             // DataServiceCollection cannot track non-entity types so it should not be used for storing primitive or complex types
             if (ClientTypeUtil.IsDataServiceCollection(clientCollectionType))
             {
-                throw DSClient.Error.InvalidOperation(DSClient.Strings.Materializer_DataServiceCollectionNotSupportedForNonEntities);
+                throw DSClient.Error.InvalidOperation(SRResources.Materializer_DataServiceCollectionNotSupportedForNonEntities);
             }
 
             try

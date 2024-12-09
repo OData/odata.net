@@ -17,6 +17,7 @@ namespace Microsoft.OData
     using System.Threading.Tasks;
     using System.Xml;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -117,7 +118,7 @@ namespace Microsoft.OData
             ODataVersion requestedVersion = ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
             if (requestedVersion > this.settings.MaxProtocolVersion)
             {
-                throw new ODataException(Strings.ODataUtils_MaxProtocolVersionExceeded(ODataUtils.ODataVersionToString(requestedVersion), ODataUtils.ODataVersionToString(this.settings.MaxProtocolVersion)));
+                throw new ODataException(Error.Format(SRResources.ODataUtils_MaxProtocolVersionExceeded, ODataUtils.ODataVersionToString(requestedVersion), ODataUtils.ODataVersionToString(this.settings.MaxProtocolVersion)));
             }
 
             this.model = model ?? GetModel(this.serviceProvider);
@@ -162,7 +163,7 @@ namespace Microsoft.OData
             ODataVersion requestedVersion = ODataUtilsInternal.GetODataVersion(this.message, this.settings.MaxProtocolVersion);
             if (requestedVersion > this.settings.MaxProtocolVersion)
             {
-                throw new ODataException(Strings.ODataUtils_MaxProtocolVersionExceeded(ODataUtils.ODataVersionToString(requestedVersion), ODataUtils.ODataVersionToString(this.settings.MaxProtocolVersion)));
+                throw new ODataException(Error.Format(SRResources.ODataUtils_MaxProtocolVersionExceeded, ODataUtils.ODataVersionToString(requestedVersion), ODataUtils.ODataVersionToString(this.settings.MaxProtocolVersion)));
             }
 
             this.model = model ?? GetModel(this.serviceProvider);
@@ -882,7 +883,7 @@ namespace Microsoft.OData
         {
             if (this.format == null)
             {
-                throw new ODataException(Strings.ODataMessageReader_GetFormatCalledBeforeReadingStarted);
+                throw new ODataException(SRResources.ODataMessageReader_GetFormatCalledBeforeReadingStarted);
             }
 
             return this.format;
@@ -949,7 +950,7 @@ namespace Microsoft.OData
             {
                 if (this.GetContentLengthHeader() != 0)
                 {
-                    throw new ODataContentTypeException(Strings.ODataMessageReader_NoneOrEmptyContentTypeHeader);
+                    throw new ODataContentTypeException(SRResources.ODataMessageReader_NoneOrEmptyContentTypeHeader);
                 }
 
                 // Set a default format if content type is null and content length is 0.
@@ -995,12 +996,12 @@ namespace Microsoft.OData
             {
                 if (entitySet != null)
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_EntitySetSpecifiedWithoutMetadata("entitySet"), nameof(entitySet));
+                    throw new ArgumentException(Error.Format(SRResources.ODataMessageReader_EntitySetSpecifiedWithoutMetadata, "entitySet"), nameof(entitySet));
                 }
 
                 if (expectedBaseResourceType != null)
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("expectedBaseEntityType"), "expectedBaseEntityType");
+                    throw new ArgumentException(Error.Format(SRResources.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata, "expectedBaseEntityType"), "expectedBaseEntityType");
                 }
             }
         }
@@ -1016,19 +1017,19 @@ namespace Microsoft.OData
 
             if (!this.readingResponse)
             {
-                throw new ODataException(Strings.ODataMessageReader_DeltaInRequest);
+                throw new ODataException(SRResources.ODataMessageReader_DeltaInRequest);
             }
 
             if (!this.model.IsUserModel())
             {
                 if (entitySet != null)
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_EntitySetSpecifiedWithoutMetadata("entitySet"), nameof(entitySet));
+                    throw new ArgumentException(Error.Format(SRResources.ODataMessageReader_EntitySetSpecifiedWithoutMetadata, "entitySet"), nameof(entitySet));
                 }
 
                 if (expectedBaseEntityType != null)
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("expectedBaseEntityType"), nameof(expectedBaseEntityType));
+                    throw new ArgumentException(Error.Format(SRResources.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata, "expectedBaseEntityType"), nameof(expectedBaseEntityType));
                 }
             }
         }
@@ -1046,12 +1047,12 @@ namespace Microsoft.OData
             {
                 if (navigationSource != null)
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_EntitySetSpecifiedWithoutMetadata("navigationSource"), nameof(navigationSource));
+                    throw new ArgumentException(Error.Format(SRResources.ODataMessageReader_EntitySetSpecifiedWithoutMetadata, "navigationSource"), nameof(navigationSource));
                 }
 
                 if (resourceType != null)
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("resourceType"), nameof(resourceType));
+                    throw new ArgumentException(Error.Format(SRResources.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata, "resourceType"), nameof(resourceType));
                 }
             }
         }
@@ -1069,7 +1070,7 @@ namespace Microsoft.OData
             {
                 if (!this.model.IsUserModel())
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("expectedItemTypeReference"), nameof(expectedItemTypeReference));
+                    throw new ArgumentException(Error.Format(SRResources.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata, "expectedItemTypeReference"), nameof(expectedItemTypeReference));
                 }
 
                 if (!expectedItemTypeReference.IsODataPrimitiveTypeKind()
@@ -1077,7 +1078,7 @@ namespace Microsoft.OData
                     && expectedItemTypeReference.TypeKind() != EdmTypeKind.Enum)
                 {
                     throw new ArgumentException(
-                        Strings.ODataMessageReader_ExpectedCollectionTypeWrongKind(expectedItemTypeReference.TypeKind().ToString()),
+                        Error.Format(SRResources.ODataMessageReader_ExpectedCollectionTypeWrongKind, expectedItemTypeReference.TypeKind().ToString()),
                         nameof(expectedItemTypeReference));
                 }
             }
@@ -1109,12 +1110,12 @@ namespace Microsoft.OData
 
             if (this.readingResponse)
             {
-                throw new ODataException(Strings.ODataMessageReader_ParameterPayloadInResponse);
+                throw new ODataException(SRResources.ODataMessageReader_ParameterPayloadInResponse);
             }
 
             if (operation != null && !this.model.IsUserModel())
             {
-                throw new ArgumentException(Strings.ODataMessageReader_OperationSpecifiedWithoutMetadata("operation"), nameof(operation));
+                throw new ArgumentException(Error.Format(SRResources.ODataMessageReader_OperationSpecifiedWithoutMetadata, "operation"), nameof(operation));
             }
         }
 
@@ -1127,7 +1128,7 @@ namespace Microsoft.OData
 
             if (!this.readingResponse)
             {
-                throw new ODataException(Strings.ODataMessageReader_ServiceDocumentInRequest);
+                throw new ODataException(SRResources.ODataMessageReader_ServiceDocumentInRequest);
             }
         }
 
@@ -1140,7 +1141,7 @@ namespace Microsoft.OData
 
             if (!this.readingResponse)
             {
-                throw new ODataException(Strings.ODataMessageReader_MetadataDocumentInRequest);
+                throw new ODataException(SRResources.ODataMessageReader_MetadataDocumentInRequest);
             }
         }
 
@@ -1170,22 +1171,22 @@ namespace Microsoft.OData
             {
                 if (!this.model.IsUserModel())
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata("expectedPropertyTypeReference"), nameof(expectedPropertyTypeReference));
+                    throw new ArgumentException(Error.Format(SRResources.ODataMessageReader_ExpectedTypeSpecifiedWithoutMetadata, "expectedPropertyTypeReference"), nameof(expectedPropertyTypeReference));
                 }
 
                 IEdmCollectionType collectionType = expectedPropertyTypeReference.Definition as IEdmCollectionType;
                 if (collectionType != null && collectionType.ElementType.IsODataEntityTypeKind())
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedPropertyTypeEntityCollectionKind, nameof(expectedPropertyTypeReference));
+                    throw new ArgumentException(SRResources.ODataMessageReader_ExpectedPropertyTypeEntityCollectionKind, nameof(expectedPropertyTypeReference));
                 }
 
                 if (expectedPropertyTypeReference.IsODataEntityTypeKind())
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedPropertyTypeEntityKind, nameof(expectedPropertyTypeReference));
+                    throw new ArgumentException(SRResources.ODataMessageReader_ExpectedPropertyTypeEntityKind, nameof(expectedPropertyTypeReference));
                 }
                 else if (expectedPropertyTypeReference.IsStream())
                 {
-                    throw new ArgumentException(Strings.ODataMessageReader_ExpectedPropertyTypeStream, nameof(expectedPropertyTypeReference));
+                    throw new ArgumentException(SRResources.ODataMessageReader_ExpectedPropertyTypeStream, nameof(expectedPropertyTypeReference));
                 }
             }
         }
@@ -1200,7 +1201,7 @@ namespace Microsoft.OData
             if (!this.readingResponse)
             {
                 // top-level errors can only be read for response messages
-                throw new ODataException(Strings.ODataMessageReader_ErrorPayloadInRequest);
+                throw new ODataException(SRResources.ODataMessageReader_ErrorPayloadInRequest);
             }
         }
 
@@ -1235,7 +1236,7 @@ namespace Microsoft.OData
                 if (!expectedTypeReference.IsODataPrimitiveTypeKind() && !expectedTypeReference.IsODataTypeDefinitionTypeKind())
                 {
                     throw new ArgumentException(
-                        Strings.ODataMessageReader_ExpectedValueTypeWrongKind(expectedTypeReference.TypeKind().ToString()),
+                        Error.Format(SRResources.ODataMessageReader_ExpectedValueTypeWrongKind, expectedTypeReference.TypeKind().ToString()),
                         nameof(expectedTypeReference));
                 }
 
@@ -1261,12 +1262,12 @@ namespace Microsoft.OData
             this.VerifyNotDisposed();
             if (this.readMethodCalled)
             {
-                throw new ODataException(Strings.ODataMessageReader_ReaderAlreadyUsed);
+                throw new ODataException(SRResources.ODataMessageReader_ReaderAlreadyUsed);
             }
 
             if (this.message.BufferingReadStream != null && this.message.BufferingReadStream.IsBuffering)
             {
-                throw new ODataException(Strings.ODataMessageReader_PayloadKindDetectionRunning);
+                throw new ODataException(SRResources.ODataMessageReader_PayloadKindDetectionRunning);
             }
 
             this.readMethodCalled = true;
@@ -1342,7 +1343,7 @@ namespace Microsoft.OData
             if (this.message.UseBufferingReadStream == true)
             {
                 // This method must be called at most once and not after the actual reading has started.
-                throw new ODataException(Strings.ODataMessageReader_DetectPayloadKindMultipleTimes);
+                throw new ODataException(SRResources.ODataMessageReader_DetectPayloadKindMultipleTimes);
             }
 
             string contentTypeHeader = this.GetContentTypeHeader();

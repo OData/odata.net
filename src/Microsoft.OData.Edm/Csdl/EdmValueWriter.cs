@@ -68,7 +68,7 @@ namespace Microsoft.OData.Edm.Csdl
                 case EdmValueKind.TimeOfDay:
                     return TimeOfDayAsXml(((IEdmTimeOfDayValue)v).Value);
                 default:
-                    throw new NotSupportedException(Edm.Strings.ValueWriter_NonSerializableValue(v.ValueKind));
+                    throw new NotSupportedException(Error.Format(SRResources.ValueWriter_NonSerializableValue, v.ValueKind));
             }
         }
 #endif

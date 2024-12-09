@@ -89,7 +89,7 @@ namespace Microsoft.OData.Client.Tests
             var exception = Assert.ThrowsAny<InvalidOperationException>(() => sut.Translate(products.Expression));
 
             // Assert
-            Assert.Equal(Strings.ALinq_ContainsNotValidOnEmptyCollection, exception.Message);
+            Assert.Equal(SRResources.ALinq_ContainsNotValidOnEmptyCollection, exception.Message);
         }
 
         [Fact]

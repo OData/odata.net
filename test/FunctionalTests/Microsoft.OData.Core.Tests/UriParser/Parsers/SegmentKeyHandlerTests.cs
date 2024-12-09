@@ -7,10 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -122,7 +122,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 "10",
                 DefaultUriResolver,
                 out keySegment);
-            implicitKeyWithOutRefIntegrityConstraint.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyCountMismatch(HardCodedTestModel.GetLionType().FullTypeName()));
+            implicitKeyWithOutRefIntegrityConstraint.Throws<ODataException>(Error.Format(SRResources.BadRequest_KeyCountMismatch, HardCodedTestModel.GetLionType().FullTypeName()));
         }
     }
 }

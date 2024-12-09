@@ -45,7 +45,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 else
                 {
                     entityModel = null;
-                    errors = new EdmError[] { new EdmError(null, EdmErrorCode.NullXmlReader, Edm.Strings.CsdlParser_NullXmlReader) };
+                    errors = new EdmError[] { new EdmError(null, EdmErrorCode.NullXmlReader, SRResources.CsdlParser_NullXmlReader) };
 
                     return false;
                 }
@@ -56,7 +56,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             if (readerCount == 0)
             {
                 entityModel = null;
-                errors = new EdmError[] { new EdmError(null, EdmErrorCode.NoReadersProvided, Edm.Strings.CsdlParser_NoReadersProvided) };
+                errors = new EdmError[] { new EdmError(null, EdmErrorCode.NoReadersProvided, SRResources.CsdlParser_NoReadersProvided) };
 
                 return false;
             }

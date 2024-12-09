@@ -25,7 +25,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.DataServiceQueryException" /> class with a system-supplied message that describes the error. </summary>
         public DataServiceQueryException()
-            : base(Strings.DataServiceException_GeneralError)
+            : base(SRResources.DataServiceException_GeneralError)
         {
         }
 

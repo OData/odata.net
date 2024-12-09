@@ -9,13 +9,9 @@ using System.Diagnostics;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.Spatial;
+using Microsoft.OData.Core;
 #if ODATA_CLIENT
     using Microsoft.OData;
-    using ErrorStrings = Microsoft.OData.Client.Strings;
-    using PlatformHelpers = Microsoft.OData.Client.PlatformHelper;
-#else
-using ErrorStrings = Microsoft.OData.Strings;
-using PlatformHelpers = Microsoft.OData.PlatformHelper;
 #endif
 
 #if ODATA_CLIENT
@@ -153,7 +149,7 @@ namespace Microsoft.OData.Evaluation
                     return ((IEdmEnumValue)edmValue).Value.Value;
             }
 
-            throw new ODataException(ErrorStrings.EdmValueUtils_CannotConvertTypeToClrValue(edmValue.ValueKind));
+            throw new ODataException(Error.Format(SRResources.EdmValueUtils_CannotConvertTypeToClrValue, edmValue.ValueKind));
         }
 
 #if !ODATA_CLIENT
@@ -196,7 +192,7 @@ namespace Microsoft.OData.Evaluation
             IEdmPropertyValue propertyValue = structuredValue.FindPropertyValue(propertyName);
             if (propertyValue == null)
             {
-                throw new ODataException(ErrorStrings.EdmValueUtils_PropertyDoesntExist(valueType.FullName(), propertyName));
+                throw new ODataException(Error.Format(SRResources.EdmValueUtils_PropertyDoesntExist, valueType.FullName(), propertyName));
             }
 
             if (propertyValue.Value.ValueKind == EdmValueKind.Null)
@@ -207,7 +203,7 @@ namespace Microsoft.OData.Evaluation
             IEdmPrimitiveValue primitiveValue = propertyValue.Value as IEdmPrimitiveValue;
             if (primitiveValue == null)
             {
-                throw new ODataException(ErrorStrings.EdmValueUtils_NonPrimitiveValue(propertyValue.Name, valueType.FullName()));
+                throw new ODataException(Error.Format(SRResources.EdmValueUtils_NonPrimitiveValue, propertyValue.Name, valueType.FullName()));
             }
 
             return primitiveValue.ToClrValue();
@@ -336,7 +332,7 @@ namespace Microsoft.OData.Evaluation
             }
 #endif
 
-            throw new ODataException(ErrorStrings.EdmValueUtils_UnsupportedPrimitiveType(primitiveValue.GetType().FullName));
+            throw new ODataException(Error.Format(SRResources.EdmValueUtils_UnsupportedPrimitiveType, primitiveValue.GetType().FullName));
         }
 
 #if ODATA_CLIENT
@@ -397,10 +393,10 @@ namespace Microsoft.OData.Evaluation
                     string typeName = type.FullName();
                     if (typeName == null)
                     {
-                        throw new ODataException(ErrorStrings.EdmValueUtils_IncorrectPrimitiveTypeKindNoTypeName(primitiveKindFromType.ToString(), primitiveKindFromValue.ToString()));
+                        throw new ODataException(Error.Format(SRResources.EdmValueUtils_IncorrectPrimitiveTypeKindNoTypeName, primitiveKindFromType.ToString(), primitiveKindFromValue.ToString()));
                     }
 
-                    throw new ODataException(ErrorStrings.EdmValueUtils_IncorrectPrimitiveTypeKind(typeName, primitiveKindFromValue.ToString(), primitiveKindFromType.ToString()));
+                    throw new ODataException(Error.Format(SRResources.EdmValueUtils_IncorrectPrimitiveTypeKind, typeName, primitiveKindFromValue.ToString(), primitiveKindFromType.ToString()));
                 }
             }
 

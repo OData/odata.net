@@ -187,7 +187,7 @@ namespace Microsoft.OData.Client
                     // Validate that we can only have one top level entity in Deep Insert.
                     if (bulkUpdateGraph.TopLevelDescriptors.Count > 0)
                     {
-                        throw Error.InvalidOperation(Strings.Context_DeepInsertOneTopLevelEntity);
+                        throw Error.InvalidOperation(SRResources.Context_DeepInsertOneTopLevelEntity);
                     }
 
                     topLevelDescriptor.ContentGeneratedForSave = true;
@@ -206,7 +206,7 @@ namespace Microsoft.OData.Client
                             if (entityDescriptor.State == EntityStates.Deleted || entityDescriptor.State == EntityStates.Modified)
                             {
                                 string entitySetAndKey = GetEntitySetAndKey(entityDescriptor);
-                                throw Error.InvalidOperation(Strings.Context_DeepInsertDeletedOrModified(entitySetAndKey));
+                                throw Error.InvalidOperation(Error.Format(SRResources.Context_DeepInsertDeletedOrModified, entitySetAndKey));
                             }
 
                             entityDescriptor.ContentGeneratedForSave = true;
@@ -224,13 +224,13 @@ namespace Microsoft.OData.Client
                             if (linkDescriptor.State == EntityStates.Deleted || linkDescriptor.State == EntityStates.Modified)
                             {
                                 string entitySetAndKey = GetEntitySetAndKey(targetDescriptor);
-                                throw Error.InvalidOperation(Strings.Context_DeepInsertDeletedOrModified(entitySetAndKey));
+                                throw Error.InvalidOperation(Error.Format(SRResources.Context_DeepInsertDeletedOrModified, entitySetAndKey));
                             }
 
                             if (targetDescriptor != null && (targetDescriptor.State == EntityStates.Deleted || targetDescriptor.State == EntityStates.Modified))
                             {
                                 string entitySetAndKey = GetEntitySetAndKey(targetDescriptor);
-                                throw Error.InvalidOperation(Strings.Context_DeepInsertDeletedOrModified(entitySetAndKey));
+                                throw Error.InvalidOperation(Error.Format(SRResources.Context_DeepInsertDeletedOrModified, entitySetAndKey));
                             }
 
                             linkDescriptor.ContentGeneratedForSave = true;
@@ -407,7 +407,7 @@ namespace Microsoft.OData.Client
                 HeaderCollection headers = new HeaderCollection(this.batchResponseMessage);
                 int statusCode = this.batchResponseMessage == null ? (int)HttpStatusCode.InternalServerError : (int)this.batchResponseMessage.StatusCode;
                 DataServiceResponse dataServiceResponse = new DataServiceResponse(headers, statusCode, Enumerable.Empty<OperationResponse>(), this.IsBatchRequest);
-                throw new DataServiceRequestException(Strings.DataServiceException_GeneralError, ex, dataServiceResponse);
+                throw new DataServiceRequestException(SRResources.DataServiceException_GeneralError, ex, dataServiceResponse);
             }
 
             HandleDeepInsertResponseInternal(entry : entry, isTopLevelDescriptor : true, descriptor : entityDescriptor, parentOperationResponse : null);
@@ -519,7 +519,7 @@ namespace Microsoft.OData.Client
 
             if (ex != null)
             {
-                throw new DataServiceRequestException(Strings.DataServiceException_GeneralError, ex, dataServiceResponse);
+                throw new DataServiceRequestException(SRResources.DataServiceException_GeneralError, ex, dataServiceResponse);
             }
 
             return null;
@@ -560,7 +560,7 @@ namespace Microsoft.OData.Client
                         // Except for preflight requests
                         if (headers.HasHeader("Content-Type") && statusCode != HttpStatusCode.Created)
                         {
-                            throw Error.NotSupported(Strings.Deserialize_NoLocationHeader);
+                            throw Error.NotSupported(SRResources.Deserialize_NoLocationHeader);
                         }
                     }
 
@@ -570,7 +570,7 @@ namespace Microsoft.OData.Client
                         odataId = WebUtil.ValidateIdentityValue(odataEntityId);
                         if (location == null)
                         {
-                            throw Error.NotSupported(Strings.Context_BothLocationAndIdMustBeSpecified);
+                            throw Error.NotSupported(SRResources.Context_BothLocationAndIdMustBeSpecified);
                         }
                     }
                     else

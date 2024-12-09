@@ -26,7 +26,7 @@ namespace Microsoft.OData.Client
         /// <param name="tokenIn">The SystemToken to translate.</param>
         public void Visit(SystemToken tokenIn)
         {
-            throw new NotSupportedException(Strings.ALinq_IllegalSystemQueryOption(tokenIn.Identifier));
+            throw new NotSupportedException(Error.Format(SRResources.ALinq_IllegalSystemQueryOption, tokenIn.Identifier));
         }
 
         /// <summary>

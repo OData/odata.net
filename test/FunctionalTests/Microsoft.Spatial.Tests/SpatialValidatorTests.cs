@@ -449,7 +449,7 @@ namespace Microsoft.Spatial.Tests
                 validator.BeginGeo(SpatialType.Point);
                 SpatialTestUtils.VerifyExceptionThrown<FormatException>(
                     () => validator.BeginFigure(10, 20, double.NaN, 40),
-                    Strings.Validator_InvalidPointCoordinate(10, 20, double.NaN, 40));
+                    Error.Format(SRResources.Validator_InvalidPointCoordinate, 10, 20, double.NaN, 40));
             }
         }
 
@@ -467,7 +467,7 @@ namespace Microsoft.Spatial.Tests
 
                 SpatialTestUtils.VerifyExceptionThrown<FormatException>(
                    () => validator.BeginGeo(SpatialType.Point),
-                   Strings.Validator_NestingOverflow(28));
+                   Error.Format(SRResources.Validator_NestingOverflow, 28));
             }
         }
 
@@ -481,7 +481,7 @@ namespace Microsoft.Spatial.Tests
                 validator.BeginGeo(SpatialType.MultiPoint);
                 SpatialTestUtils.VerifyExceptionThrown<FormatException>(
                    () => validator.SetCoordinateSystem(CoordinateSystem.DefaultGeography.EpsgId),
-                   Strings.Validator_SridMismatch);
+                   SRResources.Validator_SridMismatch);
             }
         }
 
@@ -493,7 +493,7 @@ namespace Microsoft.Spatial.Tests
             validator1.GeographyPipeline.BeginGeography(SpatialType.Point);
             SpatialTestUtils.VerifyExceptionThrown<FormatException>(
                  () => validator1.GeometryPipeline.BeginGeometry(SpatialType.Point),
-                 Strings.Validator_UnexpectedCall("SetCoordinateSystem", "BeginPoint"));
+                 Error.Format(SRResources.Validator_UnexpectedCall, "SetCoordinateSystem", "BeginPoint"));
 
             var validator2 = new SpatialValidatorImplementation();
             validator2.GeographyPipeline.SetCoordinateSystem(CoordinateSystem.DefaultGeography);
@@ -502,14 +502,14 @@ namespace Microsoft.Spatial.Tests
             validator2.GeographyPipeline.EndFigure();
             SpatialTestUtils.VerifyExceptionThrown<FormatException>(
                  () => validator2.GeometryPipeline.EndGeometry(),
-                 Strings.Validator_UnexpectedCall("SetCoordinateSystem", "End"));
+                 Error.Format(SRResources.Validator_UnexpectedCall, "SetCoordinateSystem", "End"));
 
             var validator3 = new SpatialValidatorImplementation();
             validator3.GeometryPipeline.SetCoordinateSystem(CoordinateSystem.DefaultGeometry);
             validator3.GeometryPipeline.BeginGeometry(SpatialType.Point);
             SpatialTestUtils.VerifyExceptionThrown<FormatException>(
                  () => validator3.GeographyPipeline.BeginGeography(SpatialType.Point),
-                 Strings.Validator_UnexpectedCall("SetCoordinateSystem", "BeginPoint"));
+                 Error.Format(SRResources.Validator_UnexpectedCall, "SetCoordinateSystem", "BeginPoint"));
 
             var validator4 = new SpatialValidatorImplementation();
             validator4.GeometryPipeline.SetCoordinateSystem(CoordinateSystem.DefaultGeometry);
@@ -518,7 +518,7 @@ namespace Microsoft.Spatial.Tests
             validator4.GeometryPipeline.EndFigure();
             SpatialTestUtils.VerifyExceptionThrown<FormatException>(
                  () => validator4.GeographyPipeline.EndGeography(),
-                 Strings.Validator_UnexpectedCall("SetCoordinateSystem", "End"));
+                 Error.Format(SRResources.Validator_UnexpectedCall, "SetCoordinateSystem", "End"));
 
             var validator5 = new SpatialValidatorImplementation();
             validator5.GeographyPipeline.SetCoordinateSystem(CoordinateSystem.DefaultGeography);
@@ -526,7 +526,7 @@ namespace Microsoft.Spatial.Tests
 
             SpatialTestUtils.VerifyExceptionThrown<FormatException>(
                   () => validator5.GeometryPipeline.BeginFigure(new GeometryPosition(333, 3333333, 333, 333)),
-                  Strings.Validator_UnexpectedCall("SetCoordinateSystem", "BeginFigure"));
+                  Error.Format(SRResources.Validator_UnexpectedCall, "SetCoordinateSystem", "BeginFigure"));
         }
 
         private static void RunStateValidatorTest(Func<TypeWashedPipeline> setup, params String[] validTransitions)

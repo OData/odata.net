@@ -126,7 +126,7 @@ namespace Microsoft.Spatial
             {
                 if (!this.reader.IsStartElement())
                 {
-                    throw new FormatException(Strings.GmlReader_ExpectReaderAtElement);
+                    throw new FormatException(SRResources.GmlReader_ExpectReaderAtElement);
                 }
 
                 // handle SRID here
@@ -158,7 +158,7 @@ namespace Microsoft.Spatial
                             this.ParseGmlMultiGeometryShape();
                             break;
                         default:
-                            throw new FormatException(Strings.GmlReader_InvalidSpatialType(this.reader.LocalName));
+                            throw new FormatException(Error.Format(SRResources.GmlReader_InvalidSpatialType, this.reader.LocalName));
                     }
                 }
                 else if (object.ReferenceEquals(this.reader.NamespaceURI, this.fullGlobeNamespace) && this.reader.LocalName.Equals(GmlConstants.FullGlobe, StringComparison.Ordinal))
@@ -168,7 +168,7 @@ namespace Microsoft.Spatial
                 }
                 else
                 {
-                    throw new FormatException(Strings.GmlReader_ExpectReaderAtElement);
+                    throw new FormatException(SRResources.GmlReader_ExpectReaderAtElement);
                 }
             }
 
@@ -204,7 +204,7 @@ namespace Microsoft.Spatial
                                 if (!expectSrsName)
                                 {
                                     this.reader.MoveToElement();
-                                    throw new FormatException(Strings.GmlReader_InvalidAttribute(attributeName, this.reader.Name));
+                                    throw new FormatException(Error.Format(SRResources.GmlReader_InvalidAttribute, attributeName, this.reader.Name));
                                 }
 
                                 // srsName="http://www.opengis.net/def/crs/EPSG/0/SRID"
@@ -217,13 +217,13 @@ namespace Microsoft.Spatial
                                 }
                                 else
                                 {
-                                    throw new FormatException(Strings.GmlReader_InvalidSrsName(GmlConstants.SrsPrefix));
+                                    throw new FormatException(Error.Format(SRResources.GmlReader_InvalidSrsName, GmlConstants.SrsPrefix));
                                 }
 
                                 break;
                             default:
                                 this.reader.MoveToElement();
-                                throw new FormatException(Strings.GmlReader_InvalidAttribute(attributeName, this.reader.Name));
+                                throw new FormatException(Error.Format(SRResources.GmlReader_InvalidAttribute, attributeName, this.reader.Name));
                         }
                     }
                     while (this.reader.MoveToNextAttribute());
@@ -448,7 +448,7 @@ namespace Microsoft.Spatial
                     if (this.IsEndElement(GmlConstants.LinearRing))
                     {
                         // Empty rings are not allowed
-                        throw new FormatException(Strings.GmlReader_EmptyRingsNotAllowed);
+                        throw new FormatException(SRResources.GmlReader_EmptyRingsNotAllowed);
                     }
                     else
                     {
@@ -552,14 +552,14 @@ namespace Microsoft.Spatial
                         if (doubleList.Length < 2)
                         {
                             // When parsing a pos, we need at least two coordinates.
-                            throw new FormatException(Strings.GmlReader_PosNeedTwoNumbers);
+                            throw new FormatException(SRResources.GmlReader_PosNeedTwoNumbers);
                         }
 
                         this.AddPoint(doubleList[0], doubleList[1], doubleList.Length > 2 ? doubleList[2] : default(double?), doubleList.Length > 3 ? doubleList[3] : default(double?));
                     }
                     else if (!allowEmpty)
                     {
-                        throw new FormatException(Strings.GmlReader_PosNeedTwoNumbers);
+                        throw new FormatException(SRResources.GmlReader_PosNeedTwoNumbers);
                     }
 
                     this.ReadEndElement();
@@ -567,7 +567,7 @@ namespace Microsoft.Spatial
                 else if (!allowEmpty)
                 {
                     // Read an empty "pos", and allowEmpty is false.
-                    throw new FormatException(Strings.GmlReader_PosNeedTwoNumbers);
+                    throw new FormatException(SRResources.GmlReader_PosNeedTwoNumbers);
                 }
             }
 
@@ -633,7 +633,7 @@ namespace Microsoft.Spatial
                             if (doubleList.Length % dimension != 0)
                             {
                                 // Odd number of doubles
-                                throw new FormatException(Strings.GmlReader_PosListNeedsEvenCount);
+                                throw new FormatException(SRResources.GmlReader_PosListNeedsEvenCount);
                             }
 
                             // posList supports only 2D points
@@ -652,13 +652,13 @@ namespace Microsoft.Spatial
                         else
                         {
                             // Read a ParseGmlPosListElement with 0 elements.
-                            throw new FormatException(Strings.GmlReader_PosListNeedsEvenCount);
+                            throw new FormatException(SRResources.GmlReader_PosListNeedsEvenCount);
                         }
                     }
                     else if (!allowEmpty)
                     {
                         // Read  a posList with no contents.
-                        throw new FormatException(Strings.GmlReader_PosListNeedsEvenCount);
+                        throw new FormatException(SRResources.GmlReader_PosListNeedsEvenCount);
                     }
 
                     this.ReadEndElement();
@@ -666,7 +666,7 @@ namespace Microsoft.Spatial
                 else if (!allowEmpty)
                 {
                     // Read an empty posList.
-                    throw new FormatException(Strings.GmlReader_PosListNeedsEvenCount);
+                    throw new FormatException(SRResources.GmlReader_PosListNeedsEvenCount);
                 }
             }
 
@@ -685,7 +685,7 @@ namespace Microsoft.Spatial
 
                 if (dimension != 2 && dimension != 3)
                 {
-                    throw new FormatException(Strings.GmlReader_InvalidSrsDimension);
+                    throw new FormatException(SRResources.GmlReader_InvalidSrsDimension);
                 }
 
                 return dimension;
@@ -768,7 +768,7 @@ namespace Microsoft.Spatial
                 this.reader.MoveToContent();
                 if (this.reader.NodeType != XmlNodeType.EndElement)
                 {
-                    throw new FormatException(Strings.GmlReader_UnexpectedElement(this.reader.Name));
+                    throw new FormatException(Error.Format(SRResources.GmlReader_UnexpectedElement, this.reader.Name));
                 }
 
                 this.reader.ReadEndElement();

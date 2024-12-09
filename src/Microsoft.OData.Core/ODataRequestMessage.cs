@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -53,7 +54,7 @@ namespace Microsoft.OData
 
             set
             {
-                throw new ODataException(Strings.ODataMessage_MustNotModifyMessage);
+                throw new ODataException(SRResources.ODataMessage_MustNotModifyMessage);
             }
         }
 
@@ -69,7 +70,7 @@ namespace Microsoft.OData
 
             set
             {
-                throw new ODataException(Strings.ODataMessage_MustNotModifyMessage);
+                throw new ODataException(SRResources.ODataMessage_MustNotModifyMessage);
             }
         }
 
@@ -123,7 +124,7 @@ namespace Microsoft.OData
             IODataRequestMessageAsync asyncRequestMessage = this.requestMessage as IODataRequestMessageAsync;
             if (asyncRequestMessage == null)
             {
-                throw new ODataException(Strings.ODataRequestMessage_AsyncNotAvailable);
+                throw new ODataException(SRResources.ODataRequestMessage_AsyncNotAvailable);
             }
 
             return this.GetStreamAsync(asyncRequestMessage.GetStreamAsync, /*isRequest*/ true);

@@ -23,7 +23,7 @@ namespace Microsoft.Spatial.Tests
 
             var ex = SpatialTestUtils.RunCatching<FormatException>(() => v.BeginFigure(new GeographyPosition(-91, 0, 0, 0)));
             Assert.NotNull(ex);
-            Assert.Equal(Strings.Validator_InvalidLatitudeCoordinate(-91), ex.Message);
+            Assert.Equal(Error.Format(SRResources.Validator_InvalidLatitudeCoordinate, -91), ex.Message);
 
             v.Reset();
             v.SetCoordinateSystem(NonDefaultGeographicCoords);
@@ -31,7 +31,7 @@ namespace Microsoft.Spatial.Tests
 
             ex = SpatialTestUtils.RunCatching<FormatException>(() => v.BeginFigure(new GeographyPosition(91, 0, 0, 0)));
             Assert.NotNull(ex);
-            Assert.Equal(Strings.Validator_InvalidLatitudeCoordinate(91), ex.Message);
+            Assert.Equal(Error.Format(SRResources.Validator_InvalidLatitudeCoordinate, 91), ex.Message);
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace Microsoft.Spatial.Tests
 
             var ex = SpatialTestUtils.RunCatching<FormatException>(() => v.BeginFigure(new GeographyPosition(0, -15070, 0, 0)));
             Assert.NotNull(ex);
-            Assert.Equal(Strings.Validator_InvalidLongitudeCoordinate(-15070), ex.Message);
+            Assert.Equal(Error.Format(SRResources.Validator_InvalidLongitudeCoordinate, -15070), ex.Message);
 
             v.Reset();
             v.SetCoordinateSystem(NonDefaultGeographicCoords);
@@ -51,7 +51,7 @@ namespace Microsoft.Spatial.Tests
 
             ex = SpatialTestUtils.RunCatching<FormatException>(() => v.BeginFigure(new GeographyPosition(0, 15070, 0, 0)));
             Assert.NotNull(ex);
-            Assert.Equal(Strings.Validator_InvalidLongitudeCoordinate(15070), ex.Message);
+            Assert.Equal(Error.Format(SRResources.Validator_InvalidLongitudeCoordinate, 15070), ex.Message);
         }
 
         [Fact]
@@ -65,7 +65,7 @@ namespace Microsoft.Spatial.Tests
             v.LineTo(new GeographyPosition(20, 30, 40, 50));
             var ex = SpatialTestUtils.RunCatching<FormatException>(v.EndFigure);
             Assert.NotNull(ex);
-            Assert.Equal(Strings.Validator_InvalidPolygonPoints, ex.Message);
+            Assert.Equal(SRResources.Validator_InvalidPolygonPoints, ex.Message);
         }
 
         [Fact]
@@ -80,7 +80,7 @@ namespace Microsoft.Spatial.Tests
             v.LineTo(new GeographyPosition(20, 50, 40, 50));
             var ex = SpatialTestUtils.RunCatching<FormatException>(v.EndFigure);
             Assert.NotNull(ex);
-            Assert.Equal(Strings.Validator_InvalidPolygonPoints, ex.Message);
+            Assert.Equal(SRResources.Validator_InvalidPolygonPoints, ex.Message);
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace Microsoft.Spatial.Tests
             GeometryPipeline v = new SpatialValidatorImplementation();
             var ex = SpatialTestUtils.RunCatching<FormatException>(() => v.BeginGeometry(SpatialType.FullGlobe));
             Assert.NotNull(ex);
-            Assert.Equal(Strings.Validator_InvalidType(SpatialType.FullGlobe), ex.Message);
+            Assert.Equal(Error.Format(SRResources.Validator_InvalidType, SpatialType.FullGlobe), ex.Message);
         }
 
         [Fact]
@@ -140,7 +140,7 @@ namespace Microsoft.Spatial.Tests
             v.LineTo(new GeometryPosition(20, 30, 40, 50));
             var ex = SpatialTestUtils.RunCatching<FormatException>(v.EndFigure);
             Assert.NotNull(ex);
-            Assert.Equal(Strings.Validator_InvalidPolygonPoints, ex.Message);
+            Assert.Equal(SRResources.Validator_InvalidPolygonPoints, ex.Message);
         }
 
         [Fact]
@@ -155,7 +155,7 @@ namespace Microsoft.Spatial.Tests
             v.LineTo(new GeometryPosition(20, 50, 40, 50));
             var ex = SpatialTestUtils.RunCatching<FormatException>(v.EndFigure);
             Assert.NotNull(ex);
-            Assert.Equal(Strings.Validator_InvalidPolygonPoints, ex.Message);
+            Assert.Equal(SRResources.Validator_InvalidPolygonPoints, ex.Message);
         }
 
         [Fact]
@@ -180,7 +180,7 @@ namespace Microsoft.Spatial.Tests
 
             var ex = SpatialTestUtils.RunCatching<FormatException>(() => v.BeginGeometry(SpatialType.FullGlobe));
             Assert.NotNull(ex);
-            Assert.Equal(Strings.Validator_InvalidType(SpatialType.FullGlobe), ex.Message);
+            Assert.Equal(Error.Format(SRResources.Validator_InvalidType, SpatialType.FullGlobe), ex.Message);
         }
     }
 }

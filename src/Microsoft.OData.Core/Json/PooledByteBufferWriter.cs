@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using System.Buffers;
 using System.Diagnostics;
@@ -203,7 +204,7 @@ namespace Microsoft.OData.Json
                     // If the size still exceeds the max size, then give up and throw an OOM.
                     if ((uint)newSize > MaximumBufferSize)
                     {
-                        throw new OutOfMemoryException(Strings.ODataMessageWriter_Buffer_Maximum_Size_Exceeded(newSize));
+                        throw new OutOfMemoryException(Error.Format(SRResources.ODataMessageWriter_Buffer_Maximum_Size_Exceeded, newSize));
                     }
                 }
 

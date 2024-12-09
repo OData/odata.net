@@ -131,7 +131,7 @@ namespace Microsoft.OData.Client.Materialization
                 // The resolver methods below will both need access to Id, so first ensure it's not null
                 if (entry.Id == null)
                 {
-                    throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MissingIdElement);
+                    throw DSClient.Error.InvalidOperation(SRResources.Deserialize_MissingIdElement);
                 }
 
                 return this.TryResolveAsCreated(entry) || this.TryResolveFromContext(entry, expectedEntryType);
@@ -184,7 +184,7 @@ namespace Microsoft.OData.Client.Materialization
                 {
                     if (!expectedEntryType.IsInstanceOfType(entry.ResolvedObject))
                     {
-                        throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_Current(expectedEntryType, entry.ResolvedObject.GetType()));
+                        throw DSClient.Error.InvalidOperation(Error.Format(SRResources.Deserialize_Current, expectedEntryType, entry.ResolvedObject.GetType()));
                     }
 
                     ClientEdmModel edmModel = this.Model;

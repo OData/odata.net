@@ -11,6 +11,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -701,7 +702,7 @@ namespace Microsoft.OData
         /// <returns>An exception to throw.</returns>
         private ODataException CreatePayloadKindNotSupportedException(ODataPayloadKind payloadKind)
         {
-            return new ODataException(Strings.ODataOutputContext_UnsupportedPayloadKindForFormat(this.format.ToString(), payloadKind.ToString()));
+            return new ODataException(Error.Format(SRResources.ODataOutputContext_UnsupportedPayloadKindForFormat, this.format.ToString(), payloadKind.ToString()));
         }
     }
 }

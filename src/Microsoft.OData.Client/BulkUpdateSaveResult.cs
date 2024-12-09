@@ -112,7 +112,7 @@ namespace Microsoft.OData.Client
 
             if (objects == null || objects.Length == 0)
             {
-                throw Error.Argument(Strings.Util_EmptyArray, nameof(objects));
+                throw Error.Argument(SRResources.Util_EmptyArray, nameof(objects));
             }
 
             BuildDescriptorGraph(this.ChangedEntries, true, objects);
@@ -169,7 +169,7 @@ namespace Microsoft.OData.Client
         {
             if (objects == null || objects.Length == 0)
             {
-                throw Error.Argument(Strings.Util_EmptyArray, nameof(objects));
+                throw Error.Argument(SRResources.Util_EmptyArray, nameof(objects));
             }
 
             BuildDescriptorGraph(this.ChangedEntries, true, objects);
@@ -241,7 +241,7 @@ namespace Microsoft.OData.Client
                 // for any of the provided objects then we throw an exception. 
                 if (topLevelDescriptor == null)
                 {
-                    throw Error.InvalidOperation(Strings.Context_EntityNotContained);
+                    throw Error.InvalidOperation(SRResources.Context_EntityNotContained);
                 }
 
                 // If it is a top-level object,
@@ -418,7 +418,7 @@ namespace Microsoft.OData.Client
 
             if (this.cachedResponse.Exception != null)
             {
-                throw new DataServiceRequestException(Strings.DataServiceException_GeneralError, this.cachedResponse.Exception, dataServiceResponse);
+                throw new DataServiceRequestException(SRResources.DataServiceException_GeneralError, this.cachedResponse.Exception, dataServiceResponse);
             }
                 
             Stack<(int LastVisited, IReadOnlyList<Descriptor> Descriptors)> adjacentDescriptors = new Stack<(int LastVisited, IReadOnlyList<Descriptor> Descriptors)>();
@@ -693,7 +693,7 @@ namespace Microsoft.OData.Client
 
             if (ex != null)
             {
-                throw new DataServiceRequestException(Strings.DataServiceException_GeneralError, ex, dataServiceResponse);
+                throw new DataServiceRequestException(SRResources.DataServiceException_GeneralError, ex, dataServiceResponse);
             }
         }
         

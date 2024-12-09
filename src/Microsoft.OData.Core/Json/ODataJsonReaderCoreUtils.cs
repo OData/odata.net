@@ -12,7 +12,7 @@ namespace Microsoft.OData.Json
     using System.Diagnostics;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
     using System.Threading.Tasks;
 
     #endregion Namespaces
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Json
 
             if (spatialValue == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue);
+                throw new ODataException(SRResources.ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue);
             }
 
             return spatialValue;
@@ -174,7 +174,7 @@ namespace Microsoft.OData.Json
 
             if (spatialValue == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue);
+                throw new ODataException(SRResources.ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue);
             }
 
             return spatialValue;

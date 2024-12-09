@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Json
 {
+    using Microsoft.OData.Core;
     #region Namespaces
 
     using System;
@@ -358,7 +359,7 @@ namespace Microsoft.OData.Json
                     (!this.requestIds.Contains(id) &&
                     !this.requestIds.Contains(id)))
                 {
-                    throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(id, contentId));
+                    throw new ODataException(Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, id, contentId));
                 }
             }
         }
@@ -447,7 +448,7 @@ namespace Microsoft.OData.Json
         {
             if (propertyValue == null)
             {
-                throw new ODataException(Strings.ODataBatchReader_RequestPropertyMissing(propertyName));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReader_RequestPropertyMissing, propertyName));
             }
         }
 
@@ -466,7 +467,7 @@ namespace Microsoft.OData.Json
                 // Self reference to atomicityGroup is not allowed.
                 if (dependsOnId.Equals(atomicityGroupId, StringComparison.Ordinal))
                 {
-                    throw new ODataException(Strings.ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed(
+                    throw new ODataException(Error.Format(SRResources.ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed,
                         dependsOnId,
                         atomicityGroupId));
                 }
@@ -474,7 +475,7 @@ namespace Microsoft.OData.Json
                 // Self reference is not allowed.
                 if (dependsOnId.Equals(requestId, StringComparison.Ordinal))
                 {
-                    throw new ODataException(Strings.ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed(
+                    throw new ODataException(Error.Format(SRResources.ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed,
                         dependsOnId,
                         requestId));
                 }
@@ -484,7 +485,7 @@ namespace Microsoft.OData.Json
                 string groupId = this.atomicGroups.GetGroupId(dependsOnId);
                 if (groupId != null && !groupId.Equals(this.atomicGroups.GetGroupId(requestId), StringComparison.Ordinal))
                 {
-                    throw new ODataException(Strings.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed(
+                    throw new ODataException(Error.Format(SRResources.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed,
                         dependsOnId,
                         groupId));
                 }
@@ -510,7 +511,7 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                throw new ODataException(Strings.ODataBatchReader_JsonBatchTopLevelPropertyMissing);
+                throw new ODataException(SRResources.ODataBatchReader_JsonBatchTopLevelPropertyMissing);
             }
         }
 
@@ -535,7 +536,7 @@ namespace Microsoft.OData.Json
         {
             if (this.atomicGroups.IsGroupId(groupId))
             {
-                throw new ODataException(Strings.ODataBatchReader_DuplicateAtomicityGroupIDsNotAllowed(groupId));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReader_DuplicateAtomicityGroupIDsNotAllowed, groupId));
             }
 
             // Add the request Id to the new group.
@@ -635,7 +636,7 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                throw new ODataException(Strings.ODataBatchReader_JsonBatchTopLevelPropertyMissing);
+                throw new ODataException(SRResources.ODataBatchReader_JsonBatchTopLevelPropertyMissing);
             }
         }
 

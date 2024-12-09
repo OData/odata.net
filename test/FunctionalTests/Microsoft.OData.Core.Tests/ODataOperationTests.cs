@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Core;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Tests.Evaluation;
 using Microsoft.OData.Tests.Json;
@@ -119,7 +120,7 @@ namespace Microsoft.OData.Tests
         public void SetMetadataBuilderShouldThrowWhemContextUriIsNotSet()
         {
             Action test = () => this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
-            test.Throws<ODataException>(Strings.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata(this.testSubject.GetType().Name));
+            test.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata, this.testSubject.GetType().Name));
         }
 
         [Fact]
@@ -171,7 +172,7 @@ namespace Microsoft.OData.Tests
         public void SetMetadataBuildShouldThrowWhenMetadataIsNull()
         {
             Action test = () => this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
-            test.Throws<ODataException>(Strings.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata(this.testSubject.GetType().Name));
+            test.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata, this.testSubject.GetType().Name));
         }
 
         [Fact]
@@ -186,7 +187,7 @@ namespace Microsoft.OData.Tests
         {
             this.testSubject.Metadata = new Uri("http://www.example.com/$metadata#foo");
             Action test = () => this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
-            test.Throws<ODataException>(Strings.ODataJsonValidationUtils_OpenMetadataReferencePropertyNotSupported("http://www.example.com/$metadata#foo", MetadataDocumentUri.AbsoluteUri));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonValidationUtils_OpenMetadataReferencePropertyNotSupported, "http://www.example.com/$metadata#foo", MetadataDocumentUri.AbsoluteUri));
         }
 
         [Fact]
@@ -201,7 +202,7 @@ namespace Microsoft.OData.Tests
         {
             this.testSubject.Metadata = new Uri("Action1", UriKind.Relative);
             Action action = () => this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
-            action.Throws<ODataException>(Strings.ValidationUtils_InvalidMetadataReferenceProperty("Action1"));
+            action.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_InvalidMetadataReferenceProperty, "Action1"));
         }
 
         [Fact]
@@ -209,7 +210,7 @@ namespace Microsoft.OData.Tests
         {
             this.testSubject.Metadata = new Uri("http://www.example.com/Action1");
             Action action = () => this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
-            action.Throws<ODataException>(Strings.ValidationUtils_InvalidMetadataReferenceProperty("http://www.example.com/Action1"));
+            action.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_InvalidMetadataReferenceProperty, "http://www.example.com/Action1"));
         }
 
         [Fact]
@@ -217,7 +218,7 @@ namespace Microsoft.OData.Tests
         {
             this.testSubject.Metadata = new Uri("Action#1", UriKind.Relative);
             Action action = () => this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
-            action.Throws<ODataException>(Strings.ValidationUtils_InvalidMetadataReferenceProperty("Action#1"));
+            action.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_InvalidMetadataReferenceProperty, "Action#1"));
         }
 
         [Fact]
@@ -225,7 +226,7 @@ namespace Microsoft.OData.Tests
         {
             this.testSubject.Metadata = new Uri("#", UriKind.Relative);
             Action action = () => this.testSubject.SetMetadataBuilder(ODataResourceMetadataBuilder.Null, MetadataDocumentUri);
-            action.Throws<ODataException>(Strings.ValidationUtils_InvalidMetadataReferenceProperty("#"));
+            action.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_InvalidMetadataReferenceProperty, "#"));
         }
 
         [Fact]

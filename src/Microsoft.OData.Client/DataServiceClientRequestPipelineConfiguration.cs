@@ -10,7 +10,6 @@ namespace Microsoft.OData.Client
     using System.Collections.Generic;
     using System.Diagnostics;
     using Microsoft.OData;
-    using ClientStrings = Microsoft.OData.Client.Strings;
 
     /// <summary>
     /// Class that holds a variety of events for writing the payload from the OData to the wire
@@ -66,7 +65,7 @@ namespace Microsoft.OData.Client
             {
                 if (this.ContextUsingSendingRequest)
                 {
-                    throw new DataServiceClientException(ClientStrings.Context_SendingRequest_InvalidWhenUsingOnMessageCreating);
+                    throw new DataServiceClientException(SRResources.Context_SendingRequest_InvalidWhenUsingOnMessageCreating);
                 }
 
                 this.onmessageCreating = value;

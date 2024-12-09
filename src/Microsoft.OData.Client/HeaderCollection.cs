@@ -186,7 +186,7 @@ namespace Microsoft.OData.Client
             {
                 if (requestVersion > maxProtocolVersion)
                 {
-                    string message = Strings.Context_RequestVersionIsBiggerThanProtocolVersion(requestVersion.ToString(), maxProtocolVersion.ToString());
+                    string message = Error.Format(SRResources.Context_RequestVersionIsBiggerThanProtocolVersion, requestVersion.ToString(), maxProtocolVersion.ToString());
                     throw Error.InvalidOperation(message);
                 }
 

@@ -74,7 +74,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             byte[] value;
             if (!EdmValueParser.TryParseBinary(this.expression.Value, out value))
             {
-                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidBinary, Edm.Strings.ValueParser_InvalidBinary(this.expression.Value)) };
+                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidBinary, Error.Format(SRResources.ValueParser_InvalidBinary, this.expression.Value)) };
             }
             else
             {

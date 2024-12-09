@@ -13,6 +13,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Tests.UriParser;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests
 {
@@ -71,7 +72,7 @@ namespace Microsoft.OData.Tests
 
             uri = new Uri(@"http://host/People('abc')/Addresses/City");
             Action parse = () => new ODataUriParser(Model, ServiceRoot, uri).ParsePath().ToList();
-            parse.Throws<ODataException>(Strings.RequestUriProcessor_CannotQueryCollections("Addresses"));
+            parse.Throws<ODataException>(Error.Format(SRResources.RequestUriProcessor_CannotQueryCollections, "Addresses"));
         }
 
         [Fact]

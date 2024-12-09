@@ -10,7 +10,7 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
     using System.Globalization;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Parser that knows how to parse expand options that could come after the path part of an expand term.
@@ -130,7 +130,7 @@ namespace Microsoft.OData.UriParser
                 // Check for (), which is not allowed.
                 if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseParen)
                 {
-                    throw new ODataException(ODataErrorStrings.UriParser_MissingSelectOption(pathToken.Identifier));
+                    throw new ODataException(Error.Format(SRResources.UriParser_MissingSelectOption, pathToken.Identifier));
                 }
 
                 StringComparison comparison = this.enableCaseInsensitiveBuiltinIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
@@ -182,7 +182,7 @@ namespace Microsoft.OData.UriParser
                     }
                     else
                     {
-                        throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
+                        throw new ODataException(Error.Format(SRResources.UriSelectParser_TermIsNotValid, this.lexer.ExpressionText));
                     }
                 }
 
@@ -193,7 +193,7 @@ namespace Microsoft.OData.UriParser
             // Either there was no '(' at all or we just read past the ')' so we should be at the end
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.End)
             {
-                throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
+                throw new ODataException(Error.Format(SRResources.UriSelectParser_TermIsNotValid, this.lexer.ExpressionText));
             }
 
             return new SelectTermToken(pathToken, filterOption, orderByOptions, topOption, skipOption, countOption, searchOption, selectOption, computeOption);
@@ -237,7 +237,7 @@ namespace Microsoft.OData.UriParser
                 // Check for (), which is not allowed.
                 if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseParen)
                 {
-                    throw new ODataException(ODataErrorStrings.UriParser_MissingExpandOption(pathToken.Identifier));
+                    throw new ODataException(Error.Format(SRResources.UriParser_MissingExpandOption, pathToken.Identifier));
                 }
 
                 StringComparison comparison = this.enableCaseInsensitiveBuiltinIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
@@ -304,7 +304,7 @@ namespace Microsoft.OData.UriParser
                     }
                     else
                     {
-                        throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
+                        throw new ODataException(Error.Format(SRResources.UriSelectParser_TermIsNotValid, this.lexer.ExpressionText));
                     }
                 }
 
@@ -315,7 +315,7 @@ namespace Microsoft.OData.UriParser
             // Either there was no '(' at all or we just read past the ')' so we should be at the end
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.End)
             {
-                throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
+                throw new ODataException(Error.Format(SRResources.UriSelectParser_TermIsNotValid, this.lexer.ExpressionText));
             }
 
             // TODO, there should be some check here in case pathToken identifier is $ref, select, expand and levels options are not allowed.
@@ -337,7 +337,7 @@ namespace Microsoft.OData.UriParser
         {
             if (this.parentStructuredType == null)
             {
-                throw new ODataException(ODataErrorStrings.UriExpandParser_ParentStructuredTypeIsNull(this.lexer.ExpressionText));
+                throw new ODataException(Error.Format(SRResources.UriExpandParser_ParentStructuredTypeIsNull, this.lexer.ExpressionText));
             }
 
             List<ExpandTermToken> expandTermTokenList = new List<ExpandTermToken>();
@@ -367,7 +367,7 @@ namespace Microsoft.OData.UriParser
                 // Check for (), which is not allowed.
                 if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseParen)
                 {
-                    throw new ODataException(ODataErrorStrings.UriParser_MissingExpandOption(pathToken.Identifier));
+                    throw new ODataException(Error.Format(SRResources.UriParser_MissingExpandOption, pathToken.Identifier));
                 }
 
                 // Only level option is supported by expand.
@@ -387,7 +387,7 @@ namespace Microsoft.OData.UriParser
                                 else
                                 {
                                     // no option is allowed when expand with star per specification
-                                    throw new ODataException(ODataErrorStrings.UriExpandParser_TermIsNotValidForStarRef(this.lexer.ExpressionText));
+                                    throw new ODataException(Error.Format(SRResources.UriExpandParser_TermIsNotValidForStarRef, this.lexer.ExpressionText));
                                 }
 
                                 break;
@@ -395,7 +395,7 @@ namespace Microsoft.OData.UriParser
 
                         default:
                             {
-                                throw new ODataException(ODataErrorStrings.UriExpandParser_TermIsNotValidForStar(this.lexer.ExpressionText));
+                                throw new ODataException(Error.Format(SRResources.UriExpandParser_TermIsNotValidForStar, this.lexer.ExpressionText));
                             }
                     }
                 }
@@ -407,7 +407,7 @@ namespace Microsoft.OData.UriParser
             // Either there was no '(' at all or we just read past the ')' so we should be at the end
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.End)
             {
-                throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
+                throw new ODataException(Error.Format(SRResources.UriSelectParser_TermIsNotValid, this.lexer.ExpressionText));
             }
 
             foreach (var navigationProperty in this.parentStructuredType.NavigationProperties())
@@ -475,7 +475,7 @@ namespace Microsoft.OData.UriParser
             long top;
             if (!long.TryParse(topText, out top) || top < 0)
             {
-                throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidTopOption(topText));
+                throw new ODataException(Error.Format(SRResources.UriSelectParser_InvalidTopOption, topText));
             }
 
             return top;
@@ -495,7 +495,7 @@ namespace Microsoft.OData.UriParser
             long skip;
             if (!long.TryParse(skipText, out skip) || skip < 0)
             {
-                throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidSkipOption(skipText));
+                throw new ODataException(Error.Format(SRResources.UriSelectParser_InvalidSkipOption, skipText));
             }
 
             return skip;
@@ -519,7 +519,7 @@ namespace Microsoft.OData.UriParser
                     return false;
 
                 default:
-                    throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidCountOption(countText));
+                    throw new ODataException(Error.Format(SRResources.UriSelectParser_InvalidCountOption, countText));
             }
         }
 
@@ -632,7 +632,7 @@ namespace Microsoft.OData.UriParser
             }
             else if (!long.TryParse(levelsText, NumberStyles.None, CultureInfo.InvariantCulture, out level) || level < 0)
             {
-                throw new ODataException(ODataErrorStrings.UriSelectParser_InvalidLevelsOption(levelsText));
+                throw new ODataException(Error.Format(SRResources.UriSelectParser_InvalidLevelsOption, levelsText));
             }
             else
             {

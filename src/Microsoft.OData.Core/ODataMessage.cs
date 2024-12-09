@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -252,7 +253,7 @@ namespace Microsoft.OData
         {
             if (!this.writing)
             {
-                throw new ODataException(Strings.ODataMessage_MustNotModifyMessage);
+                throw new ODataException(SRResources.ODataMessage_MustNotModifyMessage);
             }
 
             Debug.Assert(this.bufferingReadStream == null, "The buffering stream should only be used when reading.");
@@ -268,8 +269,8 @@ namespace Microsoft.OData
             if (stream == null)
             {
                 string error = isRequest
-                    ? Strings.ODataRequestMessage_MessageStreamIsNull
-                    : Strings.ODataResponseMessage_MessageStreamIsNull;
+                    ? SRResources.ODataRequestMessage_MessageStreamIsNull
+                    : SRResources.ODataResponseMessage_MessageStreamIsNull;
                 throw new ODataException(error);
             }
         }
@@ -284,8 +285,8 @@ namespace Microsoft.OData
             if (streamTask == null)
             {
                 string error = isRequest
-                    ? Strings.ODataRequestMessage_StreamTaskIsNull
-                    : Strings.ODataResponseMessage_StreamTaskIsNull;
+                    ? SRResources.ODataRequestMessage_StreamTaskIsNull
+                    : SRResources.ODataResponseMessage_StreamTaskIsNull;
                 throw new ODataException(error);
             }
         }

@@ -38,7 +38,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             Assert.IsType<UnresolvedFunction>(csdlFunctionImport.Operation);
             var errors = (csdlFunctionImport.Operation as BadElement).Errors.ToList();
             var error = Assert.Single(errors);
-            Assert.Equal(Strings.Bad_UnresolvedOperation("FQ.NS.GetStuff"), error.ErrorMessage);
+            Assert.Equal(Error.Format(SRResources.Bad_UnresolvedOperation, "FQ.NS.GetStuff"), error.ErrorMessage);
             Assert.Equal("Container", csdlFunctionImport.Container.Name);
             Assert.Equal(testLocation, csdlFunctionImport.Location());
             Assert.Equal(EdmContainerElementKind.FunctionImport, csdlFunctionImport.ContainerElementKind);
@@ -64,7 +64,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             Assert.IsType<UnresolvedAction>(imports[0].Operation);
             var errors = (imports[0].Operation as BadElement).Errors.ToList();
             var error = Assert.Single(errors);
-            Assert.Equal(Strings.Bad_UnresolvedOperation("FQ.NS.Action"), error.ErrorMessage);
+            Assert.Equal(Error.Format(SRResources.Bad_UnresolvedOperation, "FQ.NS.Action"), error.ErrorMessage);
             Assert.Equal("Container", imports[0].Container.Name);
             Assert.Equal(testLocation, imports[0].Location());
             Assert.Equal(EdmContainerElementKind.ActionImport, imports[0].ContainerElementKind);

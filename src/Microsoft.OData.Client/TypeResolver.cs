@@ -440,7 +440,7 @@ namespace Microsoft.OData.Client
                 if (!this.skipTypeAssignabilityCheck && (payloadType != null) && (!expectedType.IsAssignableFrom(payloadType)))
                 {
                     // throw an exception if the type from the resolver is not assignable to the expected type
-                    throw Error.InvalidOperation(Strings.Deserialize_Current(expectedType, payloadType));
+                    throw Error.InvalidOperation(Error.Format(SRResources.Deserialize_Current, expectedType, payloadType));
                 }
             }
 

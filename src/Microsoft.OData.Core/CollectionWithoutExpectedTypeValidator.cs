@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System.Diagnostics;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -80,7 +81,7 @@ namespace Microsoft.OData
             // Only primitive and complex values are allowed in collections
             if (collectionItemTypeKind != EdmTypeKind.Primitive && collectionItemTypeKind != EdmTypeKind.Enum && collectionItemTypeKind != EdmTypeKind.Complex)
             {
-                throw new ODataException(Strings.CollectionWithoutExpectedTypeValidator_InvalidItemTypeKind(collectionItemTypeKind));
+                throw new ODataException(Error.Format(SRResources.CollectionWithoutExpectedTypeValidator_InvalidItemTypeKind, collectionItemTypeKind));
             }
 
             if (this.itemTypeDerivedFromCollectionValue)
@@ -185,7 +186,7 @@ namespace Microsoft.OData
             // Compare the item type kinds.
             if (this.itemTypeKind != collectionItemTypeKind)
             {
-                throw new ODataException(Strings.CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeKind(collectionItemTypeKind, this.itemTypeKind));
+                throw new ODataException(Error.Format(SRResources.CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeKind, collectionItemTypeKind, this.itemTypeKind));
             }
 
             if (this.itemTypeKind == EdmTypeKind.Primitive)
@@ -225,14 +226,14 @@ namespace Microsoft.OData
                     }
                 }
 
-                throw new ODataException(Strings.CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName(collectionItemTypeName, this.itemTypeName));
+                throw new ODataException(Error.Format(SRResources.CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName, collectionItemTypeName, this.itemTypeName));
             }
             else
             {
                 // Since we do not support type inheritance for complex types, comparison of the type names is sufficient
                 if (string.CompareOrdinal(this.itemTypeName, collectionItemTypeName) != 0)
                 {
-                    throw new ODataException(Strings.CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName(collectionItemTypeName, this.itemTypeName));
+                    throw new ODataException(Error.Format(SRResources.CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName, collectionItemTypeName, this.itemTypeName));
                 }
             }
         }

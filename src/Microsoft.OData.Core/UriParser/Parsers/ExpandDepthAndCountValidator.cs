@@ -8,7 +8,7 @@ namespace Microsoft.OData.UriParser
 {
     using System.Diagnostics;
     using System.Linq;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// A component for walking an expand tree and determining if the depth or number of items exceed user-specified limits.
@@ -63,7 +63,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(expandTree != null, "expandTree != null");
             if (currentDepth > this.maxDepth)
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.UriParser_ExpandDepthExceeded(currentDepth, this.maxDepth));
+                throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.UriParser_ExpandDepthExceeded, currentDepth, this.maxDepth));
             }
 
             foreach (ExpandedNavigationSelectItem expandItem in expandTree.SelectedItems.Where(I => I.GetType() == typeof(ExpandedNavigationSelectItem)))
@@ -71,7 +71,7 @@ namespace Microsoft.OData.UriParser
                 this.currentCount++;
                 if (this.currentCount > this.maxCount)
                 {
-                    throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.UriParser_ExpandCountExceeded(this.currentCount, this.maxCount));
+                    throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.UriParser_ExpandCountExceeded, this.currentCount, this.maxCount));
                 }
 
                 this.EnsureMaximumCountAndDepthAreNotExceeded(expandItem.SelectAndExpand, currentDepth + 1);
@@ -80,7 +80,7 @@ namespace Microsoft.OData.UriParser
             this.currentCount += expandTree.SelectedItems.Where(I => I.GetType() == typeof(ExpandedReferenceSelectItem)).Count();
             if (this.currentCount > this.maxCount)
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.UriParser_ExpandCountExceeded(this.currentCount, this.maxCount));
+                throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.UriParser_ExpandCountExceeded, this.currentCount, this.maxCount));
             }
         }
     }

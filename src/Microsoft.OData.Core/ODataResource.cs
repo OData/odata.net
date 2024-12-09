@@ -12,6 +12,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Evaluation;
     #endregion Namespaces
 
@@ -427,13 +428,13 @@ namespace Microsoft.OData
 
                     if (property.Value is ODataResourceValue)
                     {
-                        throw new ODataException(Strings.ODataResource_PropertyValueCannotBeODataResourceValue(property.Name));
+                        throw new ODataException(Error.Format(SRResources.ODataResource_PropertyValueCannotBeODataResourceValue, property.Name));
                     }
                     else if ((collection = property.Value as ODataCollectionValue) != null)
                     {
                         if (collection != null && collection.Items != null && collection.Items.Any(t => t is ODataResourceValue))
                         {
-                            throw new ODataException(Strings.ODataResource_PropertyValueCannotBeODataResourceValue(property.Name));
+                            throw new ODataException(Error.Format(SRResources.ODataResource_PropertyValueCannotBeODataResourceValue, property.Name));
                         }
                     }
                 }

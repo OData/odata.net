@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Json
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -130,12 +131,12 @@ namespace Microsoft.OData.Json
                 if (!string.Equals(ODataJsonConstants.ODataErrorPropertyName, propertyName, StringComparison.Ordinal))
                 {
                     // we only allow a single 'error' property for a top-level error object
-                    throw new ODataException(Strings.ODataJsonErrorDeserializer_TopLevelErrorWithInvalidProperty(propertyName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonErrorDeserializer_TopLevelErrorWithInvalidProperty, propertyName));
                 }
 
                 if (error != null)
                 {
-                    throw new ODataException(Strings.ODataJsonReaderUtils_MultipleErrorPropertiesWithSameName(ODataJsonConstants.ODataErrorPropertyName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_MultipleErrorPropertiesWithSameName, ODataJsonConstants.ODataErrorPropertyName));
                 }
 
                 error = new ODataError();
@@ -192,12 +193,12 @@ namespace Microsoft.OData.Json
                         switch (propertyParsingResult)
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
-                                throw new ODataException(Strings.ODataJsonErrorDeserializer_InstanceAnnotationNotAllowedInErrorPayload(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonErrorDeserializer_InstanceAnnotationNotAllowedInErrorPayload, propertyName));
                             case PropertyParsingResult.CustomInstanceAnnotation:
                                 readPropertyWithValue(propertyName, propertyAndAnnotationCollector);
                                 break;
                             case PropertyParsingResult.PropertyWithoutValue:
-                                throw new ODataException(Strings.ODataJsonErrorDeserializer_PropertyAnnotationWithoutPropertyForError(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonErrorDeserializer_PropertyAnnotationWithoutPropertyForError, propertyName));
                             case PropertyParsingResult.PropertyWithValue:
                                 readPropertyWithValue(propertyName, propertyAndAnnotationCollector);
                                 break;
@@ -205,7 +206,7 @@ namespace Microsoft.OData.Json
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(Strings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
                         }
                     });
             }
@@ -241,14 +242,14 @@ namespace Microsoft.OData.Json
                 string typeName = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName(this.JsonReader.ReadStringValue()));
                 if (typeName == null)
                 {
-                    throw new ODataException(Strings.ODataJsonPropertyAndValueDeserializer_InvalidTypeName(propertyAnnotationName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTypeName, propertyAnnotationName));
                 }
 
                 this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
                 return typeName;
             }
 
-            throw new ODataException(Strings.ODataJsonErrorDeserializer_PropertyAnnotationNotAllowedInErrorPayload(propertyAnnotationName));
+            throw new ODataException(Error.Format(SRResources.ODataJsonErrorDeserializer_PropertyAnnotationNotAllowedInErrorPayload, propertyAnnotationName));
         }
 
         /// <summary>
@@ -412,7 +413,7 @@ namespace Microsoft.OData.Json
                     {
                         // we only allow a 'code', 'message', 'target', 'details, and 'innererror' properties
                         // in the value of the 'error' property or custom instance annotations
-                        throw new ODataException(Strings.ODataJsonErrorDeserializer_TopLevelErrorValueWithInvalidProperty(propertyName));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonErrorDeserializer_TopLevelErrorValueWithInvalidProperty, propertyName));
                     }
 
                     break;
@@ -496,12 +497,12 @@ namespace Microsoft.OData.Json
                 if (!string.Equals(ODataJsonConstants.ODataErrorPropertyName, propertyName, StringComparison.Ordinal))
                 {
                     // We only allow a single 'error' property for a top-level error object
-                    throw new ODataException(Strings.ODataJsonErrorDeserializer_TopLevelErrorWithInvalidProperty(propertyName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonErrorDeserializer_TopLevelErrorWithInvalidProperty, propertyName));
                 }
 
                 if (error != null)
                 {
-                    throw new ODataException(Strings.ODataJsonReaderUtils_MultipleErrorPropertiesWithSameName(ODataJsonConstants.ODataErrorPropertyName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_MultipleErrorPropertiesWithSameName, ODataJsonConstants.ODataErrorPropertyName));
                 }
 
                 error = new ODataError();
@@ -565,13 +566,13 @@ namespace Microsoft.OData.Json
                         switch (propertyParsingResult)
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
-                                throw new ODataException(Strings.ODataJsonErrorDeserializer_InstanceAnnotationNotAllowedInErrorPayload(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonErrorDeserializer_InstanceAnnotationNotAllowedInErrorPayload, propertyName));
                             case PropertyParsingResult.CustomInstanceAnnotation:
                                 await readPropertyWithValueDelegate(propertyName, propertyAndAnnotationCollector)
                                     .ConfigureAwait(false);
                                 break;
                             case PropertyParsingResult.PropertyWithoutValue:
-                                throw new ODataException(Strings.ODataJsonErrorDeserializer_PropertyAnnotationWithoutPropertyForError(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonErrorDeserializer_PropertyAnnotationWithoutPropertyForError, propertyName));
                             case PropertyParsingResult.PropertyWithValue:
                                 await readPropertyWithValueDelegate(propertyName, propertyAndAnnotationCollector)
                                     .ConfigureAwait(false);
@@ -580,7 +581,7 @@ namespace Microsoft.OData.Json
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(Strings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
                         }
                     }).ConfigureAwait(false);
             }
@@ -623,7 +624,7 @@ namespace Microsoft.OData.Json
 
                 if (typeName == null)
                 {
-                    throw new ODataException(Strings.ODataJsonPropertyAndValueDeserializer_InvalidTypeName(propertyAnnotationName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTypeName, propertyAnnotationName));
                 }
 
                 this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
@@ -632,7 +633,7 @@ namespace Microsoft.OData.Json
                 return typeName;
             }
 
-            throw new ODataException(Strings.ODataJsonErrorDeserializer_PropertyAnnotationNotAllowedInErrorPayload(propertyAnnotationName));
+            throw new ODataException(Error.Format(SRResources.ODataJsonErrorDeserializer_PropertyAnnotationNotAllowedInErrorPayload, propertyAnnotationName));
         }
 
         /// <summary>
@@ -814,7 +815,7 @@ namespace Microsoft.OData.Json
                     {
                         // We only allow a 'code', 'message', 'target', 'details, and 'innererror' properties
                         // in the value of the 'error' property or custom instance annotations
-                        throw new ODataException(Strings.ODataJsonErrorDeserializer_TopLevelErrorValueWithInvalidProperty(propertyName));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonErrorDeserializer_TopLevelErrorValueWithInvalidProperty, propertyName));
                     }
 
                     break;

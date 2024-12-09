@@ -73,7 +73,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             decimal? value;
             if (!EdmValueParser.TryParseDecimal(this.expression.Value, out value))
             {
-                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidDecimal, Edm.Strings.ValueParser_InvalidDecimal(this.expression.Value)) };
+                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidDecimal, Error.Format(SRResources.ValueParser_InvalidDecimal, this.expression.Value)) };
             }
             else
             {

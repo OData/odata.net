@@ -12,6 +12,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 
@@ -248,7 +249,7 @@ namespace Microsoft.OData
                     builder.AppendLine(error.ToString());
                 }
 
-                throw new ODataException(Strings.ODataMetadataOutputContext_ErrorWritingMetadata(builder.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataMetadataOutputContext_ErrorWritingMetadata, builder.ToString()));
             }
         }
 
@@ -270,7 +271,7 @@ namespace Microsoft.OData
                     builder.AppendLine(error.ToString());
                 }
 
-                throw new ODataException(Strings.ODataMetadataOutputContext_ErrorWritingMetadata(builder.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataMetadataOutputContext_ErrorWritingMetadata, builder.ToString()));
             }
         }
 

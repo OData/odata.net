@@ -7,7 +7,7 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Sub-parser that <see cref="SelectExpandParser"/> uses to parse a single select or expand term.
@@ -96,7 +96,7 @@ namespace Microsoft.OData.UriParser
         {
             if (pathLength > this.maxPathLength)
             {
-                throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+                throw new ODataException(SRResources.UriQueryExpressionParser_TooDeep);
             }
         }
 
@@ -113,7 +113,7 @@ namespace Microsoft.OData.UriParser
                 && (!allowRef || !this.lexer.CurrentToken.Span.Equals(UriQueryConstants.RefSegment, StringComparison.Ordinal))
                 && !this.lexer.CurrentToken.Span.Equals(UriQueryConstants.CountSegment, StringComparison.Ordinal))
             {
-                throw new ODataException(ODataErrorStrings.UriSelectParser_SystemTokenInSelectExpand(this.lexer.CurrentToken.Text.ToString(), this.lexer.ExpressionText));
+                throw new ODataException(Error.Format(SRResources.UriSelectParser_SystemTokenInSelectExpand, this.lexer.CurrentToken.Text.ToString(), this.lexer.ExpressionText));
             }
 
             // Some check here to throw exception, prop1/*/prop2 and */$ref/prop and prop1/$count/prop2 will throw exception, all are $expand cases.
@@ -122,24 +122,24 @@ namespace Microsoft.OData.UriParser
                 if (previousSegment != null && previousSegment.Identifier == UriQueryConstants.Star && !this.lexer.CurrentToken.GetIdentifier().Equals(UriQueryConstants.RefSegment, StringComparison.Ordinal))
                 {
                     // Star can only be followed with $ref. $count is not supported with star as expand option
-                    throw new ODataException(ODataErrorStrings.ExpressionToken_OnlyRefAllowWithStarInExpand);
+                    throw new ODataException(SRResources.ExpressionToken_OnlyRefAllowWithStarInExpand);
                 }
                 else if (previousSegment != null && previousSegment.Identifier == UriQueryConstants.RefSegment)
                 {
                     // $ref should not have more property followed.
-                    throw new ODataException(ODataErrorStrings.ExpressionToken_NoPropAllowedAfterRef);
+                    throw new ODataException(SRResources.ExpressionToken_NoPropAllowedAfterRef);
                 }
                 else if (previousSegment != null && previousSegment.Identifier == UriQueryConstants.CountSegment)
                 {
                     // $count should not have more property followed. e.g $expand=NavProperty/$count/MyProperty
-                    throw new ODataException(ODataErrorStrings.ExpressionToken_NoPropAllowedAfterDollarCount);
+                    throw new ODataException(SRResources.ExpressionToken_NoPropAllowedAfterDollarCount);
                 }
             }
 
             if (this.lexer.CurrentToken.Span.Equals(UriQueryConstants.CountSegment, StringComparison.Ordinal) && isSelect)
             {
                 // $count is not allowed in $select e.g $select=NavProperty/$count
-                throw new ODataException(ODataErrorStrings.ExpressionToken_DollarCountNotAllowedInSelect);
+                throw new ODataException(SRResources.ExpressionToken_DollarCountNotAllowedInSelect);
             }
 
             ReadOnlySpan<char> propertyName;
@@ -153,12 +153,12 @@ namespace Microsoft.OData.UriParser
                 // "*/$ref" is supported in expand
                 if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Slash && isSelect)
                 {
-                    throw new ODataException(ODataErrorStrings.ExpressionToken_IdentifierExpected(this.lexer.Position));
+                    throw new ODataException(Error.Format(SRResources.ExpressionToken_IdentifierExpected, this.lexer.Position));
                 }
                 else if (previousSegment != null && !isSelect)
                 {
                     // expand option like "customer?$expand=VIPCustomer/*" is not allowed as specification does not allowed any property before *.
-                    throw new ODataException(ODataErrorStrings.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
+                    throw new ODataException(SRResources.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
                 }
 
                 propertyName = this.lexer.CurrentToken.Span;

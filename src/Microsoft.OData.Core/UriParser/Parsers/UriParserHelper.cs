@@ -13,7 +13,7 @@ namespace Microsoft.OData.UriParser
     using System.Globalization;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion
 
@@ -176,7 +176,7 @@ namespace Microsoft.OData.UriParser
             if (!isLettersOnly)
             {
                 throw new ArgumentException(
-                    string.Format(CultureInfo.InvariantCulture, ODataErrorStrings.UriParserHelper_InvalidPrefixLiteral(typePrefixLiteralName)));
+                    string.Format(CultureInfo.InvariantCulture, Error.Format(SRResources.UriParserHelper_InvalidPrefixLiteral, typePrefixLiteralName)));
             }
         }
 
@@ -279,7 +279,7 @@ namespace Microsoft.OData.UriParser
         {
             if (lexer.CurrentToken.Kind != ExpressionTokenKind.Equal)
             {
-                throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(lexer.ExpressionText));
+                throw new ODataException(Error.Format(SRResources.UriSelectParser_TermIsNotValid, lexer.ExpressionText));
             }
 
             // get the full text from the current location onward

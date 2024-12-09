@@ -73,7 +73,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             Date? value;
             if (!EdmValueParser.TryParseDate(this.expression.Value, out value))
             {
-                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidDate, Edm.Strings.ValueParser_InvalidDate(this.expression.Value)) };
+                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidDate, Error.Format(SRResources.ValueParser_InvalidDate, this.expression.Value)) };
             }
             else
             {

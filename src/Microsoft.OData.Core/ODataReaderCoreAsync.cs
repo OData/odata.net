@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
 
     using System;
@@ -274,11 +275,11 @@ namespace Microsoft.OData
 
                 case ODataReaderState.Exception:    // fall through
                 case ODataReaderState.Completed:
-                    throw new ODataException(Strings.ODataReaderCore_NoReadCallsAllowed(this.State));
+                    throw new ODataException(Error.Format(SRResources.ODataReaderCore_NoReadCallsAllowed, this.State));
 
                 default:
                     Debug.Assert(false, "Unsupported reader state " + this.State + " detected.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataReaderCoreAsync_ReadAsynchronously));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataReaderCoreAsync_ReadAsynchronously));
             }
 
             return result;
@@ -319,14 +320,14 @@ namespace Microsoft.OData
         {
             if (this.State != ODataReaderState.Stream)
             {
-                throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
+                throw new ODataException(SRResources.ODataReaderCore_CreateReadStreamCalledInInvalidState);
             }
 
             StreamScope scope = this.CurrentScope as StreamScope;
             Debug.Assert(scope != null, "ODataReaderState.Stream when Scope is not a StreamScope");
             if (scope.StreamingState != StreamingState.None)
             {
-                throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
+                throw new ODataException(SRResources.ODataReaderCore_CreateReadStreamCalledInInvalidState);
             }
 
             scope.StreamingState = StreamingState.Streaming;
@@ -345,14 +346,14 @@ namespace Microsoft.OData
         {
             if (this.State != ODataReaderState.Stream)
             {
-                throw new ODataException(Strings.ODataReaderCore_CreateTextReaderCalledInInvalidState);
+                throw new ODataException(SRResources.ODataReaderCore_CreateTextReaderCalledInInvalidState);
             }
 
             StreamScope scope = this.CurrentScope as StreamScope;
             Debug.Assert(scope != null, "ODataReaderState.Stream when Scope is not a StreamScope");
             if (scope.StreamingState != StreamingState.None)
             {
-                throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
+                throw new ODataException(SRResources.ODataReaderCore_CreateReadStreamCalledInInvalidState);
             }
 
             scope.StreamingState = StreamingState.Streaming;

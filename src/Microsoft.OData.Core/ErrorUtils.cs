@@ -6,6 +6,7 @@
 
 using System.Diagnostics;
 using System.Xml;
+using Microsoft.OData.Core;
 using Microsoft.OData.Json;
 using Microsoft.OData.Metadata;
 
@@ -119,7 +120,7 @@ namespace Microsoft.OData
             if (recursionDepth > maxInnerErrorDepth)
             {
 #if ODATA_CORE
-                throw new ODataException(Strings.ValidationUtils_RecursionDepthLimitReached(maxInnerErrorDepth));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_RecursionDepthLimitReached, maxInnerErrorDepth));
 #else
                 throw new ODataException(Microsoft.OData.Service.Strings.BadRequest_DeepRecursion(maxInnerErrorDepth));
 #endif

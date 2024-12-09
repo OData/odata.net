@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -77,7 +78,7 @@ namespace Microsoft.OData.Tests
         public void SetAnnotationFilterToEmptyShouldThrow()
         {
             Action test = () => this.preferHeader.AnnotationFilter = "";
-            test.Throws<ArgumentException>(Strings.ExceptionUtils_ArgumentStringEmpty + " (Parameter 'AnnotationFilter')");
+            test.Throws<ArgumentException>(SRResources.ExceptionUtils_ArgumentStringEmpty + " (Parameter 'AnnotationFilter')");
         }
 
         [Fact]

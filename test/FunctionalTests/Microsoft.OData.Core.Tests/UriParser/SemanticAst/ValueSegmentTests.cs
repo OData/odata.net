@@ -8,7 +8,7 @@ using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -32,7 +32,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void CollectionTypeThrows()
         {
             Action createWithCollectionType = () => new ValueSegment(ModelBuildingHelpers.BuildValidCollectionType());
-            createWithCollectionType.Throws<ODataException>(ODataErrorStrings.PathParser_CannotUseValueOnCollection);
+            createWithCollectionType.Throws<ODataException>(SRResources.PathParser_CannotUseValueOnCollection);
         }
 
         [Fact]

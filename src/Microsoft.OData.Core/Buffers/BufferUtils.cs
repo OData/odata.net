@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
+
 namespace Microsoft.OData.Buffers
 {
     /// <summary>
@@ -58,7 +60,7 @@ namespace Microsoft.OData.Buffers
             char[] buffer = bufferPool.Rent(minSize);
             if (buffer == null || buffer.Length < minSize)
             {
-                throw new ODataException(Strings.BufferUtils_InvalidBufferOrSize(minSize));
+                throw new ODataException(Error.Format(SRResources.BufferUtils_InvalidBufferOrSize, minSize));
             }
 
             return buffer;

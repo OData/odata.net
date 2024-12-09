@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
@@ -264,7 +265,7 @@ namespace Microsoft.OData
                 this.totalBytesRead += bytesRead < 0 ? 0 : bytesRead;
                 if (this.totalBytesRead > this.maxBytesToBeRead)
                 {
-                    throw new ODataException(Strings.MessageStreamWrappingStream_ByteLimitExceeded(this.totalBytesRead, this.maxBytesToBeRead));
+                    throw new ODataException(Error.Format(SRResources.MessageStreamWrappingStream_ByteLimitExceeded, this.totalBytesRead, this.maxBytesToBeRead));
                 }
             }
         }

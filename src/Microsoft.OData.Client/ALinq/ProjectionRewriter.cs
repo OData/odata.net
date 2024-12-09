@@ -70,7 +70,7 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                throw new NotSupportedException(Strings.ALinq_CanOnlyProjectTheLeaf);
+                throw new NotSupportedException(SRResources.ALinq_CanOnlyProjectTheLeaf);
             }
         }
 

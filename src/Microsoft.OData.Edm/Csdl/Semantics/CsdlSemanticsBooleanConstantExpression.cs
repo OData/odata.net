@@ -73,7 +73,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             bool? value;
             if (!EdmValueParser.TryParseBool(this.expression.Value, out value))
             {
-                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidBoolean, Edm.Strings.ValueParser_InvalidBoolean(this.expression.Value)) };
+                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidBoolean, Error.Format(SRResources.ValueParser_InvalidBoolean, this.expression.Value)) };
             }
 
             return Enumerable.Empty<EdmError>();

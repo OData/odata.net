@@ -11,6 +11,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Xml;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -218,7 +219,7 @@ namespace Microsoft.OData
                     default:
                         // Note that Astoria supports XElement and Binary as well, but they are serialized as string or byte[]
                         // and the metadata will actually talk about string and byte[] as well. Astoria will perform the conversion if necessary.
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataRawValueUtils_ConvertStringToPrimitive));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataRawValueUtils_ConvertStringToPrimitive));
                 }
             }
             catch (Exception e)

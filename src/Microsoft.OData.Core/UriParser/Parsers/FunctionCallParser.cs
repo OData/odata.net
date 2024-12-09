@@ -10,7 +10,7 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Implementation of IFunctionCallParser that allows functions calls and parses arguments with a provided method.
@@ -125,7 +125,7 @@ namespace Microsoft.OData.UriParser
                     return null;
                 }
 
-                throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
+                throw new ODataException(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
             }
 
             this.Lexer.NextToken();
@@ -147,7 +147,7 @@ namespace Microsoft.OData.UriParser
                     return null;
                 }
 
-                throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
+                throw new ODataException(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, this.Lexer.CurrentToken.Position, this.Lexer.ExpressionText));
             }
 
             this.Lexer.NextToken();
@@ -205,7 +205,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (argList.Select(t => t.ParameterName).Distinct().Count() != argList.Count)
                 {
-                    throw new ODataException(ODataErrorStrings.FunctionCallParser_DuplicateParameterOrEntityKeyName);
+                    throw new ODataException(SRResources.FunctionCallParser_DuplicateParameterOrEntityKeyName);
                 }
 
                 return true;

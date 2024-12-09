@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class UnresolvedNavigationPropertyPath : BadNavigationProperty, IUnresolvedElement
     {
         public UnresolvedNavigationPropertyPath(IEdmStructuredType startingType, string path, EdmLocation location)
-            : base(startingType, path, new[] { new EdmError(location, EdmErrorCode.BadUnresolvedNavigationPropertyPath, Edm.Strings.Bad_UnresolvedNavigationPropertyPath(path, startingType.FullTypeName())) })
+            : base(startingType, path, new[] { new EdmError(location, EdmErrorCode.BadUnresolvedNavigationPropertyPath, Error.Format(SRResources.Bad_UnresolvedNavigationPropertyPath, path, startingType.FullTypeName())) })
         {
         }
     }

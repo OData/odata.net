@@ -17,7 +17,7 @@ namespace Microsoft.OData.Json
     using Microsoft.OData.Evaluation;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.UriParser;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -1738,7 +1738,7 @@ namespace Microsoft.OData.Json
                 && jsonReader.NodeType != JsonNodeType.PrimitiveValue
                 && jsonReader.NodeType != JsonNodeType.StartArray)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(jsonReader.NodeType));
+                throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet, jsonReader.NodeType));
             }
 
             this.EnterScope(new JsonResourceSetScope(resourceSet, this.CurrentNavigationSource,
@@ -1812,7 +1812,7 @@ namespace Microsoft.OData.Json
                     if (nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default)
                     {
                         throw new ODataException(
-                            Strings.ReaderValidationUtils_NullNamedValueForNonNullableType(nestedResourceInfo.Name,
+                            Error.Format(SRResources.ReaderValidationUtils_NullNamedValueForNonNullableType, nestedResourceInfo.Name,
                                 structuralProperty.Type.FullName()));
                     }
                 }
@@ -1896,7 +1896,7 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        throw new ODataException(Strings.ODataJsonReader_UnexpectedPrimitiveValueForODataResource);
+                        throw new ODataException(SRResources.ODataJsonReader_UnexpectedPrimitiveValueForODataResource);
                     }
                 }
                 else
@@ -2056,7 +2056,7 @@ namespace Microsoft.OData.Json
             IJsonReader jsonReader = this.jsonResourceDeserializer.JsonReader;
             if (jsonReader.NodeType != JsonNodeType.EndArray && jsonReader.NodeType != JsonNodeType.StartObject)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(jsonReader.NodeType));
+                throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet, jsonReader.NodeType));
             }
 
             Debug.Assert(this.CurrentResourceType is IEdmEntityType, "Delta resource type is not an entity");
@@ -2144,7 +2144,7 @@ namespace Microsoft.OData.Json
                     if (resourceType?.TypeKind == EdmTypeKind.Entity && !resourceType.IsOpen())
                     {
                         throw new ODataException(
-                        ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(
+                        Error.Format(SRResources.ODataJsonReader_CannotReadResourcesOfResourceSet,
                             this.jsonResourceDeserializer.JsonReader.NodeType));
                     }
 
@@ -2178,7 +2178,7 @@ namespace Microsoft.OData.Json
                     break;
                 default:
                     throw new ODataException(
-                        ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(
+                        Error.Format(SRResources.ODataJsonReader_CannotReadResourcesOfResourceSet,
                             this.jsonResourceDeserializer.JsonReader.NodeType));
             }
         }
@@ -3257,7 +3257,7 @@ namespace Microsoft.OData.Json
                 && jsonReader.NodeType != JsonNodeType.PrimitiveValue
                 && jsonReader.NodeType != JsonNodeType.StartArray)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(jsonReader.NodeType));
+                throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet, jsonReader.NodeType));
             }
 
             this.EnterScope(new JsonResourceSetScope(
@@ -3338,7 +3338,7 @@ namespace Microsoft.OData.Json
 
                     if (nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default)
                     {
-                        throw new ODataException(Strings.ReaderValidationUtils_NullNamedValueForNonNullableType(
+                        throw new ODataException(Error.Format(SRResources.ReaderValidationUtils_NullNamedValueForNonNullableType,
                             nestedResourceInfo.Name,
                             structuralProperty.Type.FullName()));
                     }
@@ -3417,7 +3417,7 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        throw new ODataException(Strings.ODataJsonReader_UnexpectedPrimitiveValueForODataResource);
+                        throw new ODataException(SRResources.ODataJsonReader_UnexpectedPrimitiveValueForODataResource);
                     }
                 }
                 else
@@ -3612,7 +3612,7 @@ namespace Microsoft.OData.Json
                 case JsonNodeType.PrimitiveValue:
                     if (resourceType?.TypeKind == EdmTypeKind.Entity && !resourceType.IsOpen())
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(
+                        throw new ODataException(Error.Format(SRResources.ODataJsonReader_CannotReadResourcesOfResourceSet,
                             this.jsonResourceDeserializer.JsonReader.NodeType));
                     }
 
@@ -3654,7 +3654,7 @@ namespace Microsoft.OData.Json
 
                     break;
                 default:
-                    throw new ODataException(ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(
+                    throw new ODataException(Error.Format(SRResources.ODataJsonReader_CannotReadResourcesOfResourceSet,
                         this.jsonResourceDeserializer.JsonReader.NodeType));
             }
         }
@@ -3678,7 +3678,7 @@ namespace Microsoft.OData.Json
             IJsonReader jsonReader = this.jsonResourceDeserializer.JsonReader;
             if (jsonReader.NodeType != JsonNodeType.EndArray && jsonReader.NodeType != JsonNodeType.StartObject)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(jsonReader.NodeType));
+                throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet, jsonReader.NodeType));
             }
 
             Debug.Assert(this.CurrentResourceType is IEdmEntityType, "Delta resource type is not an entity");

@@ -292,7 +292,7 @@ namespace Microsoft.OData.Edm.Vocabularies
 
             if (!matches)
             {
-                throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_FailedTypeAssertion(targetType.ToTraceString()));
+                throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_FailedTypeAssertion, targetType.ToTraceString()));
             }
 
             return operand;
@@ -405,7 +405,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                     {
                         if (context == null)
                         {
-                            throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_NoContextPath);
+                            throw new InvalidOperationException(SRResources.Edm_Evaluator_NoContextPath);
                         }
 
                         IEdmPathExpression pathExpression = (IEdmPathExpression)expression;
@@ -465,7 +465,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                             {
                                 if (this.edmModel == null)
                                 {
-                                    throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_TypeCastNeedsEdmModel);
+                                    throw new InvalidOperationException(SRResources.Edm_Evaluator_TypeCastNeedsEdmModel);
                                 }
 
                                 IEdmType typeSegmentClientType = this.resolveTypeFromName(hop, this.edmModel);
@@ -507,7 +507,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                                 result = FindProperty(hop, result);
                                 if (result == null)
                                 {
-                                    throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_UnboundPath(hop));
+                                    throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_UnboundPath, hop));
                                 }
                             }
                         }
@@ -530,7 +530,7 @@ namespace Microsoft.OData.Edm.Vocabularies
 
                             if (result == null)
                             {
-                                throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_UnboundPath(hop));
+                                throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_UnboundPath, hop));
                             }
                         }
 
@@ -569,7 +569,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                             }
                         }
 
-                        throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_UnboundFunction(target != null ? target.ToTraceString() : string.Empty));
+                        throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_UnboundFunction, target != null ? target.ToTraceString() : string.Empty));
                     }
 
                 case EdmExpressionKind.If:
@@ -676,7 +676,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                     }
 
                 default:
-                    throw new InvalidOperationException(Edm.Strings.Edm_Evaluator_UnrecognizedExpressionKind(((int)expression.ExpressionKind).ToString(System.Globalization.CultureInfo.InvariantCulture)));
+                    throw new InvalidOperationException(Error.Format(SRResources.Edm_Evaluator_UnrecognizedExpressionKind, ((int)expression.ExpressionKind).ToString(System.Globalization.CultureInfo.InvariantCulture)));
             }
         }
 

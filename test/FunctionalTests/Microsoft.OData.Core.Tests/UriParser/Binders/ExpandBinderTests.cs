@@ -10,7 +10,7 @@ using System.Linq;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -29,7 +29,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             // Act & Assert
             Action test = () => BinderForPerson.Bind(expandToken, null);
-            test.Throws<ODataException>(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
+            test.Throws<ODataException>(SRResources.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
         }
 
         // $expand=MyDog
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             // Act & Assert
             Action test = () => BinderForPerson.Bind(expandToken, null);
-            test.Throws<ODataException>(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetPersonType().FullName(), "Blah"));
+            test.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, HardCodedTestModel.GetPersonType().FullName(), "Blah"));
         }
 
         [Fact]
@@ -130,7 +130,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             // Act
             Action test = () => BinderForPerson.Bind(expandToken, null);
-            test.Throws<ODataException>(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty("Shoe", HardCodedTestModel.GetPersonType().FullName()));
+            test.Throws<ODataException>(Error.Format(SRResources.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty, "Shoe", HardCodedTestModel.GetPersonType().FullName()));
         }
 
         [Fact]

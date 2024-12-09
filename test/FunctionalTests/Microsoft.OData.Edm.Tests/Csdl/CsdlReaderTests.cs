@@ -16,7 +16,7 @@ using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Edm.Strings;
+using ErrorStrings = Microsoft.OData.Edm.SRResources;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
 {
@@ -1057,7 +1057,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 </edmx:Edmx>";
             Action parseAction = () => CsdlReader.Parse(XElement.Parse(EdmxwithMultipleEntityContainers).CreateReader());
             var exception = Assert.Throws<EdmParseException>(parseAction);
-            Assert.Contains(Strings.CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer, exception.Message);
+            Assert.Contains(SRResources.CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer, exception.Message);
             Assert.Single(exception.Errors);
         }
 
@@ -1431,7 +1431,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Action parseAction = () => parse(this.invalidReader);
 
             EdmParseException exception = Assert.Throws<EdmParseException>(parseAction);
-            Assert.Equal(ErrorStrings.EdmParseException_ErrorsEncounteredInEdmx(ErrorMessage), exception.Message);
+            Assert.Equal(Error.Format(ErrorStrings.EdmParseException_ErrorsEncounteredInEdmx, ErrorMessage), exception.Message);
             Assert.Single(exception.Errors, e => e.ToString() == ErrorMessage);
         }
 

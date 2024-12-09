@@ -11,6 +11,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Tests.UriParser;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -94,7 +95,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                                                             GEO_DISTANCE_BUILTIN_FUNCTION_SIGNATURE);
 
                 // Assert
-                addCustomFunction.Throws<ODataException>(Strings.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature(BUILT_IN_GEODISTANCE_FUNCTION_NAME));
+                addCustomFunction.Throws<ODataException>(Error.Format(SRResources.CustomUriFunctions_AddCustomUriFunction_BuiltInExistsFullSignature, BUILT_IN_GEODISTANCE_FUNCTION_NAME));
             }
             finally
             {
@@ -148,7 +149,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     CustomUriFunctions.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
 
                 // Assert
-                addCustomFunction.Throws<ODataException>(Strings.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists(customFunctionName));
+                addCustomFunction.Throws<ODataException>(Error.Format(SRResources.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists, customFunctionName));
             }
             finally
             {
@@ -174,7 +175,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     CustomUriFunctions.AddCustomUriFunction(customFunctionName, newCustomFunctionSignature);
 
                 // Asserts
-                addCustomFunction.Throws<ODataException>(Strings.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists(customFunctionName));
+                addCustomFunction.Throws<ODataException>(Error.Format(SRResources.CustomUriFunctions_AddCustomUriFunction_CustomFunctionOverloadExists, customFunctionName));
             }
             finally
             {

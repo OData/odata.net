@@ -7,8 +7,7 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
-    using System.Globalization;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Syntactic parser for the $count segment.
@@ -75,7 +74,7 @@ namespace Microsoft.OData.UriParser
                 // Check for (), which is not allowed.
                 if (this.lexer.CurrentToken.Kind == ExpressionTokenKind.CloseParen)
                 {
-                    throw new ODataException(ODataErrorStrings.UriParser_EmptyParenthesis);
+                    throw new ODataException(SRResources.UriParser_EmptyParenthesis);
                 }
 
                 StringComparison comparison = this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier ?
@@ -101,7 +100,7 @@ namespace Microsoft.OData.UriParser
                     }
                     else
                     {
-                        throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount);
+                        throw new ODataException(SRResources.UriQueryExpressionParser_IllegalQueryOptioninDollarCount);
                     }
                 }
             }

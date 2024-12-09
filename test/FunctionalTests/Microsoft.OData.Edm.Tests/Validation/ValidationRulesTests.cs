@@ -31,7 +31,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.OperationImportCannotImportBoundOperation,
                 functionImport,
                 EdmErrorCode.OperationImportCannotImportBoundOperation,
-                Strings.EdmModel_Validator_Semantic_OperationImportCannotImportBoundOperation("function1", "func"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportCannotImportBoundOperation, "function1", "func"));
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.UnBoundFunctionOverloadsMustHaveIdenticalReturnTypes,
                 model,
                 EdmErrorCode.UnboundFunctionOverloadHasIncorrectReturnType,
-                Strings.EdmModel_Validator_Semantic_UnboundFunctionOverloadHasIncorrectReturnType("GetStuff"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_UnboundFunctionOverloadHasIncorrectReturnType, "GetStuff"));
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 edmFunction,
                 EdmErrorCode.UrlEscapeFunctionMustBeBoundFunction,
-                Strings.EdmModel_Validator_Semantic_UrlEscapeFunctionMustBoundFunction("GetStuff"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_UrlEscapeFunctionMustBoundFunction, "GetStuff"));
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 edmFunction,
                 EdmErrorCode.UrlEscapeFunctionMustHaveOnlyOneEdmStringParameter,
-                Strings.EdmModel_Validator_Semantic_UrlEscapeFunctionMustHaveOneStringParameter("GetStuff"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_UrlEscapeFunctionMustHaveOneStringParameter, "GetStuff"));
         }
 
         [Fact]
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 entityType,
                 EdmErrorCode.EntityComposableBoundEscapeFunctionMustBeLessOne,
-                Strings.EdmModel_Validator_Semantic_EntityComposableBoundEscapeFunctionMustBeLessOne("NS.Entity", "GetStuff1,GetStuff2"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_EntityComposableBoundEscapeFunctionMustBeLessOne, "NS.Entity", "GetStuff1,GetStuff2"));
         }
 
         [Fact]
@@ -128,7 +128,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 entityType,
                 EdmErrorCode.EntityNoncomposableBoundEscapeFunctionMustBeLessOne,
-                Strings.EdmModel_Validator_Semantic_EntityNoncomposableBoundEscapeFunctionMustBeLessOne("NS.Entity", "GetStuff1,GetStuff2"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_EntityNoncomposableBoundEscapeFunctionMustBeLessOne, "NS.Entity", "GetStuff1,GetStuff2"));
         }
 
         [Fact]
@@ -165,7 +165,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.EntityContainerDuplicateEntityContainerMemberName,
                 container,
                 EdmErrorCode.DuplicateEntityContainerMemberName,
-                Strings.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName("Set"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName, "Set"));
         }
 
         [Fact]
@@ -179,7 +179,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.EntityContainerDuplicateEntityContainerMemberName,
                 container,
                 EdmErrorCode.DuplicateEntityContainerMemberName,
-                Strings.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName("Set"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName, "Set"));
         }
 
         [Fact]
@@ -194,7 +194,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.EntityContainerDuplicateEntityContainerMemberName,
                 container,
                 EdmErrorCode.DuplicateEntityContainerMemberName,
-                Strings.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName("Set"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName, "Set"));
         }
 
         [Fact]
@@ -231,7 +231,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.OperationReturnTypeCannotBeCollectionOfAbstractType,
                 function,
                 EdmErrorCode.OperationWithCollectionOfAbstractReturnTypeInvalid,
-                Strings.EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType(collectionType.FullName(), function.FullName()));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationReturnTypeCannotBeCollectionOfAbstractType, collectionType.FullName(), function.FullName()));
         }
 
         [Fact]
@@ -245,7 +245,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.EntityContainerDuplicateEntityContainerMemberName,
                 container,
                 EdmErrorCode.DuplicateEntityContainerMemberName,
-                Strings.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName("Set"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_DuplicateEntityContainerMemberName, "Set"));
         }
 
         [Fact]
@@ -258,7 +258,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.EntitySetTypeCannotBeEdmEntityType,
                 entitySet,
                 EdmErrorCode.EntityTypeOfEntitySetCannotBeEdmEntityType,
-                Strings.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet(entitySet.Name));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfEntitySet, entitySet.Name));
         }
 
         #endregion
@@ -280,7 +280,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 edmFunctionImport,
                 EdmErrorCode.OperationImportEntitySetExpressionIsInvalid,
-                Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid("GetStuff"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid, "GetStuff"));
         }
 
         [Fact]
@@ -310,14 +310,14 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.OperationImportEntitySetExpressionIsInvalid,
                 edmFunctionImport,
                 EdmErrorCode.OperationImportEntitySetExpressionIsInvalid,
-                Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid("GetStuff"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid, "GetStuff"));
 
             var edmActionImport = new EdmActionImport(defaultContainer, "UpdateStuff", edmAction, new EdmPathExpression("Schema.EntityContainer/Singleton"));
             ValidateError(
                 ValidationRules.OperationImportEntitySetExpressionIsInvalid,
                 edmActionImport,
                 EdmErrorCode.OperationImportEntitySetExpressionIsInvalid,
-                Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid("UpdateStuff"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid, "UpdateStuff"));
         }
 
         [Fact]
@@ -375,7 +375,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.OperationImportEntityTypeDoesNotMatchEntitySet,
                 edmFunctionImport,
                 EdmErrorCode.OperationImportSpecifiesEntitySetButDoesNotReturnEntityType,
-                Strings.EdmModel_Validator_Semantic_OperationImportSpecifiesEntitySetButNotEntityType("GetStuff"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportSpecifiesEntitySetButNotEntityType, "GetStuff"));
         }
 
         [Fact]
@@ -388,7 +388,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.OperationImportEntityTypeDoesNotMatchEntitySet,
                 edmFunctionImport,
                 EdmErrorCode.OperationImportSpecifiesEntitySetButDoesNotReturnEntityType,
-                Strings.EdmModel_Validator_Semantic_OperationImportSpecifiesEntitySetButNotEntityType("GetStuff"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportSpecifiesEntitySetButNotEntityType, "GetStuff"));
         }
 
         [Fact]
@@ -416,7 +416,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 function,
                 EdmErrorCode.OperationCannotHaveEntitySetPathWithUnBoundOperation,
-                Strings.EdmModel_Validator_Semantic_OperationCannotHaveEntitySetPathWithUnBoundOperation(function.Name));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationCannotHaveEntitySetPathWithUnBoundOperation, function.Name));
         }
 
         [Fact]
@@ -431,7 +431,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 function,
                 EdmErrorCode.OperationWithInvalidEntitySetPathMissingCompletePath,
-                Strings.EdmModel_Validator_Semantic_InvalidEntitySetPathMissingBindingParameterName("EntitySetPath"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidEntitySetPathMissingBindingParameterName, "EntitySetPath"));
         }
         #endregion
 
@@ -447,7 +447,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 function,
                 EdmErrorCode.OperationWithEntitySetPathReturnTypeInvalid,
-                Strings.EdmModel_Validator_Semantic_OperationWithEntitySetPathReturnTypeInvalid(function.Name));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationWithEntitySetPathReturnTypeInvalid, function.Name));
         }
 
         [Fact]
@@ -462,7 +462,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 function,
                 EdmErrorCode.OperationWithEntitySetPathReturnTypeInvalid,
-                Strings.EdmModel_Validator_Semantic_OperationWithEntitySetPathReturnTypeInvalid(function.Name));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationWithEntitySetPathReturnTypeInvalid, function.Name));
         }
 
         [Fact]
@@ -478,7 +478,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 testModelContainer.Model,
                 function,
                 EdmErrorCode.OperationWithEntitySetPathAndReturnTypeTypeNotAssignable,
-                Strings.EdmModel_Validator_Semantic_OperationWithEntitySetPathAndReturnTypeTypeNotAssignable(function.Name, testModelContainer.T3.FullName(), testModelContainer.T2.FullName()));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationWithEntitySetPathAndReturnTypeTypeNotAssignable, function.Name, testModelContainer.T3.FullName(), testModelContainer.T2.FullName()));
         }
 
         [Fact]
@@ -494,7 +494,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 testModelContainer.Model,
                 function,
                 EdmErrorCode.OperationWithEntitySetPathReturnTypeInvalid,
-                Strings.EdmModel_Validator_Semantic_OperationWithEntitySetPathReturnTypeInvalid(function.Name));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationWithEntitySetPathReturnTypeInvalid, function.Name));
         }
 
         [Fact]
@@ -525,7 +525,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 testModelContainer.Model,
                 function,
                 EdmErrorCode.OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType,
-                Strings.EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType(function.Name));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_OperationWithEntitySetPathResolvesToCollectionEntityTypeMismatchesEntityTypeReturnType, function.Name));
         }
 
         [Fact]
@@ -595,7 +595,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 functionImport,
                 EdmErrorCode.FunctionImportWithParameterShouldNotBeIncludedInServiceDocument,
-                Strings.EdmModel_Validator_Semantic_FunctionImportWithParameterShouldNotBeIncludedInServiceDocument("OtherName"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_FunctionImportWithParameterShouldNotBeIncludedInServiceDocument, "OtherName"));
         }
 
         [Fact]
@@ -635,7 +635,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.ModelBoundFunctionOverloadsMustHaveSameReturnType,
                 model,
                 EdmErrorCode.BoundFunctionOverloadsMustHaveSameReturnType,
-                Strings.EdmModel_Validator_Semantic_BoundFunctionOverloadsMustHaveSameReturnType("GetStuff", edmFunction.ReturnType.FullName()));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_BoundFunctionOverloadsMustHaveSameReturnType, "GetStuff", edmFunction.ReturnType.FullName()));
         }
 
         [Fact]
@@ -682,8 +682,8 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.ModelBoundFunctionOverloadsMustHaveSameReturnType,
                 model,
                 model,
-                new Tuple<EdmErrorCode, string>(EdmErrorCode.BoundFunctionOverloadsMustHaveSameReturnType, Strings.EdmModel_Validator_Semantic_BoundFunctionOverloadsMustHaveSameReturnType("GetStuff", edmFunction.ReturnType.FullName())),
-                new Tuple<EdmErrorCode, string>(EdmErrorCode.BoundFunctionOverloadsMustHaveSameReturnType, Strings.EdmModel_Validator_Semantic_BoundFunctionOverloadsMustHaveSameReturnType("GetStuff", edmFunction.ReturnType.FullName())));
+                new Tuple<EdmErrorCode, string>(EdmErrorCode.BoundFunctionOverloadsMustHaveSameReturnType, Error.Format(SRResources.EdmModel_Validator_Semantic_BoundFunctionOverloadsMustHaveSameReturnType, "GetStuff", edmFunction.ReturnType.FullName())),
+                new Tuple<EdmErrorCode, string>(EdmErrorCode.BoundFunctionOverloadsMustHaveSameReturnType, Error.Format(SRResources.EdmModel_Validator_Semantic_BoundFunctionOverloadsMustHaveSameReturnType, "GetStuff", edmFunction.ReturnType.FullName())));
         }
         #endregion
 
@@ -723,7 +723,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.ModelDuplicateSchemaElementName,
                 model,
                 EdmErrorCode.DuplicateFunctions,
-                Strings.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterTypes("n.s.GetStuff"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterTypes, "n.s.GetStuff"));
         }
 
         // TODO: Need to add tests where a function or action conflict with an existing Type, should fail.
@@ -742,7 +742,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.ModelDuplicateSchemaElementName,
                 model,
                 EdmErrorCode.AlreadyDefined,
-                Strings.EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined("n.s.GetStuff"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined, "n.s.GetStuff"));
         }
 
         // TODO: Need to add tests where a function or action conflict with an existing Type, in a referenced schema, should fail.
@@ -764,7 +764,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.ModelDuplicateSchemaElementName,
                 model,
                 EdmErrorCode.AlreadyDefined,
-                Strings.EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined("n.s.GetStuff"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined, "n.s.GetStuff"));
         }
 
         /// <summary>
@@ -791,7 +791,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.ModelDuplicateSchemaElementName,
                 model,
                 EdmErrorCode.AlreadyDefined,
-                Strings.EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined("n.s.GetStuff"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined, "n.s.GetStuff"));
         }
         #endregion
 
@@ -808,7 +808,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.RecursiveComplexTypedPropertyMustBeOptional,
                 nestedProp,
                 EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
-                Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional("nested"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional, "nested"));
         }
 
         [Fact]
@@ -823,7 +823,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.RecursiveComplexTypedPropertyMustBeOptional,
                 nestedBaseProp,
                 EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
-                Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional("nested"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional, "nested"));
         }
 
         [Fact]
@@ -857,7 +857,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.RecursiveComplexTypedPropertyMustBeOptional,
                 nestedBaseProp,
                 EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
-                Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional("nested"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional, "nested"));
         }
 
         [Fact]
@@ -874,7 +874,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.RecursiveComplexTypedPropertyMustBeOptional,
                 nestedBaseProp,
                 EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
-                Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional("nested"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional, "nested"));
         }
 
         [Fact]
@@ -921,7 +921,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             foreach (var error in errors)
             {
                 Assert.Equal(EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional, error.ErrorCode);
-                Assert.Equal(Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional("nested" + currentIndex), error.ErrorMessage);
+                Assert.Equal(Error.Format(SRResources.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional, "nested" + currentIndex), error.ErrorMessage);
                 currentIndex++;
             }
         }
@@ -964,7 +964,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationPropertyDependentEndMultiplicity,
                 navProp,
                 EdmErrorCode.InvalidMultiplicityOfDependentEnd,
-                Strings.EdmModel_Validator_Semantic_InvalidMultiplicityOfDependentEndMustBeMany("nav2"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidMultiplicityOfDependentEndMustBeMany, "nav2"));
         }
 
         [Fact]
@@ -1003,7 +1003,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationPropertyTypeMismatchRelationshipConstraint,
                 navProp,
                 EdmErrorCode.TypeMismatchRelationshipConstraint,
-                Strings.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint("foreignKey", "ns.type2", "Id1", "type1"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint, "foreignKey", "ns.type2", "Id1", "type1"));
         }
 
         [Fact]
@@ -1021,7 +1021,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 function,
                 EdmErrorCode.AlreadyDefined,
-                Strings.EdmModel_Validator_Semantic_ParameterNameAlreadyDefinedDuplicate("param1"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_ParameterNameAlreadyDefinedDuplicate, "param1"));
         }
 
         [Fact]
@@ -1039,7 +1039,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 function,
                 EdmErrorCode.RequiredParametersMustPrecedeOptional,
-                Strings.EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional("param2"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_RequiredParametersMustPrecedeOptional, "param2"));
         }
 
         [Fact]
@@ -1055,7 +1055,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 function,
                 EdmErrorCode.BoundOperationMustHaveParameters,
-                Strings.EdmModel_Validator_Semantic_BoundOperationMustHaveParameters(function.Name));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_BoundOperationMustHaveParameters, function.Name));
         }
 
         [Fact]
@@ -1072,7 +1072,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 function,
                 EdmErrorCode.BoundOperationMustHaveParameters,
-                Strings.EdmModel_Validator_Semantic_BoundOperationMustHaveParameters(function.Name));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_BoundOperationMustHaveParameters, function.Name));
         }
 
         [Fact]
@@ -1097,7 +1097,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 singleton,
                 EdmErrorCode.SingletonTypeMustBeEntityType,
-                Strings.EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType("Collection(NS.Entity)", "Set"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType, "Collection(NS.Entity)", "Set"));
         }
 
         [Fact]
@@ -1121,7 +1121,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 singleton,
                 EdmErrorCode.SingletonTypeMustBeEntityType,
-                Strings.EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType("NS.ComplexType", "Set"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_SingletonTypeMustBeEntityType, "NS.ComplexType", "Set"));
         }
 
         [Fact]
@@ -1140,7 +1140,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 singleton,
                 EdmErrorCode.EntityTypeOfSingletonCannotBeEdmEntityType,
-                Strings.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton("Singleton"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_EdmEntityTypeCannotBeTypeOfSingleton, "Singleton"));
         }
 
         [Fact]
@@ -1164,7 +1164,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 entitySet,
                 EdmErrorCode.EntitySetTypeMustBeCollectionOfEntityType,
-                Strings.EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType("Collection(NS.ComplexType)", "Set"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType, "Collection(NS.ComplexType)", "Set"));
         }
 
         [Fact]
@@ -1188,7 +1188,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 entitySet,
                 EdmErrorCode.EntitySetTypeMustBeCollectionOfEntityType,
-                Strings.EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType("NS.ComplexType", "Set"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType, "NS.ComplexType", "Set"));
         }
 
         [Fact]
@@ -1213,7 +1213,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 model,
                 entitySet,
                 EdmErrorCode.EntitySetTypeMustBeCollectionOfEntityType,
-                Strings.EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType("NS.Entity", "Set"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_EntitySetTypeMustBeCollectionOfEntityType, "NS.Entity", "Set"));
         }
 
         [Fact]
@@ -1225,7 +1225,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.StructuredTypeBaseTypeCannotBeAbstractType,
                 entity,
                 EdmErrorCode.EntityTypeBaseTypeCannotBeEdmEntityType,
-                Strings.EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType("Edm.EntityType", "entity", "NS.MyEntity"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType, "Edm.EntityType", "entity", "NS.MyEntity"));
         }
 
         [Fact]
@@ -1237,7 +1237,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.StructuredTypeBaseTypeCannotBeAbstractType,
                 complex,
                 EdmErrorCode.ComplexTypeBaseTypeCannotBeEdmComplexType,
-                Strings.EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType("Edm.ComplexType", "complex", "NS.MyComplex"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_StructuredTypeBaseTypeCannotBeAbstractType, "Edm.ComplexType", "complex", "NS.MyComplex"));
         }
 
         [Fact]
@@ -1249,7 +1249,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
                 typeDefinition,
                 EdmErrorCode.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
-                Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType("type definition", typeDefinition.FullName()));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType, "type definition", typeDefinition.FullName()));
         }
 
         [Fact]
@@ -1261,7 +1261,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.EnumUnderlyingTypeCannotBeEdmPrimitiveType,
                 enumType,
                 EdmErrorCode.TypeDefinitionUnderlyingTypeCannotBeEdmPrimitiveType,
-                Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType("enumeration", enumType.FullName()));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsUnderlyingType, "enumeration", enumType.FullName()));
         }
 
         [Fact]
@@ -1274,7 +1274,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.EntityTypeKeyTypeCannotBeEdmPrimitiveType,
                 entity,
                 EdmErrorCode.KeyPropertyTypeCannotBeEdmPrimitiveType,
-                Strings.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey("Id", "NS.Entity"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_EdmPrimitiveTypeCannotBeUsedAsTypeOfKey, "Id", "NS.Entity"));
         }
 
         [Fact]
@@ -1289,7 +1289,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.EntityTypeInvalidKeyKeyDefinedInAncestor,
                 entity,
                 EdmErrorCode.InvalidKey,
-                Strings.EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass(entity.Name, entity.BaseEntityType().Name));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass, entity.Name, entity.BaseEntityType().Name));
         }
 
         [Fact]
@@ -1305,7 +1305,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.EntityTypeInvalidKeyKeyDefinedInAncestor,
                 entity,
                 EdmErrorCode.InvalidKey,
-                Strings.EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass(entity.Name, baseEntity.Name));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass, entity.Name, baseEntity.Name));
         }
 
         [Theory]
@@ -1332,7 +1332,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.PropertyTypeCannotBeCollectionOfAbstractType,
                 property,
                 EdmErrorCode.PropertyTypeCannotBeCollectionOfAbstractType,
-                Strings.EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType(property.Type.FullName(), "Property"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_PropertyTypeCannotBeCollectionOfAbstractType, property.Type.FullName(), "Property"));
         }
 
         [Fact]
@@ -1348,7 +1348,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
                 entitySet,
                 EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
-                Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Entity", "entity set", "Entities"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty, "NS.Entity", "entity set", "Entities"));
         }
 
         [Fact]
@@ -1364,7 +1364,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
                 singleton,
                 EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
-                Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Entity", "singleton", "MyEntity"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty, "NS.Entity", "singleton", "MyEntity"));
         }
 
         [Fact]
@@ -1383,7 +1383,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
                 entitySet,
                 EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
-                Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Entity", "entity set", "Entities"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty, "NS.Entity", "entity set", "Entities"));
         }
 
         [Fact]
@@ -1402,7 +1402,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
                 entitySet,
                 EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
-                Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Derived", "entity set", "Deriveds"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty, "NS.Derived", "entity set", "Deriveds"));
         }
 
         [Fact]
@@ -1424,7 +1424,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
                 entitySet,
                 EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
-                Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Entity", "entity set", "Entities"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty, "NS.Entity", "entity set", "Entities"));
         }
 
         [Fact]
@@ -1448,7 +1448,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationPropertyTypeCannotHavePathTypeProperty,
                 navigationProperty,
                 EdmErrorCode.TypeOfNavigationPropertyCannotHavePathProperty,
-                Strings.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty("Collection(NS.OtherEntity)", "NavigationProperty", "NS.Entity"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty, "Collection(NS.OtherEntity)", "NavigationProperty", "NS.Entity"));
         }
 
         [Fact]
@@ -1472,7 +1472,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationPropertyTypeCannotHavePathTypeProperty,
                 navigationProperty,
                 EdmErrorCode.TypeOfNavigationPropertyCannotHavePathProperty,
-                Strings.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty("NS.OtherEntity", "NavigationProperty", "NS.Complex"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty, "NS.OtherEntity", "NavigationProperty", "NS.Complex"));
         }
 
         [Fact]
@@ -1505,7 +1505,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationPropertyTypeCannotHavePathTypeProperty,
                 navigationProperty,
                 EdmErrorCode.TypeOfNavigationPropertyCannotHavePathProperty,
-                Strings.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty("NS.Entity", "NavigationProperty", "NS.Entity"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_TypeOfNavigationPropertyCannotHavePathProperty, "NS.Entity", "NavigationProperty", "NS.Entity"));
         }
 
         [Fact]
@@ -1532,7 +1532,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
                 entitySet,
                 EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
-                Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Entity", "entity set", "Entities"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty, "NS.Entity", "entity set", "Entities"));
         }
 
         [Fact]
@@ -1559,7 +1559,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationSourceDeclaringTypeCannotHavePathTypeProperty,
                 singleton,
                 EdmErrorCode.DeclaringTypeOfNavigationSourceCannotHavePathProperty,
-                Strings.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty("NS.Entity", "singleton", "Me"));
+                Error.Format(SRResources.EdmModel_Validator_Semantic_DeclaringTypeOfNavigationSourceCannotHavePathProperty, "NS.Entity", "singleton", "Me"));
         }
 
         [Fact]
@@ -1579,7 +1579,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.VocabularyAnnotationTargetAllowedApplyToElement,
                 annotation,
                 EdmErrorCode.AnnotationApplyToNotAllowedAnnotatable,
-                Strings.EdmModel_Validator_Semantic_VocabularyAnnotationApplyToNotAllowedAnnotatable("NS.Entity",
+                Error.Format(SRResources.EdmModel_Validator_Semantic_VocabularyAnnotationApplyToNotAllowedAnnotatable, "NS.Entity",
                 "EntitySet Singleton ActionImport FunctionImport", "Org.OData.Core.V1.ResourcePath"));
         }
 

@@ -14,7 +14,7 @@ namespace Microsoft.OData.Json
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -140,14 +140,14 @@ namespace Microsoft.OData.Json
                 else
                 {
                     // For unsupported primitive values (e.g. spatial values)
-                    sb.Append('"').Append(JsonValueUtils.GetEscapedJsonString(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(valueAsObject.GetType().FullName))).Append('"');
+                    sb.Append('"').Append(JsonValueUtils.GetEscapedJsonString(Error.Format(SRResources.ODataJsonWriter_UnsupportedValueType, valueAsObject.GetType().FullName))).Append('"');
                 }
 
                 return;
             }
 
             // Subclasses of ODataValue that are not supported in ODataInnerError.Properties dictionary
-            sb.Append('"').Append(JsonValueUtils.GetEscapedJsonString(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(value.GetType().FullName))).Append('"');
+            sb.Append('"').Append(JsonValueUtils.GetEscapedJsonString(Error.Format(SRResources.ODataJsonWriter_UnsupportedValueType, value.GetType().FullName))).Append('"');
         }
 
         /// <summary>
@@ -380,7 +380,7 @@ namespace Microsoft.OData.Json
                 }
                 else
                 {
-                    sb.Append('"').Append(JsonValueUtils.GetEscapedJsonString(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(item.GetType().FullName))).Append('"');
+                    sb.Append('"').Append(JsonValueUtils.GetEscapedJsonString(Error.Format(SRResources.ODataJsonWriter_UnsupportedValueType, item.GetType().FullName))).Append('"');
                 }
             }
 

@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
@@ -31,7 +32,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Action test = () => BinderForPerson.Bind(null, selectToken);
 
             // Assert
-            test.Throws<ODataException>(Strings.SelectExpandBinder_SystemTokenInSelect("$value"));
+            test.Throws<ODataException>(Error.Format(SRResources.SelectExpandBinder_SystemTokenInSelect, "$value"));
         }
 
         [Fact]
@@ -204,7 +205,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Action test = () => BinderForPerson.Bind(null, selectToken);
 
             // Assert
-            test.Throws<ODataException>(Strings.MetadataBinder_InvalidIdentifierInQueryOption("Dotted.Name"));
+            test.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_InvalidIdentifierInQueryOption, "Dotted.Name"));
         }
 
         [Fact]
@@ -248,7 +249,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Action test = () => BinderForPerson.Bind(null, selectToken);
 
             // Assert
-            test.Throws<ODataException>(Strings.SelectBinder_MultiLevelPathInSelect);
+            test.Throws<ODataException>(SRResources.SelectBinder_MultiLevelPathInSelect);
         }
 
         [Theory]
@@ -263,7 +264,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Action test = () => BinderForPerson.Bind(null, selectToken);
 
             // Assert
-            test.Throws<ODataException>(Strings.SelectExpandBinder_InvalidQueryOptionNestedSelection(identifier));
+            test.Throws<ODataException>(Error.Format(SRResources.SelectExpandBinder_InvalidQueryOptionNestedSelection, identifier));
         }
 
         [Fact]
@@ -279,7 +280,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Action test = () => BinderForPerson.Bind(null, selectToken);
 
             // Arrange
-            test.Throws<ODataException>(Strings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetPersonType(), "substring"));
+            test.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, HardCodedTestModel.GetPersonType(), "substring"));
         }
 
         [Fact]
@@ -295,7 +296,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Action test = () => BinderForPerson.Bind(null, selectToken);
 
             // Assert
-            test.Throws<ODataException>(Strings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetPersonType(), "GetCoolPeople"));
+            test.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, HardCodedTestModel.GetPersonType(), "GetCoolPeople"));
         }
 
         [Fact]

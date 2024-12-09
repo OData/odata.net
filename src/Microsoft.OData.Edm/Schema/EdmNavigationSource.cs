@@ -128,13 +128,13 @@ namespace Microsoft.OData.Edm
 
             if (lastSegment == null)
             {
-                throw new ArgumentException(Strings.NavigationPropertyBinding_PathIsNotValid);
+                throw new ArgumentException(SRResources.NavigationPropertyBinding_PathIsNotValid);
             }
 
             if (navigationProperty.Name != lastSegment && (lastSegment.IndexOf('.', StringComparison.Ordinal) < 0
                 || navigationProperty.Name != penultimateSegment))
             {
-                throw new ArgumentException(Strings.NavigationPropertyBinding_PathIsNotValid);
+                throw new ArgumentException(SRResources.NavigationPropertyBinding_PathIsNotValid);
             }
 
             AddNavigationPropertyBinding(navigationProperty, target, bindingPath);

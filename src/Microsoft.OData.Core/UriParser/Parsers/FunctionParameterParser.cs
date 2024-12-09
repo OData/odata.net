@@ -10,7 +10,7 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Component for parsing function parameters in both $filter/$orderby expressions and in paths.
@@ -45,7 +45,7 @@ namespace Microsoft.OData.UriParser
             // check duplicate names
             if (splitParameters.Select(t => t.ParameterName).Distinct().Count() != splitParameters.Count)
             {
-                throw new ODataException(ODataErrorStrings.FunctionCallParser_DuplicateParameterOrEntityKeyName);
+                throw new ODataException(SRResources.FunctionCallParser_DuplicateParameterOrEntityKeyName);
             }
 
             return ret;
@@ -101,7 +101,7 @@ namespace Microsoft.OData.UriParser
                     if (currentToken.Kind == endTokenKind)
                     {
                         // Trailing comma.
-                        throw new ODataException(ODataErrorStrings.ExpressionLexer_SyntaxError(lexer.Position, lexer.ExpressionText));
+                        throw new ODataException(Error.Format(SRResources.ExpressionLexer_SyntaxError, lexer.Position, lexer.ExpressionText));
                     }
                 }
             }

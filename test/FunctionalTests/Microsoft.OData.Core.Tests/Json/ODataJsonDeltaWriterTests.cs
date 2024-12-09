@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.OData.UriParser;
@@ -501,7 +502,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.WriteStart(derivedEntity);
             };
 
-            writeAction.Throws<ODataException>(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes("MyNS.PhysicalProduct", "MyNS.Customer"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes, "MyNS.PhysicalProduct", "MyNS.Customer"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -529,7 +530,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.WriteStart(derivedEntity);
             };
 
-            writeAction.Throws<ODataException>(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes("MyNS.PhysicalProduct", "MyNS.Customer"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes, "MyNS.PhysicalProduct", "MyNS.Customer"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1154,7 +1155,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.WriteStart(ordersNavigationLink);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromResourceSet("DeltaResourceSet", "NestedResourceInfo"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromResourceSet, "DeltaResourceSet", "NestedResourceInfo"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1173,7 +1174,7 @@ namespace Microsoft.OData.Tests.Json
                    writer.WriteDeltaDeletedEntry(orderDeletedEntry);
                });
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
+            writeAction.Throws<ODataException>(SRResources.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         private static string V4_01DeltaResponse =
@@ -1304,7 +1305,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.WriteDeltaDeletedEntry(customerDeletedEntry);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
+            writeAction.Throws<ODataException>(SRResources.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1322,7 +1323,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.WriteStart(ordersFeed);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromResource("Resource", "ResourceSet"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromResource, "Resource", "ResourceSet"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1339,7 +1340,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.WriteStart(ordersFeed);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromResourceSet("DeltaResourceSet", "ResourceSet"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromResourceSet, "DeltaResourceSet", "ResourceSet"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1457,7 +1458,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.WriteStart(new ODataDeletedResource());
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);
+            writeAction.Throws<ODataException>(SRResources.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1502,7 +1503,7 @@ namespace Microsoft.OData.Tests.Json
 
             if (isResponse)
             {
-                writeAction.Throws<ODataException>(Strings.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);
+                writeAction.Throws<ODataException>(SRResources.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);
             }
             else
             {
@@ -1536,7 +1537,7 @@ namespace Microsoft.OData.Tests.Json
                 });
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFrom40DeletedResource("DeletedResource", "NestedResourceInfo"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFrom40DeletedResource, "DeletedResource", "NestedResourceInfo"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1671,7 +1672,7 @@ namespace Microsoft.OData.Tests.Json
                     });
             };
 
-            writeAction.Throws<ODataException>(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType("MyNS.Order", "MyNS.Product"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType, "MyNS.Order", "MyNS.Product"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1714,7 +1715,7 @@ namespace Microsoft.OData.Tests.Json
                     });
             };
 
-            writeAction.Throws<ODataException>(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType("MyNS.Order", "MyNS.Product"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType, "MyNS.Order", "MyNS.Product"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1807,7 +1808,7 @@ namespace Microsoft.OData.Tests.Json
                     });
             };
 
-            writeAction.Throws<ODataException>(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType("MyNS.Order", "MyNS.Product"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType, "MyNS.Order", "MyNS.Product"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1852,7 +1853,7 @@ namespace Microsoft.OData.Tests.Json
                     });
             };
 
-            writeAction.Throws<ODataException>(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType("MyNS.Order", "MyNS.Product"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType, "MyNS.Order", "MyNS.Product"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2126,7 +2127,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.WriteStart(new ODataDeltaResourceSet());
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromExpandedLink("NestedResourceInfoWithContent", "DeltaResourceSet"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromExpandedLink, "NestedResourceInfoWithContent", "DeltaResourceSet"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2149,7 +2150,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.WriteDeltaDeletedEntry(new ODataDeltaDeletedEntry("Products/1", DeltaDeletedEntryReason.Deleted));
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromExpandedLink("NestedResourceInfoWithContent", "DeletedResource"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromExpandedLink, "NestedResourceInfoWithContent", "DeletedResource"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2532,7 +2533,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.WriteStart(product);
             };
 
-            writeAction.Throws<ODataException>(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes("MyNS.Product", "MyNS.Customer"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes, "MyNS.Product", "MyNS.Customer"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2558,7 +2559,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.WriteStart(product);
             };
 
-            writeAction.Throws<ODataException>(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType("MyNS.Product", "MyNS.Order"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType, "MyNS.Product", "MyNS.Order"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2584,7 +2585,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.WriteStart(customerUpdated);
             };
 
-            writeAction.Throws<ODataException>(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType("MyNS.Customer","MyNS.Order"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType, "MyNS.Customer", "MyNS.Order"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2630,7 +2631,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.WriteStart(customerDeleted);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
+            writeAction.Throws<ODataException>(SRResources.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2656,7 +2657,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.WriteStart(customerUpdated);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
+            writeAction.Throws<ODataException>(SRResources.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2680,7 +2681,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.Write(linkToOrder10645);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromResourceSet("DeltaResourceSet", "DeltaLink"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromResourceSet, "DeltaResourceSet", "DeltaLink"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2697,7 +2698,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.Write(linkToOrder10645);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
+            writeAction.Throws<ODataException>(SRResources.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2721,7 +2722,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.Write(linkToOrder10645);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
+            writeAction.Throws<ODataException>(SRResources.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2745,7 +2746,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.Write(linkToOrder10643);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_InvalidTransitionFromResourceSet("DeltaResourceSet", "DeltaDeletedLink"));
+            writeAction.Throws<ODataException>(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromResourceSet, "DeltaResourceSet", "DeltaDeletedLink"));
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2762,7 +2763,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.Write(linkToOrder10643);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
+            writeAction.Throws<ODataException>(SRResources.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -2786,7 +2787,7 @@ namespace Microsoft.OData.Tests.Json
                 writer.Write(linkToOrder10643);
             };
 
-            writeAction.Throws<ODataException>(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
+            writeAction.Throws<ODataException>(SRResources.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
         }
 
         #endregion 4.01 Tests

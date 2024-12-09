@@ -226,7 +226,7 @@ namespace Microsoft.Spatial.Tests
 
             var ex = SpatialTestUtils.RunCatching<InvalidOperationException>(() => g = this.builder.ConstructedGeography);
             Assert.NotNull(ex);
-            Assert.Equal(ex.Message, Strings.SpatialBuilder_CannotCreateBeforeDrawn);
+            Assert.Equal(ex.Message, SRResources.SpatialBuilder_CannotCreateBeforeDrawn);
 
             this.builder.BeginGeography(SpatialType.Collection); // c2
             this.builder.BeginGeography(SpatialType.Point);
@@ -236,14 +236,14 @@ namespace Microsoft.Spatial.Tests
 
             ex = SpatialTestUtils.RunCatching<InvalidOperationException>(() => g = this.builder.ConstructedGeography);
             Assert.NotNull(ex);
-            Assert.Equal(ex.Message, Strings.SpatialBuilder_CannotCreateBeforeDrawn);
+            Assert.Equal(ex.Message, SRResources.SpatialBuilder_CannotCreateBeforeDrawn);
 
             this.builder.EndGeography(); // c2
             this.builder.BeginGeography(SpatialType.Point);
             this.builder.EndGeography();
             ex = SpatialTestUtils.RunCatching<InvalidOperationException>(() => g = this.builder.ConstructedGeography);
             Assert.NotNull(ex);
-            Assert.Equal(ex.Message, Strings.SpatialBuilder_CannotCreateBeforeDrawn);
+            Assert.Equal(ex.Message, SRResources.SpatialBuilder_CannotCreateBeforeDrawn);
             this.builder.EndGeography();
 
             this.builder.ConstructedGeography.VerifyAsCollection(

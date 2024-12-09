@@ -10,7 +10,7 @@ using System.Text;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
 {
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             IEdmEntityType entityType = GetEntityType();
             IEdmEntitySet entitySet = GetEntitySet(entityType);
             Action writeEmptyEntry = () => WriteJsonEntry(false, null, true, new ODataResource(), entitySet, entityType);
-            writeEmptyEntry.Throws<ODataException>(ErrorStrings.ODataOutputContext_MetadataDocumentUriMissing);
+            writeEmptyEntry.Throws<ODataException>(SRResources.ODataOutputContext_MetadataDocumentUriMissing);
         }
 
         [Fact]
@@ -241,7 +241,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
                 entitySet: containedEntitySet,
                 resourceType: containedEntitySet.Type as IEdmEntityType,
                 odataUri: null);
-            writeContainedEntry.Throws<ODataException>(ErrorStrings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
+            writeContainedEntry.Throws<ODataException>(SRResources.ODataMetadataBuilder_MissingParentIdOrContextUrl);
         }
 
         [Fact]
@@ -866,7 +866,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
                 },
                 throwOnUndeclaredProperty: true
                 );
-            writeEntry.Throws<ODataException>(ErrorStrings.ValidationUtils_PropertyDoesNotExistOnType("OpenProperty", "Fake.Type"));
+            writeEntry.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_PropertyDoesNotExistOnType, "OpenProperty", "Fake.Type"));
 
             // Should throw on undeclared complex value property
             res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Key", Value = "son" } } };
@@ -886,7 +886,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
                 },
                 throwOnUndeclaredProperty: true
                 );
-            writeEntry.Throws<ODataException>(ErrorStrings.ValidationUtils_PropertyDoesNotExistOnType("OpenComplex", "Fake.Type"));
+            writeEntry.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_PropertyDoesNotExistOnType, "OpenComplex", "Fake.Type"));
 
             // Should throw on undeclared navigation property
             res = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Key", Value = "son" } } };
@@ -914,7 +914,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
                 },
                 throwOnUndeclaredProperty: true
                 );
-            writeEntry.Throws<ODataException>(ErrorStrings.ValidationUtils_PropertyDoesNotExistOnType("OpenNavigationProperty", "Fake.Type"));
+            writeEntry.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_PropertyDoesNotExistOnType, "OpenNavigationProperty", "Fake.Type"));
         }
 
         private static string WriteJsonEntry(bool isRequest, Uri serviceDocumentUri, bool specifySet, ODataResource odataEntry, IEdmNavigationSource entitySet, IEdmEntityType entityType)

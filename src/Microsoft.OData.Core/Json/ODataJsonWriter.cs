@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Metadata;
@@ -779,7 +780,7 @@ namespace Microsoft.OData.Json
                 // Writing a nested deleted resource
                 if (this.Version == null || this.Version < ODataVersion.V401)
                 {
-                    throw new ODataException(Strings.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry);
+                    throw new ODataException(SRResources.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry);
                 }
                 else
                 {
@@ -1056,7 +1057,7 @@ namespace Microsoft.OData.Json
 
             if (nestedResourceScope.ResourceSetWritten)
             {
-                throw new ODataException(Strings.ODataJsonWriter_EntityReferenceLinkAfterResourceSetInRequest);
+                throw new ODataException(SRResources.ODataJsonWriter_EntityReferenceLinkAfterResourceSetInRequest);
             }
 
             if (!nestedResourceScope.EntityReferenceLinkWritten)
@@ -1799,7 +1800,7 @@ namespace Microsoft.OData.Json
                 // Writing a nested deleted resource
                 if (this.Version == null || this.Version < ODataVersion.V401)
                 {
-                    throw new ODataException(Strings.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry);
+                    throw new ODataException(SRResources.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry);
                 }
                 else
                 {
@@ -2151,7 +2152,7 @@ namespace Microsoft.OData.Json
 
             if (nestedResourceScope.ResourceSetWritten)
             {
-                throw new ODataException(Strings.ODataJsonWriter_EntityReferenceLinkAfterResourceSetInRequest);
+                throw new ODataException(SRResources.ODataJsonWriter_EntityReferenceLinkAfterResourceSetInRequest);
             }
 
             if (!nestedResourceScope.EntityReferenceLinkWritten)
@@ -2621,7 +2622,7 @@ namespace Microsoft.OData.Json
 
             if (resourceSet.InstanceAnnotations.Count > 0)
             {
-                throw new ODataException(Strings.ODataJsonWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
+                throw new ODataException(SRResources.ODataJsonWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
             }
         }
 

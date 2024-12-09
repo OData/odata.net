@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -54,7 +55,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void SetAndTypeMustMakeSenseTogether()
         {
             Action create = () => new KeySegment(Key, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetDogsSet());
-            create.Throws<ODataException>(Strings.PathParser_TypeMustBeRelatedToSet(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetDogType(), "KeySegments"));
+            create.Throws<ODataException>(Error.Format(SRResources.PathParser_TypeMustBeRelatedToSet, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetDogType(), "KeySegments"));
         }
 
         [Fact]

@@ -6,9 +6,9 @@
 
 using System;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -93,8 +93,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             FunctionCallParser tokenizerWithoutOpeningParen = GetFunctionCallParser("stuff, stuff)");
             Action createWithoutClosingParen = () => tokenizerWithoutClosingParen.ParseArgumentListOrEntityKeyList();
             Action createWithoutOpeningParen = () => tokenizerWithoutOpeningParen.ParseArgumentListOrEntityKeyList();
-            createWithoutClosingParen.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(13, "(stuff, stuff"));
-            createWithoutOpeningParen.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(0, "stuff, stuff)"));
+            createWithoutClosingParen.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, 13, "(stuff, stuff"));
+            createWithoutOpeningParen.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, 0, "stuff, stuff)"));
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             FunctionCallParser tokenizer = GetFunctionCallParser("func(");
             QueryToken result;
             Action parse = () => tokenizer.TryParseIdentifierAsFunction(null, out result);
-            parse.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_ExpressionExpected(5, "func("));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 5, "func("));
         }
 
         private static FunctionCallParser GetFunctionCallParser(string expression)

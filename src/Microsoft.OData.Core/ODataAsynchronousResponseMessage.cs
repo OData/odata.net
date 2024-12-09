@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -276,7 +277,7 @@ namespace Microsoft.OData
         {
             if (!this.writing)
             {
-                throw new ODataException(Strings.ODataAsyncResponseMessage_MustNotModifyMessage);
+                throw new ODataException(SRResources.ODataAsyncResponseMessage_MustNotModifyMessage);
             }
         }
     }

@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.MultipartMixed
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -165,7 +166,7 @@ namespace Microsoft.OData.MultipartMixed
             // The OData protocol spec does not define the behavior when an exception is encountered outside of a batch operation. The batch writer
             // should not allow WriteError in this case. Note that WCF DS Server does serialize the error in XML format when it encounters one outside of a
             // batch operation.
-            throw new ODataException(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
+            throw new ODataException(SRResources.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
         }
 
         public override async Task OnInStreamErrorAsync()
@@ -178,7 +179,7 @@ namespace Microsoft.OData.MultipartMixed
             // The OData protocol spec does not define the behavior when an exception is encountered outside of a batch operation. The batch writer
             // should not allow WriteError in this case. Note that WCF DS Server does serialize the error in XML format when it encounters one outside of a
             // batch operation.
-            throw new ODataException(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
+            throw new ODataException(SRResources.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
         }
 
         /// <summary>
@@ -249,7 +250,7 @@ namespace Microsoft.OData.MultipartMixed
             {
                 if (!this.payloadUriConverter.ContainsContentId(id))
                 {
-                    throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(id, contentId));
+                    throw new ODataException(Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, id, contentId));
                 }
             }
         }

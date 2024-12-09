@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Json
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -124,7 +125,7 @@ namespace Microsoft.OData.Json
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
                 // Property annotations are not allowed on the 'value' property, so fail if we see one.
-                Func<string, object> readPropertyAnnotationInServiceDoc = annotationName => { throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocument(annotationName, ODataJsonConstants.ODataValuePropertyName)); };
+                Func<string, object> readPropertyAnnotationInServiceDoc = annotationName => { throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocument, annotationName, ODataJsonConstants.ODataValuePropertyName)); };
 
                 this.ProcessProperty(
                     propertyAndAnnotationCollector,
@@ -140,14 +141,14 @@ namespace Microsoft.OData.Json
                         switch (propertyParsingResult)
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
-                                throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocument(propertyName, ODataJsonConstants.ODataValuePropertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocument, propertyName, ODataJsonConstants.ODataValuePropertyName));
 
                             case PropertyParsingResult.CustomInstanceAnnotation:
                                 this.JsonReader.SkipValue();
                                 break;
 
                             case PropertyParsingResult.PropertyWithoutValue:
-                                throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty, propertyName));
 
                             case PropertyParsingResult.PropertyWithValue:
                                 if (string.Equals(ODataJsonConstants.ODataValuePropertyName, propertyName, StringComparison.Ordinal))
@@ -155,7 +156,7 @@ namespace Microsoft.OData.Json
                                     // Fail if we've already processed a 'value' property.
                                     if (serviceDocumentElements[0] != null)
                                     {
-                                        throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument(ODataJsonConstants.ODataValuePropertyName));
+                                        throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument, ODataJsonConstants.ODataValuePropertyName));
                                     }
 
                                     serviceDocumentElements[0] = new List<ODataServiceDocumentElement>();
@@ -180,7 +181,7 @@ namespace Microsoft.OData.Json
                                 }
                                 else
                                 {
-                                    throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocument(propertyName, ODataJsonConstants.ODataValuePropertyName));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocument, propertyName, ODataJsonConstants.ODataValuePropertyName));
                                 }
 
                                 break;
@@ -188,14 +189,14 @@ namespace Microsoft.OData.Json
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(Strings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
                         }
                     });
             }
 
             if (serviceDocumentElements[0] == null)
             {
-                throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_MissingValuePropertyInServiceDocument(ODataJsonConstants.ODataValuePropertyName));
+                throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_MissingValuePropertyInServiceDocument, ODataJsonConstants.ODataValuePropertyName));
             }
 
             // Read over the end object (nothing else can happen after all properties have been read)
@@ -234,7 +235,7 @@ namespace Microsoft.OData.Json
                 // OData property annotations are not supported in service document element objects.
                 Func<string, object> propertyAnnotationValueReader = annotationName =>
                 {
-                    throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocumentElement(annotationName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocumentElement, annotationName));
                 };
 
                 this.ProcessProperty(
@@ -251,17 +252,17 @@ namespace Microsoft.OData.Json
                         switch (propertyParsingResult)
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
-                                throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocumentElement(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocumentElement, propertyName));
 
                             case PropertyParsingResult.CustomInstanceAnnotation:
                                 this.JsonReader.SkipValue();
                                 break;
 
                             case PropertyParsingResult.PropertyWithoutValue:
-                                throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty, propertyName));
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(Strings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
 
                             case PropertyParsingResult.PropertyWithValue:
                                 if (string.Equals(ODataJsonConstants.ODataServiceDocumentElementName, propertyName, StringComparison.Ordinal))
@@ -291,7 +292,7 @@ namespace Microsoft.OData.Json
                                 }
                                 else
                                 {
-                                    throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement(
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement,
                                         propertyName,
                                         ODataJsonConstants.ODataServiceDocumentElementName,
                                         ODataJsonConstants.ODataServiceDocumentElementUrlName));
@@ -346,7 +347,7 @@ namespace Microsoft.OData.Json
                 // Property annotations are not allowed on the 'value' property, so fail if we see one.
                 Func<string, Task<object>> readPropertyAnnotationInServiceDocumentAsync = annotationName =>
                 {
-                    throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocument(
+                    throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocument,
                         annotationName,
                         ODataJsonConstants.ODataValuePropertyName));
                 };
@@ -366,7 +367,7 @@ namespace Microsoft.OData.Json
                         switch (propertyParsingResult)
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
-                                throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocument(
+                                throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocument,
                                     propertyName,
                                     ODataJsonConstants.ODataValuePropertyName));
 
@@ -376,7 +377,7 @@ namespace Microsoft.OData.Json
                                 break;
 
                             case PropertyParsingResult.PropertyWithoutValue:
-                                throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty, propertyName));
 
                             case PropertyParsingResult.PropertyWithValue:
                                 if (string.Equals(ODataJsonConstants.ODataValuePropertyName, propertyName, StringComparison.Ordinal))
@@ -384,7 +385,7 @@ namespace Microsoft.OData.Json
                                     // Fail if we've already processed a 'value' property.
                                     if (serviceDocumentElements[0] != null)
                                     {
-                                        throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument(
+                                        throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument,
                                             ODataJsonConstants.ODataValuePropertyName));
                                     }
 
@@ -413,7 +414,7 @@ namespace Microsoft.OData.Json
                                 }
                                 else
                                 {
-                                    throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocument(
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocument,
                                         propertyName,
                                         ODataJsonConstants.ODataValuePropertyName));
                                 }
@@ -423,14 +424,14 @@ namespace Microsoft.OData.Json
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(Strings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
                         }
                     }).ConfigureAwait(false);
             }
 
             if (serviceDocumentElements[0] == null)
             {
-                throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_MissingValuePropertyInServiceDocument(
+                throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_MissingValuePropertyInServiceDocument,
                     ODataJsonConstants.ODataValuePropertyName));
             }
 
@@ -478,7 +479,7 @@ namespace Microsoft.OData.Json
                 // OData property annotations are not supported in service document element objects.
                 Func<string, Task<object>> propertyAnnotationValueReaderAsync = annotationName =>
                 {
-                    throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocumentElement(annotationName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocumentElement, annotationName));
                 };
 
                 await this.ProcessPropertyAsync(
@@ -496,7 +497,7 @@ namespace Microsoft.OData.Json
                         switch (propertyParsingResult)
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
-                                throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocumentElement(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocumentElement, propertyName));
 
                             case PropertyParsingResult.CustomInstanceAnnotation:
                                 await this.JsonReader.SkipValueAsync()
@@ -504,10 +505,10 @@ namespace Microsoft.OData.Json
                                 break;
 
                             case PropertyParsingResult.PropertyWithoutValue:
-                                throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty, propertyName));
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(Strings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
 
                             case PropertyParsingResult.PropertyWithValue:
                                 if (string.Equals(ODataJsonConstants.ODataServiceDocumentElementName, propertyName, StringComparison.Ordinal))
@@ -541,7 +542,7 @@ namespace Microsoft.OData.Json
                                 }
                                 else
                                 {
-                                    throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement(
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement,
                                         propertyName,
                                         ODataJsonConstants.ODataServiceDocumentElementName,
                                         ODataJsonConstants.ODataServiceDocumentElementUrlName));
@@ -613,7 +614,7 @@ namespace Microsoft.OData.Json
 
             if (propertyValues[0] != null)
             {
-                throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement(property));
+                throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement, property));
             }
         }
 
@@ -628,7 +629,7 @@ namespace Microsoft.OData.Json
 
             if (string.IsNullOrEmpty(propertyValues[0]))
             {
-                throw new ODataException(Strings.ODataJsonServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(property));
+                throw new ODataException(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement, property));
             }
         }
     }

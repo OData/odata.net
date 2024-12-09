@@ -9,7 +9,7 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// A specific type of <see cref="ODataPath"/> which can only contain instances of <see cref="TypeSegment"/> or <see cref="NavigationPropertySegment"/> or <see cref="PropertySegment"/> of complex.
@@ -62,21 +62,21 @@ namespace Microsoft.OData.UriParser
                 {
                     if (index == this.Count - 1)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment);
+                        throw new ODataException(SRResources.ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment);
                     }
                 }
                 else if (segment is NavigationPropertySegment)
                 {
                     if (foundNavProp)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty);
+                        throw new ODataException(SRResources.ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty);
                     }
 
                     foundNavProp = true;
                 }
                 else if (!(segment is TypeSegment))
                 {
-                    throw new ODataException(ODataErrorStrings.ODataExpandPath_InvalidExpandPathSegment(segment.GetType().Name));
+                    throw new ODataException(Error.Format(SRResources.ODataExpandPath_InvalidExpandPathSegment, segment.GetType().Name));
                 }
 
                 index++;

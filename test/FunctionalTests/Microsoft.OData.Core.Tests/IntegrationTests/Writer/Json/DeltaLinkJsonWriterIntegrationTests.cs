@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using Xunit;
 
@@ -114,10 +115,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             };
 
             Action requestTest = () => WriteAnnotationsAndValidatePayload(deltaLinkAtWriteStart, ODataFormat.Json, string.Empty, request: true, createFeedWriter: false);
-            requestTest.Throws<ODataException>(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
+            requestTest.Throws<ODataException>(SRResources.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
 
             Action responseTest = () => WriteAnnotationsAndValidatePayload(deltaLinkAtWriteStart, ODataFormat.Json, string.Empty, request: false, createFeedWriter: false);
-            responseTest.Throws<ODataException>(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
+            responseTest.Throws<ODataException>(SRResources.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
         }
 
         [Fact]
@@ -138,10 +139,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             };
 
             Action requestTest = () => WriteAnnotationsAndValidatePayload(deltaLinkAtWriteEnd, ODataFormat.Json, string.Empty, request: true, createFeedWriter: false);
-            requestTest.Throws<ODataException>(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
+            requestTest.Throws<ODataException>(SRResources.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
 
             Action responseTest = () => WriteAnnotationsAndValidatePayload(deltaLinkAtWriteEnd, ODataFormat.Json, string.Empty, request: false, createFeedWriter: false);
-            responseTest.Throws<ODataException>(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
+            responseTest.Throws<ODataException>(SRResources.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
         }
 
         #endregion Writing delta link on expanded feeds

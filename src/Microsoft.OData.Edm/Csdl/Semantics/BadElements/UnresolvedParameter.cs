@@ -16,7 +16,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private static readonly Func<UnresolvedParameter, IEdmTypeReference> ComputeTypeFunc = (me) => me.ComputeType();
 
         public UnresolvedParameter(IEdmOperation declaringOperation, string name, EdmLocation location)
-            : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedParameter, Edm.Strings.Bad_UnresolvedParameter(name)) })
+            : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedParameter, Error.Format(SRResources.Bad_UnresolvedParameter, name)) })
         {
             this.Name = name ?? string.Empty;
             this.DeclaringOperation = declaringOperation;

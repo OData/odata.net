@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     using System;
     using System.Diagnostics;
 
@@ -243,7 +244,7 @@ namespace Microsoft.OData
 
             if (segmentCount == 1)
             {
-                throw new ArgumentException(Strings.AnnotationFilterPattern_InvalidPatternMissingDot(pattern));
+                throw new ArgumentException(Error.Format(SRResources.AnnotationFilterPattern_InvalidPatternMissingDot, pattern));
             }
 
             for (int idx = 0; idx < segmentCount; idx++)
@@ -251,18 +252,18 @@ namespace Microsoft.OData
                 string currentSegment = segments[idx];
                 if (string.IsNullOrEmpty(currentSegment))
                 {
-                    throw new ArgumentException(Strings.AnnotationFilterPattern_InvalidPatternEmptySegment(pattern));
+                    throw new ArgumentException(Error.Format(SRResources.AnnotationFilterPattern_InvalidPatternEmptySegment, pattern));
                 }
 
                 if (currentSegment != WildCard && currentSegment.Contains(WildCard, StringComparison.Ordinal))
                 {
-                    throw new ArgumentException(Strings.AnnotationFilterPattern_InvalidPatternWildCardInSegment(pattern));
+                    throw new ArgumentException(Error.Format(SRResources.AnnotationFilterPattern_InvalidPatternWildCardInSegment, pattern));
                 }
 
                 bool isLastSegment = idx + 1 == segmentCount;
                 if (currentSegment == WildCard && !isLastSegment)
                 {
-                    throw new ArgumentException(Strings.AnnotationFilterPattern_InvalidPatternWildCardMustBeInLastSegment(pattern));
+                    throw new ArgumentException(Error.Format(SRResources.AnnotationFilterPattern_InvalidPatternWildCardMustBeInLastSegment, pattern));
                 }
             }
         }

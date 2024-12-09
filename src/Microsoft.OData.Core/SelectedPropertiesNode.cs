@@ -14,7 +14,7 @@ namespace Microsoft.OData
     using Microsoft.OData.Metadata;
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -682,7 +682,7 @@ namespace Microsoft.OData
                     {
                         if (typeSegmentChild.hasWildcard)
                         {
-                            throw new ODataException(ODataErrorStrings.SelectedPropertiesNode_StarSegmentAfterTypeSegment);
+                            throw new ODataException(SRResources.SelectedPropertiesNode_StarSegmentAfterTypeSegment);
                         }
 
                         yield return typeSegmentChild;
@@ -759,7 +759,7 @@ namespace Microsoft.OData
                 {
                     if (isStar)
                     {
-                        throw new ODataException(ODataErrorStrings.SelectedPropertiesNode_StarSegmentNotLastSegment);
+                        throw new ODataException(SRResources.SelectedPropertiesNode_StarSegmentNotLastSegment);
                     }
 
                     SelectedPropertiesNode childNode = this.EnsureChildNode(currentSegment, false);

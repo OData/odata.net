@@ -66,20 +66,20 @@ namespace Microsoft.Spatial.Tests
             var pipeline = SpatialImplementation.CurrentImplementation.CreateBuilder();
             pipeline.GeographyPipeline.SetCoordinateSystem(CoordinateSystem.DefaultGeography);
             pipeline.GeographyPipeline.BeginGeography(SpatialType.Point);
-            SpatialTestUtils.VerifyExceptionThrown<ArgumentException>(() => pipeline.GeographyPipeline.BeginFigure(new GeographyPosition(double.NaN, 122, null, null)), Strings.InvalidPointCoordinate(double.NaN, "latitude"));
+            SpatialTestUtils.VerifyExceptionThrown<ArgumentException>(() => pipeline.GeographyPipeline.BeginFigure(new GeographyPosition(double.NaN, 122, null, null)), Error.Format(SRResources.InvalidPointCoordinate, double.NaN, "latitude"));
             pipeline.GeographyPipeline.Reset();
             
             pipeline.GeographyPipeline.BeginGeography(SpatialType.Point);
-            SpatialTestUtils.VerifyExceptionThrown<ArgumentException>(() => pipeline.GeographyPipeline.BeginFigure(new GeographyPosition(47, double.NegativeInfinity, null, null)), Strings.InvalidPointCoordinate(double.NegativeInfinity, "longitude"));
+            SpatialTestUtils.VerifyExceptionThrown<ArgumentException>(() => pipeline.GeographyPipeline.BeginFigure(new GeographyPosition(47, double.NegativeInfinity, null, null)), Error.Format(SRResources.InvalidPointCoordinate, double.NegativeInfinity, "longitude"));
             pipeline.GeographyPipeline.Reset();
 
             pipeline.GeometryPipeline.SetCoordinateSystem(CoordinateSystem.DefaultGeometry);
             pipeline.GeometryPipeline.BeginGeometry(SpatialType.Point);
-            SpatialTestUtils.VerifyExceptionThrown<ArgumentException>(() => pipeline.GeometryPipeline.BeginFigure(new GeometryPosition(double.PositiveInfinity, 122, null, null)), Strings.InvalidPointCoordinate(double.PositiveInfinity, "x"));
+            SpatialTestUtils.VerifyExceptionThrown<ArgumentException>(() => pipeline.GeometryPipeline.BeginFigure(new GeometryPosition(double.PositiveInfinity, 122, null, null)), Error.Format(SRResources.InvalidPointCoordinate, double.PositiveInfinity, "x"));
             pipeline.GeometryPipeline.Reset();
 
             pipeline.GeometryPipeline.BeginGeometry(SpatialType.Point);
-            SpatialTestUtils.VerifyExceptionThrown<ArgumentException>(() => pipeline.GeometryPipeline.BeginFigure(new GeometryPosition(123, double.NaN, null, null)), Strings.InvalidPointCoordinate(double.NaN, "y"));
+            SpatialTestUtils.VerifyExceptionThrown<ArgumentException>(() => pipeline.GeometryPipeline.BeginFigure(new GeometryPosition(123, double.NaN, null, null)), Error.Format(SRResources.InvalidPointCoordinate, double.NaN, "y"));
             pipeline.GeometryPipeline.Reset();
         }
 

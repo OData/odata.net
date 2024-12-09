@@ -9,12 +9,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Json;
 using Microsoft.Spatial;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -863,7 +863,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceState) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_CannotReadSingletonNestedResource("StartArray", "HomeAddress"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_CannotReadSingletonNestedResource, "StartArray", "HomeAddress"),
                 exception.Message);
         }
 
@@ -911,7 +911,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceState) => { }));
 
             Assert.Equal(
-                ErrorStrings.ReaderValidationUtils_NullNamedValueForNullableType("PhysicalAddresses", "Collection(NS.Address)"),
+                Error.Format(SRResources.ReaderValidationUtils_NullNamedValueForNullableType, "PhysicalAddresses", "Collection(NS.Address)"),
                 exception.Message);
         }
 
@@ -934,7 +934,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceState) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_CannotReadCollectionNestedResource("StartObject", "ReviewedProducts"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_CannotReadCollectionNestedResource, "StartObject", "ReviewedProducts"),
                 exception.Message);
         }
 
@@ -1377,7 +1377,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceState) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_MultipleOptionalPropertiesInOperation(repeatedProperty, "#NS.Top5Products"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_MultipleOptionalPropertiesInOperation, repeatedProperty, "#NS.Top5Products"),
                 exception.Message);
         }
 
@@ -1397,7 +1397,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceState) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_OperationMissingTargetProperty("#NS.Top5Products"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_OperationMissingTargetProperty, "#NS.Top5Products"),
                 exception.Message);
         }
 
@@ -1417,7 +1417,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceState) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonOperationsDeserializerUtils_OperationsPropertyMustHaveObjectValue("#NS.Top5Products", JsonNodeType.PrimitiveValue),
+                Error.Format(SRResources.ODataJsonOperationsDeserializerUtils_OperationsPropertyMustHaveObjectValue, "#NS.Top5Products", JsonNodeType.PrimitiveValue),
                 exception.Message);
         }
 
@@ -1437,7 +1437,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceState) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty("odata.id"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty, "odata.id"),
                 exception.Message);
         }
 
@@ -1457,7 +1457,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceState) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty("odata.etag"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty, "odata.etag"),
                 exception.Message);
         }
 
@@ -1477,7 +1477,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceState) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_UnexpectedDeletedEntryInResponsePayload,
+                SRResources.ODataJsonResourceDeserializer_UnexpectedDeletedEntryInResponsePayload,
                 exception.Message);
         }
 
@@ -1497,7 +1497,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceState) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_EmptyBindArray("odata.bind"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_EmptyBindArray, "odata.bind"),
                 exception.Message);
         }
 
@@ -1517,7 +1517,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceState) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue("odata.type"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue, "odata.type"),
                 exception.Message);
         }
 
@@ -1559,7 +1559,7 @@ namespace Microsoft.OData.Tests.Json
                         propertyAndAnnotationCollector));
 
                 Assert.Equal(
-                    ErrorStrings.ODataJsonResourceDeserializer_ResourceTypeAnnotationNotFirst,
+                    SRResources.ODataJsonResourceDeserializer_ResourceTypeAnnotationNotFirst,
                     exception.Message);
             }
         }
@@ -1580,7 +1580,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceState) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.deltaLink"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, "odata.deltaLink"),
                 exception.Message);
         }
 
@@ -1599,7 +1599,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceSet, propertyAndAnnotationCollector) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_ExpectedResourceSetPropertyNotFound("value"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_ExpectedResourceSetPropertyNotFound, "value"),
                 exception.Message);
         }
 
@@ -1621,7 +1621,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceSet, propertyAndAnnotationCollector) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_MultipleOptionalPropertiesInOperation(repeatedProperty, "#NS.RateCategories"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_MultipleOptionalPropertiesInOperation, repeatedProperty, "#NS.RateCategories"),
                 exception.Message);
         }
 
@@ -1641,7 +1641,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceSet, propertyAndAnnotationCollector) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_OperationMissingTargetProperty("#NS.RateCategories"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_OperationMissingTargetProperty, "#NS.RateCategories"),
                 exception.Message);
         }
 
@@ -1661,7 +1661,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceSet, propertyAndAnnotationCollector) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonOperationsDeserializerUtils_OperationsPropertyMustHaveObjectValue("#NS.RateCategories", JsonNodeType.PrimitiveValue),
+                Error.Format(SRResources.ODataJsonOperationsDeserializerUtils_OperationsPropertyMustHaveObjectValue, "#NS.RateCategories", JsonNodeType.PrimitiveValue),
                 exception.Message);
         }
 
@@ -1680,7 +1680,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceSet, propertyAndAnnotationCollector) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_InvalidPropertyAnnotationInTopLevelResourceSet("value"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_InvalidPropertyAnnotationInTopLevelResourceSet, "value"),
                 exception.Message);
         }
 
@@ -1700,7 +1700,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceSet, propertyAndAnnotationCollector) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_InvalidPropertyInTopLevelResourceSet("Id", "value"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_InvalidPropertyInTopLevelResourceSet, "Id", "value"),
                 exception.Message);
         }
 
@@ -1720,7 +1720,7 @@ namespace Microsoft.OData.Tests.Json
                     (resourceSet, propertyAndAnnotationCollector) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.RateCategories"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, "#NS.RateCategories"),
                 exception.Message);
         }
 
@@ -1739,7 +1739,7 @@ namespace Microsoft.OData.Tests.Json
                     () => jsonResourceDeserializer.ReadResourceSetContentStartAsync());
 
                 Assert.Equal(
-                    ErrorStrings.ODataJsonResourceDeserializer_CannotReadResourceSetContentStart("StartObject"),
+                    Error.Format(SRResources.ODataJsonResourceDeserializer_CannotReadResourceSetContentStart, "StartObject"),
                     exception.Message);
             }
         }
@@ -1761,7 +1761,7 @@ namespace Microsoft.OData.Tests.Json
                     () => jsonResourceDeserializer.ReadDeletedResourceAsync());
 
                 Assert.Equal(
-                    ErrorStrings.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties,
+                    SRResources.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties,
                     exception.Message);
             }
         }
@@ -1783,7 +1783,7 @@ namespace Microsoft.OData.Tests.Json
                     () => jsonResourceDeserializer.ReadDeletedResourceAsync());
 
                 Assert.Equal(
-                    ErrorStrings.ODataJsonResourceDeserializer_DeltaRemovedAnnotationMustBeObject("NaO"),
+                    Error.Format(SRResources.ODataJsonResourceDeserializer_DeltaRemovedAnnotationMustBeObject, "NaO"),
                     exception.Message);
             }
         }
@@ -1807,7 +1807,7 @@ namespace Microsoft.OData.Tests.Json
                     () => jsonResourceDeserializer.ReadDeletedEntryAsync());
 
                 Assert.Equal(
-                    ErrorStrings.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry,
+                    SRResources.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry,
                     exception.Message);
             }
         }
@@ -1831,7 +1831,7 @@ namespace Microsoft.OData.Tests.Json
                     () => jsonResourceDeserializer.ReadDeletedEntry());
 
                 Assert.Equal(
-                    ErrorStrings.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry,
+                    SRResources.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry,
                     exception.Message);
             }
         }
@@ -1855,7 +1855,7 @@ namespace Microsoft.OData.Tests.Json
                     (nestedResourceSet) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_DuplicateNestedResourceSetAnnotation("odata.nextLink", "Products"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_DuplicateNestedResourceSetAnnotation, "odata.nextLink", "Products"),
                 exception.Message);
         }
 
@@ -1878,7 +1878,7 @@ namespace Microsoft.OData.Tests.Json
                     (nestedResourceSet) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_DuplicateNestedResourceSetAnnotation("odata.count", "Products"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_DuplicateNestedResourceSetAnnotation, "odata.count", "Products"),
                 exception.Message);
         }
 
@@ -1900,7 +1900,7 @@ namespace Microsoft.OData.Tests.Json
                     (nestedResourceSet) => { }));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet("odata.deltaLink", "Products"),
+                Error.Format(SRResources.ODataJsonResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet, "odata.deltaLink", "Products"),
                 exception.Message);
         }
 
@@ -1923,7 +1923,7 @@ namespace Microsoft.OData.Tests.Json
                     isResponse: false));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedPropertyAnnotation("Products", "odata.nextLink"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedPropertyAnnotation, "Products", "odata.nextLink"),
                 exception.Message);
         }
 

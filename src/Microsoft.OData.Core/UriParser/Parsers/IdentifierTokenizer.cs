@@ -10,7 +10,7 @@ namespace Microsoft.OData.UriParser
 
     using System;
     using System.Collections.Generic;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -107,7 +107,7 @@ namespace Microsoft.OData.UriParser
         {
             if (!this.lexer.CurrentToken.Span.Equals(UriQueryConstants.Star, StringComparison.Ordinal))
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CannotCreateStarTokenFromNonStar(this.lexer.CurrentToken.Text.ToString()));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_CannotCreateStarTokenFromNonStar, this.lexer.CurrentToken.Text.ToString()));
             }
 
             this.lexer.NextToken();

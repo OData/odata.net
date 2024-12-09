@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using Xunit;
 
@@ -67,7 +68,7 @@ namespace Microsoft.OData.Tests
         public void InvalidPatternMissingDotShouldThrow(string pattern)
         {
             Action test = () => AnnotationFilterPattern.Create(pattern);
-            test.Throws<ArgumentException>(Strings.AnnotationFilterPattern_InvalidPatternMissingDot(pattern));
+            test.Throws<ArgumentException>(Error.Format(SRResources.AnnotationFilterPattern_InvalidPatternMissingDot, pattern));
         }
 
         [Theory]
@@ -80,7 +81,7 @@ namespace Microsoft.OData.Tests
         public void InvalidPatternEmptySegmentShouldThrow(string pattern)
         {
             Action test = () => AnnotationFilterPattern.Create(pattern);
-            test.Throws<ArgumentException>(Strings.AnnotationFilterPattern_InvalidPatternEmptySegment(pattern));
+            test.Throws<ArgumentException>(Error.Format(SRResources.AnnotationFilterPattern_InvalidPatternEmptySegment, pattern));
         }
 
         [Theory]
@@ -93,7 +94,7 @@ namespace Microsoft.OData.Tests
         public void InvalidPatternWildCardInSegmentShouldThrow(string pattern)
         {
             Action test = () => AnnotationFilterPattern.Create(pattern);
-            test.Throws<ArgumentException>(Strings.AnnotationFilterPattern_InvalidPatternWildCardInSegment(pattern));
+            test.Throws<ArgumentException>(Error.Format(SRResources.AnnotationFilterPattern_InvalidPatternWildCardInSegment, pattern));
         }
 
         [Theory]
@@ -106,7 +107,7 @@ namespace Microsoft.OData.Tests
         public void InvalidPatternWildCardNotInLastSegmentShouldThrow(string pattern)
         {
             Action test = () => AnnotationFilterPattern.Create(pattern);
-            test.Throws<ArgumentException>(Strings.AnnotationFilterPattern_InvalidPatternWildCardMustBeInLastSegment(pattern));
+            test.Throws<ArgumentException>(Error.Format(SRResources.AnnotationFilterPattern_InvalidPatternWildCardMustBeInLastSegment, pattern));
         }
 
         [Fact]

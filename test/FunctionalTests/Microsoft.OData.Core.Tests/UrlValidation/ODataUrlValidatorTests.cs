@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
@@ -72,7 +73,7 @@ namespace Microsoft.OData.Tests
                      parser.Validate(validator, out errors);
                  };
 
-            validate.Throws<ODataException>(Strings.UriValidator_ValidatorMustUseSameModelAsParser);
+            validate.Throws<ODataException>(SRResources.UriValidator_ValidatorMustUseSameModelAsParser);
         }
 
         [Fact]

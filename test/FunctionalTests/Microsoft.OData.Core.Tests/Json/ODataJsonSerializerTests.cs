@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
@@ -226,7 +227,7 @@ namespace Microsoft.OData.Tests.Json
                 error.InstanceAnnotations = instanceAnnotations;
 
                 Action writeError = () => serializer.WriteTopLevelError(error, false);
-                writeError.Throws<ODataException>(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
+                writeError.Throws<ODataException>(SRResources.WriterValidationUtils_MissingTypeNameWithMetadata);
             });
         }
 
@@ -268,7 +269,7 @@ namespace Microsoft.OData.Tests.Json
                 error.InstanceAnnotations = instanceAnnotations;
 
                 Action writeError = () => serializer.WriteTopLevelError(error, false);
-                writeError.Throws<ODataException>(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
+                writeError.Throws<ODataException>(SRResources.WriterValidationUtils_MissingTypeNameWithMetadata);
             });
         }
 
@@ -279,7 +280,7 @@ namespace Microsoft.OData.Tests.Json
             var serializer = GetSerializer(stream, null, true, false);
             var uri = new Uri("TestUri", UriKind.Relative);
             Action uriToStrongError = () => serializer.UriToString(uri);
-            uriToStrongError.Throws<ODataException>(Strings.ODataJsonSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata(UriUtils.UriToString(uri)));
+            uriToStrongError.Throws<ODataException>(Error.Format(SRResources.ODataJsonSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata, UriUtils.UriToString(uri)));
         }
 
         [Fact]

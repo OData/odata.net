@@ -11,8 +11,7 @@ namespace Microsoft.OData.Json
     using System.Diagnostics;
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
-
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -23,14 +22,14 @@ namespace Microsoft.OData.Json
         /// <summary>OData property annotation reader for parameter payloads.</summary>
         /// <remarks>OData property annotations are not supported in parameter payloads.</remarks>
         private static readonly Func<string, object> propertyAnnotationValueReader =
-            annotationName => { throw new ODataException(ODataErrorStrings.ODataJsonParameterDeserializer_PropertyAnnotationForParameters); };
+            annotationName => { throw new ODataException(SRResources.ODataJsonParameterDeserializer_PropertyAnnotationForParameters); };
 
         /// <summary>OData property annotation asynchronous reader for parameter payloads.</summary>
         private static readonly Func<string, Task<object>> propertyAnnotationValueReaderAsync =
             annotationName =>
             {
                 // Throw exception since property annotations are not supported in parameter payloads.
-                throw new ODataException(ODataErrorStrings.ODataJsonParameterDeserializer_PropertyAnnotationForParameters);
+                throw new ODataException(SRResources.ODataJsonParameterDeserializer_PropertyAnnotationForParameters);
             };
 
         /// <summary>The Json parameter reader.</summary>
@@ -81,7 +80,7 @@ namespace Microsoft.OData.Json
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
                                 // OData instance annotations are not supported in parameter payloads.
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(parameterName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, parameterName));
 
                             case PropertyParsingResult.CustomInstanceAnnotation:
                                 this.JsonReader.SkipValue();
@@ -89,13 +88,13 @@ namespace Microsoft.OData.Json
                                 break;
 
                             case PropertyParsingResult.PropertyWithoutValue:
-                                throw new ODataException(ODataErrorStrings.ODataJsonParameterDeserializer_PropertyAnnotationWithoutPropertyForParameters(parameterName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonParameterDeserializer_PropertyAnnotationWithoutPropertyForParameters, parameterName));
 
                             case PropertyParsingResult.EndOfObject:
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(parameterName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, parameterName));
 
                             case PropertyParsingResult.PropertyWithValue:
                                 IEdmTypeReference parameterTypeReference = this.parameterReader.GetParameterTypeReference(parameterName);
@@ -110,7 +109,7 @@ namespace Microsoft.OData.Json
                                         IEdmPrimitiveTypeReference primitiveTypeReference = parameterTypeReference.AsPrimitive();
                                         if (primitiveTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.Stream)
                                         {
-                                            throw new ODataException(ODataErrorStrings.ODataJsonParameterDeserializer_UnsupportedPrimitiveParameterType(parameterName, primitiveTypeReference.PrimitiveKind()));
+                                            throw new ODataException(Error.Format(SRResources.ODataJsonParameterDeserializer_UnsupportedPrimitiveParameterType, parameterName, primitiveTypeReference.PrimitiveKind()));
                                         }
 
                                         parameterValue = this.ReadNonEntityValue(
@@ -167,7 +166,7 @@ namespace Microsoft.OData.Json
                                             parameterValue = this.JsonReader.ReadPrimitiveValue();
                                             if (parameterValue != null)
                                             {
-                                                throw new ODataException(ODataErrorStrings.ODataJsonParameterDeserializer_NullCollectionExpected(JsonNodeType.PrimitiveValue, parameterValue));
+                                                throw new ODataException(Error.Format(SRResources.ODataJsonParameterDeserializer_NullCollectionExpected, JsonNodeType.PrimitiveValue, parameterValue));
                                             }
 
                                             state = ODataParameterReaderState.Value;
@@ -184,7 +183,7 @@ namespace Microsoft.OData.Json
                                         break;
                                     default:
 
-                                        throw new ODataException(ODataErrorStrings.ODataJsonParameterDeserializer_UnsupportedParameterTypeKind(parameterName, parameterTypeReference.TypeKind()));
+                                        throw new ODataException(Error.Format(SRResources.ODataJsonParameterDeserializer_UnsupportedParameterTypeKind, parameterName, parameterTypeReference.TypeKind()));
                                 }
 
                                 parameterRead = true;
@@ -195,7 +194,7 @@ namespace Microsoft.OData.Json
                                 break;
 
                             default:
-                                throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonParameterDeserializer_ReadNextParameter));
+                                throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataJsonParameterDeserializer_ReadNextParameter));
                         }
                     });
 
@@ -265,7 +264,7 @@ namespace Microsoft.OData.Json
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
                                 // OData instance annotations are not supported in parameter payloads.
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(parameterName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, parameterName));
 
                             case PropertyParsingResult.CustomInstanceAnnotation:
                                 await this.JsonReader.SkipValueAsync()
@@ -274,13 +273,13 @@ namespace Microsoft.OData.Json
                                 break;
 
                             case PropertyParsingResult.PropertyWithoutValue:
-                                throw new ODataException(ODataErrorStrings.ODataJsonParameterDeserializer_PropertyAnnotationWithoutPropertyForParameters(parameterName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonParameterDeserializer_PropertyAnnotationWithoutPropertyForParameters, parameterName));
 
                             case PropertyParsingResult.EndOfObject:
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(parameterName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, parameterName));
 
                             case PropertyParsingResult.PropertyWithValue:
                                 IEdmTypeReference parameterTypeReference = this.parameterReader.GetParameterTypeReference(parameterName);
@@ -297,7 +296,7 @@ namespace Microsoft.OData.Json
 
                                         if (primitiveTypeReference.PrimitiveKind() == EdmPrimitiveTypeKind.Stream)
                                         {
-                                            throw new ODataException(ODataErrorStrings.ODataJsonParameterDeserializer_UnsupportedPrimitiveParameterType(parameterName, primitiveTypeReference.PrimitiveKind()));
+                                            throw new ODataException(Error.Format(SRResources.ODataJsonParameterDeserializer_UnsupportedPrimitiveParameterType, parameterName, primitiveTypeReference.PrimitiveKind()));
                                         }
 
                                         parameterValue = await this.ReadNonEntityValueAsync(
@@ -355,7 +354,7 @@ namespace Microsoft.OData.Json
                                                 .ConfigureAwait(false);
                                             if (parameterValue != null)
                                             {
-                                                throw new ODataException(ODataErrorStrings.ODataJsonParameterDeserializer_NullCollectionExpected(JsonNodeType.PrimitiveValue, parameterValue));
+                                                throw new ODataException(Error.Format(SRResources.ODataJsonParameterDeserializer_NullCollectionExpected, JsonNodeType.PrimitiveValue, parameterValue));
                                             }
 
                                             state = ODataParameterReaderState.Value;
@@ -372,7 +371,7 @@ namespace Microsoft.OData.Json
                                         break;
                                     default:
 
-                                        throw new ODataException(ODataErrorStrings.ODataJsonParameterDeserializer_UnsupportedParameterTypeKind(parameterName, parameterTypeReference.TypeKind()));
+                                        throw new ODataException(Error.Format(SRResources.ODataJsonParameterDeserializer_UnsupportedParameterTypeKind, parameterName, parameterTypeReference.TypeKind()));
                                 }
 
                                 parameterRead = true;
@@ -383,7 +382,7 @@ namespace Microsoft.OData.Json
                                 break;
 
                             default:
-                                throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonParameterDeserializer_ReadNextParameter));
+                                throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataJsonParameterDeserializer_ReadNextParameter));
                         }
                     }).ConfigureAwait(false);
 

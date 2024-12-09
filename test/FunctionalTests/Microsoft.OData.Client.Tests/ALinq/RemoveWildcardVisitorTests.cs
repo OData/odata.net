@@ -22,7 +22,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             SystemToken token = new SystemToken(ExpressionConstants.It, null);
             Action visitSystemToken = () => token.Accept(visitor);
             NotSupportedException exception = Assert.Throws<NotSupportedException>(visitSystemToken);
-            Assert.Equal(Strings.ALinq_IllegalSystemQueryOption(ExpressionConstants.It), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ALinq_IllegalSystemQueryOption, ExpressionConstants.It), exception.Message);
         }
 
         [Fact]

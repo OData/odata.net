@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.UriParser.Aggregation;
 using Xunit;
@@ -223,7 +224,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.UriSelectParser_InvalidTopOption("foo"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.UriSelectParser_InvalidTopOption, "foo"), exception.Message);
         }
 
         [Fact]
@@ -234,7 +235,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.UriSelectParser_InvalidTopOption("-3"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.UriSelectParser_InvalidTopOption, "-3"), exception.Message);
         }
 
         [Fact]
@@ -245,7 +246,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.UriSelectParser_InvalidSkipOption("foo"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.UriSelectParser_InvalidSkipOption, "foo"), exception.Message);
         }
 
         [Fact]
@@ -256,7 +257,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.UriSelectParser_InvalidSkipOption("-4"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.UriSelectParser_InvalidSkipOption, "-4"), exception.Message);
         }
 
         [Fact]
@@ -267,7 +268,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.UriParser_MissingSelectOption("Property"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.UriParser_MissingSelectOption, "Property"), exception.Message);
         }
 
         [Fact]
@@ -278,7 +279,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ExpressionLexer_SyntaxError(13, "($select=prop"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ExpressionLexer_SyntaxError, 13, "($select=prop"), exception.Message);
         }
 
         private SelectTermToken ParseSelectOptions(string optionsText, int maxDepth = 100)
@@ -657,7 +658,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.UriSelectParser_InvalidTopOption("foo"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.UriSelectParser_InvalidTopOption, "foo"), exception.Message);
         }
 
         [Fact]
@@ -668,7 +669,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.UriSelectParser_InvalidTopOption("-3"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.UriSelectParser_InvalidTopOption, "-3"), exception.Message);
         }
 
         [Fact]
@@ -679,7 +680,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.UriSelectParser_InvalidSkipOption("foo"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.UriSelectParser_InvalidSkipOption, "foo"), exception.Message);
         }
 
         [Fact]
@@ -690,7 +691,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.UriSelectParser_InvalidSkipOption("-4"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.UriSelectParser_InvalidSkipOption, "-4"), exception.Message);
         }
 
         [Fact]
@@ -701,7 +702,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.UriSelectParser_InvalidLevelsOption("foo"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.UriSelectParser_InvalidLevelsOption, "foo"), exception.Message);
         }
 
         [Fact]
@@ -712,7 +713,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             // Assert
             ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.UriSelectParser_InvalidLevelsOption("-5"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.UriSelectParser_InvalidLevelsOption, "-5"), exception.Message);
         }
 
         // TODO: Probably missing more simple test cases

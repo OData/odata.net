@@ -176,7 +176,7 @@ namespace Microsoft.OData.Client.Metadata
                 string propertyClientName = ClientTypeUtil.GetClientPropertyName(this.ElementType, propertyName, undeclaredPropertyBehavior);
                 if ((string.IsNullOrEmpty(propertyClientName) || !this.clientPropertyCache.TryGetValue(propertyClientName, out property)) && (undeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException))
                 {
-                    throw Microsoft.OData.Client.Error.InvalidOperation(Microsoft.OData.Client.Strings.ClientType_MissingProperty(this.ElementTypeName, propertyName));
+                    throw Error.InvalidOperation(Error.Format(SRResources.ClientType_MissingProperty, this.ElementTypeName, propertyName));
                 }
             }
 
@@ -256,7 +256,7 @@ namespace Microsoft.OData.Client.Metadata
                 ClientPropertyAnnotation mediaProperty = this.Properties().SingleOrDefault(p => p.PropertyName == mediaEntryAttribute.MediaMemberName);
                 if (mediaProperty == null)
                 {
-                    throw Microsoft.OData.Client.Error.InvalidOperation(Microsoft.OData.Client.Strings.ClientType_MissingMediaEntryProperty(
+                    throw Error.InvalidOperation(Error.Format(SRResources.ClientType_MissingMediaEntryProperty,
                         this.ElementTypeName, mediaEntryAttribute.MediaMemberName));
                 }
 

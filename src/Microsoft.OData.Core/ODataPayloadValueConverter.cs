@@ -13,7 +13,7 @@ namespace Microsoft.OData
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Class for defining a payload value conversion for given model. Currently supports primitive only.
@@ -84,7 +84,7 @@ namespace Microsoft.OData
 
                     if (targetType != typeof(Decimal))
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDecimal(primitiveTypeReference.FullName()));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_CannotConvertDecimal, primitiveTypeReference.FullName()));
                     }
                 }
                 else if (value is Double)
@@ -95,21 +95,21 @@ namespace Microsoft.OData
                 {
                     if (targetType != typeof(bool))
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertBoolean(primitiveTypeReference.FullName()));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_CannotConvertBoolean, primitiveTypeReference.FullName()));
                     }
                 }
                 else if (value is DateTime)
                 {
                     if (targetType != typeof(DateTime))
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDateTime(primitiveTypeReference.FullName()));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_CannotConvertDateTime, primitiveTypeReference.FullName()));
                     }
                 }
                 else if (value is DateTimeOffset)
                 {
                     if (targetType != typeof(DateTimeOffset))
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDateTimeOffset(primitiveTypeReference.FullName()));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_CannotConvertDateTimeOffset, primitiveTypeReference.FullName()));
                     }
                 }
             }
@@ -253,7 +253,7 @@ namespace Microsoft.OData
 
             if (targetType != typeof(Int32))
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertInt32(primitiveTypeReference.FullName()));
+                throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_CannotConvertInt32, primitiveTypeReference.FullName()));
             }
 
             return intValue;
@@ -282,7 +282,7 @@ namespace Microsoft.OData
 
             if (targetType != typeof(Double))
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_CannotConvertDouble(primitiveTypeReference.FullName()));
+                throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_CannotConvertDouble, primitiveTypeReference.FullName()));
             }
 
             return doubleValue;

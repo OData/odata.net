@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -86,7 +87,7 @@ namespace Microsoft.OData.UriParser
 
                     if (this.textPos == this.TextLen)
                     {
-                        throw ParseError(Strings.ExpressionLexer_UnterminatedStringLiteral(this.textPos, this.Text));
+                        throw ParseError(Error.Format(SRResources.ExpressionLexer_UnterminatedStringLiteral, this.textPos, this.Text));
                     }
 
                     this.NextChar();
@@ -122,7 +123,7 @@ namespace Microsoft.OData.UriParser
 
                 if (this.token.Text.IsEmpty)
                 {
-                    throw ParseError(Strings.ExpressionToken_IdentifierExpected(this.token.Position));
+                    throw ParseError(Error.Format(SRResources.ExpressionToken_IdentifierExpected, this.token.Position));
                 }
             }
 
@@ -132,7 +133,7 @@ namespace Microsoft.OData.UriParser
                 {
                     Match match = InvalidWordPattern.Match(this.token.Text.ToString());
                     int index = match.Groups[0].Index;
-                    throw ParseError(Strings.ExpressionLexer_InvalidCharacter(this.token.Span[index], this.token.Position + index, this.Text));
+                    throw ParseError(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, this.token.Span[index], this.token.Position + index, this.Text));
                 }
 
                 this.token.Kind = ExpressionTokenKind.StringLiteral;
@@ -177,7 +178,7 @@ namespace Microsoft.OData.UriParser
 
                 if (!this.ch.HasValue || EscapeSequenceSet.IndexOf(this.ch.Value, StringComparison.Ordinal) < 0)
                 {
-                    throw ParseError(Strings.ExpressionLexer_InvalidEscapeSequence(this.ch, this.textPos, this.Text));
+                    throw ParseError(Error.Format(SRResources.ExpressionLexer_InvalidEscapeSequence, this.ch, this.textPos, this.Text));
                 }
             }
         }

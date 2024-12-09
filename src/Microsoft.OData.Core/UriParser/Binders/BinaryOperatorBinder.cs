@@ -8,7 +8,7 @@ namespace Microsoft.OData.UriParser
 {
     using System;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Class that knows how to bind binary operators.
@@ -69,7 +69,7 @@ namespace Microsoft.OData.UriParser
             {
                 string leftTypeName = left.TypeReference == null ? "<null>" : left.TypeReference.FullName();
                 string rightTypeName = right.TypeReference == null ? "<null>" : right.TypeReference.FullName();
-                throw new ODataException(ODataErrorStrings.MetadataBinder_IncompatibleOperandsError(leftTypeName, rightTypeName, binaryOperatorKind));
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError, leftTypeName, rightTypeName, binaryOperatorKind));
             }
 
             left = MetadataBindingUtils.ConvertToTypeIfNeeded(left, leftType);
@@ -87,7 +87,7 @@ namespace Microsoft.OData.UriParser
             SingleValueNode operand = this.bindMethod(queryToken) as SingleValueNode;
             if (operand == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_BinaryOperatorOperandNotSingleValue(operatorKind.ToString()));
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_BinaryOperatorOperandNotSingleValue, operatorKind.ToString()));
             }
 
             return operand;

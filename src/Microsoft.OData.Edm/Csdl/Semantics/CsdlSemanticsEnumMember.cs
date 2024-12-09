@@ -67,7 +67,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 return new BadEdmEnumMemberValue(
                     new EdmError[]
                     {
-                        new EdmError(member.Location ?? this.Location, EdmErrorCode.EnumMemberMustHaveValue, Edm.Strings.CsdlSemantics_EnumMemberMustHaveValue)
+                        new EdmError(member.Location ?? this.Location, EdmErrorCode.EnumMemberMustHaveValue, SRResources.CsdlSemantics_EnumMemberMustHaveValue)
                     });
             }
             else
