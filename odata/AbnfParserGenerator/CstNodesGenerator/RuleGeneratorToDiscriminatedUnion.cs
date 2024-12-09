@@ -1,6 +1,7 @@
 ﻿using AbnfParser.CstNodes;
 using AbnfParser.CstNodes.Core;
 using Root;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
@@ -19,7 +20,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
         {
             //// TODO do a second attempt at implementing this once you've got this roughly fleshed out
 
-            //// TODO this method skips over all of the comments if you care about that
+            //// TODO you are skipping comments everywhere if you care to preserve them
 
             var ruleNameBuilder = new StringBuilder();
             new RuleNameToString().Convert(node.RuleName, ruleNameBuilder);
@@ -32,15 +33,17 @@ namespace AbnfParserGenerator.CstNodesGenerator
                 true,
                 ruleName,
                 Enumerable.Empty<string>(),
+                null,
                 new[]
                 {
-                    new ConstructorDefinition(AccessModifier.Private, Enumerable.Empty<MethodParameter>()),
+                    new ConstructorDefinition(AccessModifier.Private, Enumerable.Empty<MethodParameter>(), string.Empty),
                 },
                 new[]
                 {
                     new MethodDefinition(
                         AccessModifier.Protected,
                         true,
+                        false,
                         "TResult",
                         new[]
                         {
@@ -52,7 +55,8 @@ namespace AbnfParserGenerator.CstNodesGenerator
                         {
                             new MethodParameter("Visitor<TResult, TContext>", "visitor"),
                             new MethodParameter("TContext", "context"),
-                        }),
+                        },
+                        null),
                 },
                 discriminatedUnionElements
                     .Prepend(
@@ -65,11 +69,13 @@ namespace AbnfParserGenerator.CstNodesGenerator
                                 "TResult",
                                 "TContext",
                             },
+                            null,
                             Enumerable.Empty<ConstructorDefinition>(),
                             discriminatedUnionElements.Select(discriminatedUnionElement =>
                                 new MethodDefinition(
                                     AccessModifier.Protected | AccessModifier.Internal, 
-                                    true, 
+                                    true,
+                                    false,
                                     "TResult", 
                                     Enumerable.Empty<string>(),
                                     "Accept",
@@ -77,8 +83,11 @@ namespace AbnfParserGenerator.CstNodesGenerator
                                     {
                                         new MethodParameter(discriminatedUnionElement.Name, "node"),
                                         new MethodParameter("TContext", "context"),
-                                    })),
-                            Enumerable.Empty<Class2>())));
+                                    },
+                                    null)),
+                            Enumerable.Empty<Class2>(),
+                            Enumerable.Empty<PropertyDefinition>())),
+                Enumerable.Empty<PropertyDefinition>());
         }
 
         private sealed class ElementsToDiscriminatedUnionElements
@@ -109,30 +118,6 @@ namespace AbnfParserGenerator.CstNodesGenerator
                     {
                         yield return InnerToDuElement.Instance.Convert(inner, baseType);
                     }
-                    
-
-
-                    var name = 0;
-                    var duElement = new Class();
-                    duElement.Name.Append($"_{name}"); //// TODO this is a really bad name
-                    duElement.IsAbstract = false;
-                    ++name;
-                    new ConcatenationToDuElement().Convert(alternation.Concatenation, duElement);
-                    duElement.BaseClass = @class;
-                    @class.NestedClasses.Add(duElement);
-                    foreach (var inner in alternation.Inners)
-                    {
-                        //// TODO probably this loop body should go in `innertoduelement`?
-                        duElement = new Class();
-                        duElement.Name.Append($"_{name}");
-                        duElement.IsAbstract = false;
-                        ++name;
-                        new InnerToDuElement().Convert(inner, duElement);
-                        duElement.BaseClass = @class;
-                        @class.NestedClasses.Add(duElement);
-                    }
-
-                    //// TODO add visitor
                 }
 
                 private sealed class ConcatenationToDuElement
@@ -143,19 +128,55 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                     public static ConcatenationToDuElement Instance { get; } = new ConcatenationToDuElement();
 
-                    public Class Convert(Concatenation concatenation, Class baseType)
+                    public Class2 Convert(Concatenation concatenation, string baseType)
                     {
-                        // `baseType` should be treated as immutable
-                        var duElement = new Class();
-                        duElement.IsAbstract = false;
-                        ConcatenationToDuElementName.Instance.Convert(concatenation, duElement.Name);
+                        var duElementNameBuilder = new StringBuilder();
+                        ConcatenationToDuElementName.Instance.Convert(concatenation, duElementNameBuilder);
+                        NormalizeClassName(duElementNameBuilder);
+                        var duElementName = duElementNameBuilder.ToString();
 
-
-                        new RepetitionToProperty().Visit(concatenation.Repetition, @class);
-                        foreach (var inner in concatenation.Inners)
-                        {
-                            new InnerToProperty().Convert(inner, @class);
-                        }
+                        var duElementProperties = ConcatenationToDuElementProperties.Instance.Convert(concatenation, default);
+                        return new Class2(
+                            AccessModifier.Public,
+                            false,
+                            duElementName,
+                            Enumerable.Empty<string>(),
+                            baseType,
+                            new[]
+                            {
+                                new ConstructorDefinition(
+                                    AccessModifier.Public,
+                                    duElementProperties.Select(duElementProperty =>
+                                        new MethodParameter(
+                                            duElementProperty.Name,
+                                            duElementProperty.Name[0].ToString().ToLower() + duElementProperty.Name.Substring(1))),
+                                    string.Join(
+                                        Environment.NewLine,
+                                        duElementProperties.Select(duElementProperty =>
+                                            $"this.{duElementProperty.Name} = {duElementProperty.Name[0].ToString().ToLower() + duElementProperty.Name.Substring(1)};"))),
+                            },
+                            new[]
+                            {
+                                new MethodDefinition(
+                                    AccessModifier.Protected,
+                                    false,
+                                    true,
+                                    "TResult",
+                                    new[]
+                                    {
+                                        "TResult",
+                                        "TContext",
+                                    },
+                                    "Dispatch",
+                                    new[]
+                                    {
+                                        new MethodParameter("Visitor<TResult, TContext>", "visitor"),
+                                        new MethodParameter("TContext", "context"),
+                                    },
+                                    "return visitor.Accept(this, context);"),
+                            },
+                            Enumerable.Empty<Class2>(),
+                            duElementProperties);
                     }
 
                     private sealed class ConcatenationToDuElementName
@@ -168,117 +189,22 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                         public void Convert(Concatenation concatenation, StringBuilder duElementName)
                         {
-                            throw new System.Exception("tODO");
+                            //// TODO implement this
                         }
                     }
 
-
-                    private sealed class InnerToProperty
+                    private sealed class ConcatenationToDuElementProperties
                     {
-                        public void Convert(Concatenation.Inner inner, Class @class)
+                        private ConcatenationToDuElementProperties()
                         {
-                            //// TODO you are skipping comments
-                            new RepetitionToProperty().Visit(inner.Repetition, @class);
-                        }
-                    }
-
-                    private sealed class RepetitionToProperty : Repetition.Visitor<Void, Class>
-                    {
-                        protected internal override Void Accept(Repetition.ElementOnly node, Class context)
-                        {
-                            new ElementToProperty().Visit(node.Element, context);
-                            return default;
                         }
 
-                        protected internal override Void Accept(Repetition.RepeatAndElement node, Class context)
+                        public static ConcatenationToDuElementProperties Instance { get; } = new ConcatenationToDuElementProperties();
+
+                        public IEnumerable<PropertyDefinition> Convert(Concatenation concatenation, Root.Void context)
                         {
-                            //// TODO you are skipping repetitions
-                            new ElementToProperty().Visit(node.Element, context);
-                            return default;
-                        }
-
-                        private sealed class ElementToProperty : Element.Visitor<Void, Class>
-                        {
-                            protected internal override Void Accept(Element.RuleName node, Class context)
-                            {
-                                //// TODO what about a concatenation that has two repetitions that have an element of the same type?
-                                var property = new Property();
-                                new RuleNameToString().Convert(node.Value, property.Name); //// TODO you need to strip dashes from this //// TODO you need to make sure the beginning is not a digit
-                                context.Properties.Add(property);
-                                return default;
-                            }
-
-                            protected internal override Void Accept(Element.Group node, Class context)
-                            {
-                                var className = "_Group0"; //// TODO you need to increment this name
-                                var @class = new Class();
-                                @class.Name.Append(className);
-                                new GroupToDu().Convert(node.Value, @class);
-
-                                context.NestedClasses.Add(@class);
-                                
-                                var property = new Property();
-                                property.Name = @class.Name;
-                                property.Type = @class;
-
-                                context.Properties.Add(property);
-
-                                return default;
-                            }
-
-                            private sealed class GroupToDu
-                            {
-                                public void Convert(Group group, Class @class)
-                                {
-                                    //// TODO you are skipping comments
-                                    new AlternationToDiscriminatedUnionElements().Convert(group.Alternation, @class);
-                                }
-                            }
-
-                            protected internal override Void Accept(Element.Option node, Class context)
-                            {
-                                var className = "_Option0"; //// TODO you need to increment this name
-                                var @class = new Class();
-                                @class.Name.Append(className);
-                                new OptionToDu().Convert(node.Value, @class);
-
-                                context.NestedClasses.Add(@class);
-
-                                var property = new Property();
-                                property.Name = @class.Name;
-                                property.Type = @class;
-
-                                context.Properties.Add(property);
-
-                                return default;
-                            }
-
-                            private sealed class OptionToDu
-                            {
-                                public void Convert(Option option, Class @class)
-                                {
-                                    //// TODO you are skipping comments
-                                    new AlternationToDiscriminatedUnionElements().Convert(option.Alternation, @class);
-                                }
-                            }
-
-                            protected internal override Void Accept(Element.CharVal node, Class context)
-                            {
-                                //// TODO finish this
-                                return default;
-                            }
-
-                            protected internal override Void Accept(Element.NumVal node, Class context)
-                            {
-                                //// TODO finish this
-                                return default;
-                            }
-
-                            protected internal override Void Accept(Element.ProseVal node, Class context)
-                            {
-                                //// TODO finish this
-                                return default;
-                            }
+                            //// TODO implement this
+                            return Enumerable.Empty<PropertyDefinition>();
                         }
                     }
                 }
@@ -291,12 +217,9 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                     public static InnerToDuElement Instance { get; } = new InnerToDuElement();
 
-                    public Class Convert(Alternation.Inner inner, Class baseType)
+                    public Class2 Convert(Alternation.Inner inner, string baseType)
                     {
-                        // `baseType` should be treated as immutable
-
-                        //// TODO you are skipping comments
-                        new ConcatenationToDuElement().Convert(inner.Concatenation, @class);
+                        return ConcatenationToDuElement.Instance.Convert(inner.Concatenation, baseType);
                     }
                 }
 
