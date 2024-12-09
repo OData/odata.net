@@ -261,11 +261,10 @@
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
 
-            var classes = new Classes();
-            new RuleListGenerator().Generate(cst, classes);
+            var classes = RuleListGenerator.Instance.Generate(cst, default);
 
             var builder = new StringBuilder();
-            new ClassTranscriber().Transcribe(classes.Value[16], builder, "  ");
+            new ClassTranscriber().Transcribe(classes.Value.ElementAt(16), builder, "  ");
             var csharp = builder.ToString();
         }
 
@@ -320,6 +319,26 @@
                     this.currentIndent = this.currentIndent.Substring(this.indent.Length);
                     return this;
                 }
+
+                public Builder AppendJoin<TElement>(string separator, IEnumerable<TElement> values, Action<TElement, Builder> selector)
+                {
+                    using (var valuesEnumerator = values.GetEnumerator())
+                    {
+                        if (!valuesEnumerator.MoveNext())
+                        {
+                            return this;
+                        }
+
+                        selector(valuesEnumerator.Current, this);
+                        while (valuesEnumerator.MoveNext())
+                        {
+                            this.Append(separator);
+                            selector(valuesEnumerator.Current, this);
+                        }
+
+                        return this;
+                    }
+                }
             }
 
             public void Transcribe(Class @class, StringBuilder builder, string indent)
@@ -342,16 +361,81 @@
                     }
                 }
                 
-                builder.Append($"class {@class.Name}");
-                var baseClass = @class.BaseClass;
-                if (baseClass != null)
+                builder.Append("class ").Append(@class.Name);
+                var genericTypeParameters = string.Join(",", @class.GenericTypeParameters);
+                if (!string.IsNullOrEmpty(genericTypeParameters))
                 {
-                    builder.Append($" : {baseClass.Name}");
+                    builder.Append("<").Append(genericTypeParameters).Append(">");
+                }
+
+                var baseType = @class.BaseType;
+                if (baseType != null)
+                {
+                    builder.Append(" : ").Append(baseType);
                 }
 
                 builder.AppendLine();
-                builder.Indent();
                 builder.AppendLine("{");
+                builder.Indent();
+                var needsNewLine = false;
+                if (@class.Constructors.Any()) //// TODO you shouldn't have to do this check if you join properly
+                {
+                    if (needsNewLine)
+                    {
+                        builder.AppendLine();
+                    }
+
+                    needsNewLine = true;
+                    foreach (var constructor in @class.Constructors)
+                    {
+                        builder.Append(constructor.AccessModifier.ToString().ToLower()).Append(" ").Append(@class.Name).Append("(");
+                        builder.AppendJoin(", ", constructor.Parameters, (parameter, b) => b.Append(parameter.Type).Append(" ").Append(parameter.Name));
+                        builder.AppendLine(")");
+                        builder.AppendLine("{");
+                        if (!string.IsNullOrEmpty(constructor.Body))
+                        {
+                            builder.Indent();
+                            builder.AppendLine(constructor.Body);
+                            builder.Unindent();
+                        }
+
+                        builder.AppendLine("}");
+                    }
+                }
+
+                if (@class.Methods.Any())
+                {
+                    if (needsNewLine)
+                    {
+                        builder.AppendLine();
+                    }
+
+                    needsNewLine = true;
+                    foreach (var method in @class.Methods)
+                    {
+                        builder.Append(method.AccessModifier.ToString().ToLower()).Append(" ");
+                        if (method.IsAbstract != null)
+                        {
+                            if (method.IsAbstract.Value)
+                            {
+                                builder.Append("abstract ");
+                            }
+                            else
+                            {
+                                builder.Append("sealed ");
+                            }
+                        }
+
+                        if (method.IsOverride)
+                        {
+                            builder.Append("override ");
+                        }
+                    }
+                }
+
+
+
+
                 var constructorParameters = @class.ConstructorParameters;
                 if (constructorParameters != null)
                 {

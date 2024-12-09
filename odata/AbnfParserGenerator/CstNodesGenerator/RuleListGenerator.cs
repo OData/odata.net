@@ -11,6 +11,12 @@ namespace AbnfParserGenerator.CstNodesGenerator
 {
     public sealed class RuleListGenerator
     {
+        private RuleListGenerator()
+        {
+        }
+
+        public static RuleListGenerator Instance { get; } = new RuleListGenerator();
+
         public Classes Generate(RuleList node, Root.Void context)
         {
             return new Classes(
@@ -122,7 +128,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
         {
             AccessModifier = accessModifier;
             IsAbstract = isAbstract;
-            Override = @override;
+            IsOverride = @override;
             ReturnType = returnType;
             GenericTypeParameters = genericTypeParameters;
             MethodName = methodName;
@@ -134,7 +140,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
         public bool? IsAbstract { get; }
 
-        public bool Override { get; }
+        public bool IsOverride { get; }
 
         public string ReturnType { get; }
 
