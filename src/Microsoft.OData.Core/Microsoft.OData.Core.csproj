@@ -28,18 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
-    <None Remove="Microsoft.OData.Core.tt" />
-    <None Remove="Parameterized.Microsoft.OData.Core.tt" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>
-=======
->>>>>>> 02e4e4773 (Fixes #3132 Replace using Resource files for error message)
     <Compile Include="..\AssemblyInfo\AssemblyKeys.cs" Link="AssemblyKeys.cs" />
     <Compile Include="..\PlatformHelper.cs" Link="PlatformHelper.cs" />
     <Compile Include="..\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" Link="EdmValueWriter.cs" />
