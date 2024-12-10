@@ -32,7 +32,7 @@ namespace Microsoft.OData.UriParser
                 return false;
             }
 
-            return this.ToHashableString(first) == this.ToHashableString(second);
+            return ToHashableString(first) == ToHashableString(second);
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Microsoft.OData.UriParser
                 return 0;
             }
 
-            return this.ToHashableString(path).GetHashCode(StringComparison.Ordinal);
+            return ToHashableString(path).GetHashCode(StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -57,14 +57,14 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="token">The path token to convert to a string.</param>
         /// <returns>A string representing the path.</returns>
-        private string ToHashableString(PathSegmentToken token)
+        private static string ToHashableString(PathSegmentToken token)
         {
             if (token.NextToken == null)
             {
                 return token.Identifier;
             }
 
-            return token.Identifier + "/" + this.ToHashableString(token.NextToken);
+            return token.Identifier + "/" + ToHashableString(token.NextToken);
         }
     }
 }
