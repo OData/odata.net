@@ -11,17 +11,14 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
     /// </summary>
     internal class CsdlPropertyReference : CsdlElement
     {
-        private readonly string propertyName;
-
-        public CsdlPropertyReference(string propertyName, CsdlLocation location)
+        public CsdlPropertyReference(string propertyName, string propertyAlias, CsdlLocation location)
             : base(location)
         {
-            this.propertyName = propertyName;
+            PropertyName = propertyName;
+            PropertyAlias = propertyAlias;
         }
 
-        public string PropertyName
-        {
-            get { return this.propertyName; }
-        }
+        public string PropertyName { get; }
+        public string PropertyAlias { get; }
     }
 }
