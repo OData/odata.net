@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Diagnostics;
@@ -29,7 +30,7 @@ namespace Microsoft.OData
         /// current system culture. The Error property will be initialized with an empty <see cref="ODataError"/> instance.
         /// </remarks>
         public ODataErrorException()
-            : this(Strings.ODataErrorException_GeneralError)
+            : this(SRResources.ODataErrorException_GeneralError)
         {
         }
 
@@ -62,7 +63,7 @@ namespace Microsoft.OData
         /// current system culture.
         /// </remarks>
         public ODataErrorException(ODataError error)
-            : this(Strings.ODataErrorException_GeneralError, null, error)
+            : this(SRResources.ODataErrorException_GeneralError, null, error)
         {
         }
 

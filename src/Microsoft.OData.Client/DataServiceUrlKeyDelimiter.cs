@@ -13,7 +13,6 @@ namespace Microsoft.OData.Client
     using System.Text;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
-    using ErrorStrings = Microsoft.OData.Client.Strings;
 
     /// <summary>
     /// Component for controlling what convention set is used for generating URLs.
@@ -67,7 +66,7 @@ namespace Microsoft.OData.Client
             IEdmEntityTypeReference edmEntityTypeReference = entity.Type as IEdmEntityTypeReference;
             if (edmEntityTypeReference == null || !edmEntityTypeReference.Key().Any())
             {
-                throw Error.Argument(ErrorStrings.Content_EntityWithoutKey, "entity");
+                throw Error.Argument(SRResources.Content_EntityWithoutKey, "entity");
             }
 
             this.AppendKeyExpression(edmEntityTypeReference.Key().ToList(), p => p.Name, p => GetPropertyValue(entity.FindPropertyValue(p.Name), entity.Type), builder);
@@ -89,7 +88,7 @@ namespace Microsoft.OData.Client
                 object propertyValue = getValueForProperty(p);
                 if (propertyValue == null)
                 {
-                    throw Error.InvalidOperation(Microsoft.OData.Client.Strings.Context_NullKeysAreNotSupported(getPropertyName(p)));
+                    throw Error.InvalidOperation(Error.Format(SRResources.Context_NullKeysAreNotSupported, getPropertyName(p)));
                 }
 
                 return propertyValue;
@@ -112,13 +111,13 @@ namespace Microsoft.OData.Client
             // it seems worthwhile to fail fast if we can.
             if (propertyValue.ValueKind == EdmValueKind.Null)
             {
-                throw Error.InvalidOperation(ErrorStrings.Context_NullKeysAreNotSupported(property.Name));
+                throw Error.InvalidOperation(Error.Format(SRResources.Context_NullKeysAreNotSupported, property.Name));
             }
 
             var primitiveValue = propertyValue as IEdmPrimitiveValue;
             if (primitiveValue == null)
             {
-                throw Error.InvalidOperation(ErrorStrings.ClientType_KeysMustBeSimpleTypes(property.Name, type.FullName(), propertyValue.Type.FullName()));
+                throw Error.InvalidOperation(Error.Format(SRResources.ClientType_KeysMustBeSimpleTypes, property.Name, type.FullName(), propertyValue.Type.FullName()));
             }
 
             // DEVNOTE: This can return null, and will be handled later. The reason for this is that the client

@@ -7,6 +7,7 @@
 namespace Microsoft.OData
 {
     using System;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Metadata;
 
     /// <summary>
@@ -23,12 +24,12 @@ namespace Microsoft.OData
         {
             if (value == null)
             {
-                throw new ArgumentNullException(Strings.ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromNull, (Exception)null);
+                throw new ArgumentNullException(SRResources.ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromNull, (Exception)null);
             }
 
             if (!EdmLibraryExtensions.IsPrimitiveType(value.GetType()))
             {
-                throw new ODataException(Strings.ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromUnsupportedValueType(value.GetType()));
+                throw new ODataException(Error.Format(SRResources.ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromUnsupportedValueType, value.GetType()));
             }
 
             this.Value = value;

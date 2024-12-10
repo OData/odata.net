@@ -8,9 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Microsoft.OData.Core;
 using Microsoft.OData.MultipartMixed;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests
 {
@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests
         public void ReadFirstNonEmptyLineShouldThrowOnEndOfInput()
         {
             Action readAtEndOfInput = () => CreateBatchReaderStream("").ReadFirstNonEmptyLine();
-            readAtEndOfInput.Throws<ODataException>(ErrorStrings.ODataBatchReaderStream_UnexpectedEndOfInput);
+            readAtEndOfInput.Throws<ODataException>(SRResources.ODataBatchReaderStream_UnexpectedEndOfInput);
         }
 
         [Fact]

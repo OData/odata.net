@@ -10,7 +10,7 @@ namespace Microsoft.OData.Json
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Json
             // All other reserved OData instance annotations should fail.
             if (KnownODataAnnotationNames.Contains(annotationName))
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(annotationName));
+                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, annotationName));
             }
 
             Debug.Assert(!IsODataAnnotationName(annotationName), "Unknown names under the odata. namespace should be skipped by ODataJsonDeserializer.ParseProperty().");

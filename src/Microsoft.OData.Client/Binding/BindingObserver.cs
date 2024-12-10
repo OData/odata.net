@@ -504,7 +504,7 @@ namespace Microsoft.OData.Client
             // The user callback code could detach the source.
             if (source != null && this.IsDetachedOrDeletedFromContext(source))
             {
-                throw new InvalidOperationException(Strings.DataBinding_BindingOperation_DetachedSource);
+                throw new InvalidOperationException(SRResources.DataBinding_BindingOperation_DetachedSource);
             }
 
             // Default implementation.
@@ -638,7 +638,7 @@ namespace Microsoft.OData.Client
             // The user callback code could detach the source.
             if (source != null && !this.IsContextTrackingEntity(source))
             {
-                throw new InvalidOperationException(Strings.DataBinding_BindingOperation_DetachedSource);
+                throw new InvalidOperationException(SRResources.DataBinding_BindingOperation_DetachedSource);
             }
 
             // Default implementation.
@@ -718,7 +718,7 @@ namespace Microsoft.OData.Client
             // The user callback code could detach the source.
             if (this.IsDetachedOrDeletedFromContext(source))
             {
-                throw new InvalidOperationException(Strings.DataBinding_BindingOperation_DetachedSource);
+                throw new InvalidOperationException(SRResources.DataBinding_BindingOperation_DetachedSource);
             }
 
             // Default implementation.
@@ -873,12 +873,12 @@ namespace Microsoft.OData.Client
                 {
                     if (target == null)
                     {
-                        throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNull("Add"));
+                        throw new InvalidOperationException(Error.Format(SRResources.DataBinding_BindingOperation_ArrayItemNull, "Add"));
                     }
 
                     if (!BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model))
                     {
-                        throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNotEntity("Add"));
+                        throw new InvalidOperationException(Error.Format(SRResources.DataBinding_BindingOperation_ArrayItemNotEntity, "Add"));
                     }
 
                     // Start tracking the target entity and synchronize the context with the Add operation.
@@ -1088,12 +1088,12 @@ namespace Microsoft.OData.Client
         {
             if (target == null)
             {
-                throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNull("Remove"));
+                throw new InvalidOperationException(Error.Format(SRResources.DataBinding_BindingOperation_ArrayItemNull, "Remove"));
             }
 
             if (!BindingEntityInfo.IsEntityType(target.GetType(), this.Context.Model))
             {
-                throw new InvalidOperationException(Strings.DataBinding_BindingOperation_ArrayItemNotEntity("Remove"));
+                throw new InvalidOperationException(Error.Format(SRResources.DataBinding_BindingOperation_ArrayItemNotEntity, "Remove"));
             }
         }
 

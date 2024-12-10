@@ -14,6 +14,7 @@ namespace Microsoft.OData.Json
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -909,7 +910,7 @@ namespace Microsoft.OData.Json
 
                 if (jsonWriter == null)
                 {
-                    throw new ODataException(Strings.ODataMessageWriter_JsonWriterFactory_ReturnedNull(isIeee754Compatible, encoding.WebName));
+                    throw new ODataException(Error.Format(SRResources.ODataMessageWriter_JsonWriterFactory_ReturnedNull, isIeee754Compatible, encoding.WebName));
                 }
             }
 

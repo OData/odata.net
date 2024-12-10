@@ -36,7 +36,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             var attr = element.Attributes[attributeName];
             if (attr.IsMissing)
             {
-                this.ReportError(element.Location, EdmErrorCode.MissingAttribute, Edm.Strings.XmlParser_MissingAttribute(attributeName, element.Name));
+                this.ReportError(element.Location, EdmErrorCode.MissingAttribute, Error.Format(SRResources.XmlParser_MissingAttribute, attributeName, element.Name));
                 return attr;
             }
 
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 int? value;
                 if (!EdmValueParser.TryParseInt(attr.Value, out value))
                 {
-                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidInteger, Edm.Strings.ValueParser_InvalidInteger(attr.Value));
+                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidInteger, Error.Format(SRResources.ValueParser_InvalidInteger, attr.Value));
                 }
 
                 return value;
@@ -131,7 +131,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 long? value;
                 if (!EdmValueParser.TryParseLong(attr.Value, out value))
                 {
-                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidLong, Edm.Strings.ValueParser_InvalidLong(attr.Value));
+                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidLong, Error.Format(SRResources.ValueParser_InvalidLong, attr.Value));
                 }
 
                 return value;
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 {
                     if (!EdmValueParser.TryParseInt(attr.Value, out srid))
                     {
-                        this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidSrid, Edm.Strings.ValueParser_InvalidSrid(attr.Value));
+                        this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidSrid, Error.Format(SRResources.ValueParser_InvalidSrid, attr.Value));
                     }
                 }
 
@@ -183,7 +183,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 {
                     if (!EdmValueParser.TryParseInt(attr.Value, out scale))
                     {
-                        this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidSrid, Edm.Strings.ValueParser_InvalidScale(attr.Value));
+                        this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidSrid, Error.Format(SRResources.ValueParser_InvalidScale, attr.Value));
                     }
                 }
 
@@ -201,7 +201,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 int? value;
                 if (!EdmValueParser.TryParseInt(attr.Value, out value))
                 {
-                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidMaxLength, Edm.Strings.ValueParser_InvalidMaxLength(attr.Value));
+                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidMaxLength, Error.Format(SRResources.ValueParser_InvalidMaxLength, attr.Value));
                 }
 
                 return value;
@@ -224,7 +224,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                     case CsdlConstants.Value_EndMany:
                         return EdmMultiplicity.Many;
                     default:
-                        this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidMultiplicity, Edm.Strings.CsdlParser_InvalidMultiplicity(attr.Value));
+                        this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidMultiplicity, Error.Format(SRResources.CsdlParser_InvalidMultiplicity, attr.Value));
                         break;
                 }
             }
@@ -244,7 +244,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                     case CsdlConstants.Value_Cascade:
                         return EdmOnDeleteAction.Cascade;
                     default:
-                        this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidOnDelete, Edm.Strings.CsdlParser_InvalidDeleteAction(attr.Value));
+                        this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidOnDelete, Error.Format(SRResources.CsdlParser_InvalidDeleteAction, attr.Value));
                         break;
                 }
             }
@@ -260,7 +260,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 bool? value;
                 if (!EdmValueParser.TryParseBool(attr.Value, out value))
                 {
-                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidBoolean, Edm.Strings.ValueParser_InvalidBoolean(attr.Value));
+                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidBoolean, Error.Format(SRResources.ValueParser_InvalidBoolean, attr.Value));
                 }
 
                 return value;
@@ -379,7 +379,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         {
             if (string.IsNullOrEmpty(path.Trim()))
             {
-                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEnumMemberPath, Edm.Strings.CsdlParser_InvalidEnumMemberPath(path));
+                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEnumMemberPath, Error.Format(SRResources.CsdlParser_InvalidEnumMemberPath, path));
             }
 
             string[] enumValues = path.Split(' ').Where(s => !string.IsNullOrEmpty(s)).ToArray();
@@ -391,12 +391,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                     EdmUtil.IsValidDottedName(segments[0]) &&
                     EdmUtil.IsValidUndottedName(segments[1])))
                 {
-                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEnumMemberPath, Edm.Strings.CsdlParser_InvalidEnumMemberPath(path));
+                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEnumMemberPath, Error.Format(SRResources.CsdlParser_InvalidEnumMemberPath, path));
                 }
 
                 if (enumType != null && segments[0] != enumType)
                 {
-                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEnumMemberPath, Edm.Strings.CsdlParser_InvalidEnumMemberPath(path));
+                    this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEnumMemberPath, Error.Format(SRResources.CsdlParser_InvalidEnumMemberPath, path));
                 }
 
                 enumType = segments[0];
@@ -429,7 +429,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                     // 'Ref' on its own is not a valid type string.
                     if (typeInformation.Length == 1)
                     {
-                        this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidTypeName, Edm.Strings.CsdlParser_InvalidTypeName(name));
+                        this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidTypeName, Error.Format(SRResources.CsdlParser_InvalidTypeName, name));
                         return name;
                     }
                     else
@@ -446,7 +446,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             }
             else
             {
-                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidTypeName, Edm.Strings.CsdlParser_InvalidTypeName(name));
+                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidTypeName, Error.Format(SRResources.CsdlParser_InvalidTypeName, name));
                 return name;
             }
         }
@@ -455,7 +455,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         {
             if (!EdmUtil.IsValidUndottedName(name))
             {
-                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidQualifiedName, Edm.Strings.CsdlParser_InvalidAlias(name));
+                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidQualifiedName, Error.Format(SRResources.CsdlParser_InvalidAlias, name));
             }
 
             return name;
@@ -468,7 +468,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 EdmUtil.IsValidDottedName(segments[0]) &&
                 EdmUtil.IsValidUndottedName(segments[1])))
             {
-                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEntitySetPath, Edm.Strings.CsdlParser_InvalidEntitySetPath(path));
+                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEntitySetPath, Error.Format(SRResources.CsdlParser_InvalidEntitySetPath, path));
             }
 
             return path;
@@ -481,7 +481,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 EdmUtil.IsValidDottedName(segments[0]) &&
                 EdmUtil.IsValidUndottedName(segments[1])))
             {
-                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEnumMemberPath, Edm.Strings.CsdlParser_InvalidEnumMemberPath(path));
+                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEnumMemberPath, Error.Format(SRResources.CsdlParser_InvalidEnumMemberPath, path));
             }
 
             return path;
@@ -491,7 +491,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         {
             if (!EdmUtil.IsQualifiedName(qualifiedName))
             {
-                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidQualifiedName, Edm.Strings.CsdlParser_InvalidQualifiedName(qualifiedName));
+                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidQualifiedName, Error.Format(SRResources.CsdlParser_InvalidQualifiedName, qualifiedName));
             }
 
             return qualifiedName;

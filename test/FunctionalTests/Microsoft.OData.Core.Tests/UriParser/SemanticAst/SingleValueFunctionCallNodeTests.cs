@@ -6,11 +6,11 @@
 
 using System;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Microsoft.Test.OData.Utils.Metadata;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -73,14 +73,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TypeReferenceShouldNotBeCollection()
         {
             Action createWithCollectionReturnType = () => new SingleValueFunctionCallNode("stuff", null, new EdmCollectionType(EdmCoreModel.Instance.GetInt32(true)).ToTypeReference().AsCollection());
-            createWithCollectionReturnType.Throws<ArgumentException>(ODataErrorStrings.Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
+            createWithCollectionReturnType.Throws<ArgumentException>(SRResources.Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
         }
 
         [Fact]
         public void TypeReferenceShouldNotBeEntity()
         {
             Action createWithCollectionReturnType = () => new SingleValueFunctionCallNode("stuff", null, ModelBuildingHelpers.BuildValidEntityType().ToTypeReference().AsEntity());
-            createWithCollectionReturnType.Throws<ArgumentException>(ODataErrorStrings.Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
+            createWithCollectionReturnType.Throws<ArgumentException>(SRResources.Nodes_SingleValueFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
         }
 
         [Fact]

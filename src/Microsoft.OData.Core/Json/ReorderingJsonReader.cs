@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Json
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -47,7 +48,7 @@ namespace Microsoft.OData.Json
             }
             catch (FormatException)
             {
-                throw new ODataException(Strings.JsonReader_InvalidBinaryFormat(this.GetValue()));
+                throw new ODataException(Error.Format(SRResources.JsonReader_InvalidBinaryFormat, this.GetValue()));
             }
 
             this.Read();
@@ -64,7 +65,7 @@ namespace Microsoft.OData.Json
             if (this.NodeType == JsonNodeType.Property)
             {
                 // reading JSON
-                throw new ODataException(Strings.JsonReader_CannotCreateTextReader);
+                throw new ODataException(SRResources.JsonReader_CannotCreateTextReader);
             }
 
             TextReader result = new StringReader(this.GetValue() == null ? "" : (string)this.GetValue());
@@ -112,7 +113,7 @@ namespace Microsoft.OData.Json
             }
             catch (FormatException)
             {
-                throw new ODataException(Strings.JsonReader_InvalidBinaryFormat(value));
+                throw new ODataException(Error.Format(SRResources.JsonReader_InvalidBinaryFormat, value));
             }
 
             await this.ReadAsync()
@@ -133,7 +134,7 @@ namespace Microsoft.OData.Json
             if (this.NodeType == JsonNodeType.Property)
             {
                 // reading JSON
-                throw new ODataException(Strings.JsonReader_CannotCreateTextReader);
+                throw new ODataException(SRResources.JsonReader_CannotCreateTextReader);
             }
 
             TextReader result;
@@ -518,7 +519,7 @@ namespace Microsoft.OData.Json
                         else
                         {
                             // unexpected instance annotation name
-                            throw new ODataException(Microsoft.OData.Strings.JsonReaderExtensions_UnexpectedInstanceAnnotationName(jsonPropertyName));
+                            throw new ODataException(Error.Format(SRResources.JsonReaderExtensions_UnexpectedInstanceAnnotationName, jsonPropertyName));
                         }
                     }
                 }

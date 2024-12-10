@@ -15,6 +15,7 @@ namespace Microsoft.OData
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
 
@@ -408,14 +409,14 @@ namespace Microsoft.OData
         {
             if (this.State != ODataReaderState.Stream)
             {
-                throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
+                throw new ODataException(SRResources.ODataReaderCore_CreateReadStreamCalledInInvalidState);
             }
 
             StreamScope scope = this.CurrentScope as StreamScope;
             Debug.Assert(scope != null, "ODataReaderState.Stream when Scope is not a StreamScope");
             if (scope.StreamingState != StreamingState.None)
             {
-                throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
+                throw new ODataException(SRResources.ODataReaderCore_CreateReadStreamCalledInInvalidState);
             }
 
             scope.StreamingState = StreamingState.Streaming;
@@ -434,7 +435,7 @@ namespace Microsoft.OData
                 Debug.Assert(scope != null, "ODataReaderState.Stream when Scope is not a StreamScope");
                 if (scope.StreamingState != StreamingState.None)
                 {
-                    throw new ODataException(Strings.ODataReaderCore_CreateReadStreamCalledInInvalidState);
+                    throw new ODataException(SRResources.ODataReaderCore_CreateReadStreamCalledInInvalidState);
                 }
 
                 scope.StreamingState = StreamingState.Streaming;
@@ -442,7 +443,7 @@ namespace Microsoft.OData
             }
             else
             {
-                throw new ODataException(Strings.ODataReaderCore_CreateTextReaderCalledInInvalidState);
+                throw new ODataException(SRResources.ODataReaderCore_CreateTextReaderCalledInInvalidState);
             }
         }
 
@@ -822,7 +823,7 @@ namespace Microsoft.OData
 
             if (this.currentResourceDepth > this.inputContext.MessageReaderSettings.MessageQuotas.MaxNestingDepth)
             {
-                throw new ODataException(Strings.ValidationUtils_MaxDepthOfNestedEntriesExceeded(this.inputContext.MessageReaderSettings.MessageQuotas.MaxNestingDepth));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_MaxDepthOfNestedEntriesExceeded, this.inputContext.MessageReaderSettings.MessageQuotas.MaxNestingDepth));
             }
         }
 
@@ -917,11 +918,11 @@ namespace Microsoft.OData
 
                 case ODataReaderState.Exception:    // fall through
                 case ODataReaderState.Completed:
-                    throw new ODataException(Strings.ODataReaderCore_NoReadCallsAllowed(this.State));
+                    throw new ODataException(Error.Format(SRResources.ODataReaderCore_NoReadCallsAllowed, this.State));
 
                 default:
                     Debug.Assert(false, "Unsupported reader state " + this.State + " detected.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataReaderCore_ReadImplementation));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataReaderCore_ReadImplementation));
             }
 
             return result;
@@ -989,7 +990,7 @@ namespace Microsoft.OData
 
             if (this.State == ODataReaderState.Exception || this.State == ODataReaderState.Completed)
             {
-                throw new ODataException(Strings.ODataReaderCore_ReadOrReadAsyncCalledInInvalidState(this.State));
+                throw new ODataException(Error.Format(SRResources.ODataReaderCore_ReadOrReadAsyncCalledInInvalidState, this.State));
             }
 
             if (this.State == ODataReaderState.Stream)
@@ -998,7 +999,7 @@ namespace Microsoft.OData
                 Debug.Assert(scope != null, "In stream state without a stream scope");
                 if (scope.StreamingState != StreamingState.Completed)
                 {
-                    throw new ODataException(Strings.ODataReaderCore_ReadCalledWithOpenStream);
+                    throw new ODataException(SRResources.ODataReaderCore_ReadCalledWithOpenStream);
                 }
             }
         }
@@ -1013,14 +1014,14 @@ namespace Microsoft.OData
             {
                 if (!this.inputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataReaderCore_SyncCallOnAsyncReader);
+                    throw new ODataException(SRResources.ODataReaderCore_SyncCallOnAsyncReader);
                 }
             }
             else
             {
                 if (this.inputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataReaderCore_AsyncCallOnSyncReader);
+                    throw new ODataException(SRResources.ODataReaderCore_AsyncCallOnSyncReader);
                 }
             }
         }

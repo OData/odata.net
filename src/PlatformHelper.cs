@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client
 namespace Microsoft.Spatial
 #else
 #if ODATA_CORE
-namespace Microsoft.OData
+namespace Microsoft.OData.Core
 #else
 namespace Microsoft.OData.Edm
 #endif
@@ -328,35 +328,35 @@ namespace Microsoft.OData.Edm
         }
 
 #if ODATA_CLIENT
-        /// <summary>
-        /// Converts a string to a DateTime. This is only built in client library
-        /// </summary>
-        /// <param name="text">A DateTime value to be converted.</param>
-        /// <returns>See documentation for method being accessed in the body of the method.</returns>
-        internal static DateTime ConvertStringToDateTime(string text)
+    /// <summary>
+    /// Converts a string to a DateTime. This is only built in client library
+    /// </summary>
+    /// <param name="text">A DateTime value to be converted.</param>
+    /// <returns>See documentation for method being accessed in the body of the method.</returns>
+    internal static DateTime ConvertStringToDateTime(string text)
+    {
+        var offset = ConvertStringToDateTimeOffset(text);
+        return offset.UtcDateTime;
+    }
+
+    /// <summary>
+    /// Convert the given DateTime instance to corresponding DateTimeOffset instance. 
+    /// The conversion rules for a DateTime kind to DateTimeOffset are:
+    /// a) Unspecified -> UTC
+    /// b) Local -> Local
+    /// c) UTC -> UTC
+    /// </summary>
+    /// <param name="dt">Given DateTime value.</param>
+    /// <returns>DateTimeOffset corresponding to given DateTime value.</returns>
+    internal static DateTimeOffset ConvertDateTimeToDateTimeOffset(DateTime dt)
+    {
+        if (dt.Kind == DateTimeKind.Unspecified)
         {
-            var offset = ConvertStringToDateTimeOffset(text);
-            return offset.UtcDateTime;
+            return new DateTimeOffset(new DateTime(dt.Ticks, DateTimeKind.Utc));
         }
 
-        /// <summary>
-        /// Convert the given DateTime instance to corresponding DateTimeOffset instance. 
-        /// The conversion rules for a DateTime kind to DateTimeOffset are:
-        /// a) Unspecified -> UTC
-        /// b) Local -> Local
-        /// c) UTC -> UTC
-        /// </summary>
-        /// <param name="dt">Given DateTime value.</param>
-        /// <returns>DateTimeOffset corresponding to given DateTime value.</returns>
-        internal static DateTimeOffset ConvertDateTimeToDateTimeOffset(DateTime dt)
-        {
-            if (dt.Kind == DateTimeKind.Unspecified)
-            {
-                return new DateTimeOffset(new DateTime(dt.Ticks, DateTimeKind.Utc));
-            }
-
-            return new DateTimeOffset(dt);
-        }
+        return new DateTimeOffset(dt);
+    }
 #endif
 
         /// <summary>
@@ -384,7 +384,7 @@ namespace Microsoft.OData.Edm
             }
 
             // No timezone specified, for example: "2012-12-21T15:01:23.1234567"
-            throw new FormatException(Strings.PlatformHelper_DateTimeOffsetMustContainTimeZone(text.ToString()));
+            throw new FormatException(Error.Format(SRResources.PlatformHelper_DateTimeOffsetMustContainTimeZone, text.ToString()));
         }
 
         /// <summary>
@@ -1003,6 +1003,53 @@ namespace Microsoft.OData.Edm
         {
             options = options | RegexOptions.None;
             return new Regex(pattern, options);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    internal static partial class Error
+    {
+        /// <summary>
+        /// Formats the specified resource string.
+        /// </summary>
+        /// <param name="format">A composite format string.</param>
+        /// <param name="args">An object array that contains zero or more objects to format.</param>
+        /// <returns>The formatted string.</returns>
+        internal static string Format(string format, params object[] args)
+        {
+            return string.Format(SRResources.Culture, format, args);
+        }
+
+        /// <summary>
+        /// The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
+        /// </summary>
+        internal static Exception ArgumentNull(string paramName)
+        {
+            return new ArgumentNullException(paramName);
+        }
+
+        /// <summary>
+        /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
+        /// </summary>
+        internal static Exception ArgumentOutOfRange(string paramName)
+        {
+            return new ArgumentOutOfRangeException(paramName);
+        }
+
+        /// <summary>
+        /// The exception that is thrown when the author has not yet implemented the logic at this point in the program. This can act as an exception based TODO tag.
+        /// </summary>
+        internal static Exception NotImplemented()
+        {
+            return new NotImplementedException();
+        }
+
+        /// <summary>
+        /// The exception that is thrown when an invoked method is not supported, or when there is an attempt to read, seek, or write to a stream that does not support the invoked functionality.
+        /// </summary>
+        internal static Exception NotSupported()
+        {
+            return new NotSupportedException();
         }
     }
 }

@@ -73,7 +73,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             TimeSpan? value;
             if (!EdmValueParser.TryParseDuration(this.expression.Value, out value))
             {
-                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidDuration, Edm.Strings.ValueParser_InvalidDuration(this.expression.Value)) };
+                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidDuration, Error.Format(SRResources.ValueParser_InvalidDuration, this.expression.Value)) };
             }
             else
             {

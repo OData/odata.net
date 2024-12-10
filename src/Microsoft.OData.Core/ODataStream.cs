@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Diagnostics;
@@ -110,7 +111,7 @@ namespace Microsoft.OData
         {
             if (this.listener == null)
             {
-                throw new ObjectDisposedException(null, Strings.ODataBatchOperationStream_Disposed);
+                throw new ObjectDisposedException(null, SRResources.ODataBatchOperationStream_Disposed);
             }
         }
     }

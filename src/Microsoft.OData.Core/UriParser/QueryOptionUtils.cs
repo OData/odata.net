@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using Microsoft.OData.Core;
     #region Namespaces
 
     using System;
@@ -69,7 +70,7 @@ namespace Microsoft.OData.UriParser
                     }
                     else
                     {
-                        throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(queryOptionName));
+                        throw new ODataException(Error.Format(SRResources.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce, queryOptionName));
                     }
                 }
             }
@@ -101,7 +102,7 @@ namespace Microsoft.OData.UriParser
                     }
                     else
                     {
-                        throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(queryOptionName));
+                        throw new ODataException(Error.Format(SRResources.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce, queryOptionName));
                     }
 
                     queryOptions.RemoveAt(i);

@@ -11,6 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Metadata;
@@ -330,7 +331,7 @@ namespace Microsoft.OData
                         resourceScope = (ResourceBaseScope)this.scopeStack.Parent;
                         break;
                     default:
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_PropertyAndAnnotationCollector));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataWriterCore_PropertyAndAnnotationCollector));
                 }
 
                 return resourceScope.DuplicatePropertyNameChecker;
@@ -390,7 +391,7 @@ namespace Microsoft.OData
                 }
 
                 // The parent scope of a resource can only be a resourceSet or an expanded nav link
-                throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_ParentNestedResourceInfoScope));
+                throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataWriterCore_ParentNestedResourceInfoScope));
             }
         }
 
@@ -750,7 +751,7 @@ namespace Microsoft.OData
             // introduce another top-level element in XML)
             if (this.State == WriterState.Completed)
             {
-                throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), WriterState.Error.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromCompleted, this.State.ToString(), WriterState.Error.ToString()));
             }
 
             this.StartPayloadInStartState();
@@ -766,7 +767,7 @@ namespace Microsoft.OData
             // introduce another top-level element in XML)
             if (this.State == WriterState.Completed)
             {
-                throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), WriterState.Error.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromCompleted, this.State.ToString(), WriterState.Error.ToString()));
             }
 
             await this.StartPayloadInStartStateAsync()
@@ -1325,7 +1326,7 @@ namespace Microsoft.OData
 
             if (resourceSet.DeltaLink != null)
             {
-                throw new ODataException(Strings.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
+                throw new ODataException(SRResources.ODataWriterCore_DeltaLinkNotSupportedOnExpandedResourceSet);
             }
         }
 
@@ -1590,7 +1591,7 @@ namespace Microsoft.OData
                             // Check that Count is not set for requests
                             if (!thisParam.outputContext.WritingResponse)
                             {
-                                thisParam.ThrowODataException(Strings.ODataWriterCore_QueryCountInRequest, resourceSetParam);
+                                thisParam.ThrowODataException(SRResources.ODataWriterCore_QueryCountInRequest, resourceSetParam);
                             }
 
                             // Verify version requirements
@@ -1631,12 +1632,12 @@ namespace Microsoft.OData
                     {
                         if (deltaResourceSetParam.NextPageLink != null)
                         {
-                            thisParam.ThrowODataException(Strings.ODataWriterCore_QueryNextLinkInRequest, deltaResourceSetParam);
+                            thisParam.ThrowODataException(SRResources.ODataWriterCore_QueryNextLinkInRequest, deltaResourceSetParam);
                         }
 
                         if (deltaResourceSetParam.DeltaLink != null)
                         {
-                            thisParam.ThrowODataException(Strings.ODataWriterCore_QueryDeltaLinkInRequest, deltaResourceSetParam);
+                            thisParam.ThrowODataException(SRResources.ODataWriterCore_QueryDeltaLinkInRequest, deltaResourceSetParam);
                         }
                     }
 
@@ -1984,7 +1985,7 @@ namespace Microsoft.OData
                         case WriterState.NestedResourceInfo:
                             if (!thisParam.outputContext.WritingResponse)
                             {
-                                throw new ODataException(Strings.ODataWriterCore_DeferredLinkInRequest);
+                                throw new ODataException(SRResources.ODataWriterCore_DeferredLinkInRequest);
                             }
 
                             if (!thisParam.SkipWriting)
@@ -2019,13 +2020,13 @@ namespace Microsoft.OData
                             break;
                         case WriterState.Stream:
                         case WriterState.String:
-                            throw new ODataException(Strings.ODataWriterCore_StreamNotDisposed);
+                            throw new ODataException(SRResources.ODataWriterCore_StreamNotDisposed);
                         case WriterState.Start:                 // fall through
                         case WriterState.Completed:             // fall through
                         case WriterState.Error:                 // fall through
-                            throw new ODataException(Strings.ODataWriterCore_WriteEndCalledInInvalidState(currentScope.State.ToString()));
+                            throw new ODataException(Error.Format(SRResources.ODataWriterCore_WriteEndCalledInInvalidState, currentScope.State.ToString()));
                         default:
-                            throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_WriteEnd_UnreachableCodePath));
+                            throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataWriterCore_WriteEnd_UnreachableCodePath));
                     }
 
                     thisParam.LeaveScope();
@@ -2129,14 +2130,14 @@ namespace Microsoft.OData
             {
                 if (!this.outputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataWriterCore_SyncCallOnAsyncWriter);
+                    throw new ODataException(SRResources.ODataWriterCore_SyncCallOnAsyncWriter);
                 }
             }
             else
             {
                 if (this.outputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataWriterCore_AsyncCallOnSyncWriter);
+                    throw new ODataException(SRResources.ODataWriterCore_AsyncCallOnSyncWriter);
                 }
             }
         }
@@ -2148,7 +2149,7 @@ namespace Microsoft.OData
         {
             if (!this.CurrentScope.EnableDelta)
             {
-                throw new ODataException(Strings.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
+                throw new ODataException(SRResources.ODataWriterCore_CannotWriteDeltaWithResourceSetWriter);
             }
         }
 
@@ -2232,7 +2233,7 @@ namespace Microsoft.OData
                     // into the nested resource info content. This is only allowed for collection navigation property in request/response.
                     if (currentNestedResourceInfo.IsCollection != true)
                     {
-                        this.ThrowODataException(Strings.ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent, currentNestedResourceInfo);
+                        this.ThrowODataException(SRResources.ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent, currentNestedResourceInfo);
                     }
 
                     // Note that we don't invoke duplicate property checker in this case as it's not necessary.
@@ -2268,7 +2269,7 @@ namespace Microsoft.OData
                     Debug.Assert(parenScope != null);
                     if (parenScope.State != WriterState.NestedResourceInfo && parenScope.State != WriterState.NestedResourceInfoWithContent)
                     {
-                        this.ThrowODataException(Strings.ODataWriterCore_EntityReferenceLinkWithoutNavigationLink, null);
+                        this.ThrowODataException(SRResources.ODataWriterCore_EntityReferenceLinkWithoutNavigationLink, null);
                     }
                 }
             }
@@ -2306,7 +2307,7 @@ namespace Microsoft.OData
                         // the current scope
                         if (!resourceScope.NavigationSource.EntityType.IsAssignableFrom(resourceType))
                         {
-                            throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(resourceType.FullTypeName(), resourceScope.NavigationSource.EntityType));
+                            throw new ODataException(Error.Format(SRResources.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes, resourceType.FullTypeName(), resourceScope.NavigationSource.EntityType));
                         }
 
                         resourceScope.ResourceTypeFromMetadata = resourceScope.NavigationSource.EntityType;
@@ -2336,7 +2337,7 @@ namespace Microsoft.OData
                     (!this.outputContext.WritingResponse  && resource is ODataDeletedResource || this.outputContext.WritingResponse && (!(resource is ODataDeletedResource))) &&
                     !HasKeyProperties(entityType, resource.Properties))
                 {
-                    throw new ODataException(Strings.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);
+                    throw new ODataException(SRResources.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties);
                 }
             }
         }
@@ -2508,7 +2509,7 @@ namespace Microsoft.OData
 
             if (this.currentResourceDepth > this.outputContext.MessageWriterSettings.MessageQuotas.MaxNestingDepth)
             {
-                this.ThrowODataException(Strings.ValidationUtils_MaxDepthOfNestedEntriesExceeded(this.outputContext.MessageWriterSettings.MessageQuotas.MaxNestingDepth), null);
+                this.ThrowODataException(Error.Format(SRResources.ValidationUtils_MaxDepthOfNestedEntriesExceeded, this.outputContext.MessageWriterSettings.MessageQuotas.MaxNestingDepth), null);
             }
         }
 
@@ -2755,7 +2756,7 @@ namespace Microsoft.OData
                                     // Containment cannot be written alone without odata uri.
                                     if (!odataPath.Any())
                                     {
-                                        throw new ODataException(Strings.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
+                                        throw new ODataException(SRResources.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
                                     }
 
                                     ODataPath newPath = null;
@@ -2975,17 +2976,17 @@ namespace Microsoft.OData
                 case WriterState.Start:
                     if (newState != WriterState.ResourceSet && newState != WriterState.Resource && newState != WriterState.DeltaResourceSet && newState != WriterState.DeletedResource)
                     {
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromStart(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromStart, this.State.ToString(), newState.ToString()));
                     }
 
                     if ((newState == WriterState.ResourceSet || newState == WriterState.DeltaResourceSet) && !this.writingResourceSet)
                     {
-                        throw new ODataException(Strings.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter);
+                        throw new ODataException(SRResources.ODataWriterCore_CannotWriteTopLevelResourceSetWithResourceWriter);
                     }
 
                     if (newState == WriterState.Resource && this.writingResourceSet)
                     {
-                        throw new ODataException(Strings.ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter);
+                        throw new ODataException(SRResources.ODataWriterCore_CannotWriteTopLevelResourceWithResourceSetWriter);
                     }
 
                     break;
@@ -2994,23 +2995,23 @@ namespace Microsoft.OData
                     {
                         if (this.CurrentScope.Item == null)
                         {
-                            throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromNullResource(this.State.ToString(), newState.ToString()));
+                            throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromNullResource, this.State.ToString(), newState.ToString()));
                         }
 
                         if (newState != WriterState.NestedResourceInfo && newState != WriterState.Property)
                         {
-                            throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResource(this.State.ToString(), newState.ToString()));
+                            throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromResource, this.State.ToString(), newState.ToString()));
                         }
 
                         // TODO: The conditional expressions in the 2 `if` blocks below are adequately covered by the `if` block above?
                         if (newState == WriterState.DeletedResource && this.ParentScope.State != WriterState.DeltaResourceSet)
                         {
-                            throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
+                            throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromResourceSet, this.State.ToString(), newState.ToString()));
                         }
 
                         if (this.State == WriterState.DeletedResource && this.Version < ODataVersion.V401 && newState == WriterState.NestedResourceInfo)
                         {
-                            throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFrom40DeletedResource(this.State.ToString(), newState.ToString()));
+                            throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFrom40DeletedResource, this.State.ToString(), newState.ToString()));
                         }
                     }
 
@@ -3023,7 +3024,7 @@ namespace Microsoft.OData
                             (this.CurrentScope.ResourceType.TypeKind != EdmTypeKind.Untyped ||
                                 (newState != WriterState.Primitive && newState != WriterState.Stream && newState != WriterState.String && newState != WriterState.ResourceSet))))
                     {
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromResourceSet, this.State.ToString(), newState.ToString()));
                     }
 
                     break;
@@ -3032,21 +3033,21 @@ namespace Microsoft.OData
                         newState != WriterState.DeletedResource &&
                         !(this.ScopeLevel < 3 && (newState == WriterState.DeltaDeletedLink || newState == WriterState.DeltaLink)))
                     {
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromResourceSet(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromResourceSet, this.State.ToString(), newState.ToString()));
                     }
 
                     break;
                 case WriterState.NestedResourceInfo:
                     if (newState != WriterState.NestedResourceInfoWithContent)
                     {
-                        throw new ODataException(Strings.ODataWriterCore_InvalidStateTransition(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidStateTransition, this.State.ToString(), newState.ToString()));
                     }
 
                     break;
                 case WriterState.NestedResourceInfoWithContent:
                     if (newState != WriterState.ResourceSet && newState != WriterState.Resource && newState != WriterState.Primitive && (this.Version < ODataVersion.V401 || (newState != WriterState.DeltaResourceSet && newState != WriterState.DeletedResource)))
                     {
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromExpandedLink(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromExpandedLink, this.State.ToString(), newState.ToString()));
                     }
 
                     break;
@@ -3058,7 +3059,7 @@ namespace Microsoft.OData
                         // we've already written the value for this property
                         ODataPropertyInfo propertyInfo = propertyScope.Item as ODataPropertyInfo;
                         Debug.Assert(propertyInfo != null, "Item in PropertyInfoScope is not ODataPropertyInfo");
-                        throw new ODataException(Strings.ODataWriterCore_PropertyValueAlreadyWritten(propertyInfo.Name));
+                        throw new ODataException(Error.Format(SRResources.ODataWriterCore_PropertyValueAlreadyWritten, propertyInfo.Name));
                     }
 
                     if (newState == WriterState.Stream || newState == WriterState.String || newState == WriterState.Primitive)
@@ -3067,26 +3068,26 @@ namespace Microsoft.OData
                     }
                     else
                     {
-                        throw new ODataException(Strings.ODataWriterCore_InvalidStateTransition(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidStateTransition, this.State.ToString(), newState.ToString()));
                     }
 
                     break;
                 case WriterState.Stream:
                 case WriterState.String:
-                    throw new ODataException(Strings.ODataWriterCore_StreamNotDisposed);
+                    throw new ODataException(SRResources.ODataWriterCore_StreamNotDisposed);
                 case WriterState.Completed:
                     // we should never see a state transition when in state 'Completed'
-                    throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromCompleted(this.State.ToString(), newState.ToString()));
+                    throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromCompleted, this.State.ToString(), newState.ToString()));
                 case WriterState.Error:
                     if (newState != WriterState.Error)
                     {
                         // No more state transitions once we are in error state except for the fatal error
-                        throw new ODataException(Strings.ODataWriterCore_InvalidTransitionFromError(this.State.ToString(), newState.ToString()));
+                        throw new ODataException(Error.Format(SRResources.ODataWriterCore_InvalidTransitionFromError, this.State.ToString(), newState.ToString()));
                     }
 
                     break;
                 default:
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_ValidateTransition_UnreachableCodePath));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataWriterCore_ValidateTransition_UnreachableCodePath));
             }
         }
 
@@ -3181,7 +3182,7 @@ namespace Microsoft.OData
                     scope = new Scope(state, item, navigationSource, itemType, skipWriting, selectedProperties, odataUri, /*enableDelta*/ false);
                     break;
                 default:
-                    string errorMessage = Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_Scope_Create_UnreachableCodePath);
+                    string errorMessage = Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataWriterCore_Scope_Create_UnreachableCodePath);
                     Debug.Assert(false, errorMessage);
                     throw new ODataException(errorMessage);
             }
@@ -3247,7 +3248,7 @@ namespace Microsoft.OData
                             // Check that Count is not set for requests
                             if (!thisParam.outputContext.WritingResponse)
                             {
-                                thisParam.ThrowODataException(Strings.ODataWriterCore_QueryCountInRequest, resourceSetParam);
+                                thisParam.ThrowODataException(SRResources.ODataWriterCore_QueryCountInRequest, resourceSetParam);
                             }
                         }
 
@@ -3291,12 +3292,12 @@ namespace Microsoft.OData
                         // Check that links are not set for requests
                         if (deltaResourceSetParam.NextPageLink != null)
                         {
-                            thisParam.ThrowODataException(Strings.ODataWriterCore_QueryNextLinkInRequest, deltaResourceSetParam);
+                            thisParam.ThrowODataException(SRResources.ODataWriterCore_QueryNextLinkInRequest, deltaResourceSetParam);
                         }
 
                         if (deltaResourceSetParam.DeltaLink != null)
                         {
-                            thisParam.ThrowODataException(Strings.ODataWriterCore_QueryDeltaLinkInRequest, deltaResourceSetParam);
+                            thisParam.ThrowODataException(SRResources.ODataWriterCore_QueryDeltaLinkInRequest, deltaResourceSetParam);
                         }
                     }
 
@@ -3491,7 +3492,7 @@ namespace Microsoft.OData
                         case WriterState.NestedResourceInfo:
                             if (!thisParam.outputContext.WritingResponse)
                             {
-                                throw new ODataException(Strings.ODataWriterCore_DeferredLinkInRequest);
+                                throw new ODataException(SRResources.ODataWriterCore_DeferredLinkInRequest);
                             }
 
                             if (!thisParam.SkipWriting)
@@ -3529,13 +3530,13 @@ namespace Microsoft.OData
                             break;
                         case WriterState.Stream:
                         case WriterState.String:
-                            throw new ODataException(Strings.ODataWriterCore_StreamNotDisposed);
+                            throw new ODataException(SRResources.ODataWriterCore_StreamNotDisposed);
                         case WriterState.Start:                 // fall through
                         case WriterState.Completed:             // fall through
                         case WriterState.Error:                 // fall through
-                            throw new ODataException(Strings.ODataWriterCore_WriteEndCalledInInvalidState(currentScope.State.ToString()));
+                            throw new ODataException(Error.Format(SRResources.ODataWriterCore_WriteEndCalledInInvalidState, currentScope.State.ToString()));
                         default:
-                            throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataWriterCore_WriteEnd_UnreachableCodePath));
+                            throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataWriterCore_WriteEnd_UnreachableCodePath));
                     }
 
                     await thisParam.LeaveScopeAsync()
@@ -3659,7 +3660,7 @@ namespace Microsoft.OData
                     // into the nested resource info content. This is only allowed for collection navigation property in request/response.
                     if (currentNestedResourceInfo.IsCollection != true)
                     {
-                        this.ThrowODataException(Strings.ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent, currentNestedResourceInfo);
+                        this.ThrowODataException(SRResources.ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent, currentNestedResourceInfo);
                     }
 
                     // Note that we don't invoke duplicate property checker in this case as it's not necessary.
@@ -3696,7 +3697,7 @@ namespace Microsoft.OData
                     Debug.Assert(parentScope != null);
                     if (parentScope.State != WriterState.NestedResourceInfo && parentScope.State != WriterState.NestedResourceInfoWithContent)
                     {
-                        this.ThrowODataException(Strings.ODataWriterCore_EntityReferenceLinkWithoutNavigationLink, null);
+                        this.ThrowODataException(SRResources.ODataWriterCore_EntityReferenceLinkWithoutNavigationLink, null);
                     }
                 }
             }

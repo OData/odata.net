@@ -11,6 +11,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Json;
     #endregion Namespaces
 
@@ -115,8 +116,7 @@ namespace Microsoft.OData
             else
             {
                 throw new ODataException(
-                    Strings.DuplicatePropertyNamesNotAllowed(
-                        propertyName));
+                    Error.Format(SRResources.DuplicatePropertyNamesNotAllowed, propertyName));
             }
         }
 
@@ -205,8 +205,7 @@ namespace Microsoft.OData
                 else
                 {
                     throw new ODataException(
-                        Strings.DuplicateAnnotationNotAllowed(
-                            "odata.associationLink"));
+                        Error.Format(SRResources.DuplicateAnnotationNotAllowed, "odata.associationLink"));
                 }
 
                 return data.NestedResourceInfo;
@@ -246,8 +245,7 @@ namespace Microsoft.OData
             catch (ArgumentException)
             {
                 throw new ODataException(
-                    Strings.DuplicateAnnotationNotAllowed(
-                        annotationName));
+                    Error.Format(SRResources.DuplicateAnnotationNotAllowed, annotationName));
             }
         }
 
@@ -323,8 +321,7 @@ namespace Microsoft.OData
                 if (data.Processed)
                 {
                     throw new ODataException(
-                        Strings.PropertyAnnotationAfterTheProperty(
-                            annotationName, propertyName));
+                        Error.Format(SRResources.PropertyAnnotationAfterTheProperty, annotationName, propertyName));
                 }
             }
 
@@ -336,8 +333,8 @@ namespace Microsoft.OData
             {
                 throw new ODataException(
                     ODataJsonReaderUtils.IsAnnotationProperty(propertyName)
-                    ? Strings.DuplicateAnnotationForInstanceAnnotationNotAllowed(annotationName, propertyName)
-                    : Strings.DuplicateAnnotationForPropertyNotAllowed(annotationName, propertyName));
+                    ? Error.Format(SRResources.DuplicateAnnotationForInstanceAnnotationNotAllowed, annotationName, propertyName)
+                    : Error.Format(SRResources.DuplicateAnnotationForPropertyNotAllowed, annotationName, propertyName));
             }
         }
 
@@ -368,8 +365,7 @@ namespace Microsoft.OData
                 if (data.Processed)
                 {
                     throw new ODataException(
-                        Strings.PropertyAnnotationAfterTheProperty(
-                            annotationName, propertyName));
+                        Error.Format(SRResources.PropertyAnnotationAfterTheProperty, annotationName, propertyName));
                 }
             }
 
@@ -466,8 +462,8 @@ namespace Microsoft.OData
                 throw new ODataException(
                     ODataJsonReaderUtils.IsAnnotationProperty(propertyName)
                     && !ODataJsonUtils.IsMetadataReferenceProperty(propertyName)
-                    ? Strings.DuplicateAnnotationNotAllowed(propertyName)
-                    : Strings.DuplicatePropertyNamesNotAllowed(propertyName));
+                    ? Error.Format(SRResources.DuplicateAnnotationNotAllowed, propertyName)
+                    : Error.Format(SRResources.DuplicatePropertyNamesNotAllowed, propertyName));
             }
 
             data.Processed = true;
@@ -488,8 +484,7 @@ namespace Microsoft.OData
                 && data.Processed)
             {
                 throw new ODataException(
-                    Strings.PropertyAnnotationAfterTheProperty(
-                        annotationName, propertyName));
+                    Error.Format(SRResources.PropertyAnnotationAfterTheProperty, annotationName, propertyName));
             }
         }
 
@@ -509,8 +504,7 @@ namespace Microsoft.OData
             else if (propertyData.State != PropertyState.AnnotationSeen)
             {
                 throw new ODataException(
-                    Strings.DuplicatePropertyNamesNotAllowed(
-                        propertyName));
+                    Error.Format(SRResources.DuplicatePropertyNamesNotAllowed, propertyName));
             }
         }
 

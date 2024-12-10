@@ -10,7 +10,7 @@ using System.Linq;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
                 FunctionCallBinder.GetUriFunctionSignatures("day")); // to match the error message... blah
-            bindWithEmptyArguments.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
+            bindWithEmptyArguments.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     "day",
                     UriFunctionsHelper.BuildFunctionSignatureListDescription("day", signatures)));
         }
@@ -93,7 +93,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
                 FunctionCallBinder.GetUriFunctionSignatures("day")); // to match the error message... blah
-            bindWithEmptyArguments.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
+            bindWithEmptyArguments.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     "day",
                     UriFunctionsHelper.BuildFunctionSignatureListDescription("day", signatures)));
         }
@@ -106,7 +106,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var arguments = new List<QueryToken>() { new LiteralToken("ignored"), new LiteralToken("ignored") };
             var token = new FunctionCallToken("day", arguments);
             Action bindWithTooManyNonTypedArgs = () => functionCallBinder.BindFunctionCall(token);
-            bindWithTooManyNonTypedArgs.Throws<ODataException>(ODataErrorStrings.FunctionCallBinder_CannotFindASuitableOverload("day", "2"));
+            bindWithTooManyNonTypedArgs.Throws<ODataException>(Error.Format(SRResources.FunctionCallBinder_CannotFindASuitableOverload, "day", "2"));
         }
 
         //TypePromoteArguments tests
@@ -218,7 +218,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                             new ConstantNode("Hello"),
                                         };
             Action a = () => FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            a.Throws<ODataException>(Strings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.String"));
+            a.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Int32", "Edm.String"));
         }
 
         [Fact]
@@ -231,7 +231,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                             new ConstantNode("Hello")
                                         };
             Action a = () => FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            a.Throws<ODataException>(Strings.MetadataBinder_CannotConvertToType("Edm.String", "Edm.Int32"));
+            a.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.String", "Edm.Int32"));
         }
 
 
@@ -245,7 +245,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                                             new ConstantNode("Hello")
                                         };
             Action a = () => FunctionCallBinder.TypePromoteArguments(signature, nodes);
-            a.Throws<ODataException>(Strings.MetadataBinder_CannotConvertToType("Edm.String", "Edm.Int32"));
+            a.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.String", "Edm.Int32"));
         }
 
         [Fact]
@@ -290,7 +290,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 };
 
             Action bind = () => FunctionCallBinder.ValidateArgumentsAreSingleValue("year", argumentNodes);
-            bind.Throws<ODataException>(Strings.MetadataBinder_FunctionArgumentNotSingleValue("year"));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_FunctionArgumentNotSingleValue, "year"));
         }
 
         [Fact]
@@ -319,7 +319,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[1].GetEdmTypeReference()))},
                 nameSignatures);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_NoApplicableFunctionFound(
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     "IndexOf",
                     UriFunctionsHelper.BuildFunctionSignatureListDescription("IndexOf", nameSignatures.Select(nameSig => nameSig.Value))));
         }
@@ -358,7 +358,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[0].GetEdmTypeReference()))},
                 new List<KeyValuePair<string, FunctionSignatureWithReturnType>>());
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_NoApplicableFunctionFound(
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     "year",
                     UriFunctionsHelper.BuildFunctionSignatureListDescription("year", new FunctionSignatureWithReturnType[0])));
         }
@@ -378,7 +378,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                      new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", argumentNodes[0].GetEdmTypeReference()))},
                 this.GetHardCodedYearFunctionSignatureForTest());
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_NoApplicableFunctionFound(
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     "year",
                     UriFunctionsHelper.BuildFunctionSignatureListDescription(
                         "year",
@@ -445,7 +445,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             Action createWithMoreThanTwoArgs = () => this.functionCallBinder.BindFunctionCall(functionWithMoreThanTwoArgs);
 
-            createWithMoreThanTwoArgs.Throws<ODataErrorException>(ODataErrorStrings.MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands(3));
+            createWithMoreThanTwoArgs.Throws<ODataErrorException>(Error.Format(SRResources.MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands, 3));
         }
 
         [Fact]
@@ -457,7 +457,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             };
             FunctionCallToken function = new FunctionCallToken("cast", args);
             Action createWithoutATypeArg = () => this.functionCallBinder.BindFunctionCall(function);
-            createWithoutATypeArg.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
+            createWithoutATypeArg.Throws<ODataException>(SRResources.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
         }
 
         [Fact]
@@ -469,7 +469,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             };
 
             Action bind = () => this.functionCallBinder.BindFunctionCall(new FunctionCallToken("cast", args));
-            bind.Throws<ODataException>(Strings.MetadataBinder_CastOrIsOfCollectionsNotSupported);
+            bind.Throws<ODataException>(SRResources.MetadataBinder_CastOrIsOfCollectionsNotSupported);
         }
 
         [Fact]
@@ -482,7 +482,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             };
 
             Action bind = () => this.functionCallBinder.BindFunctionCall(new FunctionCallToken("cast", args));
-            bind.Throws<ODataException>(Strings.MetadataBinder_CastOrIsOfCollectionsNotSupported);
+            bind.Throws<ODataException>(SRResources.MetadataBinder_CastOrIsOfCollectionsNotSupported);
         }
 
         [Fact]
@@ -494,7 +494,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             };
 
             Action bind = () => this.functionCallBinder.BindFunctionCall(new FunctionCallToken("isof", args));
-            bind.Throws<ODataException>(Strings.MetadataBinder_CastOrIsOfCollectionsNotSupported);
+            bind.Throws<ODataException>(SRResources.MetadataBinder_CastOrIsOfCollectionsNotSupported);
         }
 
         [Fact]
@@ -507,7 +507,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             };
 
             Action bind = () => this.functionCallBinder.BindFunctionCall(new FunctionCallToken("isof", args));
-            bind.Throws<ODataException>(Strings.MetadataBinder_CastOrIsOfCollectionsNotSupported);
+            bind.Throws<ODataException>(SRResources.MetadataBinder_CastOrIsOfCollectionsNotSupported);
         }
 
         [Fact]
@@ -520,7 +520,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             };
             FunctionCallToken function = new FunctionCallToken("cast", args);
             Action createWithOutOfOrderArgs = () => this.functionCallBinder.BindFunctionCall(function);
-            createWithOutOfOrderArgs.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
+            createWithOutOfOrderArgs.Throws<ODataException>(SRResources.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
         }
 
         [Fact]
@@ -582,7 +582,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             Action createWithMoreThanTwoArgs = () => this.functionCallBinder.BindFunctionCall(functionWithMoreThanTwoArgs);
 
-            createWithMoreThanTwoArgs.Throws<ODataErrorException>(ODataErrorStrings.MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands(3));
+            createWithMoreThanTwoArgs.Throws<ODataErrorException>(Error.Format(SRResources.MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands, 3));
         }
 
         [Fact]
@@ -594,7 +594,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             };
             FunctionCallToken function = new FunctionCallToken("cast", args);
             Action createWithoutATypeArg = () => this.functionCallBinder.BindFunctionCall(function);
-            createWithoutATypeArg.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
+            createWithoutATypeArg.Throws<ODataException>(SRResources.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
         }
 
         [Fact]
@@ -607,7 +607,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             };
             FunctionCallToken function = new FunctionCallToken("isof", args);
             Action createWithOutOfOrderArgs = () => this.functionCallBinder.BindFunctionCall(function);
-            createWithOutOfOrderArgs.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
+            createWithOutOfOrderArgs.Throws<ODataException>(SRResources.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
         }
 
         [Fact]
@@ -624,7 +624,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
                 FunctionCallBinder.GetUriFunctionSignatures(function.Name));
-            createWithMoreThanOneArg.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
+            createWithMoreThanOneArg.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     function.Name,
                     UriFunctionsHelper.BuildFunctionSignatureListDescription(function.Name, signatures)));
         }
@@ -639,7 +639,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             FunctionCallToken function = new FunctionCallToken("geo.length", args);
             Action createWithNonSingleValueNode = () => this.functionCallBinder.BindFunctionCall(function);
-            createWithNonSingleValueNode.Throws<ODataException>(ODataErrorStrings.MetadataBinder_UnsupportedQueryTokenKind("CustomQueryOption"));
+            createWithNonSingleValueNode.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_UnsupportedQueryTokenKind, "CustomQueryOption"));
         }
 
         [Fact]
@@ -654,7 +654,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             FunctionCallToken function = new FunctionCallToken("geo.length", args);
             Action createWithNonLineStringType = () => this.functionCallBinder.BindFunctionCall(function);
 
-            createWithNonLineStringType.Throws<ODataException>(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "GeometryLinePolygon"));
+            createWithNonLineStringType.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "Fully.Qualified.Namespace.Person", "GeometryLinePolygon"));
         }
 
         [Fact]
@@ -696,13 +696,13 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             FunctionSignatureWithReturnType[] signatures;
             BuiltInUriFunctions.TryGetBuiltInFunction(functionWithOneArg.Name, out signatures);
 
-            createWithOneArg.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
+            createWithOneArg.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     functionWithOneArg.Name,
                     UriFunctionsHelper.BuildFunctionSignatureListDescription(functionWithOneArg.Name, signatures)));
 
             BuiltInUriFunctions.TryGetBuiltInFunction(functionWithMoreThanTwoArgs.Name, out signatures);
 
-            createWithMoreThanTwoArgs.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
+            createWithMoreThanTwoArgs.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     functionWithMoreThanTwoArgs.Name,
                     UriFunctionsHelper.BuildFunctionSignatureListDescription(functionWithMoreThanTwoArgs.Name, signatures)));
         }
@@ -811,31 +811,31 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             FunctionSignatureWithReturnType[] signatures;
             BuiltInUriFunctions.TryGetBuiltInFunction(geometryPointNonGeometryPolyToken.Name, out signatures);
 
-            createWithGeometryPointNonGeometryPoly.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
+            createWithGeometryPointNonGeometryPoly.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     geometryPointNonGeometryPolyToken.Name,
                     UriFunctionsHelper.BuildFunctionSignatureListDescription(geometryPointNonGeometryPolyToken.Name, signatures)));
 
             BuiltInUriFunctions.TryGetBuiltInFunction(geometryPolyNonGeometryPointToken.Name, out signatures);
 
-            createWithGeometryPolyNonGeometryPoint.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
+            createWithGeometryPolyNonGeometryPoint.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     geometryPolyNonGeometryPointToken.Name,
                     UriFunctionsHelper.BuildFunctionSignatureListDescription(geometryPolyNonGeometryPointToken.Name, signatures)));
 
             BuiltInUriFunctions.TryGetBuiltInFunction(geographyPointNonGeographyPolyToken.Name, out signatures);
 
-            createWithGeographyPointNonGeographyPoly.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
+            createWithGeographyPointNonGeographyPoly.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     geographyPointNonGeographyPolyToken.Name,
                     UriFunctionsHelper.BuildFunctionSignatureListDescription(geographyPointNonGeographyPolyToken.Name, signatures)));
 
             BuiltInUriFunctions.TryGetBuiltInFunction(geographyPolyNonGeographyPointToken.Name, out signatures);
 
-            createWithGeographyPolyNonGeographyPoint.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
+            createWithGeographyPolyNonGeographyPoint.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     geographyPolyNonGeographyPointToken.Name,
                     UriFunctionsHelper.BuildFunctionSignatureListDescription(geographyPolyNonGeographyPointToken.Name, signatures)));
 
             BuiltInUriFunctions.TryGetBuiltInFunction(garbageToken.Name, out signatures);
 
-            createWithGarbage.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
+            createWithGarbage.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     garbageToken.Name,
                     UriFunctionsHelper.BuildFunctionSignatureListDescription(garbageToken.Name, signatures)));
         }
@@ -1234,7 +1234,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             Action bind = () => FunctionCallBinder.GetUriFunctionSignatures("rarg");
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_UnknownFunction("rarg"));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_UnknownFunction, "rarg"));
         }
 
         [Fact]
@@ -1242,7 +1242,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             FunctionCallToken functionCallToken = new FunctionCallToken("substring", null, new EndPathToken("Name", null));
             Action bindWithNonNullParent = () => this.functionCallBinder.BindFunctionCall(functionCallToken);
-            bindWithNonNullParent.Throws<ODataException>(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent("substring"));
+            bindWithNonNullParent.Throws<ODataException>(Error.Format(SRResources.FunctionCallBinder_UriFunctionMustHaveHaveNullParent, "substring"));
         }
 
         [Fact]
@@ -1253,7 +1253,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 null,
                 new EndPathToken("Color", new InnerPathToken("MyDog", null, null)));
             Action bindWithNonEntityBindingType = () => this.functionCallBinder.BindFunctionCall(functionCallToken);
-            bindWithNonEntityBindingType.Throws<ODataException>(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent("ChangeOwner"));
+            bindWithNonEntityBindingType.Throws<ODataException>(Error.Format(SRResources.FunctionCallBinder_UriFunctionMustHaveHaveNullParent, "ChangeOwner"));
         }
 
         [Fact]
@@ -1274,7 +1274,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 },
                 new EndPathToken("OpenProperty", new InnerPathToken("MyFavoritePainting", null, null)));
             Action bindOpenFunction = () => this.functionCallBinder.BindFunctionCall(functionCall);
-            bindOpenFunction.Throws<ODataException>(ODataErrorStrings.FunctionCallBinder_CallingFunctionOnOpenProperty("Fully.Qualified.Namespace.FindMyOwner"));
+            bindOpenFunction.Throws<ODataException>(Error.Format(SRResources.FunctionCallBinder_CallingFunctionOnOpenProperty, "Fully.Qualified.Namespace.FindMyOwner"));
         }
 
         [Fact]

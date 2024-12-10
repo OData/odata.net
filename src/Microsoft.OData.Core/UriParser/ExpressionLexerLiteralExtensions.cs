@@ -11,7 +11,7 @@ namespace Microsoft.OData.UriParser
     using System;
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -66,7 +66,7 @@ namespace Microsoft.OData.UriParser
                 return TryParseLiteral(expressionLexer);
             }
 
-            throw new ODataException(ODataErrorStrings.ExpressionLexer_ExpectedLiteralToken(expressionLexer.CurrentToken.Text.ToString()));
+            throw new ODataException(Error.Format(SRResources.ExpressionLexer_ExpectedLiteralToken, expressionLexer.CurrentToken.Text.ToString()));
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Microsoft.OData.UriParser
 
                 if (typeParsingException == null)
                 {
-                    message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteral(
+                    message = Error.Format(SRResources.UriQueryExpressionParser_UnrecognizedLiteral,
                         targetTypeReference.FullName(),
                         tokenText,
                         expressionLexer.CurrentToken.Position,
@@ -110,7 +110,7 @@ namespace Microsoft.OData.UriParser
                 }
                 else
                 {
-                    message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteralWithReason(
+                    message = Error.Format(SRResources.UriQueryExpressionParser_UnrecognizedLiteralWithReason,
                         targetTypeReference.FullName(),
                         tokenText,
                         expressionLexer.CurrentToken.Position,

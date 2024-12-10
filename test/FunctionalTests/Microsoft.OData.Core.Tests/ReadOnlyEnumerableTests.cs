@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests
 {
@@ -65,14 +65,14 @@ namespace Microsoft.OData.Tests
         {
             IEnumerable<int> enumerable = null;
             Action test = () => enumerable.ToReadOnlyEnumerable("Integers");
-            test.Throws<ODataException>(ErrorStrings.ReaderUtils_EnumerableModified("Integers"));
+            test.Throws<ODataException>(Error.Format(SRResources.ReaderUtils_EnumerableModified, "Integers"));
         }
 
         [Fact]
         public void ToReadOnlyEnumerableShouldThrowForListSource()
         {
             Action test = () => (new List<int>()).ToReadOnlyEnumerable("Integers");
-            test.Throws<ODataException>(ErrorStrings.ReaderUtils_EnumerableModified("Integers"));
+            test.Throws<ODataException>(Error.Format(SRResources.ReaderUtils_EnumerableModified, "Integers"));
         }
 
         [Fact]
@@ -87,14 +87,14 @@ namespace Microsoft.OData.Tests
         {
             IEnumerable<int> enumerable = null;
             Action test = () => enumerable.GetOrCreateReadOnlyEnumerable("Integers");
-            test.Throws<ODataException>(ErrorStrings.ReaderUtils_EnumerableModified("Integers"));
+            test.Throws<ODataException>(Error.Format(SRResources.ReaderUtils_EnumerableModified, "Integers"));
         }
 
         [Fact]
         public void GetOrCreateReadOnlyEnumerableShouldThrowForListSource()
         {
             Action test = () => (new List<int>()).GetOrCreateReadOnlyEnumerable("Integers");
-            test.Throws<ODataException>(ErrorStrings.ReaderUtils_EnumerableModified("Integers"));
+            test.Throws<ODataException>(Error.Format(SRResources.ReaderUtils_EnumerableModified, "Integers"));
         }
 
         [Fact]
@@ -120,14 +120,14 @@ namespace Microsoft.OData.Tests
         {
             IEnumerable<ODataProperty> enumerable = null;
             Action test = () => enumerable.ConcatToReadOnlyEnumerable("Properties", new ODataProperty());
-            test.Throws<ODataException>(ErrorStrings.ReaderUtils_EnumerableModified("Properties"));
+            test.Throws<ODataException>(Error.Format(SRResources.ReaderUtils_EnumerableModified, "Properties"));
         }
 
         [Fact]
         public void ConcatToReadOnlyEnumerableShouldThrowForListSource()
         {
             Action test = () => new List<ODataProperty>().ConcatToReadOnlyEnumerable("Properties", new ODataProperty());
-            test.Throws<ODataException>(ErrorStrings.ReaderUtils_EnumerableModified("Properties"));
+            test.Throws<ODataException>(Error.Format(SRResources.ReaderUtils_EnumerableModified, "Properties"));
         }
 
         [Fact]

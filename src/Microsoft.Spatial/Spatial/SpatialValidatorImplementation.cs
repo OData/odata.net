@@ -338,7 +338,7 @@ namespace Microsoft.Spatial
                 }
                 else if (this.validationCoordinateSystem != coordinateSystem)
                 {
-                    throw new FormatException(Strings.Validator_SridMismatch);
+                    throw new FormatException(SRResources.Validator_SridMismatch);
                 }
 
                 return coordinateSystem;
@@ -353,7 +353,7 @@ namespace Microsoft.Spatial
             {
                 if (this.depth > 0 && !this.processingGeography)
                 {
-                    throw new FormatException(Strings.Validator_UnexpectedGeometry);
+                    throw new FormatException(SRResources.Validator_UnexpectedGeometry);
                 }
 
                 this.processingGeography = true;
@@ -370,7 +370,7 @@ namespace Microsoft.Spatial
                 Execute(PipelineCall.End);
                 if (!this.processingGeography)
                 {
-                    throw new FormatException(Strings.Validator_UnexpectedGeometry);
+                    throw new FormatException(SRResources.Validator_UnexpectedGeometry);
                 }
 
                 this.depth -= 1;
@@ -385,7 +385,7 @@ namespace Microsoft.Spatial
             {
                 if (this.depth > 0 && this.processingGeography)
                 {
-                    throw new FormatException(Strings.Validator_UnexpectedGeography);
+                    throw new FormatException(SRResources.Validator_UnexpectedGeography);
                 }
 
                 this.processingGeography = false;
@@ -401,7 +401,7 @@ namespace Microsoft.Spatial
                 Execute(PipelineCall.End);
                 if (this.processingGeography)
                 {
-                    throw new FormatException(Strings.Validator_UnexpectedGeography);
+                    throw new FormatException(SRResources.Validator_UnexpectedGeography);
                 }
 
                 this.depth -= 1;
@@ -461,7 +461,7 @@ namespace Microsoft.Spatial
 
                 if (!this.processingGeography)
                 {
-                    throw new FormatException(Strings.Validator_UnexpectedGeometry);
+                    throw new FormatException(SRResources.Validator_UnexpectedGeometry);
                 }
 
                 return position;
@@ -483,7 +483,7 @@ namespace Microsoft.Spatial
 
                 if (this.processingGeography)
                 {
-                    throw new FormatException(Strings.Validator_UnexpectedGeography);
+                    throw new FormatException(SRResources.Validator_UnexpectedGeography);
                 }
 
                 return position;
@@ -525,7 +525,7 @@ namespace Microsoft.Spatial
             {
                 if (!IsPointValid(first, second, z, m))
                 {
-                    throw new FormatException(Strings.Validator_InvalidPointCoordinate(first, second, z, m));
+                    throw new FormatException(Error.Format(SRResources.Validator_InvalidPointCoordinate, first, second, z, m));
                 }
             }
 
@@ -541,12 +541,12 @@ namespace Microsoft.Spatial
                 ValidateOnePosition(latitude, longitude, z, m);
                 if (!IsLatitudeValid(latitude))
                 {
-                    throw new FormatException(Strings.Validator_InvalidLatitudeCoordinate(latitude));
+                    throw new FormatException(Error.Format(SRResources.Validator_InvalidLatitudeCoordinate, latitude));
                 }
 
                 if (!IsLongitudeValid(longitude))
                 {
-                    throw new FormatException(Strings.Validator_InvalidLongitudeCoordinate(longitude));
+                    throw new FormatException(Error.Format(SRResources.Validator_InvalidLongitudeCoordinate, longitude));
                 }
             }
 
@@ -600,7 +600,7 @@ namespace Microsoft.Spatial
                 if (numOfPoints < 4 || initialFirstCoordinate != mostRecentFirstCoordinate ||
                     !AreLongitudesEqual(initialSecondCoordinate, mostRecentSecondCoordinate))
                 {
-                    throw new FormatException(Strings.Validator_InvalidPolygonPoints);
+                    throw new FormatException(SRResources.Validator_InvalidPolygonPoints);
                 }
             }
 
@@ -622,7 +622,7 @@ namespace Microsoft.Spatial
                 if (numOfPoints < 4 || initialFirstCoordinate != mostRecentFirstCoordinate ||
                     initialSecondCoordinate != mostRecentSecondCoordinate)
                 {
-                    throw new FormatException(Strings.Validator_InvalidPolygonPoints);
+                    throw new FormatException(SRResources.Validator_InvalidPolygonPoints);
                 }
             }
 
@@ -687,7 +687,7 @@ namespace Microsoft.Spatial
                     case SpatialType.FullGlobe:
                         if (!this.processingGeography)
                         {
-                            throw new FormatException(Strings.Validator_InvalidType(type));
+                            throw new FormatException(Error.Format(SRResources.Validator_InvalidType, type));
                         }
 
                         Execute(PipelineCall.BeginFullGlobe);
@@ -706,7 +706,7 @@ namespace Microsoft.Spatial
                     break;
 #endif
                     default:
-                        throw new FormatException(Strings.Validator_InvalidType(type));
+                        throw new FormatException(Error.Format(SRResources.Validator_InvalidType, type));
                 }
             }
 
@@ -779,7 +779,7 @@ namespace Microsoft.Spatial
             {
                 if (this.stack.Count > MaxGeometryCollectionDepth)
                 {
-                    throw new FormatException(Strings.Validator_NestingOverflow(MaxGeometryCollectionDepth));
+                    throw new FormatException(Error.Format(SRResources.Validator_NestingOverflow, MaxGeometryCollectionDepth));
                 }
 
                 this.stack.Push(state);
@@ -828,7 +828,7 @@ namespace Microsoft.Spatial
                 /// <param name="actual">The actual state</param>
                 protected static void ThrowExpected(PipelineCall transition, PipelineCall actual)
                 {
-                    throw new FormatException(Strings.Validator_UnexpectedCall(transition, actual));
+                    throw new FormatException(Error.Format(SRResources.Validator_UnexpectedCall, transition, actual));
                 }
 
                 /// <summary>
@@ -842,7 +842,7 @@ namespace Microsoft.Spatial
                     PipelineCall transition2,
                     PipelineCall actual)
                 {
-                    throw new FormatException(Strings.Validator_UnexpectedCall2(transition1, transition2, actual));
+                    throw new FormatException(Error.Format(SRResources.Validator_UnexpectedCall2, transition1, transition2, actual));
                 }
 
                 /// <summary>
@@ -858,7 +858,7 @@ namespace Microsoft.Spatial
                     PipelineCall transition3,
                     PipelineCall actual)
                 {
-                    throw new FormatException(Strings.Validator_UnexpectedCall2(transition1 + ", " + transition2, transition3, actual));
+                    throw new FormatException(Error.Format(SRResources.Validator_UnexpectedCall2, transition1 + ", " + transition2, transition3, actual));
                 }
             }
 
@@ -930,7 +930,7 @@ namespace Microsoft.Spatial
                         case PipelineCall.BeginFullGlobe:
                             if (validator.depth != 1)
                             {
-                                throw new FormatException(Strings.Validator_FullGlobeInCollection);
+                                throw new FormatException(SRResources.Validator_FullGlobeInCollection);
                             }
 
                             validator.Jump(FullGlobe);
@@ -1094,7 +1094,7 @@ namespace Microsoft.Spatial
                         case PipelineCall.EndFigure:
                             if (validator.pointCount < 2)
                             {
-                                throw new FormatException(Strings.Validator_LineStringNeedsTwoPoints);
+                                throw new FormatException(SRResources.Validator_LineStringNeedsTwoPoints);
                             }
 
                             validator.Jump(LineStringEnd);
@@ -1340,7 +1340,7 @@ namespace Microsoft.Spatial
                             validator.Return();
                             return;
                         case PipelineCall.BeginFullGlobe:
-                            throw new FormatException(Strings.Validator_FullGlobeInCollection);
+                            throw new FormatException(SRResources.Validator_FullGlobeInCollection);
 #if CURVE_SUPPORT
                 case Transition.Begin_CircularString:
                     Call(CircularString);
@@ -1380,7 +1380,7 @@ namespace Microsoft.Spatial
                             validator.Return();
                             return;
                         default:
-                            throw new FormatException(Strings.Validator_FullGlobeCannotHaveElements);
+                            throw new FormatException(SRResources.Validator_FullGlobeCannotHaveElements);
                     }
                 }
             }

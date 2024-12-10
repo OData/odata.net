@@ -218,7 +218,7 @@ namespace Microsoft.OData.Client
                 else if (nex.Arguments.Count > 0 && nex.Constructor.GetParameters().Length > 0)
                 {
                     // Constructor initialization in key selector not supported
-                    throw new NotSupportedException(Strings.ALinq_InvalidGroupByKeySelector(nex));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_InvalidGroupByKeySelector, nex));
                 }
 
                 return base.VisitNew(nex);

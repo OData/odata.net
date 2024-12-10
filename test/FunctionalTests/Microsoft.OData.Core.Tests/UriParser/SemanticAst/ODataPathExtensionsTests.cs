@@ -6,12 +6,12 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
 using Xunit;
 using Helpers = Microsoft.OData.Tests.UriParser.ModelBuildingHelpers;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             );
 
             Action expandPathAction = () => path.ToExpandPath();
-            expandPathAction.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment);
+            expandPathAction.Throws<ODataException>(SRResources.ODataExpandPath_LastSegmentMustBeNavigationPropertyOrTypeSegment);
         }
 
         [Fact]

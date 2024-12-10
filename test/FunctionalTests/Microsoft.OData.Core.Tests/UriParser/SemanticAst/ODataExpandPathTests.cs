@@ -6,9 +6,9 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -21,14 +21,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void ExpandPathShouldNotAllowCountSegment()
         {
             Action createWithCountSegment = () => new ODataExpandPath(CountSegment.Instance, this.navigationSegment);
-            createWithCountSegment.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_InvalidExpandPathSegment("CountSegment"));
+            createWithCountSegment.Throws<ODataException>(Error.Format(SRResources.ODataExpandPath_InvalidExpandPathSegment, "CountSegment"));
         }
 
         [Fact]
         public void ExpandPathShouldNotAllowValueSegment()
         {
             Action createWithValueSegment = () => new ODataExpandPath(new ValueSegment(HardCodedTestModel.GetPersonType()), this.navigationSegment);
-            createWithValueSegment.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_InvalidExpandPathSegment("ValueSegment"));
+            createWithValueSegment.Throws<ODataException>(Error.Format(SRResources.ODataExpandPath_InvalidExpandPathSegment, "ValueSegment"));
         }
 
         // This test is not relevant since we are now supporting type segments as the last segment in $expand
@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void ExpandPathShouldNotAllowMultipleNavigations()
         {
             Action createWithTypeSegmentLast = () => new ODataExpandPath(this.navigationSegment, this.navigationSegment);
-            createWithTypeSegmentLast.Throws<ODataException>(ODataErrorStrings.ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty);
+            createWithTypeSegmentLast.Throws<ODataException>(SRResources.ODataExpandPath_OnlyLastSegmentCanBeNavigationProperty);
         }
 
         [Fact]

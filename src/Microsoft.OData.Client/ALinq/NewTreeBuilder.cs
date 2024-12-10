@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client
         /// <returns>Always throws, since a SystemToken is illegal in a select or expand path.</returns>
         public PathSegmentToken Visit(SystemToken tokenIn)
         {
-            throw new NotSupportedException(Strings.ALinq_IllegalSystemQueryOption(tokenIn.Identifier));
+            throw new NotSupportedException(Error.Format(SRResources.ALinq_IllegalSystemQueryOption, tokenIn.Identifier));
         }
 
         /// <summary>

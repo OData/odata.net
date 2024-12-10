@@ -353,7 +353,7 @@ namespace Microsoft.OData.Client
 
                 if (hasProperties == false && (type == typeof(System.Object) || type.IsGenericType()))
                 {
-                    throw Client.Error.InvalidOperation(Client.Strings.ClientType_NoSettableFields(type.ToString()));
+                    throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientType_NoSettableFields, type.ToString()));
                 }
             }
         }
@@ -371,13 +371,13 @@ namespace Microsoft.OData.Client
                 IEdmProperty dataProperty = edmStructuredType.Properties().SingleOrDefault(p => p.Name == attribute.DataPropertyName);
                 if (dataProperty == null)
                 {
-                    throw Client.Error.InvalidOperation(Client.Strings.ClientType_MissingMimeTypeDataProperty(this.GetClientTypeAnnotation(edmStructuredType).ElementTypeName, attribute.DataPropertyName));
+                    throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientType_MissingMimeTypeDataProperty, this.GetClientTypeAnnotation(edmStructuredType).ElementTypeName, attribute.DataPropertyName));
                 }
 
                 IEdmProperty mimeTypeProperty = edmStructuredType.Properties().SingleOrDefault(p => p.Name == attribute.MimeTypePropertyName);
                 if (mimeTypeProperty == null)
                 {
-                    throw Client.Error.InvalidOperation(Client.Strings.ClientType_MissingMimeTypeProperty(this.GetClientTypeAnnotation(edmStructuredType).ElementTypeName, attribute.MimeTypePropertyName));
+                    throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientType_MissingMimeTypeProperty, this.GetClientTypeAnnotation(edmStructuredType).ElementTypeName, attribute.MimeTypePropertyName));
                 }
 
                 this.GetClientPropertyAnnotation(dataProperty).MimeTypeProperty = this.GetClientPropertyAnnotation(mimeTypeProperty);
@@ -438,7 +438,7 @@ namespace Microsoft.OData.Client
                     // 2. will also throw during SaveChanges(), validated by unit test case 'SerializationOfCollection'in CollectionTests.cs.
                     if ((itemType.TypeKind == EdmTypeKind.Collection))
                     {
-                        throw new ODataException(Strings.ClientType_CollectionOfCollectionNotSupported);
+                        throw new ODataException(SRResources.ClientType_CollectionOfCollectionNotSupported);
                     }
 
                     cachedEdmType = new EdmTypeCacheValue(new EdmCollectionType(itemType.ToEdmTypeReference(ClientTypeUtil.CanAssignNull(elementType))), hasProperties);
@@ -602,7 +602,7 @@ namespace Microsoft.OData.Client
                 {
                     if (declaringType as IEdmEntityType == null && declaringType as IEdmComplexType == null)
                     {
-                        throw Client.Error.InvalidOperation(Client.Strings.ClientTypeCache_NonEntityTypeCannotContainEntityProperties(propertyInfo.Name, propertyInfo.DeclaringType.ToString()));
+                        throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientTypeCache_NonEntityTypeCannotContainEntityProperties, propertyInfo.Name, propertyInfo.DeclaringType.ToString()));
                     }
 
                     // Create a navigation property representing one side of an association.
@@ -653,7 +653,7 @@ namespace Microsoft.OData.Client
                         qualifiedName = type.AssemblyQualifiedName;
                         if (this.typeNameToClientTypeAnnotationCache.TryGetValue(qualifiedName, out clientTypeAnnotation) && clientTypeAnnotation.ElementType != type)
                         {
-                            throw Client.Error.InvalidOperation(Strings.ClientType_MultipleTypesWithSameName(qualifiedName));
+                            throw Client.Error.InvalidOperation(Error.Format(SRResources.ClientType_MultipleTypesWithSameName, qualifiedName));
                         }
                     }
 

@@ -8,10 +8,10 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -230,7 +230,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonCollectionDeserializer_InvalidCollectionTypeName("Edm.String"),
+                Error.Format(SRResources.ODataJsonCollectionDeserializer_InvalidCollectionTypeName, "Edm.String"),
                 exception.Message);
         }
 
@@ -262,7 +262,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.deltaLink"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, "odata.deltaLink"),
                 exception.Message);
         }
 
@@ -293,7 +293,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyName("UnexpectedProp", "value"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyName, "UnexpectedProp", "value"),
                 exception.Message);
         }
 
@@ -323,7 +323,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonCollectionDeserializer_ExpectedCollectionPropertyNotFound("value"),
+                Error.Format(SRResources.ODataJsonCollectionDeserializer_ExpectedCollectionPropertyNotFound, "value"),
                 exception.Message);
         }
 
@@ -354,7 +354,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonCollectionDeserializer_CannotReadCollectionContentStart("PrimitiveValue"),
+                Error.Format(SRResources.ODataJsonCollectionDeserializer_CannotReadCollectionContentStart, "PrimitiveValue"),
                 exception.Message);
         }
 
@@ -385,7 +385,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty("value"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty, "value"),
                 exception.Message);
         }
 
@@ -417,7 +417,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.Func"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, "#NS.Func"),
                 exception.Message);
         }
 
@@ -463,7 +463,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                ODataErrorStrings.ODataJsonCollectionDeserializer_CannotReadCollectionEnd(propertyName),
+                Error.Format(SRResources.ODataJsonCollectionDeserializer_CannotReadCollectionEnd, propertyName),
                 exception.Message);
         }
 

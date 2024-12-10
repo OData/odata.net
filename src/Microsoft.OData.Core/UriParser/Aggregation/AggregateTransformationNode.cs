@@ -6,10 +6,7 @@
 
 namespace Microsoft.OData.UriParser.Aggregation
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
     /// Node representing a aggregate transformation.

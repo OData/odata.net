@@ -9,7 +9,7 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Class to handle the binding of orderby tokens.
@@ -75,7 +75,7 @@ namespace Microsoft.OData.UriParser
                 !expressionResultNode.TypeReference.IsODataEnumTypeKind() &&
                 !expressionResultNode.TypeReference.IsODataTypeDefinitionTypeKind()))
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_OrderByExpressionNotSingleValue);
+                throw new ODataException(SRResources.MetadataBinder_OrderByExpressionNotSingleValue);
             }
 
             OrderByClause orderByNode = new OrderByClause(

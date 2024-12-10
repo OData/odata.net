@@ -11,6 +11,7 @@ using Microsoft.OData.Tests.UriParser.Binders;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Metadata
 {
@@ -28,21 +29,21 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "$Batch",
                 uriParser => uriParser.ParsePath(),
                 odataPath => odataPath.LastSegment.ShouldBeBatchSegment(),
-                Strings.RequestUriProcessor_ResourceNotFound("$Batch"));
+                Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "$Batch"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "$metadata",
                 "$METADATA",
                 uriParser => uriParser.ParsePath(),
                 odataPath => odataPath.LastSegment.ShouldBeMetadataSegment(),
-                Strings.RequestUriProcessor_ResourceNotFound("$METADATA"));
+                Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "$METADATA"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "People/$count",
                 "People/$cOUNT",
                 uriParser => uriParser.ParsePath(),
                 odataPath => odataPath.LastSegment.ShouldBeCountSegment(),
-                Strings.RequestUriProcessor_CannotQueryCollections("People"));
+                Error.Format(SRResources.RequestUriProcessor_CannotQueryCollections, "People"));
         }
 
         [Fact]
@@ -53,14 +54,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People(1)/MyDog/$REF",
                 uriParser => uriParser.ParsePath(),
                 odataPath => odataPath.LastSegment.ShouldBeNavigationPropertyLinkSegment(HardCodedTestModel.GetPersonMyDogNavProp()),
-                Strings.RequestUriProcessor_ResourceNotFound("$REF"));
+                Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "$REF"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "People(1)/MyDog/$value",
                 "People(1)/MyDog/$vaLue",
                 uriParser => uriParser.ParsePath(),
                 odataPath => odataPath.LastSegment.ShouldBeValueSegment(),
-                Strings.RequestUriProcessor_ResourceNotFound("$vaLue"));
+                Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "$vaLue"));
         }
         #endregion
 
@@ -182,14 +183,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 {
                     new PropertySegment(HardCodedTestModel.GetPersonNameProp()), 
                 })),
-                Strings.UriSelectParser_TermIsNotValid("($SELECT=Name)"));
+                Error.Format(SRResources.UriSelectParser_TermIsNotValid, "($SELECT=Name)"));
 
             this.TestCaseInsensitiveBuiltIn(
               "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($expand=MyDog)",
               "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($EXPAND=MyDog)",
               uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).SelectAndExpand,
               clause => clause.SelectedItems.Single().ShouldBeExpansionFor(HardCodedTestModel.GetPersonMyDogNavProp()),
-              Strings.UriSelectParser_TermIsNotValid("($EXPAND=MyDog)"));
+              Error.Format(SRResources.UriSelectParser_TermIsNotValid, "($EXPAND=MyDog)"));
         }
 
         [Fact]
@@ -200,14 +201,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($FILTER=Name eq 'su')",
                 uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).FilterOption,
                 filter => filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal),
-                Strings.UriSelectParser_TermIsNotValid("($FILTER=Name eq 'su')"));
+                Error.Format(SRResources.UriSelectParser_TermIsNotValid, "($FILTER=Name eq 'su')"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($orderby=Name)",
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($orderBY=Name)",
                 uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).OrderByOption,
                 orderby => orderby.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp()),
-                Strings.UriSelectParser_TermIsNotValid("($orderBY=Name)"));
+                Error.Format(SRResources.UriSelectParser_TermIsNotValid, "($orderBY=Name)"));
         }
 
         [Fact]
@@ -218,7 +219,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($SEARCH=Name)",
                 uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).SearchOption,
                 clause => clause.Expression.ShouldBeSearchTermNode("Name"),
-                Strings.UriSelectParser_TermIsNotValid("($SEARCH=Name)"));
+                Error.Format(SRResources.UriSelectParser_TermIsNotValid, "($SEARCH=Name)"));
         }
 
         [Fact]
@@ -229,21 +230,21 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($toP=1;$skIp=2;$COUnt=true)",
                 uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).TopOption,
                 val => Assert.Equal(1, val),
-                Strings.UriSelectParser_TermIsNotValid("($toP=1;$skIp=2;$COUnt=true)"));
+                Error.Format(SRResources.UriSelectParser_TermIsNotValid, "($toP=1;$skIp=2;$COUnt=true)"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($top=1;$skip=2;$count=true)",
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($toP=1;$skIp=2;$COUnt=true)",
                uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).SkipOption,
                val => Assert.Equal(2, val),
-               Strings.UriSelectParser_TermIsNotValid("($toP=1;$skIp=2;$COUnt=true)"));
+               Error.Format(SRResources.UriSelectParser_TermIsNotValid, "($toP=1;$skIp=2;$COUnt=true)"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($top=1;$skip=2;$count=true)",
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($toP=1;$skIp=2;$COUnt=true)",
                uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).CountOption,
                val => Assert.True(val),
-               Strings.UriSelectParser_TermIsNotValid("($toP=1;$skIp=2;$COUnt=true)"));
+               Error.Format(SRResources.UriSelectParser_TermIsNotValid, "($toP=1;$skIp=2;$COUnt=true)"));
         }
 
         [Fact]
@@ -254,14 +255,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($LEVELS=3)",
                 uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).LevelsOption,
                 clause => Assert.Equal(3, clause.Level),
-                Strings.UriSelectParser_TermIsNotValid("($LEVELS=3)"));
+                Error.Format(SRResources.UriSelectParser_TermIsNotValid, "($LEVELS=3)"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($levels=max)",
                 "Boss/Fully.Qualified.Namespace.Manager?$expand=DirectReports($LEVELS=MAX)",
                 uriParser => (uriParser.ParseSelectAndExpand().SelectedItems.Single() as ExpandedNavigationSelectItem).LevelsOption,
                 clause => Assert.True(clause.IsMaxLevel),
-                Strings.UriSelectParser_TermIsNotValid("($LEVELS=MAX)"));
+                Error.Format(SRResources.UriSelectParser_TermIsNotValid, "($LEVELS=MAX)"));
         }
 
         [Fact]
@@ -296,7 +297,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$filter=CONTAINS(Name,'SU')",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeSingleValueFunctionCallQueryNode("contains", EdmCoreModel.Instance.GetBoolean(false)),
-                Strings.MetadataBinder_UnknownFunction("CONTAINS"));
+                Error.Format(SRResources.MetadataBinder_UnknownFunction, "CONTAINS"));
         }
 
         [Fact]
@@ -307,7 +308,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$filter=MATCHESPATTERN(Name,'SU')",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeSingleValueFunctionCallQueryNode("matchesPattern", EdmCoreModel.Instance.GetBoolean(false)),
-                Strings.MetadataBinder_UnknownFunction("MATCHESPATTERN"));
+                Error.Format(SRResources.MetadataBinder_UnknownFunction, "MATCHESPATTERN"));
         }
 
         [Fact]
@@ -318,14 +319,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$filter=STARTSWITH(Name,'SU')",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeSingleValueFunctionCallQueryNode("startswith", EdmCoreModel.Instance.GetBoolean(false)),
-                Strings.MetadataBinder_UnknownFunction("STARTSWITH"));
+                Error.Format(SRResources.MetadataBinder_UnknownFunction, "STARTSWITH"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "People?$filter=endswith(Name,'SU')",
                 "People?$filter=ENDSWITH(Name,'SU')",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeSingleValueFunctionCallQueryNode("endswith", EdmCoreModel.Instance.GetBoolean(false)),
-                Strings.MetadataBinder_UnknownFunction("ENDSWITH"));
+                Error.Format(SRResources.MetadataBinder_UnknownFunction, "ENDSWITH"));
         }
 
         [Fact]
@@ -336,7 +337,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=LENgTH(Name)",
                 uriParser => uriParser.ParseOrderBy(),
                 orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("length", EdmCoreModel.Instance.GetInt32(false)),
-                Strings.MetadataBinder_UnknownFunction("LENgTH"));
+                Error.Format(SRResources.MetadataBinder_UnknownFunction, "LENgTH"));
         }
 
         [Fact]
@@ -347,7 +348,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=INDEXOF(Name, 'o')",
                 uriParser => uriParser.ParseOrderBy(),
                 orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("indexof", EdmCoreModel.Instance.GetInt32(false)),
-                Strings.MetadataBinder_UnknownFunction("INDEXOF"));
+                Error.Format(SRResources.MetadataBinder_UnknownFunction, "INDEXOF"));
         }
 
         [Fact]
@@ -358,7 +359,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=Substring(Name, 1, 2)",
                 uriParser => uriParser.ParseOrderBy(),
                 orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("substring", EdmCoreModel.Instance.GetString(true)),
-                Strings.MetadataBinder_UnknownFunction("Substring"));
+                Error.Format(SRResources.MetadataBinder_UnknownFunction, "Substring"));
         }
 
         [Fact]
@@ -369,14 +370,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=TOLOWER(Name)",
                 uriParser => uriParser.ParseOrderBy(),
                 orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("tolower", EdmCoreModel.Instance.GetString(true)),
-                Strings.MetadataBinder_UnknownFunction("TOLOWER"));
+                Error.Format(SRResources.MetadataBinder_UnknownFunction, "TOLOWER"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "People?$orderby=toupper(Name)",
                 "People?$orderby=TOUPPER(Name)",
                 uriParser => uriParser.ParseOrderBy(),
                 orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("toupper", EdmCoreModel.Instance.GetString(true)),
-                Strings.MetadataBinder_UnknownFunction("TOUPPER"));
+                Error.Format(SRResources.MetadataBinder_UnknownFunction, "TOUPPER"));
         }
 
         [Fact]
@@ -387,14 +388,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=TRIM(Name)",
                 uriParser => uriParser.ParseOrderBy(),
                 orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("trim", EdmCoreModel.Instance.GetString(true)),
-                Strings.MetadataBinder_UnknownFunction("TRIM"));
+                Error.Format(SRResources.MetadataBinder_UnknownFunction, "TRIM"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "People?$orderby=concat(Name,'sh')",
                 "People?$orderby=Concat(Name,'sh')",
                 uriParser => uriParser.ParseOrderBy(),
                 orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("concat", EdmCoreModel.Instance.GetString(true)),
-                Strings.MetadataBinder_UnknownFunction("Concat"));
+                Error.Format(SRResources.MetadataBinder_UnknownFunction, "Concat"));
         }
 
         [Fact]
@@ -405,21 +406,21 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People?$orderby=YEAR(FavoriteDate)",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("year", EdmCoreModel.Instance.GetInt32(false)),
-               Strings.MetadataBinder_UnknownFunction("YEAR"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "YEAR"));
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$orderby=month(FavoriteDate)",
                "People?$orderby=MONTH(FavoriteDate)",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("month", EdmCoreModel.Instance.GetInt32(false)),
-               Strings.MetadataBinder_UnknownFunction("MONTH"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "MONTH"));
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$orderby=day(FavoriteDate)",
                "People?$orderby=DAY(FavoriteDate)",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("day", EdmCoreModel.Instance.GetInt32(false)),
-               Strings.MetadataBinder_UnknownFunction("DAY"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "DAY"));
         }
 
         [Fact]
@@ -430,28 +431,28 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People?$orderby=HoUR(FavoriteDate)",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("hour", EdmCoreModel.Instance.GetInt32(false)),
-               Strings.MetadataBinder_UnknownFunction("HoUR"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "HoUR"));
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$orderby=minute(FavoriteDate)",
                "People?$orderby=MinuTe(FavoriteDate)",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("minute", EdmCoreModel.Instance.GetInt32(false)),
-               Strings.MetadataBinder_UnknownFunction("MinuTe"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "MinuTe"));
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$orderby=second(FavoriteDate)",
                "People?$orderby=sEcond(FavoriteDate)",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("second", EdmCoreModel.Instance.GetInt32(false)),
-               Strings.MetadataBinder_UnknownFunction("sEcond"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "sEcond"));
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$orderby=fractionalseconds(FavoriteDate)",
                "People?$orderby=frActionalseconds(FavoriteDate)",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("fractionalseconds", EdmCoreModel.Instance.GetDecimal(false)),
-               Strings.MetadataBinder_UnknownFunction("frActionalseconds"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "frActionalseconds"));
         }
 
         [Fact]
@@ -462,21 +463,21 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People?$orderby=ROUND(ID)",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("round", EdmCoreModel.Instance.GetDouble(false)),
-               Strings.MetadataBinder_UnknownFunction("ROUND"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "ROUND"));
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$orderby=floor(ID)",
                "People?$orderby=flooR(ID)",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("floor", EdmCoreModel.Instance.GetDouble(false)),
-               Strings.MetadataBinder_UnknownFunction("flooR"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "flooR"));
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$orderby=ceiling(ID)",
                "People?$orderby=CEILING(ID)",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("ceiling", EdmCoreModel.Instance.GetDouble(false)),
-               Strings.MetadataBinder_UnknownFunction("CEILING"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "CEILING"));
         }
 
         [Fact]
@@ -487,21 +488,21 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People?$orderby=minDatetime()",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("mindatetime", EdmCoreModel.Instance.GetDateTimeOffset(false)),
-               Strings.MetadataBinder_UnknownFunction("minDatetime"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "minDatetime"));
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$orderby=maxdatetime()",
                "People?$orderby=MAxdatetime()",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("maxdatetime", EdmCoreModel.Instance.GetDateTimeOffset(false)),
-               Strings.MetadataBinder_UnknownFunction("MAxdatetime"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "MAxdatetime"));
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$orderby=now()",
                "People?$orderby=NOW()",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("now", EdmCoreModel.Instance.GetDateTimeOffset(false)),
-               Strings.MetadataBinder_UnknownFunction("NOW"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "NOW"));
         }
 
         [Fact]
@@ -512,14 +513,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People?$orderby=totalsecoNDs(TimeEmployed)",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("totalseconds", EdmCoreModel.Instance.GetDecimal(false)),
-               Strings.MetadataBinder_UnknownFunction("totalsecoNDs"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "totalsecoNDs"));
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$orderby=totaloffsetminutes(FavoriteDate)",
                "People?$orderby=totaloffsetminuteS(FavoriteDate)",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("totaloffsetminutes", EdmCoreModel.Instance.GetInt32(false)),
-               Strings.MetadataBinder_UnknownFunction("totaloffsetminuteS"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "totaloffsetminuteS"));
         }
 
         [Fact]
@@ -530,14 +531,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People?$orderby=cAst(1, Edm.String)",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("cast", EdmCoreModel.Instance.GetString(false)),
-               Strings.MetadataBinder_UnknownFunction("cAst"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "cAst"));
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$orderby=isof(1, Edm.String)",
                "People?$orderby=iSOf(1, Edm.String)",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("isof", EdmCoreModel.Instance.GetBoolean(true)),
-               Strings.MetadataBinder_UnknownFunction("iSOf"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "iSOf"));
         }
 
         [Fact]
@@ -548,21 +549,21 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                "People?$orderby=geo.DIstance(geometry'Point(10 30)', geometry'Point(7 28)')",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("geo.distance", EdmCoreModel.Instance.GetDouble(true)),
-               Strings.MetadataBinder_UnknownFunction("geo.DIstance"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "geo.DIstance"));
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$orderby=geo.length(geometry'LineString(1 1, 2 2)')",
                "People?$orderby=geo.LENGTH(geometry'LineString(1 1, 2 2)')",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("geo.length", EdmCoreModel.Instance.GetDouble(true)),
-               Strings.MetadataBinder_UnknownFunction("geo.LENGTH"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "geo.LENGTH"));
 
             this.TestCaseInsensitiveBuiltIn(
                "People?$orderby=geo.intersects(geometry'Point(10 30)',geometry'Polygon((10 30, 7 28, 6 6, 10 30))')",
                "People?$orderby=geo.iNTersects(geometry'Point(10 30)',geometry'Polygon((10 30, 7 28, 6 6, 10 30))')",
                uriParser => uriParser.ParseOrderBy(),
                orderby => orderby.Expression.ShouldBeSingleValueFunctionCallQueryNode("geo.intersects", EdmCoreModel.Instance.GetBoolean(true)),
-               Strings.MetadataBinder_UnknownFunction("geo.iNTersects"));
+               Error.Format(SRResources.MetadataBinder_UnknownFunction, "geo.iNTersects"));
         }
         #endregion
 
@@ -575,14 +576,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "Dogs(1)?$filter=Nicknames/ANY(d:d eq 'a')",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeAnyQueryNode(),
-                Strings.UriQueryExpressionParser_CloseParenOrCommaExpected("15", "Nicknames/ANY(d:d eq 'a')"));
+                Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, "15", "Nicknames/ANY(d:d eq 'a')"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "Dogs(1)?$filter=Nicknames/all(d:d eq 'a')",
                 "Dogs(1)?$filter=Nicknames/aLL(d:d eq 'a')",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeAllQueryNode(),
-                Strings.UriQueryExpressionParser_CloseParenOrCommaExpected("15", "Nicknames/aLL(d:d eq 'a')"));
+                Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, "15", "Nicknames/aLL(d:d eq 'a')"));
         }
 
         [Fact]
@@ -593,14 +594,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=Name aSC",
                 uriParser => uriParser.ParseOrderBy(),
                 orderby => Assert.Equal(OrderByDirection.Ascending, orderby.Direction),
-                Strings.ExpressionLexer_SyntaxError("8", "Name aSC"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "8", "Name aSC"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "People?$orderby=Name desc",
                 "People?$orderby=Name DESC",
                 uriParser => uriParser.ParseOrderBy(),
                 orderby => Assert.Equal(OrderByDirection.Descending, orderby.Direction),
-                Strings.ExpressionLexer_SyntaxError("9", "Name DESC"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "9", "Name DESC"));
         }
 
         [Fact]
@@ -611,13 +612,13 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$filter=true AND false",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.And),
-                Strings.ExpressionLexer_SyntaxError("8", "true AND false"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "8", "true AND false"));
             this.TestCaseInsensitiveBuiltIn(
                 "People?$filter=true or false",
                 "People?$filter=true oR false",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Or),
-                Strings.ExpressionLexer_SyntaxError("7", "true oR false"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "7", "true oR false"));
         }
 
         [Fact]
@@ -628,14 +629,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=ID ADD 1",
                 uriParser => uriParser.ParseOrderBy(),
                 orderby => orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Add),
-                Strings.ExpressionLexer_SyntaxError("6", "ID ADD 1"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "6", "ID ADD 1"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "People?$orderby=ID sub 1",
                 "People?$orderby=ID Sub 1",
                 uriParser => uriParser.ParseOrderBy(),
                 orderby => orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Subtract),
-                Strings.ExpressionLexer_SyntaxError("6", "ID Sub 1"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "6", "ID Sub 1"));
         }
 
         [Fact]
@@ -646,21 +647,21 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$orderby=ID mUl 1",
                 uriParser => uriParser.ParseOrderBy(),
                 orderby => orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Multiply),
-                Strings.ExpressionLexer_SyntaxError("6", "ID mUl 1"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "6", "ID mUl 1"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "People?$orderby=ID div 1",
                 "People?$orderby=ID diV 1",
                 uriParser => uriParser.ParseOrderBy(),
                 orderby => orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Divide),
-                Strings.ExpressionLexer_SyntaxError("6", "ID diV 1"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "6", "ID diV 1"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "People?$orderby=ID mod 1",
                 "People?$orderby=ID MoD 1",
                 uriParser => uriParser.ParseOrderBy(),
                 orderby => orderby.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Modulo),
-                Strings.ExpressionLexer_SyntaxError("6", "ID MoD 1"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "6", "ID MoD 1"));
         }
 
         [Fact]
@@ -671,7 +672,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$filter=NOT false",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeUnaryOperatorNode(UnaryOperatorKind.Not),
-                Strings.ExpressionLexer_SyntaxError("9", "NOT false"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "9", "NOT false"));
         }
 
         [Fact]
@@ -682,14 +683,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$filter=Name EQ 'su'",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal),
-                Strings.ExpressionLexer_SyntaxError("7", "Name EQ 'su'"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "7", "Name EQ 'su'"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "People?$filter=Name ne 'su'",
                 "People?$filter=Name NE 'su'",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.NotEqual),
-                Strings.ExpressionLexer_SyntaxError("7", "Name NE 'su'"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "7", "Name NE 'su'"));
         }
 
         [Fact]
@@ -700,14 +701,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$filter=ID LT 1",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThan),
-                Strings.ExpressionLexer_SyntaxError("5", "ID LT 1"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "5", "ID LT 1"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "People?$filter=ID le 1",
                 "People?$filter=ID LE 1",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.LessThanOrEqual),
-                Strings.ExpressionLexer_SyntaxError("5", "ID LE 1"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "5", "ID LE 1"));
         }
 
         [Fact]
@@ -718,14 +719,14 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "People?$filter=ID GT 1",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThan),
-                Strings.ExpressionLexer_SyntaxError("5", "ID GT 1"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "5", "ID GT 1"));
 
             this.TestCaseInsensitiveBuiltIn(
                 "People?$filter=ID ge 1",
                 "People?$filter=ID GE 1",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.GreaterThanOrEqual),
-                Strings.ExpressionLexer_SyntaxError("5", "ID GE 1"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "5", "ID GE 1"));
         }
 
         [Fact]
@@ -736,7 +737,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                 "Pet2Set?$filter=PetColorPattern HaS Fully.Qualified.Namespace.ColorPattern'SolidYellow'",
                 uriParser => uriParser.ParseFilter(),
                 filter => filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Has),
-                Strings.ExpressionLexer_SyntaxError("19", "PetColorPattern HaS Fully.Qualified.Namespace.ColorPattern'SolidYellow'"));
+                Error.Format(SRResources.ExpressionLexer_SyntaxError, "19", "PetColorPattern HaS Fully.Qualified.Namespace.ColorPattern'SolidYellow'"));
         }
         #endregion
 

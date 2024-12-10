@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
     using Microsoft.OData.Edm;
     using Microsoft.OData;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Helper methods for metadata binding.
@@ -77,12 +77,12 @@ namespace Microsoft.OData.UriParser
                         return new ConstantNode(new ODataEnumValue(enumMember.Name, enumType.ToString()), literalText, targetTypeReference);
                     }
 
-                    throw new ODataException(ODataErrorStrings.Binder_IsNotValidEnumConstant(memberName));
+                    throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, memberName));
                 }
 
                 if (!TypePromotionUtils.CanConvertTo(source, source.TypeReference, targetTypeReference))
                 {
-                    throw new ODataException(ODataErrorStrings.MetadataBinder_CannotConvertToType(source.TypeReference.FullName(), targetTypeReference.FullName()));
+                    throw new ODataException(Error.Format(SRResources.MetadataBinder_CannotConvertToType, source.TypeReference.FullName(), targetTypeReference.FullName()));
                 }
                 else
                 {
@@ -203,7 +203,7 @@ namespace Microsoft.OData.UriParser
                 {
                     if (!enumType.ContainsMember(enumValue.Value, comparison))
                     {
-                        throw new ODataException(ODataErrorStrings.Binder_IsNotValidEnumConstant(enumValue.Value));
+                        throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, enumValue.Value));
                     }
                 }
             }

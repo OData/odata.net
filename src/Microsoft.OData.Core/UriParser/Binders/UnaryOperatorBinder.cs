@@ -10,7 +10,7 @@ namespace Microsoft.OData.UriParser
     using System.Diagnostics;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Class that knows how to bind unary operators.
@@ -61,7 +61,7 @@ namespace Microsoft.OData.UriParser
             if (!TypePromotionUtils.PromoteOperandType(unaryOperatorKind, ref typeReference))
             {
                 string typeName = operand.TypeReference == null ? "<null>" : operand.TypeReference.FullName();
-                throw new ODataException(ODataErrorStrings.MetadataBinder_IncompatibleOperandError(typeName, unaryOperatorKind));
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_IncompatibleOperandError, typeName, unaryOperatorKind));
             }
 
             return typeReference;
@@ -77,7 +77,7 @@ namespace Microsoft.OData.UriParser
             SingleValueNode operand = this.bindMethod(unaryOperatorToken.Operand) as SingleValueNode;
             if (operand == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_UnaryOperatorOperandNotSingleValue(unaryOperatorToken.OperatorKind.ToString()));
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_UnaryOperatorOperandNotSingleValue, unaryOperatorToken.OperatorKind.ToString()));
             }
 
             return operand;

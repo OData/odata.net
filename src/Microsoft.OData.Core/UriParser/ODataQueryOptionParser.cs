@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser.Aggregation;
@@ -229,7 +230,7 @@ namespace Microsoft.OData.UriParser
             IEdmStructuredType structuredType = this.targetEdmType as IEdmStructuredType;
             if (structuredType == null)
             {
-                throw new ODataException(Strings.UriParser_TypeInvalidForSelectExpand(this.targetEdmType));
+                throw new ODataException(Error.Format(SRResources.UriParser_TypeInvalidForSelectExpand, this.targetEdmType));
             }
 
             this.selectExpandClause = ParseSelectAndExpandImplementation(selectQuery, expandQuery, this.Configuration, this.odataPathInfo);
@@ -525,7 +526,7 @@ namespace Microsoft.OData.UriParser
             long topValue;
             if (!long.TryParse(topQuery, out topValue) || topValue < 0)
             {
-                throw new ODataException(Strings.SyntacticTree_InvalidTopQueryOptionValue(topQuery));
+                throw new ODataException(Error.Format(SRResources.SyntacticTree_InvalidTopQueryOptionValue, topQuery));
             }
 
             return topValue;
@@ -547,7 +548,7 @@ namespace Microsoft.OData.UriParser
             long skipValue;
             if (!long.TryParse(skipQuery, out skipValue) || skipValue < 0)
             {
-                throw new ODataException(Strings.SyntacticTree_InvalidSkipQueryOptionValue(skipQuery));
+                throw new ODataException(Error.Format(SRResources.SyntacticTree_InvalidSkipQueryOptionValue, skipQuery));
             }
 
             return skipValue;
@@ -571,7 +572,7 @@ namespace Microsoft.OData.UriParser
             long indexValue;
             if (!long.TryParse(indexQuery, out indexValue))
             {
-                throw new ODataException(Strings.SyntacticTree_InvalidIndexQueryOptionValue(indexQuery));
+                throw new ODataException(Error.Format(SRResources.SyntacticTree_InvalidIndexQueryOptionValue, indexQuery));
             }
 
             return indexValue;
@@ -599,7 +600,7 @@ namespace Microsoft.OData.UriParser
                 case ExpressionConstants.KeywordFalse:
                     return false;
                 default:
-                    throw new ODataException(Strings.ODataUriParser_InvalidCount(count));
+                    throw new ODataException(Error.Format(SRResources.ODataUriParser_InvalidCount, count));
             }
         }
 
@@ -697,7 +698,7 @@ namespace Microsoft.OData.UriParser
                 return true;
             }
 
-            throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(
+            throw new ODataException(Error.Format(SRResources.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce,
                 isNoDollarQueryOptionsEnabled ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", nameWithoutDollarPrefix ?? trimmedName) : trimmedName));
         }
         #endregion private methods

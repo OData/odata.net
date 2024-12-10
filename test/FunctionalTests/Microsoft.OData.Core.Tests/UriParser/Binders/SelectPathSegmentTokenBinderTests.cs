@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -89,7 +89,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void OperationWithParenthesesShouldNotWork()
         {
             Action action = () => SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Move()", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), DefaultUriResolver);
-            action.Throws<ODataException>(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "Move()"));
+            action.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "Fully.Qualified.Namespace.Person", "Move()"));
         }
 
         [Fact]
@@ -191,14 +191,14 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void UnfoundProperyOnClosedTypeThrows()
         {
             Action visit = () => SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Missing", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), DefaultUriResolver);
-            visit.Throws<ODataException>(Strings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetPersonType(), "Missing"));
+            visit.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, HardCodedTestModel.GetPersonType(), "Missing"));
         }
 
         [Fact]
         public void UnQualifiedActionNameShouldThrow()
         {
             Action visit = () => SelectPathSegmentTokenBinder.ConvertNonTypeTokenToSegment(new NonSystemToken("Walk", null, null), HardCodedTestModel.TestModel, HardCodedTestModel.GetDogType(), DefaultUriResolver);
-            visit.Throws<ODataException>(Strings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetDogType(), "Walk"));
+            visit.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, HardCodedTestModel.GetDogType(), "Walk"));
         }
 
         [Fact]

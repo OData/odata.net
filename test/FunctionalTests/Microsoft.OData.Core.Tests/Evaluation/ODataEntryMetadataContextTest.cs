@@ -9,6 +9,7 @@ using System.Linq;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.Evaluation
 {
@@ -117,7 +118,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.TypeName = null;
             Action test = () => Assert.Null(this.entryMetadataContextWithoutModel.ActualResourceTypeName);
-            test.Throws<ODataException>(Strings.ODataResourceTypeContext_ODataResourceTypeNameMissing);
+            test.Throws<ODataException>(SRResources.ODataResourceTypeContext_ODataResourceTypeNameMissing);
         }
         #endregion ActualEntityTypeName
 
@@ -126,14 +127,14 @@ namespace Microsoft.OData.Tests.Evaluation
         public void KeyPropertiesShouldThrowWhenEntryHasNoKeyPropertiesWithSerializationInfo()
         {
             Action test = () => Assert.NotNull(this.entryMetadataContextWithoutModel.KeyProperties);
-            test.Throws<ODataException>(Strings.ODataResourceMetadataContext_EntityTypeWithNoKeyProperties(ActualEntityType.FullName()));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataResourceMetadataContext_EntityTypeWithNoKeyProperties, ActualEntityType.FullName()));
         }
 
         [Fact]
         public void KeyPropertiesShouldThrowWhenEntryHasNoKeyPropertiesAsSpecifiedInTheMetadata()
         {
             Action test = () => Assert.NotNull(this.entryMetadataContextWithModel.KeyProperties);
-            test.Throws<ODataException>(Strings.EdmValueUtils_PropertyDoesntExist(ActualEntityType.FullName(), "ID2"));
+            test.Throws<ODataException>(Error.Format(SRResources.EdmValueUtils_PropertyDoesntExist, ActualEntityType.FullName(), "ID2"));
         }
 
         [Fact]
@@ -141,7 +142,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.Properties = new[] { new ODataProperty { Name = "ID", Value = new ODataCollectionValue(), SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key } } };
             Action test = () => Assert.NotNull(this.entryMetadataContextWithoutModel.KeyProperties);
-            test.Throws<ODataException>(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues("ID", "ns.TypeName"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues, "ID", "ns.TypeName"));
         }
 
         [Fact]
@@ -149,7 +150,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.Properties = new[] {new ODataProperty {Name = "ID", Value = null, SerializationInfo = new ODataPropertySerializationInfo {PropertyKind = ODataPropertyKind.Key}}};
             Action test = () => Assert.NotNull(this.entryMetadataContextWithoutModel.KeyProperties);
-            test.Throws<ODataException>(Strings.ODataResourceMetadataContext_NullKeyValue("ID", "ns.TypeName"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataResourceMetadataContext_NullKeyValue, "ID", "ns.TypeName"));
         }
 
         [Fact]
@@ -157,7 +158,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.Properties = new[] {new ODataProperty {Name = "ID2", Value = new ODataCollectionValue()}};
             Action test = () => Assert.NotNull(this.entryMetadataContextWithModel.KeyProperties);
-            test.Throws<ODataException>(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues("ID2", "ns.TypeName"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues, "ID2", "ns.TypeName"));
         }
 
         [Fact]
@@ -165,14 +166,14 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.Properties = new[] {new ODataProperty {Name = "ID2", Value = null}};
             Action test = () => Assert.NotNull(this.entryMetadataContextWithModel.KeyProperties);
-            test.Throws<ODataException>(Strings.ODataResourceMetadataContext_NullKeyValue("ID2", "ns.TypeName"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataResourceMetadataContext_NullKeyValue, "ID2", "ns.TypeName"));
         }
 
         [Fact]
         public void KeyPropertiesShouldThrowWhenKeyPropertyInMetadataIsNotInEntry()
         {
             Action test = () => Assert.NotNull(this.entryMetadataContextWithModel.KeyProperties);
-            test.Throws<ODataException>(Strings.EdmValueUtils_PropertyDoesntExist("ns.TypeName", "ID2"));
+            test.Throws<ODataException>(Error.Format(SRResources.EdmValueUtils_PropertyDoesntExist, "ns.TypeName", "ID2"));
         }
 
         [Fact]
@@ -221,7 +222,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             this.entry.Properties = new[] { new ODataProperty { Name = "Name", Value = new ODataCollectionValue(), SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag } } };
             Action test = () => Assert.NotNull(this.entryMetadataContextWithoutModel.ETagProperties);
-            test.Throws<ODataException>(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues("Name", "ns.TypeName"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues, "Name", "ns.TypeName"));
         }
 
         [Fact]

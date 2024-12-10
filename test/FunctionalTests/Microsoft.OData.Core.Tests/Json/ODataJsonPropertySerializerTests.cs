@@ -11,6 +11,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core;
 using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
@@ -485,7 +486,7 @@ namespace Microsoft.OData.Tests.Json
             var primitiveTypeProperty = new ODataProperty { Name = "PrimitiveConstraintProperty", Value = value };
             Action action = () => this.SerializeProperty(this.entityType, primitiveTypeProperty);
             var exception = Assert.Throws<ODataException>(action);
-            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "property", "PrimitiveConstraintProperty"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, fullTypeName, "property", "PrimitiveConstraintProperty"), exception.Message);
         }
 
         #region Serializing regular properties

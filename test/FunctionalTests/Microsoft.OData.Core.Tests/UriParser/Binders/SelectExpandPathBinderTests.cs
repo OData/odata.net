@@ -8,8 +8,8 @@ using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 using System.Linq;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             PathSegmentToken firstNonTypeToken;
             IEdmStructuredType entityType = HardCodedTestModel.GetPersonType();
             Action followInvalidTypeSegment = () => SelectExpandPathBinder.FollowTypeSegments(typeSegment, HardCodedTestModel.TestModel, 800, DefaultUriResolver, ref entityType, out firstNonTypeToken);
-            followInvalidTypeSegment.Throws<ODataException>(ODataErrorStrings.SelectExpandPathBinder_FollowNonTypeSegment("Stuff"));
+            followInvalidTypeSegment.Throws<ODataException>(Error.Format(SRResources.SelectExpandPathBinder_FollowNonTypeSegment, "Stuff"));
         }
 
         [Fact]
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             PathSegmentToken firstNonTypeToken;
             IEdmStructuredType entityType = HardCodedTestModel.GetPersonType();
             Action followLongChain = () => SelectExpandPathBinder.FollowTypeSegments(typeSegment, HardCodedTestModel.TestModel, 1, DefaultUriResolver, ref entityType, out firstNonTypeToken);
-            followLongChain.Throws<ODataException>(ODataErrorStrings.ExpandItemBinder_PathTooDeep);
+            followLongChain.Throws<ODataException>(SRResources.ExpandItemBinder_PathTooDeep);
         }
     }
 }

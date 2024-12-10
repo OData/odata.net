@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class UnresolvedEnumType : BadEnumType, IUnresolvedElement
     {
         public UnresolvedEnumType(string qualifiedName, EdmLocation location)
-            : base(qualifiedName, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedEnumType, Edm.Strings.Bad_UnresolvedEnumType(qualifiedName)) })
+            : base(qualifiedName, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedEnumType, Error.Format(SRResources.Bad_UnresolvedEnumType, qualifiedName)) })
         {
         }
     }

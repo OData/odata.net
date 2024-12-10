@@ -9,10 +9,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -233,7 +233,7 @@ namespace Microsoft.OData.Tests.Json
                     transferProductAction));
 
             Assert.Equal(
-                ErrorStrings.ODataParameterReaderCore_ParametersMissingInPayload("TransferProduct", "categoryId"),
+                Error.Format(SRResources.ODataParameterReaderCore_ParametersMissingInPayload, "TransferProduct", "categoryId"),
                 exception.Message);
         }
 
@@ -251,7 +251,7 @@ namespace Microsoft.OData.Tests.Json
                     getRatingFunction));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.GetRating"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, "#NS.GetRating"),
                 exception.Message);
         }
 
@@ -269,7 +269,7 @@ namespace Microsoft.OData.Tests.Json
                     getRatingFunction));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.id"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, "odata.id"),
                 exception.Message);
         }
 
@@ -287,7 +287,7 @@ namespace Microsoft.OData.Tests.Json
                     getRatingFunction));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonParameterDeserializer_PropertyAnnotationWithoutPropertyForParameters("productId"),
+                Error.Format(SRResources.ODataJsonParameterDeserializer_PropertyAnnotationWithoutPropertyForParameters, "productId"),
                 exception.Message);
         }
 
@@ -307,7 +307,7 @@ namespace Microsoft.OData.Tests.Json
                     setPhotoAction));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonParameterDeserializer_UnsupportedPrimitiveParameterType("photo", EdmPrimitiveTypeKind.Stream),
+                Error.Format(SRResources.ODataJsonParameterDeserializer_UnsupportedPrimitiveParameterType, "photo", EdmPrimitiveTypeKind.Stream),
                 exception.Message);
         }
 
@@ -329,7 +329,7 @@ namespace Microsoft.OData.Tests.Json
                     setAttributesAction));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonParameterDeserializer_NullCollectionExpected("PrimitiveValue", "attrs"),
+                Error.Format(SRResources.ODataJsonParameterDeserializer_NullCollectionExpected, "PrimitiveValue", "attrs"),
                 exception.Message);
         }
 

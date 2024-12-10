@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -52,7 +52,7 @@ namespace Microsoft.OData.UriParser
             if (parentResource == null)
             {
                 // TODO: update error message #644
-                throw new ODataException(ODataErrorStrings.MetadataBinder_NavigationPropertyNotFollowingSingleEntityType);
+                throw new ODataException(SRResources.MetadataBinder_NavigationPropertyNotFollowingSingleEntityType);
             }
 
             return parentResource;
@@ -152,7 +152,7 @@ namespace Microsoft.OData.UriParser
                     }
                 }
 
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessSourceNotSingleValue(segmentToken.Identifier));
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_PropertyAccessSourceNotSingleValue, segmentToken.Identifier));
             }
 
             // Using the parent and name of this token, we try to get the IEdmProperty it represents
@@ -169,7 +169,7 @@ namespace Microsoft.OData.UriParser
                 if (singleValueParent.TypeReference != null && !singleValueParent.TypeReference.Definition.IsOpen())
                 {
                     throw new ODataException(
-                        ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
+                        Error.Format(SRResources.MetadataBinder_PropertyNotDeclared,
                             parent.GetEdmTypeReference().FullName(), segmentToken.Identifier));
                 }
 
@@ -204,7 +204,7 @@ namespace Microsoft.OData.UriParser
             IEdmNavigationProperty navigationProperty = property as IEdmNavigationProperty;
             if (navigationProperty == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_IllegalSegmentType(property.Name));
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_IllegalSegmentType, property.Name));
             }
 
             SingleResourceNode parentResource = EnsureParentIsResourceForNavProp(singleValueParent);

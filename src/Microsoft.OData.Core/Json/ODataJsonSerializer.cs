@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Json
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Diagnostics;
@@ -363,7 +364,7 @@ namespace Microsoft.OData.Json
                     // TODO: Check if it is dead code to be removed.
                     if (metadataDocumentUri == null)
                     {
-                        throw new ODataException(Strings.ODataJsonSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata(UriUtils.UriToString(resultUri)));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata, UriUtils.UriToString(resultUri)));
                     }
 
                     resultUri = UriUtils.UriToAbsoluteUri(metadataDocumentUri, uri);

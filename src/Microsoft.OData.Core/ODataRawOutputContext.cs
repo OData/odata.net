@@ -13,6 +13,7 @@ namespace Microsoft.OData
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
 
@@ -160,7 +161,7 @@ namespace Microsoft.OData
                 this.outputInStreamErrorListener.OnInStreamError();
             }
 
-            throw new ODataException(Strings.ODataMessageWriter_CannotWriteInStreamErrorForRawValues);
+            throw new ODataException(SRResources.ODataMessageWriter_CannotWriteInStreamErrorForRawValues);
         }
 
         /// <summary>
@@ -189,7 +190,7 @@ namespace Microsoft.OData
                     .ConfigureAwait(false);
             }
 
-            throw new ODataException(Strings.ODataMessageWriter_CannotWriteInStreamErrorForRawValues);
+            throw new ODataException(SRResources.ODataMessageWriter_CannotWriteInStreamErrorForRawValues);
         }
 
         /// <summary>

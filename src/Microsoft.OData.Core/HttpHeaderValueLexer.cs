@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -278,7 +279,7 @@ namespace Microsoft.OData
             // Instead of testing whether result is null or empty, we check to see if the index have moved forward because we can encounter the empty quoted string "".
             if (index == this.startIndexOfNextItem)
             {
-                throw new ODataException(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString(this.httpHeaderName, this.httpHeaderValue, this.startIndexOfNextItem));
+                throw new ODataException(Error.Format(SRResources.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString, this.httpHeaderName, this.httpHeaderValue, this.startIndexOfNextItem));
             }
 
             if (isQuotedString)
@@ -299,7 +300,7 @@ namespace Microsoft.OData
             HttpHeaderValueLexer item = this.ReadNextTokenOrQuotedString();
             if (item.Type == HttpHeaderValueItemType.QuotedString)
             {
-                throw new ODataException(Strings.HttpHeaderValueLexer_TokenExpectedButFoundQuotedString(this.httpHeaderName, this.httpHeaderValue, this.startIndexOfNextItem));
+                throw new ODataException(Error.Format(SRResources.HttpHeaderValueLexer_TokenExpectedButFoundQuotedString, this.httpHeaderName, this.httpHeaderValue, this.startIndexOfNextItem));
             }
 
             return (HttpHeaderToken)item;
@@ -316,7 +317,7 @@ namespace Microsoft.OData
             ReadOnlySpan<char> span = separator.Span;
             if (!span.Equals(ElementSeparator, StringComparison.Ordinal) && !span.Equals(ParameterSeparator, StringComparison.Ordinal) && !span.Equals(ValueSeparator, StringComparison.Ordinal))
             {
-                throw new ODataException(Strings.HttpHeaderValueLexer_UnrecognizedSeparator(this.httpHeaderName, this.httpHeaderValue, this.startIndexOfNextItem, separator));
+                throw new ODataException(Error.Format(SRResources.HttpHeaderValueLexer_UnrecognizedSeparator, this.httpHeaderName, this.httpHeaderValue, this.startIndexOfNextItem, separator));
             }
 
             return new HttpHeaderSeparator(this.httpHeaderName, this.httpHeaderValue, separator, this.startIndexOfNextItem + 1);
@@ -466,7 +467,7 @@ namespace Microsoft.OData
                     return separator;
                 }
 
-                throw new ODataException(Strings.HttpHeaderValueLexer_InvalidSeparatorAfterQuotedString(this.httpHeaderName, this.httpHeaderValue, this.startIndexOfNextItem, separator.Value));
+                throw new ODataException(Error.Format(SRResources.HttpHeaderValueLexer_InvalidSeparatorAfterQuotedString, this.httpHeaderName, this.httpHeaderValue, this.startIndexOfNextItem, separator.Value));
             }
         }
 
@@ -534,7 +535,7 @@ namespace Microsoft.OData
             {
                 if (this.EndOfHeaderValue())
                 {
-                    throw new ODataException(Strings.HttpHeaderValueLexer_EndOfFileAfterSeparator(this.httpHeaderName, this.httpHeaderValue, this.startIndexOfNextItem, this.originalText));
+                    throw new ODataException(Error.Format(SRResources.HttpHeaderValueLexer_EndOfFileAfterSeparator, this.httpHeaderName, this.httpHeaderValue, this.startIndexOfNextItem, this.originalText));
                 }
 
                 // Token or quoted-string can come after '='. i.e. token ['=' (token | quoted-string)]

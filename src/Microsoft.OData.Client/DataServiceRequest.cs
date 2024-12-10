@@ -177,7 +177,7 @@ namespace Microsoft.OData.Client
                         }
 
                         operationResponse.Error = ex;
-                        throw new DataServiceQueryException(Strings.DataServiceException_GeneralError, ex, operationResponse);
+                        throw new DataServiceQueryException(SRResources.DataServiceException_GeneralError, ex, operationResponse);
                     }
                 }
 
@@ -229,7 +229,7 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    throw new DataServiceQueryException(Strings.DataServiceRequest_FailGetValue, queryResult.Failure);
+                    throw new DataServiceQueryException(SRResources.DataServiceRequest_FailGetValue, queryResult.Failure);
                 }
             }
             catch (InvalidOperationException ex)
@@ -239,7 +239,7 @@ namespace Microsoft.OData.Client
                 if (operationResponse != null)
                 {
                     operationResponse.Error = ex;
-                    throw new DataServiceQueryException(Strings.DataServiceException_GeneralError, ex, operationResponse);
+                    throw new DataServiceQueryException(SRResources.DataServiceException_GeneralError, ex, operationResponse);
                 }
 
                 throw;

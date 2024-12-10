@@ -9,6 +9,7 @@ namespace Microsoft.OData
     #region Namespaces
 
     using System.Diagnostics;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -42,7 +43,7 @@ namespace Microsoft.OData
                 // if we have metadata, the type name of a resource must not be null
                 if (model.IsUserModel())
                 {
-                    throw new ODataException(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
+                    throw new ODataException(SRResources.WriterValidationUtils_MissingTypeNameWithMetadata);
                 }
 
                 return null;
@@ -50,7 +51,7 @@ namespace Microsoft.OData
 
             if (typeName.Length == 0)
             {
-                throw new ODataException(Strings.ValidationUtils_TypeNameMustNotBeEmpty);
+                throw new ODataException(SRResources.ValidationUtils_TypeNameMustNotBeEmpty);
             }
 
             if (!model.IsUserModel())
@@ -62,7 +63,7 @@ namespace Microsoft.OData
             IEdmType resolvedType = MetadataUtils.ResolveTypeNameForWrite(model, typeName);
             if (resolvedType == null)
             {
-                throw new ODataException(Strings.ValidationUtils_UnrecognizedTypeName(typeName));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_UnrecognizedTypeName, typeName));
             }
 
             if (resolvedType.TypeKind != EdmTypeKind.Untyped)
@@ -276,7 +277,7 @@ namespace Microsoft.OData
             IEdmPrimitiveTypeReference primitiveTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
             if (primitiveTypeReference == null)
             {
-                throw new ODataException(Strings.ValidationUtils_UnsupportedPrimitiveType(value.GetType().FullName));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_UnsupportedPrimitiveType, value.GetType().FullName));
             }
 
             return primitiveTypeReference.FullName();
@@ -293,7 +294,7 @@ namespace Microsoft.OData
             // if we have metadata, the type name of an open (dynamic) property value must not be null
             if (typeName == null && model.IsUserModel() && isOpenPropertyType)
             {
-                throw new ODataException(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
+                throw new ODataException(SRResources.WriterValidationUtils_MissingTypeNameWithMetadata);
             }
         }
 

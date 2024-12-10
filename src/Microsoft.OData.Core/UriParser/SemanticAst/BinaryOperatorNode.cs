@@ -10,7 +10,6 @@ namespace Microsoft.OData.UriParser
 
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
 

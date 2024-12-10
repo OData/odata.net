@@ -20,7 +20,7 @@ namespace Microsoft.OData.Edm
         private readonly List<TElement> bindings = new List<TElement>();
 
         public AmbiguousBinding(TElement first, TElement second)
-            : base(new EdmError[] { new EdmError(null, EdmErrorCode.BadAmbiguousElementBinding, Edm.Strings.Bad_AmbiguousElementBinding(first.Name)) })
+            : base(new EdmError[] { new EdmError(null, EdmErrorCode.BadAmbiguousElementBinding, Error.Format(SRResources.Bad_AmbiguousElementBinding, first.Name)) })
         {
             this.AddBinding(first);
             this.AddBinding(second);

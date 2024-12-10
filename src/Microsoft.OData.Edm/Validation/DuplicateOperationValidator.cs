@@ -51,7 +51,7 @@ namespace Microsoft.OData.Edm.Validation
                         this.context.AddError(
                             function.Location(),
                             EdmErrorCode.DuplicateFunctions,
-                            function.IsBound ? Strings.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterNames(fullName) : Strings.EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterNames(fullName));
+                            function.IsBound ? Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterNames, fullName) : Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterNames, fullName));
                     }
                 }
                 else
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Edm.Validation
                         this.context.AddError(
                             function.Location(),
                             EdmErrorCode.DuplicateFunctions,
-                            function.IsBound ? Strings.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterTypes(fullName) : Strings.EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterTypes(fullName));
+                            function.IsBound ? Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterTypes, fullName) : Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterTypes, fullName));
                     }
                 }
                 else
@@ -89,7 +89,7 @@ namespace Microsoft.OData.Edm.Validation
                         this.context.AddError(
                             action.Location(),
                             EdmErrorCode.DuplicateActions,
-                            action.IsBound ? Strings.EdmModel_Validator_Semantic_ModelDuplicateBoundActions(fullName) : Strings.EdmModel_Validator_Semantic_ModelDuplicateUnBoundActions(fullName));
+                            action.IsBound ? Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateBoundActions, fullName) : Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateUnBoundActions, fullName));
                     }
                 }
                 else

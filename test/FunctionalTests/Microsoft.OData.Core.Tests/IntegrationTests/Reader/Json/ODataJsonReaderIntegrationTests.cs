@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core;
 using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.Utils.ODataLibTest;
@@ -748,7 +749,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 "}";
             List<ODataResource> resources = null;
             List<ODataNestedResourceInfo> nestedResourceInfos = null;
-            ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos, false, false, Strings.ValidationUtils_IncompatibleType("NS.Address", "NS.AddressWithCity"));
+            ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos, false, false, Error.Format(SRResources.ValidationUtils_IncompatibleType, "NS.Address", "NS.AddressWithCity"));
         }
 
         [Fact]
@@ -774,7 +775,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 "}";
             List<ODataResource> resources = null;
             List<ODataNestedResourceInfo> nestedResourceInfos = null;
-            ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos, true, true, Strings.ValidationUtils_IncompatibleType("NS.Address", "NS.AddressWithCity"));
+            ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos, true, true, Error.Format(SRResources.ValidationUtils_IncompatibleType, "NS.Address", "NS.AddressWithCity"));
         }
 
         [Fact]
@@ -1058,7 +1059,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             Action readEntry = () => this.ReadEntryPayloadForUndeclared(payload, reader => { }, false, true);
 
-            readEntry.Throws<ODataException>(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenProperty", "NS.Person"));
+            readEntry.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_PropertyDoesNotExistOnType, "OpenProperty", "NS.Person"));
 
             payload = "{" +
                 "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
@@ -1069,7 +1070,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             readEntry = () => this.ReadEntryPayloadForUndeclared(payload, reader => { }, false, true);
 
-            readEntry.Throws<ODataException>(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenComplex", "NS.Person"));
+            readEntry.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_PropertyDoesNotExistOnType, "OpenComplex", "NS.Person"));
 
             payload = "{" +
                 "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
@@ -1080,7 +1081,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             readEntry = () => this.ReadEntryPayloadForUndeclared(payload, reader => { }, false, true);
 
-            readEntry.Throws<ODataException>(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenNavigationProperty", "NS.Person"));
+            readEntry.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_PropertyDoesNotExistOnType, "OpenNavigationProperty", "NS.Person"));
         }
 
         private static void VerifyProperty(IEnumerable<ODataPropertyInfo> properties, string propertyName, object propertyValue)

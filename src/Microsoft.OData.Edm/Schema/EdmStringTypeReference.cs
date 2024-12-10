@@ -40,7 +40,7 @@ namespace Microsoft.OData.Edm
         {
             if (isUnbounded && maxLength != null)
             {
-                throw new InvalidOperationException(Edm.Strings.EdmModel_Validator_Semantic_IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull);
+                throw new InvalidOperationException(SRResources.EdmModel_Validator_Semantic_IsUnboundedCannotBeTrueWhileMaxLengthIsNotNull);
             }
 
             this.isUnbounded = isUnbounded;

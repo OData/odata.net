@@ -10,6 +10,7 @@ namespace Microsoft.OData.UriParser
 
     using System;
     using System.Diagnostics;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
 
     #endregion Namespaces
@@ -97,7 +98,7 @@ namespace Microsoft.OData.UriParser
         {
             if (this.Kind != ExpressionTokenKind.Identifier)
             {
-                string message = Strings.ExpressionToken_IdentifierExpected(this.Position);
+                string message = Error.Format(SRResources.ExpressionToken_IdentifierExpected, this.Position);
                 throw new ODataException(message);
             }
 

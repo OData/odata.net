@@ -11,7 +11,7 @@ using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -27,7 +27,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataUnrecognizedPathException>(ODataErrorStrings.RequestUriProcessor_EachOnRoot);
+            parse.Throws<ODataUnrecognizedPathException>(SRResources.RequestUriProcessor_EachOnRoot);
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 {
                 });
 
-            parse.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_CannotApplyEachOnSingleEntities("Boss"));
+            parse.Throws<ODataException>(Error.Format(SRResources.RequestUriProcessor_CannotApplyEachOnSingleEntities, "Boss"));
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_CannotApplyEachOnSingleEntities("People"));
+            parse.Throws<ODataException>(Error.Format(SRResources.RequestUriProcessor_CannotApplyEachOnSingleEntities, "People"));
         }
 
         [Fact]
@@ -373,7 +373,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.SummonPuppies"));
+            parse.Throws<ODataException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "Fully.Qualified.Namespace.SummonPuppies"));
         }
 
         [Fact]
@@ -401,7 +401,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
+            parse.Throws<ODataException>(SRResources.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
         }
 
         [Fact]
@@ -412,7 +412,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 (oDataPath, filterClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(Strings.RequestUriProcessor_SyntaxError);
+            parse.Throws<ODataException>(SRResources.RequestUriProcessor_SyntaxError);
         }
         #endregion
 

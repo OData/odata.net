@@ -487,8 +487,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         private void ReportEmptyFile()
         {
             string errorMessage = this.DocumentPath == null ?
-                Edm.Strings.XmlParser_EmptySchemaTextReader :
-                Edm.Strings.XmlParser_EmptyFile(this.DocumentPath);
+                SRResources.XmlParser_EmptySchemaTextReader :
+                Error.Format(SRResources.XmlParser_EmptyFile, this.DocumentPath);
 
             this.ReportError(
                 this.Location,
@@ -500,8 +500,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         {
             string expectedNamespacesString = string.Join(", ", expectedNamespaces);
             string errorMessage = string.IsNullOrEmpty(namespaceUri)
-                    ? Edm.Strings.XmlParser_UnexpectedRootElementNoNamespace(expectedNamespacesString)
-                    : Edm.Strings.XmlParser_UnexpectedRootElementWrongNamespace(namespaceUri, expectedNamespacesString);
+                    ? Error.Format(SRResources.XmlParser_UnexpectedRootElementNoNamespace, expectedNamespacesString)
+                    : Error.Format(SRResources.XmlParser_UnexpectedRootElementWrongNamespace, namespaceUri, expectedNamespacesString);
             this.ReportError(
                 this.Location,
                 EdmErrorCode.UnexpectedXmlElement,
@@ -511,17 +511,17 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         private void ReportUnexpectedRootElement(CsdlLocation elementLocation, string elementName, string expectedNamespace)
         {
             Debug.Assert(!string.IsNullOrEmpty(expectedNamespace), "UnexpectedRootElementInExpectedNamespace requires a valid expected namespace");
-            this.ReportError(elementLocation, EdmErrorCode.UnexpectedXmlElement, Edm.Strings.XmlParser_UnexpectedRootElement(elementName, CsdlConstants.Element_Schema));
+            this.ReportError(elementLocation, EdmErrorCode.UnexpectedXmlElement, Error.Format(SRResources.XmlParser_UnexpectedRootElement, elementName, CsdlConstants.Element_Schema));
         }
 
         private void ReportUnexpectedAttribute(CsdlLocation errorLocation, string attributeName)
         {
-            this.ReportError(errorLocation, EdmErrorCode.UnexpectedXmlAttribute, Edm.Strings.XmlParser_UnexpectedAttribute(attributeName));
+            this.ReportError(errorLocation, EdmErrorCode.UnexpectedXmlAttribute, Error.Format(SRResources.XmlParser_UnexpectedAttribute, attributeName));
         }
 
         private void ReportUnexpectedNodeType(XmlNodeType nodeType)
         {
-            this.ReportError(this.Location, EdmErrorCode.UnexpectedXmlNodeType, Edm.Strings.XmlParser_UnexpectedNodeType(nodeType));
+            this.ReportError(this.Location, EdmErrorCode.UnexpectedXmlNodeType, Error.Format(SRResources.XmlParser_UnexpectedNodeType, nodeType));
         }
 
         private void ReportUnexpectedElement(CsdlLocation errorLocation, string elementName)
@@ -529,18 +529,18 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             // Don't error on unexpected annotations, just ignore
             if (elementName != CsdlConstants.Element_Annotation)
             {
-                this.ReportError(errorLocation, EdmErrorCode.UnexpectedXmlElement, Edm.Strings.XmlParser_UnexpectedElement(elementName));
+                this.ReportError(errorLocation, EdmErrorCode.UnexpectedXmlElement, Error.Format(SRResources.XmlParser_UnexpectedElement, elementName));
             }
         }
 
         private void ReportUnusedElement(CsdlLocation errorLocation, string elementName)
         {
-            this.ReportError(errorLocation, EdmErrorCode.UnexpectedXmlElement, Edm.Strings.XmlParser_UnusedElement(elementName));
+            this.ReportError(errorLocation, EdmErrorCode.UnexpectedXmlElement, Error.Format(SRResources.XmlParser_UnusedElement, elementName));
         }
 
         private void ReportTextNotAllowed(CsdlLocation errorLocation, string textValue)
         {
-            this.ReportError(errorLocation, EdmErrorCode.TextNotAllowed, Edm.Strings.XmlParser_TextNotAllowed(textValue));
+            this.ReportError(errorLocation, EdmErrorCode.TextNotAllowed, Error.Format(SRResources.XmlParser_TextNotAllowed, textValue));
         }
 
         #endregion

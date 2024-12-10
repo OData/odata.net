@@ -443,7 +443,7 @@ namespace Microsoft.OData.Client.Metadata
             }
             else
             {
-                throw OData.Client.Error.InvalidOperation(OData.Client.Strings.ClientType_MissingProperty(value.GetType().ToString(), propertyName));
+                throw Error.InvalidOperation(Error.Format(SRResources.ClientType_MissingProperty, value.GetType().ToString(), propertyName));
             }
         }
 

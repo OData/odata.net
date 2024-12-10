@@ -11,12 +11,12 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core;
 using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.Spatial;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -79,7 +79,7 @@ namespace Microsoft.OData.Tests.Json
         {
             ODataProperty property = new ODataProperty { Name = "Prop", Value = null };
             Action test = () => WriteAndValidate(outputContext => outputContext.WriteProperty(property), "", writingResponse: true);
-            test.Throws<ODataException>(ODataErrorStrings.ODataMessageWriter_CannotWriteTopLevelNull);
+            test.Throws<ODataException>(SRResources.ODataMessageWriter_CannotWriteTopLevelNull);
         }
 
         [Fact]
@@ -729,7 +729,7 @@ namespace Microsoft.OData.Tests.Json
                     await jsonOutputContext.WriteInStreamErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false);
                 }));
 
-            Assert.Equal(Strings.ODataParameterWriter_InStreamErrorNotSupported, exception.Message);
+            Assert.Equal(SRResources.ODataParameterWriter_InStreamErrorNotSupported, exception.Message);
         }
 
         [Fact]
@@ -745,7 +745,7 @@ namespace Microsoft.OData.Tests.Json
                     await jsonOutputContext.WriteInStreamErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false);
                 }));
 
-            Assert.Equal(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_CannotWriteInStreamErrorForBatch, exception.Message);
         }
 
 #endregion Async Tests

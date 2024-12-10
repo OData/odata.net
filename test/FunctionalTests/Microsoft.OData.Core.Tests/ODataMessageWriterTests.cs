@@ -18,6 +18,7 @@ using Microsoft.OData.Tests.Json;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm.Csdl;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests
 {
@@ -32,7 +33,7 @@ namespace Microsoft.OData.Tests
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings { JsonPCallback = "functionName" };
             Action constructorCall = () => new ODataMessageWriter(new DummyRequestMessage(), settings);
-            constructorCall.Throws<ODataException>(Strings.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
+            constructorCall.Throws<ODataException>(SRResources.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
         }
 
         [Fact]
@@ -50,7 +51,7 @@ namespace Microsoft.OData.Tests
             var writer = new ODataMessageWriter(new DummyRequestMessage());
             var entityElementType = new EdmEntityTypeReference(new EdmEntityType("Fake", "Fake"), true);
             Action createWriterWithEntityCollectionType = () => writer.CreateODataCollectionWriter(entityElementType);
-            createWriterWithEntityCollectionType.Throws<ODataException>(Strings.ODataMessageWriter_NonCollectionType("Fake.Fake"));
+            createWriterWithEntityCollectionType.Throws<ODataException>(Error.Format(SRResources.ODataMessageWriter_NonCollectionType, "Fake.Fake"));
         }
 
         [Fact]
@@ -285,7 +286,7 @@ namespace Microsoft.OData.Tests
                 Value = "This is a test ия"
             });
 
-            writePropertyAction.Throws<ODataException>(Strings.ODataMessageWriter_JsonWriterFactory_ReturnedNull(false, Encoding.UTF8.WebName));
+            writePropertyAction.Throws<ODataException>(Error.Format(SRResources.ODataMessageWriter_JsonWriterFactory_ReturnedNull, false, Encoding.UTF8.WebName));
         }
 
         [Fact]

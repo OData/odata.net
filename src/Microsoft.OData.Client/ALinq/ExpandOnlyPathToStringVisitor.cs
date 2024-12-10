@@ -33,7 +33,7 @@ namespace Microsoft.OData.Client
         /// <returns>Always throws, since a system token is invalid in an expand path.</returns>
         public string Visit(SystemToken tokenIn)
         {
-            throw new NotSupportedException(Strings.ALinq_IllegalSystemQueryOption(tokenIn.Identifier));
+            throw new NotSupportedException(Error.Format(SRResources.ALinq_IllegalSystemQueryOption, tokenIn.Identifier));
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    throw new NotSupportedException(Strings.ALinq_TypeTokenWithNoTrailingNavProp(tokenIn.Identifier));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_TypeTokenWithNoTrailingNavProp, tokenIn.Identifier));
                 }
             }
             else

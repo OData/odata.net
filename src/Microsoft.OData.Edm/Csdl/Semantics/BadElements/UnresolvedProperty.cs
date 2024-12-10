@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class UnresolvedProperty : BadProperty, IUnresolvedElement
     {
         public UnresolvedProperty(IEdmStructuredType declaringType, string name, EdmLocation location)
-            : base(declaringType, name, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedProperty, Edm.Strings.Bad_UnresolvedProperty(name)) })
+            : base(declaringType, name, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedProperty, Error.Format(SRResources.Bad_UnresolvedProperty, name)) })
         {
         }
     }

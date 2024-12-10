@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 using System.Linq;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -28,7 +28,7 @@ namespace Microsoft.OData.UriParser
 
             if (rangeVariable == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_ParameterNotInScope(rangeVariableToken.Name));
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_ParameterNotInScope, rangeVariableToken.Name));
             }
 
             return NodeFactory.CreateRangeVariableReferenceNode(rangeVariable);

@@ -266,7 +266,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         string alias;
                         if (mappings.TryGetValue(ns, out alias) && !usedAlias.Add(alias))
                         {
-                            errors.Add(new EdmError(this.Location(), EdmErrorCode.DuplicateAlias, Strings.CsdlSemantics_DuplicateAlias(ns, alias)));
+                            errors.Add(new EdmError(this.Location(), EdmErrorCode.DuplicateAlias, Error.Format(SRResources.CsdlSemantics_DuplicateAlias, ns, alias)));
                         }
                     }
                 }

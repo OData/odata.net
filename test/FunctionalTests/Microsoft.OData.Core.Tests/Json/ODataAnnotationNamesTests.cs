@@ -6,6 +6,7 @@
 
 using System;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Json;
 using Xunit;
 
@@ -89,7 +90,7 @@ namespace Microsoft.OData.Tests.Json
             foreach(string annotationName in ReservedODataAnnotationNames)
             {
                 Action test = () => ODataAnnotationNames.ValidateIsCustomAnnotationName(annotationName);
-                test.Throws<ODataException>(Strings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(annotationName));
+                test.Throws<ODataException>(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, annotationName));
             }
         }
     }

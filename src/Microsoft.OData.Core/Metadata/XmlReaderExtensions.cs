@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Metadata
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System.Diagnostics;
     using System.Text;
@@ -110,7 +111,7 @@ namespace Microsoft.OData.Metadata
                             break;
 
                         default:
-                            throw new ODataException(Strings.XmlReaderExtension_InvalidNodeInStringValue(reader.NodeType));
+                            throw new ODataException(Error.Format(SRResources.XmlReaderExtension_InvalidNodeInStringValue, reader.NodeType));
                     }
                 }
 

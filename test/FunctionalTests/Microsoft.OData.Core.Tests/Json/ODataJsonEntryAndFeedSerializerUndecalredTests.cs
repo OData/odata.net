@@ -11,6 +11,7 @@ using Microsoft.OData.Json;
 using Microsoft.OData.Tests;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.Test.OData.TDD.Tests.Writer.Json
 {
@@ -172,7 +173,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.Json
 
             Action test = () => WriteDeclaredUntypedProperty(property);
             ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ValidationUtils_NonPrimitiveTypeForPrimitiveValue("Collection(Edm.Untyped)"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ValidationUtils_NonPrimitiveTypeForPrimitiveValue, "Collection(Edm.Untyped)"), exception.Message);
         }
 
         [Fact]

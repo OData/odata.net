@@ -53,7 +53,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             if (!expectedClientType.IsCollection())
             {
-                throw new DataServiceClientException(DSClient.Strings.Materializer_TypeShouldBeCollectionError(expectedClientType.FullName()));
+                throw new DataServiceClientException(Error.Format(SRResources.Materializer_TypeShouldBeCollectionError, expectedClientType.FullName()));
             }
 
             Type underlyingExpectedType = Nullable.GetUnderlyingType(this.ExpectedType) ?? this.ExpectedType;
@@ -162,7 +162,7 @@ namespace Microsoft.OData.Client.Materialization
             /// <exception cref="System.InvalidOperationException">The collection was modified after the enumerator was created. </exception>
             public void Reset()
             {
-                throw new InvalidOperationException(DSClient.Strings.Materializer_ResetAfterEnumeratorCreationError);
+                throw new InvalidOperationException(SRResources.Materializer_ResetAfterEnumeratorCreationError);
             }
         }
     }

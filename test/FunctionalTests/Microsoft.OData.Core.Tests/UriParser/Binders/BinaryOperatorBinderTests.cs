@@ -8,6 +8,7 @@ using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -352,7 +353,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binaryOperatorQueryToken = new BinaryOperatorToken(BinaryOperatorKind.And, new LiteralToken("foo"), new LiteralToken("bar"));
             Action bind = () => this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_BinaryOperatorOperandNotSingleValue("And"));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_BinaryOperatorOperandNotSingleValue, "And"));
         }
 
         [Fact]
@@ -364,7 +365,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binaryOperatorToken = new BinaryOperatorToken(BinaryOperatorKind.Equal, new LiteralToken("foo"), new LiteralToken("bar"));
             Action bind = () => this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorToken);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_BinaryOperatorOperandNotSingleValue("Equal"));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_BinaryOperatorOperandNotSingleValue, "Equal"));
         }
 
         [Fact]
@@ -375,7 +376,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binaryOperatorToken = new BinaryOperatorToken(BinaryOperatorKind.GreaterThan, new LiteralToken("foo"), new LiteralToken("bar"));
             Action bind = () => this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorToken);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_IncompatibleOperandsError("Edm.Boolean", "Edm.Int32", BinaryOperatorKind.GreaterThan));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError, "Edm.Boolean", "Edm.Int32", BinaryOperatorKind.GreaterThan));
         }
 
         [Fact]
@@ -386,7 +387,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binaryOperatorQueryToken = new BinaryOperatorToken(BinaryOperatorKind.And, new LiteralToken("foo"), new LiteralToken("bar"));
             Action bind = () => this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_IncompatibleOperandsError("Edm.DateTimeOffset", "<null>", BinaryOperatorKind.And));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError, "Edm.DateTimeOffset", "<null>", BinaryOperatorKind.And));
         }
 
         [Fact]
@@ -397,7 +398,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binaryOperatorQueryToken = new BinaryOperatorToken(BinaryOperatorKind.And, new LiteralToken("foo"), new LiteralToken("bar"));
             Action bind = () => this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_IncompatibleOperandsError("Edm.DateTimeOffset", "<null>", BinaryOperatorKind.And));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError, "Edm.DateTimeOffset", "<null>", BinaryOperatorKind.And));
         }
 
         [Fact]
@@ -408,7 +409,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binaryOperatorQueryToken = new BinaryOperatorToken(BinaryOperatorKind.Multiply, new LiteralToken("foo"), new LiteralToken("bar"));
             Action bind = () => this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_IncompatibleOperandsError("Edm.Int32", "Edm.String", BinaryOperatorKind.Multiply));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError, "Edm.Int32", "Edm.String", BinaryOperatorKind.Multiply));
         }
 
         [Fact]
@@ -419,7 +420,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var binaryOperatorQueryToken = new BinaryOperatorToken(BinaryOperatorKind.Equal, new LiteralToken("foo"), new LiteralToken("bar"));
             Action bind = () => this.binaryOperatorBinder.BindBinaryOperator(binaryOperatorQueryToken);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_IncompatibleOperandsError("Edm.Boolean", "Edm.Int32", BinaryOperatorKind.Equal));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError, "Edm.Boolean", "Edm.Int32", BinaryOperatorKind.Equal));
         }
 
         /// <summary>

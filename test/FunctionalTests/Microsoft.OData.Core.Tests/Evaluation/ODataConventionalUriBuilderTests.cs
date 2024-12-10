@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Evaluation;
@@ -121,14 +122,14 @@ namespace Microsoft.OData.Tests.Evaluation
         public void BuildEntityInstanceUriShouldFailOnTypeWithNoKeyProperties()
         {
             Action action = () => this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/MultipleKeys"), new Collection<KeyValuePair<string, object>>(), "TestModel.EntityTypeWithNoKeys");
-            action.Throws<ODataException>(Strings.ODataConventionalUriBuilder_EntityTypeWithNoKeyProperties("TestModel.EntityTypeWithNoKeys"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataConventionalUriBuilder_EntityTypeWithNoKeyProperties, "TestModel.EntityTypeWithNoKeys"));
         }
 
         [Fact]
         public void BuildEntityInstanceUriShouldFailWithNullKeyValueKind()
         {
             Action action = () => this.builder.BuildEntityInstanceUri(new Uri("http://odata.org/base/Products"), new Collection<KeyValuePair<string, object>> { new KeyValuePair<string, object>("Id", null) }, "TestModel.Product");
-            action.Throws<ODataException>(Strings.ODataConventionalUriBuilder_NullKeyValue("Id", "TestModel.Product"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataConventionalUriBuilder_NullKeyValue, "Id", "TestModel.Product"));
         }
 
         [Fact]

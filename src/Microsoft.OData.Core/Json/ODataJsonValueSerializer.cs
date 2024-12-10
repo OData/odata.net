@@ -14,7 +14,7 @@ namespace Microsoft.OData.Json
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
 #endregion Namespaces
 
@@ -124,7 +124,7 @@ namespace Microsoft.OData.Json
             // In requests, we allow the property type reference to be null if the type name is specified in the OM
             if (metadataTypeReference == null && !this.WritingResponse && typeName == null && this.Model.IsUserModel())
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
+                throw new ODataException(SRResources.ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
             }
 
             // Resolve the type name to the type; if no type name is specified we will use the type inferred from metadata.
@@ -189,7 +189,7 @@ namespace Microsoft.OData.Json
                 Debug.Assert(metadataTypeReference == null, "Never expect a metadata type for top-level properties.");
                 if (typeName == null)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonValueSerializer_MissingTypeNameOnCollection);
+                    throw new ODataException(SRResources.ODataJsonValueSerializer_MissingTypeNameOnCollection);
                 }
             }
             else
@@ -197,7 +197,7 @@ namespace Microsoft.OData.Json
                 // In requests, we allow the metadata type reference to be null if the type name is specified in the OM
                 if (metadataTypeReference == null && !this.WritingResponse && typeName == null && this.Model.IsUserModel())
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest);
+                    throw new ODataException(SRResources.ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest);
                 }
             }
 
@@ -374,7 +374,7 @@ namespace Microsoft.OData.Json
 
             if (string.IsNullOrEmpty(value.RawValue))
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonValueSerializer_MissingRawValueOnUntyped);
+                throw new ODataException(SRResources.ODataJsonValueSerializer_MissingRawValueOnUntyped);
             }
 
             this.JsonWriter.WriteRawValue(value.RawValue);
@@ -451,7 +451,7 @@ namespace Microsoft.OData.Json
             // In requests, we allow the property type reference to be null if the type name is specified in the OM
             if (metadataTypeReference == null && !this.WritingResponse && typeName == null && this.Model.IsUserModel())
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
+                throw new ODataException(SRResources.ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
             }
 
             // Resolve the type name to the type; if no type name is specified we will use the type inferred from metadata.
@@ -519,7 +519,7 @@ namespace Microsoft.OData.Json
                 Debug.Assert(metadataTypeReference == null, "Never expect a metadata type for top-level properties.");
                 if (typeName == null)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonValueSerializer_MissingTypeNameOnCollection);
+                    throw new ODataException(SRResources.ODataJsonValueSerializer_MissingTypeNameOnCollection);
                 }
             }
             else
@@ -527,7 +527,7 @@ namespace Microsoft.OData.Json
                 // In requests, we allow the metadata type reference to be null if the type name is specified in the OM
                 if (metadataTypeReference == null && !this.WritingResponse && typeName == null && this.Model.IsUserModel())
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest);
+                    throw new ODataException(SRResources.ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest);
                 }
             }
 
@@ -714,7 +714,7 @@ namespace Microsoft.OData.Json
 
             if (string.IsNullOrEmpty(value.RawValue))
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonValueSerializer_MissingRawValueOnUntyped);
+                throw new ODataException(SRResources.ODataJsonValueSerializer_MissingRawValueOnUntyped);
             }
 
             return this.JsonWriter.WriteRawValueAsync(value.RawValue);

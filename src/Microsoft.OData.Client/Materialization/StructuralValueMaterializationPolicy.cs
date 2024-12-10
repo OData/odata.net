@@ -169,13 +169,13 @@ namespace Microsoft.OData.Client.Materialization
                 // Collections must not be null
                 if (property.Value == null)
                 {
-                    throw DSClient.Error.InvalidOperation(DSClient.Strings.Collection_NullCollectionNotSupported(property.Name));
+                    throw DSClient.Error.InvalidOperation(Error.Format(SRResources.Collection_NullCollectionNotSupported, property.Name));
                 }
 
                 // This happens if the payload contain just primitive value for a Collection property
                 if (property.Value is string)
                 {
-                    throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MixedTextWithComment);
+                    throw DSClient.Error.InvalidOperation(SRResources.Deserialize_MixedTextWithComment);
                 }
 
                 // ODataLib already parsed the data and materialized all the primitive types. There is nothing more to materialize
@@ -265,7 +265,7 @@ namespace Microsoft.OData.Client.Materialization
                 // This is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
                 if (ClientTypeUtil.TypeOrElementTypeIsEntity(property.PropertyType))
                 {
-                    throw DSClient.Error.InvalidOperation(DSClient.Strings.Materializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));
+                    throw DSClient.Error.InvalidOperation(Error.Format(SRResources.Materializer_InvalidEntityType, property.EntityCollectionItemType ?? property.PropertyType));
                 }
 
                 if (property.IsKnownType)

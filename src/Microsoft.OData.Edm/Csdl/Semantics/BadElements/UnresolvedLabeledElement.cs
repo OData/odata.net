@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class UnresolvedLabeledElement : BadLabeledExpression, IUnresolvedElement
     {
         public UnresolvedLabeledElement(string label, EdmLocation location)
-            : base(label, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedLabeledElement, Edm.Strings.Bad_UnresolvedLabeledElement(label)) })
+            : base(label, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedLabeledElement, Error.Format(SRResources.Bad_UnresolvedLabeledElement, label)) })
         {
         }
     }

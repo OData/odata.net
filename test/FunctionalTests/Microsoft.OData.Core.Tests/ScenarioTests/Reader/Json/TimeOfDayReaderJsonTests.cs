@@ -10,7 +10,7 @@ using Microsoft.OData.Json;
 using Microsoft.OData.Tests.Json;
 using Microsoft.OData.Edm;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
 {
@@ -56,7 +56,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
             foreach (var testCase in testCases)
             {
                 Action action = () => this.VerifyTimeOfDayValueReader(testCase.Payload, "Edm.TimeOfDay", null);
-                action.Throws<ODataException>(ErrorStrings.ReaderValidationUtils_CannotConvertPrimitiveValue(testCase.Show, "Edm.TimeOfDay"));
+                action.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, testCase.Show, "Edm.TimeOfDay"));
             }
         }
 

@@ -87,7 +87,7 @@ namespace Microsoft.OData.Edm
 
             if (!Object.ReferenceEquals(this, property.DeclaringType))
             {
-                throw new InvalidOperationException(Edm.Strings.EdmModel_Validator_Semantic_DeclaringTypeMustBeCorrect(property.Name));
+                throw new InvalidOperationException(Error.Format(SRResources.EdmModel_Validator_Semantic_DeclaringTypeMustBeCorrect, property.Name));
             }
 
             this.declaredProperties.Add(property);

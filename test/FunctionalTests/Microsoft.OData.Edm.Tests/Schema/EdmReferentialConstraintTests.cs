@@ -81,7 +81,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Action createWithTooFewProperties = () => EdmReferentialConstraint.Create(new[] { this.otherTypeProperty1 }, this.typeWithTwoKeys.Key());
 
             var exception = Assert.Throws<ArgumentException>(createWithTooFewProperties);
-            Assert.Equal(Strings.Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType(2, 1), exception.Message);
+            Assert.Equal(Error.Format(SRResources.Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType, 2, 1), exception.Message);
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         {
             Action createWithTooManyProperties = () => EdmReferentialConstraint.Create(new[] { this.otherTypeProperty1, this.otherTypeProperty2 }, this.typeWithOneKey.Key());
             var exception = Assert.Throws<ArgumentException>(createWithTooManyProperties);
-            Assert.Equal(Strings.Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType(1, 2), exception.Message);
+            Assert.Equal(Error.Format(SRResources.Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType, 1, 2), exception.Message);
         }
 
         [Fact]

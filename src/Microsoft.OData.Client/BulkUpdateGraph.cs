@@ -93,7 +93,7 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    throw Error.InvalidOperation(Strings.DataBinding_Util_UnknownEntitySetName(parentDescriptor.Entity.GetType().FullName));
+                    throw Error.InvalidOperation(Error.Format(SRResources.DataBinding_Util_UnknownEntitySetName, parentDescriptor.Entity.GetType().FullName));
                 }
             }
         }

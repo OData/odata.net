@@ -8,6 +8,7 @@ using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -43,7 +44,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         {
             var entityTypeRef = HardCodedTestModel.GetPersonTypeReference();
             Action ctor = () => new NonResourceRangeVariable("abc", entityTypeRef, null);
-            ctor.Throws<ArgumentException>(Strings.Nodes_NonentityParameterQueryNodeWithEntityType(entityTypeRef.FullName()));
+            ctor.Throws<ArgumentException>(Error.Format(SRResources.Nodes_NonentityParameterQueryNodeWithEntityType, entityTypeRef.FullName()));
         }
 
         [Fact]

@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using Xunit;
 
@@ -68,7 +69,7 @@ namespace Microsoft.OData.Tests
         public void SettingValueToNonPrimitiveTypeShouldThrow()
         {
             Action testSubject = () => this.property.Value = new ODataMessageWriterSettings();
-            testSubject.Throws<ODataException>(Strings.ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromUnsupportedValueType("Microsoft.OData.ODataMessageWriterSettings"));
+            testSubject.Throws<ODataException>(Error.Format(SRResources.ODataPrimitiveValue_CannotCreateODataPrimitiveValueFromUnsupportedValueType, "Microsoft.OData.ODataMessageWriterSettings"));
         }
 
         [Fact]

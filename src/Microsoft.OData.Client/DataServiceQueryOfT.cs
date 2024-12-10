@@ -383,7 +383,7 @@ namespace Microsoft.OData.Client
             }
             catch (NotSupportedException e)
             {
-                return Strings.ALinq_TranslationError(e.Message);
+                return Error.Format(SRResources.ALinq_TranslationError, e.Message);
             }
         }
 

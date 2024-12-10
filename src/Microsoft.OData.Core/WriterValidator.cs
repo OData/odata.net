@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     using System.Collections.Generic;
     using Microsoft.Extensions.ObjectPool;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
 
@@ -161,7 +162,7 @@ namespace Microsoft.OData
                                 typeReferenceFromValue.Definition))
                         {
                             throw new ODataException(
-                                Strings.ValidationUtils_IncompatibleType(
+                                Error.Format(SRResources.ValidationUtils_IncompatibleType,
                                     typeReferenceFromValue.FullName(),
                                     typeReferenceFromMetadata.FullName()));
                         }
@@ -173,7 +174,7 @@ namespace Microsoft.OData
                     if (typeReferenceFromMetadata.FullName() != typeReferenceFromValue.FullName())
                     {
                         throw new ODataException(
-                            Strings.ValidationUtils_IncompatibleType(
+                            Error.Format(SRResources.ValidationUtils_IncompatibleType,
                                 typeReferenceFromValue.FullName(),
                                 typeReferenceFromMetadata.FullName()));
                     }
@@ -242,7 +243,7 @@ namespace Microsoft.OData
                 // ...
                 // If the property is single-valued and has the null value, the service responds with 204 No Content.
                 // ...
-                throw new ODataException(Strings.ODataMessageWriter_CannotWriteTopLevelNull);
+                throw new ODataException(SRResources.ODataMessageWriter_CannotWriteTopLevelNull);
             }
         }
 

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -45,7 +46,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             foreach (var input in SharedInvalidNumericInput)
             {
                 Action action = () => ParseTop(input);
-                action.Throws<ODataException>(Strings.SyntacticTree_InvalidTopQueryOptionValue(input));
+                action.Throws<ODataException>(Error.Format(SRResources.SyntacticTree_InvalidTopQueryOptionValue, input));
             }
 
         }
@@ -70,7 +71,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             foreach (var input in SharedInvalidNumericInput)
             {
                 Action action = () => ParseSkip(input);
-                action.Throws<ODataException>(Strings.SyntacticTree_InvalidSkipQueryOptionValue(input));
+                action.Throws<ODataException>(Error.Format(SRResources.SyntacticTree_InvalidSkipQueryOptionValue, input));
             }
         }
         #endregion $skip option
@@ -108,7 +109,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var parser = new ODataQueryOptionParser(EdmCoreModel.Instance, null, null, new Dictionary<string, string>() { { "$index", value } });
             Action action = () => parser.ParseIndex();
-            action.Throws<ODataException>(Strings.SyntacticTree_InvalidIndexQueryOptionValue(value));
+            action.Throws<ODataException>(Error.Format(SRResources.SyntacticTree_InvalidIndexQueryOptionValue, value));
         }
     }
 }

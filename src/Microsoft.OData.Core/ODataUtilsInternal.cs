@@ -13,6 +13,7 @@ namespace Microsoft.OData
     using System.Linq;
 
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -95,7 +96,7 @@ namespace Microsoft.OData
                 // Anything else should never show up
                 default:
                     Debug.Assert(false, "Unsupported payload kind found: " + payloadKind.ToString());
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataUtilsInternal_IsPayloadKindSupported_UnreachableCodePath));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataUtilsInternal_IsPayloadKindSupported_UnreachableCodePath));
             }
         }
 

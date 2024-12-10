@@ -8,6 +8,7 @@ using System.Globalization;
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -235,7 +236,7 @@ namespace Microsoft.OData
                                     break;
 
                                 default:
-                                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReaderStreamBuffer_ScanForBoundary));
+                                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReaderStreamBuffer_ScanForBoundary));
                             }
                         }
 
@@ -247,7 +248,7 @@ namespace Microsoft.OData
 
                         break;
                     default:
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReaderStreamBuffer_ScanForBoundary));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReaderStreamBuffer_ScanForBoundary));
                 }
             }
         }
@@ -479,7 +480,7 @@ namespace Microsoft.OData
                                     // and we still could not find the end of it because there are
                                     // so many whitespaces before the terminating line resource set - fail
                                     // (security limit on the whitespaces)
-                                    throw new ODataException(Strings.ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached(BufferLength));
+                                    throw new ODataException(Error.Format(SRResources.ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached, BufferLength));
                                 }
 
                                 // Report a partial match.
@@ -501,7 +502,7 @@ namespace Microsoft.OData
                                 // and we still could not find the end of it because there are
                                 // so many whitespaces before the terminating line resource set - fail
                                 // (security limit on the whitespaces)
-                                throw new ODataException(Strings.ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached(BufferLength));
+                                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached, BufferLength));
                             }
 
                             // Report a partial match.
@@ -515,7 +516,7 @@ namespace Microsoft.OData
                             return ODataBatchReaderStreamScanResult.Match;
 
                         default:
-                            throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReaderStreamBuffer_ScanForBoundary));
+                            throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReaderStreamBuffer_ScanForBoundary));
                     }
                 }
             }
