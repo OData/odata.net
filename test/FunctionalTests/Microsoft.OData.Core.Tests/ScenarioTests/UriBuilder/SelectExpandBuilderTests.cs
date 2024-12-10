@@ -668,12 +668,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($filter=$it/MyAddress/City eq 'Seattle')"), actualUri.OriginalString);
         }
 
-        [Fact]
-        public void ExpandWithDollarItInFilterInOperatorShouldWork()
+        [Theory]
+        [InlineData("People?$expand=MyDog($filter=$it/ID in ['1', '2', '3'])", "MyDog($filter=$it/ID in ['1', '2', '3'])")]
+        [InlineData("People?$expand=MyDog($filter=$it/ID in ('1', '2', '3'))", "MyDog($filter=$it/ID in ('1', '2', '3'))")]
+        [InlineData("People?$expand=MyDog($filter=$it/Name in (''))", "MyDog($filter=$it/Name in (''))")]
+        [InlineData("People?$expand=MyDog($filter=$it/Name in [''])", "MyDog($filter=$it/Name in [''])")]
+        public void ExpandWithDollarItInFilterInOperatorShouldWork(string filterQuery, string expectedSubQuery)
         {
-            Uri queryUri = new Uri("People?$expand=MyDog($filter=$it/ID in ['1', '2', '3'])", UriKind.Relative);
+            Uri queryUri = new Uri(filterQuery, UriKind.Relative);
             Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
-            Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString("MyDog($filter=$it/ID in ['1', '2', '3'])"), actualUri.OriginalString);
+            Assert.Equal("http://gobbledygook/People?$expand=" + Uri.EscapeDataString(expectedSubQuery), actualUri.OriginalString);
         }
 
         [Fact]
