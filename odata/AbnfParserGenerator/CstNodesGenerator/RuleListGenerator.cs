@@ -131,7 +131,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
             IsOverride = @override;
             ReturnType = returnType;
             GenericTypeParameters = genericTypeParameters;
-            MethodName = methodName;
+            Name = methodName;
             Parameters = parameters;
             this.Body = body;
         }
@@ -146,7 +146,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
         public IEnumerable<string> GenericTypeParameters { get; }
 
-        public string MethodName { get; }
+        public string Name { get; }
 
         public IEnumerable<MethodParameter> Parameters { get; }
 

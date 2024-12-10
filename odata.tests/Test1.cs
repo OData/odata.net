@@ -430,41 +430,88 @@
                         {
                             builder.Append("override ");
                         }
+
+                        builder.Append(method.ReturnType).Append(" ");
+                        builder.Append(method.Name);
+                        var methodGenericTypeParameters = string.Join(", ", method.GenericTypeParameters);
+                        if (!string.IsNullOrEmpty(methodGenericTypeParameters))
+                        {
+                            builder.Append("<").Append(methodGenericTypeParameters).Append(">");
+                        }
+
+                        builder.Append("(");
+                        builder.AppendJoin(", ", method.Parameters, (parameter, b) => b.Append(parameter.Type).Append(" ").Append(parameter.Name));
+                        builder.Append(")");
+                        if (method.Body == null)
+                        {
+                            builder.AppendLine(";");
+                        }
+                        else
+                        {
+                            builder.AppendLine();
+                            builder.AppendLine("{");
+                            builder.Indent();
+                            builder.AppendLine(method.Body);
+                            builder.Unindent();
+                            builder.AppendLine("}");
+                        }
                     }
                 }
 
-
-
-
-                var constructorParameters = @class.ConstructorParameters;
-                if (constructorParameters != null)
+                if (@class.Properties.Any())
                 {
-                    builder.Append($"public {@class.Name}(");
-                    builder.AppendJoin(
-                        ",", 
-                        constructorParameters
-                            .Value
-                            .Select(constructorParameter => $"{constructorParameter.Type} {constructorParameter.Name}"));
-                    builder.AppendLine(")");
-                    builder.AppendLine("{");
-                    //// TODO set values
-                    builder.AppendLine("}");
-                }
-
-                foreach (var property in @class.Properties)
-                {
-                    if (property.Type == null)
+                    if (needsNewLine)
                     {
-                        /// TODO throw new Exception("TODO");
+                        builder.AppendLine();
                     }
 
-                    //// TODO null propogation
-                    builder.AppendLine($"public {property.Type?.Name} {property.Name.ToString()} {{ get; }}");
+                    needsNewLine = true;
+                    foreach (var property in @class.Properties)
+                    {
+                        builder.Append(property.AccessModifier.ToString().ToLower()).Append(" ");
+                        builder.Append(property.Type).Append(" ");
+                        builder.Append(property.Name).Append(" ");
+                        var needsBrace = true;
+                        if (property.HasGet)
+                        {
+                            if (needsBrace)
+                            {
+                                builder.Append("{ ");
+                            }
+
+                            needsBrace = false;
+                            builder.Append("get; ");
+                        }
+
+                        if (property.HasSet)
+                        {
+                            if (needsBrace)
+                            {
+                                builder.Append("{ ");
+                            }
+
+                            needsBrace = false;
+                            builder.Append("set; ");
+                        }
+
+                        if (!needsBrace)
+                        {
+                            builder.Append("}");
+                        }
+
+                        builder.AppendLine();
+                    }
                 }
 
                 foreach (var nestedClass in @class.NestedClasses)
                 {
-                    new ClassTranscriber().Transcribe(nestedClass, builder);
+                    if (needsNewLine)
+                    {
+                        builder.AppendLine();
+                    }
+
+                    needsNewLine = true;
+                    Transcribe(nestedClass, builder);
                 }
 
                 builder.Unindent();
