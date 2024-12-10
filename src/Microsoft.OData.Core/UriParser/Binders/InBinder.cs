@@ -106,21 +106,25 @@ namespace Microsoft.OData.UriParser
             LiteralToken literalToken = queryToken as LiteralToken;
             if (literalToken != null)
             {
-                string originalLiteralText = literalToken.OriginalText;
-
                 // Parentheses-based collections are not standard JSON but bracket-based ones are.
                 // Temporarily switch our collection to bracket-based so that the JSON reader will
                 // correctly parse the collection. Then pass the original literal text to the token.
-                string bracketLiteralText = originalLiteralText;
-                if (bracketLiteralText[0] == '(')
-                {
-                    Debug.Assert(bracketLiteralText[bracketLiteralText.Length - 1] == ')',
-                        "Collection with opening '(' should have corresponding ')'");
+                string bracketLiteralText = literalToken.OriginalText;
 
-                    StringBuilder replacedText = new StringBuilder(bracketLiteralText);
-                    replacedText[0] = '[';
-                    replacedText[replacedText.Length - 1] = ']';
-                    bracketLiteralText = replacedText.ToString();
+                if (bracketLiteralText[0] == '(' || bracketLiteralText[0] == '[')
+                {
+                    Debug.Assert((bracketLiteralText[0] == '(' && bracketLiteralText[^1] == ')') || (bracketLiteralText[0] == '[' && bracketLiteralText[^1] == ']'),
+                        $"Collection with opening '{bracketLiteralText[0]}' should have corresponding '{(bracketLiteralText[0] == '(' ? ')' : ']')}'");
+
+                    if (bracketLiteralText[0] == '(' && bracketLiteralText[^1] == ')')
+                    {
+                        bracketLiteralText = string.Create(bracketLiteralText.Length, bracketLiteralText, (span, state) =>
+                        {
+                            state.AsSpan().CopyTo(span);
+                            span[0] = '[';
+                            span[^1] = ']';
+                        });
+                    }
 
                     Debug.Assert(expectedType.IsCollection());
                     string expectedTypeFullName = expectedType.Definition.AsElementType().FullTypeName();
@@ -155,7 +159,7 @@ namespace Microsoft.OData.UriParser
                 }
 
                 object collection = ODataUriConversionUtils.ConvertFromCollectionValue(bracketLiteralText, model, expectedType);
-                LiteralToken collectionLiteralToken = new LiteralToken(collection, originalLiteralText, expectedType);
+                LiteralToken collectionLiteralToken = new LiteralToken(collection, literalToken.OriginalText, expectedType);
                 operand = this.bindMethod(collectionLiteralToken) as CollectionConstantNode;
             }
             else
