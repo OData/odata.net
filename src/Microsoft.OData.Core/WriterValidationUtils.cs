@@ -441,7 +441,7 @@ namespace Microsoft.OData
                 {
                     errorTemplate = expandedPayloadKind.Value == ODataPayloadKind.ResourceSet
                         ? (object obj) => Error.Format(SRResources.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent, obj)
-                        : (_) => SRResources.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent;
+                        : (object obj) => Error.Format(SRResources.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent, obj);
                 }
             }
 
@@ -462,7 +462,7 @@ namespace Microsoft.OData
                         {
                             errorTemplate = isCollectionType
                                 ? (object obj) => Error.Format(SRResources.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata, obj)
-                                : (_) => SRResources.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata;
+                                : (object obj) => Error.Format(SRResources.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata, obj);
                         }
                     }
 
@@ -472,7 +472,7 @@ namespace Microsoft.OData
                     {
                         errorTemplate = isCollectionType
                             ? (object obj) => Error.Format(SRResources.WriterValidationUtils_ExpandedLinkWithResourcePayloadAndResourceSetMetadata, obj)
-                            : (_) => SRResources.WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata;
+                            : (object obj) => Error.Format(SRResources.WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata, obj);
                     }
                 }
             }
