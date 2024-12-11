@@ -1251,7 +1251,7 @@
     <value>An XML node of type '{0}' was found at the root level. The root level of an OData payload must contain a single XML element and no text nodes.</value>
   </data>
   <data name="ODataMetadataInputContext_ErrorReadingMetadata" xml:space="preserve">
-    <value>The metadata document could not be read from the message content.\r\n{0}</value>
+    <value>The metadata document could not be read from the message content.{0}</value>
   </data>
   <data name="ODataMetadataOutputContext_ErrorWritingMetadata" xml:space="preserve">
     <value>The metadata document could not be written as specified.\r\n{0}</value>

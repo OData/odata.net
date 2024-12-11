@@ -2436,6 +2436,7 @@ namespace Microsoft.OData.Json
                     await this.JsonReader.ReadStringValueAsync().ConfigureAwait(false)));
             if (typeName == null)
             {
+                // TODO: It's meaningless to output an error message using "typeName == null". Should use the original JSON value to construct the error message.
                 throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTypeName, typeName));
             }
 

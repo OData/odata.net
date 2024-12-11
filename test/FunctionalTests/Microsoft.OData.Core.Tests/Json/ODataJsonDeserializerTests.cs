@@ -2077,7 +2077,7 @@ namespace Microsoft.OData.Tests.Json
                 (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
-                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTypeName, "null"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTypeName, new object[] { null }),
                 exception.Message);
         }
 

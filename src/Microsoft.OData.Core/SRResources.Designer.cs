@@ -4696,7 +4696,7 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The metadata document could not be read from the message content.\r\n{0}.
+        ///   Looks up a localized string similar to The metadata document could not be read from the message content.{0}.
         /// </summary>
         internal static string ODataMetadataInputContext_ErrorReadingMetadata {
             get {

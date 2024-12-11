@@ -124,7 +124,7 @@ namespace Microsoft.OData.Tests
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
 
             const string expectedErrorMessage =
-                "The metadata document could not be read from the message content.\r\n" +
+                "The metadata document could not be read from the message content." +
                 "UnexpectedXmlElement : The schema element 'Invalid' was not expected in the given context. : (6, 8)\r\n";
 
             Action test = () => reader.ReadMetadataDocument();
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Tests
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
 
             const string expectedErrorMessage =
-                "The metadata document could not be read from the message content.\r\n" +
+                "The metadata document could not be read from the message content." +
                 "UnexpectedXmlElement : The schema element 'Invalid' was not expected in the given context. : (1, 250)\r\n";
 
             Action test = () => reader.ReadMetadataDocument();
