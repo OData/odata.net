@@ -1437,5 +1437,10 @@ namespace Microsoft.OData.Edm.Validation
         /// A recursive complex-typed property must be optional.
         /// </summary>
         RecursiveComplexTypedPropertyMustBeOptional,
+
+        /// <summary>
+        /// Could not resolve a property ref with that name
+        /// </summary>
+        BadUnresolvedPropertyRef,
     }
 }

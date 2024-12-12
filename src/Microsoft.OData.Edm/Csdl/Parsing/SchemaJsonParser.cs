@@ -650,21 +650,37 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             Debug.Assert(keyArray.ValueKind == JsonValueKind.Array);
             Debug.Assert(name == "$Key", "The name should be $Key.");
 
+            string alias = null;
+            string propertyName = null;
             IList<CsdlPropertyReference> properties = keyArray.ParseAsArray(context, (v, p) =>
             {
                 if (v.ValueKind == JsonValueKind.Object)
                 {
-                    // TODO: ODL doesn't support the key referencing a property of a complex type as below.
+                    // Key properties with a key alias are represented as objects with one member
+                    // whose name is the key alias and whose value is a string containing the path to the property. For example:
                     // "$Key": [
                     //    {
                     //      "EntityInfoID": "Info/ID"
                     //    }
                     //  ]
-                    p.ReportError(EdmErrorCode.InvalidKeyValue, "It doesn't support the key object.");
+                    var objectProperties = v.EnumerateObject();
+                    if (objectProperties.Count() != 1)
+                    {
+                        p.ReportError(EdmErrorCode.InvalidKeyValue, "Key properties with a key alias are represented as objects with only one member.");
+                    }
+                    else
+                    {
+                        var property = objectProperties.First();
+                        alias = property.Name;
+                        propertyName = property.Value.ParseAsString(context);
+                    }
+                }
+                else
+                {
+                    propertyName = v.ParseAsString(context);
                 }
 
-                string propertyName = v.ParseAsString(context);
-                return new CsdlPropertyReference(propertyName, context.Location());
+                return new CsdlPropertyReference(propertyName, alias, context.Location());
             });
 
             return new CsdlKey(properties, context.Location());
