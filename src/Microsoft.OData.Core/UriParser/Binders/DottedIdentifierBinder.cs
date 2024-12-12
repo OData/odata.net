@@ -4,10 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Diagnostics;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -75,7 +74,7 @@ namespace Microsoft.OData.UriParser
                     }
                     else
                     {
-                        throw new ODataException(ODataErrorStrings.Binder_IsNotValidEnumConstant(dottedIdentifierToken.Identifier));
+                        throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, dottedIdentifierToken.Identifier));
                     }
                 }
                 else
@@ -95,7 +94,7 @@ namespace Microsoft.OData.UriParser
                     }
                     else
                     {
-                        throw new ODataException(ODataErrorStrings.CastBinder_ChildTypeIsNotEntity(dottedIdentifierToken.Identifier));
+                        throw new ODataException(Error.Format(SRResources.CastBinder_ChildTypeIsNotEntity, dottedIdentifierToken.Identifier));
                     }
                 }
             }

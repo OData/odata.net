@@ -9,10 +9,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -80,7 +80,7 @@ namespace Microsoft.OData.Tests.Json
         public void ReadServiceDocumentWithSingletonInfoWithNameAbsent()
         {
             Action test = () => ReadServiceDocument(DefaultEmptyServiceDocumentStarter.Replace("REPLACE", @"{""url"":""singleton"", ""kind"":""Singleton""}"));
-            test.Throws<ODataException>(Strings.ODataJsonServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(ODataJsonConstants.ODataServiceDocumentElementName));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement, ODataJsonConstants.ODataServiceDocumentElementName));
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Tests.Json
         public void ReaderServiceDocumentWithSingletonInfoWithEmptyUrl()
         {
             Action test = () => ReadServiceDocument(DefaultEmptyServiceDocumentStarter.Replace("REPLACE", @"{""url"":"""", ""name"":""singleton""}"));
-            test.Throws<ODataException>(Strings.ODataJsonServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(ODataJsonConstants.ODataServiceDocumentElementUrlName));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement, ODataJsonConstants.ODataServiceDocumentElementUrlName));
         }
         #endregion
 
@@ -165,7 +165,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = Assert.Throws<ODataException>(() => ReadServiceDocument(payload));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement(property),
+                Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement, property),
                 exception.Message);
         }
 
@@ -305,7 +305,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocument("odata.type", "value"),
+                Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocument, "odata.type", "value"),
                 exception.Message);
         }
 
@@ -322,7 +322,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocument("odata.type", "value"),
+                Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocument, "odata.type", "value"),
                 exception.Message);
         }
 
@@ -339,7 +339,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.Top5Customers"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, "#NS.Top5Customers"),
                 exception.Message);
         }
 
@@ -355,7 +355,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty("value"),
+                Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty, "value"),
                 exception.Message);
         }
 
@@ -370,7 +370,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonServiceDocumentDeserializer_MissingValuePropertyInServiceDocument("value"),
+                Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_MissingValuePropertyInServiceDocument, "value"),
                 exception.Message);
         }
 
@@ -387,7 +387,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument("value"),
+                Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument, "value"),
                 exception.Message);
         }
 
@@ -403,7 +403,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocument("unexpectedProp", "value"),
+                Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocument, "unexpectedProp", "value"),
                 exception.Message);
         }
 
@@ -419,7 +419,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocumentElement("odata.type"),
+                Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocumentElement, "odata.type"),
                 exception.Message);
         }
 
@@ -435,7 +435,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocumentElement("odata.type"),
+                Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocumentElement, "odata.type"),
                 exception.Message);
         }
 
@@ -455,7 +455,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement(property),
+                Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement, property),
                 exception.Message);
         }
 
@@ -474,7 +474,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(property),
+                Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement, property),
                 exception.Message);
         }
 
@@ -490,7 +490,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ValidationUtils_ServiceDocumentElementUrlMustNotBeNull,
+                SRResources.ValidationUtils_ServiceDocumentElementUrlMustNotBeNull,
                 exception.Message);
         }
 
@@ -506,7 +506,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.Top5Customers"),
+                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, "#NS.Top5Customers"),
                 exception.Message);
         }
 
@@ -522,7 +522,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty("name"),
+                Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty, "name"),
                 exception.Message);
         }
 
@@ -538,7 +538,7 @@ namespace Microsoft.OData.Tests.Json
                     (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
-                ErrorStrings.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement("unexpectedProp", "name", "url"),
+                Error.Format(SRResources.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement, "unexpectedProp", "name", "url"),
                 exception.Message);
         }
 

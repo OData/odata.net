@@ -38,11 +38,11 @@ namespace Microsoft.Spatial.Tests
             double coord;
             NotSupportedException ex = SpatialTestUtils.RunCatching<NotSupportedException>(() => coord = p.Latitude);
             Assert.NotNull(ex);
-            Assert.Equal(Strings.Point_AccessCoordinateWhenEmpty, ex.Message);
+            Assert.Equal(SRResources.Point_AccessCoordinateWhenEmpty, ex.Message);
 
             ex = SpatialTestUtils.RunCatching<NotSupportedException>(() => coord = p.Longitude);
             Assert.NotNull(ex);
-            Assert.Equal(Strings.Point_AccessCoordinateWhenEmpty, ex.Message);
+            Assert.Equal(SRResources.Point_AccessCoordinateWhenEmpty, ex.Message);
 
             Assert.False(p.Z.HasValue);
             Assert.False(p.M.HasValue);

@@ -8,6 +8,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using System;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -27,7 +28,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ODataPath odataPath = new ODataPath(segment);
             Action uriParserHelpersAction = () => UriEdmHelpers.GetNavigationPropertyFromExpandPath(odataPath);
             uriParserHelpersAction.Throws<ODataException>(
-                Strings.ExpandItemBinder_TypeSegmentNotFollowedByPath);
+                SRResources.ExpandItemBinder_TypeSegmentNotFollowedByPath);
         }
 
         [Fact]
@@ -37,7 +38,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ODataPath odataPath = new ODataPath(segment);
             Action uriParserHelpersAction = () => UriEdmHelpers.GetNavigationPropertyFromExpandPath(odataPath);
             uriParserHelpersAction.Throws<ODataException>(
-                Strings.ExpandItemBinder_TypeSegmentNotFollowedByPath);
+                SRResources.ExpandItemBinder_TypeSegmentNotFollowedByPath);
         }
 
         [Fact]

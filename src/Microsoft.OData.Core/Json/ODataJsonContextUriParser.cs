@@ -14,7 +14,7 @@ namespace Microsoft.OData.Json
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -48,7 +48,7 @@ namespace Microsoft.OData.Json
 
             if (!model.IsUserModel())
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonContextUriParser_NoModel);
+                throw new ODataException(SRResources.ODataJsonContextUriParser_NoModel);
             }
 
             this.model = model;
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Json
         {
             if (contextUriFromPayload == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonContextUriParser_NullMetadataDocumentUri);
+                throw new ODataException(SRResources.ODataJsonContextUriParser_NullMetadataDocumentUri);
             }
 
             // Create a context URI from the payload string.
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Json
             {
                 if (baseUri == null)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonContextUriParser_InvalidContextUrl(contextUriFromPayload));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonContextUriParser_InvalidContextUrl, contextUriFromPayload));
                 }
                 else
                 {
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Json
                     {
                         if (string.IsNullOrEmpty(navigationSource?.Name))
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonContextUriParser_InvalidContextUrl(contextUriFromPayload));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonContextUriParser_InvalidContextUrl, contextUriFromPayload));
                         }
                         else
                         {
@@ -117,7 +117,7 @@ namespace Microsoft.OData.Json
 
                     if (!Uri.TryCreate(baseUri, contextUriFromPayload, out contextUri))
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonContextUriParser_InvalidContextUrl(contextUriFromPayload));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonContextUriParser_InvalidContextUrl, contextUriFromPayload));
                     }
                 }         
             }
@@ -253,7 +253,7 @@ namespace Microsoft.OData.Json
             // an expected property kind (which is allowed), fail.
             if (!detectedPayloadKindMatchesExpectation)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(UriUtils.UriToString(this.parseResult.ContextUri), expectedPayloadKind.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataJsonContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind, UriUtils.UriToString(this.parseResult.ContextUri), expectedPayloadKind.ToString()));
             }
 
             // NOTE: we interpret an empty select query option to mean that nothing should be projected
@@ -263,7 +263,7 @@ namespace Microsoft.OData.Json
             {
                 if (detectedPayloadKind != ODataPayloadKind.ResourceSet && detectedPayloadKind != ODataPayloadKind.Resource && detectedPayloadKind != ODataPayloadKind.Delta)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonContextUriParser_InvalidPayloadKindWithSelectQueryOption(expectedPayloadKind.ToString()));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonContextUriParser_InvalidPayloadKindWithSelectQueryOption, expectedPayloadKind.ToString()));
                 }
             }
         }
@@ -331,7 +331,7 @@ namespace Microsoft.OData.Json
 
                 if (index == 0)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonContextUriParser_InvalidContextUrl(UriUtils.UriToString(this.parseResult.ContextUri)));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonContextUriParser_InvalidContextUrl, UriUtils.UriToString(this.parseResult.ContextUri)));
                 }
 
                 string previous = fragment.Substring(0, index + 1);
@@ -345,7 +345,7 @@ namespace Microsoft.OData.Json
                     // Do not treat Key as SelectExpand segment
                     if (KeyPattern.IsMatch(selectExpandStr))
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonContextUriParser_LastSegmentIsKeySegment(UriUtils.UriToString(this.parseResult.ContextUri)));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonContextUriParser_LastSegmentIsKeySegment, UriUtils.UriToString(this.parseResult.ContextUri)));
                     }
 
                     this.parseResult.SelectQueryOption = ExtractSelectQueryOption(selectExpandStr);
@@ -400,7 +400,7 @@ namespace Microsoft.OData.Json
 
                 if (!metadataDocumentStr.EndsWith(ODataConstants.UriMetadataSegment, StringComparison.Ordinal))
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonContextUriParser_InvalidContextUrl(UriUtils.UriToString(this.parseResult.ContextUri)));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonContextUriParser_InvalidContextUrl, UriUtils.UriToString(this.parseResult.ContextUri)));
                 }
 
                 Uri serviceRoot = new Uri(metadataDocumentStr.Substring(0, metadataDocumentStr.Length - ODataConstants.UriMetadataSegment.Length));
@@ -414,12 +414,12 @@ namespace Microsoft.OData.Json
                 }
                 catch (ODataException)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonContextUriParser_InvalidContextUrl(UriUtils.UriToString(this.parseResult.ContextUri)));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonContextUriParser_InvalidContextUrl, UriUtils.UriToString(this.parseResult.ContextUri)));
                 }
 
                 if (path.Count == 0)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonContextUriParser_InvalidContextUrl(UriUtils.UriToString(this.parseResult.ContextUri)));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonContextUriParser_InvalidContextUrl, UriUtils.UriToString(this.parseResult.ContextUri)));
                 }
 
                 this.parseResult.Path = path;
@@ -481,7 +481,7 @@ namespace Microsoft.OData.Json
                 }
                 else
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonContextUriParser_InvalidContextUrl(UriUtils.UriToString(this.parseResult.ContextUri)));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonContextUriParser_InvalidContextUrl, UriUtils.UriToString(this.parseResult.ContextUri)));
                 }
             }
 
@@ -518,7 +518,7 @@ namespace Microsoft.OData.Json
                 && resolvedType.TypeKind != EdmTypeKind.TypeDefinition
                 && resolvedType.TypeKind != EdmTypeKind.Untyped)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonContextUriParser_InvalidEntitySetNameOrTypeName(UriUtils.UriToString(this.parseResult.ContextUri), typeName));
+                throw new ODataException(Error.Format(SRResources.ODataJsonContextUriParser_InvalidEntitySetNameOrTypeName, UriUtils.UriToString(this.parseResult.ContextUri), typeName));
             }
 
             if (resolvedType.TypeKind == EdmTypeKind.Entity || resolvedType.TypeKind == EdmTypeKind.Complex)

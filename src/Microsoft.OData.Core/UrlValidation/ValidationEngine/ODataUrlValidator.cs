@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser.Aggregation;
 
@@ -225,7 +226,7 @@ namespace Microsoft.OData.UriParser.Validation
                         }
                         catch (Exception e)
                         {
-                            validationContext.AddMessage(ODataUrlValidationMessageCodes.InvalidRule, Strings.ODataUrlValidationError_InvalidRule(rule.RuleName, e.Message), Severity.Warning);
+                            validationContext.AddMessage(ODataUrlValidationMessageCodes.InvalidRule, Error.Format(SRResources.ODataUrlValidationError_InvalidRule, rule.RuleName, e.Message), Severity.Warning);
                         }
                     }
                 }

@@ -101,20 +101,20 @@ namespace Microsoft.OData.Edm
             // Validate no segment is null
             if (this.segments.Contains(null))
             {
-                throw new ArgumentException(Strings.TargetPath_SegmentsMustNotContainNullSegment);
+                throw new ArgumentException(SRResources.TargetPath_SegmentsMustNotContainNullSegment);
             }
 
             // Validate that the first element is Container.
 
             if (this.segments.Count > 0 && !(this.segments[0] is IEdmEntityContainer))
             {
-                throw new InvalidOperationException(Strings.TargetPath_FirstSegmentMustBeIEdmEntityContainer);
+                throw new InvalidOperationException(SRResources.TargetPath_FirstSegmentMustBeIEdmEntityContainer);
             }
 
             // Validate the second element is a Container element.
             if (this.segments.Count > 1 && !(this.segments[1] is IEdmEntityContainerElement))
             {
-                throw new InvalidOperationException(Strings.TargetPath_SecondSegmentMustBeIEdmEntityContainerElement);
+                throw new InvalidOperationException(SRResources.TargetPath_SecondSegmentMustBeIEdmEntityContainerElement);
             }
         }
     }

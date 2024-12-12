@@ -219,7 +219,7 @@ namespace Microsoft.OData.Client
             T result = (asyncResult as T);
             if ((result == null) || (source != result.Source) || (result.Method != method))
             {
-                throw Error.Argument(Strings.Context_DidNotOriginateAsync, "asyncResult");
+                throw Error.Argument(SRResources.Context_DidNotOriginateAsync, "asyncResult");
             }
 
             Debug.Assert((result.CompletedSynchronously && result.IsCompleted) || !result.CompletedSynchronously, "CompletedSynchronously && !IsCompleted");
@@ -234,7 +234,7 @@ namespace Microsoft.OData.Client
             // Prevent EndExecute from being called more than once.
             if (Interlocked.Exchange(ref result.done, 1) != 0)
             {
-                throw Error.Argument(Strings.Context_AsyncAlreadyDone, "asyncResult");
+                throw Error.Argument(SRResources.Context_AsyncAlreadyDone, "asyncResult");
             }
 
             // Dispose the wait handle.
@@ -250,7 +250,7 @@ namespace Microsoft.OData.Client
 
             if (result.IsAborted)
             {
-                throw Error.InvalidOperation(Strings.Context_OperationCanceled);
+                throw Error.InvalidOperation(SRResources.Context_OperationCanceled);
             }
 
             if (result.Failure != null)
@@ -260,7 +260,7 @@ namespace Microsoft.OData.Client
                     throw result.Failure;
                 }
 
-                throw Error.InvalidOperation(Strings.DataServiceException_GeneralError, result.Failure);
+                throw Error.InvalidOperation(SRResources.DataServiceException_GeneralError, result.Failure);
             }
 
             return result;

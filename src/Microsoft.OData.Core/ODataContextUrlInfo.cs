@@ -16,6 +16,7 @@ namespace Microsoft.OData
     using Microsoft.OData.UriParser.Aggregation;
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -302,7 +303,7 @@ namespace Microsoft.OData
                 ODataPath odataPath = odataUri.Path.TrimEndingTypeAndKeySegments();
                 if (!(odataPath.LastSegment is NavigationPropertySegment) && !(odataPath.LastSegment is OperationSegment))
                 {
-                    throw new ODataException(Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(odataPath.ToContextUrlPathString()));
+                    throw new ODataException(Error.Format(SRResources.ODataContextUriBuilder_ODataPathInvalidForContainedElement, odataPath.ToContextUrlPathString()));
                 }
 
                 navigationPath = odataPath.ToContextUrlPathString();
@@ -327,7 +328,7 @@ namespace Microsoft.OData
                 ODataPath odataPath = odataUri.Path.TrimEndingTypeAndKeySegments();
                 if (!(odataPath.LastSegment is NavigationPropertySegment) && !(odataPath.LastSegment is OperationSegment))
                 {
-                    throw new ODataException(Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(odataPath.ToContextUrlPathString()));
+                    throw new ODataException(Error.Format(SRResources.ODataContextUriBuilder_ODataPathInvalidForContainedElement, odataPath.ToContextUrlPathString()));
                 }
                 navigationPath = odataPath.ToContextUrlPathString();
             }
@@ -457,7 +458,7 @@ namespace Microsoft.OData
             if (primitive == null)
             {
                 Debug.Assert(value is ODataStreamReferenceValue, "value is ODataStreamReferenceValue");
-                throw new ODataException(Strings.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataResource);
+                throw new ODataException(SRResources.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataResource);
             }
 
             // Try convert to underlying type if the primitive value is unsigned int.

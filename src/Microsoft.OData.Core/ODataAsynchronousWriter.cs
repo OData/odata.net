@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Diagnostics;
@@ -98,7 +99,7 @@ namespace Microsoft.OData
             this.rawOutputContext.VerifyNotDisposed();
             this.rawOutputContext.TextWriter.Flush();
 
-            throw new ODataException(Strings.ODataAsyncWriter_CannotWriteInStreamErrorForAsync);
+            throw new ODataException(SRResources.ODataAsyncWriter_CannotWriteInStreamErrorForAsync);
         }
 
         /// <inheritdoc/>
@@ -108,7 +109,7 @@ namespace Microsoft.OData
             await this.rawOutputContext.TextWriter.FlushAsync()
                 .ConfigureAwait(false);
 
-            throw new ODataException(Strings.ODataAsyncWriter_CannotWriteInStreamErrorForAsync);
+            throw new ODataException(SRResources.ODataAsyncWriter_CannotWriteInStreamErrorForAsync);
         }
 
         /// <summary>
@@ -129,14 +130,14 @@ namespace Microsoft.OData
             {
                 if (!this.rawOutputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataAsyncWriter_SyncCallOnAsyncWriter);
+                    throw new ODataException(SRResources.ODataAsyncWriter_SyncCallOnAsyncWriter);
                 }
             }
             else
             {
                 if (this.rawOutputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataAsyncWriter_AsyncCallOnSyncWriter);
+                    throw new ODataException(SRResources.ODataAsyncWriter_AsyncCallOnSyncWriter);
                 }
             }
         }
@@ -162,12 +163,12 @@ namespace Microsoft.OData
 
             if (!this.rawOutputContext.WritingResponse)
             {
-                throw new ODataException(Strings.ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse);
+                throw new ODataException(SRResources.ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse);
             }
 
             if (responseMessageCreated)
             {
-                throw new ODataException(Strings.ODataAsyncWriter_CannotCreateResponseMoreThanOnce);
+                throw new ODataException(SRResources.ODataAsyncWriter_CannotCreateResponseMoreThanOnce);
             }
         }
 

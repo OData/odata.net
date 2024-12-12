@@ -14,7 +14,7 @@ namespace Microsoft.OData.UriParser
     using Microsoft.OData.Edm;
     using Microsoft.OData.UriParser.Aggregation;
     using Microsoft.OData.UriParser.Validation;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Main Public API to parse an ODataURI.
@@ -76,12 +76,12 @@ namespace Microsoft.OData.UriParser
 
             if (serviceRoot == null)
             {
-                throw new ODataException(ODataErrorStrings.UriParser_NeedServiceRootForThisOverload);
+                throw new ODataException(SRResources.UriParser_NeedServiceRootForThisOverload);
             }
 
             if (!serviceRoot.IsAbsoluteUri)
             {
-                throw new ODataException(ODataErrorStrings.UriParser_UriMustBeAbsolute(serviceRoot));
+                throw new ODataException(Error.Format(SRResources.UriParser_UriMustBeAbsolute, serviceRoot));
             }
 
             this.configuration = new ODataUriParserConfiguration(model, container);
@@ -112,7 +112,7 @@ namespace Microsoft.OData.UriParser
 
             if (relativeUri.IsAbsoluteUri)
             {
-                throw new ODataException(Strings.UriParser_RelativeUriMustBeRelative);
+                throw new ODataException(SRResources.UriParser_RelativeUriMustBeRelative);
             }
 
             this.configuration = new ODataUriParserConfiguration(model, container);
@@ -274,7 +274,7 @@ namespace Microsoft.OData.UriParser
         {
             if (this.Model != validator.Model)
             {
-                throw new ODataException(Strings.UriValidator_ValidatorMustUseSameModelAsParser);
+                throw new ODataException(SRResources.UriValidator_ValidatorMustUseSameModelAsParser);
             }
 
             return validator.ValidateUrl(this.ParseUri(), out validationMessages);
@@ -357,7 +357,7 @@ namespace Microsoft.OData.UriParser
                 }
                 else
                 {
-                    throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(UriQueryConstants.IdQueryOption));
+                    throw new ODataException(Error.Format(SRResources.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce, UriQueryConstants.IdQueryOption));
                 }
             }
 
@@ -591,7 +591,7 @@ namespace Microsoft.OData.UriParser
                     {
                         if (queryOptionDic.ContainsKey(fixedQueryOptionName))
                         {
-                            throw new ODataException(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce(
+                            throw new ODataException(Error.Format(SRResources.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce,
                                 this.EnableNoDollarQueryOptions
                                 ? string.Format(CultureInfo.InvariantCulture, "${0}/{0}", fixedQueryOptionName.TrimStart('$'))
                                 : fixedQueryOptionName));

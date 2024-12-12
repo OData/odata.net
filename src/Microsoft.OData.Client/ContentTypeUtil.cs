@@ -250,7 +250,7 @@ namespace Microsoft.OData.Service
 
             if (!acceptable && !acceptTypesEmpty)
             {
-                throw Error.HttpHeaderFailure(415, Strings.DataServiceException_UnsupportedMediaType);
+                throw Error.HttpHeaderFailure(415, SRResources.DataServiceException_UnsupportedMediaType);
             }
 
             if (acceptTypesEmpty)
@@ -405,7 +405,7 @@ namespace Microsoft.OData.Service
         {
             if (String.IsNullOrEmpty(contentType))
             {
-                throw Error.HttpHeaderFailure(400, Strings.HttpProcessUtility_ContentTypeMissing);
+                throw Error.HttpHeaderFailure(400, SRResources.HttpProcessUtility_ContentTypeMissing);
             }
 
             MediaType mediaType = ReadMediaType(contentType);
@@ -447,7 +447,7 @@ namespace Microsoft.OData.Service
         {
             if (String.IsNullOrEmpty(contentType))
             {
-                throw Error.HttpHeaderFailure(400, Strings.HttpProcessUtility_ContentTypeMissing);
+                throw Error.HttpHeaderFailure(400, SRResources.HttpProcessUtility_ContentTypeMissing);
             }
 
             MediaType mediaType = ReadMediaType(contentType);
@@ -485,7 +485,7 @@ namespace Microsoft.OData.Service
             catch (ArgumentException)
             {
                 // 400 - Bad Request
-                throw Error.HttpHeaderFailure(400, Strings.HttpProcessUtility_EncodingNotSupported(name));
+                throw Error.HttpHeaderFailure(400, Error.Format(SRResources.HttpProcessUtility_EncodingNotSupported, name));
             }
         }
 
@@ -773,12 +773,12 @@ namespace Microsoft.OData.Service
             int textStart = textIndex;
             if (ReadToken(text, ref textIndex))
             {
-                throw Error.HttpHeaderFailure(400, Strings.HttpProcessUtility_MediaTypeUnspecified);
+                throw Error.HttpHeaderFailure(400, SRResources.HttpProcessUtility_MediaTypeUnspecified);
             }
 
             if (text[textIndex] != '/')
             {
-                throw Error.HttpHeaderFailure(400, Strings.HttpProcessUtility_MediaTypeRequiresSlash);
+                throw Error.HttpHeaderFailure(400, SRResources.HttpProcessUtility_MediaTypeRequiresSlash);
             }
 
             type = text.Substring(textStart, textIndex - textStart);
@@ -789,7 +789,7 @@ namespace Microsoft.OData.Service
 
             if (textIndex == subTypeStart)
             {
-                throw Error.HttpHeaderFailure(400, Strings.HttpProcessUtility_MediaTypeRequiresSubType);
+                throw Error.HttpHeaderFailure(400, SRResources.HttpProcessUtility_MediaTypeRequiresSubType);
             }
 
             subType = text.Substring(subTypeStart, textIndex - subTypeStart);
@@ -813,7 +813,7 @@ namespace Microsoft.OData.Service
             {
                 if (text[textIndex] != ';')
                 {
-                    throw Error.HttpHeaderFailure(400, Strings.HttpProcessUtility_MediaTypeRequiresSemicolonBeforeParameter);
+                    throw Error.HttpHeaderFailure(400, SRResources.HttpProcessUtility_MediaTypeRequiresSemicolonBeforeParameter);
                 }
 
                 textIndex++;
@@ -876,13 +876,13 @@ namespace Microsoft.OData.Service
             int startIndex = textIndex;
             if (ReadToken(text, ref textIndex))
             {
-                throw Error.HttpHeaderFailure(400, Strings.HttpProcessUtility_MediaTypeMissingValue);
+                throw Error.HttpHeaderFailure(400, SRResources.HttpProcessUtility_MediaTypeMissingValue);
             }
 
             string parameterName = text.Substring(startIndex, textIndex - startIndex);
             if (text[textIndex] != '=')
             {
-                throw Error.HttpHeaderFailure(400, Strings.HttpProcessUtility_MediaTypeMissingValue);
+                throw Error.HttpHeaderFailure(400, SRResources.HttpProcessUtility_MediaTypeMissingValue);
             }
 
             textIndex++;
@@ -936,7 +936,7 @@ namespace Microsoft.OData.Service
                 {
                     if (!valueIsQuoted)
                     {
-                        throw Error.HttpHeaderFailure(400, Strings.HttpProcessUtility_EscapeCharWithoutQuotes(parameterName));
+                        throw Error.HttpHeaderFailure(400, Error.Format(SRResources.HttpProcessUtility_EscapeCharWithoutQuotes, parameterName));
                     }
 
                     textIndex++;
@@ -950,7 +950,7 @@ namespace Microsoft.OData.Service
 
                     if (textIndex >= headerText.Length)
                     {
-                        throw Error.HttpHeaderFailure(400, Strings.HttpProcessUtility_EscapeCharAtEnd(parameterName));
+                        throw Error.HttpHeaderFailure(400, Error.Format(SRResources.HttpProcessUtility_EscapeCharAtEnd, parameterName));
                     }
 
                     currentChar = headerText[textIndex];
@@ -968,7 +968,7 @@ namespace Microsoft.OData.Service
 
             if (valueIsQuoted)
             {
-                throw Error.HttpHeaderFailure(400, Strings.HttpProcessUtility_ClosingQuoteNotFound(parameterName));
+                throw Error.HttpHeaderFailure(400, Error.Format(SRResources.HttpProcessUtility_ClosingQuoteNotFound, parameterName));
             }
 
             return new MediaParameter(parameterName, parameterValue.ToString(), isQuoted);

@@ -130,7 +130,7 @@ namespace Microsoft.OData.Edm.Validation
             return new EdmError(
                 GetLocation(item),
                 EdmErrorCode.InterfaceCriticalPropertyValueMustNotBeNull,
-                Strings.EdmModel_Validator_Syntactic_PropertyMustNotBeNull(typeof(T).Name, propertyName));
+                Error.Format(SRResources.EdmModel_Validator_Syntactic_PropertyMustNotBeNull, typeof(T).Name, propertyName));
         }
 
         private static EdmError CreateEnumPropertyOutOfRangeError<T, E>(T item, E enumValue, string propertyName)
@@ -138,7 +138,7 @@ namespace Microsoft.OData.Edm.Validation
             return new EdmError(
                 GetLocation(item),
                 EdmErrorCode.InterfaceCriticalEnumPropertyValueOutOfRange,
-                Strings.EdmModel_Validator_Syntactic_EnumPropertyValueOutOfRange(typeof(T).Name, propertyName, typeof(E).Name, enumValue));
+                Error.Format(SRResources.EdmModel_Validator_Syntactic_EnumPropertyValueOutOfRange, typeof(T).Name, propertyName, typeof(E).Name, enumValue));
         }
 
         private static EdmError CheckForInterfaceKindValueMismatchError<T, K, I>(T item, K kind, string propertyName)
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Edm.Validation
             return new EdmError(
                 GetLocation(item),
                 EdmErrorCode.InterfaceCriticalKindValueMismatch,
-                Strings.EdmModel_Validator_Syntactic_InterfaceKindValueMismatch(kind, typeof(T).Name, propertyName, typeof(I).Name));
+                Error.Format(SRResources.EdmModel_Validator_Syntactic_InterfaceKindValueMismatch, kind, typeof(T).Name, propertyName, typeof(I).Name));
         }
 
         private static EdmError CreateInterfaceKindValueUnexpectedError<T, K>(T item, K kind, string propertyName)
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Edm.Validation
             return new EdmError(
                 GetLocation(item),
                 EdmErrorCode.InterfaceCriticalKindValueUnexpected,
-                Strings.EdmModel_Validator_Syntactic_InterfaceKindValueUnexpected(kind, typeof(T).Name, propertyName));
+                Error.Format(SRResources.EdmModel_Validator_Syntactic_InterfaceKindValueUnexpected, kind, typeof(T).Name, propertyName));
         }
 
         private static EdmError CreateTypeRefInterfaceTypeKindValueMismatchError<T>(T item) where T : IEdmTypeReference
@@ -169,7 +169,7 @@ namespace Microsoft.OData.Edm.Validation
             return new EdmError(
                 GetLocation(item),
                 EdmErrorCode.InterfaceCriticalKindValueMismatch,
-                Strings.EdmModel_Validator_Syntactic_TypeRefInterfaceTypeKindValueMismatch(typeof(T).Name, item.Definition.TypeKind));
+                Error.Format(SRResources.EdmModel_Validator_Syntactic_TypeRefInterfaceTypeKindValueMismatch, typeof(T).Name, item.Definition.TypeKind));
         }
 
         private static EdmError CreatePrimitiveTypeRefInterfaceTypeKindValueMismatchError<T>(T item) where T : IEdmPrimitiveTypeReference
@@ -178,7 +178,7 @@ namespace Microsoft.OData.Edm.Validation
             return new EdmError(
                 GetLocation(item),
                 EdmErrorCode.InterfaceCriticalKindValueMismatch,
-                Strings.EdmModel_Validator_Syntactic_TypeRefInterfaceTypeKindValueMismatch(typeof(T).Name, ((IEdmPrimitiveType)item.Definition).PrimitiveKind));
+                Error.Format(SRResources.EdmModel_Validator_Syntactic_TypeRefInterfaceTypeKindValueMismatch, typeof(T).Name, ((IEdmPrimitiveType)item.Definition).PrimitiveKind));
         }
 
         private static void ProcessEnumerable<T, E>(T item, IEnumerable<E> enumerable, string propertyName, IList targetList, ref List<EdmError> errors)
@@ -198,7 +198,7 @@ namespace Microsoft.OData.Edm.Validation
                     else
                     {
                         CollectErrors(
-                            new EdmError(GetLocation(item), EdmErrorCode.InterfaceCriticalEnumerableMustNotHaveNullElements, Strings.EdmModel_Validator_Syntactic_EnumerableMustNotHaveNullElements(typeof(T).Name, propertyName)),
+                            new EdmError(GetLocation(item), EdmErrorCode.InterfaceCriticalEnumerableMustNotHaveNullElements, Error.Format(SRResources.EdmModel_Validator_Syntactic_EnumerableMustNotHaveNullElements, typeof(T).Name, propertyName)),
                             ref errors);
                         break;
                     }
@@ -708,7 +708,7 @@ namespace Microsoft.OData.Edm.Validation
                         {
                             IEdmSchemaType schemaType = type as IEdmSchemaType;
                             string typeName = schemaType != null ? schemaType.FullName() : typeof(Type).Name;
-                            CollectErrors(new EdmError(GetLocation(type), EdmErrorCode.InterfaceCriticalCycleInTypeHierarchy, Strings.EdmModel_Validator_Syntactic_InterfaceCriticalCycleInTypeHierarchy(typeName)), ref errors);
+                            CollectErrors(new EdmError(GetLocation(type), EdmErrorCode.InterfaceCriticalCycleInTypeHierarchy, Error.Format(SRResources.EdmModel_Validator_Syntactic_InterfaceCriticalCycleInTypeHierarchy, typeName)), ref errors);
                             break;
                         }
                     }
@@ -917,7 +917,7 @@ namespace Microsoft.OData.Edm.Validation
                         if ((property.Partner.Partner != null && property.Partner.Partner != property)
                             || (property.Partner == property && (ValidationHelper.ComputeNavigationPropertyTarget(property) != property.DeclaringType)))
                         {
-                            CollectErrors(new EdmError(GetLocation(property), EdmErrorCode.InterfaceCriticalNavigationPartnerInvalid, Strings.EdmModel_Validator_Syntactic_NavigationPartnerInvalid(property.Name)), ref errors);
+                            CollectErrors(new EdmError(GetLocation(property), EdmErrorCode.InterfaceCriticalNavigationPartnerInvalid, Error.Format(SRResources.EdmModel_Validator_Syntactic_NavigationPartnerInvalid, property.Name)), ref errors);
                         }
                     }
                 }
@@ -952,7 +952,7 @@ namespace Microsoft.OData.Edm.Validation
                     {
                         if (pair == null)
                         {
-                            CollectErrors(new EdmError(GetLocation(member), EdmErrorCode.InterfaceCriticalEnumerableMustNotHaveNullElements, Strings.EdmModel_Validator_Syntactic_EnumerableMustNotHaveNullElements(typeof(IEdmReferentialConstraint).Name, "PropertyPairs")), ref errors);
+                            CollectErrors(new EdmError(GetLocation(member), EdmErrorCode.InterfaceCriticalEnumerableMustNotHaveNullElements, Error.Format(SRResources.EdmModel_Validator_Syntactic_EnumerableMustNotHaveNullElements, typeof(IEdmReferentialConstraint).Name, "PropertyPairs")), ref errors);
                             break;
                         }
 

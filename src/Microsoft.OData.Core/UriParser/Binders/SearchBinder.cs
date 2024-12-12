@@ -6,8 +6,6 @@
 
 namespace Microsoft.OData.UriParser
 {
-    using ODataErrorStrings = Microsoft.OData.Strings;
-
     /// <summary>
     /// Class responsible for binding a syntactic filter expression into a bound tree of semantic nodes.
     /// </summary>

@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -28,16 +29,16 @@ namespace Microsoft.OData.Tests.UriParser
         public void NotFoundHelperShouldSetMessageCorrectly()
         {
             var exception = ExceptionUtil.CreateResourceNotFoundError("foo");
-            Assert.Equal(Strings.RequestUriProcessor_ResourceNotFound("foo"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "foo"), exception.Message);
         }
 
         [Fact]
         public void SyntaxErrorHelperShouldSetMessageCorrectly()
         {
             var exception = ExceptionUtil.CreateSyntaxError();
-            Assert.Equal(Strings.RequestUriProcessor_SyntaxError, exception.Message);
+            Assert.Equal(SRResources.RequestUriProcessor_SyntaxError, exception.Message);
 
-            string a = Strings.General_InternalError(Microsoft.OData.UriParser.InternalErrorCodes.UriQueryExpressionParser_ParseComparison);
+            string a = Error.Format(SRResources.General_InternalError, OData.UriParser.InternalErrorCodes.UriQueryExpressionParser_ParseComparison);
         }
     }
 }

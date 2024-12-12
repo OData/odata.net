@@ -8,7 +8,7 @@ using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -36,10 +36,10 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             Action createWitnInvalidContentId2 = () => new BatchReferenceSegment("1$2", type, HardCodedTestModel.GetPeopleSet());
             Action createWitnInvalidContentId3 = () => new BatchReferenceSegment("$", type, HardCodedTestModel.GetPeopleSet());
             Action createWitnInvalidContentId4 = () => new BatchReferenceSegment("$0a1", type, HardCodedTestModel.GetPeopleSet());
-            createWitnInvalidContentId1.Throws<ODataException>(ODataErrorStrings.BatchReferenceSegment_InvalidContentID("stuff"));
-            createWitnInvalidContentId2.Throws<ODataException>(ODataErrorStrings.BatchReferenceSegment_InvalidContentID("1$2"));
-            createWitnInvalidContentId3.Throws<ODataException>(ODataErrorStrings.BatchReferenceSegment_InvalidContentID("$"));
-            createWitnInvalidContentId4.Throws<ODataException>(ODataErrorStrings.BatchReferenceSegment_InvalidContentID("$0a1"));
+            createWitnInvalidContentId1.Throws<ODataException>(Error.Format(SRResources.BatchReferenceSegment_InvalidContentID, "stuff"));
+            createWitnInvalidContentId2.Throws<ODataException>(Error.Format(SRResources.BatchReferenceSegment_InvalidContentID, "1$2"));
+            createWitnInvalidContentId3.Throws<ODataException>(Error.Format(SRResources.BatchReferenceSegment_InvalidContentID, "$"));
+            createWitnInvalidContentId4.Throws<ODataException>(Error.Format(SRResources.BatchReferenceSegment_InvalidContentID, "$0a1"));
         }
 
         [Fact]

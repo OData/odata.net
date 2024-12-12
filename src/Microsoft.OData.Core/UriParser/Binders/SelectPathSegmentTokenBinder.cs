@@ -8,12 +8,11 @@ namespace Microsoft.OData.UriParser
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using Edm.Vocabularies;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Builds segments from tokens within $select.
@@ -49,7 +48,7 @@ namespace Microsoft.OData.UriParser
                 // Don't allow selecting odata control information
                 if (String.Compare(namespaceName, ODataConstants.ODataPrefix, StringComparison.OrdinalIgnoreCase) == 0)
                 {
-                    throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(tokenIn.Identifier));
+                    throw new ODataException(Error.Format(SRResources.UriSelectParser_TermIsNotValid, tokenIn.Identifier));
                 }
 
                 return new AnnotationSegment(new EdmTerm(namespaceName, termName, EdmCoreModel.Instance.GetUntyped()));
@@ -59,7 +58,7 @@ namespace Microsoft.OData.UriParser
 
             if ((state?.IsCollapsed ?? false) && !(state?.AggregatedPropertyNames?.Contains(endPathToken) ?? false))
             {
-                throw new ODataException(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue(tokenIn.Identifier));
+                throw new ODataException(Error.Format(SRResources.ApplyBinder_GroupByPropertyNotPropertyAccessValue, tokenIn.Identifier));
             }
 
             if (TryBindAsDeclaredProperty(tokenIn, edmType, resolver, out nextSegment))
@@ -88,7 +87,7 @@ namespace Microsoft.OData.UriParser
                 return new DynamicPathSegment(tokenIn.Identifier);
             }
 
-            throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(edmType.FullTypeName(), tokenIn.Identifier));
+            throw new ODataException(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, edmType.FullTypeName(), tokenIn.Identifier));
         }
 
         /// <summary>
@@ -230,7 +229,7 @@ namespace Microsoft.OData.UriParser
                 return true;
             }
 
-            throw new ODataException(ODataErrorStrings.SelectExpandBinder_UnknownPropertyType(prop.Name));
+            throw new ODataException(Error.Format(SRResources.SelectExpandBinder_UnknownPropertyType, prop.Name));
         }
 
         /// <summary>

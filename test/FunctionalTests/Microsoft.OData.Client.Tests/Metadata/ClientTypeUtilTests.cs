@@ -148,7 +148,7 @@ namespace Microsoft.OData.Client.Tests.Metadata
 
             PropertyInfo empTypeStructKey = employee.GetProperty("EmpTypeStruct");
 
-            InvalidOperationException expectedException = Error.InvalidOperation(Strings.ClientType_KeysMustBeSimpleTypes(empTypeStructKey.Name, employee.ToString(), empTypeStructKey.PropertyType.FullName));
+            InvalidOperationException expectedException = Error.InvalidOperation(Error.Format(SRResources.ClientType_KeysMustBeSimpleTypes, empTypeStructKey.Name, employee.ToString(), empTypeStructKey.PropertyType.FullName));
 
             //Act
             InvalidOperationException actualException = Assert.Throws<InvalidOperationException>(() => ClientTypeUtil.GetKeyPropertiesOnType(employee));

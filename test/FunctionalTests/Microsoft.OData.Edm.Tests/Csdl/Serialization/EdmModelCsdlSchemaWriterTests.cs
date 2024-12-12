@@ -93,7 +93,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             Action errorTest = () => CreateEdmModelCsdlSchemaWriterForErrorTest().WriteActionImportElementHeader(actionImport);
 
             var exception = Assert.Throws<InvalidOperationException>(errorTest);
-            Assert.Equal(Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(actionImport.Name), exception.Message);
+            Assert.Equal(Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid, actionImport.Name), exception.Message);
         }
 
         #endregion

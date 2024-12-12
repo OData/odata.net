@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm
     internal class CyclicComplexType : BadComplexType
     {
         public CyclicComplexType(string qualifiedName, EdmLocation location)
-            : base(qualifiedName, new EdmError[] { new EdmError(location, EdmErrorCode.BadCyclicComplex, Edm.Strings.Bad_CyclicComplex(qualifiedName)) })
+            : base(qualifiedName, new EdmError[] { new EdmError(location, EdmErrorCode.BadCyclicComplex, Error.Format(SRResources.Bad_CyclicComplex, qualifiedName)) })
         {
         }
     }

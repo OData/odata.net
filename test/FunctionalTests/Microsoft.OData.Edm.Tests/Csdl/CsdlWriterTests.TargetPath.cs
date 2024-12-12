@@ -126,7 +126,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Action action = () => annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
 
             InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
-            Assert.Equal(Strings.EdmVocabularyAnnotations_InvalidLocationForTargetPathAnnotation(annotation.TargetString()), exception.Message);
+            Assert.Equal(Error.Format(SRResources.EdmVocabularyAnnotations_InvalidLocationForTargetPathAnnotation, annotation.TargetString()), exception.Message);
         }
 
         [Fact]

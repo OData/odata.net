@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using Microsoft.OData.Core;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -25,7 +26,7 @@ namespace Microsoft.OData.UriParser
         /// current system culture.
         /// </remarks>
         public ODataUnrecognizedPathException()
-            : this((string)Strings.ODataUriParserException_GeneralError, (Exception)null)
+            : this((string)SRResources.ODataUriParserException_GeneralError, (Exception)null)
         {
         }
 

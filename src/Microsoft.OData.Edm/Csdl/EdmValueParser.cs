@@ -16,6 +16,7 @@ namespace Microsoft.OData.Service
 namespace Microsoft.OData.Client
 #else
 #if ODATA_CORE
+using Microsoft.OData.Core;
 namespace Microsoft.OData
 #else
 namespace Microsoft.OData.Edm.Csdl
@@ -44,7 +45,7 @@ namespace Microsoft.OData.Edm.Csdl
         {
             if (value == null || !DayTimeDurationValidator.IsMatch(value))
             {
-                throw new FormatException(Strings.ValueParser_InvalidDuration(value));
+                throw new FormatException(String.Format(SRResources.Culture, SRResources.ValueParser_InvalidDuration, value));
             }
 
             return XmlConvert.ToTimeSpan(value);

@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser.Aggregation
 {
@@ -154,7 +154,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                     }
 
                 default:
-                    throw new ODataException(ODataErrorStrings.ApplyBinder_UnsupportedAggregateKind(aggregateToken.Kind));
+                    throw new ODataException(Error.Format(SRResources.ApplyBinder_UnsupportedAggregateKind, aggregateToken.Kind));
             }
         }
 
@@ -188,7 +188,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                             return expressionType;
                         default:
                             throw new ODataException(
-                                ODataErrorStrings.ApplyBinder_AggregateExpressionIncompatibleTypeForMethod(expression,
+                                Error.Format(SRResources.ApplyBinder_AggregateExpressionIncompatibleTypeForMethod, expression,
                                     expressionPrimitiveKind));
                     }
 
@@ -246,7 +246,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 else
                 {
                     throw new ODataException(
-                        ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue(propertyToken.Identifier));
+                        Error.Format(SRResources.ApplyBinder_GroupByPropertyNotPropertyAccessValue, propertyToken.Identifier));
                 }
             }
 
@@ -263,7 +263,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                 }
                 else
                 {
-                    throw new ODataException(ODataErrorStrings.ApplyBinder_UnsupportedGroupByChild(token.Child.Kind));
+                    throw new ODataException(Error.Format(SRResources.ApplyBinder_UnsupportedGroupByChild, token.Child.Kind));
                 }
             }
 

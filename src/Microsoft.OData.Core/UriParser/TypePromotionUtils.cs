@@ -15,7 +15,7 @@ namespace Microsoft.OData.UriParser
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -710,7 +710,7 @@ namespace Microsoft.OData.UriParser
                     return arithmeticSignatures;
 
                 default:
-                    throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.TypePromotionUtils_GetFunctionSignatures_Binary_UnreachableCodepath));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.TypePromotionUtils_GetFunctionSignatures_Binary_UnreachableCodepath));
             }
         }
 
@@ -729,7 +729,7 @@ namespace Microsoft.OData.UriParser
                 case UnaryOperatorKind.Not:
                     return notSignatures;
                 default:
-                    throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.TypePromotionUtils_GetFunctionSignatures_Unary_UnreachableCodepath));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.TypePromotionUtils_GetFunctionSignatures_Unary_UnreachableCodepath));
             }
         }
 

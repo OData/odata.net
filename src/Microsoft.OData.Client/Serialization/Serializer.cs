@@ -295,7 +295,7 @@ namespace Microsoft.OData.Client
                             default:
                                 // EdmTypeKind.Row
                                 // EdmTypeKind.EntityReference
-                                throw new NotSupportedException(Strings.Serializer_InvalidParameterType(operationParameter.Name, edmType.TypeKind));
+                                throw new NotSupportedException(Error.Format(SRResources.Serializer_InvalidParameterType, operationParameter.Name, edmType.TypeKind));
                         }
                     } // else
                 } // foreach
@@ -940,7 +940,7 @@ namespace Microsoft.OData.Client
                 // if the parameter name is an alias, make sure that the URI contains it.
                 if (paramName.StartsWith(Char.ToString(UriHelper.ATSIGN), StringComparison.OrdinalIgnoreCase) && !uriString.Contains(paramName, StringComparison.Ordinal))
                 {
-                    throw new DataServiceRequestException(Strings.Serializer_UriDoesNotContainParameterAlias(op.Name));
+                    throw new DataServiceRequestException(Error.Format(SRResources.Serializer_UriDoesNotContainParameterAlias, op.Name));
                 }
 
                 if (paramName.StartsWith(Char.ToString(UriHelper.ATSIGN), StringComparison.OrdinalIgnoreCase))
@@ -1035,7 +1035,7 @@ namespace Microsoft.OData.Client
                         }
                         else
                         {
-                            throw new NotSupportedException(Strings.Serializer_NullCollectionParameterItemValue(operationParameter.Name));
+                            throw new NotSupportedException(Error.Format(SRResources.Serializer_NullCollectionParameterItemValue, operationParameter.Name));
                         }
                     }
 
@@ -1044,7 +1044,7 @@ namespace Microsoft.OData.Client
 
                     if (edmItemType.TypeKind != EdmTypeKind.Entity && edmItemType.TypeKind != EdmTypeKind.Complex)
                     {
-                        throw new NotSupportedException(Strings.Serializer_InvalidCollectionParameterItemType(operationParameter.Name, edmItemType.TypeKind));
+                        throw new NotSupportedException(Error.Format(SRResources.Serializer_InvalidCollectionParameterItemType, operationParameter.Name, edmItemType.TypeKind));
                     }
 
                     Debug.Assert(model.GetClientTypeAnnotation(edmItemType).ElementType != null, "edmItemType.GetClientTypeAnnotation().ElementType != null");
@@ -1096,7 +1096,7 @@ namespace Microsoft.OData.Client
                             // EdmTypeKind.Entity
                             // EdmTypeKind.Row
                             // EdmTypeKind.EntityReference
-                            throw new NotSupportedException(Strings.Serializer_InvalidCollectionParameterItemType(operationParameter.Name, edmItemType.TypeKind));
+                            throw new NotSupportedException(Error.Format(SRResources.Serializer_InvalidCollectionParameterItemType, operationParameter.Name, edmItemType.TypeKind));
                     }
                 }
 
@@ -1290,7 +1290,7 @@ namespace Microsoft.OData.Client
                     default:
                         // EdmTypeKind.Row
                         // EdmTypeKind.EntityReference
-                        throw new NotSupportedException(Strings.Serializer_InvalidParameterType(paramName, edmType.TypeKind));
+                        throw new NotSupportedException(Error.Format(SRResources.Serializer_InvalidParameterType, paramName, edmType.TypeKind));
                 }
 
                 Debug.Assert(valueInODataFormat != null, "valueInODataFormat != null");
@@ -1343,7 +1343,7 @@ namespace Microsoft.OData.Client
                     break;
 
                 default:
-                    throw new NotSupportedException(Strings.Serializer_InvalidCollectionParameterItemType(paramName, itemTypeAnnotation.EdmType.TypeKind));
+                    throw new NotSupportedException(Error.Format(SRResources.Serializer_InvalidCollectionParameterItemType, paramName, itemTypeAnnotation.EdmType.TypeKind));
             }
 
             return valueInODataFormat;
@@ -1368,7 +1368,7 @@ namespace Microsoft.OData.Client
                 if (entry.TypeAnnotation == null ||
                     string.IsNullOrEmpty(entry.TypeAnnotation.TypeName))
                 {
-                    throw Error.InvalidOperation(Strings.DataServiceException_GeneralError);
+                    throw Error.InvalidOperation(SRResources.DataServiceException_GeneralError);
                 }
             }
             else
@@ -1404,7 +1404,7 @@ namespace Microsoft.OData.Client
                 }
                 catch (InvalidOperationException)
                 {
-                    throw Error.InvalidOperation(Strings.Context_MustBeUsedWith("EntityParameterSendOption.SendOnlySetProperties", "DataServiceCollection"));
+                    throw Error.InvalidOperation(Error.Format(SRResources.Context_MustBeUsedWith, "EntityParameterSendOption.SendOnlySetProperties", "DataServiceCollection"));
                 }
             }
 

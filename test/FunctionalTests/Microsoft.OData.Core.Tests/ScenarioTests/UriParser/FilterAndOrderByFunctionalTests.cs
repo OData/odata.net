@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
@@ -15,7 +16,6 @@ using Microsoft.OData.UriParser;
 using Microsoft.Spatial;
 using Microsoft.Test.OData.Utils.Metadata;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             //Non-ConstantNode "ID" whose type is float cannot be promoted to Decimal
             Action parse = () => ParseFilter(text, HardCodedTestModel.TestModel, HardCodedTestModel.GetPet2Type(), HardCodedTestModel.GetPet2Set());
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_IncompatibleOperandsError("Edm.Single", "Edm.Decimal", "Equal"));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError, "Edm.Single", "Edm.Decimal", "Equal"));
         }
 
         [Theory]
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // double and (implicit) decimal are incompatible
             string decimalPrecisionStr = "3258.678765765489753678965390";
             Action parse = () => ParseFilter("ID eq " + decimalPrecisionStr, HardCodedTestModel.TestModel, HardCodedTestModel.GetPet3Type(), HardCodedTestModel.GetPet3Set());
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_IncompatibleOperandsError("Edm.Double", "Edm.Decimal", "Equal"));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError, "Edm.Double", "Edm.Decimal", "Equal"));
         }
 
         [Fact]
@@ -133,7 +133,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             //Non-ConstantNode whose type is Single cannot be promoted to Decimal
             Action parse = () => ParseFilter("ID eq 123M", HardCodedTestModel.TestModel, HardCodedTestModel.GetPet3Type(), HardCodedTestModel.GetPet3Set());
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_IncompatibleOperandsError("Edm.Double", "Edm.Decimal", "Equal"));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError, "Edm.Double", "Edm.Decimal", "Equal"));
         }
 
 #if !NETCOREAPP
@@ -166,7 +166,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             // numeric string overflowing all types:
             parse = () => ParseFilter("1.79769313486232E+30700 eq " + decimalPrecisionStr, HardCodedTestModel.TestModel, HardCodedTestModel.GetPet3Type(), HardCodedTestModel.GetPet3Set());
-            parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidNumericString("1.79769313486232E+30700"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidNumericString, "1.79769313486232E+30700"));
         }
 #endif
 
@@ -229,13 +229,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             ((ConstantNode)((BinaryOperatorNode)filterQueryNode.Expression).Right).ShouldBeConstantQueryNode(11111111111100000000D);
 
             Action parse = () => filterQueryNode = ParseFilter("SingleID eq 2.34243223423235234423400003m", HardCodedTestModel.TestModel, HardCodedTestModel.GetPet1Type(), HardCodedTestModel.GetPet1Set());
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_IncompatibleOperandsError("Edm.Single", "Edm.Decimal", "Equal"));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError, "Edm.Single", "Edm.Decimal", "Equal"));
 
             parse = () => ParseFilter("DoubleID eq DecimalID", HardCodedTestModel.TestModel, HardCodedTestModel.GetPet1Type(), HardCodedTestModel.GetPet1Set());
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_IncompatibleOperandsError("Edm.Double", "Edm.Decimal", "Equal"));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError, "Edm.Double", "Edm.Decimal", "Equal"));
 
             parse = () => ParseFilter("SingleID eq DecimalID", HardCodedTestModel.TestModel, HardCodedTestModel.GetPet1Type(), HardCodedTestModel.GetPet1Set());
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_IncompatibleOperandsError("Edm.Single", "Edm.Decimal", "Equal"));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError, "Edm.Single", "Edm.Decimal", "Equal"));
         }
 
         [Fact]
@@ -320,7 +320,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             bon.Right.ShouldBeConstantQueryNode(false);
 
             Action parse = () => ParseFilter("ID eq 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPet5Type(), HardCodedTestModel.GetPet5Set());
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_IncompatibleOperandsError("Edm.Boolean", "Edm.Int32", "Equal"));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_IncompatibleOperandsError, "Edm.Boolean", "Edm.Int32", "Equal"));
 
         }
 
@@ -423,21 +423,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilterWithEntityCollectionCountWithUnbalanceParenthesisThrows()
         {
             Action parse = () => ParseFilter("MyFriendsDogs/$count($filter=Color eq 'Brown' gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError(50, "MyFriendsDogs/$count($filter=Color eq 'Brown' gt 1"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, 50, "MyFriendsDogs/$count($filter=Color eq 'Brown' gt 1"));
         }
 
         [Fact]
         public void ParseFilterWithEntityCollectionCountWithEmptyParenthesisThrows()
         {
             Action parse = () => ParseFilter("MyFriendsDogs/$count()", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.Throws<ODataException>(ODataErrorStrings.UriParser_EmptyParenthesis);
+            parse.Throws<ODataException>(SRResources.UriParser_EmptyParenthesis);
         }
 
         [Fact]
         public void ParseFilterWithEntityCollectionCountWithIllegalQueryOptionThrows()
         {
             Action parse = () => ParseFilter("MyFriendsDogs/$count($orderby=Color) gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount);
+            parse.Throws<ODataException>(SRResources.UriQueryExpressionParser_IllegalQueryOptioninDollarCount);
         }
 
         [Fact]
@@ -471,7 +471,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilterWithSingleValueCountWithFilterAndSearchOptionsThrows()
         {
             Action parse = () => ParseFilter("ID/$count($filter=Color eq 'Brown';$search=brown) gt 1", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CountSegmentNextTokenNotCollectionValue);
+            parse.Throws<ODataException>(SRResources.MetadataBinder_CountSegmentNextTokenNotCollectionValue);
         }
 
         [Fact]
@@ -497,7 +497,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FilterWithKeyLookupOnNavPropIsNotAllowed()
         {
             Action parse = () => ParseFilter("MyPeople(987)", HardCodedTestModel.TestModel, HardCodedTestModel.GetDogType());
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_UnknownFunction("MyPeople"));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_UnknownFunction, "MyPeople"));
         }
 
         [Fact]
@@ -541,7 +541,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => ParseFilter("MyPeople/Any()", HardCodedTestModel.TestModel, HardCodedTestModel.GetDogType());
 
-            parse.Throws<ODataException>(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent("Any"));
+            parse.Throws<ODataException>(Error.Format(SRResources.FunctionCallBinder_UriFunctionMustHaveHaveNullParent, "Any"));
         }
 
         [Fact]
@@ -699,14 +699,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FilterWithIncompatibleTypeShouldThrow()
         {
             Action action = () => ParseFilter("contains($it,'6')", HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32));
-            action.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound("contains", "contains(Edm.String Nullable=true, Edm.String Nullable=true)"));
+            action.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound, "contains", "contains(Edm.String Nullable=true, Edm.String Nullable=true)"));
         }
 
         [Fact]
         public void FilterWithInvalidParameterShouldThrow()
         {
             Action action = () => ParseFilter("$It gt 6", HardCodedTestModel.TestModel, EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32));
-            action.Throws<ODataException>(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Edm.Int32", "$It"));
+            action.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "Edm.Int32", "$It"));
         }
 
         [Fact]
@@ -714,7 +714,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => ParseOrderBy("MyDog/Missing.Type/Color", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
-            parse.Throws<ODataException>(ODataErrorStrings.CastBinder_ChildTypeIsNotEntity("Missing.Type"));
+            parse.Throws<ODataException>(Error.Format(SRResources.CastBinder_ChildTypeIsNotEntity, "Missing.Type"));
         }
 
         [Fact]
@@ -733,7 +733,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => ParseOrderBy("MyDog", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_OrderByExpressionNotSingleValue);
+            parse.Throws<ODataException>(SRResources.MetadataBinder_OrderByExpressionNotSingleValue);
         }
 
         [Fact]
@@ -741,14 +741,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => ParseOrderBy("MyPeople", HardCodedTestModel.TestModel, HardCodedTestModel.GetDogType());
 
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_OrderByExpressionNotSingleValue);
+            parse.Throws<ODataException>(SRResources.MetadataBinder_OrderByExpressionNotSingleValue);
         }
 
         [Fact]
         public void NegateAnEntityShouldThrow()
         {
             Action parse = () => ParseOrderBy("-MyDog", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_IncompatibleOperandError(HardCodedTestModel.GetPersonMyDogNavProp().Type.FullName(), UnaryOperatorKind.Negate));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_IncompatibleOperandError, HardCodedTestModel.GetPersonMyDogNavProp().Type.FullName(), UnaryOperatorKind.Negate));
         }
 
         [Fact]
@@ -849,7 +849,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // regression test for: [Fuzz] InvalidCastException being thrown for filter/orderby with query "PersonMetadataId /c"
             Action parseInvalidPropertyName = () => ParseFilter("PersonMetadataId /c", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseInvalidPropertyName.Throws<ODataException>(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "PersonMetadataId"));
+            parseInvalidPropertyName.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "Fully.Qualified.Namespace.Person", "PersonMetadataId"));
         }
 
         [Fact]
@@ -873,7 +873,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // regression test for: [UriParser] Trailing $ lost
             Action parseWithTrailingDollarSign = () => ParseOrderBy("Name/$", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseWithTrailingDollarSign.Throws<ODataException>(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Edm.String", "$"));
+            parseWithTrailingDollarSign.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "Edm.String", "$"));
         }
 
         [Fact]
@@ -882,7 +882,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // regression test for: [UriParser] day() allowed. What does that mean?
             // make sure arbitrary funcitons aren't allowed...
             Action parseArbitraryFunctionCall = () => ParseFilter("gobbldygook() eq 20", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseArbitraryFunctionCall.Throws<ODataException>(ODataErrorStrings.MetadataBinder_UnknownFunction("gobbldygook"));
+            parseArbitraryFunctionCall.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_UnknownFunction, "gobbldygook"));
         }
 
         [Fact]
@@ -893,7 +893,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action parseWithInvalidParameters = () => ParseFilter("day() eq 20", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
                 FunctionCallBinder.GetUriFunctionSignatures("day")); // to match the error message... blah
-            parseWithInvalidParameters.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
+            parseWithInvalidParameters.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     "day",
                     UriFunctionsHelper.BuildFunctionSignatureListDescription("day", signatures)));
         }
@@ -906,7 +906,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action parseWithInvalidParameters = () => ParseFilter("day(1) eq 20", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             FunctionSignatureWithReturnType[] signatures = FunctionCallBinder.ExtractSignatures(
                 FunctionCallBinder.GetUriFunctionSignatures("day")); // to match the error message... blah
-            parseWithInvalidParameters.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
+            parseWithInvalidParameters.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                     "day",
                     UriFunctionsHelper.BuildFunctionSignatureListDescription("day", signatures)));
         }
@@ -916,7 +916,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // regression test for: [URIParser] $filter with Any/All throws invalid cast instead of Odata Exception
             Action anyOnPrimitiveType = () => ParseFilter("Name/any(a: a eq 'Bob')", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            anyOnPrimitiveType.Throws<ODataException>(ODataErrorStrings.MetadataBinder_LambdaParentMustBeCollection);
+            anyOnPrimitiveType.Throws<ODataException>(SRResources.MetadataBinder_LambdaParentMustBeCollection);
         }
 
 #region Custom Functions
@@ -983,7 +983,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionWithInvalidComplexParameterThrows()
         {
             Action parseInvalidComplex = () => ParseFilter("Fully.Qualified.Namespace.CanMoveToAddress(address={}})", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseInvalidComplex.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidCharacter("}", "53", "Fully.Qualified.Namespace.CanMoveToAddress(address={}})"));
+            parseInvalidComplex.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", "53", "Fully.Qualified.Namespace.CanMoveToAddress(address={}})"));
         }
 
         [Fact]
@@ -1066,14 +1066,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void CannotFindFunctionWithMatchedParameters()
         {
             Action parseWithExplicitBindingParam = () => ParseFilter("Fully.Qualified.Namespace.HasDog(person=$it)", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseWithExplicitBindingParam.Throws<ODataException>(ODataErrorStrings.MetadataBinder_UnknownFunction("Fully.Qualified.Namespace.HasDog")); // no '...HasDog' method has parameter type of '$it' RangeVariableToken.
+            parseWithExplicitBindingParam.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_UnknownFunction, "Fully.Qualified.Namespace.HasDog")); // no '...HasDog' method has parameter type of '$it' RangeVariableToken.
         }
 
         [Fact]
         public void CannotAddEntityAsBindingParameterToFunction()
         {
             Action parseWithExplicitBindingParam = () => ParseFilter("HasDog(person=People(1))", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseWithExplicitBindingParam.Throws<ODataException>(ODataErrorStrings.MetadataBinder_UnknownFunction("People"));
+            parseWithExplicitBindingParam.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_UnknownFunction, "People"));
         }
 
         [Fact]
@@ -1131,7 +1131,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var model = ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes();
             Action parse = () => ParseFilter("ID/IsPrime()", model, model.EntityTypes().Single(e => e.Name == "Vegetable"), null);
-            parse.Throws<ODataException>(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent("IsPrime"));
+            parse.Throws<ODataException>(Error.Format(SRResources.FunctionCallBinder_UriFunctionMustHaveHaveNullParent, "IsPrime"));
         }
 
         [Fact]
@@ -1139,14 +1139,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var model = ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes();
             Action parse = () => ParseFilter("ID/Test.IsPrime", model, model.EntityTypes().Single(e => e.Name == "Vegetable"), null);
-            parse.Throws<ODataException>(ODataErrorStrings.CastBinder_ChildTypeIsNotEntity("Test.IsPrime"));
+            parse.Throws<ODataException>(Error.Format(SRResources.CastBinder_ChildTypeIsNotEntity, "Test.IsPrime"));
         }
 
         [Fact]
         public void FunctionWithExpressionParameterThrows()
         {
             Action parseWithExpressionParameter = () => ParseFilter("OwnsTheseDogs(dogNames=Dogs(0))", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseWithExpressionParameter.Throws<ODataException>(ODataErrorStrings.MetadataBinder_UnknownFunction("Dogs"));
+            parseWithExpressionParameter.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_UnknownFunction, "Dogs"));
         }
 
         [Fact]
@@ -1154,7 +1154,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var model = ModelBuildingHelpers.GetModelWithFunctionWithDuplicateParameterNames();
             Action parseWithMultipleParameters = () => ParseFilter("Test.Foo(p2='stuff', p2=1)", model, model.EntityTypes().Single(e => e.Name == "Vegetable"));
-            parseWithMultipleParameters.Throws<ODataException>(ODataErrorStrings.FunctionCallParser_DuplicateParameterOrEntityKeyName);
+            parseWithMultipleParameters.Throws<ODataException>(SRResources.FunctionCallParser_DuplicateParameterOrEntityKeyName);
         }
 
         [Fact]
@@ -1177,7 +1177,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ActionsThrowOnClosedTypeInFilter()
         {
             Action parseWithAction = () => ParseFilter("Move", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseWithAction.Throws<ODataException>(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "Move"));
+            parseWithAction.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "Fully.Qualified.Namespace.Person", "Move"));
         }
 
         [Fact]
@@ -1401,14 +1401,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     {"$apply", "compute(FavoriteNumber mul 2 as DoubleFavorite)/aggregate(DoubleFavorite with sum as Total)"}
                 });
             Action parseAction = () => { odataQueryOptionParser.ParseApply(); odataQueryOptionParser.ParseOrderBy(); };
-            parseAction.Throws<ODataException>(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue("DoubleFavorite"));
+            parseAction.Throws<ODataException>(Error.Format(SRResources.ApplyBinder_GroupByPropertyNotPropertyAccessValue, "DoubleFavorite"));
         }
 
         [Fact]
         public void ActionsThrowOnClosedInOrderby()
         {
             Action parseWithAction = () => ParseOrderBy("Move asc", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parseWithAction.Throws<ODataException>(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "Move"));
+            parseWithAction.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "Fully.Qualified.Namespace.Person", "Move"));
         }
 
         [Fact]
@@ -1466,7 +1466,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionBindingFailsIfParameterNameIsIncorrect()
         {
             Action parseWithIncorrectName = () => ParseFilter("Fully.Qualified.Namespace.HasDog(inOfFiCe=true)", HardCodedTestModel.TestModel, HardCodedTestModel.GetEmployeeType());
-            parseWithIncorrectName.Throws<ODataException>(ODataErrorStrings.MetadataBinder_UnknownFunction("Fully.Qualified.Namespace.HasDog")); // no '...HasDog' method has parameter 'inOfFiCe'.
+            parseWithIncorrectName.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_UnknownFunction, "Fully.Qualified.Namespace.HasDog")); // no '...HasDog' method has parameter 'inOfFiCe'.
         }
 
         [Fact]
@@ -1483,14 +1483,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionCallWithKeyExpressionShouldFail()
         {
             Action parse = () => ParseFilter("AllMyFriendsDogs(inOffice=true)(1) ne null", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError(32, "AllMyFriendsDogs(inOffice=true)(1) ne null"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, 32, "AllMyFriendsDogs(inOffice=true)(1) ne null"));
         }
 
         [Fact]
         public void FunctionCallWithKeyExpressionShouldFailEvenIfFunctionHasNoParameters()
         {
             Action parse = () => ParseFilter("AllMyFriendsDogs(1) ne null", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_UnknownFunction("AllMyFriendsDogs"));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_UnknownFunction, "AllMyFriendsDogs"));
         }
 
         [Fact]
@@ -1498,7 +1498,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var model = ModelBuildingHelpers.GetModelWithFunctionOverloadsWithSameParameterNames();
             Action parse = () => ParseFilter("Test.Foo(p2='1')", model, model.EntityTypes().Single(x => x.Name == "Vegetable"));
-            parse.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_NoSingleMatchFound("Test.Foo", "p2"));
+            parse.Throws<ODataException>(Error.Format(SRResources.FunctionOverloadResolver_NoSingleMatchFound, "Test.Foo", "p2"));
         }
 
         [Fact]
@@ -1951,7 +1951,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FilterWithInOperationWithMismatchedOperandTypes()
         {
             Action parse = () => ParseFilter("ID in RelatedSSNs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ArgumentException>(ODataErrorStrings.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType("Edm.String", "Edm.Int32"));
+            parse.Throws<ArgumentException>(Error.Format(SRResources.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType, "Edm.String", "Edm.Int32"));
         }
 
         [Fact]
@@ -2079,7 +2079,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action action = () => ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             // Assert
-            action.Throws<ODataException>(ODataErrorStrings.Binder_IsNotValidEnumConstant("53"));
+            action.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, "53"));
         }
 
         [Theory]
@@ -2096,7 +2096,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action action = () => ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             // Assert
-            action.Throws<ODataException>(ODataErrorStrings.Binder_IsNotValidEnumConstant(expectedExceptionParameter));
+            action.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, expectedExceptionParameter));
         }
 
         [Fact]
@@ -2190,7 +2190,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             string filterClause = $"SSN in {collection}";
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(ODataErrorStrings.StringItemShouldBeQuoted("d"));
+            parse.Throws<ODataException>(Error.Format(SRResources.StringItemShouldBeQuoted, "d"));
         }
 
         [Fact]
@@ -2489,7 +2489,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             string filterClause = $"SSN in {collection}";
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(ODataErrorStrings.StringItemShouldBeQuoted(error));
+            parse.Throws<ODataException>(Error.Format(SRResources.StringItemShouldBeQuoted, error));
         }
 
         [Fact]
@@ -2659,7 +2659,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FilterWithInOperationGuidWithEmptyQuotesThrows(string filterClause, string quotedString)
         {
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue(quotedString, "Edm.Guid"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, quotedString, "Edm.Guid"));
         }
 
         [Theory]
@@ -2672,7 +2672,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FilterWithInOperationDateTimeOffsetWithEmptyQuotesThrows(string filterClause, string quotedString)
         {
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue(quotedString, "Edm.DateTimeOffset"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, quotedString, "Edm.DateTimeOffset"));
         }
 
         [Theory]
@@ -2685,7 +2685,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FilterWithInOperationDateWithEmptyQuotesThrows(string filterClause, string quotedString)
         {
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue(quotedString, "Edm.Date"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, quotedString, "Edm.Date"));
         }
 
         [Theory]
@@ -2696,7 +2696,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             string filterClause = $"MyGuid in {guidsCollection}";
 
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue("", "Edm.Guid"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, "", "Edm.Guid"));
         }
 
         [Theory]
@@ -2707,7 +2707,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             string filterClause = $"Birthdate in {dateTimeOffsetCollection}";
 
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue("", "Edm.DateTimeOffset"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, "", "Edm.DateTimeOffset"));
         }
 
         [Theory]
@@ -2718,14 +2718,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             string filterClause = $"MyDate in {dateCollection}";
 
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(Strings.ReaderValidationUtils_CannotConvertPrimitiveValue("", "Edm.Date"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, "", "Edm.Date"));
         }
 
         [Fact]
         public void FilterWithInOperationWithMismatchedClosureCollection()
         {
             Action parse = () => ParseFilter("ID in (1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression);
+            parse.Throws<ODataException>(SRResources.ExpressionLexer_UnbalancedBracketExpression);
         }
 
         [Fact]
@@ -2812,7 +2812,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => ParseOrderBy("ID in RelatedSSNs", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
             parse.Throws<ArgumentException>(
-                ODataErrorStrings.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType("Edm.String", "Edm.Int32"));
+                Error.Format(SRResources.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType, "Edm.String", "Edm.Int32"));
         }
 
         [Fact]
@@ -2919,7 +2919,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void OrderByWithInOperationWithMismatchedClosureCollection()
         {
             Action parse = () => ParseOrderBy("ID in (1,2,3]", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-            parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression);
+            parse.Throws<ODataException>(SRResources.ExpressionLexer_UnbalancedBracketExpression);
         }
         
         [Fact]

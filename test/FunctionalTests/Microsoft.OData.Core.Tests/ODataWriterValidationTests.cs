@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
@@ -276,7 +277,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(
+                    Error.Format(SRResources.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint,
                         "NS.GlobalAddress",
                         "property",
                         "ShippingAddress"),
@@ -317,7 +318,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_UnrecognizedTypeName("Collection(Str)"),
+                    Error.Format(SRResources.ValidationUtils_UnrecognizedTypeName, "Collection(Str)"),
                     exception.Message);
             }, odataVersion);
         }
@@ -355,7 +356,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_UnsupportedPrimitiveType("System.Object"),
+                    Error.Format(SRResources.ValidationUtils_UnsupportedPrimitiveType, "System.Object"),
                     exception.Message);
             }, odataVersion);
         }
@@ -395,7 +396,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_IncorrectTypeKind("Edm.Int32", "Collection", "Primitive"),
+                    Error.Format(SRResources.ValidationUtils_IncorrectTypeKind, "Edm.Int32", "Collection", "Primitive"),
                     exception.Message);
             }, odataVersion);
         }
@@ -434,7 +435,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_IncompatibleType("Collection(Edm.Int32)", "Collection(Edm.String)"),
+                    Error.Format(SRResources.ValidationUtils_IncompatibleType, "Collection(Edm.Int32)", "Collection(Edm.String)"),
                     exception.Message);
             }, odataVersion);
         }
@@ -468,7 +469,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection("Customer"),
+                    Error.Format(SRResources.WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection, "Customer"),
                     exception.Message);
             }, odataVersion);
         }
@@ -486,7 +487,7 @@ namespace Microsoft.OData.Tests
                 }));
 
                 Assert.Equal(
-                    Strings.ODataMessageWriter_CannotWriteTopLevelNull,
+                    SRResources.ODataMessageWriter_CannotWriteTopLevelNull,
                     exception.Message);
             }, odataVersion);
         }
@@ -521,7 +522,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_IncompatiblePrimitiveItemType("Edm.Double", "False", "Edm.Decimal", "False"),
+                    Error.Format(SRResources.ValidationUtils_IncompatiblePrimitiveItemType, "Edm.Double", "False", "Edm.Decimal", "False"),
                     exception.Message);
             }, odataVersion);
         }
@@ -545,7 +546,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType("NS.Product", "NS.Customer"),
+                    Error.Format(SRResources.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType, "NS.Product", "NS.Customer"),
                     exception.Message);
             }, odataVersion);
         }
@@ -575,7 +576,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_NonPrimitiveTypeForPrimitiveValue("Collection(Edm.String)"),
+                    Error.Format(SRResources.ValidationUtils_NonPrimitiveTypeForPrimitiveValue, "Collection(Edm.String)"),
                     exception.Message);
             }, odataVersion);
         }
@@ -606,7 +607,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_PropertiesMustNotContainReservedChars("Customer.Name", "':', '.', '@'"),
+                    Error.Format(SRResources.ValidationUtils_PropertiesMustNotContainReservedChars, "Customer.Name", "':', '.', '@'"),
                     exception.Message);
             }, odataVersion);
         }
@@ -639,7 +640,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_PropertiesMustHaveNonEmptyName,
+                    SRResources.WriterValidationUtils_PropertiesMustHaveNonEmptyName,
                     exception.Message);
             }, odataVersion);
         }
@@ -669,7 +670,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_PropertyDoesNotExistOnType("NonExistentProperty", "NS.Customer"),
+                    Error.Format(SRResources.ValidationUtils_PropertyDoesNotExistOnType, "NonExistentProperty", "NS.Customer"),
                     exception.Message);
             }, odataVersion);
         }
@@ -700,7 +701,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_CollectionPropertiesMustNotHaveNullValue("Emails"),
+                    Error.Format(SRResources.WriterValidationUtils_CollectionPropertiesMustNotHaveNullValue, "Emails"),
                     exception.Message);
             }, odataVersion);
         }
@@ -731,7 +732,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_StreamPropertiesMustNotHaveNullValue("Photo"),
+                    Error.Format(SRResources.WriterValidationUtils_StreamPropertiesMustNotHaveNullValue, "Photo"),
                     exception.Message);
             }, odataVersion);
         }
@@ -772,7 +773,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_StreamPropertyInRequest("Photo"),
+                    Error.Format(SRResources.WriterValidationUtils_StreamPropertyInRequest, "Photo"),
                     exception.Message);
             }, odataVersion);
         }
@@ -812,7 +813,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_MismatchPropertyKindForStreamProperty("Name"),
+                    Error.Format(SRResources.ValidationUtils_MismatchPropertyKindForStreamProperty, "Name"),
                     exception.Message);
             }, odataVersion);
         }
@@ -861,7 +862,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata("http://tempuri.org/Orders(1)/Items"),
+                    Error.Format(SRResources.WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata, "http://tempuri.org/Orders(1)/Items"),
                     exception.Message);
             }, odataVersion);
         }
@@ -895,7 +896,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_ExpandedLinkWithResourcePayloadAndResourceSetMetadata("http://tempuri.org/Orders(1)/Customer"),
+                    Error.Format(SRResources.WriterValidationUtils_ExpandedLinkWithResourcePayloadAndResourceSetMetadata, "http://tempuri.org/Orders(1)/Customer"),
                     exception.Message);
             }, odataVersion);
         }
@@ -929,7 +930,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent("http://tempuri.org/Orders(1)/Customer"),
+                    Error.Format(SRResources.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent, "http://tempuri.org/Orders(1)/Customer"),
                     exception.Message);
             }, odataVersion);
         }
@@ -965,7 +966,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent("http://tempuri.org/Customers(1)/Orders"),
+                    Error.Format(SRResources.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent, "http://tempuri.org/Customers(1)/Orders"),
                     exception.Message);
             }, odataVersion);
         }
@@ -997,7 +998,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata("http://tempuri.org/Orders(1)/Customer"),
+                    Error.Format(SRResources.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata, "http://tempuri.org/Orders(1)/Customer"),
                     exception.Message);
             }, odataVersion);
         }
@@ -1041,7 +1042,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata("http://tempuri.org/Customers(7)/Orders"),
+                    Error.Format(SRResources.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata, "http://tempuri.org/Customers(7)/Orders"),
                     exception.Message);
             }, odataVersion);
         }
@@ -1074,7 +1075,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_NullCollectionItemForNonNullableType("Edm.String"),
+                    Error.Format(SRResources.ValidationUtils_NullCollectionItemForNonNullableType, "Edm.String"),
                     exception.Message);
             }, odataVersion);
         }
@@ -1104,7 +1105,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue("Name", "Edm.String"),
+                    Error.Format(SRResources.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue, "Name", "Edm.String"),
                     exception.Message);
             }, odataVersion);
         }
@@ -1137,7 +1138,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull,
+                    SRResources.WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull,
                     exception.Message);
             }, odataVersion);
         }
@@ -1167,7 +1168,7 @@ namespace Microsoft.OData.Tests
                         }));
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull,
+                    SRResources.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull,
                     exception.Message);
             }
         }
@@ -1195,7 +1196,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_NextPageLinkInRequest,
+                    SRResources.WriterValidationUtils_NextPageLinkInRequest,
                     exception.Message);
             }, odataVersion);
         }
@@ -1233,7 +1234,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_OperationInRequest("http://tempuri.org/$metadata#Default.SendOffers"),
+                    Error.Format(SRResources.WriterValidationUtils_OperationInRequest, "http://tempuri.org/$metadata#Default.SendOffers"),
                     exception.Message);
             }, odataVersion);
         }
@@ -1265,7 +1266,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_EnumerableContainsANullItem("ODataResource.Actions"),
+                    Error.Format(SRResources.ValidationUtils_EnumerableContainsANullItem, "ODataResource.Actions"),
                     exception.Message);
             }, odataVersion);
         }
@@ -1302,7 +1303,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata("ODataAction"),
+                    Error.Format(SRResources.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata, "ODataAction"),
                     exception.Message);
             }, odataVersion);
         }
@@ -1351,7 +1352,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_StreamReferenceValuesNotSupportedInCollections,
+                    SRResources.ValidationUtils_StreamReferenceValuesNotSupportedInCollections,
                     exception.Message);
             }
         }
@@ -1400,7 +1401,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_NestedCollectionsAreNotSupported,
+                    SRResources.ValidationUtils_NestedCollectionsAreNotSupported,
                     exception.Message);
             }
         }
@@ -1438,7 +1439,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_NonNullableCollectionElementsMustNotBeNull,
+                    SRResources.ValidationUtils_NonNullableCollectionElementsMustNotBeNull,
                     exception.Message);
             }, odataVersion);
         }
@@ -1488,7 +1489,7 @@ namespace Microsoft.OData.Tests
                     () => messageWriter.WriteErrorAsync(odataError, includeDebugInformation: true));
 
                 Assert.Equal(
-                    Strings.ValidationUtils_RecursionDepthLimitReached(1),
+                    Error.Format(SRResources.ValidationUtils_RecursionDepthLimitReached, 1),
                     exception.Message);
             }, odataVersion);
         }
@@ -1528,7 +1529,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_MissingTypeNameWithMetadata,
+                    SRResources.WriterValidationUtils_MissingTypeNameWithMetadata,
                     exception.Message);
             }, odataVersion);
         }
@@ -1569,7 +1570,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_TypeNameMustNotBeEmpty,
+                    SRResources.ValidationUtils_TypeNameMustNotBeEmpty,
                     exception.Message);
             }, odataVersion);
         }
@@ -1619,7 +1620,7 @@ namespace Microsoft.OData.Tests
                     () => messageWriter.WriteServiceDocumentAsync(serviceDocument));
 
                 Assert.Equal(
-                    Strings.ValidationUtils_ResourceMustSpecifyUrl,
+                    SRResources.ValidationUtils_ResourceMustSpecifyUrl,
                     exception.Message);
             }, odataVersion);
         }
@@ -1642,7 +1643,7 @@ namespace Microsoft.OData.Tests
                     () => messageWriter.WriteServiceDocumentAsync(serviceDocument));
 
                 Assert.Equal(
-                    Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem,
+                    SRResources.ValidationUtils_WorkspaceResourceMustNotContainNullItem,
                     exception.Message);
             }, odataVersion);
         }
@@ -1675,7 +1676,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_MaxDepthOfNestedEntriesExceeded(2),
+                    Error.Format(SRResources.ValidationUtils_MaxDepthOfNestedEntriesExceeded, 2),
                     exception.Message);
             }, odataVersion);
         }
@@ -1692,7 +1693,7 @@ namespace Microsoft.OData.Tests
             });
 
             Assert.Equal(
-            Strings.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute('/'),
+            Error.Format(SRResources.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute, '/'),
             exception.Message);
         }
 
@@ -1708,7 +1709,7 @@ namespace Microsoft.OData.Tests
             });
 
             Assert.Equal(
-                Strings.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage,
+                SRResources.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage,
                 exception.Message);
         }
 
@@ -1747,7 +1748,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_UnsupportedPrimitiveType("System.Object"),
+                    Error.Format(SRResources.ValidationUtils_UnsupportedPrimitiveType, "System.Object"),
                     exception.Message);
             }, odataVersion);
         }
@@ -1787,7 +1788,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_IncorrectTypeKind("Edm.Int32", "Collection", "Primitive"),
+                    Error.Format(SRResources.ValidationUtils_IncorrectTypeKind, "Edm.Int32", "Collection", "Primitive"),
                     exception.Message);
             }, odataVersion);
         }
@@ -1826,7 +1827,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_IncompatibleType("Collection(Edm.Int32)", "Collection(Edm.String)"),
+                    Error.Format(SRResources.ValidationUtils_IncompatibleType, "Collection(Edm.Int32)", "Collection(Edm.String)"),
                     exception.Message);
             }, odataVersion);
         }
@@ -1860,7 +1861,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection("Customer"),
+                    Error.Format(SRResources.WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection, "Customer"),
                     exception.Message);
             }, odataVersion);
         }
@@ -1878,7 +1879,7 @@ namespace Microsoft.OData.Tests
                 }));
 
                 Assert.Equal(
-                    Strings.ODataMessageWriter_CannotWriteTopLevelNull,
+                    SRResources.ODataMessageWriter_CannotWriteTopLevelNull,
                     exception.Message);
             }, odataVersion);
         }
@@ -1913,7 +1914,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_IncompatiblePrimitiveItemType("Edm.Double", "False", "Edm.Decimal", "False"),
+                    Error.Format(SRResources.ValidationUtils_IncompatiblePrimitiveItemType, "Edm.Double", "False", "Edm.Decimal", "False"),
                     exception.Message);
             }, odataVersion);
         }
@@ -1937,7 +1938,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType("NS.Product", "NS.Customer"),
+                    Error.Format(SRResources.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType, "NS.Product", "NS.Customer"),
                     exception.Message);
             }, odataVersion);
         }
@@ -1967,7 +1968,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_NonPrimitiveTypeForPrimitiveValue("Collection(Edm.String)"),
+                    Error.Format(SRResources.ValidationUtils_NonPrimitiveTypeForPrimitiveValue, "Collection(Edm.String)"),
                     exception.Message);
             }, odataVersion);
         }
@@ -1998,7 +1999,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_PropertiesMustNotContainReservedChars("Customer.Name", "':', '.', '@'"),
+                    Error.Format(SRResources.ValidationUtils_PropertiesMustNotContainReservedChars, "Customer.Name", "':', '.', '@'"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2031,7 +2032,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_PropertiesMustHaveNonEmptyName,
+                    SRResources.WriterValidationUtils_PropertiesMustHaveNonEmptyName,
                     exception.Message);
             }, odataVersion);
         }
@@ -2061,7 +2062,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_PropertyDoesNotExistOnType("NonExistentProperty", "NS.Customer"),
+                    Error.Format(SRResources.ValidationUtils_PropertyDoesNotExistOnType, "NonExistentProperty", "NS.Customer"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2092,7 +2093,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_CollectionPropertiesMustNotHaveNullValue("Emails"),
+                    Error.Format(SRResources.WriterValidationUtils_CollectionPropertiesMustNotHaveNullValue, "Emails"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2123,7 +2124,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_StreamPropertiesMustNotHaveNullValue("Photo"),
+                    Error.Format(SRResources.WriterValidationUtils_StreamPropertiesMustNotHaveNullValue, "Photo"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2164,7 +2165,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_StreamPropertyInRequest("Photo"),
+                    Error.Format(SRResources.WriterValidationUtils_StreamPropertyInRequest, "Photo"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2204,7 +2205,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_MismatchPropertyKindForStreamProperty("Name"),
+                    Error.Format(SRResources.ValidationUtils_MismatchPropertyKindForStreamProperty, "Name"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2253,7 +2254,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata("http://tempuri.org/Orders(1)/Items"),
+                    Error.Format(SRResources.WriterValidationUtils_ExpandedLinkWithResourceSetPayloadAndResourceMetadata, "http://tempuri.org/Orders(1)/Items"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2287,7 +2288,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_ExpandedLinkWithResourcePayloadAndResourceSetMetadata("http://tempuri.org/Orders(1)/Customer"),
+                    Error.Format(SRResources.WriterValidationUtils_ExpandedLinkWithResourcePayloadAndResourceSetMetadata, "http://tempuri.org/Orders(1)/Customer"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2321,7 +2322,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent("http://tempuri.org/Orders(1)/Customer"),
+                    Error.Format(SRResources.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceContent, "http://tempuri.org/Orders(1)/Customer"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2357,7 +2358,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent("http://tempuri.org/Customers(1)/Orders"),
+                    Error.Format(SRResources.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetContent, "http://tempuri.org/Customers(1)/Orders"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2389,7 +2390,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata("http://tempuri.org/Orders(1)/Customer"),
+                    Error.Format(SRResources.WriterValidationUtils_ExpandedLinkIsCollectionTrueWithResourceMetadata, "http://tempuri.org/Orders(1)/Customer"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2433,7 +2434,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata("http://tempuri.org/Customers(7)/Orders"),
+                    Error.Format(SRResources.WriterValidationUtils_ExpandedLinkIsCollectionFalseWithResourceSetMetadata, "http://tempuri.org/Customers(7)/Orders"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2466,7 +2467,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_NullCollectionItemForNonNullableType("Edm.String"),
+                    Error.Format(SRResources.ValidationUtils_NullCollectionItemForNonNullableType, "Edm.String"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2496,7 +2497,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue("Name", "Edm.String"),
+                    Error.Format(SRResources.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue, "Name", "Edm.String"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2529,7 +2530,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull,
+                    SRResources.WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull,
                     exception.Message);
             }, odataVersion);
         }
@@ -2559,7 +2560,7 @@ namespace Microsoft.OData.Tests
                         }));
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull,
+                    SRResources.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull,
                     exception.Message);
             }
         }
@@ -2587,7 +2588,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_NextPageLinkInRequest,
+                    SRResources.WriterValidationUtils_NextPageLinkInRequest,
                     exception.Message);
             }, odataVersion);
         }
@@ -2625,7 +2626,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_OperationInRequest("http://tempuri.org/$metadata#Default.SendOffers"),
+                    Error.Format(SRResources.WriterValidationUtils_OperationInRequest, "http://tempuri.org/$metadata#Default.SendOffers"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2657,7 +2658,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_EnumerableContainsANullItem("ODataResource.Actions"),
+                    Error.Format(SRResources.ValidationUtils_EnumerableContainsANullItem, "ODataResource.Actions"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2694,7 +2695,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata("ODataAction"),
+                    Error.Format(SRResources.ValidationUtils_ActionsAndFunctionsMustSpecifyMetadata, "ODataAction"),
                     exception.Message);
             }, odataVersion);
         }
@@ -2743,7 +2744,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_StreamReferenceValuesNotSupportedInCollections,
+                    SRResources.ValidationUtils_StreamReferenceValuesNotSupportedInCollections,
                     exception.Message);
             }
         }
@@ -2792,7 +2793,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_NestedCollectionsAreNotSupported,
+                    SRResources.ValidationUtils_NestedCollectionsAreNotSupported,
                     exception.Message);
             }
         }
@@ -2830,7 +2831,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_NonNullableCollectionElementsMustNotBeNull,
+                    SRResources.ValidationUtils_NonNullableCollectionElementsMustNotBeNull,
                     exception.Message);
             }, odataVersion);
         }
@@ -2880,7 +2881,7 @@ namespace Microsoft.OData.Tests
                     () => messageWriter.WriteError(odataError, includeDebugInformation: true));
 
                 Assert.Equal(
-                    Strings.ValidationUtils_RecursionDepthLimitReached(1),
+                    Error.Format(SRResources.ValidationUtils_RecursionDepthLimitReached, 1),
                     exception.Message);
             }, odataVersion);
         }
@@ -2920,7 +2921,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.WriterValidationUtils_MissingTypeNameWithMetadata,
+                    SRResources.WriterValidationUtils_MissingTypeNameWithMetadata,
                     exception.Message);
             }, odataVersion);
         }
@@ -2961,7 +2962,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_TypeNameMustNotBeEmpty,
+                    SRResources.ValidationUtils_TypeNameMustNotBeEmpty,
                     exception.Message);
             }, odataVersion);
         }
@@ -3011,7 +3012,7 @@ namespace Microsoft.OData.Tests
                     () => messageWriter.WriteServiceDocument(serviceDocument));
 
                 Assert.Equal(
-                    Strings.ValidationUtils_ResourceMustSpecifyUrl,
+                    SRResources.ValidationUtils_ResourceMustSpecifyUrl,
                     exception.Message);
             }, odataVersion);
         }
@@ -3034,7 +3035,7 @@ namespace Microsoft.OData.Tests
                     () => messageWriter.WriteServiceDocument(serviceDocument));
 
                 Assert.Equal(
-                    Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem,
+                    SRResources.ValidationUtils_WorkspaceResourceMustNotContainNullItem,
                     exception.Message);
             }, odataVersion);
         }
@@ -3067,7 +3068,7 @@ namespace Microsoft.OData.Tests
                 });
 
                 Assert.Equal(
-                    Strings.ValidationUtils_MaxDepthOfNestedEntriesExceeded(2),
+                    Error.Format(SRResources.ValidationUtils_MaxDepthOfNestedEntriesExceeded, 2),
                     exception.Message);
             }, odataVersion);
         }
@@ -3084,7 +3085,7 @@ namespace Microsoft.OData.Tests
             });
 
             Assert.Equal(
-            Strings.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute('/'),
+            Error.Format(SRResources.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute, '/'),
             exception.Message);
         }
 
@@ -3100,7 +3101,7 @@ namespace Microsoft.OData.Tests
             });
 
             Assert.Equal(
-                Strings.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage,
+                SRResources.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage,
                 exception.Message);
         }
 
@@ -3129,7 +3130,7 @@ namespace Microsoft.OData.Tests
             });
 
             Assert.Equal(
-                Strings.ValidationUtils_ResourceWithoutMediaResourceAndMLEType("NS.Product"),
+                Error.Format(SRResources.ValidationUtils_ResourceWithoutMediaResourceAndMLEType, "NS.Product"),
                 exception.Message);
         }
 
@@ -3165,7 +3166,7 @@ namespace Microsoft.OData.Tests
             });
 
             Assert.Equal(
-                Strings.ValidationUtils_ResourceWithMediaResourceAndNonMLEType("NS.Customer"),
+                Error.Format(SRResources.ValidationUtils_ResourceWithMediaResourceAndNonMLEType, "NS.Customer"),
                 exception.Message);
         }
 
@@ -3192,7 +3193,7 @@ namespace Microsoft.OData.Tests
             });
 
             Assert.Equal(
-                Strings.ValidationUtils_LinkMustSpecifyName,
+                SRResources.ValidationUtils_LinkMustSpecifyName,
                 exception.Message);
         }
 
@@ -3211,7 +3212,7 @@ namespace Microsoft.OData.Tests
             });
 
             Assert.Equal(
-                Strings.WriterValidationUtils_MessageWriterSettingsServiceDocumentUriMustBeNullOrAbsolute('/'),
+                Error.Format(SRResources.WriterValidationUtils_MessageWriterSettingsServiceDocumentUriMustBeNullOrAbsolute, '/'),
                 exception.Message);
         }
 

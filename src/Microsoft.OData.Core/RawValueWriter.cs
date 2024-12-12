@@ -11,6 +11,7 @@ namespace Microsoft.OData
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Json;
     using Microsoft.Spatial;
 
@@ -156,7 +157,7 @@ namespace Microsoft.OData
             else
             {
                 // throw an exception because the value is neither enum nor primitive
-                throw new ODataException(Strings.ODataUtils_CannotConvertValueToRawString(value.GetType().FullName));
+                throw new ODataException(Error.Format(SRResources.ODataUtils_CannotConvertValueToRawString, value.GetType().FullName));
             }
         }
 
@@ -245,7 +246,7 @@ namespace Microsoft.OData
 
             // Value is neither enum nor primitive
             return TaskUtils.GetFaultedTask(
-                new ODataException(Strings.ODataUtils_CannotConvertValueToRawString(value.GetType().FullName)));
+                new ODataException(Error.Format(SRResources.ODataUtils_CannotConvertValueToRawString, value.GetType().FullName)));
         }
 
         /// <summary>

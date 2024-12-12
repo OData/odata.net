@@ -167,7 +167,7 @@ namespace Microsoft.OData.Edm
 
             if (nextSchemaType != null)
             {
-                throw new InvalidOperationException(Strings.TypeCast_HierarchyNotFollowed(schemaType, nextSchemaType));
+                throw new InvalidOperationException(Error.Format(SRResources.TypeCast_HierarchyNotFollowed, schemaType, nextSchemaType));
             }
 
             if (schemaType is IEdmStructuredType structuredType)
@@ -192,7 +192,7 @@ namespace Microsoft.OData.Edm
 
             if (!isValid)
             {
-                throw new InvalidOperationException(Strings.TypeCast_HierarchyNotFollowed(previousElement, schemaType));
+                throw new InvalidOperationException(Error.Format(SRResources.TypeCast_HierarchyNotFollowed, previousElement, schemaType));
             }
         }
 

@@ -149,7 +149,7 @@ namespace Microsoft.OData.Client
                 if (operationResponse != null)
                 {
                     operationResponse.Error = ex;
-                    throw new DataServiceQueryException(Strings.DataServiceException_GeneralError, ex, operationResponse);
+                    throw new DataServiceQueryException(SRResources.DataServiceException_GeneralError, ex, operationResponse);
                 }
 
                 throw;

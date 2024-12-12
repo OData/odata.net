@@ -926,7 +926,7 @@ namespace Microsoft.OData.Client
 
             if (this.State != EntityStates.Added)
             {
-                throw new ArgumentNullException(Strings.EntityDescriptor_MissingSelfEditLink(this.identity));
+                throw new ArgumentNullException(Error.Format(SRResources.EntityDescriptor_MissingSelfEditLink, this.identity));
             }
             else
             {

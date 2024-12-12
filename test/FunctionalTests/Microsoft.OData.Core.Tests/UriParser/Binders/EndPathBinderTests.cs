@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -56,7 +57,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var token = new EndPathToken("Color", new RangeVariableToken("notInScope"));
             Action bind = () => this.propertyBinder.BindEndPath(token);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_ParameterNotInScope("notInScope"));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_ParameterNotInScope, "notInScope"));
         }
 
         [Fact]
@@ -172,7 +173,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             var state = new BindingState(this.configuration);
             Action createparent = () => EndPathBinder.CreateParentFromImplicitRangeVariable(state);
-            createparent.Throws<ODataException>(Strings.MetadataBinder_PropertyAccessWithoutParentParameter);
+            createparent.Throws<ODataException>(SRResources.MetadataBinder_PropertyAccessWithoutParentParameter);
         }
 
         [Fact]
@@ -238,7 +239,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
                 token, parentNode);
 
             getQueryNode.Throws<ODataException>(
-                Strings.MetadataBinder_PropertyNotDeclared(parentNode.GetEdmTypeReference().FullName(),
+                Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, parentNode.GetEdmTypeReference().FullName(),
                                                                                     token.Identifier));
         }
 
@@ -273,7 +274,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             Action bind = () => endPathBinder.BindEndPath(token);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_PropertyAccessSourceNotSingleValue("FastestOwner"));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyAccessSourceNotSingleValue, "FastestOwner"));
         }
 
         [Fact]
@@ -290,7 +291,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             Action bind = () => endPathBinder.BindEndPath(token);
 
-            bind.Throws<ODataException>(Strings.MetadataBinder_PropertyAccessSourceNotSingleValue("MissingProperty"));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyAccessSourceNotSingleValue, "MissingProperty"));
         }
 
         /// <summary>

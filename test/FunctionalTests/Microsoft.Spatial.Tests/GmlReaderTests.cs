@@ -67,7 +67,7 @@ namespace Microsoft.Spatial.Tests
 
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(
                 () => new GmlReader(new SpatialToPositionPipeline()).ReadGeography(reader),
-                Strings.GmlReader_EmptyRingsNotAllowed);
+                SRResources.GmlReader_EmptyRingsNotAllowed);
         }
 
         [Fact]
@@ -81,7 +81,7 @@ namespace Microsoft.Spatial.Tests
 
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(
                 () => new GmlReader(new SpatialToPositionPipeline()).ReadGeography(reader),
-                Strings.GmlReader_UnexpectedElement("MyWeirdElement"));
+                Error.Format(SRResources.GmlReader_UnexpectedElement, "MyWeirdElement"));
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Microsoft.Spatial.Tests
 
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(
                 () => new GmlReader(new SpatialToPositionPipeline()).ReadGeography(reader),
-                Strings.GmlReader_InvalidSpatialType("Surface"));
+                Error.Format(SRResources.GmlReader_InvalidSpatialType, "Surface"));
         }
 
         [Fact]
@@ -106,7 +106,7 @@ namespace Microsoft.Spatial.Tests
             reader.ReadStartElement();
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(
                 () => new GmlReader(new SpatialToPositionPipeline()).ReadGeography(reader),
-                Strings.GmlReader_ExpectReaderAtElement);
+                    SRResources.GmlReader_ExpectReaderAtElement);
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Microsoft.Spatial.Tests
 
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(
                 () => new GmlReader(new SpatialToPositionPipeline()).ReadGeography(reader),
-                Strings.GmlReader_InvalidSrsName(GmlConstants.SrsPrefix));
+                Error.Format(SRResources.GmlReader_InvalidSrsName, GmlConstants.SrsPrefix));
         }
 
         [Fact]
@@ -127,7 +127,7 @@ namespace Microsoft.Spatial.Tests
 
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(
                 () => new GmlReader(new SpatialToPositionPipeline()).ReadGeography(reader),
-                Strings.GmlReader_InvalidAttribute("foo", "gml:Polygon"));
+                Error.Format(SRResources.GmlReader_InvalidAttribute, "foo", "gml:Polygon"));
         }
 
         [Fact]
@@ -138,7 +138,7 @@ namespace Microsoft.Spatial.Tests
 
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(
                 () => new GmlReader(new SpatialToPositionPipeline()).ReadGeography(reader),
-                Strings.GmlReader_InvalidAttribute("srsDimension", "pos"));
+                Error.Format(SRResources.GmlReader_InvalidAttribute, "srsDimension", "pos"));
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace Microsoft.Spatial.Tests
 
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(
                 () => new GmlReader(new SpatialToPositionPipeline()).ReadGeography(reader),
-                Strings.GmlReader_InvalidAttribute("srsName", "pos"));
+                Error.Format(SRResources.GmlReader_InvalidAttribute, "srsName", "pos"));
         }
 
         [Fact]
@@ -161,7 +161,7 @@ namespace Microsoft.Spatial.Tests
 
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(
                 () => new GmlReader(new SpatialToPositionPipeline()).ReadGeography(reader),
-                Strings.GmlReader_InvalidAttribute("srsName", "pos"));
+                Error.Format(SRResources.GmlReader_InvalidAttribute, "srsName", "pos"));
         }
 
         [Fact]
@@ -196,7 +196,7 @@ namespace Microsoft.Spatial.Tests
 
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(
                 () => new GmlReader(new SpatialToPositionPipeline()).ReadGeography(reader),
-                Strings.GmlReader_PosNeedTwoNumbers);
+                SRResources.GmlReader_PosNeedTwoNumbers);
         }
 
         [Fact]
@@ -206,7 +206,7 @@ namespace Microsoft.Spatial.Tests
 
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(
                 () => new GmlReader(new SpatialToPositionPipeline()).ReadGeography(reader),
-                Strings.GmlReader_PosListNeedsEvenCount);
+                SRResources.GmlReader_PosListNeedsEvenCount);
         }
 
         [Fact]
@@ -585,7 +585,7 @@ namespace Microsoft.Spatial.Tests
 
             var target = new SpatialToPositionPipeline();
             var gmlReader = new GmlReader(target);
-            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => gmlReader.ReadGeography(invalidReader), Strings.GmlReader_PosNeedTwoNumbers);
+            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => gmlReader.ReadGeography(invalidReader), SRResources.GmlReader_PosNeedTwoNumbers);
             gmlReader.Reset();
             gmlReader.ReadGeography(validReader);
             Assert.Equal(CoordinateSystem.Geography(1234), target.CoordinateSystem);

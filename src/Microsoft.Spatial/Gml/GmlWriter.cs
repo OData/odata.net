@@ -261,7 +261,7 @@ namespace Microsoft.Spatial
                     this.writer.WriteStartElement(GmlConstants.FullGlobe, GmlConstants.FullGlobeNamespace);
                     break;
                 default:
-                    throw new NotSupportedException(Strings.Validator_InvalidType(type));
+                    throw new NotSupportedException(Error.Format(SRResources.Validator_InvalidType, type));
             }
 
             this.WriteCoordinateSystem();

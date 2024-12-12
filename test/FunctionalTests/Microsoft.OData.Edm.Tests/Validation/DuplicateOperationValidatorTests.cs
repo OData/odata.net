@@ -45,7 +45,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmModel model = new EdmModel();
             model.AddElement(edmFunction);
             model.AddElement(edmFunction2);
-            ValidateError(model, EdmErrorCode.DuplicateFunctions, Strings.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterNames("n.s.GetStuff"));
+            ValidateError(model, EdmErrorCode.DuplicateFunctions, Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterNames, "n.s.GetStuff"));
         }
 
         [Fact]
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmModel model = new EdmModel();
             model.AddElement(edmFunction);
             model.AddElement(edmFunction2);
-            ValidateError(model, EdmErrorCode.DuplicateFunctions, Strings.EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterNames("n.s.GetStuff"));
+            ValidateError(model, EdmErrorCode.DuplicateFunctions, Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterNames, "n.s.GetStuff"));
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmModel model = new EdmModel();
             model.AddElement(edmFunction);
             model.AddElement(edmFunction2);
-            ValidateError(model, EdmErrorCode.DuplicateFunctions, Strings.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterTypes("n.s.GetStuff"));
+            ValidateError(model, EdmErrorCode.DuplicateFunctions, Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterTypes, "n.s.GetStuff"));
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmModel model = new EdmModel();
             model.AddElement(edmFunction);
             model.AddElement(edmFunction2);
-            ValidateError(model, EdmErrorCode.DuplicateFunctions, Strings.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterTypes("n.s.GetStuff"));
+            ValidateError(model, EdmErrorCode.DuplicateFunctions, Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterTypes, "n.s.GetStuff"));
         }
 
         [Fact]
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmModel model = new EdmModel();
             model.AddElement(edmFunction);
             model.AddElement(edmFunction2);
-            ValidateError(model, EdmErrorCode.DuplicateFunctions, Strings.EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterTypes("n.s.GetStuff"));
+            ValidateError(model, EdmErrorCode.DuplicateFunctions, Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterTypes, "n.s.GetStuff"));
         }
 
         [Fact]
@@ -178,7 +178,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmModel model = new EdmModel();
             model.AddElement(edmFunction);
             model.AddElement(edmFunction2);
-            ValidateError(model, EdmErrorCode.DuplicateFunctions, Strings.EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterNames("n.s.GetStuff"));
+            ValidateError(model, EdmErrorCode.DuplicateFunctions, Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterNames, "n.s.GetStuff"));
         }
 
         [Fact]
@@ -196,7 +196,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmModel model = new EdmModel();
             model.AddElement(edmFunction);
             model.AddElement(edmFunction2);
-            ValidateError(model, EdmErrorCode.DuplicateFunctions, Strings.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterNames("n.s.GetStuff"));
+            ValidateError(model, EdmErrorCode.DuplicateFunctions, Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterNames, "n.s.GetStuff"));
         }
 
         [Fact]
@@ -214,7 +214,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmModel model = new EdmModel();
             model.AddElement(edmFunction);
             model.AddElement(edmFunction2);
-            ValidateError(model, EdmErrorCode.DuplicateFunctions, Strings.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterTypes("n.s.GetStuff"));
+            ValidateError(model, EdmErrorCode.DuplicateFunctions, Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateBoundFunctionParameterTypes, "n.s.GetStuff"));
         }
 
         [Fact]
@@ -230,7 +230,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmModel model = new EdmModel();
             model.AddElement(edmFunction);
             model.AddElement(edmFunction2);
-            ValidateError(model, EdmErrorCode.DuplicateFunctions, Strings.EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterTypes("n.s.GetStuff"));
+            ValidateError(model, EdmErrorCode.DuplicateFunctions, Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateUnBoundFunctionsParameterTypes, "n.s.GetStuff"));
         }
 
         [Fact]
@@ -290,7 +290,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmModel model = new EdmModel();
             model.AddElement(edmAction);
             model.AddElement(edmAction2);
-            ValidateError(model, EdmErrorCode.DuplicateActions, Strings.EdmModel_Validator_Semantic_ModelDuplicateBoundActions("n.s.DoStuff"));
+            ValidateError(model, EdmErrorCode.DuplicateActions, Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateBoundActions, "n.s.DoStuff"));
         }
 
         [Fact]
@@ -306,7 +306,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmModel model = new EdmModel();
             model.AddElement(edmAction);
             model.AddElement(edmAction2);
-            ValidateError(model, EdmErrorCode.DuplicateActions, Strings.EdmModel_Validator_Semantic_ModelDuplicateUnBoundActions("n.s.DoStuff"));
+            ValidateError(model, EdmErrorCode.DuplicateActions, Error.Format(SRResources.EdmModel_Validator_Semantic_ModelDuplicateUnBoundActions, "n.s.DoStuff"));
         }
 
         [Fact]

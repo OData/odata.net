@@ -81,21 +81,21 @@ namespace Microsoft.OData.Client
         /// <returns>exception to throw</returns>
         internal static NotSupportedException MethodNotSupported(System.Linq.Expressions.MethodCallExpression m)
         {
-            return Error.NotSupported(Strings.ALinq_MethodNotSupported(m.Method.Name));
+            return Error.NotSupported(Error.Format(SRResources.ALinq_MethodNotSupported, m.Method.Name));
         }
 
         /// <summary>throw an exception because unexpected batch content was encounted</summary>
         /// <param name="value">internal error</param>
         internal static void ThrowBatchUnexpectedContent(InternalError value)
         {
-            throw InvalidOperation(Strings.Batch_UnexpectedContent((int)value));
+            throw InvalidOperation(Error.Format(SRResources.Batch_UnexpectedContent, (int)value));
         }
 
         /// <summary>throw an exception because expected batch content was not encountered</summary>
         /// <param name="value">internal error</param>
         internal static void ThrowBatchExpectedResponse(InternalError value)
         {
-            throw InvalidOperation(Strings.Batch_ExpectedResponse((int)value));
+            throw InvalidOperation(Error.Format(SRResources.Batch_ExpectedResponse, (int)value));
         }
 
         /// <summary>unexpected xml when reading web responses</summary>
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Client
         /// <returns>exception to throw</returns>
         internal static InvalidOperationException InternalError(InternalError value)
         {
-            return InvalidOperation(Strings.Context_InternalError((int)value));
+            return InvalidOperation(Error.Format(SRResources.Context_InternalError, (int)value));
         }
 
         /// <summary>throw exception for unexpected xml when reading web responses</summary>

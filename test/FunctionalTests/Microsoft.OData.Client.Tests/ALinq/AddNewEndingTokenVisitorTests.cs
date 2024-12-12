@@ -6,7 +6,6 @@
 
 using System;
 using Microsoft.OData.Client.ALinq.UriParser;
-using Microsoft.OData;
 using Xunit;
 
 namespace Microsoft.OData.Client.Tests.ALinq
@@ -24,7 +23,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             Action visitSystemToken = () => token.Accept(visitor);
 
             NotSupportedException exception = Assert.Throws<NotSupportedException>(visitSystemToken);
-            Assert.Equal(Strings.ALinq_IllegalSystemQueryOption(ExpressionConstants.It), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ALinq_IllegalSystemQueryOption, ExpressionConstants.It), exception.Message);
         }
 
         [Fact]

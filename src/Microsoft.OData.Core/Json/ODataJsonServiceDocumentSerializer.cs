@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Json
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -74,7 +75,7 @@ namespace Microsoft.OData.Json
                         {
                             if (functionImportInfo == null)
                             {
-                                throw new ODataException(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
+                                throw new ODataException(SRResources.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
                             }
 
                             if (!functionImportsWritten.Contains(functionImportInfo.Name))
@@ -187,7 +188,7 @@ namespace Microsoft.OData.Json
                         {
                             if (functionImportInfo == null)
                             {
-                                throw new ODataException(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
+                                throw new ODataException(SRResources.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
                             }
 
                             if (!functionImportsWritten.Contains(functionImportInfo.Name))

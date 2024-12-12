@@ -94,7 +94,7 @@ namespace Microsoft.OData.Client.Materialization
                     // and in the client, the property is not a collection property.
                     if (!property.IsResourceSet)
                     {
-                        throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MismatchEntryLinkFeedPropertyNotCollection(property.PropertyName));
+                        throw DSClient.Error.InvalidOperation(Error.Format(SRResources.Deserialize_MismatchEntryLinkFeedPropertyNotCollection, property.PropertyName));
                     }
 
                     propertyType = property.ResourceSetItemType;
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Client.Materialization
                 {
                     if (property.IsResourceSet)
                     {
-                        throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MismatchEntryLinkEntryPropertyIsCollection(property.PropertyName));
+                        throw DSClient.Error.InvalidOperation(Error.Format(SRResources.Deserialize_MismatchEntryLinkEntryPropertyIsCollection, property.PropertyName));
                     }
 
                     propertyType = property.PropertyType;
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Client.Materialization
             {
                 if (!ClientTypeUtil.TypeIsStructured(propertyType, model))
                 {
-                    throw DSClient.Error.InvalidOperation(DSClient.Strings.Materializer_InvalidNonEntityType(propertyType.ToString()));
+                    throw DSClient.Error.InvalidOperation(Error.Format(SRResources.Materializer_InvalidNonEntityType, propertyType.ToString()));
                 }
             }
 
@@ -141,7 +141,7 @@ namespace Microsoft.OData.Client.Materialization
 
             if (property.IsKnownType && (feed != null || entry != null))
             {
-                throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MismatchEntryLinkLocalSimple);
+                throw DSClient.Error.InvalidOperation(SRResources.Deserialize_MismatchEntryLinkLocalSimple);
             }
 
             Type propertyType = null;
@@ -151,7 +151,7 @@ namespace Microsoft.OData.Client.Materialization
                 // and in the client, the property is not a collection property.
                 if (!property.IsEntityCollection)
                 {
-                    throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MismatchEntryLinkFeedPropertyNotCollection(property.PropertyName));
+                    throw DSClient.Error.InvalidOperation(Error.Format(SRResources.Deserialize_MismatchEntryLinkFeedPropertyNotCollection, property.PropertyName));
                 }
 
                 propertyType = property.EntityCollectionItemType;
@@ -161,7 +161,7 @@ namespace Microsoft.OData.Client.Materialization
             {
                 if (property.IsEntityCollection)
                 {
-                    throw DSClient.Error.InvalidOperation(DSClient.Strings.Deserialize_MismatchEntryLinkEntryPropertyIsCollection(property.PropertyName));
+                    throw DSClient.Error.InvalidOperation(Error.Format(SRResources.Deserialize_MismatchEntryLinkEntryPropertyIsCollection, property.PropertyName));
                 }
 
                 propertyType = property.PropertyType;
@@ -173,7 +173,7 @@ namespace Microsoft.OData.Client.Materialization
             {
                 if (!ClientTypeUtil.TypeIsEntity(propertyType, model))
                 {
-                    throw DSClient.Error.InvalidOperation(DSClient.Strings.Materializer_InvalidNonEntityType(propertyType.ToString()));
+                    throw DSClient.Error.InvalidOperation(Error.Format(SRResources.Materializer_InvalidNonEntityType, propertyType.ToString()));
                 }
             }
         }
@@ -351,7 +351,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             if (!collectionElementType.IsAssignableFrom(itemType))
             {
-                string message = DSClient.Strings.Materializer_EntryIntoCollectionMismatch(
+                string message = Error.Format(SRResources.Materializer_EntryIntoCollectionMismatch,
                     itemType.FullName,
                     collectionElementType.FullName);
 
@@ -569,7 +569,7 @@ namespace Microsoft.OData.Client.Materialization
             // This is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
             if (!actualType.IsStructuredType)
             {
-                throw DSClient.Error.InvalidOperation(DSClient.Strings.Materializer_InvalidNonEntityType(actualType.ElementTypeName));
+                throw DSClient.Error.InvalidOperation(Error.Format(SRResources.Materializer_InvalidNonEntityType, actualType.ElementTypeName));
             }
 
             // Note that even if ShouldUpdateFromPayload is false, we will still be creating

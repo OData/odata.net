@@ -6,6 +6,7 @@
 
 using System;
 using Microsoft.OData.Buffers;
+using Microsoft.OData.Core;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -43,7 +44,7 @@ namespace Microsoft.OData.Tests
 
             // Act & Assert
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.BufferUtils_InvalidBufferOrSize(1024), exception.Message);
+            Assert.Equal(Error.Format(SRResources.BufferUtils_InvalidBufferOrSize, 1024), exception.Message);
         }
 
         public class BadCharArrayPool : ICharArrayPool
@@ -66,7 +67,7 @@ namespace Microsoft.OData.Tests
 
             // Act & Assert
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.BufferUtils_InvalidBufferOrSize(1024), exception.Message);
+            Assert.Equal(Error.Format(SRResources.BufferUtils_InvalidBufferOrSize, 1024), exception.Message);
         }
 
         public class StingyCharArrayPool : ICharArrayPool

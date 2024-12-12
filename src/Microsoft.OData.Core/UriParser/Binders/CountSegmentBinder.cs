@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Class that knows how to bind a Count segment token.
@@ -49,7 +49,7 @@ namespace Microsoft.OData.UriParser
 
             if(node == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_CountSegmentNextTokenNotCollectionValue);
+                throw new ODataException(SRResources.MetadataBinder_CountSegmentNextTokenNotCollectionValue);
             }
 
             FilterClause filterClause = null;

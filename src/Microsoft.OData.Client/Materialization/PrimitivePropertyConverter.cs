@@ -38,7 +38,7 @@ namespace Microsoft.OData.Client.Materialization
             {
                 if (!PrimitiveType.IsKnownNullableType(propertyType))
                 {
-                    throw new InvalidOperationException(Client.Strings.ClientType_UnsupportedType(propertyType));
+                    throw new InvalidOperationException(Error.Format(SRResources.ClientType_UnsupportedType, propertyType));
                 }
 
                 // Fast path for the supported primitive types that have a type code and are supported by ODataLib.

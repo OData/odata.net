@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -29,13 +30,13 @@ namespace Microsoft.OData
         {
             if (String.IsNullOrEmpty(contentType))
             {
-                throw new ODataContentTypeException(Strings.HttpUtils_ContentTypeMissing);
+                throw new ODataContentTypeException(SRResources.HttpUtils_ContentTypeMissing);
             }
 
             IList<KeyValuePair<ODataMediaType, string>> mediaTypes = ReadMediaTypes(contentType);
             if (mediaTypes.Count != 1)
             {
-                throw new ODataContentTypeException(Strings.HttpUtils_NoOrMoreThanOneContentTypeSpecified(contentType));
+                throw new ODataContentTypeException(Error.Format(SRResources.HttpUtils_NoOrMoreThanOneContentTypeSpecified, contentType));
             }
 
             ODataMediaType mediaType = mediaTypes[0].Key;
@@ -207,7 +208,7 @@ namespace Microsoft.OData
                     qualityValue = 1;
                     break;
                 default:
-                    throw new ODataContentTypeException(Strings.HttpUtils_InvalidQualityValueStartChar(text, digit));
+                    throw new ODataContentTypeException(Error.Format(SRResources.HttpUtils_InvalidQualityValueStartChar, text, digit));
             }
 
             if (textIndex < text.Length && text[textIndex] == '.')
@@ -236,7 +237,7 @@ namespace Microsoft.OData
                 if (qualityValue > 1000)
                 {
                     // Too high of a value in qvalue.
-                    throw new ODataContentTypeException(Strings.HttpUtils_InvalidQualityValue(qualityValue / 1000, text));
+                    throw new ODataContentTypeException(Error.Format(SRResources.HttpUtils_InvalidQualityValue, qualityValue / 1000, text));
                 }
             }
             else
@@ -259,7 +260,7 @@ namespace Microsoft.OData
                 && string.CompareOrdinal(httpMethodString, ODataConstants.MethodPost) != 0
                 && string.CompareOrdinal(httpMethodString, ODataConstants.MethodPut) != 0)
             {
-                throw new ODataException(Strings.HttpUtils_InvalidHttpMethodString(httpMethodString));
+                throw new ODataException(Error.Format(SRResources.HttpUtils_InvalidHttpMethodString, httpMethodString));
             }
         }
 
@@ -468,7 +469,7 @@ namespace Microsoft.OData
 
                     if (textIndex >= headerText.Length)
                     {
-                        throw createException(Strings.HttpUtils_EscapeCharAtEnd(headerName, headerText, textIndex, currentChar));
+                        throw createException(Error.Format(SRResources.HttpUtils_EscapeCharAtEnd, headerName, headerText, textIndex, currentChar));
                     }
 
                     currentChar = headerText[textIndex]; // only save the char after '\'? not unescape it? or it's never used?
@@ -477,7 +478,7 @@ namespace Microsoft.OData
                 {
                     if (!IsValidInQuotedHeaderValue(currentChar))
                     {
-                        throw createException(Strings.HttpUtils_InvalidCharacterInQuotedParameterValue(headerName, headerText, textIndex, currentChar));
+                        throw createException(Error.Format(SRResources.HttpUtils_InvalidCharacterInQuotedParameterValue, headerName, headerText, textIndex, currentChar));
                     }
                 }
 
@@ -491,7 +492,7 @@ namespace Microsoft.OData
 
             if (currentChar != '\"')
             {
-                throw createException(Strings.HttpUtils_ClosingQuoteNotFound(headerName, headerText, textIndex));
+                throw createException(Error.Format(SRResources.HttpUtils_ClosingQuoteNotFound, headerName, headerText, textIndex));
             }
 
             if (parameterValue != null)
@@ -521,7 +522,7 @@ namespace Microsoft.OData
                 currentChar = headerText[textIndex];
                 if (currentChar == '\\' || currentChar == '\"')
                 {
-                    throw createException(Strings.HttpUtils_EscapeCharWithoutQuotes(headerName, headerText, textIndex, currentChar));
+                    throw createException(Error.Format(SRResources.HttpUtils_EscapeCharWithoutQuotes, headerName, headerText, textIndex, currentChar));
                 }
                 else if (!IsHttpToken(currentChar))
                 {
@@ -592,7 +593,7 @@ namespace Microsoft.OData
                 if (commaRequired)
                 {
                     // Comma missing between charset elements.
-                    throw new ODataContentTypeException(Strings.HttpUtils_MissingSeparatorBetweenCharsets(headerValue));
+                    throw new ODataContentTypeException(Error.Format(SRResources.HttpUtils_MissingSeparatorBetweenCharsets, headerValue));
                 }
 
                 headerStart = headerIndex;
@@ -602,7 +603,7 @@ namespace Microsoft.OData
                 if (headerNameEnd == headerIndex)
                 {
                     // Invalid (empty) charset name.
-                    throw new ODataContentTypeException(Strings.HttpUtils_InvalidCharsetName(headerValue));
+                    throw new ODataContentTypeException(Error.Format(SRResources.HttpUtils_InvalidCharsetName, headerValue));
                 }
 
                 if (endReached)
@@ -620,7 +621,7 @@ namespace Microsoft.OData
                             if (ReadLiteral(headerValue, headerNameEnd, ";q="))
                             {
                                 // Unexpected end of qvalue.
-                                throw new ODataContentTypeException(Strings.HttpUtils_UnexpectedEndOfQValue(headerValue));
+                                throw new ODataContentTypeException(Error.Format(SRResources.HttpUtils_UnexpectedEndOfQValue, headerValue));
                             }
 
                             headerEnd = headerNameEnd + 3;
@@ -635,7 +636,7 @@ namespace Microsoft.OData
                     else
                     {
                         // Invalid separator character.
-                        throw new ODataContentTypeException(Strings.HttpUtils_InvalidSeparatorBetweenCharsets(headerValue));
+                        throw new ODataContentTypeException(Error.Format(SRResources.HttpUtils_InvalidSeparatorBetweenCharsets, headerValue));
                     }
                 }
 
@@ -676,7 +677,7 @@ namespace Microsoft.OData
 
                     if (text[textIndex] != ';')
                     {
-                        throw new ODataContentTypeException(Strings.HttpUtils_MediaTypeRequiresSemicolonBeforeParameter(text));
+                        throw new ODataContentTypeException(Error.Format(SRResources.HttpUtils_MediaTypeRequiresSemicolonBeforeParameter, text));
                     }
 
                     textIndex++;
@@ -713,17 +714,17 @@ namespace Microsoft.OData
 
             if (parameterName.Length == 0)
             {
-                throw new ODataContentTypeException(Strings.HttpUtils_MediaTypeMissingParameterName);
+                throw new ODataContentTypeException(SRResources.HttpUtils_MediaTypeMissingParameterName);
             }
 
             if (eof)
             {
-                throw new ODataContentTypeException(Strings.HttpUtils_MediaTypeMissingParameterValue(parameterName));
+                throw new ODataContentTypeException(Error.Format(SRResources.HttpUtils_MediaTypeMissingParameterValue, parameterName));
             }
 
             if (text[textIndex] != '=')
             {
-                throw new ODataContentTypeException(Strings.HttpUtils_MediaTypeMissingParameterValue(parameterName));
+                throw new ODataContentTypeException(Error.Format(SRResources.HttpUtils_MediaTypeMissingParameterValue, parameterName));
             }
 
             textIndex++;
@@ -758,12 +759,12 @@ namespace Microsoft.OData
             int textStart = textIndex;
             if (ReadToken(mediaTypeName, ref textIndex))
             {
-                throw new ODataContentTypeException(Strings.HttpUtils_MediaTypeUnspecified(mediaTypeName));
+                throw new ODataContentTypeException(Error.Format(SRResources.HttpUtils_MediaTypeUnspecified, mediaTypeName));
             }
 
             if (mediaTypeName[textIndex] != '/')
             {
-                throw new ODataContentTypeException(Strings.HttpUtils_MediaTypeRequiresSlash(mediaTypeName));
+                throw new ODataContentTypeException(Error.Format(SRResources.HttpUtils_MediaTypeRequiresSlash, mediaTypeName));
             }
 
             type = mediaTypeName.Substring(textStart, textIndex - textStart);
@@ -774,7 +775,7 @@ namespace Microsoft.OData
 
             if (textIndex == subTypeStart)
             {
-                throw new ODataContentTypeException(Strings.HttpUtils_MediaTypeRequiresSubType(mediaTypeName));
+                throw new ODataContentTypeException(Error.Format(SRResources.HttpUtils_MediaTypeRequiresSubType, mediaTypeName));
             }
 
             subType = mediaTypeName.Substring(subTypeStart, textIndex - subTypeStart);
@@ -866,7 +867,7 @@ namespace Microsoft.OData
                 return -1;
             }
 
-            throw new ODataException(Strings.HttpUtils_CannotConvertCharToInt(c));
+            throw new ODataException(Error.Format(SRResources.HttpUtils_CannotConvertCharToInt, c));
         }
 
         /// <summary>
@@ -893,7 +894,7 @@ namespace Microsoft.OData
             if (String.Compare(text, textIndex, literal, 0, literal.Length, StringComparison.Ordinal) != 0)
             {
                 // Failed to find expected literal.
-                throw new ODataException(Strings.HttpUtils_ExpectedLiteralNotFoundInString(literal, textIndex, text));
+                throw new ODataException(Error.Format(SRResources.HttpUtils_ExpectedLiteralNotFoundInString, literal, textIndex, text));
             }
 
             return textIndex + literal.Length == text.Length;

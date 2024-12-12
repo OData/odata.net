@@ -11,6 +11,7 @@ using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -395,7 +396,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilterWithEmptyEnumValue()
         {
             Action parse = () => ParseFilter("Color has NS.Color''", this.userModel, this.entityType, this.entitySet);
-            parse.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("NS.Color''"));
+            parse.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, "NS.Color''"));
         }
 
         [Fact]
@@ -461,63 +462,63 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilterEnumTypesUndefined1()
         {
             Action parse = () => ParseFilter("NS1234.Color'Green' eq Color", this.userModel, this.entityType, this.entitySet);
-            parse.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("NS1234.Color'Green'"));
+            parse.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, "NS1234.Color'Green'"));
         }
 
         [Fact]
         public void ParseFilterEnumTypesUndefined2()
         {
             Action parse = () => ParseFilter("NS.BadColor'Green' eq Color", this.userModel, this.entityType, this.entitySet);
-            parse.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("NS.BadColor'Green'"));
+            parse.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, "NS.BadColor'Green'"));
         }
 
         [Fact]
         public void ParseFilterEnumMemberUndefined1()
         {
             Action parse = () => ParseFilter("NS.Color'_54' has NS.Color'Green'", this.userModel, this.entityType, this.entitySet);
-            parse.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("NS.Color'_54'"));
+            parse.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, "NS.Color'_54'"));
         }
 
         [Fact]
         public void ParseFilterEnumMemberUndefined2()
         {
             Action parse = () => ParseFilter("NS.ColorFlags'GreenYellow' has NS.ColorFlags'Green'", this.userModel, this.entityType, this.entitySet);
-            parse.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("NS.ColorFlags'GreenYellow'"));
+            parse.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, "NS.ColorFlags'GreenYellow'"));
         }
 
         [Fact]
         public void ParseFilterEnumMemberUndefined3()
         {
             Action parse = () => ParseFilter("NS.ColorFlags'Green,Yellow' has NS.ColorFlags'Green'", this.userModel, this.entityType, this.entitySet);
-            parse.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("NS.ColorFlags'Green,Yellow'"));
+            parse.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, "NS.ColorFlags'Green,Yellow'"));
         }
 
         [Fact]
         public void ParseFilterEnumMemberUndefined4()
         {
             Action parse = () => ParseFilter("ColorFlags has NS.ColorFlags'Red,2'", this.userModel, this.entityType, this.entitySet);
-            parse.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("NS.ColorFlags'Red,2'"));
+            parse.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, "NS.ColorFlags'Red,2'"));
         }
 
         [Fact]
         public void ParseFilterEnumTypesWrongCast1()
         {
             Action parse = () => ParseFilter("cast(NS.ColorFlags'Green', 'Edm.Int64') eq 2", this.userModel, this.entityType, this.entitySet);
-            parse.Throws<ODataException>(Strings.CastBinder_EnumOnlyCastToOrFromString);
+            parse.Throws<ODataException>(SRResources.CastBinder_EnumOnlyCastToOrFromString);
         }
 
         [Fact]
         public void ParseFilterEnumTypesWrongCast2()
         {
             Action parse = () => ParseFilter("cast(321, 'NS.ColorFlags') eq 2", this.userModel, this.entityType, this.entitySet);
-            parse.Throws<ODataException>(Strings.CastBinder_EnumOnlyCastToOrFromString);
+            parse.Throws<ODataException>(SRResources.CastBinder_EnumOnlyCastToOrFromString);
         }
 
         [Fact]
         public void ParseFilterEnumTypesWrongCast3()
         {
             Action parse = () => ParseFilter("cast(321, 'NS.NotExistingColorFlags') eq 2", this.userModel, this.entityType, this.entitySet);
-            parse.Throws<ODataException>(Strings.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
+            parse.Throws<ODataException>(SRResources.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
         }
 
         [Theory]
@@ -573,7 +574,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action test = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
 
             // Assert
-            test.Throws<ArgumentException>(Strings.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType("NS.Color", "Edm.Single")); // Float are of Type Edm.Single
+            test.Throws<ArgumentException>(Error.Format(SRResources.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType, "NS.Color", "Edm.Single")); // Float are of Type Edm.Single
         }
 
         [Theory]
@@ -589,7 +590,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action action = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
 
             // Assert
-            action.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant(errorMessageParam));
+            action.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, errorMessageParam));
         }
 
         [Fact]
@@ -602,7 +603,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action action = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
 
             // Assert
-            action.Throws<ODataException>(Strings.MetadataBinder_PropertyNotDeclared(this.entityType.FullName, "Red"));
+            action.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, this.entityType.FullName, "Red"));
         }
 
         [Theory]
@@ -621,7 +622,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action action = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
 
             // Assert
-            action.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant(expectedExceptionParameter));
+            action.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, expectedExceptionParameter));
         }
 
         private T GetIEdmType<T>(string typeName) where T : IEdmType

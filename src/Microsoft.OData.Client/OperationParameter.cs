@@ -24,7 +24,7 @@ namespace Microsoft.OData.Client
         {
             if (string.IsNullOrEmpty(name))
             {
-                throw new ArgumentException(Strings.Context_MissingOperationParameterName);
+                throw new ArgumentException(SRResources.Context_MissingOperationParameterName);
             }
 
             this.parameterName = name;

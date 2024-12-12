@@ -14,7 +14,7 @@ namespace Microsoft.OData.UriParser
     using System.Globalization;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -266,12 +266,12 @@ namespace Microsoft.OData.UriParser
                         // if we accept a star and this is the last token in the identifier, then we're ok... otherwise we throw.
                         if (!acceptStar || (this.PeekNextToken().Kind != ExpressionTokenKind.End && this.PeekNextToken().Kind != ExpressionTokenKind.Comma))
                         {
-                            throw ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.Text));
+                            throw ParseError(Error.Format(SRResources.ExpressionLexer_SyntaxError, this.textPos, this.Text));
                         }
                     }
                     else
                     {
-                        throw ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.Text));
+                        throw ParseError(Error.Format(SRResources.ExpressionLexer_SyntaxError, this.textPos, this.Text));
                     }
                 }
 
@@ -366,7 +366,7 @@ namespace Microsoft.OData.UriParser
         {
             if (this.token.Kind != t)
             {
-                throw ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.Text));
+                throw ParseError(Error.Format(SRResources.ExpressionLexer_SyntaxError, this.textPos, this.Text));
             }
         }
 
@@ -626,7 +626,7 @@ namespace Microsoft.OData.UriParser
 
                         if (this.textPos == this.TextLen)
                         {
-                            error = ParseError(ODataErrorStrings.ExpressionLexer_UnterminatedStringLiteral(this.textPos, this.Text));
+                            error = ParseError(Error.Format(SRResources.ExpressionLexer_UnterminatedStringLiteral, this.textPos, this.Text));
                         }
 
                         this.NextChar();
@@ -703,14 +703,14 @@ namespace Microsoft.OData.UriParser
 
                         if (this.textPos == this.TextLen)
                         {
-                            error = ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.Text));
+                            error = ParseError(Error.Format(SRResources.ExpressionLexer_SyntaxError, this.textPos, this.Text));
                             t = ExpressionTokenKind.Unknown;
                             break;
                         }
 
                         if (!this.IsValidStartingCharForIdentifier)
                         {
-                            error = ParseError(ODataErrorStrings.ExpressionLexer_InvalidCharacter(this.ch, this.textPos, this.Text));
+                            error = ParseError(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, this.ch, this.textPos, this.Text));
                             t = ExpressionTokenKind.Unknown;
                             break;
                         }
@@ -730,7 +730,7 @@ namespace Microsoft.OData.UriParser
                         break;
                     }
 
-                    error = ParseError(ODataErrorStrings.ExpressionLexer_InvalidCharacter(this.ch, this.textPos, this.Text));
+                    error = ParseError(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, this.ch, this.textPos, this.Text));
                     t = ExpressionTokenKind.Unknown;
                     break;
             }
@@ -814,7 +814,7 @@ namespace Microsoft.OData.UriParser
 
                 if (this.ch == null)
                 {
-                    throw ParseError(ODataErrorStrings.ExpressionLexer_UnterminatedLiteral(this.textPos, this.Text));
+                    throw ParseError(Error.Format(SRResources.ExpressionLexer_UnterminatedLiteral, this.textPos, this.Text));
                 }
 
                 this.NextChar();
@@ -879,7 +879,7 @@ namespace Microsoft.OData.UriParser
             else if (tokenText.Equals(ExpressionConstants.KeywordNull, StringComparison.OrdinalIgnoreCase))
             {
                 // typed null literals are not supported.
-                throw ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.Text));
+                throw ParseError(Error.Format(SRResources.ExpressionLexer_SyntaxError, this.textPos, this.Text));
             }
             else
             {
@@ -1197,7 +1197,7 @@ namespace Microsoft.OData.UriParser
                 return ExpressionTokenKind.DoubleLiteral;
             }
 
-            throw new ODataException(ODataErrorStrings.ExpressionLexer_InvalidNumericString(numericStr.ToString()));
+            throw new ODataException(Error.Format(SRResources.ExpressionLexer_InvalidNumericString, numericStr.ToString()));
         }
 
         /// <summary>
@@ -1233,7 +1233,7 @@ namespace Microsoft.OData.UriParser
 
                 if (this.ch == null)
                 {
-                    throw new ODataException(ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression);
+                    throw new ODataException(SRResources.ExpressionLexer_UnbalancedBracketExpression);
                 }
 
                 this.NextChar();
@@ -1265,7 +1265,7 @@ namespace Microsoft.OData.UriParser
         {
             if (!this.IsValidDigit)
             {
-                throw ParseError(ODataErrorStrings.ExpressionLexer_DigitExpected(this.textPos, this.Text));
+                throw ParseError(Error.Format(SRResources.ExpressionLexer_DigitExpected, this.textPos, this.Text));
             }
         }
 

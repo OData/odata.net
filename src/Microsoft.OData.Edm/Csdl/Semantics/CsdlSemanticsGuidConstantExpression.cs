@@ -73,7 +73,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             Guid? value;
             if (!EdmValueParser.TryParseGuid(this.expression.Value, out value))
             {
-                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidGuid, Edm.Strings.ValueParser_InvalidGuid(this.expression.Value)) };
+                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidGuid, Error.Format(SRResources.ValueParser_InvalidGuid, this.expression.Value)) };
             }
             else
             {

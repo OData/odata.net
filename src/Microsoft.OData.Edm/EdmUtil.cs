@@ -47,7 +47,7 @@ namespace Microsoft.OData.Edm
         /// <returns>The (non-null) value of the MIME type annotation of the <paramref name="annotatableProperty"/> or null if no MIME type annotation exists.</returns>
         public static string GetMimeType(this IEdmModel model, IEdmProperty annotatableProperty)
         {
-            return GetStringAnnotationValue(model, annotatableProperty, EdmConstants.MimeTypeAttributeName, () => Strings.EdmUtil_NullValueForMimeTypeAnnotation);
+            return GetStringAnnotationValue(model, annotatableProperty, EdmConstants.MimeTypeAttributeName, () => SRResources.EdmUtil_NullValueForMimeTypeAnnotation);
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Edm
         /// <returns>The (non-null) value of the MIME type annotation of the <paramref name="annotatableOperation"/> or null if no MIME type annotation exists.</returns>
         public static string GetMimeType(this IEdmModel model, IEdmOperation annotatableOperation)
         {
-            return GetStringAnnotationValue(model, annotatableOperation, EdmConstants.MimeTypeAttributeName, () => Strings.EdmUtil_NullValueForMimeTypeAnnotation);
+            return GetStringAnnotationValue(model, annotatableOperation, EdmConstants.MimeTypeAttributeName, () => SRResources.EdmUtil_NullValueForMimeTypeAnnotation);
         }
 
         /// <summary>
@@ -568,7 +568,7 @@ namespace Microsoft.OData.Edm
             if (annotationStringValue == null)
             {
                 // invalid annotation type found
-                throw new InvalidOperationException(Strings.EdmUtil_InvalidAnnotationValue(localName, annotationValue.GetType().FullName));
+                throw new InvalidOperationException(Error.Format(SRResources.EdmUtil_InvalidAnnotationValue, localName, annotationValue.GetType().FullName));
             }
 
             value = annotationStringValue.Value;

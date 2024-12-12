@@ -10,7 +10,7 @@ using Microsoft.OData.Json;
 using Microsoft.OData.Tests.Json;
 using Microsoft.OData.Edm;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
 {
@@ -54,7 +54,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
             foreach (var testCase in testCases)
             {
                 Action action = () => this.VerifyDateTimeValueReader(testCase.Payload, "Edm.DateTimeOffset", null);
-                action.Throws<ODataException>(ErrorStrings.ReaderValidationUtils_CannotConvertPrimitiveValue(testCase.Show, "Edm.DateTimeOffset"));
+                action.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_CannotConvertPrimitiveValue, testCase.Show, "Edm.DateTimeOffset"));
             }
         }
 

@@ -12,6 +12,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests
 {
@@ -49,7 +50,7 @@ namespace Microsoft.OData.Tests
         public void BuildContextUrlforUnsupportedPayloadKindShouldThrowException()
         {
             Action action = () => this.responseContextUriBuilder.BuildContextUri(ODataPayloadKind.MetadataDocument);
-            action.Throws<ODataException>(Strings.ODataContextUriBuilder_UnsupportedPayloadKind(ODataPayloadKind.MetadataDocument.ToString()));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataContextUriBuilder_UnsupportedPayloadKind, ODataPayloadKind.MetadataDocument.ToString()));
         }
 
         [Fact]
@@ -62,7 +63,7 @@ namespace Microsoft.OData.Tests
         public void ShouldRequireMetadataDocumentUriInResponses()
         {
             Action action = () => ODataContextUriBuilder.Create(null, true);
-            action.Throws<ODataException>(Strings.ODataOutputContext_MetadataDocumentUriMissing);
+            action.Throws<ODataException>(SRResources.ODataOutputContext_MetadataDocumentUriMissing);
         }
 
         #region context uri with $select and $expand
@@ -398,7 +399,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 Action test = () => this.CreateFeedContextUri(ResponseTypeContextWithoutTypeInfo, version);
-                test.Throws<ODataException>(Strings.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
+                test.Throws<ODataException>(SRResources.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
             }
         }
 
@@ -459,7 +460,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 Action test = () => this.CreateEntryContextUri(ResponseTypeContextWithoutTypeInfo, version);
-                test.Throws<ODataException>(Strings.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
+                test.Throws<ODataException>(SRResources.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
             }
         }
 
@@ -657,7 +658,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 Action withStream = () => this.CreatePropertyContextUri(new ODataCollectionValue(), version);
-                withStream.Throws<ODataException>(Strings.ODataContextUriBuilder_TypeNameMissingForProperty);
+                withStream.Throws<ODataException>(SRResources.ODataContextUriBuilder_TypeNameMissingForProperty);
             }
         }
 
@@ -667,7 +668,7 @@ namespace Microsoft.OData.Tests
             foreach (ODataVersion version in Versions)
             {
                 Action withStream = () => this.CreatePropertyContextUri(new ODataStreamReferenceValue(), version);
-                withStream.Throws<ODataException>(Strings.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataResource);
+                withStream.Throws<ODataException>(SRResources.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataResource);
             }
         }
         #endregion value context uri
@@ -690,7 +691,7 @@ namespace Microsoft.OData.Tests
         public void ShouldThrowIfTypeNameIsMissingOnCollectionResponse()
         {
             Action action = () => Assert.Equal(this.CreateCollectionContextUri(serializationInfo: null, itemTypeReference: null).OriginalString, BuildExpectedContextUri("#Collection(Edm.Guid)"));
-            action.Throws<ODataException>(Strings.ODataContextUriBuilder_TypeNameMissingForTopLevelCollection);
+            action.Throws<ODataException>(SRResources.ODataContextUriBuilder_TypeNameMissingForTopLevelCollection);
         }
         #endregion collection context uri
 

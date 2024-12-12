@@ -434,7 +434,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         {
             if (entitySetPath != null && !isBound)
             {
-                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEntitySetPath, Edm.Strings.CsdlParser_InvalidEntitySetPathWithUnboundAction(CsdlConstants.Element_Action, name));
+                this.ReportError(this.currentElement.Location, EdmErrorCode.InvalidEntitySetPath, Error.Format(SRResources.CsdlParser_InvalidEntitySetPathWithUnboundAction, CsdlConstants.Element_Action, name));
             }
         }
 
@@ -540,7 +540,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             if (entityContainerCount++ > 0)
             {
-                this.ReportError(this.currentElement.Location, EdmErrorCode.MetadataDocumentCannotHaveMoreThanOneEntityContainer, Edm.Strings.CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer);
+                this.ReportError(this.currentElement.Location, EdmErrorCode.MetadataDocumentCannotHaveMoreThanOneEntityContainer, SRResources.CsdlParser_MetadataDocumentCannotHaveMoreThanOneEntityContainer);
             }
 
             return new CsdlEntityContainer(

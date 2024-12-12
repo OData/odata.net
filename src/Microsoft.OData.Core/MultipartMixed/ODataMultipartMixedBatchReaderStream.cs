@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.MultipartMixed
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -201,11 +202,11 @@ namespace Microsoft.OData.MultipartMixed
                         return true;
 
                     default:
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReaderStream_SkipToBoundary));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReaderStream_SkipToBoundary));
                 }
             }
 
-            throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReaderStream_SkipToBoundary));
+            throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReaderStream_SkipToBoundary));
         }
 
         /// <summary>
@@ -328,7 +329,7 @@ namespace Microsoft.OData.MultipartMixed
                 }
             }
 
-            throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReaderStream_ReadWithDelimiter));
+            throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReaderStream_ReadWithDelimiter));
         }
 
         /// <summary>
@@ -374,7 +375,7 @@ namespace Microsoft.OData.MultipartMixed
                         // We cannot fully satisfy the read request since there are not enough bytes in the stream.
                         // This means that the content length of the stream was incorrect; this should never happen
                         // since the caller should already have checked this.
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReaderStreamBuffer_ReadWithLength));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReaderStreamBuffer_ReadWithLength));
                     }
                     else
                     {
@@ -451,7 +452,7 @@ namespace Microsoft.OData.MultipartMixed
 
                 if (headers.ContainsKeyOrdinal(headerName))
                 {
-                    throw new ODataException(Strings.ODataBatchReaderStream_DuplicateHeaderFound(headerName));
+                    throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_DuplicateHeaderFound, headerName));
                 }
 
                 headers.Add(headerName, headerValue);
@@ -476,7 +477,7 @@ namespace Microsoft.OData.MultipartMixed
                 // null indicates end of input, which is unexpected at this point.
                 if (line == null)
                 {
-                    throw new ODataException(Strings.ODataBatchReaderStream_UnexpectedEndOfInput);
+                    throw new ODataException(SRResources.ODataBatchReaderStream_UnexpectedEndOfInput);
                 }
             }
             while (line.Length == 0);
@@ -497,7 +498,7 @@ namespace Microsoft.OData.MultipartMixed
             int colon = headerLine.IndexOf(':', StringComparison.Ordinal);
             if (colon <= 0)
             {
-                throw new ODataException(Strings.ODataBatchReaderStream_InvalidHeaderSpecified(headerLine));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_InvalidHeaderSpecified, headerLine));
             }
 
             headerName = headerLine.Substring(0, colon).Trim();
@@ -601,7 +602,7 @@ namespace Microsoft.OData.MultipartMixed
                         this.BatchBuffer.SkipTo(lineEndEndPosition + 1);
                         break;
                     default:
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReaderStream_ReadLine));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReaderStream_ReadLine));
                 }
             }
 
@@ -639,7 +640,7 @@ namespace Microsoft.OData.MultipartMixed
             string contentType;
             if (!headers.TryGetValue(ODataConstants.ContentTypeHeader, out contentType))
             {
-                throw new ODataException(Strings.ODataBatchReaderStream_MissingContentTypeHeader);
+                throw new ODataException(SRResources.ODataBatchReaderStream_MissingContentTypeHeader);
             }
 
             if (MediaTypeUtils.MediaTypeAndSubtypeAreEqual(contentType, MimeConstants.MimeApplicationHttp))
@@ -652,7 +653,7 @@ namespace Microsoft.OData.MultipartMixed
                 if (!headers.TryGetValue(ODataConstants.ContentTransferEncoding, out transferEncoding) ||
                     string.Compare(transferEncoding, ODataConstants.BatchContentTransferEncoding, StringComparison.OrdinalIgnoreCase) != 0)
                 {
-                    throw new ODataException(Strings.ODataBatchReaderStream_MissingOrInvalidContentEncodingHeader(
+                    throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_MissingOrInvalidContentEncodingHeader,
                         ODataConstants.ContentTransferEncoding,
                         ODataConstants.BatchContentTransferEncoding));
                 }
@@ -664,12 +665,12 @@ namespace Microsoft.OData.MultipartMixed
                 if (this.changesetBoundary != null)
                 {
                     // Nested changesets are not supported
-                    throw new ODataException(Strings.ODataBatchReaderStream_NestedChangesetsAreNotSupported);
+                    throw new ODataException(SRResources.ODataBatchReaderStream_NestedChangesetsAreNotSupported);
                 }
             }
             else
             {
-                throw new ODataException(Strings.ODataBatchReaderStream_InvalidContentTypeSpecified(
+                throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_InvalidContentTypeSpecified,
                     ODataConstants.ContentTypeHeader,
                     contentType,
                     MimeConstants.MimeMultipartMixed,

@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using Xunit;
 
@@ -27,7 +28,7 @@ namespace Microsoft.OData.Tests
             foreach (string name in new[] { "foo", ".foo", "foo." })
             {
                 Action test = () => new ODataInstanceAnnotation(name, new ODataPrimitiveValue("value"));
-                test.Throws<ArgumentException>(Strings.ODataInstanceAnnotation_NeedPeriodInName(name));
+                test.Throws<ArgumentException>(Error.Format(SRResources.ODataInstanceAnnotation_NeedPeriodInName, name));
             }
         }
 
@@ -37,7 +38,7 @@ namespace Microsoft.OData.Tests
             foreach (string name in new[] { "@foo.bar", "foo.b@ar", "foo.bar@" })
             {
                 Action test = () => new ODataInstanceAnnotation(name, new ODataPrimitiveValue("value"));
-                test.Throws<ArgumentException>(Strings.ODataInstanceAnnotation_BadTermName(name));
+                test.Throws<ArgumentException>(Error.Format(SRResources.ODataInstanceAnnotation_BadTermName, name));
             }
         }
 
@@ -47,7 +48,7 @@ namespace Microsoft.OData.Tests
             foreach (string name in new[] { "#foo.bar", "foo.b#ar", "foo.bar#" })
             {
                 Action test = () => new ODataInstanceAnnotation(name, new ODataPrimitiveValue("value"));
-                test.Throws<ArgumentException>(Strings.ODataInstanceAnnotation_BadTermName(name));
+                test.Throws<ArgumentException>(Error.Format(SRResources.ODataInstanceAnnotation_BadTermName, name));
             }
         }
 
@@ -56,7 +57,7 @@ namespace Microsoft.OData.Tests
         {
             const string annotationName = "odata.unknown";
             Action add = () => new ODataInstanceAnnotation(annotationName, new ODataPrimitiveValue("value"));
-            add.Throws<ArgumentException>(Strings.ODataInstanceAnnotation_ReservedNamesNotAllowed(annotationName, "odata."));
+            add.Throws<ArgumentException>(Error.Format(SRResources.ODataInstanceAnnotation_ReservedNamesNotAllowed, annotationName, "odata."));
         }
 
         [Fact]

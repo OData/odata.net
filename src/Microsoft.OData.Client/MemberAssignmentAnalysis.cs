@@ -370,7 +370,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(previous != null, "previous != null");
             Debug.Assert(candidate != null, "candidate != null");
 
-            string message = Strings.ALinq_ProjectionMemberAssignmentMismatch(targetType.FullName, previous.LastOrDefault(), candidate.LastOrDefault());
+            string message = Error.Format(SRResources.ALinq_ProjectionMemberAssignmentMismatch, targetType.FullName, previous.LastOrDefault(), candidate.LastOrDefault());
             return new NotSupportedException(message);
         }
 

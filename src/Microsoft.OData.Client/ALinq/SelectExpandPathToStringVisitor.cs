@@ -37,7 +37,7 @@ namespace Microsoft.OData.Client
         /// <returns>Always throws, because a system token is illegal in this case.</returns>
         public string Visit(SystemToken tokenIn)
         {
-            throw new NotSupportedException(Strings.ALinq_IllegalSystemQueryOption(tokenIn.Identifier));
+            throw new NotSupportedException(Error.Format(SRResources.ALinq_IllegalSystemQueryOption, tokenIn.Identifier));
         }
 
         /// <summary>

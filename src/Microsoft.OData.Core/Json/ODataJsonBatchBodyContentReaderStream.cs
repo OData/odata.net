@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Json
 {
+    using Microsoft.OData.Core;
     #region Namespaces
 
     using System;
@@ -111,7 +112,7 @@ namespace Microsoft.OData.Json
                     break;
 
                     default:
-                        throw new ODataException(Strings.ODataJsonBatchBodyContentReaderStream_UnsupportedContentTypeInHeader(contentType));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonBatchBodyContentReaderStream_UnsupportedContentTypeInHeader, contentType));
                 }
 
                 isStreamPopulated = true;
@@ -202,7 +203,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     default:
-                        throw new ODataException(Strings.ODataJsonBatchBodyContentReaderStream_UnsupportedContentTypeInHeader(contentType));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonBatchBodyContentReaderStream_UnsupportedContentTypeInHeader, contentType));
                 }
 
                 isStreamPopulated = true;
@@ -442,7 +443,7 @@ namespace Microsoft.OData.Json
 
                     default:
                         {
-                            throw new ODataException(Strings.ODataJsonBatchBodyContentReaderStream_UnexpectedNodeType(reader.NodeType));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonBatchBodyContentReaderStream_UnexpectedNodeType, reader.NodeType));
                         }
                 }
 
@@ -570,7 +571,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     default:
-                        throw new ODataException(Strings.ODataJsonBatchBodyContentReaderStream_UnexpectedNodeType(reader.NodeType));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonBatchBodyContentReaderStream_UnexpectedNodeType, reader.NodeType));
                 }
 
                 await reader.ReadNextAsync()

@@ -11,8 +11,7 @@ namespace Microsoft.OData.Json
     using System.Diagnostics;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
-    using ODataPlatformHelper = Microsoft.OData.PlatformHelper;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -176,7 +175,7 @@ namespace Microsoft.OData.Json
 
             if (propertyValue == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_AnnotationWithNullValue(annotationName));
+                throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_AnnotationWithNullValue, annotationName));
             }
         }
 
@@ -227,7 +226,7 @@ namespace Microsoft.OData.Json
                 return resource.TypeName;
             }
 
-            throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonReader_ReadResourceStart));
+            throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataJsonReader_ReadResourceStart));
         }
     }
 }

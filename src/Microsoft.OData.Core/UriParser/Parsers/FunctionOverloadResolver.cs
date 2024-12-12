@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
     using System.Linq;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Helper class to help bind function overloads.
@@ -55,12 +55,12 @@ namespace Microsoft.OData.UriParser
                     throw;
                 }
 
-                throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_FoundInvalidOperationImport(identifier), exc);
+                throw new ODataException(Error.Format(SRResources.FunctionOverloadResolver_FoundInvalidOperationImport, identifier), exc);
             }
 
             if (foundActionImportsWhenLookingForFunctions.Count > 0)
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
+                throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates, identifier));
             }
 
             // If any of the things returned are an action, it better be the only thing returned, and there can't be parameters in the URL
@@ -70,17 +70,17 @@ namespace Microsoft.OData.UriParser
                 {
                     if (candidateMatchingOperationImports.Any(o => o.IsFunctionImport()))
                     {
-                        throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads(identifier));
+                        throw new ODataException(Error.Format(SRResources.FunctionOverloadResolver_MultipleOperationImportOverloads, identifier));
                     }
                     else
                     {
-                        throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleActionImportOverloads(identifier));
+                        throw new ODataException(Error.Format(SRResources.FunctionOverloadResolver_MultipleActionImportOverloads, identifier));
                     }
                 }
 
                 if (parameterNames.Count != 0)
                 {
-                    throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
+                    throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates, identifier));
                 }
 
                 matchingOperationImport = candidateMatchingOperationImports.Single();
@@ -107,7 +107,7 @@ namespace Microsoft.OData.UriParser
 
             if (candidateMatchingOperationImports.Count() > 1)
             {
-                throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads(identifier));
+                throw new ODataException(Error.Format(SRResources.FunctionOverloadResolver_MultipleOperationImportOverloads, identifier));
             }
 
             matchingOperationImport = candidateMatchingOperationImports.Single();
@@ -159,7 +159,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (ExceptionUtils.IsCatchableExceptionType(exc))
                 {
-                    throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_FoundInvalidOperation(identifier), exc);
+                    throw new ODataException(Error.Format(SRResources.FunctionOverloadResolver_FoundInvalidOperation, identifier), exc);
                 }
 
                 throw;
@@ -181,7 +181,7 @@ namespace Microsoft.OData.UriParser
                 {
                     if (foundActionsWhenLookingForFunctions)
                     {
-                        throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
+                        throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates, identifier));
                     }
 
                     return false; 
@@ -196,7 +196,7 @@ namespace Microsoft.OData.UriParser
 
             if (foundActionsWhenLookingForFunctions)
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
+                throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates, identifier));
             }
 
             // If more than one overload matches, try to select based on optional parameters
@@ -207,7 +207,7 @@ namespace Microsoft.OData.UriParser
 
             if (candidatesMatchingOperations.Count > 1)
             {
-                throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_NoSingleMatchFound(identifier, string.Join(",", parameterNames.ToArray())));
+                throw new ODataException(Error.Format(SRResources.FunctionOverloadResolver_NoSingleMatchFound, identifier, string.Join(",", parameterNames.ToArray())));
             }
 
             matchingOperation = candidatesMatchingOperations.Count > 0 ? candidatesMatchingOperations[0] : null;
@@ -242,7 +242,7 @@ namespace Microsoft.OData.UriParser
                 {
                     if (actionExists)
                     {
-                        throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationOverloads(identifier));
+                        throw new ODataException(Error.Format(SRResources.FunctionOverloadResolver_MultipleOperationOverloads, identifier));
                     }
 
                     functionExists = true;
@@ -252,7 +252,7 @@ namespace Microsoft.OData.UriParser
                 {
                     if (functionExists)
                     {
-                        throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationOverloads(identifier));
+                        throw new ODataException(Error.Format(SRResources.FunctionOverloadResolver_MultipleOperationOverloads, identifier));
                     }
 
                     actionExists = true;
@@ -263,7 +263,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (candidatesMatchingOperations.Count > 1)
                 {
-                    throw new ODataException(ODataErrorStrings.FunctionOverloadResolver_MultipleActionOverloads(identifier));
+                    throw new ODataException(Error.Format(SRResources.FunctionOverloadResolver_MultipleActionOverloads, identifier));
                 }
 
                 Debug.Assert(!hasParameters);

@@ -8,9 +8,9 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Reader
 {
@@ -69,7 +69,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
         public void JsonShouldFailIfPayloadTypeDoesNotMatchMetadataTypeByDefault()
         {
             Action readWithWrongType = () => this.ReadPropertyValueInJson("String", "AQ==", "Edm.Binary", this.defaultSettings);
-            readWithWrongType.Throws<ODataException>(ODataErrorStrings.ValidationUtils_IncompatibleType("Edm.Binary", "Edm.String"));
+            readWithWrongType.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_IncompatibleType, "Edm.Binary", "Edm.String"));
         }
 
         private object ReadPropertyValueInJson(string propertyName, string propertyValue, string typeName, ODataMessageReaderSettings settings)
