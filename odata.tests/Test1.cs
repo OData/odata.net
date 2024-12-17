@@ -254,9 +254,9 @@
         [TestMethod]
         public void CodeGenerator()
         {
-            var coreRulesPath = @"C:\github\odata.net\odata\AbnfParser\core.abnf";
+            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
             var coreRulesText = File.ReadAllText(coreRulesPath);
-            var abnfRulesPath = @"C:\github\odata.net\odata\AbnfParser\abnf.abnf";
+            var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
             var abnfRulesText = File.ReadAllText(abnfRulesPath);
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
@@ -275,6 +275,7 @@
                 private readonly StringBuilder builder;
                 private readonly string indent;
                 private string currentIndent;
+                private bool isNewLine;
 
                 public Builder(StringBuilder builder, string indent)
                 {
@@ -282,28 +283,45 @@
                     this.indent = indent;
 
                     this.currentIndent = string.Empty;
+                    this.isNewLine = true;
+                }
+
+                private void AppendIndent()
+                {
+                    if (this.isNewLine)
+                    {
+                        this.builder.Append(this.currentIndent);
+                    }
                 }
 
                 public Builder Append(string value)
                 {
+                    this.AppendIndent();
+                    this.isNewLine = false;
                     this.builder.Append(value);
                     return this;
                 }
 
                 public Builder AppendLine()
                 {
-                    this.builder.AppendLine().Append(this.currentIndent);
+                    this.AppendIndent();
+                    this.isNewLine = true;
+                    this.builder.AppendLine();
                     return this;
                 }
 
                 public Builder AppendLine(string value)
                 {
-                    this.builder.AppendLine(value).Append(this.currentIndent);
+                    this.AppendIndent();
+                    this.isNewLine = true;
+                    this.builder.AppendLine(value);
                     return this;
                 }
 
                 public Builder AppendJoin(string separator, IEnumerable<string> values)
                 {
+                    this.AppendIndent();
+                    this.isNewLine = false;
                     this.builder.AppendJoin(separator, values);
                     return this;
                 }
@@ -322,6 +340,8 @@
 
                 public Builder AppendJoin<TElement>(string separator, IEnumerable<TElement> values, Action<TElement, Builder> selector)
                 {
+                    this.AppendIndent();
+                    this.isNewLine = false;
                     using (var valuesEnumerator = values.GetEnumerator())
                     {
                         if (!valuesEnumerator.MoveNext())
