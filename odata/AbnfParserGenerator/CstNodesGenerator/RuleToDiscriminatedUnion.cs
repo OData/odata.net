@@ -30,7 +30,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
             //// TODO you are skipping comments everywhere if you care to preserve them
 
             var ruleNameBuilder = new StringBuilder();
-            new RuleNameToString().Convert(node.RuleName, ruleNameBuilder);
+            RuleNameToString.Instance.Convert(node.RuleName, ruleNameBuilder);
             NormalizeClassName(ruleNameBuilder);
             var ruleName = ruleNameBuilder.ToString();
 
@@ -210,12 +210,19 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                         public void Convert(Concatenation concatenation, StringBuilder duElementName)
                         {
-                            //// TODO implement this
                             RepetitionToDuElementName.Instance.Visit(concatenation.Repetition, duElementName);
-                            foreach (var inner in concatenation.Inners)
+                            if (!concatenation.Inners.Any())
                             {
-                                duElementName.Append("CombinedWith");
-                                InnerToDuElementName.Instance.Convert(inner, duElementName);
+                                //// TODO this isn't working correctly but you'll definintely need it for some cases:
+                                //// duElementName.Append("Only");
+                            }
+                            else
+                            {
+                                foreach (var inner in concatenation.Inners)
+                                {
+                                    duElementName.Append("CombinedWith");
+                                    InnerToDuElementName.Instance.Convert(inner, duElementName);
+                                }
                             }
                         }
 
@@ -243,7 +250,8 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                             protected internal override Root.Void Accept(Repetition.ElementOnly node, StringBuilder context)
                             {
-                                throw new NotImplementedException();
+                                ElementToDuElementName.Instance.Visit(node.Element, context);
+                                return default;
                             }
 
                             protected internal override Root.Void Accept(Repetition.RepeatAndElement node, StringBuilder context)
@@ -263,32 +271,38 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                                 protected internal override Root.Void Accept(Element.RuleName node, StringBuilder context)
                                 {
-                                    throw new NotImplementedException();
+                                    RuleNameToString.Instance.Convert(node.Value, context);
+                                    return default;
                                 }
 
                                 protected internal override Root.Void Accept(Element.Group node, StringBuilder context)
                                 {
-                                    throw new NotImplementedException();
+                                    //// TODO implement this
+                                    return default;
                                 }
 
                                 protected internal override Root.Void Accept(Element.Option node, StringBuilder context)
                                 {
-                                    throw new NotImplementedException();
+                                    //// TODO implement this
+                                    return default;
                                 }
 
                                 protected internal override Root.Void Accept(Element.CharVal node, StringBuilder context)
                                 {
-                                    throw new NotImplementedException();
+                                    //// TODO implement this
+                                    return default;
                                 }
 
                                 protected internal override Root.Void Accept(Element.NumVal node, StringBuilder context)
                                 {
-                                    throw new NotImplementedException();
+                                    //// TODO implement this
+                                    return default;
                                 }
 
                                 protected internal override Root.Void Accept(Element.ProseVal node, StringBuilder context)
                                 {
-                                    throw new NotImplementedException();
+                                    //// TODO implement this
+                                    return default;
                                 }
                             }
 
@@ -519,6 +533,12 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
         private sealed class RuleNameToString
         {
+            private RuleNameToString()
+            {
+            }
+
+            public static RuleNameToString Instance { get; } = new RuleNameToString();
+
             public void Convert(RuleName ruleName, StringBuilder builder)
             {
                 var alphaToString = new AlphaToString();
