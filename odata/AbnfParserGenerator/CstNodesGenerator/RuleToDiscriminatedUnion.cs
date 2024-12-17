@@ -196,7 +196,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                                     },
                                     "return visitor.Accept(this, context);"),
                             },
-                            Enumerable.Empty<Class>(),
+                            Enumerable.Empty<Class>(), //// TODO implement this
                             duElementProperties);
                     }
 
