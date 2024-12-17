@@ -82,4 +82,10 @@
       <DependentUpon>Parameterized.Microsoft.Spatial.tt</DependentUpon>
     </Compile>
   </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="Docs\README.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
