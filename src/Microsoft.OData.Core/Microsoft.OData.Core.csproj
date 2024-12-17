@@ -6,7 +6,6 @@
     <RootNamespace>Microsoft.OData.Core</RootNamespace>
 
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <DefineConstants>$(DefineConstants);ODATA_CORE;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -43,10 +42,6 @@
   <ItemGroup>
     <None Remove="Microsoft.OData.Core.tt" />
     <None Remove="Parameterized.Microsoft.OData.Core.tt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>

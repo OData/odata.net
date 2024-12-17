@@ -5,7 +5,6 @@
     <RootNamespace>Microsoft.Spatial</RootNamespace>
 
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <DefineConstants>TRACE;SPATIAL;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <IsPackable>true</IsPackable>
@@ -24,10 +23,6 @@
     <None Remove="Microsoft.Spatial.tt" />
     <None Remove="Microsoft.Spatial.xml" />
     <None Remove="Parameterized.Microsoft.Spatial.tt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>

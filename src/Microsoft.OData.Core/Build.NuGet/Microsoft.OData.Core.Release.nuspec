@@ -10,6 +10,7 @@
     <projectUrl>http://odata.github.io/</projectUrl>
     <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <readme>src\Microsoft.OData.Core\README.md</readme>
     <summary>Classes to serialize, deserialize and validate OData JSON payloads. Supports OData v4 and v4.01.</summary>
     <description>Classes to serialize, deserialize and validate OData JSON payloads. Supports OData v4 and v4.01. Enables construction of OData services and clients. Targets .NET 8 or above.
 OData .NET library is open source at http://github.com/OData/odata.net. Documentation for the library can be found at https://docs.microsoft.com/en-us/odata/.</description>
@@ -33,5 +34,7 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
     <file src="$SourcesRoot$\src\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" target="src\Microsoft.OData.Edm\Csdl\EdmValueWriter.cs" />
     <file src="$SourcesRoot$\src\PlatformHelper.cs" target="src\PlatformHelper.cs" />
     <file src="$SourcesRoot$\src\AssemblyInfo\AssemblyMetadataAttribute.cs" target="src\AssemblyMetadataAttribute.cs" />
+    <!-- file README.md -->
+    <file src="$SourcesRoot$\src\Microsoft.OData.Core\Docs\README.md" target="src\Microsoft.OData.Core" />
   </files>
 </package>
