@@ -64,7 +64,7 @@ public class SampleModelBuilder
 
 ### Parsing an EDM Model
 
-You can also parse an `EDM model` from a CSDL (Common Schema Definition Language)` document:
+You can also parse an `EDM model` from a CSDL (Common Schema Definition Language) document:
 
 ```csharp
 using Microsoft.OData.Edm.Csdl;
