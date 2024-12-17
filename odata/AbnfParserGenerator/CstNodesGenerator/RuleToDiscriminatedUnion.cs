@@ -210,6 +210,40 @@ namespace AbnfParserGenerator.CstNodesGenerator
                         public void Convert(Concatenation concatenation, StringBuilder duElementName)
                         {
                             //// TODO implement this
+                            RepetitionToDuElementName.Instance.Convert(concatenation.Repetition, duElementName);
+                            foreach (var inner in concatenation.Inners)
+                            {
+                                duElementName.Append("CombinedWith");
+                                InnerToDuElementName.Instance.Convert(inner, duElementName);
+                            }
+                        }
+
+                        private sealed class InnerToDuElementName
+                        {
+                            private InnerToDuElementName()
+                            {
+                            }
+
+                            public static InnerToDuElementName Instance { get; } = new InnerToDuElementName();
+
+                            public void Convert(Concatenation.Inner inner, StringBuilder duElementName)
+                            {
+                                RepetitionToDuElementName.Instance.Convert(inner.Repetition, duElementName);
+                            }
+                        }
+
+                        private sealed class RepetitionToDuElementName
+                        {
+                            private RepetitionToDuElementName()
+                            {
+                            }
+
+                            public static RepetitionToDuElementName Instance { get; } = new RepetitionToDuElementName();
+
+                            public void Convert(Repetition repetition, StringBuilder duElementName)
+                            {
+                                //// TODO implement this
+                            }
                         }
                     }
 
