@@ -196,7 +196,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                                     },
                                     "return visitor.Accept(this, context);"),
                             },
-                            Enumerable.Empty<Class>(), //// TODO implement this
+                            Enumerable.Empty<Class>(), //// TODO implement this //// TODO you wrote this because you thought this is where the "option" and "group" classes would happen
                             duElementProperties);
                     }
 
