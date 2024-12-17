@@ -77,20 +77,34 @@ namespace AbnfParserGenerator.CstNodesGenerator
                             },
                             null,
                             Enumerable.Empty<ConstructorDefinition>(),
-                            discriminatedUnionElements.Select(discriminatedUnionElement =>
-                                new MethodDefinition(
-                                    AccessModifier.Protected | AccessModifier.Internal, 
-                                    true,
+                            discriminatedUnionElements
+                                .Select(discriminatedUnionElement =>
+                                    new MethodDefinition(
+                                        AccessModifier.Protected | AccessModifier.Internal, 
+                                        true,
+                                        false,
+                                        "TResult", 
+                                        Enumerable.Empty<string>(),
+                                        "Accept",
+                                        new[] 
+                                        {
+                                            new MethodParameter(discriminatedUnionElement.Name, "node"),
+                                            new MethodParameter("TContext", "context"),
+                                        },
+                                        null))
+                                .Prepend(new MethodDefinition(
+                                    AccessModifier.Public,
+                                    null,
                                     false,
-                                    "TResult", 
+                                    "TResult",
                                     Enumerable.Empty<string>(),
-                                    "Accept",
-                                    new[] 
+                                    "Visit",
+                                    new[]
                                     {
-                                        new MethodParameter(discriminatedUnionElement.Name, "node"),
+                                        new MethodParameter(ruleName, "node"),
                                         new MethodParameter("TContext", "context"),
                                     },
-                                    null)),
+                                    "return node.Dispatch(this, context);")),
                             Enumerable.Empty<Class>(),
                             Enumerable.Empty<PropertyDefinition>())),
                 Enumerable.Empty<PropertyDefinition>());
