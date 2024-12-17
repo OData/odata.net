@@ -35,6 +35,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
             var ruleName = ruleNameBuilder.ToString();
 
             var discriminatedUnionElements = ElementsToDiscriminatedUnionElements.Instance.Convert(node.Elements, ruleName);
+            var groupingClasses = ElementsToGroupingClasses.Instance.Convert(node.Elements, default);
             return new Class(
                 AccessModifier.Public,
                 true,
@@ -65,7 +66,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                         },
                         null),
                 },
-                discriminatedUnionElements
+                groupingClasses
                     .Prepend(
                         new Class(
                             AccessModifier.Public,
@@ -81,13 +82,13 @@ namespace AbnfParserGenerator.CstNodesGenerator
                             discriminatedUnionElements
                                 .Select(discriminatedUnionElement =>
                                     new MethodDefinition(
-                                        AccessModifier.Protected | AccessModifier.Internal, 
+                                        AccessModifier.Protected | AccessModifier.Internal,
                                         true,
                                         false,
-                                        "TResult", 
+                                        "TResult",
                                         Enumerable.Empty<string>(),
                                         "Accept",
-                                        new[] 
+                                        new[]
                                         {
                                             new MethodParameter(discriminatedUnionElement.Name, "node"),
                                             new MethodParameter("TContext", "context"),
@@ -107,8 +108,205 @@ namespace AbnfParserGenerator.CstNodesGenerator
                                     },
                                     "return node.Dispatch(this, context);")),
                             Enumerable.Empty<Class>(),
-                            Enumerable.Empty<PropertyDefinition>())),
+                            Enumerable.Empty<PropertyDefinition>()))
+                    .Concat(discriminatedUnionElements),
                 Enumerable.Empty<PropertyDefinition>());
+        }
+        private sealed class ElementToNaturalLanguageName : Element.Visitor<Root.Void, StringBuilder>
+        {
+            private ElementToNaturalLanguageName()
+            {
+            }
+
+            public static ElementToNaturalLanguageName Instance { get; } = new ElementToNaturalLanguageName();
+
+            protected internal override Root.Void Accept(Element.RuleName node, StringBuilder context)
+            {
+                RuleNameToString.Instance.Convert(node.Value, context);
+                return default;
+            }
+
+            protected internal override Root.Void Accept(Element.Group node, StringBuilder context)
+            {
+                //// TODO implement this
+                return default;
+            }
+
+            protected internal override Root.Void Accept(Element.Option node, StringBuilder context)
+            {
+                //// TODO implement this
+                return default;
+            }
+
+            protected internal override Root.Void Accept(Element.CharVal node, StringBuilder context)
+            {
+                //// TODO implement this
+                return default;
+            }
+
+            protected internal override Root.Void Accept(Element.NumVal node, StringBuilder context)
+            {
+                //// TODO implement this
+                return default;
+            }
+
+            protected internal override Root.Void Accept(Element.ProseVal node, StringBuilder context)
+            {
+                //// TODO implement this
+                return default;
+            }
+        }
+
+        private sealed class ElementsToGroupingClasses
+        {
+            private ElementsToGroupingClasses()
+            {
+            }
+
+            public static ElementsToGroupingClasses Instance { get; } = new ElementsToGroupingClasses();
+
+            public IEnumerable<Class> Convert(Elements elements, Root.Void context)
+            {
+                //// TODO figure out how to get this warning to go away
+                //// have a "nonnull" extension?
+                return AlternationToGroupingClasses.Instance.Convert(elements.Alternation, context).Where(@class => @class != null);
+            }
+
+            private sealed class AlternationToGroupingClasses
+            {
+                private AlternationToGroupingClasses()
+                {
+                }
+
+                public static AlternationToGroupingClasses Instance { get; } = new AlternationToGroupingClasses();
+
+                public IEnumerable<Class?> Convert(Alternation alternation, Root.Void context)
+                {
+                    return ConcatenationToGroupingClass.Instance
+                        .Convert(
+                            alternation.Concatenation, 
+                            default)
+                        .Concat(
+                            alternation
+                                .Inners
+                                .SelectMany(inner => 
+                                    InnerToGroupingClass.Instance.Convert(inner, default)));
+                }
+
+                private sealed class InnerToGroupingClass
+                {
+                    private InnerToGroupingClass()
+                    {
+                    }
+
+                    public static InnerToGroupingClass Instance { get; } = new InnerToGroupingClass();
+
+                    public IEnumerable<Class?> Convert(Alternation.Inner inner, Root.Void context)
+                    {
+                        return ConcatenationToGroupingClass.Instance.Convert(inner.Concatenation, default);
+                    }
+                }
+
+                private sealed class ConcatenationToGroupingClass
+                {
+                    private ConcatenationToGroupingClass()
+                    {
+                    }
+
+                    public static ConcatenationToGroupingClass Instance { get; } = new ConcatenationToGroupingClass();
+
+                    public IEnumerable<Class?> Convert(Concatenation concatenation, Root.Void context)
+                    {
+                        yield return RepetitonToGroupingClass.Instance.Visit(concatenation.Repetition, default);
+                        foreach (var inner in concatenation.Inners)
+                        {
+                            yield return InnerToGroupingClass.Instance.Convert(inner, default);
+                        }
+                    }
+
+                    private sealed class InnerToGroupingClass
+                    {
+                        private InnerToGroupingClass()
+                        {
+                        }
+
+                        public static InnerToGroupingClass Instance { get; } = new InnerToGroupingClass();
+
+                        public Class? Convert(Concatenation.Inner inner, Root.Void context)
+                        {
+                            return RepetitonToGroupingClass.Instance.Visit(inner.Repetition, default);
+                        }
+                    }
+
+                    private sealed class RepetitonToGroupingClass : Repetition.Visitor<Class?, Root.Void>
+                    {
+                        private RepetitonToGroupingClass()
+                        {
+                        }
+
+                        public static RepetitonToGroupingClass Instance { get; } = new RepetitonToGroupingClass();
+
+                        protected internal override Class? Accept(Repetition.ElementOnly node, Root.Void context)
+                        {
+                            return ElementToGroupingClass.Instance.Visit(node.Element, default);
+                        }
+
+                        protected internal override Class? Accept(Repetition.RepeatAndElement node, Root.Void context)
+                        {
+                            return ElementToGroupingClass.Instance.Visit(node.Element, default);
+                        }
+
+                        private sealed class ElementToGroupingClass : Element.Visitor<Class?, Root.Void>
+                        {
+                            private ElementToGroupingClass()
+                            {
+                            }
+
+                            public static ElementToGroupingClass Instance { get; } = new ElementToGroupingClass();
+
+                            protected internal override Class? Accept(Element.RuleName node, Root.Void context)
+                            {
+                                return null;
+                            }
+
+                            protected internal override Class? Accept(Element.Group node, Root.Void context)
+                            {
+                                //// TODO implement this
+                                return new Class(
+                                    AccessModifier.Public,
+                                    null,
+                                    "Group1",
+                                    Enumerable.Empty<string>(),
+                                    null,
+                                    Enumerable.Empty<ConstructorDefinition>(),
+                                    Enumerable.Empty<MethodDefinition>(),
+                                    Enumerable.Empty<Class>(),
+                                    Enumerable.Empty<PropertyDefinition>());
+                            }
+
+                            protected internal override Class? Accept(Element.Option node, Root.Void context)
+                            {
+                                return null;
+                            }
+
+                            protected internal override Class? Accept(Element.CharVal node, Root.Void context)
+                            {
+                                return null;
+                            }
+
+                            protected internal override Class? Accept(Element.NumVal node, Root.Void context)
+                            {
+                                return null;
+                            }
+
+                            protected internal override Class? Accept(Element.ProseVal node, Root.Void context)
+                            {
+                                return null;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         private sealed class ElementsToDiscriminatedUnionElements
@@ -250,60 +448,16 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                             protected internal override Root.Void Accept(Repetition.ElementOnly node, StringBuilder context)
                             {
-                                ElementToDuElementName.Instance.Visit(node.Element, context);
+                                //// TODO it's tempting to prepend with "One", but what if the element is an optional?
+                                ElementToNaturalLanguageName.Instance.Visit(node.Element, context);
                                 return default;
                             }
 
                             protected internal override Root.Void Accept(Repetition.RepeatAndElement node, StringBuilder context)
                             {
                                 RepeatToDuElementName.Instance.Visit(node.Repeat, context);
-                                ElementToDuElementName.Instance.Visit(node.Element, context);
+                                ElementToNaturalLanguageName.Instance.Visit(node.Element, context);
                                 return default;
-                            }
-
-                            private sealed class ElementToDuElementName : Element.Visitor<Root.Void, StringBuilder>
-                            {
-                                private ElementToDuElementName()
-                                {
-                                }
-
-                                public static ElementToDuElementName Instance { get; } = new ElementToDuElementName();
-
-                                protected internal override Root.Void Accept(Element.RuleName node, StringBuilder context)
-                                {
-                                    RuleNameToString.Instance.Convert(node.Value, context);
-                                    return default;
-                                }
-
-                                protected internal override Root.Void Accept(Element.Group node, StringBuilder context)
-                                {
-                                    //// TODO implement this
-                                    return default;
-                                }
-
-                                protected internal override Root.Void Accept(Element.Option node, StringBuilder context)
-                                {
-                                    //// TODO implement this
-                                    return default;
-                                }
-
-                                protected internal override Root.Void Accept(Element.CharVal node, StringBuilder context)
-                                {
-                                    //// TODO implement this
-                                    return default;
-                                }
-
-                                protected internal override Root.Void Accept(Element.NumVal node, StringBuilder context)
-                                {
-                                    //// TODO implement this
-                                    return default;
-                                }
-
-                                protected internal override Root.Void Accept(Element.ProseVal node, StringBuilder context)
-                                {
-                                    //// TODO implement this
-                                    return default;
-                                }
                             }
 
                             private sealed class RepeatToDuElementName : Repeat.Visitor<Root.Void, StringBuilder>
