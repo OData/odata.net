@@ -435,13 +435,20 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                 },
             ];
 
-            this.ProductDetails[0].Reviews = [this.ProductReviews[0]];
-            this.ProductDetails[0].Reviews = [this.ProductReviews[1]];
-            this.ProductDetails[0].Reviews = [this.ProductReviews[2]];
-            this.ProductDetails[0].Reviews = [this.ProductReviews[3]];
-            this.ProductDetails[1].Reviews = [this.ProductReviews[1]];
-            this.ProductDetails[1].Reviews = [this.ProductReviews[2]];
-            this.ProductDetails[1].Reviews = [this.ProductReviews[3]];
+            this.ProductDetails[0].Reviews = new List<ProductReview>
+            {
+                this.ProductReviews[0],
+                this.ProductReviews[1],
+                this.ProductReviews[2],
+                this.ProductReviews[3]
+            };
+
+            this.ProductDetails[1].Reviews = new List<ProductReview>
+            {
+                this.ProductReviews[1],
+                this.ProductReviews[2],
+                this.ProductReviews[3]
+            };
 
             this.Calendars = new List<Calendar>()
             {

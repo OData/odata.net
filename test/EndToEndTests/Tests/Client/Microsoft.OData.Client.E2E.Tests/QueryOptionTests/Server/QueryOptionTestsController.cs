@@ -1,4 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿//---------------------------------------------------------------------
+// <copyright file="QueryOptionTestsController.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
@@ -76,6 +82,15 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Server
             }
 
             return Ok(customer);
+        }
+
+        [EnableQuery]
+        [HttpGet("odata/ProductDetails")]
+        public IActionResult GetProductDetails()
+        {
+            var productDetails = _dataSource.ProductDetails;
+
+            return Ok(productDetails);
         }
 
         [HttpPost("odata/queryoption/Default.ResetDefaultDataSource")]

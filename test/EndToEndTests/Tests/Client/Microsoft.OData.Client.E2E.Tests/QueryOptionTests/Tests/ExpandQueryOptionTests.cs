@@ -1,5 +1,11 @@
-﻿using System.Reflection;
+﻿//---------------------------------------------------------------------
+// <copyright file="ExpandQueryOptionTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using Microsoft.AspNetCore.OData;
+using Microsoft.AspNetCore.OData.Query.Expressions;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client.E2E.TestCommon;
@@ -24,13 +30,20 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
             {
                 services.ConfigureControllers(typeof(QueryOptionTestsController), typeof(MetadataController));
 
-                services.AddControllers().AddOData(opt => opt.EnableQueryFeatures().AddRouteComponents("odata", DefaultEdmModel.GetEdmModel()));
+                services.AddControllers().AddOData(opt => 
+                    opt.EnableQueryFeatures().AddRouteComponents("odata", DefaultEdmModel.GetEdmModel(), services =>
+                        services.AddSingleton<ISearchBinder, CustomSearchBinder>()));
             }
         }
 
         public ExpandQueryOptionTests(TestWebApplicationFactory<TestsStartup> fixture) 
             : base(fixture)
         {
+            if (Client.BaseAddress == null)
+            {
+                throw new ArgumentNullException(nameof(Client.BaseAddress), "Base address cannot be null");
+            }
+
             _baseUri = new Uri(Client.BaseAddress, "odata/");
 
             _context = new Container(_baseUri)
@@ -60,7 +73,7 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         {
             // Arrange & Act
             var queryText = "Products(5)?$expand=Details($top=3)";
-            var entries = await QueryEntries(queryText, mimeType);
+            var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
@@ -80,7 +93,7 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         {
             // Arrange & Act
             var queryText = "Products(5)?$expand=Details($skip=2)";
-            var entries = await QueryEntries(queryText, mimeType);
+            var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
@@ -100,7 +113,7 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         {
             // Arrange & Act
             var queryText = "Products(5)?$expand=Details($orderby=Description desc)";
-            var entries = await QueryEntries(queryText, mimeType);
+            var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
@@ -130,7 +143,7 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         {
             // Arrange & Act
             var queryText = "Products(5)?$expand=Details($filter=Description eq 'spicy snack')";
-            var entries = await QueryEntries(queryText, mimeType);
+            var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
@@ -157,7 +170,7 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         {
             // Arrange & Act
             var queryText = "Products(5)?$expand=Details($count=true)";
-            var feed = await QueryInnerFeed(queryText, mimeType);
+            var feed = await this.TestsHelper.QueryInnerFeedAsync(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata) && !mimeType.Contains(MimeTypes.ApplicationAtomXml))
@@ -177,7 +190,7 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         {
             // Arrange & Act
             var queryText = "Products(5)?$expand=Details($search=(spicy OR suger) AND NOT \"0\" )";
-            var entries = await QueryEntries(queryText, mimeType);
+            var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
@@ -198,7 +211,7 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         {
             // Arrange & Act
             var queryText = "Products(5)?$expand=Details/$ref";
-            var entries = await QueryEntries(queryText, mimeType);
+            var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
@@ -220,7 +233,7 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         {
             // Arrange & Act
             var queryText = "Products(5)?$expand=Details/$ref($orderby=Description desc)";
-            var entries = await QueryEntries(queryText, mimeType);
+            var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
@@ -241,7 +254,7 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         {
             // Arrange & Act
             var queryText = "Products(5)?$expand=Details($orderby=Description;$skip=2;$top=1)";
-            var entries = await QueryEntries(queryText, mimeType);
+            var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
@@ -265,12 +278,12 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         {
             // Arrange & Act
             var queryText = "Products(5)?$expand=Details($expand=Reviews($filter=contains(Comment,'good');$select=Comment))";
-            var entries = await QueryEntries(queryText, mimeType);
+            var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
-                Assert.Equal(5, entries.Count);
+                Assert.Equal(8, entries.Count);
                 var reviews = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductReviews"));
                 Assert.Equal(2, reviews.Count);
                 Assert.Single(reviews.First().Properties);
@@ -290,7 +303,7 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         {
             // Arrange & Act
             var queryText = "Products(5)?$expand=Details($expand=Reviews/$ref)";
-            var entries = await QueryEntries(queryText, mimeType);
+            var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
@@ -312,12 +325,12 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
         {
             // Arrange & Act
             var queryText = "Products(5)?$expand=Details($expand=Reviews($filter=contains(Comment, 'good'));$search=snack \"Cheese-flavored\")";
-            var entries = await QueryEntries(queryText, mimeType);
+            var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
 
             // Assert
             if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
             {
-                Assert.Equal(6, entries.Count);
+                Assert.Equal(8, entries.Count);
 
                 var reviews = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductReviews"));
                 Assert.Equal(2, reviews.Count);
@@ -332,71 +345,18 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Tests
 
         #region Private methods
 
+        private QueryOptionTestsHelper TestsHelper
+        {
+            get
+            {
+                return new QueryOptionTestsHelper(_baseUri, _model, Client);
+            }
+        }
+
         private void ResetDefaultDataSource()
         {
             var actionUri = new Uri(_baseUri + "queryoption/Default.ResetDefaultDataSource", UriKind.Absolute);
             _context.Execute(actionUri, "POST");
-        }
-
-        private async Task<List<ODataResource>> QueryEntries(string queryText, string mimeType)
-        {
-            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
-
-            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
-            requestMessage.SetHeader("Accept", mimeType);
-
-            var responseMessage = await requestMessage.GetResponseAsync();
-
-            Assert.Equal(200, responseMessage.StatusCode);
-
-            var entries = new List<ODataResource>();
-            if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
-            {
-                using var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model);
-                var reader = await messageReader.CreateODataResourceReaderAsync();
-                while (await reader.ReadAsync())
-                {
-                    if (reader.State == ODataReaderState.ResourceEnd)
-                    {
-                        if (reader.Item is ODataResource odataResource)
-                        {
-                            entries.Add(odataResource);
-                        }
-                    }
-                }
-                Assert.Equal(ODataReaderState.Completed, reader.State);
-            }
-
-            return entries;
-        }
-
-        private async Task<ODataResourceSet?> QueryInnerFeed(string queryText, string mimeType)
-        {
-            ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
-            var requestUrl = new Uri(_baseUri.AbsoluteUri + queryText, UriKind.Absolute);
-
-            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
-            requestMessage.SetHeader("Accept", mimeType);
-
-            var responseMessage = await requestMessage.GetResponseAsync();
-
-            Assert.Equal(200, responseMessage.StatusCode);
-
-            if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
-            {
-                using var messageReader = new ODataMessageReader(responseMessage, readerSettings, _model);
-                var reader = await messageReader.CreateODataResourceReaderAsync();
-                while (await reader.ReadAsync())
-                {
-                    if (reader.State == ODataReaderState.ResourceSetEnd && reader.Item is ODataResourceSet oDataResourceSet)
-                    {
-                        return oDataResourceSet;
-                    }
-                }
-            }
-
-            return null;
         }
 
         #endregion
