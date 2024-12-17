@@ -7,6 +7,8 @@ using System.Linq;
 using System.Net.Mime;
 using System.Runtime.InteropServices;
 using System.Text;
+using static AbnfParser.CstNodes.Element;
+using System.Xml.Linq;
 
 namespace AbnfParserGenerator.CstNodesGenerator
 {
@@ -34,84 +36,9 @@ namespace AbnfParserGenerator.CstNodesGenerator
             NormalizeClassName(ruleNameBuilder);
             var ruleName = ruleNameBuilder.ToString();
 
-            var discriminatedUnionElements = ElementsToDiscriminatedUnionElements.Instance.Convert(node.Elements, ruleName);
-            var groupingClasses = ElementsToGroupingClasses.Instance.Convert(node.Elements, default);
-            return new Class(
-                AccessModifier.Public,
-                true,
-                ruleName,
-                Enumerable.Empty<string>(),
-                null,
-                new[]
-                {
-                    new ConstructorDefinition(AccessModifier.Private, Enumerable.Empty<MethodParameter>(), string.Empty),
-                },
-                new[]
-                {
-                    new MethodDefinition(
-                        AccessModifier.Protected,
-                        true,
-                        false,
-                        "TResult",
-                        new[]
-                        {
-                            "TResult",
-                            "TContext",
-                        },
-                        "Dispatch",
-                        new[]
-                        {
-                            new MethodParameter("Visitor<TResult, TContext>", "visitor"),
-                            new MethodParameter("TContext", "context"),
-                        },
-                        null),
-                },
-                groupingClasses
-                    .Prepend(
-                        new Class(
-                            AccessModifier.Public,
-                            true,
-                            "Visitor",
-                            new[]
-                            {
-                                "TResult",
-                                "TContext",
-                            },
-                            null,
-                            Enumerable.Empty<ConstructorDefinition>(),
-                            discriminatedUnionElements
-                                .Select(discriminatedUnionElement =>
-                                    new MethodDefinition(
-                                        AccessModifier.Protected | AccessModifier.Internal,
-                                        true,
-                                        false,
-                                        "TResult",
-                                        Enumerable.Empty<string>(),
-                                        "Accept",
-                                        new[]
-                                        {
-                                            new MethodParameter(discriminatedUnionElement.Name, "node"),
-                                            new MethodParameter("TContext", "context"),
-                                        },
-                                        null))
-                                .Prepend(new MethodDefinition(
-                                    AccessModifier.Public,
-                                    null,
-                                    false,
-                                    "TResult",
-                                    Enumerable.Empty<string>(),
-                                    "Visit",
-                                    new[]
-                                    {
-                                        new MethodParameter(ruleName, "node"),
-                                        new MethodParameter("TContext", "context"),
-                                    },
-                                    "return node.Dispatch(this, context);")),
-                            Enumerable.Empty<Class>(),
-                            Enumerable.Empty<PropertyDefinition>()))
-                    .Concat(discriminatedUnionElements),
-                Enumerable.Empty<PropertyDefinition>());
+            return ElementsToDiscriminatedUnion.Instance.Convert(node.Elements, ruleName);
         }
+
         private sealed class ElementToNaturalLanguageName : Element.Visitor<Root.Void, StringBuilder>
         {
             private ElementToNaturalLanguageName()
@@ -157,40 +84,166 @@ namespace AbnfParserGenerator.CstNodesGenerator
             }
         }
 
-        private sealed class ElementsToGroupingClasses
+        private sealed class AlternationToDiscriminatedUnion
         {
-            private ElementsToGroupingClasses()
+            private AlternationToDiscriminatedUnion()
             {
             }
 
-            public static ElementsToGroupingClasses Instance { get; } = new ElementsToGroupingClasses();
+            public static AlternationToDiscriminatedUnion Instance { get; } = new AlternationToDiscriminatedUnion();
 
-            public IEnumerable<Class> Convert(Elements elements, Root.Void context)
+            public Class Convert(Alternation alternation, string discriminatedUnionName)
             {
-                //// TODO figure out how to get this warning to go away
-                //// have a "nonnull" extension?
-                return AlternationToGroupingClasses.Instance.Convert(elements.Alternation, context).Where(@class => @class != null);
+                var discriminatedUnionElements = AlternationToDiscriminatedUnionElements
+                    .Instance
+                    .Convert(alternation, discriminatedUnionName);
+                var groupingClasses = AlternationToGroupingClasses
+                    .Instance
+                    .Convert(alternation, default)
+                    .Where(@class => @class != null)
+                    .Cast<Class>();
+                return new Class(
+                    AccessModifier.Public,
+                    true,
+                    discriminatedUnionName,
+                    Enumerable.Empty<string>(),
+                    null,
+                    new[]
+                    {
+                    new ConstructorDefinition(AccessModifier.Private, Enumerable.Empty<MethodParameter>(), string.Empty),
+                    },
+                    new[]
+                    {
+                    new MethodDefinition(
+                        AccessModifier.Protected,
+                        true,
+                        false,
+                        "TResult",
+                        new[]
+                        {
+                            "TResult",
+                            "TContext",
+                        },
+                        "Dispatch",
+                        new[]
+                        {
+                            new MethodParameter("Visitor<TResult, TContext>", "visitor"),
+                            new MethodParameter("TContext", "context"),
+                        },
+                        null),
+                    },
+                    groupingClasses
+                        .Prepend(
+                            new Class(
+                                AccessModifier.Public,
+                                true,
+                                "Visitor",
+                                new[]
+                                {
+                                    "TResult",
+                                    "TContext",
+                                },
+                                null,
+                                Enumerable.Empty<ConstructorDefinition>(),
+                                discriminatedUnionElements
+                                    .Select(discriminatedUnionElement =>
+                                        new MethodDefinition(
+                                            AccessModifier.Protected | AccessModifier.Internal,
+                                            true,
+                                            false,
+                                            "TResult",
+                                            Enumerable.Empty<string>(),
+                                            "Accept",
+                                            new[]
+                                            {
+                                                new MethodParameter(discriminatedUnionElement.Name, "node"),
+                                                new MethodParameter("TContext", "context"),
+                                            },
+                                            null))
+                                    .Prepend(new MethodDefinition(
+                                        AccessModifier.Public,
+                                        null,
+                                        false,
+                                        "TResult",
+                                        Enumerable.Empty<string>(),
+                                        "Visit",
+                                        new[]
+                                        {
+                                            new MethodParameter(discriminatedUnionName, "node"),
+                                            new MethodParameter("TContext", "context"),
+                                        },
+                                        "return node.Dispatch(this, context);")),
+                                Enumerable.Empty<Class>(),
+                                Enumerable.Empty<PropertyDefinition>()))
+                        .Concat(discriminatedUnionElements),
+                    Enumerable.Empty<PropertyDefinition>());
+            }
+        }
+
+        private sealed class ElementsToDiscriminatedUnion
+        {
+            private ElementsToDiscriminatedUnion()
+            {
             }
 
-            private sealed class AlternationToGroupingClasses
+            public static ElementsToDiscriminatedUnion Instance { get; } = new ElementsToDiscriminatedUnion();
+
+            public Class Convert(Elements elements, string discriminatedUnionName)
             {
-                private AlternationToGroupingClasses()
+                return AlternationToDiscriminatedUnion.Instance.Convert(elements.Alternation, discriminatedUnionName);
+            }
+        }
+
+        private sealed class AlternationToGroupingClasses
+        {
+            private AlternationToGroupingClasses()
+            {
+            }
+
+            public static AlternationToGroupingClasses Instance { get; } = new AlternationToGroupingClasses();
+
+            public IEnumerable<Class?> Convert(Alternation alternation, Root.Void context)
+            {
+                return ConcatenationToGroupingClass.Instance
+                    .Convert(
+                        alternation.Concatenation,
+                        default)
+                    .Concat(
+                        alternation
+                            .Inners
+                            .SelectMany(inner =>
+                                InnerToGroupingClass.Instance.Convert(inner, default)));
+            }
+
+            private sealed class InnerToGroupingClass
+            {
+                private InnerToGroupingClass()
                 {
                 }
 
-                public static AlternationToGroupingClasses Instance { get; } = new AlternationToGroupingClasses();
+                public static InnerToGroupingClass Instance { get; } = new InnerToGroupingClass();
 
-                public IEnumerable<Class?> Convert(Alternation alternation, Root.Void context)
+                public IEnumerable<Class?> Convert(Alternation.Inner inner, Root.Void context)
                 {
-                    return ConcatenationToGroupingClass.Instance
-                        .Convert(
-                            alternation.Concatenation, 
-                            default)
-                        .Concat(
-                            alternation
-                                .Inners
-                                .SelectMany(inner => 
-                                    InnerToGroupingClass.Instance.Convert(inner, default)));
+                    return ConcatenationToGroupingClass.Instance.Convert(inner.Concatenation, default);
+                }
+            }
+
+            private sealed class ConcatenationToGroupingClass
+            {
+                private ConcatenationToGroupingClass()
+                {
+                }
+
+                public static ConcatenationToGroupingClass Instance { get; } = new ConcatenationToGroupingClass();
+
+                public IEnumerable<Class?> Convert(Concatenation concatenation, Root.Void context)
+                {
+                    yield return RepetitonToGroupingClass.Instance.Visit(concatenation.Repetition, default);
+                    foreach (var inner in concatenation.Inners)
+                    {
+                        yield return InnerToGroupingClass.Instance.Convert(inner, default);
+                    }
                 }
 
                 private sealed class InnerToGroupingClass
@@ -201,168 +254,123 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                     public static InnerToGroupingClass Instance { get; } = new InnerToGroupingClass();
 
-                    public IEnumerable<Class?> Convert(Alternation.Inner inner, Root.Void context)
+                    public Class? Convert(Concatenation.Inner inner, Root.Void context)
                     {
-                        return ConcatenationToGroupingClass.Instance.Convert(inner.Concatenation, default);
+                        return RepetitonToGroupingClass.Instance.Visit(inner.Repetition, default);
                     }
                 }
 
-                private sealed class ConcatenationToGroupingClass
+                private sealed class RepetitonToGroupingClass : Repetition.Visitor<Class?, Root.Void>
                 {
-                    private ConcatenationToGroupingClass()
+                    private RepetitonToGroupingClass()
                     {
                     }
 
-                    public static ConcatenationToGroupingClass Instance { get; } = new ConcatenationToGroupingClass();
+                    public static RepetitonToGroupingClass Instance { get; } = new RepetitonToGroupingClass();
 
-                    public IEnumerable<Class?> Convert(Concatenation concatenation, Root.Void context)
+                    protected internal override Class? Accept(Repetition.ElementOnly node, Root.Void context)
                     {
-                        yield return RepetitonToGroupingClass.Instance.Visit(concatenation.Repetition, default);
-                        foreach (var inner in concatenation.Inners)
-                        {
-                            yield return InnerToGroupingClass.Instance.Convert(inner, default);
-                        }
+                        return ElementToGroupingClass.Instance.Visit(node.Element, default);
                     }
 
-                    private sealed class InnerToGroupingClass
+                    protected internal override Class? Accept(Repetition.RepeatAndElement node, Root.Void context)
                     {
-                        private InnerToGroupingClass()
-                        {
-                        }
-
-                        public static InnerToGroupingClass Instance { get; } = new InnerToGroupingClass();
-
-                        public Class? Convert(Concatenation.Inner inner, Root.Void context)
-                        {
-                            return RepetitonToGroupingClass.Instance.Visit(inner.Repetition, default);
-                        }
+                        return ElementToGroupingClass.Instance.Visit(node.Element, default);
                     }
 
-                    private sealed class RepetitonToGroupingClass : Repetition.Visitor<Class?, Root.Void>
+                    private sealed class ElementToGroupingClass : Element.Visitor<Class?, Root.Void>
                     {
-                        private RepetitonToGroupingClass()
+                        private ElementToGroupingClass()
                         {
                         }
 
-                        public static RepetitonToGroupingClass Instance { get; } = new RepetitonToGroupingClass();
+                        public static ElementToGroupingClass Instance { get; } = new ElementToGroupingClass();
 
-                        protected internal override Class? Accept(Repetition.ElementOnly node, Root.Void context)
+                        protected internal override Class? Accept(Element.RuleName node, Root.Void context)
                         {
-                            return ElementToGroupingClass.Instance.Visit(node.Element, default);
+                            return null;
                         }
 
-                        protected internal override Class? Accept(Repetition.RepeatAndElement node, Root.Void context)
+                        protected internal override Class? Accept(Element.Group node, Root.Void context)
                         {
-                            return ElementToGroupingClass.Instance.Visit(node.Element, default);
+                            //// TODO implement this
+                            return new Class(
+                                AccessModifier.Public,
+                                null,
+                                "Group1",
+                                Enumerable.Empty<string>(),
+                                null,
+                                Enumerable.Empty<ConstructorDefinition>(),
+                                Enumerable.Empty<MethodDefinition>(),
+                                Enumerable.Empty<Class>(),
+                                Enumerable.Empty<PropertyDefinition>());
                         }
 
-                        private sealed class ElementToGroupingClass : Element.Visitor<Class?, Root.Void>
+                        protected internal override Class? Accept(Element.Option node, Root.Void context)
                         {
-                            private ElementToGroupingClass()
-                            {
-                            }
+                            return null;
+                        }
 
-                            public static ElementToGroupingClass Instance { get; } = new ElementToGroupingClass();
+                        protected internal override Class? Accept(Element.CharVal node, Root.Void context)
+                        {
+                            return null;
+                        }
 
-                            protected internal override Class? Accept(Element.RuleName node, Root.Void context)
-                            {
-                                return null;
-                            }
+                        protected internal override Class? Accept(Element.NumVal node, Root.Void context)
+                        {
+                            return null;
+                        }
 
-                            protected internal override Class? Accept(Element.Group node, Root.Void context)
-                            {
-                                //// TODO implement this
-                                return new Class(
-                                    AccessModifier.Public,
-                                    null,
-                                    "Group1",
-                                    Enumerable.Empty<string>(),
-                                    null,
-                                    Enumerable.Empty<ConstructorDefinition>(),
-                                    Enumerable.Empty<MethodDefinition>(),
-                                    Enumerable.Empty<Class>(),
-                                    Enumerable.Empty<PropertyDefinition>());
-                            }
-
-                            protected internal override Class? Accept(Element.Option node, Root.Void context)
-                            {
-                                return null;
-                            }
-
-                            protected internal override Class? Accept(Element.CharVal node, Root.Void context)
-                            {
-                                return null;
-                            }
-
-                            protected internal override Class? Accept(Element.NumVal node, Root.Void context)
-                            {
-                                return null;
-                            }
-
-                            protected internal override Class? Accept(Element.ProseVal node, Root.Void context)
-                            {
-                                return null;
-                            }
+                        protected internal override Class? Accept(Element.ProseVal node, Root.Void context)
+                        {
+                            return null;
                         }
                     }
                 }
             }
         }
 
-        private sealed class ElementsToDiscriminatedUnionElements
+        private sealed class AlternationToDiscriminatedUnionElements
         {
-            private ElementsToDiscriminatedUnionElements()
+            private AlternationToDiscriminatedUnionElements()
             {
             }
 
-            public static ElementsToDiscriminatedUnionElements Instance { get; } = new ElementsToDiscriminatedUnionElements();
+            public static AlternationToDiscriminatedUnionElements Instance { get; } = new AlternationToDiscriminatedUnionElements();
 
-            public IEnumerable<Class> Convert(Elements elements, string baseType)
+            public IEnumerable<Class> Convert(Alternation alternation, string baseType)
             {
-                return AlternationToDiscriminatedUnionElements.Instance.Convert(elements.Alternation, baseType);
+                yield return ConcatenationToDuElement.Instance.Convert(alternation.Concatenation, baseType);
+                foreach (var inner in alternation.Inners)
+                {
+                    yield return InnerToDuElement.Instance.Convert(inner, baseType);
+                }
             }
 
-            private sealed class AlternationToDiscriminatedUnionElements
+            private sealed class ConcatenationToDuElement
             {
-                private AlternationToDiscriminatedUnionElements()
+                private ConcatenationToDuElement()
                 {
                 }
 
-                public static AlternationToDiscriminatedUnionElements Instance { get; } = new AlternationToDiscriminatedUnionElements();
+                public static ConcatenationToDuElement Instance { get; } = new ConcatenationToDuElement();
 
-                public IEnumerable<Class> Convert(Alternation alternation, string baseType)
+                public Class Convert(Concatenation concatenation, string baseType)
                 {
-                    yield return ConcatenationToDuElement.Instance.Convert(alternation.Concatenation, baseType);
-                    foreach (var inner in alternation.Inners)
-                    {
-                        yield return InnerToDuElement.Instance.Convert(inner, baseType);
-                    }
-                }
+                    var duElementNameBuilder = new StringBuilder();
+                    ConcatenationToDuElementName.Instance.Convert(concatenation, duElementNameBuilder);
+                    NormalizeClassName(duElementNameBuilder);
+                    var duElementName = duElementNameBuilder.ToString();
 
-                private sealed class ConcatenationToDuElement
-                {
-                    private ConcatenationToDuElement()
-                    {
-                    }
-
-                    public static ConcatenationToDuElement Instance { get; } = new ConcatenationToDuElement();
-
-                    public Class Convert(Concatenation concatenation, string baseType)
-                    {
-                        var duElementNameBuilder = new StringBuilder();
-                        ConcatenationToDuElementName.Instance.Convert(concatenation, duElementNameBuilder);
-                        NormalizeClassName(duElementNameBuilder);
-                        var duElementName = duElementNameBuilder.ToString();
-
-                        var duElementProperties = ConcatenationToDuElementProperties.Instance.Convert(concatenation, default);
-                        return new Class(
-                            AccessModifier.Public,
-                            false,
-                            duElementName,
-                            Enumerable.Empty<string>(),
-                            baseType,
-                            new[]
-                            {
+                    var duElementProperties = ConcatenationToDuElementProperties.Instance.Convert(concatenation, default);
+                    return new Class(
+                        AccessModifier.Public,
+                        false,
+                        duElementName,
+                        Enumerable.Empty<string>(),
+                        baseType,
+                        new[]
+                        {
                                 new ConstructorDefinition(
                                     AccessModifier.Public,
                                     duElementProperties.Select(duElementProperty =>
@@ -373,9 +381,9 @@ namespace AbnfParserGenerator.CstNodesGenerator
                                         Environment.NewLine,
                                         duElementProperties.Select(duElementProperty =>
                                             $"this.{duElementProperty.Name} = {duElementProperty.Name[0].ToString().ToLower() + duElementProperty.Name.Substring(1)};"))),
-                            },
-                            new[]
-                            {
+                        },
+                        new[]
+                        {
                                 new MethodDefinition(
                                     AccessModifier.Protected,
                                     false,
@@ -393,296 +401,295 @@ namespace AbnfParserGenerator.CstNodesGenerator
                                         new MethodParameter("TContext", "context"),
                                     },
                                     "return visitor.Accept(this, context);"),
-                            },
-                            Enumerable.Empty<Class>(), //// TODO implement this //// TODO you wrote this because you thought this is where the "option" and "group" classes would happen
-                            duElementProperties);
-                    }
-
-                    private sealed class ConcatenationToDuElementName
-                    {
-                        private ConcatenationToDuElementName()
-                        {
-                        }
-
-                        public static ConcatenationToDuElementName Instance { get; } = new ConcatenationToDuElementName();
-
-                        public void Convert(Concatenation concatenation, StringBuilder duElementName)
-                        {
-                            RepetitionToDuElementName.Instance.Visit(concatenation.Repetition, duElementName);
-                            if (!concatenation.Inners.Any())
-                            {
-                                //// TODO this isn't working correctly but you'll definintely need it for some cases:
-                                //// duElementName.Append("Only");
-                            }
-                            else
-                            {
-                                foreach (var inner in concatenation.Inners)
-                                {
-                                    duElementName.Append("CombinedWith");
-                                    InnerToDuElementName.Instance.Convert(inner, duElementName);
-                                }
-                            }
-                        }
-
-                        private sealed class InnerToDuElementName
-                        {
-                            private InnerToDuElementName()
-                            {
-                            }
-
-                            public static InnerToDuElementName Instance { get; } = new InnerToDuElementName();
-
-                            public void Convert(Concatenation.Inner inner, StringBuilder duElementName)
-                            {
-                                RepetitionToDuElementName.Instance.Visit(inner.Repetition, duElementName);
-                            }
-                        }
-
-                        private sealed class RepetitionToDuElementName : Repetition.Visitor<Root.Void, StringBuilder>
-                        {
-                            private RepetitionToDuElementName()
-                            {
-                            }
-
-                            public static RepetitionToDuElementName Instance { get; } = new RepetitionToDuElementName();
-
-                            protected internal override Root.Void Accept(Repetition.ElementOnly node, StringBuilder context)
-                            {
-                                //// TODO it's tempting to prepend with "One", but what if the element is an optional?
-                                ElementToNaturalLanguageName.Instance.Visit(node.Element, context);
-                                return default;
-                            }
-
-                            protected internal override Root.Void Accept(Repetition.RepeatAndElement node, StringBuilder context)
-                            {
-                                RepeatToDuElementName.Instance.Visit(node.Repeat, context);
-                                ElementToNaturalLanguageName.Instance.Visit(node.Element, context);
-                                return default;
-                            }
-
-                            private sealed class RepeatToDuElementName : Repeat.Visitor<Root.Void, StringBuilder>
-                            {
-                                private RepeatToDuElementName()
-                                {
-                                }
-
-                                public static RepeatToDuElementName Instance { get; } = new RepeatToDuElementName();
-
-                                protected internal override Root.Void Accept(Repeat.Count node, StringBuilder context)
-                                {
-                                    var count = DigitsToInt.Instance.Convert(node.Digits, default);
-                                    var numberWord = IntToNumberWord(count);
-                                    context.Append(numberWord);
-                                    //// TODO it would be really nice to put an "s" after the next word taht the caller appends if this is != 1
-                                    return default;
-                                }
-
-                                private static string IntToNumberWord(int value)
-                                {
-                                    //// TODO use a standard implementation for this
-                                    if (value == 0)
-                                    {
-                                        return "Zero";
-                                    }
-                                    else if (value == 1)
-                                    {
-                                        return "One";
-                                    }
-                                    else if (value == 2)
-                                    {
-                                        return "Two";
-                                    }
-                                    else if (value == 3)
-                                    {
-                                        return "Three";
-                                    }
-                                    else if (value == 4)
-                                    {
-                                        return "Four";
-                                    }
-                                    else if (value == 5)
-                                    {
-                                        return "Five";
-                                    }
-                                    else if (value == 6)
-                                    {
-                                        return "Six";
-                                    }
-                                    else if (value == 7)
-                                    {
-                                        return "Seven";
-                                    }
-                                    else if (value == 8)
-                                    {
-                                        return "Eight";
-                                    }
-                                    else if (value == 9)
-                                    {
-                                        return "Nine";
-                                    }
-                                    else
-                                    {
-                                        throw new Exception("TODO use a standard implementation");
-                                    }
-                                }
-
-                                protected internal override Root.Void Accept(Repeat.Range node, StringBuilder context)
-                                {
-                                    if (!node.PrefixDigits.Any())
-                                    {
-                                        if (!node.SuffixDigits.Any())
-                                        {
-                                            context.Append("AnyNumberOf");
-                                            return default;
-                                        }
-                                        else
-                                        {
-                                            context.Append("ZeroTo");
-                                            var count = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
-                                            var numberWord = IntToNumberWord(count);
-                                            context.Append(numberWord);
-                                            return default;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (!node.SuffixDigits.Any())
-                                        {
-                                            context.Append("AtLeast");
-                                            var count = DigitsToInt.Instance.Convert(node.PrefixDigits, default);
-                                            var numberWord = IntToNumberWord(count);
-                                            context.Append(numberWord);
-                                            return default;
-                                        }
-                                        else
-                                        {
-                                            var prefixCount = DigitsToInt.Instance.Convert(node.PrefixDigits, default);
-                                            var prefixNumberWord = IntToNumberWord(prefixCount);
-                                            context.Append(prefixNumberWord);
-                                            context.Append("To");
-                                            
-                                            var suffixCount = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
-                                            var suffixNumberWord = IntToNumberWord(suffixCount);
-                                            context.Append(suffixNumberWord);
-                                            return default;
-                                        }
-                                    }
-                                }
-
-                                private sealed class DigitsToInt
-                                {
-                                    private DigitsToInt()
-                                    {
-                                    }
-
-                                    public static DigitsToInt Instance { get; } = new DigitsToInt();
-
-                                    public int Convert(IEnumerable<Digit> digits, Root.Void context)
-                                    {
-                                        var value = 0;
-                                        foreach (var digit in digits)
-                                        {
-                                            value *= 10;
-                                            value += DigitToInt.Instance.Visit(digit, default);
-                                        }
-
-                                        return value;
-                                    }
-
-                                    private sealed class DigitToInt : Digit.Visitor<int, Root.Void>
-                                    {
-                                        private DigitToInt()
-                                        {
-                                        }
-
-                                        public static DigitToInt Instance { get; } = new DigitToInt();
-
-                                        protected internal override int Accept(Digit.x30 node, Root.Void context)
-                                        {
-                                            return 0x30 - '0';
-                                        }
-
-                                        protected internal override int Accept(Digit.x31 node, Root.Void context)
-                                        {
-                                            return 0x31 - '0';
-                                        }
-
-                                        protected internal override int Accept(Digit.x32 node, Root.Void context)
-                                        {
-                                            return 0x32 - '0';
-                                        }
-
-                                        protected internal override int Accept(Digit.x33 node, Root.Void context)
-                                        {
-                                            return 0x33 - '0';
-                                        }
-
-                                        protected internal override int Accept(Digit.x34 node, Root.Void context)
-                                        {
-                                            return 0x34 - '0';
-                                        }
-
-                                        protected internal override int Accept(Digit.x35 node, Root.Void context)
-                                        {
-                                            return 0x35 - '0';
-                                        }
-
-                                        protected internal override int Accept(Digit.x36 node, Root.Void context)
-                                        {
-                                            return 0x36 - '0';
-                                        }
-
-                                        protected internal override int Accept(Digit.x37 node, Root.Void context)
-                                        {
-                                            return 0x37 - '0';
-                                        }
-
-                                        protected internal override int Accept(Digit.x38 node, Root.Void context)
-                                        {
-                                            return 0x38 - '0';
-                                        }
-
-                                        protected internal override int Accept(Digit.x39 node, Root.Void context)
-                                        {
-                                            return 0x39 - '0';
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    private sealed class ConcatenationToDuElementProperties
-                    {
-                        private ConcatenationToDuElementProperties()
-                        {
-                        }
-
-                        public static ConcatenationToDuElementProperties Instance { get; } = new ConcatenationToDuElementProperties();
-
-                        public IEnumerable<PropertyDefinition> Convert(Concatenation concatenation, Root.Void context)
-                        {
-                            //// TODO implement this
-                            return Enumerable.Empty<PropertyDefinition>();
-                        }
-                    }
+                        },
+                        Enumerable.Empty<Class>(), //// TODO implement this //// TODO you wrote this because you thought this is where the "option" and "group" classes would happen
+                        duElementProperties);
                 }
 
-                private sealed class InnerToDuElement
+                private sealed class ConcatenationToDuElementName
                 {
-                    private InnerToDuElement()
+                    private ConcatenationToDuElementName()
                     {
                     }
 
-                    public static InnerToDuElement Instance { get; } = new InnerToDuElement();
+                    public static ConcatenationToDuElementName Instance { get; } = new ConcatenationToDuElementName();
 
-                    public Class Convert(Alternation.Inner inner, string baseType)
+                    public void Convert(Concatenation concatenation, StringBuilder duElementName)
                     {
-                        return ConcatenationToDuElement.Instance.Convert(inner.Concatenation, baseType);
+                        RepetitionToDuElementName.Instance.Visit(concatenation.Repetition, duElementName);
+                        if (!concatenation.Inners.Any())
+                        {
+                            //// TODO this isn't working correctly but you'll definintely need it for some cases:
+                            //// duElementName.Append("Only");
+                        }
+                        else
+                        {
+                            foreach (var inner in concatenation.Inners)
+                            {
+                                duElementName.Append("CombinedWith");
+                                InnerToDuElementName.Instance.Convert(inner, duElementName);
+                            }
+                        }
+                    }
+
+                    private sealed class InnerToDuElementName
+                    {
+                        private InnerToDuElementName()
+                        {
+                        }
+
+                        public static InnerToDuElementName Instance { get; } = new InnerToDuElementName();
+
+                        public void Convert(Concatenation.Inner inner, StringBuilder duElementName)
+                        {
+                            RepetitionToDuElementName.Instance.Visit(inner.Repetition, duElementName);
+                        }
+                    }
+
+                    private sealed class RepetitionToDuElementName : Repetition.Visitor<Root.Void, StringBuilder>
+                    {
+                        private RepetitionToDuElementName()
+                        {
+                        }
+
+                        public static RepetitionToDuElementName Instance { get; } = new RepetitionToDuElementName();
+
+                        protected internal override Root.Void Accept(Repetition.ElementOnly node, StringBuilder context)
+                        {
+                            //// TODO it's tempting to prepend with "One", but what if the element is an optional?
+                            ElementToNaturalLanguageName.Instance.Visit(node.Element, context);
+                            return default;
+                        }
+
+                        protected internal override Root.Void Accept(Repetition.RepeatAndElement node, StringBuilder context)
+                        {
+                            RepeatToDuElementName.Instance.Visit(node.Repeat, context);
+                            ElementToNaturalLanguageName.Instance.Visit(node.Element, context);
+                            return default;
+                        }
+
+                        private sealed class RepeatToDuElementName : Repeat.Visitor<Root.Void, StringBuilder>
+                        {
+                            private RepeatToDuElementName()
+                            {
+                            }
+
+                            public static RepeatToDuElementName Instance { get; } = new RepeatToDuElementName();
+
+                            protected internal override Root.Void Accept(Repeat.Count node, StringBuilder context)
+                            {
+                                var count = DigitsToInt.Instance.Convert(node.Digits, default);
+                                var numberWord = IntToNumberWord(count);
+                                context.Append(numberWord);
+                                //// TODO it would be really nice to put an "s" after the next word taht the caller appends if this is != 1
+                                return default;
+                            }
+
+                            private static string IntToNumberWord(int value)
+                            {
+                                //// TODO use a standard implementation for this
+                                if (value == 0)
+                                {
+                                    return "Zero";
+                                }
+                                else if (value == 1)
+                                {
+                                    return "One";
+                                }
+                                else if (value == 2)
+                                {
+                                    return "Two";
+                                }
+                                else if (value == 3)
+                                {
+                                    return "Three";
+                                }
+                                else if (value == 4)
+                                {
+                                    return "Four";
+                                }
+                                else if (value == 5)
+                                {
+                                    return "Five";
+                                }
+                                else if (value == 6)
+                                {
+                                    return "Six";
+                                }
+                                else if (value == 7)
+                                {
+                                    return "Seven";
+                                }
+                                else if (value == 8)
+                                {
+                                    return "Eight";
+                                }
+                                else if (value == 9)
+                                {
+                                    return "Nine";
+                                }
+                                else
+                                {
+                                    throw new Exception("TODO use a standard implementation");
+                                }
+                            }
+
+                            protected internal override Root.Void Accept(Repeat.Range node, StringBuilder context)
+                            {
+                                if (!node.PrefixDigits.Any())
+                                {
+                                    if (!node.SuffixDigits.Any())
+                                    {
+                                        context.Append("AnyNumberOf");
+                                        return default;
+                                    }
+                                    else
+                                    {
+                                        context.Append("ZeroTo");
+                                        var count = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
+                                        var numberWord = IntToNumberWord(count);
+                                        context.Append(numberWord);
+                                        return default;
+                                    }
+                                }
+                                else
+                                {
+                                    if (!node.SuffixDigits.Any())
+                                    {
+                                        context.Append("AtLeast");
+                                        var count = DigitsToInt.Instance.Convert(node.PrefixDigits, default);
+                                        var numberWord = IntToNumberWord(count);
+                                        context.Append(numberWord);
+                                        return default;
+                                    }
+                                    else
+                                    {
+                                        var prefixCount = DigitsToInt.Instance.Convert(node.PrefixDigits, default);
+                                        var prefixNumberWord = IntToNumberWord(prefixCount);
+                                        context.Append(prefixNumberWord);
+                                        context.Append("To");
+
+                                        var suffixCount = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
+                                        var suffixNumberWord = IntToNumberWord(suffixCount);
+                                        context.Append(suffixNumberWord);
+                                        return default;
+                                    }
+                                }
+                            }
+
+                            private sealed class DigitsToInt
+                            {
+                                private DigitsToInt()
+                                {
+                                }
+
+                                public static DigitsToInt Instance { get; } = new DigitsToInt();
+
+                                public int Convert(IEnumerable<Digit> digits, Root.Void context)
+                                {
+                                    var value = 0;
+                                    foreach (var digit in digits)
+                                    {
+                                        value *= 10;
+                                        value += DigitToInt.Instance.Visit(digit, default);
+                                    }
+
+                                    return value;
+                                }
+
+                                private sealed class DigitToInt : Digit.Visitor<int, Root.Void>
+                                {
+                                    private DigitToInt()
+                                    {
+                                    }
+
+                                    public static DigitToInt Instance { get; } = new DigitToInt();
+
+                                    protected internal override int Accept(Digit.x30 node, Root.Void context)
+                                    {
+                                        return 0x30 - '0';
+                                    }
+
+                                    protected internal override int Accept(Digit.x31 node, Root.Void context)
+                                    {
+                                        return 0x31 - '0';
+                                    }
+
+                                    protected internal override int Accept(Digit.x32 node, Root.Void context)
+                                    {
+                                        return 0x32 - '0';
+                                    }
+
+                                    protected internal override int Accept(Digit.x33 node, Root.Void context)
+                                    {
+                                        return 0x33 - '0';
+                                    }
+
+                                    protected internal override int Accept(Digit.x34 node, Root.Void context)
+                                    {
+                                        return 0x34 - '0';
+                                    }
+
+                                    protected internal override int Accept(Digit.x35 node, Root.Void context)
+                                    {
+                                        return 0x35 - '0';
+                                    }
+
+                                    protected internal override int Accept(Digit.x36 node, Root.Void context)
+                                    {
+                                        return 0x36 - '0';
+                                    }
+
+                                    protected internal override int Accept(Digit.x37 node, Root.Void context)
+                                    {
+                                        return 0x37 - '0';
+                                    }
+
+                                    protected internal override int Accept(Digit.x38 node, Root.Void context)
+                                    {
+                                        return 0x38 - '0';
+                                    }
+
+                                    protected internal override int Accept(Digit.x39 node, Root.Void context)
+                                    {
+                                        return 0x39 - '0';
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
+                private sealed class ConcatenationToDuElementProperties
+                {
+                    private ConcatenationToDuElementProperties()
+                    {
+                    }
+
+                    public static ConcatenationToDuElementProperties Instance { get; } = new ConcatenationToDuElementProperties();
+
+                    public IEnumerable<PropertyDefinition> Convert(Concatenation concatenation, Root.Void context)
+                    {
+                        //// TODO implement this
+                        return Enumerable.Empty<PropertyDefinition>();
+                    }
+                }
             }
+
+            private sealed class InnerToDuElement
+            {
+                private InnerToDuElement()
+                {
+                }
+
+                public static InnerToDuElement Instance { get; } = new InnerToDuElement();
+
+                public Class Convert(Alternation.Inner inner, string baseType)
+                {
+                    return ConcatenationToDuElement.Instance.Convert(inner.Concatenation, baseType);
+                }
+            }
+
         }
 
         private sealed class RuleNameToString
@@ -693,7 +700,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
             public static RuleNameToString Instance { get; } = new RuleNameToString();
 
-            public void Convert(RuleName ruleName, StringBuilder builder)
+            public void Convert(AbnfParser.CstNodes.RuleName ruleName, StringBuilder builder)
             {
                 var alphaToString = new AlphaToString();
                 alphaToString.Visit(ruleName.Alpha, builder);
@@ -703,21 +710,21 @@ namespace AbnfParserGenerator.CstNodesGenerator
                 }
             }
 
-            private sealed class RuleNameInnerToString : RuleName.Inner.Visitor<Root.Void, StringBuilder>
+            private sealed class RuleNameInnerToString : AbnfParser.CstNodes.RuleName.Inner.Visitor<Root.Void, StringBuilder>
             {
-                protected internal override Root.Void Accept(RuleName.Inner.AlphaInner node, StringBuilder context)
+                protected internal override Root.Void Accept(AbnfParser.CstNodes.RuleName.Inner.AlphaInner node, StringBuilder context)
                 {
                     new AlphaToString().Visit(node.Alpha, context);
                     return default;
                 }
 
-                protected internal override Root.Void Accept(RuleName.Inner.DigitInner node, StringBuilder context)
+                protected internal override Root.Void Accept(AbnfParser.CstNodes.RuleName.Inner.DigitInner node, StringBuilder context)
                 {
                     new DigitToString().Visit(node.Digit, context);
                     return default;
                 }
 
-                protected internal override Root.Void Accept(RuleName.Inner.DashInner node, StringBuilder context)
+                protected internal override Root.Void Accept(AbnfParser.CstNodes.RuleName.Inner.DashInner node, StringBuilder context)
                 {
                     //// TODO traverse all the way down the sub-nodes
                     context.Append((char)0x2D);
