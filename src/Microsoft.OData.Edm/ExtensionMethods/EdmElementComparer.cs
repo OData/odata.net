@@ -56,7 +56,7 @@ namespace Microsoft.OData.Edm
                 case EdmTypeKind.None:
                     return otherType.TypeKind == EdmTypeKind.None;
                 default:
-                    throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_TypeKind(thisType.TypeKind));
+                    throw new InvalidOperationException(Error.Format(SRResources.UnknownEnumVal_TypeKind, thisType.TypeKind));
             }
         }
 

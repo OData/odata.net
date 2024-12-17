@@ -155,7 +155,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 {
                     // If childValues is null, then it is the case when a required type attribute was expected.
                     // In this case, we do not report the error as it should already be reported by EdmXmlDocumentParser.RequiredType method.
-                    this.ReportError(parentLocation, EdmErrorCode.MissingType, Edm.Strings.CsdlParser_MissingTypeAttributeOrElement);
+                    this.ReportError(parentLocation, EdmErrorCode.MissingType, SRResources.CsdlParser_MissingTypeAttributeOrElement);
                 }
                 else
                 {
@@ -403,7 +403,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             IEnumerable<CsdlExpressionBase> expressions = childValues.ValuesOfType<CsdlExpressionBase>();
             if (expressions.Count() != 1)
             {
-                this.ReportError(element.Location, EdmErrorCode.InvalidLabeledElementExpressionIncorrectNumberOfOperands, Edm.Strings.CsdlParser_InvalidLabeledElementExpressionIncorrectNumberOfOperands);
+                this.ReportError(element.Location, EdmErrorCode.InvalidLabeledElementExpressionIncorrectNumberOfOperands, SRResources.CsdlParser_InvalidLabeledElementExpressionIncorrectNumberOfOperands);
             }
 
             return new CsdlLabeledExpression(
@@ -529,7 +529,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             IEnumerable<CsdlExpressionBase> expressions = childValues.ValuesOfType<CsdlExpressionBase>();
             if (expressions.Count() != 3)
             {
-                this.ReportError(element.Location, EdmErrorCode.InvalidIfExpressionIncorrectNumberOfOperands, Edm.Strings.CsdlParser_InvalidIfExpressionIncorrectNumberOfOperands);
+                this.ReportError(element.Location, EdmErrorCode.InvalidIfExpressionIncorrectNumberOfOperands, SRResources.CsdlParser_InvalidIfExpressionIncorrectNumberOfOperands);
             }
 
             return new CsdlIfExpression(
@@ -547,7 +547,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             IEnumerable<CsdlExpressionBase> expressions = childValues.ValuesOfType<CsdlExpressionBase>();
             if (expressions.Count() != 1)
             {
-                this.ReportError(element.Location, EdmErrorCode.InvalidCastExpressionIncorrectNumberOfOperands, Edm.Strings.CsdlParser_InvalidCastExpressionIncorrectNumberOfOperands);
+                this.ReportError(element.Location, EdmErrorCode.InvalidCastExpressionIncorrectNumberOfOperands, SRResources.CsdlParser_InvalidCastExpressionIncorrectNumberOfOperands);
             }
 
             return new CsdlCastExpression(type, expressions.ElementAtOrDefault(0), element.Location);
@@ -561,7 +561,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             IEnumerable<CsdlExpressionBase> expressions = childValues.ValuesOfType<CsdlExpressionBase>();
             if (expressions.Count() != 1)
             {
-                this.ReportError(element.Location, EdmErrorCode.InvalidIsOfExpressionIncorrectNumberOfOperands, Edm.Strings.CsdlParser_InvalidIsOfExpressionIncorrectNumberOfOperands);
+                this.ReportError(element.Location, EdmErrorCode.InvalidIsOfExpressionIncorrectNumberOfOperands, SRResources.CsdlParser_InvalidIsOfExpressionIncorrectNumberOfOperands);
             }
 
             return new CsdlIsOfExpression(type, expressions.ElementAtOrDefault(0), element.Location);

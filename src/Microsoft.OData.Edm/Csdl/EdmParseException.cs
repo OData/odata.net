@@ -13,7 +13,6 @@ namespace Microsoft.OData.Edm.Csdl
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.OData.Edm.Validation;
-    using ErrorStrings = Microsoft.OData.Edm.Strings;
 
     /// <summary>
     /// Exception type representing a failure to parse an EDM document. Carries the set of errors along with it.
@@ -54,7 +53,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <returns>The exception message.</returns>
         private static string ConstructMessage(IEnumerable<EdmError> parseErrors)
         {
-            return ErrorStrings.EdmParseException_ErrorsEncounteredInEdmx(string.Join(Environment.NewLine, parseErrors.Select(p => p.ToString()).ToArray()));
+            return Error.Format(SRResources.EdmParseException_ErrorsEncounteredInEdmx, string.Join(Environment.NewLine, parseErrors.Select(p => p.ToString()).ToArray()));
         }
     }
 }

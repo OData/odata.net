@@ -15,6 +15,7 @@ using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData
 {
@@ -272,7 +273,7 @@ namespace Microsoft.OData
                     builder.AppendLine(error.ToString());
                 }
 
-                throw new ODataException(Strings.ODataMetadataOutputContext_ErrorWritingMetadata(builder.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataMetadataOutputContext_ErrorWritingMetadata, builder.ToString()));
             }
         }
 
@@ -296,7 +297,7 @@ namespace Microsoft.OData
                     builder.AppendLine(error.ToString());
                 }
 
-                throw new ODataException(Strings.ODataMetadataOutputContext_ErrorWritingMetadata(builder.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataMetadataOutputContext_ErrorWritingMetadata, builder.ToString()));
             }
         }
     }

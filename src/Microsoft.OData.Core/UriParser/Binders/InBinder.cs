@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
     using System.Linq;
     using System.Text;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Class that knows how to bind the In operator.
@@ -87,7 +87,7 @@ namespace Microsoft.OData.UriParser
             SingleValueNode operand = this.bindMethod(queryToken) as SingleValueNode;
             if (operand == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_LeftOperandNotSingleValue);
+                throw new ODataException(SRResources.MetadataBinder_LeftOperandNotSingleValue);
             }
 
             return operand;
@@ -106,21 +106,25 @@ namespace Microsoft.OData.UriParser
             LiteralToken literalToken = queryToken as LiteralToken;
             if (literalToken != null)
             {
-                string originalLiteralText = literalToken.OriginalText;
-
                 // Parentheses-based collections are not standard JSON but bracket-based ones are.
                 // Temporarily switch our collection to bracket-based so that the JSON reader will
                 // correctly parse the collection. Then pass the original literal text to the token.
-                string bracketLiteralText = originalLiteralText;
-                if (bracketLiteralText[0] == '(')
-                {
-                    Debug.Assert(bracketLiteralText[bracketLiteralText.Length - 1] == ')',
-                        "Collection with opening '(' should have corresponding ')'");
+                string bracketLiteralText = literalToken.OriginalText;
 
-                    StringBuilder replacedText = new StringBuilder(bracketLiteralText);
-                    replacedText[0] = '[';
-                    replacedText[replacedText.Length - 1] = ']';
-                    bracketLiteralText = replacedText.ToString();
+                if (bracketLiteralText[0] == '(' || bracketLiteralText[0] == '[')
+                {
+                    Debug.Assert((bracketLiteralText[0] == '(' && bracketLiteralText[^1] == ')') || (bracketLiteralText[0] == '[' && bracketLiteralText[^1] == ']'),
+                        $"Collection with opening '{bracketLiteralText[0]}' should have corresponding '{(bracketLiteralText[0] == '(' ? ')' : ']')}'");
+
+                    if (bracketLiteralText[0] == '(' && bracketLiteralText[^1] == ')')
+                    {
+                        bracketLiteralText = string.Create(bracketLiteralText.Length, bracketLiteralText, (span, state) =>
+                        {
+                            state.AsSpan().CopyTo(span);
+                            span[0] = '[';
+                            span[^1] = ']';
+                        });
+                    }
 
                     Debug.Assert(expectedType.IsCollection());
                     string expectedTypeFullName = expectedType.Definition.AsElementType().FullTypeName();
@@ -155,7 +159,7 @@ namespace Microsoft.OData.UriParser
                 }
 
                 object collection = ODataUriConversionUtils.ConvertFromCollectionValue(bracketLiteralText, model, expectedType);
-                LiteralToken collectionLiteralToken = new LiteralToken(collection, originalLiteralText, expectedType);
+                LiteralToken collectionLiteralToken = new LiteralToken(collection, literalToken.OriginalText, expectedType);
                 operand = this.bindMethod(collectionLiteralToken) as CollectionConstantNode;
             }
             else
@@ -173,7 +177,7 @@ namespace Microsoft.OData.UriParser
 
             if (operand == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_RightOperandNotCollectionValue);
+                throw new ODataException(SRResources.MetadataBinder_RightOperandNotCollectionValue);
             }
 
             return operand;
@@ -236,14 +240,14 @@ namespace Microsoft.OData.UriParser
                         }
                         else
                         {
-                            throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(subStr));
+                            throw new ODataException(Error.Format(SRResources.StringItemShouldBeQuoted, subStr));
                         }
 
                         break;
 
                     default:
                         // any other character between items is not valid.
-                        throw new ODataException(ODataErrorStrings.StringItemShouldBeQuoted(ch));
+                        throw new ODataException(Error.Format(SRResources.StringItemShouldBeQuoted, ch));
                 }
             }
 

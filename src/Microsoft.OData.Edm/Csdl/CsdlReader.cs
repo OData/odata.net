@@ -374,7 +374,7 @@ namespace Microsoft.OData.Edm.Csdl
             {
                 if (!reference.Includes.Any() && !reference.IncludeAnnotations.Any())
                 {
-                    this.RaiseError(EdmErrorCode.ReferenceElementMustContainAtLeastOneIncludeOrIncludeAnnotationsElement, Strings.EdmxParser_InvalidReferenceIncorrectNumberOfIncludes);
+                    this.RaiseError(EdmErrorCode.ReferenceElementMustContainAtLeastOneIncludeOrIncludeAnnotationsElement, SRResources.EdmxParser_InvalidReferenceIncorrectNumberOfIncludes);
                     continue;
                 }
 
@@ -391,7 +391,7 @@ namespace Microsoft.OData.Edm.Csdl
                 XmlReader referencedXmlReader = this.getReferencedModelReaderFunc(new Uri(reference.Uri, UriKind.RelativeOrAbsolute));
                 if (referencedXmlReader == null)
                 {
-                    this.RaiseError(EdmErrorCode.UnresolvedReferenceUriInEdmxReference, Strings.EdmxParser_UnresolvedReferenceUriInEdmxReference);
+                    this.RaiseError(EdmErrorCode.UnresolvedReferenceUriInEdmxReference, SRResources.EdmxParser_UnresolvedReferenceUriInEdmxReference);
                     continue;
                 }
 
@@ -449,7 +449,7 @@ namespace Microsoft.OData.Edm.Csdl
                 if (this.reader.LocalName != CsdlConstants.Element_Edmx ||
                     !CsdlConstants.SupportedEdmxNamespaces.TryGetValue(this.reader.NamespaceURI, out csdlVersion))
                 {
-                    this.RaiseError(EdmErrorCode.UnexpectedXmlElement, Edm.Strings.XmlParser_UnexpectedRootElement(this.reader.Name, CsdlConstants.Element_Edmx));
+                    this.RaiseError(EdmErrorCode.UnexpectedXmlElement, Error.Format(SRResources.XmlParser_UnexpectedRootElement, this.reader.Name, CsdlConstants.Element_Edmx));
                     return false;
                 }
 
@@ -543,7 +543,7 @@ namespace Microsoft.OData.Edm.Csdl
             Version edmxVersionFromAttribute = null;
             if (edmxVersionString != null && (!TryParseVersion(edmxVersionString, out edmxVersionFromAttribute) || edmxVersionFromAttribute.Major != edmxVersion.Major))
             {
-                this.RaiseError(EdmErrorCode.InvalidVersionNumber, Edm.Strings.EdmxParser_EdmxVersionMismatch);
+                this.RaiseError(EdmErrorCode.InvalidVersionNumber, SRResources.EdmxParser_EdmxVersionMismatch);
             }
 
             this.ParseElement(CsdlConstants.Element_Edmx, this.edmxParserLookup);
@@ -596,7 +596,7 @@ namespace Microsoft.OData.Edm.Csdl
             else
             {
                 // Edmx should contain at most one element - either <DataServices> or <Runtime>.
-                this.RaiseError(EdmErrorCode.UnexpectedXmlElement, Edm.Strings.EdmxParser_BodyElement(CsdlConstants.Element_DataServices));
+                this.RaiseError(EdmErrorCode.UnexpectedXmlElement, Error.Format(SRResources.EdmxParser_BodyElement, CsdlConstants.Element_DataServices));
 
                 // Read to the end of the element anyway, to let the caller move on to the rest of the document.
                 elementParsers = EmptyParserLookup;
@@ -643,7 +643,7 @@ namespace Microsoft.OData.Edm.Csdl
 
         private void RaiseEmptyFile()
         {
-            this.RaiseError(EdmErrorCode.EmptyFile, Edm.Strings.XmlParser_EmptySchemaTextReader);
+            this.RaiseError(EdmErrorCode.EmptyFile, SRResources.XmlParser_EmptySchemaTextReader);
         }
 
         private CsdlLocation Location()

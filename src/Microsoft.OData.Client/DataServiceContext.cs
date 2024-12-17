@@ -29,10 +29,8 @@ namespace Microsoft.OData.Client
     using Microsoft.OData;
     using Microsoft.OData.Client.Annotation;
     using Microsoft.OData.Client.Metadata;
-    using Microsoft.OData.Client.Providers;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
-    using ClientStrings = Microsoft.OData.Client.Strings;
 
     #endregion Namespaces
     /// <summary>
@@ -1016,7 +1014,7 @@ namespace Microsoft.OData.Client
 
                 if (context != this)
                 {
-                    throw Error.Argument(Strings.Context_DidNotOriginateAsync, "asyncResult");
+                    throw Error.Argument(SRResources.Context_DidNotOriginateAsync, "asyncResult");
                 }
             }
 
@@ -1374,14 +1372,14 @@ namespace Microsoft.OData.Client
                 BaseEntityType baseEntity = entity as BaseEntityType;
                 if (baseEntity == null)
                 {
-                    throw Error.InvalidOperation(Strings.Context_EntityMediaLinksNotTrackedInEntity);
+                    throw Error.InvalidOperation(SRResources.Context_EntityMediaLinksNotTrackedInEntity);
                 }
 
                 descriptor = baseEntity.EntityDescriptor;
 
                 if (descriptor == null)
                 {
-                    throw Error.InvalidOperation(Strings.Context_EntityInNonTrackedContextLacksMediaLinks);
+                    throw Error.InvalidOperation(SRResources.Context_EntityInNonTrackedContextLacksMediaLinks);
                 }
             }
             else
@@ -1602,7 +1600,7 @@ namespace Microsoft.OData.Client
             if (clientType.MediaDataMember != null)
             {
                 throw new ArgumentException(
-                    Strings.Context_SetSaveStreamOnMediaEntryProperty(clientType.ElementTypeName),
+                    Error.Format(SRResources.Context_SetSaveStreamOnMediaEntryProperty, clientType.ElementTypeName),
                     nameof(entity));
             }
 
@@ -1621,7 +1619,7 @@ namespace Microsoft.OData.Client
                     break;
 
                 default:
-                    throw new DataServiceClientException(Strings.Context_SetSaveStreamOnInvalidEntityState(Enum.GetName(typeof(EntityStates), box.State)));
+                    throw new DataServiceClientException(Error.Format(SRResources.Context_SetSaveStreamOnInvalidEntityState, Enum.GetName(typeof(EntityStates), box.State)));
             }
 
             // Note that there's no need to mark the entity as updated because we consider the presence
@@ -1667,14 +1665,14 @@ namespace Microsoft.OData.Client
 
             if (string.IsNullOrEmpty(args.ContentType))
             {
-                throw Error.Argument(Strings.Context_ContentTypeRequiredForNamedStream, "args");
+                throw Error.Argument(SRResources.Context_ContentTypeRequiredForNamedStream, "args");
             }
 
             EntityDescriptor box = this.entityTracker.GetEntityDescriptor(entity);
             Debug.Assert(box.State != EntityStates.Detached, "We should never have a detached entity in the entityDescriptor dictionary.");
             if (box.State == EntityStates.Deleted)
             {
-                throw new DataServiceClientException(Strings.Context_SetSaveStreamOnInvalidEntityState(Enum.GetName(typeof(EntityStates), box.State)));
+                throw new DataServiceClientException(Error.Format(SRResources.Context_SetSaveStreamOnInvalidEntityState, Enum.GetName(typeof(EntityStates), box.State)));
             }
 
             StreamDescriptor namedStream = box.AddStreamInfoIfNotPresent(name);
@@ -2003,7 +2001,7 @@ namespace Microsoft.OData.Client
             QueryOperationResponse<object> result = (QueryOperationResponse<object>)DataServiceRequest.EndExecute<object>(this, this, Util.ExecuteMethodNameForVoidResults, asyncResult);
             if (result.Any())
             {
-                throw new DataServiceClientException(Strings.Context_EndExecuteExpectedVoidResponse);
+                throw new DataServiceClientException(SRResources.Context_EndExecuteExpectedVoidResponse);
             }
 
             return result;
@@ -2058,7 +2056,7 @@ namespace Microsoft.OData.Client
             QueryOperationResponse<object> result = (QueryOperationResponse<object>)Execute<object>(requestUri, httpMethod, false, operationParameters);
             if (result.Any())
             {
-                throw new DataServiceClientException(Strings.Context_ExecuteExpectedVoidResponse);
+                throw new DataServiceClientException(SRResources.Context_ExecuteExpectedVoidResponse);
             }
 
             return result;
@@ -2237,7 +2235,7 @@ namespace Microsoft.OData.Client
         {
             if (objects == null || objects.Length == 0)
             {
-                throw Error.Argument(Strings.Util_EmptyArray, nameof(objects));
+                throw Error.Argument(SRResources.Util_EmptyArray, nameof(objects));
             }
 
             BulkUpdateSaveResult result = new BulkUpdateSaveResult(this, Util.BulkUpdateMethodName, SaveChangesOptions.BulkUpdate, callback: null, state: null);
@@ -2274,7 +2272,7 @@ namespace Microsoft.OData.Client
         {
             if (objects == null || objects.Length == 0)
             {
-                throw Error.Argument(Strings.Util_EmptyArray, nameof(objects));
+                throw Error.Argument(SRResources.Util_EmptyArray, nameof(objects));
             }
 
             BulkUpdateSaveResult result = new BulkUpdateSaveResult(this, Util.BulkUpdateMethodName, SaveChangesOptions.BulkUpdate, callback, state);
@@ -2450,7 +2448,7 @@ namespace Microsoft.OData.Client
             {
                 if (delay)
                 {   // can't have non-added relationship when source or target is in added state
-                    throw Error.InvalidOperation(Strings.Context_NoRelationWithInsertEnd);
+                    throw Error.InvalidOperation(SRResources.Context_NoRelationWithInsertEnd);
                 }
 
                 if (existing == null)
@@ -2528,7 +2526,7 @@ namespace Microsoft.OData.Client
             // Check for deleted source entity
             if (sourceResource.State == EntityStates.Deleted)
             {
-                throw Error.InvalidOperation(Strings.Context_SetRelatedObjectLinkSourceDeleted);
+                throw Error.InvalidOperation(SRResources.Context_SetRelatedObjectLinkSourceDeleted);
             }
 
             // Validate that the property is valid and exists on the source
@@ -2540,7 +2538,7 @@ namespace Microsoft.OData.Client
 
             if (property.IsKnownType || property.IsEntityCollection)
             {
-                throw Error.InvalidOperation(Strings.Context_SetRelatedObjectLinkNonCollectionOnly);
+                throw Error.InvalidOperation(SRResources.Context_SetRelatedObjectLinkNonCollectionOnly);
             }
 
             // if (property.IsEntityCollection) then property.PropertyType is the collection elementType
@@ -2551,7 +2549,7 @@ namespace Microsoft.OData.Client
             if (!sourcePropertyType.ElementType.IsInstanceOfType(target))
             {
                 // target is not of the correct type
-                throw Error.Argument(Strings.Context_RelationNotRefOrCollection, nameof(target));
+                throw Error.Argument(SRResources.Context_RelationNotRefOrCollection, nameof(target));
             }
 
             LinkDescriptor descriptor = new LinkDescriptor(source, sourceProperty, target, this.model);
@@ -2609,7 +2607,7 @@ namespace Microsoft.OData.Client
             // Check for deleted source entity
             if (sourceResource.State == EntityStates.Deleted)
             {
-                throw Error.InvalidOperation(Strings.Context_AddRelatedObjectSourceDeleted);
+                throw Error.InvalidOperation(SRResources.Context_AddRelatedObjectSourceDeleted);
             }
 
             // Validate that the property is valid and exists on the source
@@ -2617,7 +2615,7 @@ namespace Microsoft.OData.Client
             ClientPropertyAnnotation property = parentType.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
             if (property.IsKnownType || !property.IsEntityCollection)
             {
-                throw Error.InvalidOperation(Strings.Context_AddRelatedObjectCollectionOnly);
+                throw Error.InvalidOperation(SRResources.Context_AddRelatedObjectCollectionOnly);
             }
 
             // Validate that the target is an entity
@@ -2629,7 +2627,7 @@ namespace Microsoft.OData.Client
             if (!propertyElementType.ElementType.IsAssignableFrom(childType.ElementType))
             {
                 // target is not of the correct type
-                throw Error.Argument(Strings.Context_RelationNotRefOrCollection, "target");
+                throw Error.Argument(SRResources.Context_RelationNotRefOrCollection, "target");
             }
 
             var targetResource = new EntityDescriptor(this.model)
@@ -2669,7 +2667,7 @@ namespace Microsoft.OData.Client
             // Check for deleted source entity
             if (sourceResource.State == EntityStates.Deleted)
             {
-                throw Error.InvalidOperation(Strings.Context_SetRelatedObjectSourceDeleted);
+                throw Error.InvalidOperation(SRResources.Context_SetRelatedObjectSourceDeleted);
             }
 
             // Validate that the property is valid and exists on the source
@@ -2678,7 +2676,7 @@ namespace Microsoft.OData.Client
 
             if (property.IsKnownType || property.IsEntityCollection)
             {
-                throw Error.InvalidOperation(Strings.Context_SetRelatedObjectNonCollectionOnly);
+                throw Error.InvalidOperation(SRResources.Context_SetRelatedObjectNonCollectionOnly);
             }
 
             // Validate that the target is an entity
@@ -2691,7 +2689,7 @@ namespace Microsoft.OData.Client
             if (!propertyElementType.ElementType.IsAssignableFrom(childType.ElementType))
             {
                 // target is not of the correct type
-                throw Error.Argument(Strings.Context_RelationNotRefOrCollection, nameof(target));
+                throw Error.Argument(SRResources.Context_RelationNotRefOrCollection, nameof(target));
             }
 
             var targetResource = new EntityDescriptor(this.model)
@@ -2852,7 +2850,7 @@ namespace Microsoft.OData.Client
             // Check for deleted source entity
             if (sourceResource.State == EntityStates.Deleted)
             {
-                throw Error.InvalidOperation(Strings.Context_AddRelatedObjectSourceDeleted);
+                throw Error.InvalidOperation(SRResources.Context_AddRelatedObjectSourceDeleted);
             }
 
             // Validate that the property is valid and exists on the source
@@ -2861,7 +2859,7 @@ namespace Microsoft.OData.Client
 
             if (property.IsKnownType || property.IsEntityCollection)
             {
-                throw Error.InvalidOperation(Strings.Context_UpdateRelatedObjectNonCollectionOnly);
+                throw Error.InvalidOperation(SRResources.Context_UpdateRelatedObjectNonCollectionOnly);
             }
 
             // Validate that the target is an entity
@@ -2872,7 +2870,7 @@ namespace Microsoft.OData.Client
             if (!propertyElementType.ElementType.IsAssignableFrom(childType.ElementType))
             {
                 // target is not of the correct type
-                throw Error.Argument(Strings.Context_RelationNotRefOrCollection, "target");
+                throw Error.Argument(SRResources.Context_RelationNotRefOrCollection, "target");
             }
 
             EntityDescriptor targetResource = this.entityTracker.TryGetEntityDescriptor(target);
@@ -2913,7 +2911,7 @@ namespace Microsoft.OData.Client
             switch (state)
             {
                 case EntityStates.Added:
-                    throw Error.NotSupported(ClientStrings.Context_CannotChangeStateToAdded);
+                    throw Error.NotSupported(SRResources.Context_CannotChangeStateToAdded);
 
                 case EntityStates.Modified:
                     this.UpdateObjectInternal(entity, true /*failIfNotUnchanged*/);
@@ -3605,7 +3603,7 @@ namespace Microsoft.OData.Client
                 !String.IsNullOrEmpty(UriUtil.CreateUri(new Uri("http://ConstBaseUri/ConstService.svc/"), tmp)
                                      .GetComponents(UriComponents.Query | UriComponents.Fragment, UriFormat.SafeUnescaped)))
             {
-                throw Error.Argument(Strings.Context_EntitySetName, "entitySetName");
+                throw Error.Argument(SRResources.Context_EntitySetName, "entitySetName");
             }
         }
 
@@ -3620,7 +3618,7 @@ namespace Microsoft.OData.Client
 
             if (!ClientTypeUtil.TypeIsEntity(entity.GetType(), model))
             {
-                throw Error.Argument(Strings.Content_EntityIsNotEntityType, "entity");
+                throw Error.Argument(SRResources.Content_EntityIsNotEntityType, "entity");
             }
         }
 
@@ -3654,12 +3652,12 @@ namespace Microsoft.OData.Client
             {
                 if (operationParameter == null)
                 {
-                    throw new ArgumentException(Strings.Context_NullElementInOperationParameterArray);
+                    throw new ArgumentException(SRResources.Context_NullElementInOperationParameterArray);
                 }
 
                 if (String.IsNullOrEmpty(operationParameter.Name))
                 {
-                    throw new ArgumentException(Strings.Context_MissingOperationParameterName);
+                    throw new ArgumentException(SRResources.Context_MissingOperationParameterName);
                 }
 
                 String paramName = operationParameter.Name.Trim();
@@ -3669,12 +3667,12 @@ namespace Microsoft.OData.Client
                 {
                     if (string.CompareOrdinal(XmlConstants.HttpMethodGet, httpMethod) == 0)
                     {
-                        throw new ArgumentException(Strings.Context_BodyOperationParametersNotAllowedWithGet);
+                        throw new ArgumentException(SRResources.Context_BodyOperationParametersNotAllowedWithGet);
                     }
 
                     if (!bodyParamNames.Add(paramName))
                     {
-                        throw new ArgumentException(Strings.Context_DuplicateBodyOperationParameterName);
+                        throw new ArgumentException(SRResources.Context_DuplicateBodyOperationParameterName);
                     }
 
                     bodyParams.Add(bodyOperationParameter);
@@ -3686,7 +3684,7 @@ namespace Microsoft.OData.Client
                     {
                         if (!uriParamNames.Add(paramName))
                         {
-                            throw new ArgumentException(Strings.Context_DuplicateUriOperationParameterName);
+                            throw new ArgumentException(SRResources.Context_DuplicateUriOperationParameterName);
                         }
 
                         uriParams.Add(uriOperationParameter);
@@ -3763,19 +3761,19 @@ namespace Microsoft.OData.Client
             // OnlyPostExplicitProperties cannot be used without DataServiceCollection to track properties change
             if (Util.IsFlagSet(options, SaveChangesOptions.PostOnlySetProperties) && !this.UsingDataServiceCollection)
             {
-                throw Error.InvalidOperation(Strings.Context_MustBeUsedWith("SaveChangesOptions.OnlyPostExplicitProperties", "DataServiceCollection"));
+                throw Error.InvalidOperation(Error.Format(SRResources.Context_MustBeUsedWith, "SaveChangesOptions.OnlyPostExplicitProperties", "DataServiceCollection"));
             }
 
             // UseRelativeUri can only be used in Batch Requests
             if (Util.IsFlagSet(options, SaveChangesOptions.UseRelativeUri) && !Util.IsBatch(options))
             {
-                throw Error.InvalidOperation(Strings.Context_MustBeUsedWith("SaveChangesOptions.UseRelativeUri", "DataServiceCollection"));
+                throw Error.InvalidOperation(Error.Format(SRResources.Context_MustBeUsedWith, "SaveChangesOptions.UseRelativeUri", "DataServiceCollection"));
             }
 
             // UseJsonBatch can only be used in Batch Requests
             if (Util.IsFlagSet(options, SaveChangesOptions.UseJsonBatch) && !Util.IsBatch(options))
             {
-                throw Error.InvalidOperation(Strings.Context_MustBeUsedWith("SaveChangesOptions.UseJsonBatch", "DataServiceCollection"));
+                throw Error.InvalidOperation(Error.Format(SRResources.Context_MustBeUsedWith, "SaveChangesOptions.UseJsonBatch", "DataServiceCollection"));
             }
 
             // BulkUpdate cannot be used in Batch Requests
@@ -3809,7 +3807,7 @@ namespace Microsoft.OData.Client
                 string.CompareOrdinal(XmlConstants.HttpMethodPost, httpMethod) != 0 &&
                 string.CompareOrdinal(XmlConstants.HttpMethodDelete, httpMethod) != 0)
             {
-                throw new ArgumentException(Strings.Context_ExecuteExpectsGetOrPostOrDelete, nameof(httpMethod));
+                throw new ArgumentException(SRResources.Context_ExecuteExpectsGetOrPostOrDelete, nameof(httpMethod));
             }
 
             if (ClientTypeUtil.TypeOrElementTypeIsStructured(typeof(TElement)))
@@ -3852,7 +3850,7 @@ namespace Microsoft.OData.Client
 
             if (EntityStates.Added == box.State)
             {
-                throw Error.InvalidOperation(Strings.Context_NoLoadWithInsertEnd);
+                throw Error.InvalidOperation(SRResources.Context_NoLoadWithInsertEnd);
             }
 
             ClientPropertyAnnotation property = type.GetProperty(propertyName, UndeclaredPropertyBehavior.ThrowException);
@@ -3951,7 +3949,7 @@ namespace Microsoft.OData.Client
 
             if (property.IsKnownType)
             {
-                throw Error.InvalidOperation(Strings.Context_RelationNotRefOrCollection);
+                throw Error.InvalidOperation(SRResources.Context_RelationNotRefOrCollection);
             }
 
             if (EntityStates.Unchanged == state && target == null && property.IsEntityCollection)
@@ -3962,11 +3960,11 @@ namespace Microsoft.OData.Client
 
             if (((EntityStates.Added == state) || (EntityStates.Deleted == state)) && !property.IsEntityCollection)
             {
-                throw Error.InvalidOperation(Strings.Context_AddLinkCollectionOnly);
+                throw Error.InvalidOperation(SRResources.Context_AddLinkCollectionOnly);
             }
             else if (EntityStates.Modified == state && property.IsEntityCollection)
             {
-                throw Error.InvalidOperation(Strings.Context_SetLinkReferenceOnly);
+                throw Error.InvalidOperation(SRResources.Context_SetLinkReferenceOnly);
             }
 
             // if (property.IsEntityCollection) then property.PropertyType is the collection elementType
@@ -3977,7 +3975,7 @@ namespace Microsoft.OData.Client
             if ((target != null) && !type.ElementType.IsInstanceOfType(target))
             {
                 // target is not of the correct type
-                throw Error.Argument(Strings.Context_RelationNotRefOrCollection, "target");
+                throw Error.Argument(SRResources.Context_RelationNotRefOrCollection, "target");
             }
 
             if ((EntityStates.Added == state) || (EntityStates.Unchanged == state))
@@ -3986,7 +3984,7 @@ namespace Microsoft.OData.Client
                     ((targetResource != null) && (targetResource.State == EntityStates.Deleted)))
                 {
                     // can't add/attach new relationship when source or target in deleted state
-                    throw Error.InvalidOperation(Strings.Context_NoRelationWithDeleteEnd);
+                    throw Error.InvalidOperation(SRResources.Context_NoRelationWithDeleteEnd);
                 }
             }
 
@@ -4001,7 +3999,7 @@ namespace Microsoft.OData.Client
                         return true;
                     }
 
-                    throw Error.InvalidOperation(Strings.Context_NoRelationWithInsertEnd);
+                    throw Error.InvalidOperation(SRResources.Context_NoRelationWithInsertEnd);
                 }
             }
 
@@ -4044,7 +4042,7 @@ namespace Microsoft.OData.Client
                 requestUri = entityDescriptor.ReadStreamUri;
                 if (requestUri == null)
                 {
-                    throw new ArgumentException(Strings.Context_EntityNotMediaLinkEntry, nameof(entity));
+                    throw new ArgumentException(SRResources.Context_EntityNotMediaLinkEntry, nameof(entity));
                 }
 
                 streamDescriptor = entityDescriptor.DefaultStreamDescriptor;
@@ -4054,14 +4052,14 @@ namespace Microsoft.OData.Client
                 version = Util.ODataVersion4;
                 if (!entityDescriptor.TryGetNamedStreamInfo(name, out streamDescriptor))
                 {
-                    throw new ArgumentException(Strings.Context_EntityDoesNotContainNamedStream(name), nameof(name));
+                    throw new ArgumentException(Error.Format(SRResources.Context_EntityDoesNotContainNamedStream, name), nameof(name));
                 }
 
                 // use the edit link, if self link is not specified.
                 requestUri = streamDescriptor.SelfLink ?? streamDescriptor.EditLink;
                 if (requestUri == null)
                 {
-                    throw new ArgumentException(Strings.Context_MissingSelfAndEditLinkForNamedStream(name), nameof(name));
+                    throw new ArgumentException(Error.Format(SRResources.Context_MissingSelfAndEditLinkForNamedStream, name), nameof(name));
                 }
             }
 
@@ -4088,7 +4086,7 @@ namespace Microsoft.OData.Client
         {
             if (this.MaxProtocolVersionAsVersion < Util.ODataVersion4)
             {
-                throw Error.InvalidOperation(Strings.Context_RequestVersionIsBiggerThanProtocolVersion(Util.ODataVersion4, this.MaxProtocolVersionAsVersion));
+                throw Error.InvalidOperation(Error.Format(SRResources.Context_RequestVersionIsBiggerThanProtocolVersion, Util.ODataVersion4, this.MaxProtocolVersionAsVersion));
             }
         }
 
@@ -4106,7 +4104,7 @@ namespace Microsoft.OData.Client
             ODataResourceMetadataBuilder entityMetadataBuilder = this.GetEntityMetadataBuilder(descriptor.EntitySetName, descriptor.EdmValue);
             if (entityMetadataBuilder == null)
             {
-                throw new InvalidOperationException(Strings.Context_EntityMetadataBuilderIsRequired);
+                throw new InvalidOperationException(SRResources.Context_EntityMetadataBuilderIsRequired);
             }
 
             return entityMetadataBuilder;
@@ -4171,7 +4169,7 @@ namespace Microsoft.OData.Client
             EntityDescriptor resource = this.entityTracker.TryGetEntityDescriptor(entity);
             if (resource == null)
             {
-                throw Error.Argument(Strings.Context_EntityNotContained, "entity");
+                throw Error.Argument(SRResources.Context_EntityNotContained, "entity");
             }
 
             if (resource.State == EntityStates.Modified)
@@ -4183,7 +4181,7 @@ namespace Microsoft.OData.Client
             {
                 if (failIfNotUnchanged)
                 {
-                    throw Error.InvalidOperation(ClientStrings.Context_CannotChangeStateToModifiedIfNotUnchanged);
+                    throw Error.InvalidOperation(SRResources.Context_CannotChangeStateToModifiedIfNotUnchanged);
                 }
 
                 return;
@@ -4237,7 +4235,7 @@ namespace Microsoft.OData.Client
             {
                 if (failIfInAddedState)
                 {
-                    throw Error.InvalidOperation(ClientStrings.Context_CannotChangeStateIfAdded(EntityStates.Deleted));
+                    throw Error.InvalidOperation(Error.Format(SRResources.Context_CannotChangeStateIfAdded, EntityStates.Deleted));
                 }
 
                 // added -> detach
@@ -4311,7 +4309,7 @@ namespace Microsoft.OData.Client
             EntityDescriptor descriptor = this.entityTracker.GetEntityDescriptor(entity);
             if (descriptor.State == EntityStates.Added)
             {
-                throw Error.InvalidOperation(ClientStrings.Context_CannotChangeStateIfAdded(EntityStates.Unchanged));
+                throw Error.InvalidOperation(Error.Format(SRResources.Context_CannotChangeStateIfAdded, EntityStates.Unchanged));
             }
 
             descriptor.State = EntityStates.Unchanged;

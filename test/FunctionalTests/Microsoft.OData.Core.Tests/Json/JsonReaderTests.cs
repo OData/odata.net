@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Buffers;
+using Microsoft.OData.Core;
 using Microsoft.OData.Json;
 using Xunit;
 
@@ -488,7 +489,7 @@ namespace Microsoft.OData.Tests.Json
             using (var reader = new JsonReader(new StringReader(",{}"), isIeee754Compatible: false))
             {
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.ReadAsync());
-                Assert.Equal(Strings.JsonReader_UnexpectedComma("Root"), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReader_UnexpectedComma, "Root"), exception.Message);
             }
         }
 
@@ -499,7 +500,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 await reader.ReadAsync(); // Read start of object
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.ReadAsync());
-                Assert.Equal(Strings.JsonReader_UnexpectedComma("Object"), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReader_UnexpectedComma, "Object"), exception.Message);
             }
         }
 
@@ -512,7 +513,7 @@ namespace Microsoft.OData.Tests.Json
                 await reader.ReadAsync(); // Read property name: Id
                 await reader.ReadAsync(); // Read property value
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.ReadAsync());
-                Assert.Equal(Strings.JsonReader_UnexpectedComma("Object"), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReader_UnexpectedComma, "Object"), exception.Message);
             }
         }
 
@@ -525,7 +526,7 @@ namespace Microsoft.OData.Tests.Json
                 await reader.ReadAsync(); // Read property name: Id
                 await reader.ReadAsync(); // Read property value
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.ReadAsync());
-                Assert.Equal(Strings.JsonReader_MissingComma("Object"), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReader_MissingComma, "Object"), exception.Message);
             }
         }
 
@@ -536,7 +537,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 await reader.ReadAsync(); // Read start of object
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.ReadAsync()); // Try to read property name
-                Assert.Equal(Strings.JsonReader_InvalidPropertyNameOrUnexpectedComma(string.Empty), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReader_InvalidPropertyNameOrUnexpectedComma, string.Empty), exception.Message);
             }
         }
 
@@ -547,7 +548,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 await reader.ReadAsync(); // Read start of object
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.ReadAsync());
-                Assert.Equal(Strings.JsonReader_MissingColon("Id"), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReader_MissingColon, "Id"), exception.Message);
             }
         }
 
@@ -559,7 +560,7 @@ namespace Microsoft.OData.Tests.Json
                 await reader.ReadAsync(); // Read start of object
                 await reader.ReadAsync(); // Read property name: Id
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.ReadAsync());
-                Assert.Equal(Strings.JsonReader_UnrecognizedToken, exception.Message);
+                Assert.Equal(SRResources.JsonReader_UnrecognizedToken, exception.Message);
             }
         }
 
@@ -571,7 +572,7 @@ namespace Microsoft.OData.Tests.Json
                 await reader.ReadAsync(); // Read start of object
                 await reader.ReadAsync(); // Read property name: Id
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.ReadAsync());
-                Assert.Equal(Strings.JsonReader_UnexpectedComma("Property"), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReader_UnexpectedComma, "Property"), exception.Message);
             }
         }
 
@@ -585,7 +586,7 @@ namespace Microsoft.OData.Tests.Json
                 await reader.ReadAsync(); // Read property value
                 await reader.ReadAsync(); // Read end of object
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.ReadAsync());
-                Assert.Equal(Strings.JsonReader_MultipleTopLevelValues, exception.Message);
+                Assert.Equal(SRResources.JsonReader_MultipleTopLevelValues, exception.Message);
             }
         }
 
@@ -598,7 +599,7 @@ namespace Microsoft.OData.Tests.Json
                 await reader.ReadAsync(); // Read property name: Orders
                 await reader.ReadAsync(); // Read start of array
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.ReadAsync());
-                Assert.Equal(Strings.JsonReader_UnexpectedComma("Array"), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReader_UnexpectedComma, "Array"), exception.Message);
             }
         }
 
@@ -615,7 +616,7 @@ namespace Microsoft.OData.Tests.Json
                 await reader.ReadAsync(); // Read property value
                 await reader.ReadAsync(); // Read end of 1st array object
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.ReadAsync());
-                Assert.Equal(Strings.JsonReader_UnexpectedComma("Array"), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReader_UnexpectedComma, "Array"), exception.Message);
             }
         }
 
@@ -632,7 +633,7 @@ namespace Microsoft.OData.Tests.Json
                 await reader.ReadAsync(); // Read property value
                 await reader.ReadAsync(); // Read end of 1st array object
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.ReadAsync());
-                Assert.Equal(Strings.JsonReader_MissingComma("Array"), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReader_MissingComma, "Array"), exception.Message);
             }
         }
 
@@ -643,7 +644,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 await reader.ReadAsync();
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.GetValueAsync());
-                Assert.Equal(Strings.JsonReader_UnexpectedToken("nil"), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReader_UnexpectedToken, "nil"), exception.Message);
             }
         }
 
@@ -660,7 +661,7 @@ namespace Microsoft.OData.Tests.Json
                 await reader.ReadAsync(); // Read property name - Data
                 await reader.ReadAsync(); // Position reader at the beginning of string value
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.GetValueAsync());
-                Assert.Equal(Strings.JsonReader_UnrecognizedEscapeSequence(expected), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, expected), exception.Message);
             }
         }
 
@@ -682,7 +683,7 @@ namespace Microsoft.OData.Tests.Json
                     var chars = new char[maxLength];
 
                     var exception = await Assert.ThrowsAsync<ODataException>(async () => await textReader.ReadAsync(chars, 0, maxLength));
-                    Assert.Equal(Strings.JsonReader_UnrecognizedEscapeSequence(expected), exception.Message);
+                    Assert.Equal(Error.Format(SRResources.JsonReader_UnrecognizedEscapeSequence, expected), exception.Message);
                 }
             }
         }
@@ -696,7 +697,7 @@ namespace Microsoft.OData.Tests.Json
                 await reader.ReadAsync(); // Read property name: Binary
                                           // await reader.ReadAsync(); // Position reader at the beginning of binary value
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.CreateReadStreamAsync());
-                Assert.Equal(Strings.JsonReader_CannotCreateReadStream, exception.Message);
+                Assert.Equal(SRResources.JsonReader_CannotCreateReadStream, exception.Message);
             }
         }
 
@@ -710,7 +711,7 @@ namespace Microsoft.OData.Tests.Json
                 await reader.ReadAsync(); // Read property name: Text
                                           // await reader.ReadAsync(); // Position reader at the beginning of string value
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.CreateTextReaderAsync());
-                Assert.Equal(Strings.JsonReader_CannotCreateTextReader, exception.Message);
+                Assert.Equal(SRResources.JsonReader_CannotCreateTextReader, exception.Message);
             }
         }
 
@@ -730,7 +731,7 @@ namespace Microsoft.OData.Tests.Json
                     }
                 });
 
-                Assert.Equal(Strings.JsonReader_CannotCallReadInStreamState, exception.Message);
+                Assert.Equal(SRResources.JsonReader_CannotCallReadInStreamState, exception.Message);
             }
         }
 
@@ -750,7 +751,7 @@ namespace Microsoft.OData.Tests.Json
                     }
                 });
 
-                Assert.Equal(Strings.JsonReader_CannotAccessValueInStreamState, exception.Message);
+                Assert.Equal(SRResources.JsonReader_CannotAccessValueInStreamState, exception.Message);
             }
         }
 
@@ -764,7 +765,7 @@ namespace Microsoft.OData.Tests.Json
                 await reader.ReadAsync(); // Read property name: Text
                 await reader.ReadAsync(); // Position reader at the beginning of string value
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.GetValueAsync());
-                Assert.Equal(Strings.JsonReader_UnexpectedEndOfString, exception.Message);
+                Assert.Equal(SRResources.JsonReader_UnexpectedEndOfString, exception.Message);
             }
         }
 
@@ -777,7 +778,7 @@ namespace Microsoft.OData.Tests.Json
                 await reader.ReadAsync(); // Read property name: Value
                                           // Try to read boolean value
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.ReadAsync());
-                Assert.Equal(Strings.JsonReader_UnexpectedToken("tRue"), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReader_UnexpectedToken, "tRue"), exception.Message);
             }
         }
 
@@ -790,7 +791,7 @@ namespace Microsoft.OData.Tests.Json
                 await reader.ReadAsync(); // Read property name: Value
                                           // Try to read numeric value
                 var exception = await Assert.ThrowsAsync<ODataException>(async () => await reader.ReadAsync());
-                Assert.Equal(Strings.JsonReader_InvalidNumberFormat("6.0221409-e23"), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReader_InvalidNumberFormat, "6.0221409-e23"), exception.Message);
             }
         }
 
@@ -997,7 +998,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.True(reader.IsOnValueNode());
                 var exception = await Assert.ThrowsAsync<ODataException>(() => reader.ReadStringValueAsync());
-                Assert.Equal(Strings.JsonReaderExtensions_CannotReadValueAsString(13), exception.Message);
+                Assert.Equal(Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsString, 13), exception.Message);
             }
         }
 
@@ -1009,7 +1010,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.True(reader.IsOnValueNode());
                 var exception = await Assert.ThrowsAsync<ODataException>(() => reader.ReadStringValueAsync("Data"));
                 Assert.Equal(
-                    Strings.JsonReaderExtensions_CannotReadPropertyValueAsString(13, "Data"),
+                    Error.Format(SRResources.JsonReaderExtensions_CannotReadPropertyValueAsString, 13, "Data"),
                     exception.Message);
             }
         }
@@ -1022,7 +1023,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.True(reader.IsOnValueNode());
                 var exception = await Assert.ThrowsAsync<ODataException>(() => reader.ReadDoubleValueAsync());
                 Assert.Equal(
-                    Strings.JsonReaderExtensions_CannotReadValueAsDouble("Thirteen"),
+                    Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsDouble, "Thirteen"),
                     exception.Message);
             }
         }
@@ -1033,7 +1034,7 @@ namespace Microsoft.OData.Tests.Json
             using (var reader = await CreateJsonReaderAsync($"{{\"Product\":{{\"Id\":1,\"Name\":\"Pencil\""))
             {
                 var exception = await Assert.ThrowsAsync<ODataException>(() => reader.SkipValueAsync());
-                Assert.Equal(Strings.JsonReader_EndOfInputWithOpenScope, exception.Message);
+                Assert.Equal(SRResources.JsonReader_EndOfInputWithOpenScope, exception.Message);
             }
         }
 
@@ -1043,7 +1044,7 @@ namespace Microsoft.OData.Tests.Json
             using (var reader = await CreateJsonReaderAsync($"{{\"Product\":{{\"Id\":1,\"Name\":\"Pencil\""))
             {
                 var exception = await Assert.ThrowsAsync<ODataException>(() => reader.SkipValueAsync(new StringBuilder()));
-                Assert.Equal(Strings.JsonReader_EndOfInputWithOpenScope, exception.Message);
+                Assert.Equal(SRResources.JsonReader_EndOfInputWithOpenScope, exception.Message);
             }
         }
 

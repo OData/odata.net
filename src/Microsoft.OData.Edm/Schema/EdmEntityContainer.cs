@@ -101,9 +101,9 @@ namespace Microsoft.OData.Edm
                     RegistrationHelper.AddOperationImport((IEdmOperationImport)element, element.Name, this.operationImportDictionary);
                     break;
                 case EdmContainerElementKind.None:
-                    throw new InvalidOperationException(Edm.Strings.EdmEntityContainer_CannotUseElementWithTypeNone);
+                    throw new InvalidOperationException(SRResources.EdmEntityContainer_CannotUseElementWithTypeNone);
                 default:
-                    throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_ContainerElementKind(element.ContainerElementKind));
+                    throw new InvalidOperationException(Error.Format(SRResources.UnknownEnumVal_ContainerElementKind, element.ContainerElementKind));
             }
         }
 

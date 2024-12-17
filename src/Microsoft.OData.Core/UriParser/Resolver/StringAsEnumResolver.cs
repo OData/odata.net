@@ -10,6 +10,7 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
 
     /// <summary>
@@ -87,7 +88,7 @@ namespace Microsoft.OData.UriParser
                 // ensure parameter name exists
                 if (functionParameter == null)
                 {
-                    throw new ODataException(Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation(item.Key, operation.Name));
+                    throw new ODataException(Error.Format(SRResources.ODataParameterWriterCore_ParameterNameNotFoundInOperation, item.Key, operation.Name));
                 }
 
                 SingleValueNode newVal = item.Value;

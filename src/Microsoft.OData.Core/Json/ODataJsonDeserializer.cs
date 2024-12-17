@@ -14,6 +14,7 @@ namespace Microsoft.OData.Json
     using System.Linq;
     using System.Threading.Tasks;
     using Microsoft.OData;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Evaluation;
     #endregion Namespaces
@@ -445,7 +446,7 @@ namespace Microsoft.OData.Json
 
             if ((value is string) ^ this.JsonReader.IsIeee754Compatible)
             {
-                throw new ODataException(Strings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter(Metadata.EdmConstants.EdmInt64TypeName));
+                throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter, Metadata.EdmConstants.EdmInt64TypeName));
             }
 
             return (long)ODataJsonReaderUtils.ConvertValue(
@@ -480,7 +481,7 @@ namespace Microsoft.OData.Json
             {
                 if (metadataDocumentUri == null)
                 {
-                    throw new ODataException(Strings.ODataJsonDeserializer_RelativeUriUsedWithouODataMetadataAnnotation(uriFromPayload, ODataAnnotationNames.ODataContext));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonDeserializer_RelativeUriUsedWithouODataMetadataAnnotation, uriFromPayload, ODataAnnotationNames.ODataContext));
                 }
 
                 uri = UriUtils.UriToAbsoluteUri(metadataDocumentUri, uri);
@@ -573,7 +574,7 @@ namespace Microsoft.OData.Json
                     return null;
                 }
 
-                throw new ODataException(Strings.ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty);
+                throw new ODataException(SRResources.ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty);
             }
 
             // Must make sure the input odata.context has a '@' prefix
@@ -587,7 +588,7 @@ namespace Microsoft.OData.Json
                     return null;
                 }
 
-                throw new ODataException(Strings.ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty);
+                throw new ODataException(SRResources.ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty);
             }
 
             if (propertyAndAnnotationCollector != null)
@@ -684,7 +685,7 @@ namespace Microsoft.OData.Json
 
             if ((value is string) ^ this.JsonReader.IsIeee754Compatible)
             {
-                throw new ODataException(Strings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter(Metadata.EdmConstants.EdmInt64TypeName));
+                throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter, Metadata.EdmConstants.EdmInt64TypeName));
             }
 
             return (long)ODataJsonReaderUtils.ConvertValue(
@@ -767,7 +768,7 @@ namespace Microsoft.OData.Json
                     return null;
                 }
 
-                throw new ODataException(Strings.ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty);
+                throw new ODataException(SRResources.ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty);
             }
 
             // Must make sure the input odata.context has a '@' prefix
@@ -782,7 +783,7 @@ namespace Microsoft.OData.Json
                     return null;
                 }
 
-                throw new ODataException(Strings.ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty);
+                throw new ODataException(SRResources.ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty);
             }
 
             if (propertyAndAnnotationCollector != null)
@@ -972,7 +973,7 @@ namespace Microsoft.OData.Json
                 {
                     if (ODataJsonReaderUtils.IsAnnotationProperty(parsedPropertyName))
                     {
-                        throw new ODataException(Strings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue(lastPropertyAnnotationNameFound, parsedPropertyName));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, lastPropertyAnnotationNameFound, parsedPropertyName));
                     }
 
                     return PropertyParsingResult.PropertyWithoutValue;
@@ -1046,7 +1047,7 @@ namespace Microsoft.OData.Json
             {
                 if (ODataJsonReaderUtils.IsAnnotationProperty(parsedPropertyName))
                 {
-                    throw new ODataException(Strings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue(lastPropertyAnnotationNameFound, parsedPropertyName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, lastPropertyAnnotationNameFound, parsedPropertyName));
                 }
 
                 return PropertyParsingResult.PropertyWithoutValue;
@@ -1067,7 +1068,7 @@ namespace Microsoft.OData.Json
             // We don't currently support annotation targeting an instance annotation except for the @odata.type property annotation.
             if (ODataJsonReaderUtils.IsAnnotationProperty(annotatedPropertyName) && !string.Equals(annotationName, ODataAnnotationNames.ODataType, StringComparison.Ordinal))
             {
-                throw new ODataException(Strings.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation(annotationName, annotatedPropertyName, ODataAnnotationNames.ODataType));
+                throw new ODataException(Error.Format(SRResources.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation, annotationName, annotatedPropertyName, ODataAnnotationNames.ODataType));
             }
 
             ReadODataOrCustomInstanceAnnotationValue(annotatedPropertyName, annotationName, propertyAndAnnotationCollector, readPropertyAnnotationValue);
@@ -1287,7 +1288,7 @@ namespace Microsoft.OData.Json
                 {
                     if (ODataJsonReaderUtils.IsAnnotationProperty(parsedPropertyName))
                     {
-                        throw new ODataException(Strings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue(
+                        throw new ODataException(Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue,
                             lastPropertyAnnotationNameFound,
                             parsedPropertyName));
                     }
@@ -1382,7 +1383,7 @@ namespace Microsoft.OData.Json
                 if (ODataJsonReaderUtils.IsAnnotationProperty(parsedPropertyName))
                 {
                     throw new ODataException(
-                        Strings.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue(
+                        Error.Format(SRResources.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue,
                             lastPropertyAnnotationNameFound,
                             parsedPropertyName));
                 }
@@ -1412,7 +1413,7 @@ namespace Microsoft.OData.Json
                 && !string.Equals(annotationName, ODataAnnotationNames.ODataType, StringComparison.Ordinal))
             {
                 return TaskUtils.GetFaultedTask<ODataException>(
-                    new ODataException(Strings.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation(
+                    new ODataException(Error.Format(SRResources.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation,
                         annotationName,
                         annotatedPropertyName,
                         ODataAnnotationNames.ODataType)));

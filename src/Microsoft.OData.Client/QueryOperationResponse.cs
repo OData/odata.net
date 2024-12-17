@@ -72,7 +72,7 @@ namespace Microsoft.OData.Client
             {
                 if (this.Error != null)
                 {
-                    throw Microsoft.OData.Client.Error.InvalidOperation(Strings.Context_BatchExecuteError, this.Error);
+                    throw Microsoft.OData.Client.Error.InvalidOperation(SRResources.Context_BatchExecuteError, this.Error);
                 }
 
                 return this.results;
@@ -159,7 +159,7 @@ namespace Microsoft.OData.Client
 
                         if (materializedCollection == null)
                         {
-                            throw new DataServiceClientException(Strings.Materializer_CollectionExpectedCollection(innerObject.GetType().ToString()));
+                            throw new DataServiceClientException(Client.Error.Format(SRResources.Materializer_CollectionExpectedCollection, innerObject.GetType().ToString()));
                         }
 
                         Debug.Assert(!enumerator.MoveNext(), "MaterializationEvents of top level collection expected one result of ICollection<>, but found at least 2 results");

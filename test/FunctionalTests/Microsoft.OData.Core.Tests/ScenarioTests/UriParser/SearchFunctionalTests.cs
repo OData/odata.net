@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OData.Core;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Xunit;
@@ -91,34 +92,34 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ErrorTest()
         {
             Action action = () => this.RunSearchTest("NOT");
-            action.Throws<ODataException>(Strings.UriQueryExpressionParser_ExpressionExpected(3, "NOT"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 3, "NOT"));
             action = () => this.RunSearchTest("(");
-            action.Throws<ODataException>(Strings.UriQueryExpressionParser_ExpressionExpected(1, "("));
+            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 1, "("));
             action = () => this.RunSearchTest("(something");
-            action.Throws<ODataException>(Strings.UriQueryExpressionParser_CloseParenOrOperatorExpected(10, "(something"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrOperatorExpected, 10, "(something"));
             action = () => this.RunSearchTest("AND OR");
-            action.Throws<ODataException>(Strings.UriQueryExpressionParser_ExpressionExpected(0, "AND OR"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 0, "AND OR"));
             action = () => this.RunSearchTest("kit (");
-            action.Throws<ODataException>(Strings.UriQueryExpressionParser_ExpressionExpected(5, "kit ("));
+            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, 5, "kit ("));
             action = () => this.RunSearchTest("kit ( A");
-            action.Throws<ODataException>(Strings.UriQueryExpressionParser_CloseParenOrOperatorExpected(7, "kit ( A"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrOperatorExpected, 7, "kit ( A"));
             action = () => this.RunSearchTest("kit )");
-            action.Throws<ODataException>(Strings.ExpressionLexer_SyntaxError(5, "kit )"));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, 5, "kit )"));
         }
 
         [Fact]
         public void LexerErrorTest()
         {
             Action action = () => this.RunSearchTest("\"");
-            action.Throws<ODataException>(Strings.ExpressionLexer_UnterminatedStringLiteral(1, "\""));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_UnterminatedStringLiteral, 1, "\""));
             action = () => this.RunSearchTest("A \"");
-            action.Throws<ODataException>(Strings.ExpressionLexer_UnterminatedStringLiteral(3, "A \""));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_UnterminatedStringLiteral, 3, "A \""));
             action = () => this.RunSearchTest("A \" BC");
-            action.Throws<ODataException>(Strings.ExpressionLexer_UnterminatedStringLiteral(6, "A \" BC"));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_UnterminatedStringLiteral, 6, "A \" BC"));
             action = () => this.RunSearchTest("\\\"");
-            action.Throws<ODataException>(Strings.ExpressionLexer_InvalidCharacter("\\", 0, "\\\""));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "\\", 0, "\\\""));
             action = () => this.RunSearchTest("\"\\t\"");
-            action.Throws<ODataException>(Strings.ExpressionLexer_InvalidEscapeSequence("t", 2, "\"\\t\""));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidEscapeSequence, "t", 2, "\"\\t\""));
         }
 
         private SearchClause RunSearchTest(string search)

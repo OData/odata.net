@@ -1341,7 +1341,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
                 });
 
             Assert.Equal(
-                "Error translating Linq expression to URI: " + Strings.ALinq_InvalidGroupByKeySelector("new SalesGroupingKey02(d1.Product.Color, d1.Customer.Country)"),
+                "Error translating Linq expression to URI: " + Error.Format(SRResources.ALinq_InvalidGroupByKeySelector, "new SalesGroupingKey02(d1.Product.Color, d1.Customer.Country)"),
                 aggregateQuery.ToString());
         }
 

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 
@@ -112,7 +113,7 @@ namespace Microsoft.OData.Metadata
                     if (resolvedType == null)
                     {
                         // If a type resolver is specified it must never return null.
-                        throw new ODataException(Strings.MetadataUtils_ResolveTypeName(typeName));
+                        throw new ODataException(Error.Format(SRResources.MetadataUtils_ResolveTypeName, typeName));
                     }
                 }
                 else
@@ -168,7 +169,7 @@ namespace Microsoft.OData.Metadata
                     throw;
                 }
 
-                throw new ODataException(Strings.MetadataUtils_CalculateBindableOperationsForType(bindingType.FullTypeName()), exc);
+                throw new ODataException(Error.Format(SRResources.MetadataUtils_CalculateBindableOperationsForType, bindingType.FullTypeName()), exc);
             }
 
             IList<IEdmOperation> operationsFound = operations as IList<IEdmOperation>;

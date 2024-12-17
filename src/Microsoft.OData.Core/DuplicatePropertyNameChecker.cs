@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using System.Collections.Generic;
 
@@ -57,8 +58,7 @@ namespace Microsoft.OData
             catch (ArgumentException)
             {
                 throw new ODataException(
-                    Strings.DuplicatePropertyNamesNotAllowed(
-                        property.Name));
+                    Error.Format(SRResources.DuplicatePropertyNamesNotAllowed, property.Name));
             }
         }
 
@@ -78,8 +78,7 @@ namespace Microsoft.OData
                 if (state != State.AssociationLink)
                 {
                     throw new ODataException(
-                        Strings.DuplicatePropertyNamesNotAllowed(
-                            property.Name));
+                        Error.Format(SRResources.DuplicatePropertyNamesNotAllowed, property.Name));
                 }
                 else
                 {
@@ -105,8 +104,7 @@ namespace Microsoft.OData
                 if (state != State.NestedResource)
                 {
                     throw new ODataException(
-                        Strings.DuplicatePropertyNamesNotAllowed(
-                            propertyName));
+                        Error.Format(SRResources.DuplicatePropertyNamesNotAllowed, propertyName));
                 }
                 else
                 {

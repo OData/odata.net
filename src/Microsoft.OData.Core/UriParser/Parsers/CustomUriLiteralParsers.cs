@@ -6,17 +6,11 @@
 
 using System;
 using System.Linq;
-
 using Microsoft.OData.Edm;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
-    #region Namespaces
-
-    using ODataErrorStrings = Microsoft.OData.Strings;
-
-    #endregion
-
     /// <summary>
     /// This class is the custom literal parser manager and parser.
     /// Add a Uri custom literal parser through this class.
@@ -138,7 +132,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (CustomUriLiteralParsers.customUriLiteralParsers.Contains(customUriLiteralParser))
                 {
-                    throw new ODataException(ODataErrorStrings.UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists);
+                    throw new ODataException(SRResources.UriCustomTypeParsers_AddCustomUriTypeParserAlreadyExists);
                 }
 
                 CustomUriLiteralParsers.customUriLiteralParsers = CustomUriLiteralParsers.customUriLiteralParsers.Concat(new IUriLiteralParser[] { customUriLiteralParser }).ToArray();
@@ -162,7 +156,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (CustomUriLiteralParsers.IsEdmTypeAlreadyRegistered(edmTypeReference))
                 {
-                    throw new ODataException(ODataErrorStrings.UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists(edmTypeReference.FullName()));
+                    throw new ODataException(Error.Format(SRResources.UriCustomTypeParsers_AddCustomUriTypeParserEdmTypeExists, edmTypeReference.FullName()));
                 }
 
                 CustomUriLiteralParsers.customUriLiteralParserPerEdmType = CustomUriLiteralParsers.customUriLiteralParserPerEdmType.Concat(

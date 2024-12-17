@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class UnresolvedEntityType : BadEntityType, IUnresolvedElement
     {
         public UnresolvedEntityType(string qualifiedName, EdmLocation location)
-            : base(qualifiedName, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedEntityType, Edm.Strings.Bad_UnresolvedEntityType(qualifiedName)) })
+            : base(qualifiedName, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedEntityType, Error.Format(SRResources.Bad_UnresolvedEntityType, qualifiedName)) })
         {
         }
     }

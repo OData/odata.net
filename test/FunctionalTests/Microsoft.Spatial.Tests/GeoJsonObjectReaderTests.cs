@@ -40,28 +40,28 @@ namespace Microsoft.Spatial.Tests
         public void ErrorOnCoordinatesArrayElementPrimitiveNotDouble_MultipleDimension()
         {
             var coordinates = new object[] {new object[] {new object[] {1.0, 2.0}, new object[] {3.0, "stingVal"}}};
-            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(SpatialType.Polygon, coordinates), Strings.GeoJsonReader_ExpectedNumeric);
+            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(SpatialType.Polygon, coordinates), SRResources.GeoJsonReader_ExpectedNumeric);
         }
 
         [Fact]
         public void ErrorOnCoordinatesArrayElementPrimitiveNotDouble_SingleDimension()
         {
             var coordinates = new object[] {1.0, true};
-            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(SpatialType.Point,  coordinates), Strings.GeoJsonReader_ExpectedNumeric);
+            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(SpatialType.Point,  coordinates), SRResources.GeoJsonReader_ExpectedNumeric);
         }
 
         [Fact]
         public void ErrorOnCoordinatesArrayElementPrimitiveIsObject()
         {
             var coordinates = new object[] {new Dictionary<string, object>() {{"prop", "value"}}, 1.0};
-            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(SpatialType.Point, coordinates), Strings.GeoJsonReader_ExpectedNumeric);
+            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(SpatialType.Point, coordinates), SRResources.GeoJsonReader_ExpectedNumeric);
         }
 
         [Fact]
         public void ErrorOnCoordinatesArrayElementArrayIsObject()
         {
             var coordinates = new object[] { new Dictionary<string, object>() { { "prop", "value" } }, 1.0 };
-            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(SpatialType.Polygon, coordinates), Strings.GeoJsonReader_ExpectedArray);
+            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(SpatialType.Polygon, coordinates), SRResources.GeoJsonReader_ExpectedArray);
         }
 
         [Fact]
@@ -72,13 +72,13 @@ namespace Microsoft.Spatial.Tests
                                 {"type", "Point"},
                                 {"coordinates", 1.0}
                             };
-            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(input), Strings.GeoJsonReader_ExpectedArray);
+            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(input), SRResources.GeoJsonReader_ExpectedArray);
         }
 
         [Fact]
         public void ErrorOnInvalidCrs_CrsValueNotAnObject()
         {
-            TestInvalidCrs("badCRSValue", Strings.JsonReaderExtensions_CannotReadValueAsJsonObject("badCRSValue"));
+            TestInvalidCrs("badCRSValue", Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsJsonObject, "badCRSValue"));
         }
 
         [Fact]
@@ -96,7 +96,7 @@ namespace Microsoft.Spatial.Tests
                                      }
                                  };
 
-            TestInvalidCrs(crsMembers, Strings.JsonReaderExtensions_CannotReadValueAsJsonObject("badPropertiesValue"));
+            TestInvalidCrs(crsMembers, Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsJsonObject, "badPropertiesValue"));
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace Microsoft.Spatial.Tests
                                      }
                                  };
 
-            TestInvalidCrs(crsMembers, Strings.GeoJsonReader_MissingRequiredMember(GeoJsonConstants.CrsNameMemberName));
+            TestInvalidCrs(crsMembers, Error.Format(SRResources.GeoJsonReader_MissingRequiredMember, GeoJsonConstants.CrsNameMemberName));
         }
 
         [Fact]
@@ -148,7 +148,7 @@ namespace Microsoft.Spatial.Tests
                                          }
                                  };
 
-            TestInvalidCrs(crsMembers, Strings.GeoJsonReader_InvalidCrsType("foo"));
+            TestInvalidCrs(crsMembers, Error.Format(SRResources.GeoJsonReader_InvalidCrsType, "foo"));
         }
 
         [Fact]
@@ -162,14 +162,14 @@ namespace Microsoft.Spatial.Tests
                                          },
                                  };
 
-            TestInvalidCrs(crsMembers, Strings.GeoJsonReader_MissingRequiredMember(GeoJsonConstants.CrsPropertiesMemberName));
+            TestInvalidCrs(crsMembers, Error.Format(SRResources.GeoJsonReader_MissingRequiredMember, GeoJsonConstants.CrsPropertiesMemberName));
         }
 
         [Fact]
         public void ErrorOnInvalidCrs_MissingType()
         {
             var crsMembers = new Dictionary<string, object>();
-            TestInvalidCrs(crsMembers, Strings.GeoJsonReader_MissingRequiredMember(GeoJsonConstants.TypeMemberName));
+            TestInvalidCrs(crsMembers, Error.Format(SRResources.GeoJsonReader_MissingRequiredMember, GeoJsonConstants.TypeMemberName));
         }
 
         [Fact]
@@ -190,27 +190,27 @@ namespace Microsoft.Spatial.Tests
         public void ErrorOnInvalidGeoJSONTypeName_NotAString()
         {
             var input = new Dictionary<string, object>(){{"type", 55}};
-            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(input), Strings.JsonReaderExtensions_CannotReadPropertyValueAsString(55, "type"));
+            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(input), Error.Format(SRResources.JsonReaderExtensions_CannotReadPropertyValueAsString, 55, "type"));
         }
 
         [Fact]
         public void ErrorOnInvalidGeoJSONTypeName_Null()
         {
             var input = new Dictionary<string, object>() { { "type", null } };
-            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(input), Strings.GeoJsonReader_InvalidTypeName(String.Empty));
+            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(input), Error.Format(SRResources.GeoJsonReader_InvalidTypeName, String.Empty));
         }
 
         [Fact]
         public void ErrorOnInvalidGeoJSONTypeName_UnknownType()
         {
-            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(SpatialType.Unknown, null), Strings.GeoJsonReader_InvalidTypeName("Unknown"));
+            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(SpatialType.Unknown, null), Error.Format(SRResources.GeoJsonReader_InvalidTypeName, "Unknown"));
         }
 
         [Fact]
         public void ErrorOnInvalidGeoJSONTypeName_WrongCasing()
         {
             var input = new Dictionary<string, object>() { { "type", "point" } };
-            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(input), Strings.GeoJsonReader_InvalidTypeName("point"));
+            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => ExecuteSendToPipeline(input), Error.Format(SRResources.GeoJsonReader_InvalidTypeName, "point"));
         }
 
         [Fact]
@@ -223,7 +223,7 @@ namespace Microsoft.Spatial.Tests
 
             // This error should occur regardless of if the pipeline is geography or geometry, so just pick one.
             var isGeography = true;
-            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => SendToPipeline(members, pipeline, isGeography), Strings.GeoJsonReader_MissingRequiredMember("coordinates"));
+            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => SendToPipeline(members, pipeline, isGeography), Error.Format(SRResources.GeoJsonReader_MissingRequiredMember, "coordinates"));
         }
 
         [Fact]
@@ -236,7 +236,7 @@ namespace Microsoft.Spatial.Tests
 
             // This error should occur regardless of if the pipeline is geography or geometry, so just pick one.
             var isGeography = true;
-            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => SendToPipeline(properties, pipeline, isGeography), Strings.GeoJsonReader_MissingRequiredMember("type"));
+            SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() => SendToPipeline(properties, pipeline, isGeography), Error.Format(SRResources.GeoJsonReader_MissingRequiredMember, "type"));
         }
 
         [Fact]
@@ -244,7 +244,7 @@ namespace Microsoft.Spatial.Tests
         {
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() =>
                                                                     ExecuteSendToPipeline(SpatialType.Point, new List<object> {null, 75}),
-                                                                    Strings.GeoJsonReader_InvalidNullElement);
+                                                                    SRResources.GeoJsonReader_InvalidNullElement);
         }
 
         [Fact]
@@ -252,7 +252,7 @@ namespace Microsoft.Spatial.Tests
         {
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() =>
                                                                     ExecuteSendToPipeline(SpatialType.Point, new List<object> {32.4, null}),
-                                                                    Strings.GeoJsonReader_InvalidNullElement);
+                                                                    SRResources.GeoJsonReader_InvalidNullElement);
         }
 
         [Fact]
@@ -260,7 +260,7 @@ namespace Microsoft.Spatial.Tests
         {
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() =>
                                                                     ExecuteSendToPipeline(SpatialType.Polygon, new List<object> {new List<object> {new List<object> {127.3, -88}, new List<object> {22}}}),
-                                                                    Strings.GeoJsonReader_InvalidPosition);
+                                                                    SRResources.GeoJsonReader_InvalidPosition);
         }
 
         [Fact]
@@ -268,7 +268,7 @@ namespace Microsoft.Spatial.Tests
         {
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() =>
                                                                     ExecuteSendToPipeline(SpatialType.Point, new List<object> {1.1}),
-                                                                    Strings.GeoJsonReader_InvalidPosition);
+                                                                    SRResources.GeoJsonReader_InvalidPosition);
         }
 
         [Fact]
@@ -276,7 +276,7 @@ namespace Microsoft.Spatial.Tests
         {
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() =>
                                                                     ExecuteSendToPipeline(SpatialType.Polygon, new List<object> {new List<object> {new List<object> {127.3, -88}}, new List<object> {new List<object> {22, 88, -121.5, 91.2, 10, 102}}}),
-                                                                    Strings.GeoJsonReader_InvalidPosition);
+                                                                    SRResources.GeoJsonReader_InvalidPosition);
         }
 
         [Fact]
@@ -284,7 +284,7 @@ namespace Microsoft.Spatial.Tests
         {
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() =>
                                                                     ExecuteSendToPipeline(SpatialType.Point, new List<object> {1.1, 5, -32, 99.11, 6}),
-                                                                    Strings.GeoJsonReader_InvalidPosition);
+                                                                    SRResources.GeoJsonReader_InvalidPosition);
         }
 
         [Fact]
@@ -964,21 +964,21 @@ namespace Microsoft.Spatial.Tests
         private static void TestCrsWithInvalidName(string name)
         {
             var crsMembers = CreateCrsMembersWithName(name);
-            TestInvalidCrs(crsMembers, Strings.GeoJsonReader_InvalidCrsName(name));
+            TestInvalidCrs(crsMembers, Error.Format(SRResources.GeoJsonReader_InvalidCrsName, name));
         }
 
         private static void TestErrorOnUnexpectedArray(SpatialType spatialType, List<object> coordinates)
         {
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() =>
                                                                     ExecuteSendToPipeline(spatialType, coordinates),
-                                                                    Strings.GeoJsonReader_ExpectedNumeric);
+                                                                    SRResources.GeoJsonReader_ExpectedNumeric);
         }
 
         private static void TestErrorOnUnexpectedNumeric(SpatialType spatialType, List<object> coordinates)
         {
             SpatialTestUtils.VerifyExceptionThrown<ParseErrorException>(() =>
                                                                     ExecuteSendToPipeline(spatialType, coordinates),
-                                                                    Strings.GeoJsonReader_ExpectedArray);
+                                                                    SRResources.GeoJsonReader_ExpectedArray);
         }
 
         private static void TestInvalidCrs(object crsMembers, string error)

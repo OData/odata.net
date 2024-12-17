@@ -297,7 +297,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             {
                 // TODO: this should happen at parsing time, which should remove
                 // the code for handling type-ref based collection types and unify this parsing logic
-                errors = AllocateAndAdd(errors, new EdmError(this.Location, EdmErrorCode.NavigationPropertyWithCollectionTypeCannotHaveNullableAttribute, Strings.CsdlParser_CannotSpecifyNullableAttributeForNavigationPropertyWithCollectionType));
+                errors = AllocateAndAdd(errors, new EdmError(this.Location, EdmErrorCode.NavigationPropertyWithCollectionTypeCannotHaveNullableAttribute, SRResources.CsdlParser_CannotSpecifyNullableAttributeForNavigationPropertyWithCollectionType));
             }
 
             var badType = this.TargetEntityType as BadEntityType;

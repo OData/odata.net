@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Settings used by <see cref="ODataUriParser"/>.
@@ -121,7 +121,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (value < 0)
                 {
-                    throw new ODataException(ODataErrorStrings.UriParser_NegativeLimit);
+                    throw new ODataException(SRResources.UriParser_NegativeLimit);
                 }
 
                 this.maxExpandDepth = value;
@@ -146,7 +146,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (value < 0)
                 {
-                    throw new ODataException(ODataErrorStrings.UriParser_NegativeLimit);
+                    throw new ODataException(SRResources.UriParser_NegativeLimit);
                 }
 
                 this.maxExpandCount = value;
@@ -179,7 +179,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (value < 0)
                 {
-                    throw new ODataException(ODataErrorStrings.UriParser_NegativeLimit);
+                    throw new ODataException(SRResources.UriParser_NegativeLimit);
                 }
 
                 this.selectExpandLimit = value;
@@ -207,7 +207,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (value < 0)
                 {
-                    throw new ODataException(ODataErrorStrings.UriParser_NegativeLimit);
+                    throw new ODataException(SRResources.UriParser_NegativeLimit);
                 }
 
                 this.filterLimit = value;
@@ -235,7 +235,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (value < 0)
                 {
-                    throw new ODataException(ODataErrorStrings.UriParser_NegativeLimit);
+                    throw new ODataException(SRResources.UriParser_NegativeLimit);
                 }
 
                 this.orderByLimit = value;
@@ -263,7 +263,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (value < 0)
                 {
-                    throw new ODataException(ODataErrorStrings.UriParser_NegativeLimit);
+                    throw new ODataException(SRResources.UriParser_NegativeLimit);
                 }
 
                 this.pathLimit = value;
@@ -291,7 +291,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (value < 0)
                 {
-                    throw new ODataException(ODataErrorStrings.UriParser_NegativeLimit);
+                    throw new ODataException(SRResources.UriParser_NegativeLimit);
                 }
 
                 this.searchLimit = value;

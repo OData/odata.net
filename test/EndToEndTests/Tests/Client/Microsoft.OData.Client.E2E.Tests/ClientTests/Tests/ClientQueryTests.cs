@@ -63,6 +63,37 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             Assert.Equal(expectedCount, result.Length);
         }
 
+        [Theory]
+        [InlineData("People?$filter=Name in ('')")]
+        [InlineData("People?$filter=Name in ['']")]
+        [InlineData("People?$filter=Name in ( '' )")]
+        [InlineData("People?$filter=Name in [ '' ]")]
+        [InlineData("People?$filter=Name in (\"\")")]
+        [InlineData("People?$filter=Name in [\"\"]")]
+        [InlineData("People?$filter=Name in ( \"\" )")]
+        [InlineData("People?$filter=Name in [ \"\" ]")]
+        [InlineData("People?$filter=Name in ( ' ' )")]
+        [InlineData("People?$filter=Name in [ ' ' ]")]
+        [InlineData("People?$filter=Name in ( \"  \" )")]
+        [InlineData("People?$filter=Name in [ \"   \"]")]
+        [InlineData("People?$filter=Name in ( '', ' ' )")]
+        [InlineData("People?$filter=Name in [ '', ' ' ]")]
+        [InlineData("People?$filter=Name in ( \"\", \" \" )")]
+        [InlineData("People?$filter=Name in [ \"\", \" \" ]")]
+        [InlineData("People?$filter=Name in ( '', \" \" )")]
+        [InlineData("People?$filter=Name in [ '', \" \" ]")]
+        [InlineData("People?$filter=Name in ( \"\", ' ' )")]
+        [InlineData("People?$filter=Name in [ \"\", ' ' ]")]
+        [InlineData("People?$filter=Name in [ 'null', 'null' ]")]
+        public async Task DollarFilter_WithCollectionWithEmptyString_ExecutesSuccessfully(string query)
+        {
+            // Act
+            var response = await _context.ExecuteAsync<Common.Clients.EndToEnd.Person>(new Uri(_baseUri.OriginalString + query));
+
+            // Assert
+            Assert.Empty(response.ToArray());
+        }
+
         [Fact]
         public async Task Using_LinqContains_ExecutesSuccessfully()
         {

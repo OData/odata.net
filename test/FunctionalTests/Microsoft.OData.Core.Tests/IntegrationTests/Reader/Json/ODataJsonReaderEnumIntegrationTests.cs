@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -144,7 +145,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             Action action = () => this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=minimal", expectedEntry);
             string fullName = this.entityType.FindProperty("ColorFlags").Type.FullName();
-            action.Throws<ODataException>(Strings.ReaderValidationUtils_NullNamedValueForNonNullableType("MyColorFlags", fullName));
+            action.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_NullNamedValueForNonNullableType, "MyColorFlags", fullName));
         }
 
         [Fact]
@@ -200,7 +201,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             Action action = () => this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=minimal", expectedEntry);
             string fullName = this.entityType.FindProperty("ColorFlags").Type.FullName();
-            action.Throws<ODataException>(Strings.ReaderValidationUtils_NullNamedValueForNonNullableType("MyColorFlags", fullName));
+            action.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_NullNamedValueForNonNullableType, "MyColorFlags", fullName));
         }
 
         [Fact]
@@ -343,7 +344,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             Action action = () => this.ReadEntryPayloadAndVerify(payload, "application/json;odata.metadata=minimal", expectedEntry);
             string fullName = this.entityType.FindProperty("ColorFlags").Type.FullName();
-            action.Throws<ODataException>(Strings.ReaderValidationUtils_NullNamedValueForNonNullableType("ColorFlags", fullName));
+            action.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_NullNamedValueForNonNullableType, "ColorFlags", fullName));
         }
 
         [Fact]
@@ -368,7 +369,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             const string payload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/$entity\",\"FloatId\":12.3,\"ColorFlags\":2}";
             ODataResource entry = null;
             Action parse = () => ReadRequestEntryPayload(this.userModel, payload, "application/json;odata.metadata=minimal", this.entitySet, this.entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
-            parse.Throws<ODataException>(Strings.JsonReaderExtensions_CannotReadValueAsString("2"));
+            parse.Throws<ODataException>(Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsString, "2"));
         }
         #endregion
 

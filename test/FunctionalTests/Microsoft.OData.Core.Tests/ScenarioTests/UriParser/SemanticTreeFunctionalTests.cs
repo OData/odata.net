@@ -11,7 +11,7 @@ using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -198,7 +198,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // Repro for: Syntactic parser assumes any token which matches the name of a previously used range variable is also a range variable, even after the scope has been exited
             Action parse = () => HardCodedTestModel.ParseUri("Dogs?$filter=MyPeople/all(a: true) and a ne null", this.edmModel);
-            parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Dog", "a"));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "Fully.Qualified.Namespace.Dog", "a"));
         }
 
         [Fact]
@@ -206,7 +206,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // Repro for: Semantic binding fails with useless error message when a range variable is redefined within a nested any/all
             Action parse = () => HardCodedTestModel.ParseUri("Dogs?$filter=MyPeople/all(a: a/MyPaintings/any(a:true))", this.edmModel);
-            parse.Throws<ODataException>(ODataErrorStrings.UriQueryExpressionParser_RangeVariableAlreadyDeclared("a"));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_RangeVariableAlreadyDeclared, "a"));
         }
 
         [Fact]
@@ -397,7 +397,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             {
                 //Ensure $-sign is required.
                 parser.EnableNoDollarQueryOptions = false;
-                test.Throws<ODataException>(Strings.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce("$count"));
+                test.Throws<ODataException>(Error.Format(SRResources.QueryOptionUtils_QueryParameterMustBeSpecifiedOnce, "$count"));
             }
             finally
             {
@@ -590,14 +590,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FilterThroughMissingNavigationOrComplexPropertyShouldThrowOurException()
         {
             Action parse = () => HardCodedTestModel.ParseUri("People?$filter=Missing/ID eq 1", this.edmModel);
-            parse.Throws<ODataException>(Strings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "Missing"));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "Fully.Qualified.Namespace.Person", "Missing"));
         }
 
         [Fact]
         public void FilterThroughMissingPropertyShouldThrowOurException()
         {
             Action parse = () => HardCodedTestModel.ParseUri("People?$filter=Missing eq 1", this.edmModel);
-            parse.Throws<ODataException>(Strings.MetadataBinder_PropertyNotDeclared("Fully.Qualified.Namespace.Person", "Missing"));
+            parse.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, "Fully.Qualified.Namespace.Person", "Missing"));
         }
     }
 }

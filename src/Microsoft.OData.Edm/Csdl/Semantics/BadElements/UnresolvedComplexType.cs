@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class UnresolvedComplexType : BadComplexType, IUnresolvedElement
     {
         public UnresolvedComplexType(string qualifiedName, EdmLocation location)
-            : base(qualifiedName, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedComplexType, Edm.Strings.Bad_UnresolvedComplexType(qualifiedName)) })
+            : base(qualifiedName, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedComplexType, Error.Format(SRResources.Bad_UnresolvedComplexType, qualifiedName)) })
         {
         }
     }

@@ -9,10 +9,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -383,7 +383,7 @@ namespace Microsoft.OData.Tests.Json
                             /* isOpenProperty */ true);
                     }));
 
-            Assert.Equal(ODataErrorStrings.WriterValidationUtils_MissingTypeNameWithMetadata, exception.Message);
+            Assert.Equal(SRResources.WriterValidationUtils_MissingTypeNameWithMetadata, exception.Message);
         }
 
         [Fact]
@@ -407,7 +407,7 @@ namespace Microsoft.OData.Tests.Json
                             /* isOpenProperty */ false);
                     }));
 
-            Assert.Equal(ODataErrorStrings.ODataJsonValueSerializer_MissingTypeNameOnCollection, exception.Message);
+            Assert.Equal(SRResources.ODataJsonValueSerializer_MissingTypeNameOnCollection, exception.Message);
         }
 
         [Fact]
@@ -469,7 +469,7 @@ namespace Microsoft.OData.Tests.Json
                         });
                 });
 
-            Assert.Equal(ODataErrorStrings.ODataJsonValueSerializer_MissingRawValueOnUntyped, exception.Message);
+            Assert.Equal(SRResources.ODataJsonValueSerializer_MissingRawValueOnUntyped, exception.Message);
         }
 
         [Fact]

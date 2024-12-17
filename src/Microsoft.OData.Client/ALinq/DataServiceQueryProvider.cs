@@ -343,7 +343,7 @@ namespace Microsoft.OData.Client
             }
 
             // Failed to retrieve the aggregate result for whatever reason
-            throw new DataServiceQueryException(Strings.DataServiceRequest_FailGetValue);
+            throw new DataServiceQueryException(SRResources.DataServiceRequest_FailGetValue);
         }
     }
 }

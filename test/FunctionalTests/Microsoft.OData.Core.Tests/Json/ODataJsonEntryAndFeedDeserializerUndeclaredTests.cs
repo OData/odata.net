@@ -11,10 +11,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Tests;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 {
@@ -2301,7 +2301,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,
                 ""UndeclaredProperty"":{""@odata.type"":""#Collection(Server.NS.Undeclared)"", ""Id"":""123""}}";
             Action test = () => this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader => { }, true);
-            test.Throws<ODataException>(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_CollectionTypeNotExpected("Collection(Server.NS.Undeclared)"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_CollectionTypeNotExpected, "Collection(Server.NS.Undeclared)"));
         }
 
         [Fact]
@@ -2343,7 +2343,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             const string payload = @"{""@odata.context"":""http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity"",""Id"":61880128,
                 ""UndeclaredProperty@odata.type"":""#Server.NS.Undeclared"",""UndeclaredProperty"":[{""Id"":""123""}]}";
             Action test = () => this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader => { }, true);
-            test.Throws<ODataException>(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_CollectionTypeExpected("Server.NS.Undeclared"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_CollectionTypeExpected, "Server.NS.Undeclared"));
         }
 
         [Fact]
@@ -2352,7 +2352,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             string contextUrl = @"http://www.sampletest.com/$metadata#Collection(Server.NS.Undefined)";
             string payload = "{\"@odata.context\":\"" + contextUrl + "\",\"id\":1}";
             Action test = () => this.ReadEntryPayload(payload, this.serverOpenEntitySet, this.serverOpenEntityType, reader => { }, true);
-            test.Throws<ODataException>(ODataErrorStrings.ODataJsonContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(contextUrl, "Resource"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind, contextUrl, "Resource"));
         }
 
         [Fact]
@@ -2361,7 +2361,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             string contextUrl = @"http://www.sampletest.com/$metadata#Server.NS.Undefined";
             string payload = "{\"@odata.context\":\"" + contextUrl + "\",\"value\":[{\"id\":1}]}";
             Action test = () => this.ReadCollectionPayload(payload, reader => { });
-            test.Throws<ODataException>(ODataErrorStrings.ODataJsonContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(contextUrl, "ResourceSet"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind, contextUrl, "ResourceSet"));
         }
         
         #endregion

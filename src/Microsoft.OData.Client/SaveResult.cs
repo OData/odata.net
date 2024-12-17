@@ -344,7 +344,7 @@ namespace Microsoft.OData.Client
 
             if (ex != null)
             {
-                throw new DataServiceRequestException(Strings.DataServiceException_GeneralError, ex, service);
+                throw new DataServiceRequestException(SRResources.DataServiceException_GeneralError, ex, service);
             }
 
             return service;
@@ -539,7 +539,7 @@ namespace Microsoft.OData.Client
             {
                 // The entity is marked as MLE but we don't have the content property
                 //   and the user didn't set the save stream.
-                throw Error.InvalidOperation(Strings.Context_MLEWithoutSaveStream(type.ElementTypeName));
+                throw Error.InvalidOperation(Error.Format(SRResources.Context_MLEWithoutSaveStream, type.ElementTypeName));
             }
 
             Debug.Assert(
@@ -565,7 +565,7 @@ namespace Microsoft.OData.Client
                     if (String.IsNullOrEmpty(mimeType))
                     {
                         throw Error.InvalidOperation(
-                            Strings.Context_NoContentTypeForMediaLink(
+                            Error.Format(SRResources.Context_NoContentTypeForMediaLink,
                                 type.ElementTypeName,
                                 type.MediaDataMember.MimeTypeProperty.PropertyName));
                     }
@@ -658,7 +658,7 @@ namespace Microsoft.OData.Client
             if (requestUri == null)
             {
                 throw Error.InvalidOperation(
-                    Strings.Context_SetSaveStreamWithoutEditMediaLink);
+                    SRResources.Context_SetSaveStreamWithoutEditMediaLink);
             }
 
             HeaderCollection headers = new HeaderCollection();
@@ -917,7 +917,7 @@ namespace Microsoft.OData.Client
             Uri requestUri = namedStreamInfo.GetLatestEditLink();
             if (requestUri == null)
             {
-                throw Error.InvalidOperation(Strings.Context_SetSaveStreamWithoutNamedStreamEditLink(namedStreamInfo.Name));
+                throw Error.InvalidOperation(Error.Format(SRResources.Context_SetSaveStreamWithoutNamedStreamEditLink, namedStreamInfo.Name));
             }
 
             HeaderCollection headers = new HeaderCollection();

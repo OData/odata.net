@@ -11,7 +11,7 @@ using System.Text;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser
 {
@@ -221,7 +221,7 @@ namespace Microsoft.OData.Tests.UriParser
             bool result = lexer.TryPeekNextToken(out resultToken, out error);
             Assert.False(result);
             Assert.NotNull(error);
-            Assert.Equal(ODataErrorStrings.ExpressionLexer_InvalidCharacter("#", "0", "#$*@#"), error.Message);
+            Assert.Equal(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "#", "0", "#$*@#"), error.Message);
         }
 
         // internal ExpressionToken NextToken()
@@ -241,7 +241,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("#$*@#", false, false);
             Action nextToken = () => lexer.NextToken();
-            nextToken.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidCharacter("#", "0", "#$*@#"));
+            nextToken.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "#", "0", "#$*@#"));
         }
 
         // internal object ReadLiteralToken()
@@ -333,7 +333,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("potato", false, false);
             Action read = () => lexer.ReadLiteralToken();
-            read.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_ExpectedLiteralToken("potato"));
+            read.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_ExpectedLiteralToken, "potato"));
         }
 
         // internal string ReadDottedIdentifier()
@@ -366,7 +366,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("2.43", false, false);
             Action read = () => lexer.ReadDottedIdentifier(false);
-            read.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError("0", "2.43"));
+            read.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, "0", "2.43"));
         }
 
         [Fact]
@@ -382,7 +382,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("m.*", true, false);
             Action read = () => lexer.ReadDottedIdentifier(false);
-            read.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError("3", "m.*"));
+            read.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, "3", "m.*"));
         }
 
         [Fact]
@@ -390,7 +390,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("m.*.blah", true, false);
             Action read = () => lexer.ReadDottedIdentifier(true);
-            read.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError("3", "m.*.blah"));
+            read.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, "3", "m.*.blah"));
         }
 
         // internal ExpressionToken PeekNextToken()
@@ -408,7 +408,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("#$*@#", false, false);
             Action peek = () => lexer.PeekNextToken();
-            peek.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidCharacter("#", "0", "#$*@#"));
+            peek.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "#", "0", "#$*@#"));
         }
 
         // internal void ValidateToken(ExpressionTokenKind t)
@@ -425,7 +425,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer lexer = new ExpressionLexer("null", true, false);
             Action validate = () => lexer.ValidateToken(ExpressionTokenKind.Question);
-            validate.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError(4, "null"));
+            validate.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, 4, "null"));
         }
 
         [Fact]
@@ -516,15 +516,15 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void SpatialLiteralNegative_WrongQuotes()
         {
-            ValidateLexerException<ODataException>("geography\"foo\"", Strings.ExpressionLexer_InvalidCharacter("\"", 9, "geography\"foo\""));
-            ValidateLexerException<ODataException>("geometry\"foo\"", Strings.ExpressionLexer_InvalidCharacter("\"", 8, "geometry\"foo\""));
+            ValidateLexerException<ODataException>("geography\"foo\"", Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "\"", 9, "geography\"foo\""));
+            ValidateLexerException<ODataException>("geometry\"foo\"", Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "\"", 8, "geometry\"foo\""));
         }
 
         [Fact]
         public void SpatialLiteralNegative_UnterminatedQuote()
         {
-            ValidateLexerException<ODataException>("geography'foo", Strings.ExpressionLexer_UnterminatedLiteral(13, "geography'foo"));
-            ValidateLexerException<ODataException>("geometry'foo", Strings.ExpressionLexer_UnterminatedLiteral(12, "geometry'foo"));
+            ValidateLexerException<ODataException>("geography'foo", Error.Format(SRResources.ExpressionLexer_UnterminatedLiteral, 13, "geography'foo"));
+            ValidateLexerException<ODataException>("geometry'foo", Error.Format(SRResources.ExpressionLexer_UnterminatedLiteral, 12, "geometry'foo"));
         }
 
         [Fact]
@@ -684,21 +684,21 @@ namespace Microsoft.OData.Tests.UriParser
         public void ExpressionLexerShouldFailByDefaultForAtSymbol()
         {
             Action lex = () => new ExpressionLexer("@", moveToFirstToken: true, useSemicolonDelimiter: false);
-            lex.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError(1, "@"));
+            lex.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, 1, "@"));
         }
 
         [Fact]
         public void ExpressionLexerShouldFailAtSymbolIsLastCharacter()
         {
             Action lex = () => new ExpressionLexer("@", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
-            lex.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError(1, "@"));
+            lex.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, 1, "@"));
         }
 
         [Fact]
         public void ExpressionLexerShouldExpectIdentifierStartAfterAtSymbol()
         {
             Action lex = () => new ExpressionLexer("@1", moveToFirstToken: true, useSemicolonDelimiter: false, parsingFunctionParameters: true);
-            lex.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_InvalidCharacter("1", 1, "@1"));
+            lex.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "1", 1, "@1"));
         }
 
         [Fact]
@@ -840,13 +840,13 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ComplexValueMustBeEndedByBracket()
         {
-            ValidateLexerException<ODataException>("{stuff : morestuff", ODataErrorStrings.ExpressionLexer_UnbalancedBracketExpression);
+            ValidateLexerException<ODataException>("{stuff : morestuff", SRResources.ExpressionLexer_UnbalancedBracketExpression);
         }
 
         [Fact]
         public void OverClosedBracketsThrow()
         {
-            ValidateLexerException<ODataException>("{stuff: morestuff}}", ODataErrorStrings.ExpressionLexer_InvalidCharacter("}", "18", "{stuff: morestuff}}"));
+            ValidateLexerException<ODataException>("{stuff: morestuff}}", Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", "18", "{stuff: morestuff}}"));
         }
 
         [Fact]

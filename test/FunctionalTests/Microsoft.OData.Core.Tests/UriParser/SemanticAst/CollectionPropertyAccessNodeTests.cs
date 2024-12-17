@@ -8,6 +8,7 @@ using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -65,14 +66,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void CollectionPropertyAccessCannotTakeANavigationProperty()
         {
             Action create = () => new CollectionPropertyAccessNode(new ConstantNode(null), HardCodedTestModel.GetDogMyPeopleNavProp());
-            create.Throws<ArgumentException>(Strings.Nodes_PropertyAccessShouldBeNonEntityProperty("MyPeople"));
+            create.Throws<ArgumentException>(Error.Format(SRResources.Nodes_PropertyAccessShouldBeNonEntityProperty, "MyPeople"));
         }
 
         [Fact]
         public void CollectionPropertyAccessCannotTakeANonCollectionProperty()
         {
             Action create = () => new CollectionPropertyAccessNode(new ConstantNode(null), HardCodedTestModel.GetDogColorProp());
-            create.Throws<ArgumentException>(Strings.Nodes_PropertyAccessTypeMustBeCollection("Color"));
+            create.Throws<ArgumentException>(Error.Format(SRResources.Nodes_PropertyAccessTypeMustBeCollection, "Color"));
         }
 
         [Fact]

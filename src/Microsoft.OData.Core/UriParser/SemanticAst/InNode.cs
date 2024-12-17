@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -55,7 +55,7 @@ namespace Microsoft.OData.UriParser
                 if (!this.left.GetEdmTypeReference().IsAssignableFrom(this.right.ItemType) &&
                     !this.right.ItemType.IsAssignableFrom(this.left.GetEdmTypeReference()))
                 {
-                    throw new ArgumentException(ODataErrorStrings.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType(
+                    throw new ArgumentException(Error.Format(SRResources.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType,
                         this.right.ItemType.FullName(), this.left.GetEdmTypeReference().FullName()));
                 }
             }

@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using Xunit;
 
@@ -72,7 +73,7 @@ namespace Microsoft.OData.Tests
 
             var odataRequestMessage = new ODataRequestMessage(simulatedRequestMessage, false, false, -1);
             Action setHeader = (() => odataRequestMessage.SetHeader(headerName, headerValueAfter));
-            setHeader.Throws<ODataException>(Strings.ODataMessage_MustNotModifyMessage);
+            setHeader.Throws<ODataException>(SRResources.ODataMessage_MustNotModifyMessage);
         }
 
         [Fact]

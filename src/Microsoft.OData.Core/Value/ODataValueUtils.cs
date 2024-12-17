@@ -9,6 +9,7 @@ namespace Microsoft.OData.Service
 #else
 using System;
 using System.Text.Json;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData
 #endif

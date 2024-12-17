@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -65,7 +66,7 @@ namespace Microsoft.OData
         {
             if (baseContextUrl == null && throwIfMissingInfo)
             {
-                throw new ODataException(Strings.ODataOutputContext_MetadataDocumentUriMissing);
+                throw new ODataException(SRResources.ODataOutputContext_MetadataDocumentUriMissing);
             }
 
             return new ODataContextUriBuilder(baseContextUrl, throwIfMissingInfo);
@@ -97,7 +98,7 @@ namespace Microsoft.OData
             }
             else
             {
-                throw new ODataException(Strings.ODataContextUriBuilder_UnsupportedPayloadKind(payloadKind.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataContextUriBuilder_UnsupportedPayloadKind, payloadKind.ToString()));
             }
 
             switch (payloadKind)
@@ -242,7 +243,7 @@ namespace Microsoft.OData
         {
             if (string.IsNullOrEmpty(contextUrlInfo.TypeName))
             {
-                throw new ODataException(Strings.ODataContextUriBuilder_TypeNameMissingForProperty);
+                throw new ODataException(SRResources.ODataContextUriBuilder_TypeNameMissingForProperty);
             }
         }
 
@@ -254,7 +255,7 @@ namespace Microsoft.OData
         {
             if (string.IsNullOrEmpty(contextUrlInfo.TypeName))
             {
-                throw new ODataException(Strings.ODataContextUriBuilder_TypeNameMissingForTopLevelCollection);
+                throw new ODataException(SRResources.ODataContextUriBuilder_TypeNameMissingForTopLevelCollection);
             }
         }
 
@@ -270,7 +271,7 @@ namespace Microsoft.OData
             {
                 if (string.IsNullOrEmpty(contextUrlInfo.TypeName))
                 {
-                    throw new ODataException(Strings.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
+                    throw new ODataException(SRResources.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
                 }
 
                 return;
@@ -284,7 +285,7 @@ namespace Microsoft.OData
                 contextUrlInfo.IsUnknownEntitySet && string.IsNullOrEmpty(contextUrlInfo.NavigationSource) &&
                 string.IsNullOrEmpty(contextUrlInfo.TypeName))
             {
-                throw new ODataException(Strings.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
+                throw new ODataException(SRResources.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
             }
         }
 
@@ -296,7 +297,7 @@ namespace Microsoft.OData
         {
             if (string.IsNullOrEmpty(contextUrlInfo.ResourcePath))
             {
-                throw new ODataException(Strings.ODataContextUriBuilder_ODataUriMissingForIndividualProperty);
+                throw new ODataException(SRResources.ODataContextUriBuilder_ODataUriMissingForIndividualProperty);
             }
         }
 

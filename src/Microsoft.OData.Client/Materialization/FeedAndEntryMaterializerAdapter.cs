@@ -149,7 +149,7 @@ namespace Microsoft.OData.Client.Materialization
                 return this.currentFeed.Count.Value;
             }
 
-            throw new InvalidOperationException(DSClient.Strings.MaterializeFromObject_CountNotPresent);
+            throw new InvalidOperationException(SRResources.MaterializeFromObject_CountNotPresent);
         }
 
         /// <summary>
@@ -652,7 +652,7 @@ namespace Microsoft.OData.Client.Materialization
             }
             catch (ODataErrorException e)
             {
-                throw new DataServiceClientException(DSClient.Strings.Deserialize_ServerException(e.Error.Message), e);
+                throw new DataServiceClientException(Error.Format(SRResources.Deserialize_ServerException, e.Error.Message), e);
             }
             catch (ODataException o)
             {

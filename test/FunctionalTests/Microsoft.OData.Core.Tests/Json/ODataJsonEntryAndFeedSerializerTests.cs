@@ -11,7 +11,7 @@ using System.Text;
 using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests.Json
                 var context = this.CreateJsonOutputContext(stream, writingResponse: false);
                 var serializer = new ODataJsonResourceSerializer(context);
                 Action test = () => serializer.WriteOperations(new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) } }, /*isAction*/true);
-                test.Throws<ODataException>(ErrorStrings.WriterValidationUtils_OperationInRequest("#foo"));
+                test.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_OperationInRequest, "#foo"));
             }
         }
 
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Tests.Json
         {
             IEnumerable<ODataOperation> operations = new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative), Target = new Uri("foo", UriKind.Relative) } };
             Action test = () => this.WriteOperationsAndValidatePayload(operations, null, true, false /*setMetadataDocumentUri*/);
-            test.Throws<ODataException>(ErrorStrings.ODataOutputContext_MetadataDocumentUriMissing);
+            test.Throws<ODataException>(SRResources.ODataOutputContext_MetadataDocumentUriMissing);
         }
 
         [Fact]
@@ -124,7 +124,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var operations = new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) }, new ODataAction { Metadata = new Uri("#foo", UriKind.Relative), Target = new Uri("http://www.example.com/foo") } };
             Action test = () => this.WriteOperationsAndValidatePayload(operations, null);
-            test.Throws<ODataException>(ErrorStrings.ODataJsonResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget("#foo"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget, "#foo"));
         }
 
         [Fact]
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var operations = new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) }, new ODataAction { Metadata = new Uri("#foo", UriKind.Relative) } };
             Action test = () => this.WriteOperationsAndValidatePayload(operations, null);
-            test.Throws<ODataException>(ErrorStrings.ODataJsonResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget("#foo"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget, "#foo"));
         }
 
         [Fact]
@@ -140,7 +140,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var operations = new ODataOperation[] { new ODataAction { Metadata = new Uri("#foo", UriKind.Relative), Target = new Uri("http://www.example.com/foo") }, new ODataAction { Metadata = new Uri("#foo", UriKind.Relative), Target = new Uri("http://www.example.com/foo") } };
             Action test = () => this.WriteOperationsAndValidatePayload(operations, null);
-            test.Throws<ODataException>(ErrorStrings.ODataJsonResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget("#foo", "http://www.example.com/foo"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataJsonResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget, "#foo", "http://www.example.com/foo"));
         }
 
         [Fact]

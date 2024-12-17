@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class UnresolvedPrimitiveType : BadPrimitiveType, IUnresolvedElement
     {
         public UnresolvedPrimitiveType(string qualifiedName, EdmLocation location)
-            : base(qualifiedName, EdmPrimitiveTypeKind.None, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedPrimitiveType, Edm.Strings.Bad_UnresolvedPrimitiveType(qualifiedName)) })
+            : base(qualifiedName, EdmPrimitiveTypeKind.None, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedPrimitiveType, Error.Format(SRResources.Bad_UnresolvedPrimitiveType, qualifiedName)) })
         {
         }
     }

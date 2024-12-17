@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,28 +36,28 @@ namespace Microsoft.OData.Tests
         public void StartCannotTransitionToQuotedString()
         {
             Action test = () => HttpHeaderValueLexer.Create("headerName", "\"quoted-string\"").ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_TokenExpectedButFoundQuotedString("headerName", "\"quoted-string\"", 0));
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_TokenExpectedButFoundQuotedString, "headerName", "\"quoted-string\"", 0));
         }
 
         [Fact]
         public void StartCannotTrnasistionToElementSeparator()
         {
             Action test = () => HttpHeaderValueLexer.Create("headerName", ",").ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", ",", 0));            
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString, "headerName", ",", 0));
         }
 
         [Fact]
         public void StartCannotTrnasistionToParameterSeparator()
         {
             Action test = () => HttpHeaderValueLexer.Create("headerName", ";").ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", ";", 0));
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString, "headerName", ";", 0));
         }
 
         [Fact]
         public void StartCannotTrnasistionToValueSeparator()
         {
             Action test = () => HttpHeaderValueLexer.Create("headerName", "=").ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", "=", 0));
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString, "headerName", "=", 0));
         }
 
         [Fact]
@@ -99,7 +100,7 @@ namespace Microsoft.OData.Tests
         public void TokenCannotNotTransitionToQuotedString()
         {
             Action test = () => HttpHeaderValueLexer.Create("headerName", "token\"quotes-string\"").ReadNext().ReadNext();
-            test.Throws<ODataException>(Strings.HttpUtils_EscapeCharWithoutQuotes("headerName", "token\"quotes-string\"", 5, "\""));
+            test.Throws<ODataException>(Error.Format(SRResources.HttpUtils_EscapeCharWithoutQuotes, "headerName", "token\"quotes-string\"", 5, "\""));
         }
 
         [Fact]
@@ -132,7 +133,7 @@ namespace Microsoft.OData.Tests
             var lexer = HttpHeaderValueLexer.Create("headerName", "token=\"quotes-string\"=").ReadNext().ReadNext().ReadNext();
             Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_InvalidSeparatorAfterQuotedString("headerName", "token=\"quotes-string\"=", 21, "="));
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_InvalidSeparatorAfterQuotedString, "headerName", "token=\"quotes-string\"=", 21, "="));
         }
 
         [Fact]
@@ -141,7 +142,7 @@ namespace Microsoft.OData.Tests
             var lexer = HttpHeaderValueLexer.Create("headerName", "token=\"quotes-string\"token").ReadNext().ReadNext().ReadNext();
             Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_UnrecognizedSeparator("headerName", "token=\"quotes-string\"token", 21, "t"));            
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_UnrecognizedSeparator, "headerName", "token=\"quotes-string\"token", 21, "t"));
         }
 
         [Fact]
@@ -150,7 +151,7 @@ namespace Microsoft.OData.Tests
             var lexer = HttpHeaderValueLexer.Create("headerName", "token=\"quotes-string\"\"quotes-string\"").ReadNext().ReadNext().ReadNext();
             Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.QuotedString, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_UnrecognizedSeparator("headerName", "token=\"quotes-string\"\"quotes-string\"", 21, "\""));                        
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_UnrecognizedSeparator, "headerName", "token=\"quotes-string\"\"quotes-string\"", 21, "\""));
         }
 
         [Fact]
@@ -159,7 +160,7 @@ namespace Microsoft.OData.Tests
             var lexer = HttpHeaderValueLexer.Create("headerName", "token,").ReadNext().ReadNext();
             Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_EndOfFileAfterSeparator("headerName", "token,", 6, ","));
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_EndOfFileAfterSeparator, "headerName", "token,", 6, ","));
         }
 
         [Fact]
@@ -168,7 +169,7 @@ namespace Microsoft.OData.Tests
             var lexer = HttpHeaderValueLexer.Create("headerName", "token;").ReadNext().ReadNext();
             Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_EndOfFileAfterSeparator("headerName", "token;", 6, ";"));
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_EndOfFileAfterSeparator, "headerName", "token;", 6, ";"));
         }
 
         [Fact]
@@ -177,7 +178,7 @@ namespace Microsoft.OData.Tests
             var lexer = HttpHeaderValueLexer.Create("headerName", "token=").ReadNext().ReadNext();
             Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ValueSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_EndOfFileAfterSeparator("headerName", "token=", 6, "="));
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_EndOfFileAfterSeparator, "headerName", "token=", 6, "="));
         }
 
         [Fact]
@@ -202,7 +203,7 @@ namespace Microsoft.OData.Tests
             var lexer = HttpHeaderValueLexer.Create("headerName", "token= =").ReadNext().ReadNext();
             Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ValueSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", "token= =", 7));
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString, "headerName", "token= =", 7));
         }
 
         [Fact]
@@ -219,7 +220,7 @@ namespace Microsoft.OData.Tests
             var lexer = HttpHeaderValueLexer.Create("headerName", "token,\"quoted-string\"").ReadNext().ReadNext();
             Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_TokenExpectedButFoundQuotedString("headerName", "token,\"quoted-string\"", 6));
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_TokenExpectedButFoundQuotedString, "headerName", "token,\"quoted-string\"", 6));
         }
 
         [Fact]
@@ -228,7 +229,7 @@ namespace Microsoft.OData.Tests
             var lexer = HttpHeaderValueLexer.Create("headerName", "token,,").ReadNext().ReadNext();
             Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ElementSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", "token,,", 6));
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString, "headerName", "token,,", 6));
         }
 
         [Fact]
@@ -245,7 +246,7 @@ namespace Microsoft.OData.Tests
             var lexer = HttpHeaderValueLexer.Create("headerName", "token;\"quoted-string\"").ReadNext().ReadNext();
             Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_TokenExpectedButFoundQuotedString("headerName", "token;\"quoted-string\"", 6));
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_TokenExpectedButFoundQuotedString, "headerName", "token;\"quoted-string\"", 6));
         }
 
         [Fact]
@@ -254,7 +255,7 @@ namespace Microsoft.OData.Tests
             var lexer = HttpHeaderValueLexer.Create("headerName", "token;;").ReadNext().ReadNext();
             Assert.Equal(HttpHeaderValueLexer.HttpHeaderValueItemType.ParameterSeparator, lexer.Type);
             Action test = () => lexer.ReadNext();
-            test.Throws<ODataException>(Strings.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString("headerName", "token;;", 6));
+            test.Throws<ODataException>(Error.Format(SRResources.HttpHeaderValueLexer_FailedToReadTokenOrQuotedString, "headerName", "token;;", 6));
         }
 
         [Fact]

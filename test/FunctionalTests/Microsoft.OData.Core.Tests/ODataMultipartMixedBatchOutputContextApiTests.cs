@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -948,8 +949,8 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     }
                 }));
 
-            Assert.Equal(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound("Content-ID"), asyncException.Message);
-            Assert.Equal(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound("Content-ID"), syncException.Message);
+            Assert.Equal(Error.Format(SRResources.ODataBatchOperationHeaderDictionary_KeyNotFound, "Content-ID"), asyncException.Message);
+            Assert.Equal(Error.Format(SRResources.ODataBatchOperationHeaderDictionary_KeyNotFound, "Content-ID"), syncException.Message);
         }
 
         [Fact]
@@ -995,8 +996,8 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     }
                 }));
 
-            Assert.Equal(Strings.ODataBatchReader_DependsOnIdNotFound(3, 2), asyncException.Message);
-            Assert.Equal(Strings.ODataBatchReader_DependsOnIdNotFound(3, 2), syncException.Message);
+            Assert.Equal(Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, 3, 2), asyncException.Message);
+            Assert.Equal(Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, 3, 2), syncException.Message);
         }
 
         [Fact]
@@ -1027,8 +1028,8 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     }
                 }));
 
-            Assert.Equal(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch, asyncException.Message);
-            Assert.Equal(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch, syncException.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_CannotWriteInStreamErrorForBatch, asyncException.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_CannotWriteInStreamErrorForBatch, syncException.Message);
         }
 
         #endregion

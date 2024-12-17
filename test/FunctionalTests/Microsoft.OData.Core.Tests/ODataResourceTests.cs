@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Tests.Evaluation;
@@ -282,7 +283,7 @@ namespace Microsoft.OData.Tests
             };
 
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ODataResource_PropertyValueCannotBeODataResourceValue("ResourceProperty"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataResource_PropertyValueCannotBeODataResourceValue, "ResourceProperty"), exception.Message);
         }
 
         [Fact]
@@ -306,7 +307,7 @@ namespace Microsoft.OData.Tests
             };
 
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ODataResource_PropertyValueCannotBeODataResourceValue("CollectionProperty"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataResource_PropertyValueCannotBeODataResourceValue, "CollectionProperty"), exception.Message);
         }
 
         [Fact]

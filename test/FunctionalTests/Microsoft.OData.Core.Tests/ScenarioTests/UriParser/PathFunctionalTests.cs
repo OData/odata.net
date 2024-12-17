@@ -13,7 +13,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void MultipleUnnamedKeysThrowsException()
         {
             Action parsePath = () => PathFunctionalTestsUtil.RunParsePath("People(7,8,9)");
-            parsePath.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_KeysMustBeNamed);
+            parsePath.Throws<ODataException>(SRResources.RequestUriProcessor_KeysMustBeNamed);
         }
 
         [Fact]
@@ -92,7 +92,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void VoidServiceOperationIsNotComposable()
         {
             Action parsePath = () => PathFunctionalTestsUtil.RunParsePath("GetNothing/foo");
-            parsePath.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("GetNothing"));
+            parsePath.Throws<ODataException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "GetNothing"));
         }
 
         [Fact]
@@ -121,7 +121,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void PrimitiveServiceOperationThrowsRightErrorWhenFollowedByUnrecognizedSegment()
         {
             Action parsePath = () => PathFunctionalTestsUtil.RunParsePath("GetSomeNumber/foo");
-            parsePath.Throws<ODataUnrecognizedPathException>(ODataErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("GetSomeNumber", "foo"));
+            parsePath.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment, "GetSomeNumber", "foo"));
         }
 
         [Fact]
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ComplexServiceOperationThrowsRightErrorWhenFollowedByUnrecognizedSegment()
         {
             Action parsePath = () => PathFunctionalTestsUtil.RunParsePath("GetSomeAddress/foo");
-            parsePath.Throws<ODataUnrecognizedPathException>(ODataErrorStrings.RequestUriProcessor_ResourceNotFound("foo"));
+            parsePath.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "foo"));
         }
 
         [Fact]
@@ -150,7 +150,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void EntityServiceOperationThrowsRightErrorWhenFollowedByUnrecognizedSegment()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("GetCoolestPerson/foo", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("foo"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("GetCoolestPerson/foo", Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "foo"));
         }
 
         [Fact]
@@ -165,19 +165,19 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void EntitySetServiceOperationThrowsRightErrorWhenFollowedByUnrecognizedSegment()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("GetCoolPeople/foo", ODataErrorStrings.RequestUriProcessor_SyntaxError);
+            PathFunctionalTestsUtil.RunParseErrorPath("GetCoolPeople/foo", SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
         public void PrimitiveCollectionOperationThrowsRightErrorWhenFollowedByUnrecognizedSegment()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("GetSomeNumbers/foo", ODataErrorStrings.RequestUriProcessor_CannotQueryCollections("GetSomeNumbers"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetSomeNumbers/foo", Error.Format(SRResources.RequestUriProcessor_CannotQueryCollections, "GetSomeNumbers"));
         }
 
         [Fact]
         public void ComplexCollectionServiceOperationThrowsRightErrorWhenFollowedByUnrecognizedSegment()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("GetSomeAddresses/foo", ODataErrorStrings.RequestUriProcessor_CannotQueryCollections("GetSomeAddresses"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetSomeAddresses/foo", Error.Format(SRResources.RequestUriProcessor_CannotQueryCollections, "GetSomeAddresses"));
         }
 
         [Fact]
@@ -356,7 +356,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void CannotAddParametersToActions()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("Context.MoveEveryone(streetAddress='stuff')", ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates("Context.MoveEveryone"));
+            PathFunctionalTestsUtil.RunParseErrorPath("Context.MoveEveryone(streetAddress='stuff')", Error.Format(SRResources.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates, "Context.MoveEveryone"));
         }
 
         [Fact]
@@ -364,7 +364,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             // TODO: We can improve error message drastically when we refactor path parsing
             // The 'Walk' action returns an Address
-            PathFunctionalTestsUtil.RunParseErrorPath("Dogs(1)/Fully.Qualified.Namespace.Walk/City", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.Walk"));
+            PathFunctionalTestsUtil.RunParseErrorPath("Dogs(1)/Fully.Qualified.Namespace.Walk/City", Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "Fully.Qualified.Namespace.Walk"));
         }
 
         #region Functions
@@ -420,13 +420,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void FunctionWithPositionalParmeterShouldThrow()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.HasDog(true)", ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates("Fully.Qualified.Namespace.HasDog"));
+            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.HasDog(true)", Error.Format(SRResources.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates, "Fully.Qualified.Namespace.HasDog"));
         }
 
         [Fact]
         public void FunctionWithMultiplePositionalParametersShouldThrow()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.HasDog(true, 'Fido')", ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates("Fully.Qualified.Namespace.HasDog"));
+            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.HasDog(true, 'Fido')", Error.Format(SRResources.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates, "Fully.Qualified.Namespace.HasDog"));
         }
 
         [Fact]
@@ -452,14 +452,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void FunctionWithBogusBracketsThrows()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={}})", ODataErrorStrings.ExpressionLexer_InvalidCharacter("}", "10", "address={}}"));
+            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.CanMoveToAddress(address={}})", Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", "10", "address={}}"));
         }
 
         [Fact]
         public void FunctionBoundToPrimitiveCannotBeInvoked()
         {
             Action parse = () => PathFunctionalTestsUtil.RunParsePath("Vegetables(0)/ID/IsPrime()", ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes());
-            parse.Throws<ODataUnrecognizedPathException>(ODataErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("ID", "IsPrime()"));
+            parse.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment, "ID", "IsPrime()"));
         }
 
         [Fact]
@@ -569,7 +569,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void AmbiguousFunctionCallThrows()
         {
             Action parse = () => PathFunctionalTestsUtil.RunParsePath("Vegetables(0)/Test.Foo(p2='1')", ModelBuildingHelpers.GetModelWithFunctionOverloadsWithSameParameterNames());
-            parse.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_NoSingleMatchFound("Test.Foo", "p2"));
+            parse.Throws<ODataException>(Error.Format(SRResources.FunctionOverloadResolver_NoSingleMatchFound, "Test.Foo", "p2"));
         }
 
         [Fact]
@@ -583,20 +583,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ActionBoundToPrimitiveThrows()
         {
             Action parse = () => PathFunctionalTestsUtil.RunParsePath("Vegetables(0)/ID/Subtract", ModelBuildingHelpers.GetModelFunctionsOnNonEntityTypes());
-            parse.Throws<ODataUnrecognizedPathException>(ODataErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("ID", "Subtract"));
+            parse.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment, "ID", "Subtract"));
         }
 
         [Fact]
         public void FunctionWithExpressionParameterThrows()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.OwnsTheseDogs(dogNames=Dogs(0))", ODataErrorStrings.MetadataBinder_UnknownFunction("Dogs"));
+            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.OwnsTheseDogs(dogNames=Dogs(0))", Error.Format(SRResources.MetadataBinder_UnknownFunction, "Dogs"));
         }
 
         [Fact]
         public void FunctionWithMultipleParametersWithTheSameNameThrows()
         {
             Action parse = () => PathFunctionalTestsUtil.RunParsePath("Foo(p2='stuff', p2='1')", ModelBuildingHelpers.GetModelWithFunctionWithDuplicateParameterNames());
-            parse.Throws<ODataException>(ODataErrorStrings.FunctionCallParser_DuplicateParameterOrEntityKeyName);
+            parse.Throws<ODataException>(SRResources.FunctionCallParser_DuplicateParameterOrEntityKeyName);
         }
 
         #endregion
@@ -712,25 +712,25 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void InvalidCastShouldNotBeAllowedOnSingleComplex()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/MyAddress/Fully.Qualified.Namespace.OpenAddress", ODataErrorStrings.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType("Fully.Qualified.Namespace.OpenAddress", HardCodedTestModel.GetAddressType().FullName()));
+            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/MyAddress/Fully.Qualified.Namespace.OpenAddress", Error.Format(SRResources.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType, "Fully.Qualified.Namespace.OpenAddress", HardCodedTestModel.GetAddressType().FullName()));
         }
 
         [Fact]
         public void InvalidCastShouldNotBeAllowedOnComplexCollection()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/PreviousAddresses/Fully.Qualified.Namespace.OpenAddress", ODataErrorStrings.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType("Fully.Qualified.Namespace.OpenAddress", HardCodedTestModel.GetAddressType().FullName()));
+            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/PreviousAddresses/Fully.Qualified.Namespace.OpenAddress", Error.Format(SRResources.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType, "Fully.Qualified.Namespace.OpenAddress", HardCodedTestModel.GetAddressType().FullName()));
         }
 
         [Fact]
         public void InvalidCastShouldNotBeAllowedOnSingleEntity()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("Dogs(2)/Fully.Qualified.Namespace.Person", ODataErrorStrings.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType("Fully.Qualified.Namespace.Person", HardCodedTestModel.GetDogType().FullName()));
+            PathFunctionalTestsUtil.RunParseErrorPath("Dogs(2)/Fully.Qualified.Namespace.Person", Error.Format(SRResources.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType, "Fully.Qualified.Namespace.Person", HardCodedTestModel.GetDogType().FullName()));
         }
 
         [Fact]
         public void InvalidCastShouldNotBeAllowedOnEntityCollection()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("Dogs/Fully.Qualified.Namespace.Person", ODataErrorStrings.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType("Fully.Qualified.Namespace.Person", HardCodedTestModel.GetDogType().FullName()));
+            PathFunctionalTestsUtil.RunParseErrorPath("Dogs/Fully.Qualified.Namespace.Person", Error.Format(SRResources.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType, "Fully.Qualified.Namespace.Person", HardCodedTestModel.GetDogType().FullName()));
         }
 
         [Fact]
@@ -761,7 +761,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void KeysDuplicatedError()
         {
             Action action = () => PathFunctionalTestsUtil.RunParsePath("Dogs( ID  =  1, ID  =  1)");
-            action.Throws<ODataException>(ODataErrorStrings.FunctionCallParser_DuplicateParameterOrEntityKeyName);
+            action.Throws<ODataException>(SRResources.FunctionCallParser_DuplicateParameterOrEntityKeyName);
         }
 
         [Fact]
@@ -837,7 +837,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void IfKeyIsExplicitlySetToValueOfImplicitKeyThrowError()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(32)/MyLions(ID1=64)", ODataErrorStrings.BadRequest_KeyMismatch(HardCodedTestModel.GetLionType().FullName()));
+            PathFunctionalTestsUtil.RunParseErrorPath("People(32)/MyLions(ID1=64)", Error.Format(SRResources.BadRequest_KeyMismatch, HardCodedTestModel.GetLionType().FullName()));
         }
 
         [Fact]
@@ -850,7 +850,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             Action parse = () => parser.ParsePath();
 
-            parse.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_SyntaxError);
+            parse.Throws<ODataException>(SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -972,22 +972,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             PathFunctionalTestsUtil.RunParsePath("GetPet5(id=false)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet5()).ShouldHaveParameterCount(1).ShouldHaveConstantParameter("id", false);
 
-            PathFunctionalTestsUtil.RunParseErrorPath("GetPet5(id=1)", ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.Boolean"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetPet5(id=1)", Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Int32", "Edm.Boolean"));
         }
 
         [Fact]
         public void FunctionParameterWithUnmatchType()
         {
             // long
-            PathFunctionalTestsUtil.RunParseErrorPath("GetPet1(id=102F)", ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.Single", "Edm.Int64"));
-            PathFunctionalTestsUtil.RunParseErrorPath("GetPet1(id=9223372036854775808)" /*bigger than long*/, ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.Decimal", "Edm.Int64"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetPet1(id=102F)", Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Single", "Edm.Int64"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetPet1(id=9223372036854775808)" /*bigger than long*/, Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Decimal", "Edm.Int64"));
 
             // single
-            PathFunctionalTestsUtil.RunParseErrorPath("GetPet2(id=102.0D)", ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.Double", "Edm.Single"));
-            PathFunctionalTestsUtil.RunParseErrorPath("GetPet2(id=3402823000000000000000000000000000000000)" /*bigger than Single*/, ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.Double", "Edm.Single"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetPet2(id=102.0D)", Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Double", "Edm.Single"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetPet2(id=3402823000000000000000000000000000000000)" /*bigger than Single*/, Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Double", "Edm.Single"));
 
             // double
-            PathFunctionalTestsUtil.RunParseErrorPath("GetPet3(id=12M)", ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.Decimal", "Edm.Double"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetPet3(id=12M)", Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Decimal", "Edm.Double"));
 
             // decimal
             // TODO: Whether different type should throw exception even when 102F can be promoted to 102M?
@@ -1000,43 +1000,43 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void KeyLookupCannotAppearTwiceInARow()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("Dogs(1)(2)", ODataErrorStrings.RequestUriProcessor_SyntaxError);
+            PathFunctionalTestsUtil.RunParseErrorPath("Dogs(1)(2)", SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
         public void KeyLookupCannotAppearAfterStructuralProperty()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("Dogs(1)/Color(1)", ODataErrorStrings.RequestUriProcessor_SyntaxError);
+            PathFunctionalTestsUtil.RunParseErrorPath("Dogs(1)/Color(1)", SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
         public void KeyLookupCannotAppearAfterMetadata()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("$metadata(1)", ODataErrorStrings.RequestUriProcessor_SyntaxError);
+            PathFunctionalTestsUtil.RunParseErrorPath("$metadata(1)", SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
         public void KeyLookupCannotAppearAfterCount()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("Dogs(1)/MyPeople/$count(1)", ODataErrorStrings.RequestUriProcessor_SyntaxError);
+            PathFunctionalTestsUtil.RunParseErrorPath("Dogs(1)/MyPeople/$count(1)", SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
         public void KeyLookupCannotAppearAfterNamedStream()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("Dogs(1)/NamedStream(1)", ODataErrorStrings.RequestUriProcessor_SyntaxError);
+            PathFunctionalTestsUtil.RunParseErrorPath("Dogs(1)/NamedStream(1)", SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
         public void KeyLookupCannotAppearAfterVoidServiceOperation()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("GetNothing(1)", ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates("GetNothing"));
+            PathFunctionalTestsUtil.RunParseErrorPath("GetNothing(1)", Error.Format(SRResources.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates, "GetNothing"));
         }
 
         [Fact]
         public void KeyLookupCannotAppearAfterNonComposableFunctionWithoutParameters()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.AllMyFriendsDogsNonComposable(1)", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.AllMyFriendsDogsNonComposable"));
+            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.AllMyFriendsDogsNonComposable(1)", Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "Fully.Qualified.Namespace.AllMyFriendsDogsNonComposable"));
         }
 
         [Fact]
@@ -1049,7 +1049,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void KeyLookupCannotAppearAfterFunctionWithParameters()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.AllMyFriendsDogs(inOffice=true)(1)", ODataErrorStrings.ExpressionLexer_SyntaxError(14, "inOffice=true)(1"));
+            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.AllMyFriendsDogs(inOffice=true)(1)", Error.Format(SRResources.ExpressionLexer_SyntaxError, 14, "inOffice=true)(1"));
         }
 
         [Fact]
@@ -1064,7 +1064,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void BatchCannotAppearAfterSomethingElse()
         {
             // TODO: Error message isn't great, could improve
-            PathFunctionalTestsUtil.RunParseErrorPath("Dogs/$batch", ODataErrorStrings.RequestUriProcessor_CannotQueryCollections("Dogs"));
+            PathFunctionalTestsUtil.RunParseErrorPath("Dogs/$batch", Error.Format(SRResources.RequestUriProcessor_CannotQueryCollections, "Dogs"));
         }
 
         [Fact]
@@ -1112,20 +1112,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void NothingCanAppearAfterMetadata()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("$metadata/Dogs", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$metadata"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("$metadata/Dogs", Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "$metadata"));
         }
 
         [Fact]
         public void MetadataCannotAppearAfterAnotherSegment()
         {
             // TODO: We can improve error message drastically when we refactor path parsing
-            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/$metadata", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$metadata"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/$metadata", Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "$metadata"));
         }
 
         [Fact]
         public void KeyLookupOnSingleTypeCastIsInvalid()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.Employee(1)", ODataErrorStrings.RequestUriProcessor_SyntaxError);
+            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.Employee(1)", SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -1167,39 +1167,39 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ValueRequestOnServiceRootIsInvalid()
         {
             // TODO: improve error message wehn refactoring / cleaning up code
-            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("$value", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$value"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("$value", Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "$value"));
         }
 
         [Fact]
         public void NothingCanAppearAfterValue()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/MyAddress/$value/City", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$value"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/MyAddress/$value/City", Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "$value"));
         }
 
         [Fact]
         public void NothingCanAppearAfterEnumValue()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("Pet2Set(1)/PetColorPattern/$value/City", ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment("$value"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("Pet2Set(1)/PetColorPattern/$value/City", Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "$value"));
         }
 
         [Fact]
         public void ReservedWordsAreCaseSensitive()
         {
             // TODO: Should the error message talk about $ being special? Would this be OK if there was a $metaDATA EntitySet? Is that allowed?
-            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("$metaDATA", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$metaDATA"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("$metaDATA", Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "$metaDATA"));
         }
 
         [Fact]
         public void DirectValueServiceOperationWithKeyLookupIsInvalid()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("DirectValuePrimitiveServiceOperation(ID='Bob')", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("DirectValuePrimitiveServiceOperation"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("DirectValuePrimitiveServiceOperation(ID='Bob')", Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "DirectValuePrimitiveServiceOperation"));
         }
 
         [Fact]
         public void SystemQueryOptionsThatDoNotBelongInPathAreBlocked()
         {
             // TODO: Should the error message talk about $ being special? 
-            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("$top", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("$top"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("$top", Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "$top"));
         }
 
         [Fact]
@@ -1234,7 +1234,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => PathFunctionalTestsUtil.RunParsePath("Dogs(1)/Nicknames/$value");
 
-            parse.Throws<ODataException>(ODataErrorStrings.PathParser_CannotUseValueOnCollection);
+            parse.Throws<ODataException>(SRResources.PathParser_CannotUseValueOnCollection);
         }
 
         [Fact]
@@ -1242,7 +1242,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => PathFunctionalTestsUtil.RunParsePath("Dogs/$value");
 
-            parse.Throws<ODataException>(ODataErrorStrings.PathParser_CannotUseValueOnCollection);
+            parse.Throws<ODataException>(SRResources.PathParser_CannotUseValueOnCollection);
         }
 
         [Fact]
@@ -1339,7 +1339,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var parser = new ODataUriParser(HardCodedTestModel.TestModel, serviceRoot, path);
             Action parse = () => parser.ParsePath();
 
-            parse.Throws<ODataException>(ODataErrorStrings.UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri(path, serviceRoot));
+            parse.Throws<ODataException>(Error.Format(SRResources.UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri, path, serviceRoot));
         }
 
         [Fact]
@@ -1347,7 +1347,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             Action parse = () => new ODataUriParser(HardCodedTestModel.TestModel, null, new Uri("https://www.tomatosoup.com:1234/OData/V3/Dogs"));
 
-            parse.Throws<ODataException>(ODataErrorStrings.UriParser_NeedServiceRootForThisOverload);
+            parse.Throws<ODataException>(SRResources.UriParser_NeedServiceRootForThisOverload);
         }
 
         [Fact]
@@ -1371,14 +1371,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void CannotExplicitlyAddBindingParameterToFunction()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/Fully.Qualified.Namespace.HasDog(person=$it)", Strings.RequestUriProcessor_ResourceNotFound("Fully.Qualified.Namespace.HasDog"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/Fully.Qualified.Namespace.HasDog(person=$it)", Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "Fully.Qualified.Namespace.HasDog"));
         }
 
         [Fact]
         public void CannotAddEntityAsBindingParameterToFunction()
         {
             // bindable functions don't require the first parameter be specified, since its already implied in the path.
-            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/Fully.Qualified.Namespace.HasDog(person=People(1))", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("Fully.Qualified.Namespace.HasDog"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("People(1)/Fully.Qualified.Namespace.HasDog(person=People(1))", Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "Fully.Qualified.Namespace.HasDog"));
         }
 
         [Fact]
@@ -1392,7 +1392,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void FunctionBindingFailsIfParameterNameIsWronglyCased()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("Fully.Qualified.Namespace.HasDog(inOfFiCe=true)", ODataErrorStrings.RequestUriProcessor_ResourceNotFound("Fully.Qualified.Namespace.HasDog"));
+            PathFunctionalTestsUtil.RunParseErrorPath<ODataUnrecognizedPathException>("Fully.Qualified.Namespace.HasDog(inOfFiCe=true)", Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "Fully.Qualified.Namespace.HasDog"));
         }
 
         [Fact]
@@ -1427,7 +1427,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbldgook/"), new Uri("http://gobbldgook/GetCoolPeople(id=test, limit=1)"));
             Action action = () => parser.ParsePath();
-            action.Throws<ODataException>(ODataErrorStrings.MetadataBinder_ParameterNotInScope("id=test"));
+            action.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_ParameterNotInScope, "id=test"));
         }
 
 #region enum property in path
@@ -1530,7 +1530,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void KeyOfIncompatibleTypeDefinitionShouldFail()
         {
             Action action = () => PathFunctionalTestsUtil.RunParsePath("Pet6Set(ID='abc')");
-            action.Throws<ODataException>(ODataErrorStrings.BadRequest_KeyMismatch(HardCodedTestModel.GetPet6Type().FullTypeName()));
+            action.Throws<ODataException>(Error.Format(SRResources.BadRequest_KeyMismatch, HardCodedTestModel.GetPet6Type().FullTypeName()));
         }
 
         [Fact]
@@ -1544,7 +1544,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void FunctionImportWithImcompatibleTypeDefinitionShouldFail()
         {
             Action action = () => PathFunctionalTestsUtil.RunParsePath("GetPet6(id='abc')");
-            action.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CannotConvertToType("Edm.String", "Fully.Qualified.Namespace.IdType"));
+            action.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.String", "Fully.Qualified.Namespace.IdType"));
         }
 
 #endregion

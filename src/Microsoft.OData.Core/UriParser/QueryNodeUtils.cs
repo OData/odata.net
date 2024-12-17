@@ -11,7 +11,7 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -136,7 +136,7 @@ namespace Microsoft.OData.UriParser
                     return left;
 
                 default:
-                    throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.QueryNodeUtils_BinaryOperatorResultType_UnreachableCodepath));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.QueryNodeUtils_BinaryOperatorResultType_UnreachableCodepath));
             }
         }
     }

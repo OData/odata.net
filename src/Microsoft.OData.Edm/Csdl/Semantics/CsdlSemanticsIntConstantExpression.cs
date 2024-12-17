@@ -73,7 +73,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             Int64? value;
             if (!EdmValueParser.TryParseLong(this.expression.Value, out value))
             {
-                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidInteger, Edm.Strings.ValueParser_InvalidInteger(this.expression.Value)) };
+                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidInteger, Error.Format(SRResources.ValueParser_InvalidInteger, this.expression.Value)) };
             }
             else
             {

@@ -10,10 +10,9 @@ namespace Microsoft.OData.UriParser
 
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -183,7 +182,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (ReferenceEquals(this.computedReturnEdmType, UnknownSentinel))
                 {
-                    throw new ODataException(ODataErrorStrings.OperationSegment_ReturnTypeForMultipleOverloads);
+                    throw new ODataException(SRResources.OperationSegment_ReturnTypeForMultipleOverloads);
                 }
 
                 return this.computedReturnEdmType;
@@ -255,7 +254,7 @@ namespace Microsoft.OData.UriParser
             // Void operations cannot specify return entity set
             if (this.computedReturnEdmType == null)
             {
-                throw new ODataException(ODataErrorStrings.OperationSegment_CannotReturnNull);
+                throw new ODataException(SRResources.OperationSegment_CannotReturnNull);
             }
 
             // Unwrap the return type if it's a collection
@@ -269,7 +268,7 @@ namespace Microsoft.OData.UriParser
             // Ensure that the return type is in the same type hierarchy as the entity set provided
             if (!this.entitySet.EntityType.IsOrInheritsFrom(unwrappedCollectionType) && !unwrappedCollectionType.IsOrInheritsFrom(this.entitySet.EntityType))
             {
-                throw new ODataException(ODataErrorStrings.OperationSegment_CannotReturnNull);
+                throw new ODataException(SRResources.OperationSegment_CannotReturnNull);
             }
         }
     }

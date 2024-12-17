@@ -8,7 +8,7 @@ namespace Microsoft.OData.UriParser
 {
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Class that knows how to bind an end path token, which could be several things.
@@ -96,7 +96,7 @@ namespace Microsoft.OData.UriParser
             // If the Parent is null, then it must be referring to the implicit $it parameter
             if (state.ImplicitRangeVariable == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessWithoutParentParameter);
+                throw new ODataException(SRResources.MetadataBinder_PropertyAccessWithoutParentParameter);
             }
 
             return NodeFactory.CreateRangeVariableReferenceNode(state.ImplicitRangeVariable);
@@ -118,7 +118,7 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared,
                     parentNode.TypeReference.FullName(),
                     endPathToken.Identifier));
             }
@@ -148,7 +148,7 @@ namespace Microsoft.OData.UriParser
 
                 if (state.IsCollapsed && !IsAggregatedProperty(endPathToken))
                 {
-                    throw new ODataException(ODataErrorStrings.ApplyBinder_GroupByPropertyNotPropertyAccessValue(endPathToken.Identifier));
+                    throw new ODataException(Error.Format(SRResources.ApplyBinder_GroupByPropertyNotPropertyAccessValue, endPathToken.Identifier));
                 }
 
                 // Now that we have the parent type, can find its corresponding EDM type
@@ -198,7 +198,7 @@ namespace Microsoft.OData.UriParser
                 return boundFunction;
             }
 
-            throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyAccessSourceNotSingleValue(endPathToken.Identifier));
+            throw new ODataException(Error.Format(SRResources.MetadataBinder_PropertyAccessSourceNotSingleValue, endPathToken.Identifier));
         }
 
         /// <summary>

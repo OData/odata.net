@@ -12,6 +12,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -185,7 +186,7 @@ namespace Microsoft.OData
 
                 default:
                     Debug.Assert(false, "Unsupported collection reader state " + this.State + " detected.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionReaderCore_ReadImplementation));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataCollectionReaderCore_ReadImplementation));
             }
 
             return result;
@@ -368,7 +369,7 @@ namespace Microsoft.OData
 
             if (this.State == ODataCollectionReaderState.Exception || this.State == ODataCollectionReaderState.Completed)
             {
-                throw new ODataException(Strings.ODataCollectionReaderCore_ReadOrReadAsyncCalledInInvalidState(this.State));
+                throw new ODataException(Error.Format(SRResources.ODataCollectionReaderCore_ReadOrReadAsyncCalledInInvalidState, this.State));
             }
         }
 
@@ -395,7 +396,7 @@ namespace Microsoft.OData
         {
             if (!this.inputContext.Synchronous)
             {
-                throw new ODataException(Strings.ODataCollectionReaderCore_SyncCallOnAsyncReader);
+                throw new ODataException(SRResources.ODataCollectionReaderCore_SyncCallOnAsyncReader);
             }
         }
 
@@ -406,7 +407,7 @@ namespace Microsoft.OData
         {
             if (this.inputContext.Synchronous)
             {
-                throw new ODataException(Strings.ODataCollectionReaderCore_AsyncCallOnSyncReader);
+                throw new ODataException(SRResources.ODataCollectionReaderCore_AsyncCallOnSyncReader);
             }
         }
 

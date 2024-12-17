@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Metadata
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -454,7 +455,7 @@ namespace Microsoft.OData.Metadata
                                 if (this.documentBaseUri == null)
                                 {
                                     // If there's no document base URI we need to fail since there's no way to create an absolute URI now.
-                                    throw new ODataException(Strings.ODataXmlDeserializer_RelativeUriUsedWithoutBaseUriSpecified(xmlBaseAttributeValue));
+                                    throw new ODataException(Error.Format(SRResources.ODataXmlDeserializer_RelativeUriUsedWithoutBaseUriSpecified, xmlBaseAttributeValue));
                                 }
 
                                 newBaseUri = UriUtils.UriToAbsoluteUri(this.documentBaseUri, newBaseUri);
@@ -775,7 +776,7 @@ namespace Microsoft.OData.Metadata
         public override void ResolveEntity()
         {
             // We don't support entity references, and we should never get a reader which does.
-            throw new InvalidOperationException(Strings.ODataException_GeneralError);
+            throw new InvalidOperationException(SRResources.ODataException_GeneralError);
         }
 
         /// <summary>

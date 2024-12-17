@@ -6,9 +6,9 @@
 
 using System;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Evaluation
 {
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public void MalformedSelectClauseShouldFail()
         {
             Action action = () => SelectedPropertiesNode.Create("*/Name");
-            action.Throws<ODataException>(ErrorStrings.SelectedPropertiesNode_StarSegmentNotLastSegment);
+            action.Throws<ODataException>(SRResources.SelectedPropertiesNode_StarSegmentNotLastSegment);
         }
 
         [Fact]
@@ -249,7 +249,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var node = SelectedPropertiesNode.Create("TestModel.City/*");
             Action action = () => node.GetSelectedStreamProperties(this.cityType);
-            action.Throws<ODataException>(ErrorStrings.SelectedPropertiesNode_StarSegmentAfterTypeSegment);
+            action.Throws<ODataException>(SRResources.SelectedPropertiesNode_StarSegmentAfterTypeSegment);
         }
 
         [Fact]
@@ -257,7 +257,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var node = SelectedPropertiesNode.Create("TestModel.City/*");
             Action action = () => node.GetSelectedNavigationProperties(this.cityType);
-            action.Throws<ODataException>(ErrorStrings.SelectedPropertiesNode_StarSegmentAfterTypeSegment);
+            action.Throws<ODataException>(SRResources.SelectedPropertiesNode_StarSegmentAfterTypeSegment);
         }
 
         [Fact]
@@ -265,7 +265,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var node = SelectedPropertiesNode.Create("TestModel.City/*");
             Action action = () => node.GetSelectedPropertiesForNavigationProperty(this.cityType, "Districts");
-            action.Throws<ODataException>(ErrorStrings.SelectedPropertiesNode_StarSegmentAfterTypeSegment);
+            action.Throws<ODataException>(SRResources.SelectedPropertiesNode_StarSegmentAfterTypeSegment);
         }
 
         [Fact]

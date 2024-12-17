@@ -66,7 +66,7 @@ namespace Microsoft.OData.Edm
         {
             if (hour < 0 || hour > 23 || minute < 0 || minute > 59 || second < 0 || second > 59 || millisecond < 0 || millisecond > 999)
             {
-                throw new FormatException(Strings.TimeOfDay_InvalidTimeOfDayParameters(hour, minute, second, millisecond));
+                throw new FormatException(Error.Format(SRResources.TimeOfDay_InvalidTimeOfDayParameters, hour, minute, second, millisecond));
             }
             else
             {
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Edm
         {
             if (ticks < MinTickValue || ticks > MaxTickValue)
             {
-                throw new FormatException(Strings.TimeOfDay_TicksOutOfRange(ticks));
+                throw new FormatException(Error.Format(SRResources.TimeOfDay_TicksOutOfRange, ticks));
             }
             else
             {
@@ -245,7 +245,7 @@ namespace Microsoft.OData.Edm
                 || timeSpan.Minutes < 0 || timeSpan.Milliseconds < 0
                 || timeSpan.Ticks < MinTickValue || timeSpan.Ticks > MaxTickValue)
             {
-                throw new FormatException(Strings.TimeOfDay_ConvertErrorFromTimeSpan(timeSpan));
+                throw new FormatException(Error.Format(SRResources.TimeOfDay_ConvertErrorFromTimeSpan, timeSpan));
             }
             else
             {
@@ -337,7 +337,7 @@ namespace Microsoft.OData.Edm
             }
             else
             {
-                throw new ArgumentException(Strings.TimeOfDay_InvalidCompareToTarget(obj));
+                throw new ArgumentException(Error.Format(SRResources.TimeOfDay_InvalidCompareToTarget, obj));
             }
         }
 
@@ -380,7 +380,7 @@ namespace Microsoft.OData.Edm
             }
             else
             {
-                throw new FormatException(Strings.TimeOfDay_InvalidParsingString(text));
+                throw new FormatException(Error.Format(SRResources.TimeOfDay_InvalidParsingString, text));
             }
         }
 

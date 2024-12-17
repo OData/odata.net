@@ -11,7 +11,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -88,7 +88,7 @@ namespace Microsoft.OData
             {
                 if (this.DeltaLink != null && value != null)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
+                    throw new ODataException(SRResources.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
                 }
 
                 this.nextPageLink = value;
@@ -109,7 +109,7 @@ namespace Microsoft.OData
             {
                 if (this.NextPageLink != null && value != null)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
+                    throw new ODataException(SRResources.ODataResourceSet_MustNotContainBothNextPageLinkAndDeltaLink);
                 }
 
                 this.deltaLink = value;

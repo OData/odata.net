@@ -137,7 +137,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 this.value = term.GetDefaultValueExpression();
                 if (this.value == null)
                 {
-                    throw new InvalidOperationException(Strings.EdmVocabularyAnnotations_DidNotFindDefaultValue(term.Type));
+                    throw new InvalidOperationException(Error.Format(SRResources.EdmVocabularyAnnotations_DidNotFindDefaultValue, term.Type));
                 }
 
                 UsesDefault = true;

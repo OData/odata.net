@@ -337,7 +337,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.Json
                         }",
                     RequestMessageDependsOnIdVerifier = null,
                     ExceptionType = typeof(ODataException),
-                    TokenInExceptionMessage = Strings.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed("g1r1", "g1")
+                    TokenInExceptionMessage = Error.Format(SRResources.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed, "g1r1", "g1")
                 },
                 new ODataJsonBatchPayloadTestCase
                 {
@@ -371,7 +371,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.Json
                         }",
                     RequestMessageDependsOnIdVerifier = null,
                     ExceptionType = typeof(ODataException),
-                    TokenInExceptionMessage = Strings.ODataBatchReader_DependsOnIdNotFound("invalidId", "g2r6")
+                    TokenInExceptionMessage = Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, "invalidId", "g2r6")
                 },
                 new ODataJsonBatchPayloadTestCase
                 {
@@ -401,7 +401,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.Json
                         }",
                     RequestMessageDependsOnIdVerifier = null,
                     ExceptionType = typeof(ODataException),
-                    TokenInExceptionMessage = Strings.ODataBatchReader_DuplicateContentIDsNotAllowed("duplicate")
+                    TokenInExceptionMessage = Error.Format(SRResources.ODataBatchReader_DuplicateContentIDsNotAllowed, "duplicate")
                 },
                 new ODataJsonBatchPayloadTestCase
                 {
@@ -432,7 +432,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.Json
                         }",
                     RequestMessageDependsOnIdVerifier = null,
                     ExceptionType = typeof(ODataException),
-                    TokenInExceptionMessage = Strings.ODataBatchReader_DependsOnIdNotFound("invalidId", "duplicate")
+                    TokenInExceptionMessage = Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, "invalidId", "duplicate")
                 },
                 new ODataJsonBatchPayloadTestCase
                 {
@@ -463,7 +463,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.Json
                         }",
                     RequestMessageDependsOnIdVerifier = null,
                     ExceptionType = typeof(ODataException),
-                    TokenInExceptionMessage = Strings.ODataBatchReader_DependsOnIdNotFound("r2", "r1")
+                    TokenInExceptionMessage = Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, "r2", "r1")
                 },
                 new ODataJsonBatchPayloadTestCase
                 {
@@ -501,7 +501,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.Json
                         new List<string>(){ "g1", "g1r1" }
                     },
                     ExceptionType = typeof(ODataException),
-                    TokenInExceptionMessage = Strings.ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed("g1", "g1")
+                    TokenInExceptionMessage = Error.Format(SRResources.ODataBatchReader_SameRequestIdAsAtomicityGroupIdNotAllowed, "g1", "g1")
                 },
                 new ODataJsonBatchPayloadTestCase
                 {
@@ -528,7 +528,7 @@ namespace Microsoft.OData.Core.Tests.ScenarioTests.Roundtrip.Json
                         new List<string>(){ "g1r1" }
                     },
                     ExceptionType = typeof(ODataException),
-                    TokenInExceptionMessage = Strings.ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed("g1r1", "g1r1")
+                    TokenInExceptionMessage = Error.Format(SRResources.ODataBatchReader_SelfReferenceDependsOnRequestIdNotAllowed, "g1r1", "g1r1")
                 },
             };
 

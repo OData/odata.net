@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Metadata
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Diagnostics;
@@ -161,7 +162,7 @@ namespace Microsoft.OData.Metadata
 
             if ((elementsFoundBitField & elementFoundBitMask) == elementFoundBitMask)
             {
-                throw new ODataException(Strings.ODataXmlErrorDeserializer_MultipleErrorElementsWithSameName(elementName));
+                throw new ODataException(Error.Format(SRResources.ODataXmlErrorDeserializer_MultipleErrorElementsWithSameName, elementName));
             }
 
             elementsFoundBitField |= elementFoundBitMask;
@@ -185,7 +186,7 @@ namespace Microsoft.OData.Metadata
 
             if ((elementsFoundBitField & elementFoundBitMask) == elementFoundBitMask)
             {
-                throw new ODataException(Strings.ODataXmlErrorDeserializer_MultipleInnerErrorElementsWithSameName(elementName));
+                throw new ODataException(Error.Format(SRResources.ODataXmlErrorDeserializer_MultipleInnerErrorElementsWithSameName, elementName));
             }
 
             elementsFoundBitField |= elementFoundBitMask;

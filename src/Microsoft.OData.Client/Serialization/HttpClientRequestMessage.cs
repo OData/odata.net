@@ -312,7 +312,7 @@ namespace Microsoft.OData.Client
         {
             if (this.inSendingRequest2Event)
             {
-                throw new NotSupportedException(Strings.ODataRequestMessage_GetStreamMethodNotSupported);
+                throw new NotSupportedException(SRResources.ODataRequestMessage_GetStreamMethodNotSupported);
             }
             return _messageStream;
         }
@@ -335,7 +335,7 @@ namespace Microsoft.OData.Client
         {
             if (this.inSendingRequest2Event)
             {
-                throw new NotSupportedException(Strings.ODataRequestMessage_GetStreamMethodNotSupported);
+                throw new NotSupportedException(SRResources.ODataRequestMessage_GetStreamMethodNotSupported);
             }
             TaskCompletionSource<Stream> taskCompletionSource = new TaskCompletionSource<Stream>();
             taskCompletionSource.TrySetResult(_messageStream);

@@ -5,9 +5,9 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -54,21 +54,21 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ATermWithJustSpaceAndSlashesShouldThrowInSelect()
         {
             Action parse = () => ParseSelectTerm(" /  // /");
-            parse.Throws<ODataException>(Strings.ExpressionToken_IdentifierExpected(1)); // TODO: better error message
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, 1)); // TODO: better error message
         }
 
         [Fact]
         public void JustOneSlashShouldThrowInSelect()
         {
             Action parse = () => ParseSelectTerm("/");
-            parse.Throws<ODataException>(Strings.ExpressionToken_IdentifierExpected("0"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, "0"));
         }
 
         [Fact]
         public void StarThenSlashShouldThrowInSelect()
         {
             Action parse = () => ParseSelectTerm("*/");
-            parse.Throws<ODataException>(Strings.ExpressionToken_IdentifierExpected("0"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, "0"));
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void StarCannotBeInMiddleOfPathInSelect()
         {
             Action parse = () => ParseSelectTerm("foo/*/bar");
-            parse.Throws<ODataException>(Strings.ExpressionToken_IdentifierExpected("4"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, "4"));
         }
 
         [Fact]
@@ -137,7 +137,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void DoubleTrailingSlashShouldFailInSelect()
         {
             Action parse = () => ParseSelectTerm("navprop//");
-            parse.Throws<ODataException>(Strings.ExpressionToken_IdentifierExpected(8));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, 8));
         }
 
         [Fact]
@@ -186,21 +186,21 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ATermWithJustSpaceAndSlashesShouldThrowInExpand()
         {
             Action parse = () => this.ParseExpandTerm(" /  // /");
-            parse.Throws<ODataException>(Strings.ExpressionToken_IdentifierExpected(1)); // TODO: better error message
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, 1)); // TODO: better error message
         }
 
         [Fact]
         public void JustOneSlashShouldThrowInExpand()
         {
             Action parse = () => this.ParseExpandTerm("/");
-            parse.Throws<ODataException>(Strings.ExpressionToken_IdentifierExpected("0"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, "0"));
         }
 
         [Fact]
         public void StarThenSlashShouldThrowInExpand()
         {
             Action parse = () => this.ParseExpandTerm("*/");
-            parse.Throws<ODataException>(Strings.ExpressionToken_IdentifierExpected("2"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, "2"));
         }
 
         [Fact]
@@ -221,7 +221,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void StarCannotBeInMiddleOfPathInExpand()
         {
             Action parse = () => this.ParseExpandTerm("foo/*/bar");
-            parse.Throws<ODataException>(Strings.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
+            parse.Throws<ODataException>(SRResources.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
         }
 
         [Fact]
@@ -235,14 +235,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void PropertyAfterStarWithRefIsOkInExpand()
         {
             Action parse = () => this.ParseExpandTerm("*/$ref/prop");
-            parse.Throws<ODataException>(Strings.ExpressionToken_NoPropAllowedAfterRef);
+            parse.Throws<ODataException>(SRResources.ExpressionToken_NoPropAllowedAfterRef);
         } 
 
         [Fact]
         public void StarAfterNavPropIsOkInExpand()
         {
             Action parse = () => this.ParseExpandTerm("navprop/*");
-            parse.Throws<ODataException>(Strings.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
+            parse.Throws<ODataException>(SRResources.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
         } 
 
         [Fact]
@@ -275,7 +275,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ContainerQualifiedWildcardNotAllowedInExpand()
         {
             Action parseWithContainerQualfiedWildcard = () => this.ParseExpandTerm("container.qualified.*");
-            parseWithContainerQualfiedWildcard.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError("21", "container.qualified.*"));
+            parseWithContainerQualfiedWildcard.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, "21", "container.qualified.*"));
         }
 
         [Fact]
@@ -289,7 +289,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void DoubleTrailingSlashShouldFailInExpand()
         {
             Action parse = () => this.ParseExpandTerm("navprop//");
-            parse.Throws<ODataException>(Strings.ExpressionToken_IdentifierExpected(8));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionToken_IdentifierExpected, 8));
         }
 
         [Fact]

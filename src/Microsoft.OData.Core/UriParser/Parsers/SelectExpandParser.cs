@@ -9,7 +9,7 @@ namespace Microsoft.OData.UriParser
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Object that knows how to parse a select or expand expression. That is, a path to a property,
@@ -275,7 +275,7 @@ namespace Microsoft.OData.UriParser
                     // Multiple stars is not allowed here.
                     if (starTermTokens.Count > 0)
                     {
-                        throw new ODataException(ODataErrorStrings.UriExpandParser_TermWithMultipleStarNotAllowed(this.lexer.ExpressionText));
+                        throw new ODataException(Error.Format(SRResources.UriExpandParser_TermWithMultipleStarNotAllowed, this.lexer.ExpressionText));
                     }
 
                     starTermTokens = termParsingFunc();
@@ -321,7 +321,7 @@ namespace Microsoft.OData.UriParser
             // If there isn't a comma, then we must be done. Otherwise there is a syntax error
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.End)
             {
-                throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
+                throw new ODataException(Error.Format(SRResources.UriSelectParser_TermIsNotValid, this.lexer.ExpressionText));
             }
 
             return ctor(termTokens);
@@ -373,7 +373,7 @@ namespace Microsoft.OData.UriParser
             // If there isn't a comma, then we must be done. Otherwise there is a syntax error
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.End)
             {
-                throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
+                throw new ODataException(Error.Format(SRResources.UriSelectParser_TermIsNotValid, this.lexer.ExpressionText));
             }
 
             return ctor(termTokens);

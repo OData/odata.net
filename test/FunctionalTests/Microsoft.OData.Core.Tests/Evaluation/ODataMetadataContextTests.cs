@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Evaluation;
@@ -35,7 +36,7 @@ namespace Microsoft.OData.Tests.Evaluation
             IEdmEntitySet set = this.edmModel.EntityContainer.FindEntitySet("Products");
             ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType, true), new IEdmPropertyValue[0]), set.EntityType);
             Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonReaderEntryState { Resource = entry, SelectedProperties = new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree), NavigationSource = set }, false);
-            action.Throws<ODataException>(Strings.ODataJsonResourceMetadataContext_MetadataAnnotationMustBeInPayload("odata.context"));
+            action.Throws<ODataException>(Error.Format(SRResources.ODataJsonResourceMetadataContext_MetadataAnnotationMustBeInPayload, "odata.context"));
         }
 
         [Fact]

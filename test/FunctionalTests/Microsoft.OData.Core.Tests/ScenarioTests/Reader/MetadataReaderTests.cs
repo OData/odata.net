@@ -13,6 +13,7 @@ using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Xunit;
 using Microsoft.OData.Json;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Reader
 {
@@ -134,7 +135,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             };
 
             Action test = () => this.ReadMetadataDocument(map, "main");
-            test.Throws<ODataException>(Strings.ODataXmlErrorDeserializer_MultipleErrorElementsWithSameName("code"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataXmlErrorDeserializer_MultipleErrorElementsWithSameName, "code"));
         }
 
         [Theory]
@@ -194,7 +195,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             };
 
             Action test = () => this.ReadMetadataDocument(map, "main");
-            test.Throws<ODataException>(Strings.ODataXmlErrorDeserializer_MultipleInnerErrorElementsWithSameName("stacktrace"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataXmlErrorDeserializer_MultipleInnerErrorElementsWithSameName, "stacktrace"));
         }
 
         private IEdmModel ReadMetadataDocument(Dictionary<string, string> map, string mainUrl)

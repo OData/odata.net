@@ -7,6 +7,7 @@
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
+using Microsoft.OData.Core;
 namespace Microsoft.OData
 #endif
 {
@@ -80,7 +81,7 @@ namespace Microsoft.OData
             if (value != null && value.Length == 0)
             {
 #if !ODATA_CLIENT
-                throw new ArgumentException(Strings.ExceptionUtils_ArgumentStringEmpty, parameterName);
+                throw new ArgumentException(SRResources.ExceptionUtils_ArgumentStringEmpty, parameterName);
 #endif
             }
         }
@@ -98,7 +99,7 @@ namespace Microsoft.OData
             if (string.IsNullOrEmpty(value))
             {
 #if !ODATA_CLIENT
-                throw new ArgumentNullException(parameterName, Strings.ExceptionUtils_ArgumentStringNullOrEmpty);
+                throw new ArgumentNullException(parameterName, SRResources.ExceptionUtils_ArgumentStringNullOrEmpty);
 #endif
             }
         }
@@ -116,7 +117,7 @@ namespace Microsoft.OData
             if (value < 0)
             {
 #if !ODATA_CLIENT
-                throw new ArgumentOutOfRangeException(parameterName, Strings.ExceptionUtils_CheckIntegerNotNegative(value));
+                throw new ArgumentOutOfRangeException(parameterName, Error.Format(SRResources.ExceptionUtils_CheckIntegerNotNegative, value));
 #endif
             }
         }
@@ -134,7 +135,7 @@ namespace Microsoft.OData
             if (value <= 0)
             {
 #if !ODATA_CLIENT
-                throw new ArgumentOutOfRangeException(parameterName, Strings.ExceptionUtils_CheckIntegerPositive(value));
+                throw new ArgumentOutOfRangeException(parameterName, Error.Format(SRResources.ExceptionUtils_CheckIntegerPositive, value));
 #endif
             }
         }
@@ -152,7 +153,7 @@ namespace Microsoft.OData
             if (value <= 0)
             {
 #if !ODATA_CLIENT
-                throw new ArgumentOutOfRangeException(parameterName, Strings.ExceptionUtils_CheckLongPositive(value));
+                throw new ArgumentOutOfRangeException(parameterName, Error.Format(SRResources.ExceptionUtils_CheckLongPositive, value));
 #endif
             }
         }
@@ -178,7 +179,7 @@ namespace Microsoft.OData
             {
 #if !ODATA_CLIENT
                 // TODO: STRINGS The string is fine; just rename it to just ArgumentEmpty
-                throw new ArgumentException(Strings.ExceptionUtils_ArgumentStringEmpty, parameterName);
+                throw new ArgumentException(SRResources.ExceptionUtils_ArgumentStringEmpty, parameterName);
 #endif
             }
         }

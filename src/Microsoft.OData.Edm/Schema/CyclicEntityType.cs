@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm
     internal class CyclicEntityType : BadEntityType
     {
         public CyclicEntityType(string qualifiedName, EdmLocation location)
-            : base(qualifiedName, new EdmError[] { new EdmError(location, EdmErrorCode.BadCyclicEntity, Edm.Strings.Bad_CyclicEntity(qualifiedName)) })
+            : base(qualifiedName, new EdmError[] { new EdmError(location, EdmErrorCode.BadCyclicEntity, Error.Format(SRResources.Bad_CyclicEntity, qualifiedName)) })
         {
         }
     }

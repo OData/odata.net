@@ -5,12 +5,12 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Json;
 using Microsoft.OData.Tests.Evaluation;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests.Json
                 /*requestUri*/ null,
                 /*settings*/null);
 
-            test.Throws<ODataException>(ODataErrorStrings.ODataOutputContext_MetadataDocumentUriMissing);
+            test.Throws<ODataException>(SRResources.ODataOutputContext_MetadataDocumentUriMissing);
         }
 
         [Fact]

@@ -7,9 +7,9 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Json;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -489,7 +489,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                ErrorStrings.JsonReader_InvalidBinaryFormat("AQIDBAUGBwgJAA"),
+                Error.Format(SRResources.JsonReader_InvalidBinaryFormat, "AQIDBAUGBwgJAA"),
                 exception.Message);
         }
 
@@ -504,7 +504,7 @@ namespace Microsoft.OData.Tests.Json
                     (reorderingReader) => reorderingReader.CreateTextReaderAsync()));
 
             Assert.Equal(
-                ErrorStrings.JsonReader_CannotCreateTextReader,
+                SRResources.JsonReader_CannotCreateTextReader,
                 exception.Message);
         }
 
@@ -523,7 +523,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                ErrorStrings.JsonReaderExtensions_UnexpectedInstanceAnnotationName("invalid.annotation"),
+                Error.Format(SRResources.JsonReaderExtensions_UnexpectedInstanceAnnotationName, "invalid.annotation"),
                 exception.Message);
         }
 

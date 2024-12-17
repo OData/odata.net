@@ -90,7 +90,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             async Task errorTest() => await csdlSchemaWriter.WriteActionImportElementHeaderAsync(actionImport).ConfigureAwait(false);
 
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(errorTest).ConfigureAwait(false);
-            Assert.Equal(Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(actionImport.Name), exception.Message);
+            Assert.Equal(Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid, actionImport.Name), exception.Message);
         }
         #endregion
 

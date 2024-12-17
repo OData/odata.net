@@ -11,7 +11,7 @@ namespace Microsoft.OData.Json
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading.Tasks;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -217,7 +217,7 @@ namespace Microsoft.OData.Json
             {
                 // OData property annotations are not supported on entity reference links.
                 Func<string, object> propertyAnnotationValueReader =
-                    annotationName => { throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLinks); };
+                    annotationName => { throw new ODataException(SRResources.ODataJsonEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLinks); };
 
                 bool foundValueProperty = false;
                 this.ReadPropertyCustomAnnotationValue = this.ReadCustomInstanceAnnotationValue;
@@ -245,7 +245,7 @@ namespace Microsoft.OData.Json
                                 }
                                 else
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, propertyName));
                                 }
 
                                 break;
@@ -265,7 +265,7 @@ namespace Microsoft.OData.Json
                                 if (!string.Equals(ODataJsonConstants.ODataValuePropertyName, propertyName, StringComparison.Ordinal))
                                 {
                                     // We did not find a supported link collection property; fail.
-                                    throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_InvalidEntityReferenceLinksPropertyFound(propertyName, ODataJsonConstants.ODataValuePropertyName));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_InvalidEntityReferenceLinksPropertyFound, propertyName, ODataJsonConstants.ODataValuePropertyName));
                                 }
 
                                 // We found the link collection property and are done parsing property annotations;
@@ -275,16 +275,16 @@ namespace Microsoft.OData.Json
                             case PropertyParsingResult.PropertyWithoutValue:
                                 // If we find a property without a value it means that we did not find the entity reference links property (yet)
                                 // but an invalid property annotation
-                                throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityReferenceLinks(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityReferenceLinks, propertyName));
 
                             case PropertyParsingResult.EndOfObject:
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
 
                             default:
-                                throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonEntityReferenceLinkDeserializer_ReadEntityReferenceLinksAnnotations));
+                                throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataJsonEntityReferenceLinkDeserializer_ReadEntityReferenceLinksAnnotations));
                         }
                     });
 
@@ -297,7 +297,7 @@ namespace Microsoft.OData.Json
             if (forLinksStart)
             {
                 // We did not find the 'value' property.
-                throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_ExpectedEntityReferenceLinksPropertyNotFound(ODataJsonConstants.ODataValuePropertyName));
+                throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_ExpectedEntityReferenceLinksPropertyNotFound, ODataJsonConstants.ODataValuePropertyName));
             }
 
             this.AssertJsonCondition(JsonNodeType.EndObject);
@@ -364,7 +364,7 @@ namespace Microsoft.OData.Json
                 if (this.JsonReader.NodeType != JsonNodeType.StartObject)
                 {
                     // entity reference link has to be an object
-                    throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkMustBeObjectValue(this.JsonReader.NodeType));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkMustBeObjectValue, this.JsonReader.NodeType));
                 }
 
                 this.JsonReader.ReadStartObject();
@@ -376,7 +376,7 @@ namespace Microsoft.OData.Json
 
             // Entity  reference links use instance annotations. Fail if we find a  property annotation.
             Func<string, object> propertyAnnotationValueReader =
-                annotationName => { throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLink(annotationName)); };
+                annotationName => { throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLink, annotationName)); };
 
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
@@ -397,18 +397,18 @@ namespace Microsoft.OData.Json
                             case PropertyParsingResult.ODataInstanceAnnotation:
                                 if (!string.Equals(ODataAnnotationNames.ODataId, propertyName, StringComparison.Ordinal))
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyInEntityReferenceLink(propertyName, ODataAnnotationNames.ODataId));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyInEntityReferenceLink, propertyName, ODataAnnotationNames.ODataId));
                                 }
                                 else if (entityReferenceLink[0] != null)
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_MultipleUriPropertiesInEntityReferenceLink(ODataAnnotationNames.ODataId));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_MultipleUriPropertiesInEntityReferenceLink, ODataAnnotationNames.ODataId));
                                 }
 
                                 // read the value of the 'odata.id' annotation
                                 string urlString = this.JsonReader.ReadStringValue(ODataAnnotationNames.ODataId);
                                 if (urlString == null)
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull(ODataAnnotationNames.ODataId));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull, ODataAnnotationNames.ODataId));
                                 }
 
                                 entityReferenceLink[0] = new ODataEntityReferenceLink
@@ -423,7 +423,7 @@ namespace Microsoft.OData.Json
                             case PropertyParsingResult.CustomInstanceAnnotation:
                                 if (entityReferenceLink[0] == null)
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(ODataAnnotationNames.ODataId));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty, ODataAnnotationNames.ODataId));
                                 }
 
                                 Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -439,23 +439,23 @@ namespace Microsoft.OData.Json
                             case PropertyParsingResult.PropertyWithValue:
                             case PropertyParsingResult.PropertyWithoutValue:
                                 // entity reference link  is denoted by odata.id annotation
-                                throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink, propertyName));
 
                             case PropertyParsingResult.EndOfObject:
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
 
                             default:
-                                throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonEntityReferenceLinkDeserializer_ReadSingleEntityReferenceLink));
+                                throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataJsonEntityReferenceLinkDeserializer_ReadSingleEntityReferenceLink));
                         }
                     });
             }
 
             if (entityReferenceLink[0] == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(ODataAnnotationNames.ODataId));
+                throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty, ODataAnnotationNames.ODataId));
             }
 
             // end of the entity reference link object
@@ -555,7 +555,7 @@ namespace Microsoft.OData.Json
                 Func<string, Task<object>> propertyAnnotationValueReaderDelegate =
                     annotationName =>
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLinks);
+                        throw new ODataException(SRResources.ODataJsonEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLinks);
                     };
 
                 bool foundValueProperty = false;
@@ -592,7 +592,7 @@ namespace Microsoft.OData.Json
                                 }
                                 else
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, propertyName));
                                 }
 
                                 break;
@@ -613,7 +613,7 @@ namespace Microsoft.OData.Json
                                 if (!string.Equals(ODataJsonConstants.ODataValuePropertyName, propertyName, StringComparison.Ordinal))
                                 {
                                     // We did not find a supported link collection property; fail.
-                                    throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_InvalidEntityReferenceLinksPropertyFound(propertyName, ODataJsonConstants.ODataValuePropertyName));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_InvalidEntityReferenceLinksPropertyFound, propertyName, ODataJsonConstants.ODataValuePropertyName));
                                 }
 
                                 // We found the link collection property and are done parsing property annotations;
@@ -623,16 +623,16 @@ namespace Microsoft.OData.Json
                             case PropertyParsingResult.PropertyWithoutValue:
                                 // If we find a property without a value it means that we did not find the entity reference links property (yet)
                                 // but an invalid property annotation
-                                throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityReferenceLinks(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityReferenceLinks, propertyName));
 
                             case PropertyParsingResult.EndOfObject:
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
 
                             default:
-                                throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonEntityReferenceLinkDeserializer_ReadEntityReferenceLinksAnnotations));
+                                throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataJsonEntityReferenceLinkDeserializer_ReadEntityReferenceLinksAnnotations));
                         }
                     }).ConfigureAwait(false);
 
@@ -645,7 +645,7 @@ namespace Microsoft.OData.Json
             if (forLinksStart)
             {
                 // We did not find the 'value' property.
-                throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_ExpectedEntityReferenceLinksPropertyNotFound(ODataJsonConstants.ODataValuePropertyName));
+                throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_ExpectedEntityReferenceLinksPropertyNotFound, ODataJsonConstants.ODataValuePropertyName));
             }
 
             this.AssertJsonCondition(JsonNodeType.EndObject);
@@ -679,7 +679,7 @@ namespace Microsoft.OData.Json
                 if (this.JsonReader.NodeType != JsonNodeType.StartObject)
                 {
                     // entity reference link has to be an object
-                    throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkMustBeObjectValue(this.JsonReader.NodeType));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkMustBeObjectValue, this.JsonReader.NodeType));
                 }
 
                 await this.JsonReader.ReadStartObjectAsync()
@@ -694,7 +694,7 @@ namespace Microsoft.OData.Json
             Func<string, Task<object>> propertyAnnotationValueReaderDelegate =
                 annotationName =>
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLink(annotationName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLink, annotationName));
                 };
 
             while (this.JsonReader.NodeType == JsonNodeType.Property)
@@ -717,11 +717,11 @@ namespace Microsoft.OData.Json
                             case PropertyParsingResult.ODataInstanceAnnotation:
                                 if (!string.Equals(ODataAnnotationNames.ODataId, propertyName, StringComparison.Ordinal))
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyInEntityReferenceLink(propertyName, ODataAnnotationNames.ODataId));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyInEntityReferenceLink, propertyName, ODataAnnotationNames.ODataId));
                                 }
                                 else if (entityReferenceLink[0] != null)
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_MultipleUriPropertiesInEntityReferenceLink(ODataAnnotationNames.ODataId));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_MultipleUriPropertiesInEntityReferenceLink, ODataAnnotationNames.ODataId));
                                 }
 
                                 // read the value of the 'odata.id' annotation
@@ -729,7 +729,7 @@ namespace Microsoft.OData.Json
                                     .ConfigureAwait(false);
                                 if (urlString == null)
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull(ODataAnnotationNames.ODataId));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull, ODataAnnotationNames.ODataId));
                                 }
 
                                 entityReferenceLink[0] = new ODataEntityReferenceLink
@@ -744,7 +744,7 @@ namespace Microsoft.OData.Json
                             case PropertyParsingResult.CustomInstanceAnnotation:
                                 if (entityReferenceLink[0] == null)
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(ODataAnnotationNames.ODataId));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty, ODataAnnotationNames.ODataId));
                                 }
 
                                 Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -761,23 +761,23 @@ namespace Microsoft.OData.Json
                             case PropertyParsingResult.PropertyWithValue:
                             case PropertyParsingResult.PropertyWithoutValue:
                                 // entity reference link  is denoted by odata.id annotation
-                                throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink, propertyName));
 
                             case PropertyParsingResult.EndOfObject:
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
 
                             default:
-                                throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonEntityReferenceLinkDeserializer_ReadSingleEntityReferenceLink));
+                                throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataJsonEntityReferenceLinkDeserializer_ReadSingleEntityReferenceLink));
                         }
                     }).ConfigureAwait(false);
             }
 
             if (entityReferenceLink[0] == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(ODataAnnotationNames.ODataId));
+                throw new ODataException(Error.Format(SRResources.ODataJsonEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty, ODataAnnotationNames.ODataId));
             }
 
             // end of the entity reference link object

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 
@@ -108,7 +109,7 @@ namespace Microsoft.OData.UriParser
 
                     if (cachedResults.Count > 1)
                     {
-                        throw new ODataException(Strings.UriParserMetadata_MultipleMatchingNavigationSourcesFound(identifier));
+                        throw new ODataException(Error.Format(SRResources.UriParserMetadata_MultipleMatchingNavigationSourcesFound, identifier));
                     }
                 }
 
@@ -134,7 +135,7 @@ namespace Microsoft.OData.UriParser
                 }
                 else
                 {
-                    throw new ODataException(Strings.UriParserMetadata_MultipleMatchingNavigationSourcesFound(identifier));
+                    throw new ODataException(Error.Format(SRResources.UriParserMetadata_MultipleMatchingNavigationSourcesFound, identifier));
                 }
             }
 
@@ -171,7 +172,7 @@ namespace Microsoft.OData.UriParser
                 }
                 else
                 {
-                    throw new ODataException(Strings.UriParserMetadata_MultipleMatchingPropertiesFound(propertyName, type.FullTypeName()));
+                    throw new ODataException(Error.Format(SRResources.UriParserMetadata_MultipleMatchingPropertiesFound, propertyName, type.FullTypeName()));
                 }
             }
 
@@ -204,7 +205,7 @@ namespace Microsoft.OData.UriParser
 
             if (results.Count > 1)
             {
-                throw new ODataException(Strings.UriParserMetadata_MultipleMatchingTypesFound(termName));
+                throw new ODataException(Error.Format(SRResources.UriParserMetadata_MultipleMatchingTypesFound, termName));
             }
 
             return results[0];
@@ -236,7 +237,7 @@ namespace Microsoft.OData.UriParser
 
             if (results.Count > 1)
             {
-                throw new ODataException(Strings.UriParserMetadata_MultipleMatchingTypesFound(typeName));
+                throw new ODataException(Error.Format(SRResources.UriParserMetadata_MultipleMatchingTypesFound, typeName));
             }
 
             return results[0];
@@ -383,7 +384,7 @@ namespace Microsoft.OData.UriParser
                 // ensure parameter name exists
                 if (functionParameter == null)
                 {
-                    throw new ODataException(Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation(item.Key, operation.Name));
+                    throw new ODataException(Error.Format(SRResources.ODataParameterWriterCore_ParameterNameNotFoundInOperation, item.Key, operation.Name));
                 }
 
                 result.Add(functionParameter, item.Value);
@@ -411,7 +412,7 @@ namespace Microsoft.OData.UriParser
             IEnumerable<IEdmStructuralProperty> keys = type.Key();
             if (keys.Count() != positionalValues.Count)
             {
-                throw ExceptionUtil.CreateBadRequestError(Strings.BadRequest_KeyCountMismatch(type.FullName()));
+                throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.BadRequest_KeyCountMismatch, type.FullName()));
             }
 
             var keyPairList = new List<KeyValuePair<string, object>>(positionalValues.Count);
@@ -447,7 +448,7 @@ namespace Microsoft.OData.UriParser
 
             if (!TryResolveKeys(type, namedValues, convertFunc, out IEnumerable<KeyValuePair<string, object>> resolvedKeys))
             {
-                throw ExceptionUtil.CreateBadRequestError(Strings.BadRequest_KeyMismatch(type.FullName()));
+                throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.BadRequest_KeyMismatch, type.FullName()));
             }
 
             return resolvedKeys;
@@ -554,7 +555,7 @@ namespace Microsoft.OData.UriParser
                 }
                 else
                 {
-                    throw new ODataException(Strings.UriParserMetadata_MultipleMatchingParametersFound(identifier));
+                    throw new ODataException(Error.Format(SRResources.UriParserMetadata_MultipleMatchingParametersFound, identifier));
                 }
             }
 

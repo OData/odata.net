@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Json
 {
+    using Microsoft.OData.Core;
     #region Namespaces
 
     using System;
@@ -106,7 +107,7 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                throw new ODataException(Strings.ODataBatchReader_MessageIdPositionedIncorrectly(messageId, groupId));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReader_MessageIdPositionedIncorrectly, messageId, groupId));
             }
 
             return isChangesetStart;

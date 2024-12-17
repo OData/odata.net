@@ -8,7 +8,7 @@ namespace Microsoft.OData.UriParser
 {
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// A specific type of <see cref="ODataPath"/> which can only contain instances of <see cref="TypeSegment"/>, <see cref="NavigationPropertySegment"/>,
@@ -49,7 +49,7 @@ namespace Microsoft.OData.UriParser
 
             if (this.Count == 1 && this.FirstSegment is TypeSegment)
             {
-                throw new ODataException(ODataErrorStrings.ODataSelectPath_CannotOnlyHaveTypeSegment);
+                throw new ODataException(SRResources.ODataSelectPath_CannotOnlyHaveTypeSegment);
             }
 
             foreach (ODataPathSegment segment in this)
@@ -58,14 +58,14 @@ namespace Microsoft.OData.UriParser
                 {
                     if (index != this.Count - 1)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataSelectPath_NavPropSegmentCanOnlyBeLastSegment);
+                        throw new ODataException(SRResources.ODataSelectPath_NavPropSegmentCanOnlyBeLastSegment);
                     }
                 }
                 else if (segment is OperationSegment)
                 {
                     if (index != this.Count - 1)
                     {
-                        throw new ODataException(ODataErrorStrings.ODataSelectPath_OperationSegmentCanOnlyBeLastSegment);
+                        throw new ODataException(SRResources.ODataSelectPath_OperationSegmentCanOnlyBeLastSegment);
                     }
                 }
                 else if (segment is DynamicPathSegment || segment is PropertySegment || segment is TypeSegment || segment is AnnotationSegment)
@@ -76,7 +76,7 @@ namespace Microsoft.OData.UriParser
                 else
                 {
                     throw new ODataException(
-                        ODataErrorStrings.ODataSelectPath_InvalidSelectPathSegmentType(segment.GetType().Name));
+                        Error.Format(SRResources.ODataSelectPath_InvalidSelectPathSegmentType, segment.GetType().Name));
                 }
 
                 index++;

@@ -10,6 +10,7 @@ namespace Microsoft.OData
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -40,7 +41,7 @@ namespace Microsoft.OData
 
             if (payloadKind == ODataPayloadKind.Unsupported)
             {
-                throw new ArgumentException(Strings.ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind(payloadKind), nameof(payloadKind));
+                throw new ArgumentException(Error.Format(SRResources.ODataMessageWriter_CannotSetHeadersWithInvalidPayloadKind, payloadKind), nameof(payloadKind));
             }
 
             return messageWriter.SetHeaders(payloadKind);
@@ -118,7 +119,7 @@ namespace Microsoft.OData
 
                 default:
                     // invalid enum value - unreachable.
-                    throw new ODataException(Strings.ODataUtils_UnsupportedVersionNumber);
+                    throw new ODataException(SRResources.ODataUtils_UnsupportedVersionNumber);
             }
         }
 
@@ -150,7 +151,7 @@ namespace Microsoft.OData
 
                 default:
                     // invalid version string
-                    throw new ODataException(Strings.ODataUtils_UnsupportedVersionHeader(version));
+                    throw new ODataException(Error.Format(SRResources.ODataUtils_UnsupportedVersionHeader, version));
             }
         }
 
@@ -206,7 +207,7 @@ namespace Microsoft.OData
 
             if (model.EntityContainer == null)
             {
-                throw new ODataException(Strings.ODataUtils_ModelDoesNotHaveContainer);
+                throw new ODataException(SRResources.ODataUtils_ModelDoesNotHaveContainer);
             }
 
             IList<ODataEntitySetInfo> lstEntitySets = new List<ODataEntitySetInfo>();

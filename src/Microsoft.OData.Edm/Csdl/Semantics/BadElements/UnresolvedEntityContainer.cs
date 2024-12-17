@@ -11,7 +11,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     internal class UnresolvedEntityContainer : BadEntityContainer, IUnresolvedElement
     {
         public UnresolvedEntityContainer(string name, EdmLocation location)
-            : base(name, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedEntityContainer, Edm.Strings.Bad_UnresolvedEntityContainer(name)) })
+            : base(name, new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedEntityContainer, Error.Format(SRResources.Bad_UnresolvedEntityContainer, name)) })
         {
         }
     }

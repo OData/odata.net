@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -164,7 +165,7 @@ namespace Microsoft.OData.Tests
             var entry = new ODataResource();
             Action test = () => coreWriter.GetEntityType2(entry);
 
-            test.Throws<ODataException>(Strings.WriterValidationUtils_MissingTypeNameWithMetadata);
+            test.Throws<ODataException>(SRResources.WriterValidationUtils_MissingTypeNameWithMetadata);
         }
 
         private static EdmModel CreateTestModel()

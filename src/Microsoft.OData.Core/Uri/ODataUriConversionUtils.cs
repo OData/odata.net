@@ -15,7 +15,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Json;
 using Microsoft.OData.Metadata;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData
 {
@@ -116,7 +116,7 @@ namespace Microsoft.OData
             {
                 if (!expectedTypeReference.IsNullable)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralNullOnNonNullableType(expectedTypeReference.FullName()));
+                    throw new ODataException(Error.Format(SRResources.ODataUriUtils_ConvertFromUriLiteralNullOnNonNullableType, expectedTypeReference.FullName()));
                 }
 
                 return nullValue;
@@ -126,7 +126,7 @@ namespace Microsoft.OData
             IEdmPrimitiveTypeReference expectedPrimitiveTypeReference = expectedTypeReference.AsPrimitiveOrNull();
             if (expectedPrimitiveTypeReference == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure(expectedTypeReference.FullName(), literalValue));
+                throw new ODataException(Error.Format(SRResources.ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure, expectedTypeReference.FullName(), literalValue));
             }
 
             object coercedResult = CoerceNumericType(primitiveValue, expectedPrimitiveTypeReference.PrimitiveDefinition());
@@ -151,7 +151,7 @@ namespace Microsoft.OData
                 return primitiveValue;
             }
 
-            throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure(expectedPrimitiveTypeReference.FullName(), literalValue));
+            throw new ODataException(Error.Format(SRResources.ODataUriUtils_ConvertFromUriLiteralTypeVerificationFailure, expectedPrimitiveTypeReference.FullName(), literalValue));
         }
 
         /// <summary>
@@ -699,7 +699,7 @@ namespace Microsoft.OData
             }
             catch (OverflowException ex)
             {
-                throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralOverflowNumber(targetEdmType.FullName(), ex.Message));
+                throw new ODataException(Error.Format(SRResources.ODataUriUtils_ConvertFromUriLiteralOverflowNumber, targetEdmType.FullName(), ex.Message));
             }
         }
     }

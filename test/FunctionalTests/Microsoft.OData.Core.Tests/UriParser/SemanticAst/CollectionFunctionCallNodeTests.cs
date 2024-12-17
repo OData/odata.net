@@ -11,7 +11,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.Utils.Metadata;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
 {
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void ItemTypeMustBePrimitiveOrComplex()
         {
             Action createWithEntityCollectionType = () => new CollectionFunctionCallNode("stuff", new List<IEdmFunction>() { HardCodedTestModel.GetFunctionForHasJob() }, new QueryNode[] { new ConstantNode(1) }, new EdmCollectionTypeReference(new EdmCollectionType(ModelBuildingHelpers.BuildValidEntityType().ToTypeReference())), null);
-            createWithEntityCollectionType.Throws<ArgumentException>(ODataErrorStrings.Nodes_CollectionFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
+            createWithEntityCollectionType.Throws<ArgumentException>(SRResources.Nodes_CollectionFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
         }
     }
 }

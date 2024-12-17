@@ -112,7 +112,7 @@ namespace Microsoft.OData.Client
         /// <returns>The visited UnaryExpression expression </returns>
         internal override Expression VisitUnary(UnaryExpression u)
         {
-            throw new NotSupportedException(Strings.ALinq_UnaryNotSupported(u.NodeType.ToString()));
+            throw new NotSupportedException(Error.Format(SRResources.ALinq_UnaryNotSupported, u.NodeType.ToString()));
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Microsoft.OData.Client
         /// <returns>The visited BinaryExpression expression </returns>
         internal override Expression VisitBinary(BinaryExpression b)
         {
-            throw new NotSupportedException(Strings.ALinq_BinaryNotSupported(b.NodeType.ToString()));
+            throw new NotSupportedException(Error.Format(SRResources.ALinq_BinaryNotSupported, b.NodeType.ToString()));
         }
 
         /// <summary>
@@ -132,7 +132,7 @@ namespace Microsoft.OData.Client
         /// <returns>The visited ConstantExpression expression </returns>
         internal override Expression VisitConstant(ConstantExpression c)
         {
-            throw new NotSupportedException(Strings.ALinq_ConstantNotSupported(c.Value));
+            throw new NotSupportedException(Error.Format(SRResources.ALinq_ConstantNotSupported, c.Value));
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Microsoft.OData.Client
         /// <returns>The visited TypeBinaryExpression expression </returns>
         internal override Expression VisitTypeIs(TypeBinaryExpression b)
         {
-            throw new NotSupportedException(Strings.ALinq_TypeBinaryNotSupported);
+            throw new NotSupportedException(SRResources.ALinq_TypeBinaryNotSupported);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Client
         /// <returns>The visited ConditionalExpression expression </returns>
         internal override Expression VisitConditional(ConditionalExpression c)
         {
-            throw new NotSupportedException(Strings.ALinq_ConditionalNotSupported);
+            throw new NotSupportedException(SRResources.ALinq_ConditionalNotSupported);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace Microsoft.OData.Client
         /// <returns>The visited ParameterExpression expression </returns>
         internal override Expression VisitParameter(ParameterExpression p)
         {
-            throw new NotSupportedException(Strings.ALinq_ParameterNotSupported);
+            throw new NotSupportedException(SRResources.ALinq_ParameterNotSupported);
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace Microsoft.OData.Client
         /// <returns>The visited MemberExpression expression </returns>
         internal override Expression VisitMemberAccess(MemberExpression m)
         {
-            throw new NotSupportedException(Strings.ALinq_MemberAccessNotSupported(m.Member.Name));
+            throw new NotSupportedException(Error.Format(SRResources.ALinq_MemberAccessNotSupported, m.Member.Name));
         }
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace Microsoft.OData.Client
         /// <returns>The visited LambdaExpression</returns>
         internal override Expression VisitLambda(LambdaExpression lambda)
         {
-            throw new NotSupportedException(Strings.ALinq_LambdaNotSupported);
+            throw new NotSupportedException(SRResources.ALinq_LambdaNotSupported);
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Microsoft.OData.Client
         /// <returns>The visited NewExpression</returns>
         internal override NewExpression VisitNew(NewExpression nex)
         {
-            throw new NotSupportedException(Strings.ALinq_NewNotSupported);
+            throw new NotSupportedException(SRResources.ALinq_NewNotSupported);
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace Microsoft.OData.Client
         /// <returns>The visited MemberInitExpression</returns>
         internal override Expression VisitMemberInit(MemberInitExpression init)
         {
-            throw new NotSupportedException(Strings.ALinq_MemberInitNotSupported);
+            throw new NotSupportedException(SRResources.ALinq_MemberInitNotSupported);
         }
 
         /// <summary>
@@ -212,7 +212,7 @@ namespace Microsoft.OData.Client
         /// <returns>The visited ListInitExpression</returns>
         internal override Expression VisitListInit(ListInitExpression init)
         {
-            throw new NotSupportedException(Strings.ALinq_ListInitNotSupported);
+            throw new NotSupportedException(SRResources.ALinq_ListInitNotSupported);
         }
 
         /// <summary>
@@ -222,7 +222,7 @@ namespace Microsoft.OData.Client
         /// <returns>The visited NewArrayExpression</returns>
         internal override Expression VisitNewArray(NewArrayExpression na)
         {
-            throw new NotSupportedException(Strings.ALinq_NewArrayNotSupported);
+            throw new NotSupportedException(SRResources.ALinq_NewArrayNotSupported);
         }
 
         /// <summary>
@@ -232,7 +232,7 @@ namespace Microsoft.OData.Client
         /// <returns>The visited InvocationExpression</returns>
         internal override Expression VisitInvocation(InvocationExpression iv)
         {
-            throw new NotSupportedException(Strings.ALinq_InvocationNotSupported);
+            throw new NotSupportedException(SRResources.ALinq_InvocationNotSupported);
         }
 
         /// <summary>
@@ -689,7 +689,7 @@ namespace Microsoft.OData.Client
                 {
                     // This would happen if an aggregation method was added to the enum with no
                     // relevant update to map it to the URI equivalent 
-                    throw new NotSupportedException(Strings.ALinq_AggregationMethodNotSupported(aggregationMethod.ToString()));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_AggregationMethodNotSupported, aggregationMethod.ToString()));
                 }
 
                 string aggregationProperty = string.Empty;

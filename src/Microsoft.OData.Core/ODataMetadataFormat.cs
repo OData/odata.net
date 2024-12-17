@@ -13,6 +13,7 @@ namespace Microsoft.OData
     using System.Xml;
     using System.Threading.Tasks;
     using Microsoft.OData.Metadata;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -123,7 +124,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataMetadataFormat_CreateInputContextAsync));
+            throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataMetadataFormat_CreateInputContextAsync));
         }
 
         /// <summary>

@@ -6,9 +6,9 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OData.Core;
 using Microsoft.OData.UriParser;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void MetadataBinderProcessSkipWithNegativeNumberShouldThrow()
         {
             Action metadataBinderAction = () => MetadataBinder.ProcessSkip(-1);
-            metadataBinderAction.Throws<ODataException>(ODataErrorStrings.MetadataBinder_SkipRequiresNonNegativeInteger("-1"));
+            metadataBinderAction.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_SkipRequiresNonNegativeInteger, "-1"));
         }
 
         [Fact]
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void MetadataBinderProcessTopWithNegativeNumberShouldThrow()
         {
             Action metadataBinderAction = () => MetadataBinder.ProcessTop(-1);
-            metadataBinderAction.Throws<ODataException>(ODataErrorStrings.MetadataBinder_TopRequiresNonNegativeInteger("-1"));
+            metadataBinderAction.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_TopRequiresNonNegativeInteger, "-1"));
         }
 
         [Fact]
@@ -69,12 +69,12 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             // Test null bind state
             Action metadataBinderAction = () => MetadataBinder.ProcessQueryOptions(null, bindInfo.BindMethod);
-            metadataBinderAction.Throws<ODataException>(ODataErrorStrings.MetadataBinder_QueryOptionsBindStateCannotBeNull);
+            metadataBinderAction.Throws<ODataException>(SRResources.MetadataBinder_QueryOptionsBindStateCannotBeNull);
 
             // Test bind state that doesn't have query options populated
             metadataBinderAction = () => MetadataBinder.ProcessQueryOptions(bindInfo.BindingState, bindInfo.BindMethod);
             metadataBinderAction.Throws<ODataException>(
-                ODataErrorStrings.MetadataBinder_QueryOptionsBindStateCannotBeNull);
+                SRResources.MetadataBinder_QueryOptionsBindStateCannotBeNull);
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             Action metadataBinderAction = () => MetadataBinder.ProcessQueryOptions(bindInfo.BindingState, null);
             metadataBinderAction.Throws<ODataException>(
-                ODataErrorStrings.MetadataBinder_QueryOptionsBindMethodCannotBeNull);
+                SRResources.MetadataBinder_QueryOptionsBindMethodCannotBeNull);
         }
 
         [Fact]
