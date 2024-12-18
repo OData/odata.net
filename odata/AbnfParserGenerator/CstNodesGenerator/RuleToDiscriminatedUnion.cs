@@ -61,43 +61,43 @@ namespace AbnfParserGenerator.CstNodesGenerator
                 //// TODO use a standard implementation for this
                 if (value == 0)
                 {
-                    return "Zero";
+                    return "ZERO";
                 }
                 else if (value == 1)
                 {
-                    return "One";
+                    return "ONE";
                 }
                 else if (value == 2)
                 {
-                    return "Two";
+                    return "TWO";
                 }
                 else if (value == 3)
                 {
-                    return "Three";
+                    return "THREE";
                 }
                 else if (value == 4)
                 {
-                    return "Four";
+                    return "FOUR";
                 }
                 else if (value == 5)
                 {
-                    return "Five";
+                    return "FIVE";
                 }
                 else if (value == 6)
                 {
-                    return "Six";
+                    return "SIX";
                 }
                 else if (value == 7)
                 {
-                    return "Seven";
+                    return "SEVEN";
                 }
                 else if (value == 8)
                 {
-                    return "Eight";
+                    return "EIGHT";
                 }
                 else if (value == 9)
                 {
-                    return "Nine";
+                    return "NINE";
                 }
                 else
                 {
@@ -111,12 +111,12 @@ namespace AbnfParserGenerator.CstNodesGenerator
                 {
                     if (!node.SuffixDigits.Any())
                     {
-                        context.Append("AnyNumberOf");
+                        context.Append("ANYNUMBEROF");
                         return default;
                     }
                     else
                     {
-                        context.Append("ZeroTo");
+                        context.Append("BETWEENZEROAND");
                         var count = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
                         var numberWord = IntToNumberWord(count);
                         context.Append(numberWord);
@@ -127,7 +127,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                 {
                     if (!node.SuffixDigits.Any())
                     {
-                        context.Append("AtLeast");
+                        context.Append("ATLEAST");
                         var count = DigitsToInt.Instance.Convert(node.PrefixDigits, default);
                         var numberWord = IntToNumberWord(count);
                         context.Append(numberWord);
@@ -135,10 +135,11 @@ namespace AbnfParserGenerator.CstNodesGenerator
                     }
                     else
                     {
+                        context.Append("BETWEEN");
                         var prefixCount = DigitsToInt.Instance.Convert(node.PrefixDigits, default);
                         var prefixNumberWord = IntToNumberWord(prefixCount);
                         context.Append(prefixNumberWord);
-                        context.Append("To");
+                        context.Append("AND");
 
                         var suffixCount = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
                         var suffixNumberWord = IntToNumberWord(suffixCount);
@@ -501,7 +502,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                             {
                                 //// TODO remove this whole "underscore" thing once you've go the groupclassname computed
                                 var groupingClassName = new StringBuilder();
-                                groupingClassName.Append("GroupingOfЖ");
+                                groupingClassName.Append("GROUPINGOFЖ");
                                 AlternationToGroupingName.Instance.Convert(group.Alternation, groupingClassName);
                                 groupingClassName.Append("Ж");
                                 return AlternationToDiscriminatedUnion.Instance.Convert(group.Alternation, (groupingClassName.ToString(), context.underscores + "_"));
@@ -521,7 +522,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                                 ConcatenationToGroupingName.Instance.Convert(alternation.Concatenation, context);
                                 foreach (var inner in alternation.Inners)
                                 {
-                                    context.Append("Or");
+                                    context.Append("OR");
                                     InnerToGroupingName.Instance.Convert(inner, context);
                                 }
                             }
@@ -553,7 +554,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                                     RepetitionToGroupingName.Instance.Visit(concatenation.Repetition, context);
                                     foreach (var inner in concatenation.Inners)
                                     {
-                                        context.Append("FollowedBy");
+                                        context.Append("FOLLOWEDBY");
                                         InnerToGroupingName.Instance.Convert(inner, context);
                                     }
                                 }
@@ -624,7 +625,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                                             public void Convert(AbnfParser.CstNodes.Group group, StringBuilder context)
                                             {
-                                                context.Append("Ж");
+                                                context.Append("GROUPINGOFЖ");
                                                 AlternationToGroupingName.Instance.Convert(group.Alternation, context);
                                                 context.Append("Ж");
                                             }
@@ -646,7 +647,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                                             public void Convert(AbnfParser.CstNodes.Option option, StringBuilder context)
                                             {
-                                                context.Append("Ж");
+                                                context.Append("OPTIONALЖ");
                                                 AlternationToGroupingName.Instance.Convert(option.Alternation, context);
                                                 context.Append("Ж");
                                             }
