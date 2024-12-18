@@ -433,7 +433,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                         {
                             foreach (var inner in concatenation.Inners)
                             {
-                                duElementName.Append("CombinedWith");
+                                duElementName.Append("FollowedBy");
                                 InnerToDuElementName.Instance.Convert(inner, duElementName);
                             }
                         }
