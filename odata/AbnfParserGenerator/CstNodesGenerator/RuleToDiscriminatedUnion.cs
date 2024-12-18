@@ -99,7 +99,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                     .Convert(alternation, context.discriminatedUnionName);
                 var groupingClasses = AlternationToGroupingClasses
                     .Instance
-                    .Convert(alternation, default)
+                    .Convert(alternation, context.underscores)
                     .Where(@class => @class != null)
                     .Cast<Class>();
                 return new Class(
@@ -202,17 +202,17 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
             public static AlternationToGroupingClasses Instance { get; } = new AlternationToGroupingClasses();
 
-            public IEnumerable<Class?> Convert(Alternation alternation, Root.Void context)
+            public IEnumerable<Class?> Convert(Alternation alternation, string underscores)
             {
                 return ConcatenationToGroupingClass.Instance
                     .Convert(
                         alternation.Concatenation,
-                        default)
+                        underscores)
                     .Concat(
                         alternation
                             .Inners
                             .SelectMany(inner =>
-                                InnerToGroupingClass.Instance.Convert(inner, default)));
+                                InnerToGroupingClass.Instance.Convert(inner, underscores)));
             }
 
             private sealed class InnerToGroupingClass
@@ -223,9 +223,9 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                 public static InnerToGroupingClass Instance { get; } = new InnerToGroupingClass();
 
-                public IEnumerable<Class?> Convert(Alternation.Inner inner, Root.Void context)
+                public IEnumerable<Class?> Convert(Alternation.Inner inner, string underscores)
                 {
-                    return ConcatenationToGroupingClass.Instance.Convert(inner.Concatenation, default);
+                    return ConcatenationToGroupingClass.Instance.Convert(inner.Concatenation, underscores);
                 }
             }
 
@@ -239,6 +239,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                 public IEnumerable<Class?> Convert(Concatenation concatenation, string underscores)
                 {
+                    //// TODO figure out the naming
                     var count = 0;
                     yield return RepetitonToGroupingClass.Instance.Visit(concatenation.Repetition, ($"{underscores}group{count}", underscores));
                     foreach (var inner in concatenation.Inners)
@@ -295,7 +296,6 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                         protected internal override Class? Accept(Element.Group node, (string groupName, string underscores) context)
                         {
-                            //// TODO implement this
                             return GroupToDiscriminatedUnion.Instance.Convert(node.Value, context);
                         }
 
