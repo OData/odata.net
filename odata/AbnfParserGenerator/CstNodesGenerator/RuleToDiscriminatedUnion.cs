@@ -501,7 +501,9 @@ namespace AbnfParserGenerator.CstNodesGenerator
                             {
                                 //// TODO remove this whole "underscore" thing once you've go the groupclassname computed
                                 var groupingClassName = new StringBuilder();
+                                groupingClassName.Append("GroupingOfЖ");
                                 AlternationToGroupingName.Instance.Convert(group.Alternation, groupingClassName);
+                                groupingClassName.Append("Ж");
                                 return AlternationToDiscriminatedUnion.Instance.Convert(group.Alternation, (groupingClassName.ToString(), context.underscores + "_"));
                             }
                         }
