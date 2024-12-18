@@ -309,7 +309,24 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                             public Class Convert(AbnfParser.CstNodes.Group group, (string groupName, string underscores) context)
                             {
-                                return AlternationToDiscriminatedUnion.Instance.Convert(group.Alternation, (context.groupName, context.underscores + "_"));
+                                //// TODO remove this whole "underscore" thing once you've go the groupclassname computed
+                                var groupingClassName = new StringBuilder();
+                                AlternationToGroupingName.Instance.Convert(group.Alternation, groupingClassName);
+                                return AlternationToDiscriminatedUnion.Instance.Convert(group.Alternation, (groupingClassName.ToString(), context.underscores + "_"));
+                            }
+                        }
+
+                        private sealed class AlternationToGroupingName
+                        {
+                            private AlternationToGroupingName()
+                            {
+                            }
+
+                            public static AlternationToGroupingName Instance { get; } = new AlternationToGroupingName();
+
+                            public void Convert(Alternation alternation, StringBuilder context)
+                            {
+                                //// TODO implement this
                             }
                         }
 
