@@ -608,14 +608,46 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                                         protected internal override Root.Void Accept(Element.Group node, StringBuilder context)
                                         {
-                                            //// TODO implement this
+                                            GroupToGroupingName.Instance.Convert(node.Value, context);
                                             return default;
+                                        }
+
+                                        private sealed class GroupToGroupingName
+                                        {
+                                            private GroupToGroupingName()
+                                            {
+                                            }
+
+                                            public static GroupToGroupingName Instance { get; } = new GroupToGroupingName();
+
+                                            public void Convert(AbnfParser.CstNodes.Group group, StringBuilder context)
+                                            {
+                                                context.Append("Ж");
+                                                AlternationToGroupingName.Instance.Convert(group.Alternation, context);
+                                                context.Append("Ж");
+                                            }
                                         }
 
                                         protected internal override Root.Void Accept(Element.Option node, StringBuilder context)
                                         {
-                                            //// TODO implement this
+                                            OptionToGroupingName.Instance.Convert(node.Value, context);
                                             return default;
+                                        }
+
+                                        private sealed class OptionToGroupingName
+                                        {
+                                            private OptionToGroupingName()
+                                            {
+                                            }
+
+                                            public static OptionToGroupingName Instance { get; } = new OptionToGroupingName();
+
+                                            public void Convert(AbnfParser.CstNodes.Option option, StringBuilder context)
+                                            {
+                                                context.Append("Ж");
+                                                AlternationToGroupingName.Instance.Convert(option.Alternation, context);
+                                                context.Append("Ж");
+                                            }
                                         }
 
                                         protected internal override Root.Void Accept(Element.CharVal node, StringBuilder context)
