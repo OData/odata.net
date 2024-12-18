@@ -674,10 +674,6 @@ namespace AbnfParserGenerator.CstNodesGenerator
                             }
                         }
 
-                        class FoЖasdfoЖasdfasdfЖasdfЖ
-                        {
-                        }
-
                         protected internal override Class? Accept(Element.Option node, (string groupName, string underscores) context)
                         {
                             return null;
