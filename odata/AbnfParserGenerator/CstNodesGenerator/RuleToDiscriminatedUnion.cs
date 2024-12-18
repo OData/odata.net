@@ -429,7 +429,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                 public IEnumerable<Class?> Convert(Concatenation concatenation, string underscores)
                 {
-                    //// TODO figure out the naming
+                    //// TODO figure out the naming; TODO you've done this you just need to clean up the old garbage
                     var count = 0;
                     yield return RepetitonToGroupingClass.Instance.Visit(concatenation.Repetition, ($"{underscores}group{count}", underscores));
                     foreach (var inner in concatenation.Inners)
