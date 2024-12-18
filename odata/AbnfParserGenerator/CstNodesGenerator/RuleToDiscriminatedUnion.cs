@@ -61,43 +61,43 @@ namespace AbnfParserGenerator.CstNodesGenerator
                 //// TODO use a standard implementation for this
                 if (value == 0)
                 {
-                    return "ZERO";
+                    return "zero";
                 }
                 else if (value == 1)
                 {
-                    return "ONE";
+                    return "one";
                 }
                 else if (value == 2)
                 {
-                    return "TWO";
+                    return "two";
                 }
                 else if (value == 3)
                 {
-                    return "THREE";
+                    return "three";
                 }
                 else if (value == 4)
                 {
-                    return "FOUR";
+                    return "four";
                 }
                 else if (value == 5)
                 {
-                    return "FIVE";
+                    return "five";
                 }
                 else if (value == 6)
                 {
-                    return "SIX";
+                    return "six";
                 }
                 else if (value == 7)
                 {
-                    return "SEVEN";
+                    return "seven";
                 }
                 else if (value == 8)
                 {
-                    return "EIGHT";
+                    return "eight";
                 }
                 else if (value == 9)
                 {
-                    return "NINE";
+                    return "nine";
                 }
                 else
                 {
@@ -116,7 +116,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                     }
                     else
                     {
-                        context.Append("BETWEENZEROAND");
+                        context.Append("BETWEENzeroAND");
                         var count = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
                         var numberWord = IntToNumberWord(count);
                         context.Append(numberWord);
@@ -571,6 +571,14 @@ namespace AbnfParserGenerator.CstNodesGenerator
                                     {
                                         RepetitionToGroupingName.Instance.Visit(inner.Repetition, context);
                                     }
+                                }
+
+                                private class NᴗaᴖmᴒᴒesⲺЖⳆф
+                                {
+                                }
+
+                                private class Fake
+                                {
                                 }
 
                                 private sealed class RepetitionToGroupingName : Repetition.Visitor<Root.Void, StringBuilder>
