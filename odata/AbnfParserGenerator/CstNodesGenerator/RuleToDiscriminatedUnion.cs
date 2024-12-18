@@ -92,11 +92,11 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
             public static AlternationToDiscriminatedUnion Instance { get; } = new AlternationToDiscriminatedUnion();
 
-            public Class Convert(Alternation alternation, string discriminatedUnionName)
+            public Class Convert(Alternation alternation, (string discriminatedUnionName, string underscores) context)
             {
                 var discriminatedUnionElements = AlternationToDiscriminatedUnionElements
                     .Instance
-                    .Convert(alternation, discriminatedUnionName);
+                    .Convert(alternation, context.discriminatedUnionName);
                 var groupingClasses = AlternationToGroupingClasses
                     .Instance
                     .Convert(alternation, default)
@@ -105,7 +105,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                 return new Class(
                     AccessModifier.Public,
                     true,
-                    discriminatedUnionName,
+                    context.discriminatedUnionName,
                     Enumerable.Empty<string>(),
                     null,
                     new[]
@@ -169,7 +169,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
                                         "Visit",
                                         new[]
                                         {
-                                            new MethodParameter(discriminatedUnionName, "node"),
+                                            new MethodParameter(context.discriminatedUnionName, "node"),
                                             new MethodParameter("TContext", "context"),
                                         },
                                         "return node.Dispatch(this, context);")),
@@ -190,7 +190,7 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
             public Class Convert(Elements elements, string discriminatedUnionName)
             {
-                return AlternationToDiscriminatedUnion.Instance.Convert(elements.Alternation, discriminatedUnionName);
+                return AlternationToDiscriminatedUnion.Instance.Convert(elements.Alternation, (discriminatedUnionName, "_"));
             }
         }
 
@@ -237,12 +237,14 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                 public static ConcatenationToGroupingClass Instance { get; } = new ConcatenationToGroupingClass();
 
-                public IEnumerable<Class?> Convert(Concatenation concatenation, Root.Void context)
+                public IEnumerable<Class?> Convert(Concatenation concatenation, string underscores)
                 {
-                    yield return RepetitonToGroupingClass.Instance.Visit(concatenation.Repetition, default);
+                    var count = 0;
+                    yield return RepetitonToGroupingClass.Instance.Visit(concatenation.Repetition, ($"{underscores}group{count}", underscores));
                     foreach (var inner in concatenation.Inners)
                     {
-                        yield return InnerToGroupingClass.Instance.Convert(inner, default);
+                        ++count;
+                        yield return InnerToGroupingClass.Instance.Convert(inner, ($"{underscores}group{count}", underscores));
                     }
                 }
 
@@ -254,13 +256,13 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                     public static InnerToGroupingClass Instance { get; } = new InnerToGroupingClass();
 
-                    public Class? Convert(Concatenation.Inner inner, Root.Void context)
+                    public Class? Convert(Concatenation.Inner inner, (string groupName, string underscores) context)
                     {
-                        return RepetitonToGroupingClass.Instance.Visit(inner.Repetition, default);
+                        return RepetitonToGroupingClass.Instance.Visit(inner.Repetition, context);
                     }
                 }
 
-                private sealed class RepetitonToGroupingClass : Repetition.Visitor<Class?, Root.Void>
+                private sealed class RepetitonToGroupingClass : Repetition.Visitor<Class?, (string groupName, string underscores)>
                 {
                     private RepetitonToGroupingClass()
                     {
@@ -268,17 +270,17 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                     public static RepetitonToGroupingClass Instance { get; } = new RepetitonToGroupingClass();
 
-                    protected internal override Class? Accept(Repetition.ElementOnly node, Root.Void context)
+                    protected internal override Class? Accept(Repetition.ElementOnly node, (string groupName, string underscores) context)
                     {
-                        return ElementToGroupingClass.Instance.Visit(node.Element, default);
+                        return ElementToGroupingClass.Instance.Visit(node.Element, context);
                     }
 
-                    protected internal override Class? Accept(Repetition.RepeatAndElement node, Root.Void context)
+                    protected internal override Class? Accept(Repetition.RepeatAndElement node, (string groupName, string underscores) context)
                     {
-                        return ElementToGroupingClass.Instance.Visit(node.Element, default);
+                        return ElementToGroupingClass.Instance.Visit(node.Element, context);
                     }
 
-                    private sealed class ElementToGroupingClass : Element.Visitor<Class?, Root.Void>
+                    private sealed class ElementToGroupingClass : Element.Visitor<Class?, (string groupName, string underscores)>
                     {
                         private ElementToGroupingClass()
                         {
@@ -286,42 +288,47 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                         public static ElementToGroupingClass Instance { get; } = new ElementToGroupingClass();
 
-                        protected internal override Class? Accept(Element.RuleName node, Root.Void context)
+                        protected internal override Class? Accept(Element.RuleName node, (string groupName, string underscores) context)
                         {
                             return null;
                         }
 
-                        protected internal override Class? Accept(Element.Group node, Root.Void context)
+                        protected internal override Class? Accept(Element.Group node, (string groupName, string underscores) context)
                         {
                             //// TODO implement this
-                            return new Class(
-                                AccessModifier.Public,
-                                null,
-                                "Group1",
-                                Enumerable.Empty<string>(),
-                                null,
-                                Enumerable.Empty<ConstructorDefinition>(),
-                                Enumerable.Empty<MethodDefinition>(),
-                                Enumerable.Empty<Class>(),
-                                Enumerable.Empty<PropertyDefinition>());
+                            return GroupToDiscriminatedUnion.Instance.Convert(node.Value, context);
                         }
 
-                        protected internal override Class? Accept(Element.Option node, Root.Void context)
+                        private sealed class GroupToDiscriminatedUnion
+                        {
+                            private GroupToDiscriminatedUnion()
+                            {
+                            }
+
+                            public static GroupToDiscriminatedUnion Instance { get; } = new GroupToDiscriminatedUnion();
+
+                            public Class Convert(AbnfParser.CstNodes.Group group, (string groupName, string underscores) context)
+                            {
+                                return AlternationToDiscriminatedUnion.Instance.Convert(group.Alternation, (context.groupName, context.underscores + "_"));
+                            }
+                        }
+
+                        protected internal override Class? Accept(Element.Option node, (string groupName, string underscores) context)
                         {
                             return null;
                         }
 
-                        protected internal override Class? Accept(Element.CharVal node, Root.Void context)
+                        protected internal override Class? Accept(Element.CharVal node, (string groupName, string underscores) context)
                         {
                             return null;
                         }
 
-                        protected internal override Class? Accept(Element.NumVal node, Root.Void context)
+                        protected internal override Class? Accept(Element.NumVal node, (string groupName, string underscores) context)
                         {
                             return null;
                         }
 
-                        protected internal override Class? Accept(Element.ProseVal node, Root.Void context)
+                        protected internal override Class? Accept(Element.ProseVal node, (string groupName, string underscores) context)
                         {
                             return null;
                         }
