@@ -601,7 +601,8 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                                         protected internal override Root.Void Accept(Element.RuleName node, StringBuilder context)
                                         {
-                                            //// TODO implement this
+                                            //// TODO this converter isn't really applicable for all contexts where rulename appears; you should figure out a common class to use instead
+                                            RuleNameToString.Instance.Convert(node.Value, context);
                                             return default;
                                         }
 
