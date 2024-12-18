@@ -39,6 +39,196 @@ namespace AbnfParserGenerator.CstNodesGenerator
             return ElementsToDiscriminatedUnion.Instance.Convert(node.Elements, ruleName);
         }
 
+        private sealed class RepeatToNaturalLanguageName : Repeat.Visitor<Root.Void, StringBuilder>
+        {
+            private RepeatToNaturalLanguageName()
+            {
+            }
+
+            public static RepeatToNaturalLanguageName Instance { get; } = new RepeatToNaturalLanguageName();
+
+            protected internal override Root.Void Accept(Repeat.Count node, StringBuilder context)
+            {
+                var count = DigitsToInt.Instance.Convert(node.Digits, default);
+                var numberWord = IntToNumberWord(count);
+                context.Append(numberWord);
+                //// TODO it would be really nice to put an "s" after the next word taht the caller appends if this is != 1
+                return default;
+            }
+
+            private static string IntToNumberWord(int value)
+            {
+                //// TODO use a standard implementation for this
+                if (value == 0)
+                {
+                    return "Zero";
+                }
+                else if (value == 1)
+                {
+                    return "One";
+                }
+                else if (value == 2)
+                {
+                    return "Two";
+                }
+                else if (value == 3)
+                {
+                    return "Three";
+                }
+                else if (value == 4)
+                {
+                    return "Four";
+                }
+                else if (value == 5)
+                {
+                    return "Five";
+                }
+                else if (value == 6)
+                {
+                    return "Six";
+                }
+                else if (value == 7)
+                {
+                    return "Seven";
+                }
+                else if (value == 8)
+                {
+                    return "Eight";
+                }
+                else if (value == 9)
+                {
+                    return "Nine";
+                }
+                else
+                {
+                    throw new Exception("TODO use a standard implementation");
+                }
+            }
+
+            protected internal override Root.Void Accept(Repeat.Range node, StringBuilder context)
+            {
+                if (!node.PrefixDigits.Any())
+                {
+                    if (!node.SuffixDigits.Any())
+                    {
+                        context.Append("AnyNumberOf");
+                        return default;
+                    }
+                    else
+                    {
+                        context.Append("ZeroTo");
+                        var count = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
+                        var numberWord = IntToNumberWord(count);
+                        context.Append(numberWord);
+                        return default;
+                    }
+                }
+                else
+                {
+                    if (!node.SuffixDigits.Any())
+                    {
+                        context.Append("AtLeast");
+                        var count = DigitsToInt.Instance.Convert(node.PrefixDigits, default);
+                        var numberWord = IntToNumberWord(count);
+                        context.Append(numberWord);
+                        return default;
+                    }
+                    else
+                    {
+                        var prefixCount = DigitsToInt.Instance.Convert(node.PrefixDigits, default);
+                        var prefixNumberWord = IntToNumberWord(prefixCount);
+                        context.Append(prefixNumberWord);
+                        context.Append("To");
+
+                        var suffixCount = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
+                        var suffixNumberWord = IntToNumberWord(suffixCount);
+                        context.Append(suffixNumberWord);
+                        return default;
+                    }
+                }
+            }
+
+            private sealed class DigitsToInt
+            {
+                private DigitsToInt()
+                {
+                }
+
+                public static DigitsToInt Instance { get; } = new DigitsToInt();
+
+                public int Convert(IEnumerable<Digit> digits, Root.Void context)
+                {
+                    var value = 0;
+                    foreach (var digit in digits)
+                    {
+                        value *= 10;
+                        value += DigitToInt.Instance.Visit(digit, default);
+                    }
+
+                    return value;
+                }
+
+                private sealed class DigitToInt : Digit.Visitor<int, Root.Void>
+                {
+                    private DigitToInt()
+                    {
+                    }
+
+                    public static DigitToInt Instance { get; } = new DigitToInt();
+
+                    protected internal override int Accept(Digit.x30 node, Root.Void context)
+                    {
+                        return 0x30 - '0';
+                    }
+
+                    protected internal override int Accept(Digit.x31 node, Root.Void context)
+                    {
+                        return 0x31 - '0';
+                    }
+
+                    protected internal override int Accept(Digit.x32 node, Root.Void context)
+                    {
+                        return 0x32 - '0';
+                    }
+
+                    protected internal override int Accept(Digit.x33 node, Root.Void context)
+                    {
+                        return 0x33 - '0';
+                    }
+
+                    protected internal override int Accept(Digit.x34 node, Root.Void context)
+                    {
+                        return 0x34 - '0';
+                    }
+
+                    protected internal override int Accept(Digit.x35 node, Root.Void context)
+                    {
+                        return 0x35 - '0';
+                    }
+
+                    protected internal override int Accept(Digit.x36 node, Root.Void context)
+                    {
+                        return 0x36 - '0';
+                    }
+
+                    protected internal override int Accept(Digit.x37 node, Root.Void context)
+                    {
+                        return 0x37 - '0';
+                    }
+
+                    protected internal override int Accept(Digit.x38 node, Root.Void context)
+                    {
+                        return 0x38 - '0';
+                    }
+
+                    protected internal override int Accept(Digit.x39 node, Root.Void context)
+                    {
+                        return 0x39 - '0';
+                    }
+                }
+            }
+        }
+
         private sealed class ElementToNaturalLanguageName : Element.Visitor<Root.Void, StringBuilder>
         {
             private ElementToNaturalLanguageName()
@@ -326,8 +516,131 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                             public void Convert(Alternation alternation, StringBuilder context)
                             {
-                                //// TODO implement this
+                                ConcatenationToGroupingName.Instance.Convert(alternation.Concatenation, context);
+                                foreach (var inner in alternation.Inners)
+                                {
+                                    context.Append("Or");
+                                    InnerToGroupingName.Instance.Convert(inner, context);
+                                }
                             }
+
+                            private sealed class InnerToGroupingName
+                            {
+                                private InnerToGroupingName()
+                                {
+                                }
+
+                                public static InnerToGroupingName Instance { get; } = new InnerToGroupingName();
+
+                                public void Convert(Alternation.Inner inner, StringBuilder context)
+                                {
+                                    ConcatenationToGroupingName.Instance.Convert(inner.Concatenation, context);
+                                }
+                            }
+
+                            private sealed class ConcatenationToGroupingName
+                            {
+                                private ConcatenationToGroupingName()
+                                {
+                                }
+
+                                public static ConcatenationToGroupingName Instance { get; } = new ConcatenationToGroupingName();
+
+                                public void Convert(Concatenation concatenation, StringBuilder context)
+                                {
+                                    RepetitionToGroupingName.Instance.Visit(concatenation.Repetition, context);
+                                    foreach (var inner in concatenation.Inners)
+                                    {
+                                        context.Append("FollowedBy");
+                                        InnerToGroupingName.Instance.Convert(inner, context);
+                                    }
+                                }
+
+                                private sealed class InnerToGroupingName
+                                {
+                                    private InnerToGroupingName()
+                                    {
+                                    }
+
+                                    public static InnerToGroupingName Instance { get; } = new InnerToGroupingName();
+
+                                    public void Convert(Concatenation.Inner inner, StringBuilder context)
+                                    {
+                                        RepetitionToGroupingName.Instance.Visit(inner.Repetition, context);
+                                    }
+                                }
+
+                                private sealed class RepetitionToGroupingName : Repetition.Visitor<Root.Void, StringBuilder>
+                                {
+                                    private RepetitionToGroupingName()
+                                    {
+                                    }
+
+                                    public static RepetitionToGroupingName Instance { get; } = new RepetitionToGroupingName();
+
+                                    protected internal override Root.Void Accept(Repetition.ElementOnly node, StringBuilder context)
+                                    {
+                                        ElementToGroupingName.Instance.Visit(node.Element, context);
+                                        return default;
+                                    }
+
+                                    protected internal override Root.Void Accept(Repetition.RepeatAndElement node, StringBuilder context)
+                                    {
+                                        RepeatToNaturalLanguageName.Instance.Visit(node.Repeat, context);
+                                        ElementToGroupingName.Instance.Visit(node.Element, context);
+                                        return default;
+                                    }
+
+                                    private sealed class ElementToGroupingName : Element.Visitor<Root.Void, StringBuilder>
+                                    {
+                                        private ElementToGroupingName()
+                                        {
+                                        }
+
+                                        public static ElementToGroupingName Instance { get; } = new ElementToGroupingName();
+
+                                        protected internal override Root.Void Accept(Element.RuleName node, StringBuilder context)
+                                        {
+                                            //// TODO implement this
+                                            return default;
+                                        }
+
+                                        protected internal override Root.Void Accept(Element.Group node, StringBuilder context)
+                                        {
+                                            //// TODO implement this
+                                            return default;
+                                        }
+
+                                        protected internal override Root.Void Accept(Element.Option node, StringBuilder context)
+                                        {
+                                            //// TODO implement this
+                                            return default;
+                                        }
+
+                                        protected internal override Root.Void Accept(Element.CharVal node, StringBuilder context)
+                                        {
+                                            //// TODO implement this
+                                            return default;
+                                        }
+
+                                        protected internal override Root.Void Accept(Element.NumVal node, StringBuilder context)
+                                        {
+                                            //// TODO implement this
+                                            return default;
+                                        }
+
+                                        protected internal override Root.Void Accept(Element.ProseVal node, StringBuilder context)
+                                        {
+                                            //// TODO implement this
+                                            return default;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        class FoЖasdfoЖasdfasdfЖasdfЖ
+                        {
                         }
 
                         protected internal override Class? Accept(Element.Option node, (string groupName, string underscores) context)
@@ -487,199 +800,9 @@ namespace AbnfParserGenerator.CstNodesGenerator
 
                         protected internal override Root.Void Accept(Repetition.RepeatAndElement node, StringBuilder context)
                         {
-                            RepeatToDuElementName.Instance.Visit(node.Repeat, context);
+                            RepeatToNaturalLanguageName.Instance.Visit(node.Repeat, context);
                             ElementToNaturalLanguageName.Instance.Visit(node.Element, context);
                             return default;
-                        }
-
-                        private sealed class RepeatToDuElementName : Repeat.Visitor<Root.Void, StringBuilder>
-                        {
-                            private RepeatToDuElementName()
-                            {
-                            }
-
-                            public static RepeatToDuElementName Instance { get; } = new RepeatToDuElementName();
-
-                            protected internal override Root.Void Accept(Repeat.Count node, StringBuilder context)
-                            {
-                                var count = DigitsToInt.Instance.Convert(node.Digits, default);
-                                var numberWord = IntToNumberWord(count);
-                                context.Append(numberWord);
-                                //// TODO it would be really nice to put an "s" after the next word taht the caller appends if this is != 1
-                                return default;
-                            }
-
-                            private static string IntToNumberWord(int value)
-                            {
-                                //// TODO use a standard implementation for this
-                                if (value == 0)
-                                {
-                                    return "Zero";
-                                }
-                                else if (value == 1)
-                                {
-                                    return "One";
-                                }
-                                else if (value == 2)
-                                {
-                                    return "Two";
-                                }
-                                else if (value == 3)
-                                {
-                                    return "Three";
-                                }
-                                else if (value == 4)
-                                {
-                                    return "Four";
-                                }
-                                else if (value == 5)
-                                {
-                                    return "Five";
-                                }
-                                else if (value == 6)
-                                {
-                                    return "Six";
-                                }
-                                else if (value == 7)
-                                {
-                                    return "Seven";
-                                }
-                                else if (value == 8)
-                                {
-                                    return "Eight";
-                                }
-                                else if (value == 9)
-                                {
-                                    return "Nine";
-                                }
-                                else
-                                {
-                                    throw new Exception("TODO use a standard implementation");
-                                }
-                            }
-
-                            protected internal override Root.Void Accept(Repeat.Range node, StringBuilder context)
-                            {
-                                if (!node.PrefixDigits.Any())
-                                {
-                                    if (!node.SuffixDigits.Any())
-                                    {
-                                        context.Append("AnyNumberOf");
-                                        return default;
-                                    }
-                                    else
-                                    {
-                                        context.Append("ZeroTo");
-                                        var count = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
-                                        var numberWord = IntToNumberWord(count);
-                                        context.Append(numberWord);
-                                        return default;
-                                    }
-                                }
-                                else
-                                {
-                                    if (!node.SuffixDigits.Any())
-                                    {
-                                        context.Append("AtLeast");
-                                        var count = DigitsToInt.Instance.Convert(node.PrefixDigits, default);
-                                        var numberWord = IntToNumberWord(count);
-                                        context.Append(numberWord);
-                                        return default;
-                                    }
-                                    else
-                                    {
-                                        var prefixCount = DigitsToInt.Instance.Convert(node.PrefixDigits, default);
-                                        var prefixNumberWord = IntToNumberWord(prefixCount);
-                                        context.Append(prefixNumberWord);
-                                        context.Append("To");
-
-                                        var suffixCount = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
-                                        var suffixNumberWord = IntToNumberWord(suffixCount);
-                                        context.Append(suffixNumberWord);
-                                        return default;
-                                    }
-                                }
-                            }
-
-                            private sealed class DigitsToInt
-                            {
-                                private DigitsToInt()
-                                {
-                                }
-
-                                public static DigitsToInt Instance { get; } = new DigitsToInt();
-
-                                public int Convert(IEnumerable<Digit> digits, Root.Void context)
-                                {
-                                    var value = 0;
-                                    foreach (var digit in digits)
-                                    {
-                                        value *= 10;
-                                        value += DigitToInt.Instance.Visit(digit, default);
-                                    }
-
-                                    return value;
-                                }
-
-                                private sealed class DigitToInt : Digit.Visitor<int, Root.Void>
-                                {
-                                    private DigitToInt()
-                                    {
-                                    }
-
-                                    public static DigitToInt Instance { get; } = new DigitToInt();
-
-                                    protected internal override int Accept(Digit.x30 node, Root.Void context)
-                                    {
-                                        return 0x30 - '0';
-                                    }
-
-                                    protected internal override int Accept(Digit.x31 node, Root.Void context)
-                                    {
-                                        return 0x31 - '0';
-                                    }
-
-                                    protected internal override int Accept(Digit.x32 node, Root.Void context)
-                                    {
-                                        return 0x32 - '0';
-                                    }
-
-                                    protected internal override int Accept(Digit.x33 node, Root.Void context)
-                                    {
-                                        return 0x33 - '0';
-                                    }
-
-                                    protected internal override int Accept(Digit.x34 node, Root.Void context)
-                                    {
-                                        return 0x34 - '0';
-                                    }
-
-                                    protected internal override int Accept(Digit.x35 node, Root.Void context)
-                                    {
-                                        return 0x35 - '0';
-                                    }
-
-                                    protected internal override int Accept(Digit.x36 node, Root.Void context)
-                                    {
-                                        return 0x36 - '0';
-                                    }
-
-                                    protected internal override int Accept(Digit.x37 node, Root.Void context)
-                                    {
-                                        return 0x37 - '0';
-                                    }
-
-                                    protected internal override int Accept(Digit.x38 node, Root.Void context)
-                                    {
-                                        return 0x38 - '0';
-                                    }
-
-                                    protected internal override int Accept(Digit.x39 node, Root.Void context)
-                                    {
-                                        return 0x39 - '0';
-                                    }
-                                }
-                            }
                         }
                     }
                 }
