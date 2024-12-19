@@ -381,14 +381,14 @@
                                     return node.Dispatch(this, context);
                                 }
 
-                                protected internal abstract TResult Accept(FIRST_RULEoneFIRST_RULE node, TContext context);
+                                protected internal abstract TResult Accept(FIRST_RULEfollowedbyoneFIRST_RULE node, TContext context);
 
-                                protected internal abstract TResult Accept(FIRST_RULEnoFIRST_RULE node, TContext context);
+                                protected internal abstract TResult Accept(FIRST_RULEfollowedbynoFIRST_RULE node, TContext context);
                             }
 
-                            public sealed class FIRST_RULEoneFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                            public sealed class FIRST_RULEfollowedbyoneFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
                             {
-                                public FIRST_RULEoneFIRST_RULE(FIRST_RULE FIRST_RULE1, FIRST_RULE FIRST_RULE2)
+                                public FIRST_RULEfollowedbyoneFIRST_RULE(FIRST_RULE FIRST_RULE1, FIRST_RULE FIRST_RULE2)
                                 {
                                     this.FIRST_RULE1 = FIRST_RULE1;
                                     this.FIRST_RULE2 = FIRST_RULE2;
@@ -403,9 +403,9 @@
                                 }
                             }
 
-                            public sealed class FIRST_RULEnoFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                            public sealed class FIRST_RULEfollowedbynoFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
                             {
-                                public FIRST_RULEnoFIRST_RULE(FIRST_RULE FIRST_RULE1)
+                                public FIRST_RULEfollowedbynoFIRST_RULE(FIRST_RULE FIRST_RULE1)
                                 {
                                     this.FIRST_RULE1 = FIRST_RULE1;
                                 }
@@ -486,14 +486,14 @@
                                         return node.Dispatch(this, context);
                                     }
 
-                                    protected internal abstract TResult Accept(FIRST_RULEoneFIRST_RULE node, TContext context);
+                                    protected internal abstract TResult Accept(FIRST_RULEfollowedbyoneFIRST_RULE node, TContext context);
 
-                                    protected internal abstract TResult Accept(FIRST_RULEnoFIRST_RULE node, TContext context);
+                                    protected internal abstract TResult Accept(FIRST_RULEfollowedbynoFIRST_RULE node, TContext context);
                                 }
 
-                                public sealed class FIRST_RULEoneFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                                public sealed class FIRST_RULEfollowedbyoneFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
                                 {
-                                    public FIRST_RULEoneFIRST_RULE(FIRST_RULE FIRST_RULE1, FIRST_RULE FIRST_RULE2)
+                                    public FIRST_RULEfollowedbyoneFIRST_RULE(FIRST_RULE FIRST_RULE1, FIRST_RULE FIRST_RULE2)
                                     {
                                         this.FIRST_RULE1 = FIRST_RULE1;
                                         this.FIRST_RULE2 = FIRST_RULE2;
@@ -508,9 +508,9 @@
                                     }
                                 }
 
-                                public sealed class FIRST_RULEnoFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                                public sealed class FIRST_RULEfollowedbynoFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
                                 {
-                                    public FIRST_RULEnoFIRST_RULE(FIRST_RULE FIRST_RULE1)
+                                    public FIRST_RULEfollowedbynoFIRST_RULE(FIRST_RULE FIRST_RULE1)
                                     {
                                         this.FIRST_RULE1 = FIRST_RULE1;
                                     }
@@ -569,6 +569,97 @@
 
                     public abstract class FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
                     {
+                        private FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ()
+                        {
+                        }
+
+                        //// TODO visitor here
+
+                        public sealed class groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
+                        {
+                            public groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ(FIRST_RULEfollowedbyanoptionalFIRST_RULE FIRST_RULEfollowedbyanoptionalFIRST_RULE1)
+                            {
+                                this.FIRST_RULEfollowedbyanoptionalFIRST_RULE1 = FIRST_RULEfollowedbyanoptionalFIRST_RULE1;
+                            }
+
+                            public FIRST_RULEfollowedbyanoptionalFIRST_RULE FIRST_RULEfollowedbyanoptionalFIRST_RULE1 { get; }
+
+                            public abstract class FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                            {
+                                private FIRST_RULEfollowedbyanoptionalFIRST_RULE()
+                                {
+                                }
+
+                                //// TODO visitor here
+
+                                public sealed class FIRST_RULEfollowedbyoneFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                                {
+                                    public FIRST_RULEfollowedbyoneFIRST_RULE(FIRST_RULE FIRST_RULE1, FIRST_RULE FIRST_RULE2)
+                                    {
+                                        this.FIRST_RULE1 = FIRST_RULE1;
+                                        this.FIRST_RULE2 = FIRST_RULE2;
+                                    }
+
+                                    public FIRST_RULE FIRST_RULE1 { get; }
+                                    public FIRST_RULE FIRST_RULE2 { get; }
+                                }
+
+                                public sealed class FIRST_RULEfollwedbynoFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                                {
+                                    public FIRST_RULEfollwedbynoFIRST_RULE(FIRST_RULE FIRST_RULE1, FIRST_RULE FIRST_RULE2)
+                                    {
+                                        this.FIRST_RULE1 = FIRST_RULE1;
+                                        this.FIRST_RULE2 = FIRST_RULE2;
+                                    }
+
+                                    public FIRST_RULE FIRST_RULE1 { get; }
+                                    public FIRST_RULE FIRST_RULE2 { get; }
+                                }
+                            }
+                        }
+
+                        public sealed class groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
+                        {
+                            public groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(FIRST_RULE FIRST_RULE1, FIRST_RULE FIRST_RULE2)
+                            {
+                                this.FIRST_RULE1 = FIRST_RULE1;
+                                this.FIRST_RULE2 = FIRST_RULE2;
+                            }
+
+                            public FIRST_RULE FIRST_RULE1 { get; }
+                            public FIRST_RULE FIRST_RULE2 { get; }
+                        }
+
+                        public sealed class FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyonegroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ : FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
+                        {
+                            public FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyonegroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(
+                                FIRST_RULE FIRST_RULE1,
+                                groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1,
+                                groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1)
+                            {
+                                this.FIRST_RULE1 = FIRST_RULE1;
+                                this.groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 = groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1;
+                                this.groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 = groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1;
+                            }
+
+                            public FIRST_RULE FIRST_RULE1 { get; }
+                            public groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 { get; }
+                            public groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 { get; }
+                        }
+
+                        public sealed class FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbynogroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ : FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
+                        {
+                            public FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbynogroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(
+                                FIRST_RULE FIRST_RULE1,
+                                groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1)
+                            {
+                                this.FIRST_RULE1 = FIRST_RULE1;
+                                this.groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 = groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1;
+                            }
+
+                            public FIRST_RULE FIRST_RULE1 { get; }
+                            public groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 { get; }
+                        }
                     }
                 }
 
