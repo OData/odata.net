@@ -588,9 +588,43 @@
                             propertyDefinitions); //// TODO
                     }
 
-                    //// TODO i'm not convinced this is implemented correctly
+                    //// TODO i'm not convinced this is implemented correctly:
                     ////return RepetitionToNestedGroupingClass.Instance.Visit(concatenation.Repetition, context);
                     return null;
+                }
+
+                private sealed class ConcatenationToNestedGroupingClasses
+                {
+                    private ConcatenationToNestedGroupingClasses()
+                    {
+                    }
+
+                    public static ConcatenationToNestedGroupingClasses Instance { get; } = new ConcatenationToNestedGroupingClasses();
+
+                    public IEnumerable<Class?> Generate(Concatenation concatenation, Root.Void context)
+                    {
+                        //// TODO i think this class doesn't work correctly
+                        yield return RepetitionToNestedGroupingClass.Instance.Visit(concatenation.Repetition, context);
+                        foreach (var inner in concatenation.Inners)
+                        {
+                            yield return InnerToNestedGroupingClass.Instance.Generate(inner, context);
+                        }
+                    }
+
+                    private sealed class InnerToNestedGroupingClass
+                    {
+                        private InnerToNestedGroupingClass()
+                        {
+                        }
+
+                        public static InnerToNestedGroupingClass Instance { get; }
+
+                        public Class? Generate(Concatenation.Inner inner, Root.Void context)
+                        {
+                            //// TODO i think this class doesn't work correctly
+                            return RepetitionToNestedGroupingClass.Instance.Visit(inner.Repetition, context);
+                        }
+                    }
                 }
 
                 private sealed class RepetitionToNestedGroupingClass : Repetition.Visitor<Class?, Root.Void>
