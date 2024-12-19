@@ -311,7 +311,7 @@
                     (string ClassName, IEnumerable<Repetition> Repetitions) repetitionCombination,
                     string baseType)
                 {
-                    var properties = ConvertRepetitionsToPropertyDefinitions(repetitionCombination.Repetitions).ToList();
+                    var properties = ConvertRepetitionsToPropertyDefinitions(repetitionCombination.Repetitions);
 
                     return new Class(
                         AccessModifier.Public,
@@ -338,6 +338,7 @@
 
                 private static IEnumerable<PropertyDefinition> ConvertRepetitionsToPropertyDefinitions(IEnumerable<Repetition> repetitions)
                 {
+                    //// TODO you have to be careful everywhere you use this pattern
                     var propertyTypeCounts = new Dictionary<string, int>();
                     return repetitions
                         .Select(repetition =>
@@ -345,8 +346,9 @@
                             .RepetitionToPropertyDefinition
                             .Instance
                             .Visit(
-                                repetition, 
-                                (propertyTypeCounts, default)));
+                                repetition,
+                                (propertyTypeCounts, default)))
+                        .ToList();
                 }
 
                 private static IEnumerable<(string ClassName, IEnumerable<Repetition> Repetitions)> Combinations(
