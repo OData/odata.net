@@ -2491,6 +2491,11 @@ namespace Microsoft.OData.Client
             if (relation == null)
             {
                 relation = new LinkDescriptor(source, sourceProperty, target, this.model);
+                EntityDescriptor sourceResource = this.entityTracker.GetEntityDescriptor(source);
+                if (sourceResource.State == EntityStates.Added)
+                {
+                    relation.DependsOnIds = new List<string> { sourceResource.ChangeOrder.ToString(CultureInfo.InvariantCulture) };
+                }
                 this.entityTracker.AddLink(relation);
             }
 
@@ -2633,9 +2638,13 @@ namespace Microsoft.OData.Client
             var targetResource = new EntityDescriptor(this.model)
             {
                 Entity = target,
-                State = EntityStates.Added,
-                DependsOnIds = new List<string> { sourceResource.ChangeOrder.ToString(CultureInfo.InvariantCulture) }
+                State = EntityStates.Added
             };
+
+            if (sourceResource.State == EntityStates.Added)
+            {
+                targetResource.DependsOnIds = new List<string> { sourceResource.ChangeOrder.ToString(CultureInfo.InvariantCulture) };
+            }
 
             targetResource.SetParentForInsert(sourceResource, sourceProperty);
 
@@ -2884,8 +2893,12 @@ namespace Microsoft.OData.Client
                 {
                     Entity = target,
                     State = EntityStates.Modified,
-                    EditLink = sourceResource.GetNestedResourceInfo(this.baseUriResolver, property)
+                    EditLink = sourceResource.GetNestedResourceInfo(this.baseUriResolver, property) 
                 };
+                if (sourceResource.State == EntityStates.Added)
+                {
+                    targetResource.DependsOnIds = new List<string> { sourceResource.ChangeOrder.ToString(CultureInfo.InvariantCulture) };
+                }
 
                 targetResource.SetParentForUpdate(sourceResource, sourceProperty);
                 this.EntityTracker.AddEntityDescriptor(targetResource);
@@ -4313,6 +4326,7 @@ namespace Microsoft.OData.Client
             }
 
             descriptor.State = EntityStates.Unchanged;
+            descriptor.DependsOnIds = null;
         }
 
         /// <summary>
