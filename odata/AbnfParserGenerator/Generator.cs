@@ -92,7 +92,6 @@
                 if (alternation.Inners.Any())
                 {
                     // if there are multiple concatenations, then we are going to need a discriminated union to distinguish them
-                    //// TODO and nested grouping classes
                     var discriminatedUnionMembers = AlternationToDiscriminatedUnionMembers.Instance.Generate(alternation, context);
                     return new Class(
                         AccessModifier.Public,
