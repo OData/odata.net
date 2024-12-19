@@ -49,7 +49,7 @@
                 public Class Generate(AbnfParser.CstNodes.Rule rule, Root.Void context)
                 {
                     var ruleNameBuilder = new StringBuilder();
-                    RuleNameToString.Instance.Generate(rule.RuleName, ruleNameBuilder);
+                    RuleNameToClassName.Instance.Generate(rule.RuleName, ruleNameBuilder);
                     return ElementsToClass.Instance.Generate(rule.Elements, (ruleNameBuilder.ToString(), context));
                 }
 
@@ -120,6 +120,9 @@
                     .Instance
                     .Generate(alternation.Concatenation, context.@void)
                     .NotNull();
+                var propertyDefinitions = ConcatenationToPropertyDefinitions
+                    .Instance
+                    .Generate(alternation.Concatenation, context.@void);
                 return new Class(
                     AccessModifier.Public,
                     false,
@@ -129,7 +132,7 @@
                     Enumerable.Empty<ConstructorDefinition>(), //// TODO add these
                     Enumerable.Empty<MethodDefinition>(),
                     nestedGroupingClasses,
-                    Enumerable.Empty<PropertyDefinition>()); //// TODO add these
+                    propertyDefinitions); //// TODO add these
             }
 
             private sealed class ConcatenationToPropertyDefinitions
@@ -200,7 +203,7 @@
                             (Dictionary<string, int> PropertyTypeCounts, bool IsCollection) context)
                         {
                             var propertyTypeBuilder = new StringBuilder();
-                            RuleNameToString.Instance.Generate(node.Value, propertyTypeBuilder);
+                            RuleNameToClassName.Instance.Generate(node.Value, propertyTypeBuilder);
                             var propertyType = propertyTypeBuilder.ToString();
 
                             if (!context.PropertyTypeCounts.TryGetValue(propertyType, out var propertyTypeCount))
@@ -588,7 +591,7 @@
 
             protected internal override Root.Void Accept(Element.RuleName node, StringBuilder context)
             {
-                RuleNameToString.Instance.Generate(node.Value, context);
+                RuleNameToClassName.Instance.Generate(node.Value, context);
                 return default;
             }
 
@@ -790,53 +793,53 @@
                 return default;
             }
         }
-    }
 
-    public sealed class RuleNameToString
-    {
-        private RuleNameToString()
+        private sealed class RuleNameToClassName
         {
-        }
-
-        public static RuleNameToString Instance { get; } = new RuleNameToString();
-
-        public Root.Void Generate(RuleName ruleName, StringBuilder context)
-        {
-            context.Append(AlphaToChar.Instance.Visit(ruleName.Alpha, default));
-            foreach (var inner in ruleName.Inners)
-            {
-                InnerToString.Instance.Visit(inner, context);
-            }
-
-            return default;
-        }
-
-        private sealed class InnerToString : RuleName.Inner.Visitor<Root.Void, StringBuilder>
-        {
-            private InnerToString()
+            private RuleNameToClassName()
             {
             }
 
-            public static InnerToString Instance { get; } = new InnerToString();
+            public static RuleNameToClassName Instance { get; } = new RuleNameToClassName();
 
-            protected internal override Root.Void Accept(RuleName.Inner.AlphaInner node, StringBuilder context)
+            public Root.Void Generate(RuleName ruleName, StringBuilder context)
             {
-                context.Append(AlphaToChar.Instance.Visit(node.Alpha, default));
+                context.Append("rulewithname");
+                context.Append(char.ToUpperInvariant(AlphaToChar.Instance.Visit(ruleName.Alpha, default)));
+                foreach (var inner in ruleName.Inners)
+                {
+                    InnerToString.Instance.Visit(inner, context);
+                }
+
                 return default;
             }
 
-            protected internal override Root.Void Accept(RuleName.Inner.DigitInner node, StringBuilder context)
+            private sealed class InnerToString : RuleName.Inner.Visitor<Root.Void, StringBuilder>
             {
-                context.Append(DigitToInt.Instance.Visit(node.Digit, default).ToString());
-                return default;
-            }
+                private InnerToString()
+                {
+                }
 
-            protected internal override Root.Void Accept(RuleName.Inner.DashInner node, StringBuilder context)
-            {
-                //// TODO add a visitor for the dash CST node
-                //// TODO using underscore here instead of dash means that this class isn't really "rulename to string", but "rulename to classname"
-                context.Append("_");
-                return default;
+                public static InnerToString Instance { get; } = new InnerToString();
+
+                protected internal override Root.Void Accept(RuleName.Inner.AlphaInner node, StringBuilder context)
+                {
+                    context.Append(char.ToUpperInvariant(AlphaToChar.Instance.Visit(node.Alpha, default)));
+                    return default;
+                }
+
+                protected internal override Root.Void Accept(RuleName.Inner.DigitInner node, StringBuilder context)
+                {
+                    context.Append(DigitToInt.Instance.Visit(node.Digit, default).ToString());
+                    return default;
+                }
+
+                protected internal override Root.Void Accept(RuleName.Inner.DashInner node, StringBuilder context)
+                {
+                    //// TODO add a visitor for the dash CST node
+                    context.Append("_");
+                    return default;
+                }
             }
         }
     }
