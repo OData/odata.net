@@ -260,20 +260,34 @@
                         var classNameBuilder = new StringBuilder();
                         ConcatenationToClassName.Instance.Generate(concatenation, classNameBuilder);
                         var className = classNameBuilder.ToString();
-                        //// TODO this is very hacky and you should do better
-                        var groupingOfLiteral = "groupingofᴖ";
-                        if (className.StartsWith(groupingOfLiteral))
-                        {
-                            className = className.Substring(groupingOfLiteral.Length, className.Length - groupingOfLiteral.Length - 1);
-                        }
-
                         var nestedGroupingClasses = ConcatenationToNestedGroupingClasses
                             .Instance
                             .Generate(concatenation, context.@void)
                             .NotNull();
-                        var propertyDefinitions = ConcatenationToPropertyDefinitions
-                            .Instance
-                            .Generate(concatenation, context.@void);
+
+                        IEnumerable<PropertyDefinition> propertyDefinitions;
+                        //// TODO this is very hacky and you should do better
+                        var groupingOfLiteral = "groupingofᴖ";
+                        if (className.StartsWith(groupingOfLiteral))
+                        {
+                            propertyDefinitions = new[]
+                            {
+                                new PropertyDefinition(
+                                    AccessModifier.Public,
+                                    className,
+                                    $"{className}1",
+                                    true,
+                                    false),
+                            };
+                            className = className.Substring(groupingOfLiteral.Length, className.Length - groupingOfLiteral.Length - 1);
+                        }
+                        else
+                        {
+                            propertyDefinitions = ConcatenationToPropertyDefinitions
+                                .Instance
+                                .Generate(concatenation, context.@void);
+                        }
+
                         return new Class(
                             AccessModifier.Public,
                             false,
@@ -282,14 +296,14 @@
                             context.BaseType,
                             new[]
                             {
-                                new ConstructorDefinition(
-                                    AccessModifier.Public,
+                            new ConstructorDefinition(
+                                AccessModifier.Public,
+                                propertyDefinitions.Select(propertyDefinition =>
+                                    new MethodParameter(propertyDefinition.Type, propertyDefinition.Name)),
+                                string.Join(
+                                    Environment.NewLine,
                                     propertyDefinitions.Select(propertyDefinition =>
-                                        new MethodParameter(propertyDefinition.Type, propertyDefinition.Name)),
-                                    string.Join(
-                                        Environment.NewLine,
-                                        propertyDefinitions.Select(propertyDefinition =>
-                                            $"this.{propertyDefinition.Name} = {propertyDefinition.Name};"))),
+                                        $"this.{propertyDefinition.Name} = {propertyDefinition.Name};"))),
                             },
                             Enumerable.Empty<MethodDefinition>(),
                             nestedGroupingClasses,
