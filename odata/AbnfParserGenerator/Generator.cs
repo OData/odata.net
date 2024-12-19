@@ -145,7 +145,7 @@
                     
                 }
 
-                private sealed class RepetitionToPropertyDefinition : Repetition.Visitor<PropertyDefinition, Root.Void>
+                private sealed class RepetitionToPropertyDefinition : Repetition.Visitor<PropertyDefinition, (Dictionary<string, int> PropertyTypeCounts, Root.Void)>
                 {
                     private RepetitionToPropertyDefinition()
                     {
@@ -153,14 +153,18 @@
 
                     public static RepetitionToPropertyDefinition Instance { get; } = new RepetitionToPropertyDefinition();
 
-                    protected internal override PropertyDefinition Accept(Repetition.ElementOnly node, Root.Void context)
+                    protected internal override PropertyDefinition Accept(
+                        Repetition.ElementOnly node, 
+                        (Dictionary<string, int> PropertyTypeCounts, Root.Void) context)
                     {
-                        return ElementToPropertyDefinition.Instance.Visit(node.Element, context);
+                        return ElementToPropertyDefinition.Instance.Visit(node.Element, (context.PropertyTypeCounts, false));
                     }
 
-                    protected internal override PropertyDefinition Accept(Repetition.RepeatAndElement node, Root.Void context)
+                    protected internal override PropertyDefinition Accept(
+                        Repetition.RepeatAndElement node, 
+                        (Dictionary<string, int> PropertyTypeCounts, Root.Void) context)
                     {
-                        
+                        return ElementToPropertyDefinition.Instance.Visit(node.Element, (context.PropertyTypeCounts, true));
                     }
 
                     private sealed class ElementToPropertyDefinition : Element.Visitor<PropertyDefinition, (Dictionary<string, int> PropertyTypeCounts, bool IsCollection)>
