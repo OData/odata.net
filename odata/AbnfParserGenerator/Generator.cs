@@ -592,7 +592,7 @@
                             propertyDefinitions);
                     }
 
-                    //// TODO this call might not be working correctly:
+                    //// TODO this call might not be working correctly: //// TODO or maybe it's just that you haven't fully implemented the callers that are getting recursively called into...
                     return RepetitionToNestedGroupingClass.Instance.Visit(concatenation.Repetition, context);
                 }
 
