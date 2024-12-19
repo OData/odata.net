@@ -47,6 +47,7 @@
 
                 public Class Generate(AbnfParser.CstNodes.Rule rule, Root.Void context)
                 {
+
                 }
 
                 private sealed class ElementsToClass
@@ -57,8 +58,9 @@
 
                     public static ElementsToClass Instance { get; } = new ElementsToClass();
 
-                    public Class Generate(AbnfParser.CstNodes.Elements elements, Root.Void context)
+                    public Class Generate(AbnfParser.CstNodes.Elements elements, (string ClassName, Root.Void) context)
                     {
+                        return AlternationToClass.Instance.Generate(elements.Alternation, context);
                     }
                 }
             }
