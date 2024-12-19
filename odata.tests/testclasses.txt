@@ -69,7 +69,7 @@ public abstract class rulewithnameSECOND_RULE
 
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(FIRST_RULEfollowedbyanoptionalFIRST_RULE node, TContext context)
+                public TResult Visit(groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
