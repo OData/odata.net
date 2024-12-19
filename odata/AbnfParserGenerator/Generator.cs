@@ -579,11 +579,15 @@
                 public IEnumerable<PropertyDefinition> Generate(Concatenation concatenation, Root.Void context)
                 {
                     var propertyTypeCounts = new Dictionary<string, int>();
+                    return GenerateImpl(concatenation, propertyTypeCounts).ToList();
+                }
 
-                    yield return RepetitionToPropertyDefinition.Instance.Visit(concatenation.Repetition, (propertyTypeCounts, context));
+                private IEnumerable<PropertyDefinition> GenerateImpl(Concatenation concatenation, Dictionary<string, int> propertyTypeCounts)
+                {
+                    yield return RepetitionToPropertyDefinition.Instance.Visit(concatenation.Repetition, (propertyTypeCounts, default));
                     foreach (var inner in concatenation.Inners)
                     {
-                        yield return InnerToPropertyDefinition.Instance.Generate(inner, (propertyTypeCounts, context));
+                        yield return InnerToPropertyDefinition.Instance.Generate(inner, (propertyTypeCounts, default));
                     }
                 }
 
