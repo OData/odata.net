@@ -680,26 +680,26 @@
 
             public static ConcatenationToClassName Instance { get; } = new ConcatenationToClassName();
 
-            public Root.Void Generate(AbnfParser.CstNodes.Concatenation concatenation, StringBuilder context)
+            public Root.Void Generate(AbnfParser.CstNodes.Concatenation concatenation, StringBuilder ClassNameBuilder)
             {
-                var grouping = concatenation.Inners.Any();
+                var implicitGrouping = concatenation.Inners.Any();
 
-                if (grouping)
+                if (implicitGrouping)
                 {
                     //// TODO call this "concatenationof" instead? also use a different symbol?
-                    context.Append("groupingofᴖ");
+                    ClassNameBuilder.Append("groupingofᴖ");
                 }
 
-                RepetitionToClassName.Instance.Visit(concatenation.Repetition, context);
+                RepetitionToClassName.Instance.Visit(concatenation.Repetition, ClassNameBuilder);
                 foreach (var inner in concatenation.Inners)
                 {
-                    context.Append("followedby");
-                    InnerToClassName.Instance.Generate(inner, context);
+                    ClassNameBuilder.Append("followedby");
+                    InnerToClassName.Instance.Generate(inner, ClassNameBuilder);
                 }
 
-                if (grouping)
+                if (implicitGrouping)
                 {
-                    context.Append("ᴖ");
+                    ClassNameBuilder.Append("ᴖ");
                 }
 
                 return default;
@@ -952,9 +952,18 @@
 
             public Root.Void Generate(AbnfParser.CstNodes.Group group, StringBuilder context)
             {
-                context.Append("groupingofᴖ");
+                var needsGrouping = group.Alternation.Inners.Any() || !group.Alternation.Concatenation.Inners.Any();
+                if (needsGrouping)
+                {
+                    context.Append("groupingofᴖ");
+                }
+
                 AlternationToClassName.Instance.Generate(group.Alternation, context);
-                context.Append("ᴖ");
+
+                if (needsGrouping)
+                {
+                    context.Append("ᴖ");
+                }
                 return default;
             }
         }
