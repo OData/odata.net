@@ -225,7 +225,7 @@
 
                 public IEnumerable<Class?> Generate(Alternation alternation, Root.Void context)
                 {
-                    yield return ConcatenationToNestedGroupingClasses.Instance.Generate(alternation.Concatenation, context);
+                    yield return ConcatenationToNestedGroupingClass.Instance.Generate(alternation.Concatenation, context);
                     foreach (var inner in alternation.Inners)
                     {
                         yield return InnerToNestedGroupingClasses.Instance.Generate(inner, context);
@@ -242,7 +242,7 @@
 
                     public Class? Generate(Alternation.Inner inner, Root.Void context)
                     {
-                        return ConcatenationToNestedGroupingClasses.Instance.Generate(inner.Concatenation, context);
+                        return ConcatenationToNestedGroupingClass.Instance.Generate(inner.Concatenation, context);
                     }
                 }
             }
@@ -316,7 +316,7 @@
                             //// TODO i don't think this is right
                             nestedGroupingClasses = new[]
                             {
-                                ConcatenationToNestedGroupingClasses
+                                ConcatenationToNestedGroupingClass
                                     .Instance
                                     .Generate(concatenation, context.@void)
                             }.NotNull();
@@ -545,13 +545,13 @@
                 }
             }
 
-            private sealed class ConcatenationToNestedGroupingClasses
+            private sealed class ConcatenationToNestedGroupingClass
             {
-                private ConcatenationToNestedGroupingClasses()
+                private ConcatenationToNestedGroupingClass()
                 {
                 }
 
-                public static ConcatenationToNestedGroupingClasses Instance { get; } = new ConcatenationToNestedGroupingClasses();
+                public static ConcatenationToNestedGroupingClass Instance { get; } = new ConcatenationToNestedGroupingClass();
 
                 public Class? Generate(Concatenation concatenation, Root.Void context)
                 {
@@ -582,8 +582,8 @@
                                     propertyDefinitions
                                         .Select(propertyDefinition =>
                                             $"this.{propertyDefinition.Name} = {propertyDefinition.Name};")),
-                            }, //// TODO
-                            Enumerable.Empty<MethodDefinition>(), //// TODO
+                            },
+                            Enumerable.Empty<MethodDefinition>(),
                             Enumerable.Empty<Class>(), //// TODO
                             propertyDefinitions); //// TODO
                     }
