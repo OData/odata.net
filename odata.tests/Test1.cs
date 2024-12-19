@@ -578,6 +578,7 @@ public abstract class rulewithnameSECOND_RULE
         }
     }
 
+    //// TODO these grouping classes that immediately take in a DU could just directly be a DU
     public sealed class groupingofᴖFIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖᴖ
     {
         public groupingofᴖFIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖᴖ(
@@ -744,6 +745,8 @@ public abstract class rulewithnameSECOND_RULE
     public sealed class FIRST_RULEfollowedbyFIRST_RULE
     {
     }
+
+    //// TODO you didn't actually finish this...
 }
 """;
 
