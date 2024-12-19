@@ -47,7 +47,9 @@
 
                 public Class Generate(AbnfParser.CstNodes.Rule rule, Root.Void context)
                 {
-
+                    var ruleNameBuilder = new StringBuilder();
+                    RuleNameToString.Instance.Generate(rule.RuleName, ruleNameBuilder);
+                    return ElementsToClass.Instance.Generate(rule.Elements, (ruleNameBuilder.ToString(), context));
                 }
 
                 private sealed class ElementsToClass
