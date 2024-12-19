@@ -296,16 +296,35 @@
                             context.BaseType,
                             new[]
                             {
-                            new ConstructorDefinition(
-                                AccessModifier.Public,
-                                propertyDefinitions.Select(propertyDefinition =>
-                                    new MethodParameter(propertyDefinition.Type, propertyDefinition.Name)),
-                                string.Join(
-                                    Environment.NewLine,
+                                new ConstructorDefinition(
+                                    AccessModifier.Public,
                                     propertyDefinitions.Select(propertyDefinition =>
-                                        $"this.{propertyDefinition.Name} = {propertyDefinition.Name};"))),
+                                        new MethodParameter(propertyDefinition.Type, propertyDefinition.Name)),
+                                    string.Join(
+                                        Environment.NewLine,
+                                        propertyDefinitions.Select(propertyDefinition =>
+                                            $"this.{propertyDefinition.Name} = {propertyDefinition.Name};"))),
                             },
-                            Enumerable.Empty<MethodDefinition>(),
+                            new[]
+                            {
+                                new MethodDefinition(
+                                    AccessModifier.Protected,
+                                    false,
+                                    true,
+                                    "TResult",
+                                    new[]
+                                    {
+                                        "TResult",
+                                        "TContext",
+                                    },
+                                    "Dispatch",
+                                    new[]
+                                    {
+                                        new MethodParameter("Visitor<TResult, TContext>", "visitor"),
+                                        new MethodParameter("TContext", "context"),
+                                    },
+                                    "return visitor.Accept(this, context);"),
+                            },
                             nestedGroupingClasses,
                             propertyDefinitions);
                     }
