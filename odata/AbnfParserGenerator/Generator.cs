@@ -310,6 +310,8 @@
                     (string ClassName, IEnumerable<Repetition> Repetitions) repetitionCombination,
                     string baseType)
                 {
+                    var properties = ConvertRepetitionsToPropertyDefinitions(repetitionCombination.Repetitions);
+
                     return new Class(
                         AccessModifier.Public,
                         false,
@@ -317,10 +319,23 @@
                         Enumerable.Empty<string>(),
                         baseType,
                         Enumerable.Empty<ConstructorDefinition>(), //// TODO
-                        Enumerable.Empty<MethodDefinition>(),
+                        Enumerable.Empty<MethodDefinition>(), //// TODO
                         Enumerable.Empty<Class>(), //// TODO
-                        Enumerable.Empty<PropertyDefinition>()); //// TODO
+                        properties); //// TODO
                         
+                }
+
+                private static IEnumerable<PropertyDefinition> ConvertRepetitionsToPropertyDefinitions(IEnumerable<Repetition> repetitions)
+                {
+                    var propertyTypeCounts = new Dictionary<string, int>();
+                    return repetitions
+                        .Select(repetition =>
+                            ConcatenationToPropertyDefinitions
+                            .RepetitionToPropertyDefinition
+                            .Instance
+                            .Visit(
+                                repetition, 
+                                (propertyTypeCounts, default)));
                 }
 
                 private static IEnumerable<(string ClassName, IEnumerable<Repetition> Repetitions)> Combinations(
