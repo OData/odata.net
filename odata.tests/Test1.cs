@@ -288,7 +288,11 @@
 
             var csharp = builder.ToString();
 
-            var expected = File.ReadAllText(@"C:\msgithub\odata.net\odata.tests\testclasses.txt");
+            var filePath = @"C:\msgithub\odata.net\odata.tests\testclasses.txt";
+            var expected = File.ReadAllText(filePath);
+
+            File.WriteAllText(filePath, csharp);
+
             Assert.AreEqual(expected, csharp);
 
             //// TODO does the natural language classnames even make sense? would it make more sense to just make the class names the ABNF but replacing the symbol syntax with class friendly symbols?
