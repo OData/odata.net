@@ -35,6 +35,7 @@
 
             protected internal override Class? Accept(RuleList.Inner.RuleInner node, Root.Void context)
             {
+                return RuleToClass.Instance.Generate(node.Rule, context);
             }
 
             private sealed class RuleToClass
