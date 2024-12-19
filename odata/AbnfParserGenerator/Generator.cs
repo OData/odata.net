@@ -274,10 +274,33 @@
                 }
 
                 //// TODO do the repetitions now
+                RepetitionToClassName.Instance.Visit(concatenation.Repetition, context);
+                foreach (var inner in concatenation.Inners)
+                {
+                    context.Append("followedby");
+                    InnerToClassName.Instance.Generate(inner, context);
+                }
 
                 if (grouping)
                 {
                     context.Append("ᴖ");
+                }
+
+                return default;
+            }
+
+            private sealed class InnerToClassName
+            {
+                private InnerToClassName()
+                {
+                }
+
+                public static InnerToClassName Instance { get; } = new InnerToClassName();
+
+                public Root.Void Generate(AbnfParser.CstNodes.Concatenation.Inner inner, StringBuilder context)
+                {
+                    RepetitionToClassName.Instance.Visit(inner.Repetition, context);
+                    return default;
                 }
             }
         }
