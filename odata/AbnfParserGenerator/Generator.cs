@@ -178,7 +178,10 @@
                 if (AlternationToIsThereAnOptionPresent.Instance.Generate(alternation, context.@void))
                 {
                     // if there are options present, then we are going to need a discriminated union to distinguish whether the option was taken or not
-                    //// TODO
+                    var discriminatedUnionMembers = ConcatenationWithOptionToDiscriminatedUnionMembers
+                        .Instance
+                        .Generate(alternation.Concatenation, context.@void);
+
                     return new Class(
                         AccessModifier.Public,
                         true,
@@ -212,7 +215,7 @@
                                 },
                                 null)
                         },
-                        Enumerable.Empty<Class>(), //// TODO add these
+                        discriminatedUnionMembers,
                         Enumerable.Empty<PropertyDefinition>());
                 }
 
@@ -238,6 +241,93 @@
                     Enumerable.Empty<MethodDefinition>(),
                     nestedGroupingClasses,
                     propertyDefinitions);
+            }
+
+            private sealed class ConcatenationWithOptionToDiscriminatedUnionMembers
+            {
+                private ConcatenationWithOptionToDiscriminatedUnionMembers()
+                {
+                }
+
+                public static ConcatenationWithOptionToDiscriminatedUnionMembers Instance { get; } = new ConcatenationWithOptionToDiscriminatedUnionMembers();
+
+                public IEnumerable<Class> Generate(Concatenation concatenation, Root.Void context)
+                {
+                    var classNames = Generate(
+                        concatenation.Inners.Select(inner => inner.Repetition).Prepend(concatenation.Repetition).ToList(),
+                        0);
+                    return classNames
+                        .Select(className =>
+                            new Class(
+                                AccessModifier.Public,
+                                false,
+                                className,
+                                Enumerable.Empty<string>(), //// TODO
+                                null, //// TODO
+                                Enumerable.Empty<ConstructorDefinition>(), //// TODO
+                                Enumerable.Empty<MethodDefinition>(), //// TODO
+                                Enumerable.Empty<Class>(), //// TODO
+                                Enumerable.Empty<PropertyDefinition>())); //// TODO
+                }
+
+                private static IEnumerable<string> Generate(IReadOnlyList<Repetition> repetitions, int index)
+                {
+                    //// TODO get these names actually correct
+                    if (index == repetitions.Count - 1)
+                    {
+                        if (RepetitionToIsOptional.Instance.Visit(repetitions[index], default))
+                        {
+                            yield return "followedbyone" + "asdf";
+                            yield return "followedbyno" + "qwer";
+                        }
+                        else
+                        {
+                            yield return "followedby" + "zxcv";
+                        }
+                    }
+                    else
+                    {
+                        if (RepetitionToIsOptional.Instance.Visit(repetitions[index], default))
+                        {
+                            foreach (var name in Generate(repetitions, index + 1))
+                            {
+                                yield return "followedbyone" + "asdf" + name;
+                                yield return "followedbyno" + "qwer" + name;
+                            }
+                        }
+                        else
+                        {
+                            foreach (var name in Generate(repetitions, index + 1))
+                            {
+                                yield return "followedby" + "zxcv" + name;
+                            }
+                        }
+                    }
+                }
+
+                private sealed class RepetitionToIsOptional : Repetition.Visitor<bool, Root.Void>
+                {
+                    private RepetitionToIsOptional()
+                    {
+                    }
+
+                    public static RepetitionToIsOptional Instance { get; } = new RepetitionToIsOptional();
+
+                    protected internal override bool Accept(Repetition.ElementOnly node, Root.Void context)
+                    {
+                        return IsOptional(node.Element);
+                    }
+
+                    protected internal override bool Accept(Repetition.RepeatAndElement node, Root.Void context)
+                    {
+                        return IsOptional(node.Element);
+                    }
+
+                    private static bool IsOptional(Element element)
+                    {
+                        return element is Element.Option;
+                    }
+                }
             }
 
             private sealed class AlternationToNestedGroupingClasses
