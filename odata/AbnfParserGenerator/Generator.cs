@@ -130,10 +130,12 @@
 
                     protected internal override Class? Accept(Repetition.ElementOnly node, Root.Void context)
                     {
+                        return ElementToNestedGroupingClass.Instance.Visit(node.Element, context);
                     }
 
                     protected internal override Class? Accept(Repetition.RepeatAndElement node, Root.Void context)
                     {
+                        return ElementToNestedGroupingClass.Instance.Visit(node.Element, context);
                     }
 
                     private sealed class ElementToNestedGroupingClass : Element.Visitor<Class?, Root.Void>
