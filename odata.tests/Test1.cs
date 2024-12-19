@@ -478,13 +478,13 @@ second-rule = first-rule
                         builder.AppendJoin(", ", constructor.Parameters, (parameter, b) => b.Append(parameter.Type).Append(" ").Append(parameter.Name));
                         builder.AppendLine(")");
                         builder.AppendLine("{");
-                        if (!string.IsNullOrEmpty(constructor.Body))
+                        builder.Indent();
+                        foreach (var bodyLine in constructor.Body)
                         {
-                            builder.Indent();
-                            builder.AppendLine(constructor.Body);
-                            builder.Unindent();
+                            builder.AppendLine(bodyLine);
                         }
 
+                        builder.Unindent();
                         builder.AppendLine("}");
                     }
                 }

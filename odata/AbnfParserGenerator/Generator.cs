@@ -104,7 +104,7 @@
                             new ConstructorDefinition(
                                 AccessModifier.Private,
                                 Enumerable.Empty<MethodParameter>(),
-                                string.Empty),
+                                Enumerable.Empty<string>()),
                         },
                         new[]
                         {
@@ -207,10 +207,8 @@
                             AccessModifier.Public,
                             propertyDefinitions.Select(propertyDefinition =>
                                 new MethodParameter(propertyDefinition.Type, propertyDefinition.Name)),
-                                    string.Join(
-                                        Environment.NewLine,
-                                        propertyDefinitions.Select(propertyDefinition =>
-                                            $"this.{propertyDefinition.Name} = {propertyDefinition.Name};"))),
+                                    propertyDefinitions.Select(propertyDefinition =>
+                                        $"this.{propertyDefinition.Name} = {propertyDefinition.Name};")),
                     },
                     Enumerable.Empty<MethodDefinition>(),
                     nestedGroupingClasses,
@@ -337,12 +335,12 @@
                             {
                                 new ConstructorDefinition(
                                     AccessModifier.Public,
-                                    propertyDefinitions.Select(propertyDefinition =>
-                                        new MethodParameter(propertyDefinition.Type, propertyDefinition.Name)),
-                                    string.Join(
-                                        Environment.NewLine,
-                                        propertyDefinitions.Select(propertyDefinition =>
-                                            $"this.{propertyDefinition.Name} = {propertyDefinition.Name};"))),
+                                    propertyDefinitions
+                                        .Select(propertyDefinition =>
+                                            new MethodParameter(propertyDefinition.Type, propertyDefinition.Name)),
+                                    propertyDefinitions
+                                        .Select(propertyDefinition =>
+                                            $"this.{propertyDefinition.Name} = {propertyDefinition.Name};")),
                             },
                             new[]
                             {
@@ -581,11 +579,9 @@
                                     propertyDefinitions
                                         .Select(propertyDefinition =>
                                             new MethodParameter(propertyDefinition.Type, propertyDefinition.Name)),
-                                    string.Join(
-                                        Environment.NewLine,
-                                        propertyDefinitions
-                                            .Select(propertyDefinition =>
-                                                $"this.{propertyDefinition.Name} = {propertyDefinition.Name};"))),
+                                    propertyDefinitions
+                                        .Select(propertyDefinition =>
+                                            $"this.{propertyDefinition.Name} = {propertyDefinition.Name};")),
                             }, //// TODO
                             Enumerable.Empty<MethodDefinition>(), //// TODO
                             Enumerable.Empty<Class>(), //// TODO

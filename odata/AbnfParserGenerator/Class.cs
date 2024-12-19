@@ -117,7 +117,7 @@
 
     public sealed class ConstructorDefinition
     {
-        public ConstructorDefinition(AccessModifier accessModifier, IEnumerable<MethodParameter> parameters, string body)
+        public ConstructorDefinition(AccessModifier accessModifier, IEnumerable<MethodParameter> parameters, IEnumerable<string> body)
         {
             this.AccessModifier = accessModifier;
             this.Parameters = parameters;
@@ -128,7 +128,7 @@
 
         public IEnumerable<MethodParameter> Parameters { get; }
 
-        public string Body { get; }
+        public IEnumerable<string> Body { get; }
     }
 
     [Flags]
