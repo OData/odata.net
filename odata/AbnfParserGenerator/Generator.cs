@@ -607,7 +607,6 @@
 
                     public IEnumerable<Class?> Generate(Concatenation concatenation, Root.Void context)
                     {
-                        //// TODO i think this class doesn't work correctly
                         yield return RepetitionToNestedGroupingClass.Instance.Visit(concatenation.Repetition, context);
                         foreach (var inner in concatenation.Inners)
                         {
@@ -625,7 +624,6 @@
 
                         public Class? Generate(Concatenation.Inner inner, Root.Void context)
                         {
-                            //// TODO i think this class doesn't work correctly
                             return RepetitionToNestedGroupingClass.Instance.Visit(inner.Repetition, context);
                         }
                     }
