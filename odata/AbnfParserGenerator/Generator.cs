@@ -690,7 +690,6 @@
                     context.Append("groupingofᴖ");
                 }
 
-                //// TODO do the repetitions now
                 RepetitionToClassName.Instance.Visit(concatenation.Repetition, context);
                 foreach (var inner in concatenation.Inners)
                 {
