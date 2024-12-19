@@ -447,10 +447,16 @@
                             ++propertyTypeCount;
                             context.PropertyTypeCounts[propertyType] = propertyTypeCount;
 
+                            var propertyName = $"{propertyType}{propertyTypeCount}";
+                            if (context.IsCollection)
+                            {
+                                propertyType = $"IEnumerable<{propertyType}>";
+                            }
+
                             return new PropertyDefinition(
                                 AccessModifier.Public,
-                                context.IsCollection ? $"IEnumerable<{propertyType}>" : propertyType,
-                                $"{propertyType}{propertyTypeCount}",
+                                propertyType,
+                                propertyName,
                                 true,
                                 false);
                         }
@@ -462,10 +468,6 @@
                             var propertyTypeBuilder = new StringBuilder();
                             GroupToClassName.Instance.Generate(node.Value, propertyTypeBuilder);
                             var propertyType = propertyTypeBuilder.ToString();
-                            if (context.IsCollection)
-                            {
-                                propertyType = $"IEnumerable<{propertyType}>";
-                            }
 
                             if (!context.PropertyTypeCounts.TryGetValue(propertyType, out var propertyTypeCount))
                             {
@@ -475,10 +477,16 @@
                             ++propertyTypeCount;
                             context.PropertyTypeCounts[propertyType] = propertyTypeCount;
 
+                            var propertyName = $"{propertyType}{propertyTypeCount}";
+                            if (context.IsCollection)
+                            {
+                                propertyType = $"IEnumerable<{propertyType}>";
+                            }
+
                             return new PropertyDefinition(
                                 AccessModifier.Public,
                                 propertyType,
-                                $"{propertyType}{propertyTypeCount}",
+                                propertyName,
                                 true,
                                 false);
                         }
@@ -499,10 +507,16 @@
                             ++propertyTypeCount;
                             context.PropertyTypeCounts[propertyType] = propertyTypeCount;
 
+                            var propertyName = $"{propertyType}{propertyTypeCount}";
+                            if (context.IsCollection)
+                            {
+                                propertyType = $"IEnumerable<{propertyType}>";
+                            }
+
                             return new PropertyDefinition(
                                 AccessModifier.Public,
-                                context.IsCollection ? $"IEnumerable<{propertyType}>" : propertyType,
-                                $"{propertyType}{propertyTypeCount}",
+                                propertyType,
+                                propertyName,
                                 true,
                                 false);
                         }
