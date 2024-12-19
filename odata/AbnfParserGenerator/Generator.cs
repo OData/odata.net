@@ -5,6 +5,7 @@
     using Root;
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Text;
@@ -129,10 +130,17 @@
                     context.ClassName,
                     Enumerable.Empty<string>(),
                     null,
-                    Enumerable.Empty<ConstructorDefinition>(), //// TODO add these
+                    new[]
+                    {
+                        new ConstructorDefinition(
+                            AccessModifier.Public,
+                            propertyDefinitions.Select(propertyDefinition =>
+                                new MethodParameter(propertyDefinition.Type, propertyDefinition.Name)),
+                            string.Empty),
+                    },
                     Enumerable.Empty<MethodDefinition>(),
                     nestedGroupingClasses,
-                    propertyDefinitions); //// TODO add these
+                    propertyDefinitions);
             }
 
             private sealed class ConcatenationToPropertyDefinitions
