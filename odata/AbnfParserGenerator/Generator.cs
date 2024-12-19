@@ -253,53 +253,128 @@
 
                 public IEnumerable<Class> Generate(Concatenation concatenation, Root.Void context)
                 {
-                    var classNames = Generate(
+                    var combinations = Generate(
                         concatenation.Inners.Select(inner => inner.Repetition).Prepend(concatenation.Repetition).ToList(),
                         0);
-                    return classNames
-                        .Select(className =>
+                    return combinations
+                        .Select(combination =>
                             new Class(
                                 AccessModifier.Public,
                                 false,
-                                className,
+                                combination.DuMemberName,
                                 Enumerable.Empty<string>(), //// TODO
                                 null, //// TODO
                                 Enumerable.Empty<ConstructorDefinition>(), //// TODO
                                 Enumerable.Empty<MethodDefinition>(), //// TODO
                                 Enumerable.Empty<Class>(), //// TODO
-                                Enumerable.Empty<PropertyDefinition>())); //// TODO
+                                combination.Properties)); //// TODO
                 }
 
-                private static IEnumerable<string> Generate(IReadOnlyList<Repetition> repetitions, int index)
+                private static IEnumerable<(
+                    string DuMemberName,
+                    IEnumerable<PropertyDefinition> Properties
+                    )> Generate(IReadOnlyList<Repetition> repetitions, int index)
                 {
+                    var repetition = repetitions[index];
+
+                    var repetitonClassNameBuilder = new StringBuilder();
+                    RepetitionToClassName.Instance.Visit(repetition, repetitonClassNameBuilder);
+                    var repetitionClassName = repetitonClassNameBuilder.ToString();
+
                     //// TODO get these names actually correct
+                    //// TODO this method is a mess
                     if (index == repetitions.Count - 1)
                     {
-                        if (RepetitionToIsOptional.Instance.Visit(repetitions[index], default))
+                        if (RepetitionToIsOptional.Instance.Visit(repetition, default))
                         {
-                            yield return "followedbyone" + "asdf";
-                            yield return "followedbyno" + "qwer";
+
+                            yield return
+                                (
+                                    "followedbyone" + "asdf",
+                                    new[]
+                                    {
+                                        new PropertyDefinition(
+                                            AccessModifier.Public,
+                                            repetitionClassName, //// TODO get this right
+                                            repetitionClassName, //// TODO get this right
+                                            true,
+                                            false),
+                                    }
+                                );
+                            yield return 
+                                (
+                                    "followedbyno" + "qwer",
+                                    Enumerable.Empty<PropertyDefinition>()
+                                );
                         }
                         else
                         {
-                            yield return "followedby" + "zxcv";
+                            yield return
+                                (
+                                    "followedby" + "zxcv",
+                                    new[]
+                                    {
+                                        new PropertyDefinition(
+                                            AccessModifier.Public, 
+                                            repetitionClassName, 
+                                            repetitionClassName,
+                                            true, 
+                                            false),
+                                    }
+                                );
                         }
                     }
                     else
                     {
-                        if (RepetitionToIsOptional.Instance.Visit(repetitions[index], default))
+                        if (RepetitionToIsOptional.Instance.Visit(repetition, default))
                         {
-                            foreach (var name in Generate(repetitions, index + 1))
+                            foreach (var combination in Generate(repetitions, index + 1))
                             {
-                                yield return "followedbyone" + "asdf" + name;
-                                yield return "followedbyno" + "qwer" + name;
+                                yield return
+                                    (
+                                        "followedbyone" + "asdf" + combination.DuMemberName,
+                                        combination
+                                            .Properties
+                                            .Append(
+                                                new PropertyDefinition(
+                                                    AccessModifier.Public,
+                                                    repetitionClassName,
+                                                    repetitionClassName,
+                                                    true,
+                                                    false))
+                                    );
+                                yield return
+                                    (
+                                        "followedbyno" + "qwer" + combination.DuMemberName,
+                                        combination
+                                            .Properties
+                                            .Append(
+                                                new PropertyDefinition(
+                                                    AccessModifier.Public,
+                                                    repetitionClassName,
+                                                    repetitionClassName,
+                                                    true,
+                                                    false))
+                                    );
                             }
                         }
                         else
                         {
-                            foreach (var name in Generate(repetitions, index + 1))
+                            foreach (var combination in Generate(repetitions, index + 1))
                             {
-                                yield return "followedby" + "zxcv" + name;
+                                yield return
+                                    (
+                                        "followedby" + "zxcv" + combination.DuMemberName,
+                                        combination
+                                            .Properties
+                                            .Append(
+                                                new PropertyDefinition(
+                                                    AccessModifier.Public,
+                                                    repetitionClassName,
+                                                    repetitionClassName,
+                                                    true,
+                                                    false))
+                                    );
                             }
                         }
                     }
@@ -516,7 +591,10 @@
                     }
                 }
 
-                private sealed class RepetitionToPropertyDefinition : Repetition.Visitor<PropertyDefinition, (Dictionary<string, int> PropertyTypeCounts, Root.Void)>
+                /// <summary>
+                /// TODO move this more towards the root and mark it private if it's really re-usable
+                /// </summary>
+                public sealed class RepetitionToPropertyDefinition : Repetition.Visitor<PropertyDefinition, (Dictionary<string, int> PropertyTypeCounts, Root.Void)>
                 {
                     private RepetitionToPropertyDefinition()
                     {
