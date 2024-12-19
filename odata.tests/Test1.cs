@@ -977,7 +977,7 @@ second-rule = first-rule
                     foreach (var constructor in @class.Constructors)
                     {
                         Transcribe(constructor.AccessModifier, builder);
-                        builder.Append(" ").Append(@class.Name).Append("(");
+                        builder.Append(@class.Name).Append("(");
                         builder.AppendJoin(", ", constructor.Parameters, (parameter, b) => b.Append(parameter.Type).Append(" ").Append(parameter.Name));
                         builder.AppendLine(")");
                         builder.AppendLine("{");
