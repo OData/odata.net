@@ -283,7 +283,7 @@
             foreach (var @class in classes)
             {
                 classTranscriber.Transcribe(@class, builder, "    ");
-                builder.AppendLine().AppendLine();
+                builder.AppendLine();
             }
 
             var csharp = builder.ToString();
@@ -913,14 +913,9 @@ second-rule = first-rule
 
             private void Transcribe(AbnfParserGenerator.AccessModifier accessModifier, Builder builder)
             {
-                if (accessModifier.HasFlag(AbnfParserGenerator.AccessModifier.Public))
+                if (accessModifier.HasFlag(AbnfParserGenerator.AccessModifier.Private))
                 {
-                    builder.Append($"public ");
-                }
-
-                if (accessModifier.HasFlag(AbnfParserGenerator.AccessModifier.Internal))
-                {
-                    builder.Append($"internal ");
+                    builder.Append($"private ");
                 }
 
                 if (accessModifier.HasFlag(AbnfParserGenerator.AccessModifier.Protected))
@@ -928,9 +923,14 @@ second-rule = first-rule
                     builder.Append($"protected ");
                 }
 
-                if (accessModifier.HasFlag(AbnfParserGenerator.AccessModifier.Private))
+                if (accessModifier.HasFlag(AbnfParserGenerator.AccessModifier.Internal))
                 {
-                    builder.Append($"private ");
+                    builder.Append($"internal ");
+                }
+
+                if (accessModifier.HasFlag(AbnfParserGenerator.AccessModifier.Public))
+                {
+                    builder.Append($"public ");
                 }
             }
 
