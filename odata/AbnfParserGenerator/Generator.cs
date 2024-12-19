@@ -574,7 +574,19 @@
                             className,
                             Enumerable.Empty<string>(),
                             null,
-                            Enumerable.Empty<ConstructorDefinition>(), //// TODO
+                            new[]
+                            {
+                                new ConstructorDefinition(
+                                    AccessModifier.Public,
+                                    propertyDefinitions
+                                        .Select(propertyDefinition =>
+                                            new MethodParameter(propertyDefinition.Type, propertyDefinition.Name)),
+                                    string.Join(
+                                        Environment.NewLine,
+                                        propertyDefinitions
+                                            .Select(propertyDefinition =>
+                                                $"this.{propertyDefinition.Name} = {propertyDefinition.Name};"))),
+                            }, //// TODO
                             Enumerable.Empty<MethodDefinition>(), //// TODO
                             Enumerable.Empty<Class>(), //// TODO
                             propertyDefinitions); //// TODO
