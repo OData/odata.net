@@ -563,6 +563,11 @@
                         var classNameBuilder = new StringBuilder();
                         ConcatenationToClassName.Instance.Generate(concatenation, classNameBuilder);
                         var className = classNameBuilder.ToString();
+
+                        var propertyDefinitions = ConcatenationToPropertyDefinitions
+                            .Instance
+                            .Generate(concatenation, context);
+
                         return new Class(
                             AccessModifier.Public,
                             false,
@@ -572,7 +577,7 @@
                             Enumerable.Empty<ConstructorDefinition>(), //// TODO
                             Enumerable.Empty<MethodDefinition>(), //// TODO
                             Enumerable.Empty<Class>(), //// TODO
-                            Enumerable.Empty<PropertyDefinition>()); //// TODO
+                            propertyDefinitions); //// TODO
                     }
 
                     //// TODO i'm not convinced this is implemented correctly
