@@ -334,6 +334,7 @@
                     else
                     {
                         var repetition = concatenation[index];
+                        var prefix = index == 0 ? string.Empty : "followedby";
 
                         var repetitonClassNameBuilder = new StringBuilder();
                         RepetitionToClassName.Instance.Visit(repetition, repetitonClassNameBuilder);
@@ -344,17 +345,17 @@
                             if (RepetitionToIsOptional.Instance.Visit(repetition, default))
                             {
                                 yield return (
-                                    "followedbyone" + repetitionClassName + combination.ClassName,
+                                    prefix + "one" + repetitionClassName + combination.ClassName,
                                     combination.Repetitions.Prepend(repetition));
                                 yield return (
-                                    "followedbyno" + repetitionClassName + combination.ClassName,
+                                    prefix + "no" + repetitionClassName + combination.ClassName,
                                     combination.Repetitions
                                     );
                             }
                             else
                             {
                                 yield return (
-                                    "followedby" + repetitionClassName + combination.ClassName,
+                                    prefix + repetitionClassName + combination.ClassName,
                                     combination.Repetitions.Prepend(repetition));
                             }
                         }
@@ -1115,7 +1116,7 @@
 
             public Root.Void Generate(Option option, StringBuilder context)
             {
-                context.Append("anoptional");
+                context.Append("optional");
                 var needsGrouping = OptionToHasMultipleConcatenations.Instance.Generate(option, default);
                 if (needsGrouping)
                 {
