@@ -88,7 +88,11 @@
                 if (alternation.Inners.Any())
                 {
                     // if there are multiple concatenations, then we are going to need a discriminated union to distinguish them
-                    //// TODO and nested grouping classes //// TODO it's possible that there are no nested grouping classes because you'll only get DU members if there's a single rule or you're part of an alternation
+                    //// TODO and nested grouping classes
+                    var foo = AlternationToNestedGroupingClasses
+                        .Instance
+                        .Generate(alternation, context.@void)
+                        .NotNull();
                     var discriminatedUnionMembers = AlternationToDiscriminatedUnionMembers.Instance.Generate(alternation, context);
                     return new Class(
                         AccessModifier.Public,
@@ -123,7 +127,9 @@
                                 },
                                 null),
                         },
-                        discriminatedUnionMembers
+                        foo
+                            .Concat(
+                                discriminatedUnionMembers)
                             .Prepend(
                                 new Class(
                                     AccessModifier.Public,
@@ -214,6 +220,42 @@
                     Enumerable.Empty<MethodDefinition>(),
                     nestedGroupingClasses,
                     propertyDefinitions);
+            }
+
+            private sealed class AlternationToNestedGroupingClasses
+            {
+                private AlternationToNestedGroupingClasses()
+                {
+                }
+
+                public static AlternationToNestedGroupingClasses Instance { get; } = new AlternationToNestedGroupingClasses();
+
+                public IEnumerable<Class?> Generate(Alternation alternation, Root.Void context)
+                {
+                    return ConcatenationToNestedGroupingClasses
+                        .Instance
+                        .Generate(alternation.Concatenation, context)
+                        .Concat(
+                            alternation
+                                .Inners
+                                .SelectMany(inner => InnerToNestedGroupingClasses
+                                    .Instance
+                                    .Generate(inner, context)));
+                }
+
+                private sealed class InnerToNestedGroupingClasses
+                {
+                    private InnerToNestedGroupingClasses()
+                    {
+                    }
+
+                    public static InnerToNestedGroupingClasses Instance { get; } = new InnerToNestedGroupingClasses();
+
+                    public IEnumerable<Class?> Generate(Alternation.Inner inner, Root.Void context)
+                    {
+                        return ConcatenationToNestedGroupingClasses.Instance.Generate(inner.Concatenation, context);
+                    }
+                }
             }
 
             private sealed class AlternationToDiscriminatedUnionMembers
