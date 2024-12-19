@@ -299,6 +299,7 @@ public sealed class rulewithnameFIRST_RULE
 {
     public rulewithnameFIRST_RULE(rulewithnameSECOND_RULE rulewithnameSECOND_RULE1)
     {
+        this.rulewithnameSECOND_RULE1 = rulewithnameSECOND_RULE1;
     }
 
     public rulewithnameSECOND_RULE rulewithnameSECOND_RULE1 { get; }

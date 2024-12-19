@@ -88,7 +88,7 @@
                 if (alternation.Inners.Any())
                 {
                     // if there are multiple concatenations, then we are going to need a discriminated union to distinguish them
-                    //// TODO discriminatedunion members, visitor, and nested grouping classes
+                    //// TODO discriminatedunion members, du member visitor methods, and nested grouping classes
                     return new Class(
                         AccessModifier.Public,
                         true,
@@ -201,6 +201,58 @@
                     propertyDefinitions);
             }
 
+            private sealed class AlternationToDiscriminatedUnionMembers
+            {
+                private AlternationToDiscriminatedUnionMembers()
+                {
+                }
+
+                public static AlternationToDiscriminatedUnionMembers Instance { get; } = new AlternationToDiscriminatedUnionMembers();
+
+                public IEnumerable<Class> Generate(Alternation alternation, (string BaseType, Root.Void @void) context)
+                {
+
+                }
+
+                private sealed class ConcatenationToDisciminatedUnionMember
+                {
+                    private ConcatenationToDisciminatedUnionMember()
+                    {
+                    }
+
+                    public static ConcatenationToDisciminatedUnionMember Instance { get; } = new ConcatenationToDisciminatedUnionMember();
+
+                    public Class Generate(Concatenation concatenation, (string BaseType, Root.Void @void) context)
+                    {
+                        var classNameBuilder = new StringBuilder();
+                        ConcatenationToClassName.Instance.Generate(concatenation, classNameBuilder);
+                        var className = classNameBuilder.ToString();
+
+                        var nestedGroupingClasses = ConcatenationToNestedGroupingClasses
+                            .Instance
+                            .Generate(concatenation, context.@void)
+                            .NotNull();
+                        var propertyDefinitions = ConcatenationToPropertyDefinitions
+                            .Instance
+                            .Generate(concatenation, context.@void);
+                        return new Class(
+                            AccessModifier.Public,
+                            false,
+                            className,
+                            Enumerable.Empty<string>(),
+                            context.BaseType,
+                            new[]
+                            {
+                                new ConstructorDefinition(
+                                    AccessModifier.Public,
+                                    propertyDefinitions.Select(propertyDefinition =>
+                                        new MethodParameter(propertyDefinition.Type, propertyDefinition.Name)),
+                                    string.Empty),
+                            },
+                    }
+                }
+            }
+
             private sealed class ConcatenationToPropertyDefinitions
             {
                 private ConcatenationToPropertyDefinitions()
@@ -243,14 +295,14 @@
                     public static RepetitionToPropertyDefinition Instance { get; } = new RepetitionToPropertyDefinition();
 
                     protected internal override PropertyDefinition Accept(
-                        Repetition.ElementOnly node, 
+                        Repetition.ElementOnly node,
                         (Dictionary<string, int> PropertyTypeCounts, Root.Void) context)
                     {
                         return ElementToPropertyDefinition.Instance.Visit(node.Element, (context.PropertyTypeCounts, false));
                     }
 
                     protected internal override PropertyDefinition Accept(
-                        Repetition.RepeatAndElement node, 
+                        Repetition.RepeatAndElement node,
                         (Dictionary<string, int> PropertyTypeCounts, Root.Void) context)
                     {
                         return ElementToPropertyDefinition.Instance.Visit(node.Element, (context.PropertyTypeCounts, true));
@@ -265,7 +317,7 @@
                         public static ElementToPropertyDefinition Instance { get; } = new ElementToPropertyDefinition();
 
                         protected internal override PropertyDefinition Accept(
-                            Element.RuleName node, 
+                            Element.RuleName node,
                             (Dictionary<string, int> PropertyTypeCounts, bool IsCollection) context)
                         {
                             var propertyTypeBuilder = new StringBuilder();
@@ -289,7 +341,7 @@
                         }
 
                         protected internal override PropertyDefinition Accept(
-                            Element.Group node, 
+                            Element.Group node,
                             (Dictionary<string, int> PropertyTypeCounts, bool IsCollection) context)
                         {
                             var propertyTypeBuilder = new StringBuilder();
@@ -337,7 +389,7 @@
                         }
 
                         protected internal override PropertyDefinition Accept(
-                            Element.CharVal node, 
+                            Element.CharVal node,
                             (Dictionary<string, int> PropertyTypeCounts, bool IsCollection) context)
                         {
                             //// TODO
@@ -350,7 +402,7 @@
                         }
 
                         protected internal override PropertyDefinition Accept(
-                            Element.NumVal node, 
+                            Element.NumVal node,
                             (Dictionary<string, int> PropertyTypeCounts, bool IsCollection) context)
                         {
                             //// TODO
@@ -363,7 +415,7 @@
                         }
 
                         protected internal override PropertyDefinition Accept(
-                            Element.ProseVal node, 
+                            Element.ProseVal node,
                             (Dictionary<string, int> PropertyTypeCounts, bool IsCollection) context)
                         {
                             //// TODO
@@ -524,7 +576,7 @@
                     {
                         return true;
                     }
-                        
+
                     return alternation
                         .Concatenation
                         .Inners
