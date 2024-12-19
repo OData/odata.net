@@ -484,7 +484,7 @@
                             (Dictionary<string, int> PropertyTypeCounts, bool IsCollection) context)
                         {
                             var propertyTypeBuilder = new StringBuilder();
-                            OptionToClassName.Instance.Generate(node.Value, propertyTypeBuilder);
+                            AlternationToClassName.Instance.Generate(node.Value.Alternation, propertyTypeBuilder);
                             var propertyType = propertyTypeBuilder.ToString();
 
                             if (!context.PropertyTypeCounts.TryGetValue(propertyType, out var propertyTypeCount))
