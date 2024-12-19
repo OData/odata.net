@@ -142,7 +142,27 @@
 
                 public IEnumerable<PropertyDefinition> Generate(Concatenation concatenation, Root.Void context)
                 {
-                    
+                    var propertyTypeCounts = new Dictionary<string, int>();
+
+                    yield return RepetitionToPropertyDefinition.Instance.Visit(concatenation.Repetition, (propertyTypeCounts, context));
+                    foreach (var inner in concatenation.Inners)
+                    {
+                        yield return InnerToPropertyDefinition.Instance.Generate(inner, (propertyTypeCounts, context));
+                    }
+                }
+
+                private sealed class InnerToPropertyDefinition
+                {
+                    private InnerToPropertyDefinition()
+                    {
+                    }
+
+                    public static InnerToPropertyDefinition Instance { get; } = new InnerToPropertyDefinition();
+
+                    public PropertyDefinition Generate(Concatenation.Inner inner, (Dictionary<string, int> PropertyTypeCounts, Root.Void) context)
+                    {
+                        return RepetitionToPropertyDefinition.Instance.Visit(inner.Repetition, context);
+                    }
                 }
 
                 private sealed class RepetitionToPropertyDefinition : Repetition.Visitor<PropertyDefinition, (Dictionary<string, int> PropertyTypeCounts, Root.Void)>
