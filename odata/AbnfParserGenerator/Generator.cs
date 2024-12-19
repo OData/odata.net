@@ -215,7 +215,22 @@
                                 },
                                 null)
                         },
-                        discriminatedUnionMembers,
+                        discriminatedUnionMembers
+                            .Prepend(
+                                new Class(
+                                    AccessModifier.Public,
+                                    true,
+                                    "Visitor",
+                                    new[]
+                                    {
+                                        "TResult",
+                                        "TContext",
+                                    },
+                                    null,
+                                    Enumerable.Empty<ConstructorDefinition>(),
+                                    Enumerable.Empty<MethodDefinition>(), //// TODO
+                                    Enumerable.Empty<Class>(),
+                                    Enumerable.Empty<PropertyDefinition>())),
                         Enumerable.Empty<PropertyDefinition>());
                 }
 
