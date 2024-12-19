@@ -588,8 +588,8 @@
                                             $"this.{propertyDefinition.Name} = {propertyDefinition.Name};")),
                             },
                             Enumerable.Empty<MethodDefinition>(),
-                            nestedGroupingClasses, //// TODO
-                            propertyDefinitions); //// TODO
+                            nestedGroupingClasses,
+                            propertyDefinitions);
                     }
 
                     //// TODO i'm not convinced this is implemented correctly:
