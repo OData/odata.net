@@ -293,40 +293,15 @@
             //// TODO you are entirely skipping out on incremental definitions, by the way
         }
 
-        private static string TestAbnfCstClasses = 
+        private static string TestAbnfCstClasses =
 """
-public abstract class rulewithnameFIRST_RULE
+public sealed class rulewithnameFIRST_RULE
 {
-    private rulewithnameFIRST_RULE()
+    public rulewithnameFIRST_RULE(rulewithnameSECOND_RULE rulewithnameSECOND_RULE1)
     {
     }
 
-    protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-
-    public abstract class Visitor<TResult, TContext>
-    {
-        public TResult Visit(rulewithnameFIRST_RULE node, TContext context)
-        {
-            return node.Dispatch(this, context);
-        }
-
-        protected internal abstract TResult Accept(SECOND_RULE node, TContext context);
-    }
-
-    public sealed class SECOND_RULE : rulewithnameFIRST_RULE
-    {
-        public SECOND_RULE(rulewithnameSECOND_RULE rulewithnameSECOND_RULE1)
-        {
-            this.rulewithnameSECOND_RULE1 = rulewithnameSECOND_RULE1;
-        }
-
-        public rulewithnameSECOND_RULE rulewithnameSECOND_RULE1 { get; }
-
-        protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-        {
-            return visitor.Accept(this, context);
-        }
-    }
+    public rulewithnameSECOND_RULE rulewithnameSECOND_RULE1 { get; }
 }
 
 public abstract class rulewithnameSECOND_RULE

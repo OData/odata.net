@@ -97,13 +97,32 @@
                         new[]
                         {
                             new ConstructorDefinition(
-                                AccessModifier.Private, 
+                                AccessModifier.Private,
                                 Enumerable.Empty<MethodParameter>(),
                                 string.Empty),
                         },
-                        Enumerable.Empty<MethodDefinition>(), //// TODO add these
+                        new[]
+                        {
+                            new MethodDefinition(
+                                AccessModifier.Protected,
+                                true,
+                                false,
+                                "TResult",
+                                new[]
+                                {
+                                    "TResult",
+                                    "TContxt",
+                                },
+                                "Dispatch",
+                                new[]
+                                {
+                                    new MethodParameter("Visitor<TResult, TContext>", "visitor"),
+                                    new MethodParameter("TContext", "context"),
+                                },
+                                null),
+                        },
                         Enumerable.Empty<Class>(), //// TODO add these
-                        Enumerable.Empty<PropertyDefinition>()); //// TODO add these
+                        Enumerable.Empty<PropertyDefinition>());
                 }
 
                 if (AlternationToIsThereAnOptionPresent.Instance.Generate(alternation, context.@void))
