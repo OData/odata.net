@@ -193,9 +193,9 @@
                 }
 
                 // there is no need for a discriminated union, so let's just create the class
-                var nestedGroupingClasses = ConcatenationToNestedGroupingClasses
+                var nestedGroupingClasses = AlternationToNestedGroupingClasses
                     .Instance
-                    .Generate(alternation.Concatenation, context.@void)
+                    .Generate(alternation, context.@void)
                     .NotNull();
                 var propertyDefinitions = ConcatenationToPropertyDefinitions
                     .Instance
@@ -563,6 +563,13 @@
 
                 public IEnumerable<Class?> Generate(Concatenation concatenation, Root.Void context)
                 {
+                    if (!concatenation.Inners.Any())
+                    {
+                        yield break;
+                    }
+
+                    //// TODO it should return 1 if the concatenation 
+
                     yield return RepetitionToNestedGroupingClass.Instance.Visit(concatenation.Repetition, context);
                     foreach (var inner in concatenation.Inners)
                     {
