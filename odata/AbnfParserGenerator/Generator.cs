@@ -281,6 +281,7 @@
                         }
                         else
                         {
+                            //// TODO it's possible that you'll never have nested grouping classes because the two possible callers of this method are either going to be single rules or things that are grouping because of an alternation
                             nestedGroupingClasses = ConcatenationToNestedGroupingClasses
                                 .Instance
                                 .Generate(concatenation, context.@void)
