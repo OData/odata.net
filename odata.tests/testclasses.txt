@@ -44,20 +44,20 @@ public abstract class rulewithnameSECOND_RULE
 
     public sealed class groupingofᴖFIRST_RULEfollowedbyanynumberofgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanynumberofanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖfollowedbyatmostONEFIRST_RULEfollowedbyatleastONEFIRST_RULEᴖ
     {
-        public groupingofᴖFIRST_RULEfollowedbyanynumberofgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanynumberofanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖfollowedbyatmostONEFIRST_RULEfollowedbyatleastONEFIRST_RULEᴖ(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, IEnumerable<groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ> groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1, IEnumerable<groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ> groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1, IEnumerable<rulewithnameFIRST_RULE> atmostONEFIRST_RULE1, IEnumerable<rulewithnameFIRST_RULE> atleastONEFIRST_RULE1)
+        public groupingofᴖFIRST_RULEfollowedbyanynumberofgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanynumberofanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖfollowedbyatmostONEFIRST_RULEfollowedbyatleastONEFIRST_RULEᴖ(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, IEnumerable<groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ> groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1, IEnumerable<groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ> groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1, IEnumerable<rulewithnameFIRST_RULE> rulewithnameFIRST_RULE3, IEnumerable<rulewithnameFIRST_RULE> rulewithnameFIRST_RULE4)
         {
             this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
             this.groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 = groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1;
             this.groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 = groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1;
-            this.atmostONEFIRST_RULE = atmostONEFIRST_RULE1;
-            this.atleastONEFIRST_RULE = atleastONEFIRST_RULE1;
+            this.rulewithnameFIRST_RULE3 = rulewithnameFIRST_RULE3;
+            this.rulewithnameFIRST_RULE4 = rulewithnameFIRST_RULE4;
         }
 
         public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
         public IEnumerable<groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ> groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 { get; }
         public IEnumerable<groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ> groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 { get; }
-        public IEnumerable<rulewithnameFIRST_RULE> atmostONEFIRST_RULE { get; }
-        public IEnumerable<rulewithnameFIRST_RULE> atleastONEFIRST_RULE { get; }
+        public IEnumerable<rulewithnameFIRST_RULE> rulewithnameFIRST_RULE3 { get; }
+        public IEnumerable<rulewithnameFIRST_RULE> rulewithnameFIRST_RULE4 { get; }
 
         public sealed class groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
         {
