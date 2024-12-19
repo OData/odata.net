@@ -86,16 +86,33 @@
             {
                 if (alternation.Inners.Any())
                 {
-                    // if there are multiple alternations, then we are going to need a discriminated union to distinguish them
-                    //// TODO
-                    return null;
+                    // if there are multiple concatenations, then we are going to need a discriminated union to distinguish them
+                    return new Class(
+                        AccessModifier.Public,
+                        true,
+                        context.ClassName,
+                        Enumerable.Empty<string>(), //// TODO do this
+                        null, //// TODO add this
+                        Enumerable.Empty<ConstructorDefinition>(), //// TODO add these
+                        Enumerable.Empty<MethodDefinition>(), //// TODO add these
+                        Enumerable.Empty<Class>(), //// TODO add these
+                        Enumerable.Empty<PropertyDefinition>()); //// TODO add these
                 }
 
                 if (AlternationToIsThereAnOptionPresent.Instance.Generate(alternation, context.@void))
                 {
                     // if there are options present, then we are going to need a discriminated union to distinguish whether the option was taken or not
                     //// TODO
-                    return null;
+                    return new Class(
+                        AccessModifier.Public,
+                        true,
+                        context.ClassName,
+                        Enumerable.Empty<string>(), //// TODO do this
+                        null, //// TODO add this
+                        Enumerable.Empty<ConstructorDefinition>(), //// TODO add these
+                        Enumerable.Empty<MethodDefinition>(), //// TODO add these
+                        Enumerable.Empty<Class>(), //// TODO add these
+                        Enumerable.Empty<PropertyDefinition>()); //// TODO add these
                 }
 
                 // there is no need for a discriminated union, so let's just create the class
