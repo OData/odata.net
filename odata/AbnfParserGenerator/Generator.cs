@@ -260,16 +260,14 @@
                         var classNameBuilder = new StringBuilder();
                         ConcatenationToClassName.Instance.Generate(concatenation, classNameBuilder);
                         var className = classNameBuilder.ToString();
-                        var nestedGroupingClasses = ConcatenationToNestedGroupingClasses
-                            .Instance
-                            .Generate(concatenation, context.@void)
-                            .NotNull();
 
+                        IEnumerable<Class> nestedGroupingClasses;
                         IEnumerable<PropertyDefinition> propertyDefinitions;
                         //// TODO this is very hacky and you should do better
                         var groupingOfLiteral = "groupingofᴖ";
                         if (className.StartsWith(groupingOfLiteral))
                         {
+                            nestedGroupingClasses = Enumerable.Empty<Class>();
                             propertyDefinitions = new[]
                             {
                                 new PropertyDefinition(
@@ -283,6 +281,10 @@
                         }
                         else
                         {
+                            nestedGroupingClasses = ConcatenationToNestedGroupingClasses
+                                .Instance
+                                .Generate(concatenation, context.@void)
+                                .NotNull();
                             propertyDefinitions = ConcatenationToPropertyDefinitions
                                 .Instance
                                 .Generate(concatenation, context.@void);
