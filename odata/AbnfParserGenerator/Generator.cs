@@ -296,21 +296,22 @@
 
                 public IEnumerable<Class> Generate(Concatenation concatenation, (string BaseType, Root.Void) context)
                 {
-                    return Combinations(
-                        concatenation
-                            .Inners
-                            .Select(inner => inner.Repetition)
-                            .Prepend(concatenation.Repetition)
-                            .ToList(),
-                        0)
-                    .Select(combination => Generate(combination, context.BaseType));
+                    return 
+                        Combinations(
+                            concatenation
+                                .Inners
+                                .Select(inner => inner.Repetition)
+                                .Prepend(concatenation.Repetition)
+                                .ToList(),
+                            0)
+                        .Select(combination => Generate(combination, context.BaseType));
                 }
 
                 private static Class Generate(
                     (string ClassName, IEnumerable<Repetition> Repetitions) repetitionCombination,
                     string baseType)
                 {
-                    var properties = ConvertRepetitionsToPropertyDefinitions(repetitionCombination.Repetitions);
+                    var properties = ConvertRepetitionsToPropertyDefinitions(repetitionCombination.Repetitions).ToList();
 
                     return new Class(
                         AccessModifier.Public,
@@ -318,7 +319,17 @@
                         repetitionCombination.ClassName,
                         Enumerable.Empty<string>(),
                         baseType,
-                        Enumerable.Empty<ConstructorDefinition>(), //// TODO
+                        new[]
+                        {
+                            new ConstructorDefinition(
+                                AccessModifier.Public,
+                                properties
+                                    .Select(property =>
+                                        new MethodParameter(property.Type, property.Name)),
+                                properties
+                                    .Select(property =>
+                                        $"this.{property.Name} = {property.Name};")),
+                        }, //// TODO
                         Enumerable.Empty<MethodDefinition>(), //// TODO
                         Enumerable.Empty<Class>(), //// TODO
                         properties); //// TODO
