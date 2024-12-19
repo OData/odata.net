@@ -120,13 +120,13 @@
                     
                 }
 
-                private sealed class RepetitionToNestedGroupingClasses : Repetition.Visitor<Class?, Root.Void>
+                private sealed class RepetitionToNestedGroupingClass : Repetition.Visitor<Class?, Root.Void>
                 {
-                    private RepetitionToNestedGroupingClasses()
+                    private RepetitionToNestedGroupingClass()
                     {
                     }
 
-                    public static RepetitionToNestedGroupingClasses Instance { get; } = new RepetitionToNestedGroupingClasses();
+                    public static RepetitionToNestedGroupingClass Instance { get; } = new RepetitionToNestedGroupingClass();
 
                     protected internal override Class? Accept(Repetition.ElementOnly node, Root.Void context)
                     {
@@ -136,13 +136,13 @@
                     {
                     }
 
-                    private sealed class ElementToNestedGroupingClasses : Element.Visitor<Class?, Root.Void>
+                    private sealed class ElementToNestedGroupingClass : Element.Visitor<Class?, Root.Void>
                     {
-                        private ElementToNestedGroupingClasses()
+                        private ElementToNestedGroupingClass()
                         {
                         }
 
-                        public static ElementToNestedGroupingClasses Instance { get; } = new ElementToNestedGroupingClasses();
+                        public static ElementToNestedGroupingClass Instance { get; } = new ElementToNestedGroupingClass();
 
                         protected internal override Class? Accept(Element.RuleName node, Root.Void context)
                         {
@@ -151,16 +151,16 @@
 
                         protected internal override Class? Accept(Element.Group node, Root.Void context)
                         {
-                            return GroupToNestedGroupingClasses.Instance.Generate(node.Value, context);
+                            return GroupToNestedGroupingClass.Instance.Generate(node.Value, context);
                         }
 
-                        private sealed class GroupToNestedGroupingClasses
+                        private sealed class GroupToNestedGroupingClass
                         {
-                            private GroupToNestedGroupingClasses()
+                            private GroupToNestedGroupingClass()
                             {
                             }
 
-                            public static GroupToNestedGroupingClasses Instance { get; } = new GroupToNestedGroupingClasses();
+                            public static GroupToNestedGroupingClass Instance { get; } = new GroupToNestedGroupingClass();
 
                             public Class Generate(AbnfParser.CstNodes.Group group, Root.Void context)
                             {
@@ -172,7 +172,30 @@
 
                         protected internal override Class? Accept(Element.Option node, Root.Void context)
                         {
-                            //// TODO if the option has concatenations, then return something, otherwise null
+                            return OptionToNestedGroupingClass.Instance.Generate(node.Value, context);
+                        }
+
+                        private sealed class OptionToNestedGroupingClass
+                        {
+                            private OptionToNestedGroupingClass()
+                            {
+                            }
+
+                            public static OptionToNestedGroupingClass Instance { get; } = new OptionToNestedGroupingClass();
+
+                            public Class? Generate(AbnfParser.CstNodes.Option option, Root.Void context)
+                            {
+                                //// TODO create classes to traverse these cst nodes
+                                if (!option.Alternation.Inners.Any())
+                                {
+                                    // the option only has one element inside, so we don't need a discriminated union
+                                    return null;
+                                }
+
+                                var classNameBuilder = new StringBuilder();
+                                OptionToClassName.Instance.Generate(option, classNameBuilder);
+                                return AlternationToClass.Instance.Generate(option.Alternation, (classNameBuilder.ToString(), context));
+                            }
                         }
 
                         protected internal override Class? Accept(Element.CharVal node, Root.Void context)
