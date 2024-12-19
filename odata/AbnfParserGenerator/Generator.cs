@@ -292,12 +292,15 @@
 
             protected internal override Root.Void Accept(Repetition.ElementOnly node, StringBuilder context)
             {
+                ElementToClassName.Instance.Visit(node.Element, context);
+                return default;
             }
 
             protected internal override Root.Void Accept(Repetition.RepeatAndElement node, StringBuilder context)
             {
                 RepeatToClassName.Instance.Visit(node.Repeat, context);
-
+                ElementToClassName.Instance.Visit(node.Element, context);
+                return default;
             }
         }
 
