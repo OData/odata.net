@@ -798,7 +798,6 @@
 
                 public Class? Generate(Concatenation concatenation, Root.Void context)
                 {
-                    //// TODO if this is a single repetiton and that repetition doesn't isn't a group or option, we won't have a nested class
                     if (concatenation.Inners.Any())
                     {
                         var classNameBuilder = new StringBuilder();
@@ -835,7 +834,6 @@
                             propertyDefinitions);
                     }
 
-                    //// TODO this call might not be working correctly: //// TODO or maybe it's just that you haven't fully implemented the callers that are getting recursively called into...
                     return RepetitionToNestedGroupingClass.Instance.Visit(concatenation.Repetition, context);
                 }
 
@@ -938,7 +936,7 @@
 
                             public Class? Generate(AbnfParser.CstNodes.Option option, Root.Void context)
                             {
-                                //// TODO create classes to traverse these cst nodes
+                                //// TODO create classes to traverse the individual CST nodes
                                 if (!option.Alternation.Inners.Any())
                                 {
                                     // the option only has one element inside, so we don't need a discriminated union
@@ -1194,7 +1192,7 @@
 
                 public bool Generate(Option option, Root.Void context)
                 {
-                    //// TODO traverse the CST nodes instead of this shortcut
+                    //// TODO create classes to traverse the individual CST nodes
                     return option.Alternation.Inners.Any();
                 }
             }
@@ -1393,7 +1391,7 @@
 
             protected internal override Root.Void Accept(RuleName.Inner.DashInner node, StringBuilder context)
             {
-                //// TODO add a visitor for the dash CST node
+                //// TODO create classes to traverse the individual CST nodes
                 context.Append("-");
                 return default;
             }
