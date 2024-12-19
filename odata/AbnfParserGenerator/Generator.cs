@@ -51,7 +51,6 @@
                 {
                     var ruleNameBuilder = new StringBuilder();
                     RuleNameToClassName.Instance.Generate(rule.RuleName, ruleNameBuilder);
-                    ruleNameBuilder.Append()
                     return ElementsToClass.Instance.Generate(rule.Elements, (ruleNameBuilder.ToString(), context));
                 }
 
