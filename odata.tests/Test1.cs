@@ -324,8 +324,8 @@ public abstract class rulewithnameSECOND_RULE
         protected internal abstract TResult Accept(FIRST_RULE node, TContext context);
         protected internal abstract TResult Accept(FIRST_RULEfollowedbyFIRST_RULE node, TContext context);
         protected internal abstract TResult Accept(FIRST_RULEfollowedbyanynumberofgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanynumberofanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖfollowedbyatmostONEFIRST_RULEfollowedbyatleastONEFIRST_RULE node, TContext context);
-        protected internal abstract TResult Accept(FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ node, TContext context);
         protected internal abstract TResult Accept(FIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ node, TContext context);
+        protected internal abstract TResult Accept(FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ node, TContext context);
     }
 
     public sealed class groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
