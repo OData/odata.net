@@ -1000,8 +1000,14 @@ second-rule = first-rule
                     }
 
                     needsNewLine = true;
+                    var methodNewLine = false;
                     foreach (var method in @class.Methods)
                     {
+                        if (methodNewLine)
+                        {
+                            builder.AppendLine();
+                        }
+
                         Transcribe(method.AccessModifier, builder);
                         if (method.IsAbstract != null)
                         {
@@ -1034,6 +1040,7 @@ second-rule = first-rule
                         if (method.Body == null)
                         {
                             builder.AppendLine(";");
+                            methodNewLine = false;
                         }
                         else
                         {
@@ -1043,6 +1050,7 @@ second-rule = first-rule
                             builder.AppendLine(method.Body);
                             builder.Unindent();
                             builder.AppendLine("}");
+                            methodNewLine = true;
                         }
                     }
                 }
