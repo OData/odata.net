@@ -950,7 +950,7 @@ second-rule = first-rule
                 }
 
                 builder.Append("class ").Append(@class.Name);
-                var genericTypeParameters = string.Join(",", @class.GenericTypeParameters);
+                var genericTypeParameters = string.Join(", ", @class.GenericTypeParameters);
                 if (!string.IsNullOrEmpty(genericTypeParameters))
                 {
                     builder.Append("<").Append(genericTypeParameters).Append(">");
