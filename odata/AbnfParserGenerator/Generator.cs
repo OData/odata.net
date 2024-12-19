@@ -329,8 +329,27 @@
                                 properties
                                     .Select(property =>
                                         $"this.{property.Name} = {property.Name};")),
+                        },
+                        new[]
+                        {
+                           new MethodDefinition(
+                               AccessModifier.Protected,
+                               false,
+                               true,
+                               "TResult",
+                               new[]
+                               {
+                                   "TResult",
+                                   "TContext",
+                               },
+                               "Dispatch",
+                               new[]
+                               {
+                                   new MethodParameter("Visitor<TResult, TContext>", "visitor"),
+                                   new MethodParameter("TContext", "context"),
+                               },
+                               "return visitor.Accept(this, context);"), 
                         }, //// TODO
-                        Enumerable.Empty<MethodDefinition>(), //// TODO
                         Enumerable.Empty<Class>(), //// TODO
                         properties); //// TODO
                         
