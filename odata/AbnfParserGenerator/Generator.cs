@@ -92,9 +92,15 @@
                         AccessModifier.Public,
                         true,
                         context.ClassName,
-                        Enumerable.Empty<string>(), //// TODO do this
-                        null, //// TODO add this
-                        Enumerable.Empty<ConstructorDefinition>(), //// TODO add these
+                        Enumerable.Empty<string>(),
+                        null,
+                        new[]
+                        {
+                            new ConstructorDefinition(
+                                AccessModifier.Private, 
+                                Enumerable.Empty<MethodParameter>(),
+                                string.Empty),
+                        },
                         Enumerable.Empty<MethodDefinition>(), //// TODO add these
                         Enumerable.Empty<Class>(), //// TODO add these
                         Enumerable.Empty<PropertyDefinition>()); //// TODO add these
