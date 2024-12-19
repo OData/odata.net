@@ -29,7 +29,7 @@ public abstract class rulewithnameSECOND_RULE
         protected internal abstract TResult Accept(FIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ node, TContext context);
         protected internal abstract TResult Accept(FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ node, TContext context);
     }
-    
+
     public sealed class groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
     {
         public groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
@@ -37,105 +37,377 @@ public abstract class rulewithnameSECOND_RULE
             this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
             this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
         }
-        
+
         public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
         public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
     }
-    
+
     public sealed class groupingofᴖFIRST_RULEfollowedbyanynumberofgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanynumberofanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖfollowedbyatmostONEFIRST_RULEfollowedbyatleastONEFIRST_RULEᴖ
     {
-        public groupingofᴖFIRST_RULEfollowedbyanynumberofgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanynumberofanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖfollowedbyatmostONEFIRST_RULEfollowedbyatleastONEFIRST_RULEᴖ(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, IEnumerable<groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ> groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1, IEnumerable<anoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ> anoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1, IEnumerable<rulewithnameFIRST_RULE> rulewithnameFIRST_RULE2, IEnumerable<rulewithnameFIRST_RULE> rulewithnameFIRST_RULE3)
+        public groupingofᴖFIRST_RULEfollowedbyanynumberofgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanynumberofanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖfollowedbyatmostONEFIRST_RULEfollowedbyatleastONEFIRST_RULEᴖ(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, IEnumerable<groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ> groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1, IEnumerable<groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ> groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1, IEnumerable<rulewithnameFIRST_RULE> atmostONEFIRST_RULE1, IEnumerable<rulewithnameFIRST_RULE> atleastONEFIRST_RULE1)
         {
             this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
             this.groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 = groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1;
-            this.anoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 = anoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1;
-            this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
-            this.rulewithnameFIRST_RULE3 = rulewithnameFIRST_RULE3;
+            this.groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 = groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1;
+            this.atmostONEFIRST_RULE = atmostONEFIRST_RULE1;
+            this.atleastONEFIRST_RULE = atleastONEFIRST_RULE1;
         }
-        
+
         public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
         public IEnumerable<groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ> groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 { get; }
-        public IEnumerable<anoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ> anoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 { get; }
-        public IEnumerable<rulewithnameFIRST_RULE> rulewithnameFIRST_RULE2 { get; }
-        public IEnumerable<rulewithnameFIRST_RULE> rulewithnameFIRST_RULE3 { get; }
-        
-        public abstract class groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
+        public IEnumerable<groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ> groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 { get; }
+        public IEnumerable<rulewithnameFIRST_RULE> atmostONEFIRST_RULE { get; }
+        public IEnumerable<rulewithnameFIRST_RULE> atleastONEFIRST_RULE { get; }
+
+        public sealed class groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
         {
-        }
-    }
-    
-    public abstract class groupingofᴖFIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖᴖ
-    {
-        private groupingofᴖFIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖᴖ()
-        {
-        }
-        
-        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-        
-        public abstract class Visitor<TResult, TContext>
-        {
-            public TResult Visit(groupingofᴖFIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖᴖ node, TContext context)
+            public groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ(FIRST_RULEfollowedbyanoptionalFIRST_RULE FIRST_RULEfollowedbyanoptionalFIRST_RULE1)
             {
-                return node.Dispatch(this, context);
+                this.FIRST_RULEfollowedbyanoptionalFIRST_RULE1 = FIRST_RULEfollowedbyanoptionalFIRST_RULE1;
             }
-            
-            protected internal abstract TResult Accept(FIRST_RULE node, TContext context);
-            protected internal abstract TResult Accept(FIRST_RULEfollowedbyanoptionalFIRST_RULE node, TContext context);
+
+            public FIRST_RULEfollowedbyanoptionalFIRST_RULE FIRST_RULEfollowedbyanoptionalFIRST_RULE1 { get; }
+
+            public abstract class FIRST_RULEfollowedbyanoptionalFIRST_RULE
+            {
+                private FIRST_RULEfollowedbyanoptionalFIRST_RULE()
+                {
+                }
+
+                protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+                public abstract class Visitor<TResult, TContext>
+                {
+                    public TResult Visit(FIRST_RULEfollowedbyanoptionalFIRST_RULE node, TContext context)
+                    {
+                        return node.Dispatch(this, context);
+                    }
+
+                    protected internal abstract TResult Accept(FIRST_RULEfollowedbyoneFIRST_RULE node, TContext context);
+
+                    protected internal abstract TResult Accept(FIRST_RULEfollowedbynoFIRST_RULE node, TContext context);
+                }
+
+                public sealed class FIRST_RULEfollowedbyoneFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                {
+                    public FIRST_RULEfollowedbyoneFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
+                    {
+                        this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
+                        this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
+                    }
+
+                    public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
+                    public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
+
+                    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                    {
+                        return visitor.Accept(this, context);
+                    }
+                }
+
+                public sealed class FIRST_RULEfollowedbynoFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                {
+                    public FIRST_RULEfollowedbynoFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1)
+                    {
+                        this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
+                    }
+
+                    public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
+
+                    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                    {
+                        return visitor.Accept(this, context);
+                    }
+                }
+            }
         }
-        
-        public abstract class groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
+
+        public sealed class groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
         {
-        }
-        
-        public sealed class FIRST_RULE : groupingofᴖFIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖᴖ
-        {
-            public FIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1)
+            public groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
             {
                 this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
+                this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
             }
-            
+
             public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
+            public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
         }
-        
-        public sealed class FIRST_RULEfollowedbyanoptionalFIRST_RULE : groupingofᴖFIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖᴖ
+    }
+
+    public sealed class groupingofᴖFIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖᴖ
+    {
+        public groupingofᴖFIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖᴖ(FIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ FIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1)
         {
-            public FIRST_RULEfollowedbyanoptionalFIRST_RULE(groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1)
+            this.FIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 = FIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1;
+        }
+
+        public FIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ FIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 { get; }
+
+        public abstract class FIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
+        {
+            private FIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ()
             {
-                this.groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 = groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1;
             }
-            
-            public groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+
+            protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+            public abstract class Visitor<TResult, TContext>
             {
-                return visitor.Accept(this, context);
+                public TResult Visit(FIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ node, TContext context)
+                {
+                    return node.Dispatch(this, context);
+                }
+
+                protected internal abstract TResult Accept(FIRST_RULE node, TContext context);
+
+                protected internal abstract TResult Accept(FIRST_RULEfollowedbyanoptionalFIRST_RULE node, TContext context);
+            }
+
+            public sealed class groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
+            {
+                public groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ(FIRST_RULEfollowedbyanoptionalFIRST_RULE FIRST_RULEfollowedbyanoptionalFIRST_RULE1)
+                {
+                    this.FIRST_RULEfollowedbyanoptionalFIRST_RULE1 = FIRST_RULEfollowedbyanoptionalFIRST_RULE1;
+                }
+
+                public FIRST_RULEfollowedbyanoptionalFIRST_RULE FIRST_RULEfollowedbyanoptionalFIRST_RULE1 { get; }
+
+                public abstract class FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                {
+                    private FIRST_RULEfollowedbyanoptionalFIRST_RULE()
+                    {
+                    }
+
+                    protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+                    public abstract class Visitor<TResult, TContext>
+                    {
+                        public TResult Visit(FIRST_RULEfollowedbyanoptionalFIRST_RULE node, TContext context)
+                        {
+                            return node.Dispatch(this, context);
+                        }
+
+                        protected internal abstract TResult Accept(FIRST_RULEfollowedbyoneFIRST_RULE node, TContext context);
+
+                        protected internal abstract TResult Accept(FIRST_RULEfollowedbynoFIRST_RULE node, TContext context);
+                    }
+
+                    public sealed class FIRST_RULEfollowedbyoneFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                    {
+                        public FIRST_RULEfollowedbyoneFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
+                        {
+                            this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
+                            this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
+                        }
+
+                        public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
+                        public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
+
+                        protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                        {
+                            return visitor.Accept(this, context);
+                        }
+                    }
+
+                    public sealed class FIRST_RULEfollowedbynoFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                    {
+                        public FIRST_RULEfollowedbynoFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1)
+                        {
+                            this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
+                        }
+
+                        public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
+
+                        protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                        {
+                            return visitor.Accept(this, context);
+                        }
+                    }
+                }
+            }
+
+            public sealed class FIRST_RULE : FIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
+            {
+                public FIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1)
+                {
+                    this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
+                }
+
+                public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
+
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
+            }
+
+            public sealed class FIRST_RULEfollowedbyanoptionalFIRST_RULE : FIRST_RULEorgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
+            {
+                public FIRST_RULEfollowedbyanoptionalFIRST_RULE(groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1)
+                {
+                    this.groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 = groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1;
+                }
+
+                public groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 { get; }
+
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
             }
         }
     }
-    
+
+    //// TODO these grouping classes that immediately take in a DU could just directly be a DU
     public sealed class groupingofᴖFIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖᴖ
     {
-        public groupingofᴖFIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖᴖ(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1, anoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ anoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1)
+        public groupingofᴖFIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖᴖ(
+            FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1)
         {
-            this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
-            this.groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 = groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1;
-            this.anoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 = anoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1;
+            this.FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 = FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1;
         }
-        
-        public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
-        public groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 { get; }
-        public anoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ anoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 { get; }
-        
-        public abstract class groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
+
+        public FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 { get; }
+
+        public abstract class FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
         {
+            private FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ()
+            {
+            }
+
+            protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+            public abstract class Visitor<TResult, TContext>
+            {
+                public TResult Visit(FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ node, TContext context)
+                {
+                    return node.Dispatch(this, context);
+                }
+
+                protected internal abstract TResult Accept(FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyonegroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ node, TContext context);
+                protected internal abstract TResult Accept(FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbynogroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ node, TContext context);
+            }
+
+            public sealed class groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
+            {
+                public groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ(FIRST_RULEfollowedbyanoptionalFIRST_RULE FIRST_RULEfollowedbyanoptionalFIRST_RULE1)
+                {
+                    this.FIRST_RULEfollowedbyanoptionalFIRST_RULE1 = FIRST_RULEfollowedbyanoptionalFIRST_RULE1;
+                }
+
+                public FIRST_RULEfollowedbyanoptionalFIRST_RULE FIRST_RULEfollowedbyanoptionalFIRST_RULE1 { get; }
+
+                public abstract class FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                {
+                    private FIRST_RULEfollowedbyanoptionalFIRST_RULE()
+                    {
+                    }
+
+                    protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+                    public abstract class Visitor<TResult, TContext>
+                    {
+                        public TResult Visit(FIRST_RULEfollowedbyanoptionalFIRST_RULE node, TContext context)
+                        {
+                            return node.Dispatch(this, context);
+                        }
+
+                        protected internal abstract TResult Accept(FIRST_RULEfollowedbyoneFIRST_RULE node, TContext context);
+                        protected internal abstract TResult Accept(FIRST_RULEfollwedbynoFIRST_RULE node, TContext context);
+                    }
+
+                    public sealed class FIRST_RULEfollowedbyoneFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                    {
+                        public FIRST_RULEfollowedbyoneFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
+                        {
+                            this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
+                            this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
+                        }
+
+                        public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
+                        public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
+
+                        protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                        {
+                            return visitor.Accept(this, context);
+                        }
+                    }
+
+                    public sealed class FIRST_RULEfollwedbynoFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
+                    {
+                        public FIRST_RULEfollwedbynoFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
+                        {
+                            this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
+                            this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
+                        }
+
+                        public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
+                        public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
+
+                        protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                        {
+                            return visitor.Accept(this, context);
+                        }
+                    }
+                }
+            }
+
+            public sealed class groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
+            {
+                public groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
+                {
+                    this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
+                    this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
+                }
+
+                public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
+                public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
+            }
+
+            public sealed class FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyonegroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ : FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
+            {
+                public FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyonegroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(
+                    rulewithnameFIRST_RULE rulewithnameFIRST_RULE1,
+                    groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1,
+                    groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1)
+                {
+                    this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
+                    this.groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 = groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1;
+                    this.groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 = groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1;
+                }
+
+                public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
+                public groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 { get; }
+                public groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 { get; }
+
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
+            }
+
+            public sealed class FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbynogroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ : FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
+            {
+                public FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbynogroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(
+                    rulewithnameFIRST_RULE rulewithnameFIRST_RULE1,
+                    groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1)
+                {
+                    this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
+                    this.groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 = groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1;
+                }
+
+                public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
+                public groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 { get; }
+
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
+            }
         }
     }
-    
+
     public sealed class FIRST_RULE : rulewithnameSECOND_RULE
     {
         public FIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1)
