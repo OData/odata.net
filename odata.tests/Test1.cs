@@ -293,8 +293,8 @@
             //// TODO you are entirely skipping out on incremental definitions, by the way
         }
 
-        /*private static string TestAbnfCstClasses =
-"""*/
+        private static string TestAbnfCstClasses =
+"""
 public sealed class rulewithnameFIRST_RULE
 {
     public rulewithnameFIRST_RULE(rulewithnameSECOND_RULE rulewithnameSECOND_RULE1)
@@ -785,7 +785,7 @@ public abstract class rulewithnameSECOND_RULE
         }
     }
 }
-////""";
+""";
 
 
 
