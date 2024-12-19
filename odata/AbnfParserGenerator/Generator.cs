@@ -225,7 +225,7 @@
 
                 public IEnumerable<Class?> Generate(Alternation alternation, Root.Void context)
                 {
-                    yield return ConcatenationToNestedGroupingClass.Instance.Generate(alternation.Concatenation, context);
+                    yield return ConcatenationToGroupingClass.Instance.Generate(alternation.Concatenation, context);
                     foreach (var inner in alternation.Inners)
                     {
                         yield return InnerToNestedGroupingClasses.Instance.Generate(inner, context);
@@ -242,7 +242,7 @@
 
                     public Class? Generate(Alternation.Inner inner, Root.Void context)
                     {
-                        return ConcatenationToNestedGroupingClass.Instance.Generate(inner.Concatenation, context);
+                        return ConcatenationToGroupingClass.Instance.Generate(inner.Concatenation, context);
                     }
                 }
             }
@@ -316,7 +316,7 @@
                             //// TODO i don't think this is right
                             nestedGroupingClasses = new[]
                             {
-                                ConcatenationToNestedGroupingClass
+                                ConcatenationToGroupingClass
                                     .Instance
                                     .Generate(concatenation, context.@void)
                             }.NotNull();
@@ -545,13 +545,13 @@
                 }
             }
 
-            private sealed class ConcatenationToNestedGroupingClass
+            private sealed class ConcatenationToGroupingClass
             {
-                private ConcatenationToNestedGroupingClass()
+                private ConcatenationToGroupingClass()
                 {
                 }
 
-                public static ConcatenationToNestedGroupingClass Instance { get; } = new ConcatenationToNestedGroupingClass();
+                public static ConcatenationToGroupingClass Instance { get; } = new ConcatenationToGroupingClass();
 
                 public Class? Generate(Concatenation concatenation, Root.Void context)
                 {
