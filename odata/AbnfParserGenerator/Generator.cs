@@ -754,7 +754,10 @@
 
             protected internal override Root.Void Accept(Element.RuleName node, StringBuilder context)
             {
-                RuleNameToClassName.Instance.Generate(node.Value, context);
+                var ruleNameBuilder = new StringBuilder();
+                RuleNameToString.Instance.Generate(node.Value, ruleNameBuilder);
+                ruleNameBuilder.Replace('-', '_');
+                context.Append(ruleNameBuilder);
                 return default;
             }
 
