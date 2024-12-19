@@ -992,6 +992,51 @@ second-rule = first-rule
                     }
                 }
 
+                if (@class.Properties.Any())
+                {
+                    if (needsNewLine)
+                    {
+                        builder.AppendLine();
+                    }
+
+                    needsNewLine = true;
+                    foreach (var property in @class.Properties)
+                    {
+                        Transcribe(property.AccessModifier, builder);
+                        builder.Append(property.Type).Append(" ");
+                        builder.Append(property.Name).Append(" ");
+                        var needsBrace = true;
+                        if (property.HasGet)
+                        {
+                            if (needsBrace)
+                            {
+                                builder.Append("{ ");
+                            }
+
+                            needsBrace = false;
+                            builder.Append("get; ");
+                        }
+
+                        if (property.HasSet)
+                        {
+                            if (needsBrace)
+                            {
+                                builder.Append("{ ");
+                            }
+
+                            needsBrace = false;
+                            builder.Append("set; ");
+                        }
+
+                        if (!needsBrace)
+                        {
+                            builder.Append("}");
+                        }
+
+                        builder.AppendLine();
+                    }
+                }
+
                 if (@class.Methods.Any())
                 {
                     if (needsNewLine)
@@ -1052,51 +1097,6 @@ second-rule = first-rule
                             builder.AppendLine("}");
                             methodNewLine = true;
                         }
-                    }
-                }
-
-                if (@class.Properties.Any())
-                {
-                    if (needsNewLine)
-                    {
-                        builder.AppendLine();
-                    }
-
-                    needsNewLine = true;
-                    foreach (var property in @class.Properties)
-                    {
-                        Transcribe(property.AccessModifier, builder);
-                        builder.Append(property.Type).Append(" ");
-                        builder.Append(property.Name).Append(" ");
-                        var needsBrace = true;
-                        if (property.HasGet)
-                        {
-                            if (needsBrace)
-                            {
-                                builder.Append("{ ");
-                            }
-
-                            needsBrace = false;
-                            builder.Append("get; ");
-                        }
-
-                        if (property.HasSet)
-                        {
-                            if (needsBrace)
-                            {
-                                builder.Append("{ ");
-                            }
-
-                            needsBrace = false;
-                            builder.Append("set; ");
-                        }
-
-                        if (!needsBrace)
-                        {
-                            builder.Append("}");
-                        }
-
-                        builder.AppendLine();
                     }
                 }
 
