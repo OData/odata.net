@@ -88,7 +88,7 @@
                 if (alternation.Inners.Any())
                 {
                     // if there are multiple concatenations, then we are going to need a discriminated union to distinguish them
-                    //// TODO discriminatedunion members, du member visitor methods, and nested grouping classes
+                    //// TODO du member visitor methods, and nested grouping classes
                     var discriminatedUnionMembers = AlternationToDiscriminatedUnionMembers.Instance.Generate(alternation, context);
                     return new Class(
                         AccessModifier.Public,
@@ -245,6 +245,12 @@
                         var classNameBuilder = new StringBuilder();
                         ConcatenationToClassName.Instance.Generate(concatenation, classNameBuilder);
                         var className = classNameBuilder.ToString();
+                        //// TODO this is very hacky and you should do better
+                        var groupingOfLiteral = "groupingofᴖ";
+                        if (className.StartsWith(groupingOfLiteral))
+                        {
+                            className = className.Substring(groupingOfLiteral.Length, className.Length - groupingOfLiteral.Length - 1);
+                        }
 
                         var nestedGroupingClasses = ConcatenationToNestedGroupingClasses
                             .Instance
