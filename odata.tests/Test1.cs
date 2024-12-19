@@ -1,6 +1,7 @@
 ﻿namespace odata.tests
 {
     using AbnfParser.CstNodes.Core;
+    using AbnfParserGenerator;
     using AbnfParserGenerator.CstNodesGenerator;
     using Root;
     using Root.OdataResourcePath.CombinatorParsers;
@@ -910,9 +911,32 @@ second-rule = first-rule
                 Transcribe(@class, new Builder(builder, indent));
             }
 
+            private void Transcribe(AbnfParserGenerator.AccessModifier accessModifier, Builder builder)
+            {
+                if (accessModifier.HasFlag(AbnfParserGenerator.AccessModifier.Public))
+                {
+                    builder.Append($"public ");
+                }
+
+                if (accessModifier.HasFlag(AbnfParserGenerator.AccessModifier.Internal))
+                {
+                    builder.Append($"internal ");
+                }
+
+                if (accessModifier.HasFlag(AbnfParserGenerator.AccessModifier.Protected))
+                {
+                    builder.Append($"protected ");
+                }
+
+                if (accessModifier.HasFlag(AbnfParserGenerator.AccessModifier.Private))
+                {
+                    builder.Append($"private ");
+                }
+            }
+
             private void Transcribe(AbnfParserGenerator.Class @class, Builder builder)
             {
-                builder.Append("public ");
+                Transcribe(@class.AccessModifier, builder);
                 if (@class.IsAbstract != null)
                 {
                     if (@class.IsAbstract.Value)
@@ -952,7 +976,8 @@ second-rule = first-rule
                     needsNewLine = true;
                     foreach (var constructor in @class.Constructors)
                     {
-                        builder.Append(constructor.AccessModifier.ToString().ToLower()).Append(" ").Append(@class.Name).Append("(");
+                        Transcribe(constructor.AccessModifier, builder);
+                        builder.Append(" ").Append(@class.Name).Append("(");
                         builder.AppendJoin(", ", constructor.Parameters, (parameter, b) => b.Append(parameter.Type).Append(" ").Append(parameter.Name));
                         builder.AppendLine(")");
                         builder.AppendLine("{");
@@ -977,7 +1002,7 @@ second-rule = first-rule
                     needsNewLine = true;
                     foreach (var method in @class.Methods)
                     {
-                        builder.Append(method.AccessModifier.ToString().ToLower()).Append(" ");
+                        Transcribe(method.AccessModifier, builder);
                         if (method.IsAbstract != null)
                         {
                             if (method.IsAbstract.Value)
@@ -1032,7 +1057,7 @@ second-rule = first-rule
                     needsNewLine = true;
                     foreach (var property in @class.Properties)
                     {
-                        builder.Append(property.AccessModifier.ToString().ToLower()).Append(" ");
+                        Transcribe(property.AccessModifier, builder);
                         builder.Append(property.Type).Append(" ");
                         builder.Append(property.Name).Append(" ");
                         var needsBrace = true;

@@ -134,9 +134,9 @@
     [Flags]
     public enum AccessModifier
     {
-        Public = 0,
-        Internal = 1,
-        Protected = 2,
-        Private = 3,
+        Public = 1 << 0,
+        Internal = 1 << 1,
+        Protected = 1 << 2,
+        Private = 1 << 3,
     }
 }
