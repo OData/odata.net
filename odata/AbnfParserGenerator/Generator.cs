@@ -567,8 +567,8 @@
                             AccessModifier.Public,
                             false,
                             className,
-                            Enumerable.Empty<string>(), //// TODO
-                            null, //// TODO
+                            Enumerable.Empty<string>(),
+                            null,
                             Enumerable.Empty<ConstructorDefinition>(), //// TODO
                             Enumerable.Empty<MethodDefinition>(), //// TODO
                             Enumerable.Empty<Class>(), //// TODO
