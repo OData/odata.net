@@ -228,7 +228,35 @@
                                     },
                                     null,
                                     Enumerable.Empty<ConstructorDefinition>(),
-                                    Enumerable.Empty<MethodDefinition>(), //// TODO
+                                    discriminatedUnionMembers
+                                        .Select(discriminatedUnionMember =>
+                                            new MethodDefinition(
+                                                AccessModifier.Protected | AccessModifier.Internal,
+                                                true,
+                                                false,
+                                                "TResult",
+                                                Enumerable.Empty<string>(),
+                                                "Accept",
+                                                new[]
+                                                {
+                                                    new MethodParameter(discriminatedUnionMember.Name, "node"),
+                                                    new MethodParameter("TContext", "context"),
+                                                },
+                                                null))
+                                        .Prepend(
+                                            new MethodDefinition(
+                                                AccessModifier.Public,
+                                                null,
+                                                false,
+                                                "TResult",
+                                                Enumerable.Empty<string>(),
+                                                "Visit",
+                                                new[]
+                                                {
+                                                    new MethodParameter(context.ClassName, "node"),
+                                                    new MethodParameter("TContext", "context"),
+                                                },
+                                                "return node.Dispatch(this, context);")),
                                     Enumerable.Empty<Class>(),
                                     Enumerable.Empty<PropertyDefinition>())),
                         Enumerable.Empty<PropertyDefinition>());
