@@ -94,7 +94,10 @@
                 }
 
                 // there is no need for a discriminated union, so let's just create the class
-
+                var nestedGroupingClasses = ConcatenationToNestedGroupingClasses
+                    .Instance
+                    .Generate(alternation.Concatenation, context.@void)
+                    .NotNull();
                 return new Class(
                     AccessModifier.Public,
                     false,
@@ -103,7 +106,7 @@
                     null,
                     Enumerable.Empty<ConstructorDefinition>(), //// TODO add these
                     Enumerable.Empty<MethodDefinition>(),
-                    Enumerable.Empty<Class>(), //// TODO add these
+                    nestedGroupingClasses,
                     Enumerable.Empty<PropertyDefinition>()); //// TODO add these
             }
 
