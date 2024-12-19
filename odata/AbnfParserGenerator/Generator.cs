@@ -357,7 +357,6 @@
 
                 private static IEnumerable<PropertyDefinition> ConvertRepetitionsToPropertyDefinitions(IEnumerable<Repetition> repetitions)
                 {
-                    //// TODO you have to be careful everywhere you use this pattern
                     var propertyTypeCounts = new Dictionary<string, int>();
                     return repetitions
                         .Select(repetition =>
