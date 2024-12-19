@@ -1,10 +1,12 @@
 ﻿namespace AbnfParserGenerator
 {
     using AbnfParser.CstNodes;
+    using AbnfParser.CstNodes.Core;
     using Root;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using System.Text;
 
     public sealed class Generator
@@ -280,6 +282,167 @@
             }
         }
 
+        private sealed class RepetitionToClassName : Repetition.Visitor<Root.Void, StringBuilder>
+        {
+            private RepetitionToClassName()
+            {
+            }
+
+            public static RepetitionToClassName Instance { get; } = new RepetitionToClassName();
+
+            protected internal override Root.Void Accept(Repetition.ElementOnly node, StringBuilder context)
+            {
+            }
+
+            protected internal override Root.Void Accept(Repetition.RepeatAndElement node, StringBuilder context)
+            {
+                RepeatToClassName.Instance.Visit(node.Repeat, context);
+
+            }
+        }
+
+        private sealed class ElementToClassName : Element.Visitor<Root.Void, StringBuilder>
+        {
+            private ElementToClassName()
+            {
+            }
+
+            public static ElementToClassName Instance { get; } = new ElementToClassName();
+
+            protected internal override Root.Void Accept(Element.RuleName node, StringBuilder context)
+            {
+                RuleNameToString.Instance.Convert(node.Value, context);
+                return default;
+            }
+
+            protected internal override Root.Void Accept(Element.Group node, StringBuilder context)
+            {
+            }
+
+            protected internal override Root.Void Accept(Element.Option node, StringBuilder context)
+            {
+            }
+
+            protected internal override Root.Void Accept(Element.CharVal node, StringBuilder context)
+            {
+            }
+
+            protected internal override Root.Void Accept(Element.NumVal node, StringBuilder context)
+            {
+            }
+
+            protected internal override Root.Void Accept(Element.ProseVal node, StringBuilder context)
+            {
+            }
+        }
+
+        private sealed class RepeatToClassName : Repeat.Visitor<Root.Void, StringBuilder>
+        {
+            private RepeatToClassName()
+            {
+            }
+
+            public static RepeatToClassName Instance { get; } = new RepeatToClassName();
+
+            protected internal override Root.Void Accept(Repeat.Count node, StringBuilder context)
+            {
+                var count = DigitsToInt.Instance.Convert(node.Digits, default);
+                IntToNumberWord(count, context);
+                return default;
+            }
+
+            protected internal override Root.Void Accept(Repeat.Range node, StringBuilder context)
+            {
+                if (!node.PrefixDigits.Any())
+                {
+                    if (!node.SuffixDigits.Any())
+                    {
+                        context.Append("anynumberof");
+                        return default;
+                    }
+                    else
+                    {
+                        context.Append("betweenZEROand");
+                        var count = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
+                        IntToNumberWord(count, context);
+                        return default;
+                    }
+                }
+                else
+                {
+                    if (!node.SuffixDigits.Any())
+                    {
+                        context.Append("atleast");
+                        var count = DigitsToInt.Instance.Convert(node.PrefixDigits, default);
+                        IntToNumberWord(count, context);
+                        return default;
+                    }
+                    else
+                    {
+                        context.Append("between");
+                        var prefixCount = DigitsToInt.Instance.Convert(node.PrefixDigits, default);
+                        IntToNumberWord(prefixCount, context);
+                        context.Append("and");
+
+                        var suffixCount = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
+                        IntToNumberWord(suffixCount, context);
+                        return default;
+                    }
+                }
+            }
+
+            private static Root.Void IntToNumberWord(int value, StringBuilder context)
+            {
+                //// TODO use a standard implementation for this
+                if (value == 0)
+                {
+                    context.Append("ZERO");
+                }
+                else if (value == 1)
+                {
+                    context.Append("ONE");
+                }
+                else if (value == 2)
+                {
+                    context.Append("TWO");
+                }
+                else if (value == 3)
+                {
+                    context.Append("THREE");
+                }
+                else if (value == 4)
+                {
+                    context.Append("FOUR");
+                }
+                else if (value == 5)
+                {
+                    context.Append("FIVE");
+                }
+                else if (value == 6)
+                {
+                    context.Append("SIX");
+                }
+                else if (value == 7)
+                {
+                    context.Append("SEVEN");
+                }
+                else if (value == 8)
+                {
+                    context.Append("EIGHT");
+                }
+                else if (value == 9)
+                {
+                    context.Append("NINE");
+                }
+                else
+                {
+                    throw new Exception("TODO use a standard implementation");
+                }
+
+                return default;
+            }
+        }
+
         private sealed class GroupToClassName
         {
             private GroupToClassName()
@@ -305,6 +468,396 @@
         }
 
         public static RuleNameToString Instance { get; } = new RuleNameToString();
+
+        public Root.Void Convert(RuleName ruleName, StringBuilder context)
+        {
+            context.Append(AlphaToChar.Instance.Visit(ruleName.Alpha, default));
+            foreach (var inner in ruleName.Inners)
+            {
+                InnerToString.Instance.Visit(inner, context);
+            }
+
+            return default;
+        }
+
+        private sealed class InnerToString : RuleName.Inner.Visitor<Root.Void, StringBuilder>
+        {
+            private InnerToString()
+            {
+            }
+
+            public static InnerToString Instance { get; } = new InnerToString();
+
+            protected internal override Root.Void Accept(RuleName.Inner.AlphaInner node, StringBuilder context)
+            {
+                context.Append(AlphaToChar.Instance.Visit(node.Alpha, default));
+                return default;
+            }
+
+            protected internal override Root.Void Accept(RuleName.Inner.DigitInner node, StringBuilder context)
+            {
+                context.Append(DigitToInt.Instance.Visit(node.Digit, default).ToString());
+                return default;
+            }
+
+            protected internal override Root.Void Accept(RuleName.Inner.DashInner node, StringBuilder context)
+            {
+                //// TODO add a visitor for the dash CST node
+                //// TODO using underscore here instead of dash means that this class isn't really "rulename to string", but "rulename to classname"
+                context.Append("_");
+                return default;
+            }
+        }
+    }
+
+    public sealed class AlphaToChar : Alpha.Visitor<char, Root.Void>
+    {
+        private AlphaToChar()
+        {
+        }
+
+        public static AlphaToChar Instance { get; } = new AlphaToChar();
+
+        protected internal override char Accept(Alpha.x41 node, Root.Void context)
+        {
+            //// TODO add visitors for each CST node, and do it for each method in this class
+            return (char)0x41;
+        }
+
+        protected internal override char Accept(Alpha.x42 node, Root.Void context)
+        {
+            return (char)0x42;
+        }
+
+        protected internal override char Accept(Alpha.x43 node, Root.Void context)
+        {
+            return (char)0x43;
+        }
+
+        protected internal override char Accept(Alpha.x44 node, Root.Void context)
+        {
+            return (char)0x44;
+        }
+
+        protected internal override char Accept(Alpha.x45 node, Root.Void context)
+        {
+            return (char)0x45;
+        }
+
+        protected internal override char Accept(Alpha.x46 node, Root.Void context)
+        {
+            return (char)0x46;
+        }
+
+        protected internal override char Accept(Alpha.x47 node, Root.Void context)
+        {
+            return (char)0x47;
+        }
+
+        protected internal override char Accept(Alpha.x48 node, Root.Void context)
+        {
+            return (char)0x48;
+        }
+
+        protected internal override char Accept(Alpha.x49 node, Root.Void context)
+        {
+            return (char)0x49;
+        }
+
+        protected internal override char Accept(Alpha.x4A node, Root.Void context)
+        {
+            return (char)0x4A;
+        }
+
+        protected internal override char Accept(Alpha.x4B node, Root.Void context)
+        {
+            return (char)0x4B;
+        }
+
+        protected internal override char Accept(Alpha.x4C node, Root.Void context)
+        {
+            return (char)0x4C;
+        }
+
+        protected internal override char Accept(Alpha.x4D node, Root.Void context)
+        {
+            return (char)0x4D;
+        }
+
+        protected internal override char Accept(Alpha.x4E node, Root.Void context)
+        {
+            return (char)0x4E;
+        }
+
+        protected internal override char Accept(Alpha.x4F node, Root.Void context)
+        {
+            return (char)0x4F;
+        }
+
+        protected internal override char Accept(Alpha.x50 node, Root.Void context)
+        {
+            return (char)0x50;
+        }
+
+        protected internal override char Accept(Alpha.x51 node, Root.Void context)
+        {
+            return (char)0x51;
+        }
+
+        protected internal override char Accept(Alpha.x52 node, Root.Void context)
+        {
+            return (char)0x52;
+        }
+
+        protected internal override char Accept(Alpha.x53 node, Root.Void context)
+        {
+            return (char)0x53;
+        }
+
+        protected internal override char Accept(Alpha.x54 node, Root.Void context)
+        {
+            return (char)0x54;
+        }
+
+        protected internal override char Accept(Alpha.x55 node, Root.Void context)
+        {
+            return (char)0x55;
+        }
+
+        protected internal override char Accept(Alpha.x56 node, Root.Void context)
+        {
+            return (char)0x56;
+        }
+
+        protected internal override char Accept(Alpha.x57 node, Root.Void context)
+        {
+            return (char)0x57;
+        }
+
+        protected internal override char Accept(Alpha.x58 node, Root.Void context)
+        {
+            return (char)0x58;
+        }
+
+        protected internal override char Accept(Alpha.x59 node, Root.Void context)
+        {
+            return (char)0x59;
+        }
+
+        protected internal override char Accept(Alpha.x5A node, Root.Void context)
+        {
+            return (char)0x5A;
+        }
+
+        protected internal override char Accept(Alpha.x61 node, Root.Void context)
+        {
+            return (char)0x61;
+        }
+
+        protected internal override char Accept(Alpha.x62 node, Root.Void context)
+        {
+            return (char)0x62;
+        }
+
+        protected internal override char Accept(Alpha.x63 node, Root.Void context)
+        {
+            return (char)0x63;
+        }
+
+        protected internal override char Accept(Alpha.x64 node, Root.Void context)
+        {
+            return (char)0x64;
+        }
+
+        protected internal override char Accept(Alpha.x65 node, Root.Void context)
+        {
+            return (char)0x65;
+        }
+
+        protected internal override char Accept(Alpha.x66 node, Root.Void context)
+        {
+            return (char)0x66;
+        }
+
+        protected internal override char Accept(Alpha.x67 node, Root.Void context)
+        {
+            return (char)0x67;
+        }
+
+        protected internal override char Accept(Alpha.x68 node, Root.Void context)
+        {
+            return (char)0x68;
+        }
+
+        protected internal override char Accept(Alpha.x69 node, Root.Void context)
+        {
+            return (char)0x69;
+        }
+
+        protected internal override char Accept(Alpha.x6A node, Root.Void context)
+        {
+            return (char)0x6A;
+        }
+
+        protected internal override char Accept(Alpha.x6B node, Root.Void context)
+        {
+            return (char)0x6B;
+        }
+
+        protected internal override char Accept(Alpha.x6C node, Root.Void context)
+        {
+            return (char)0x6C;
+        }
+
+        protected internal override char Accept(Alpha.x6D node, Root.Void context)
+        {
+            return (char)0x6D;
+        }
+
+        protected internal override char Accept(Alpha.x6E node, Root.Void context)
+        {
+            return (char)0x6E;
+        }
+
+        protected internal override char Accept(Alpha.x6F node, Root.Void context)
+        {
+            return (char)0x6F;
+        }
+
+        protected internal override char Accept(Alpha.x70 node, Root.Void context)
+        {
+            return (char)0x70;
+        }
+
+        protected internal override char Accept(Alpha.x71 node, Root.Void context)
+        {
+            return (char)0x71;
+        }
+
+        protected internal override char Accept(Alpha.x72 node, Root.Void context)
+        {
+            return (char)0x72;
+        }
+
+        protected internal override char Accept(Alpha.x73 node, Root.Void context)
+        {
+            return (char)0x73;
+        }
+
+        protected internal override char Accept(Alpha.x74 node, Root.Void context)
+        {
+            return (char)0x74;
+        }
+
+        protected internal override char Accept(Alpha.x75 node, Root.Void context)
+        {
+            return (char)0x75;
+        }
+
+        protected internal override char Accept(Alpha.x76 node, Root.Void context)
+        {
+            return (char)0x76;
+        }
+
+        protected internal override char Accept(Alpha.x77 node, Root.Void context)
+        {
+            return (char)0x77;
+        }
+
+        protected internal override char Accept(Alpha.x78 node, Root.Void context)
+        {
+            return (char)0x78;
+        }
+
+        protected internal override char Accept(Alpha.x79 node, Root.Void context)
+        {
+            return (char)0x79;
+        }
+
+        protected internal override char Accept(Alpha.x7A node, Root.Void context)
+        {
+            return (char)0x7A;
+        }
+    }
+
+    public sealed class DigitsToInt
+    {
+        private DigitsToInt()
+        {
+        }
+
+        public static DigitsToInt Instance { get; } = new DigitsToInt();
+
+        public int Convert(IEnumerable<Digit> digits, Root.Void context)
+        {
+            var value = 0;
+            foreach (var digit in digits)
+            {
+                value *= 10;
+                value += DigitToInt.Instance.Visit(digit, default);
+            }
+
+            return value;
+        }
+    }
+    public sealed class DigitToInt : Digit.Visitor<int, Root.Void>
+    {
+        private DigitToInt()
+        {
+        }
+
+        public static DigitToInt Instance { get; } = new DigitToInt();
+
+        protected internal override int Accept(Digit.x30 node, Root.Void context)
+        {
+            //// TODO add visitors foreach CST node and do this for each method in this class
+            return 0x30 - '0';
+        }
+
+        protected internal override int Accept(Digit.x31 node, Root.Void context)
+        {
+            return 0x31 - '0';
+        }
+
+        protected internal override int Accept(Digit.x32 node, Root.Void context)
+        {
+            return 0x32 - '0';
+        }
+
+        protected internal override int Accept(Digit.x33 node, Root.Void context)
+        {
+            return 0x33 - '0';
+        }
+
+        protected internal override int Accept(Digit.x34 node, Root.Void context)
+        {
+            return 0x34 - '0';
+        }
+
+        protected internal override int Accept(Digit.x35 node, Root.Void context)
+        {
+            return 0x35 - '0';
+        }
+
+        protected internal override int Accept(Digit.x36 node, Root.Void context)
+        {
+            return 0x36 - '0';
+        }
+
+        protected internal override int Accept(Digit.x37 node, Root.Void context)
+        {
+            return 0x37 - '0';
+        }
+
+        protected internal override int Accept(Digit.x38 node, Root.Void context)
+        {
+            return 0x38 - '0';
+        }
+
+        protected internal override int Accept(Digit.x39 node, Root.Void context)
+        {
+            return 0x39 - '0';
+        }
     }
 
     public static class NotNullExtension

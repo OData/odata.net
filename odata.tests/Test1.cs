@@ -288,6 +288,9 @@
             var csharp = builder.ToString();
 
             Assert.AreEqual(TestAbnfCstClasses, csharp);
+
+            //// TODO does the natural language classnames even make sense? would it make more sense to just make the class names the ABNF but replacing the symbol syntax with class friendly symbols?
+            //// TODO you are entirely skipping out on incremental definitions, by the way
         }
 
         private static string TestAbnfCstClasses = 
