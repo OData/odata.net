@@ -88,7 +88,7 @@
                 if (alternation.Inners.Any())
                 {
                     // if there are multiple concatenations, then we are going to need a discriminated union to distinguish them
-                    //// TODO du member visitor methods, and nested grouping classes
+                    //// TODO and nested grouping classes //// TODO it's possible that there are no nested grouping classes because you'll only get DU members if there's a single rule or you're part of an alternation
                     var discriminatedUnionMembers = AlternationToDiscriminatedUnionMembers.Instance.Generate(alternation, context);
                     return new Class(
                         AccessModifier.Public,
