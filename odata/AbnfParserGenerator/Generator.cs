@@ -146,11 +146,12 @@
 
                         protected internal override Class? Accept(Element.RuleName node, Root.Void context)
                         {
+                            return null;
                         }
 
                         protected internal override Class? Accept(Element.Group node, Root.Void context)
                         {
-                            
+                            return GroupToNestedGroupingClasses.Instance.Generate(node.Value, context);
                         }
 
                         private sealed class GroupToNestedGroupingClasses
@@ -161,27 +162,32 @@
 
                             public static GroupToNestedGroupingClasses Instance { get; } = new GroupToNestedGroupingClasses();
 
-                            public IEnumerable<Class> Generate(AbnfParser.CstNodes.Group group, Root.Void context)
+                            public Class Generate(AbnfParser.CstNodes.Group group, Root.Void context)
                             {
-
-                                return AlternationToClass.Instance.Generate(group.Alternation, )
+                                var classNameBuilder = new StringBuilder();
+                                GroupToClassName.Instance.Generate(group, classNameBuilder);
+                                return AlternationToClass.Instance.Generate(group.Alternation, (classNameBuilder.ToString(), context));
                             }
                         }
 
                         protected internal override Class? Accept(Element.Option node, Root.Void context)
                         {
+                            //// TODO if the option has concatenations, then return something, otherwise null
                         }
 
                         protected internal override Class? Accept(Element.CharVal node, Root.Void context)
                         {
+                            return null;
                         }
 
                         protected internal override Class? Accept(Element.NumVal node, Root.Void context)
                         {
+                            return null;
                         }
 
                         protected internal override Class? Accept(Element.ProseVal node, Root.Void context)
                         {
+                            return null;
                         }
                     }
                 }
