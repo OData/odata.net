@@ -573,7 +573,18 @@
                         {
                         }
 
-                        //// TODO visitor here
+                        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+                        public abstract class Visitor<TResult, TContext>
+                        {
+                            public TResult Visit(FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ node, TContext context)
+                            {
+                                return node.Dispatch(this, context);
+                            }
+
+                            protected internal abstract TResult Accept(FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyonegroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ node, TContext context);
+                            protected internal abstract TResult Accept(FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbynogroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ node, TContext context);
+                        }
 
                         public sealed class groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
                         {
@@ -590,7 +601,18 @@
                                 {
                                 }
 
-                                //// TODO visitor here
+                                protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+                                public abstract class Visitor<TResult, TContext>
+                                {
+                                    public TResult Visit(FIRST_RULEfollowedbyanoptionalFIRST_RULE node, TContext context)
+                                    {
+                                        return node.Dispatch(this, context);
+                                    }
+
+                                    protected internal abstract TResult Accept(FIRST_RULEfollowedbyoneFIRST_RULE node, TContext context);
+                                    protected internal abstract TResult Accept(FIRST_RULEfollwedbynoFIRST_RULE node, TContext context);
+                                }
 
                                 public sealed class FIRST_RULEfollowedbyoneFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
                                 {
@@ -602,6 +624,11 @@
 
                                     public FIRST_RULE FIRST_RULE1 { get; }
                                     public FIRST_RULE FIRST_RULE2 { get; }
+
+                                    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                                    {
+                                        return visitor.Accept(this, context);
+                                    }
                                 }
 
                                 public sealed class FIRST_RULEfollwedbynoFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
@@ -614,6 +641,11 @@
 
                                     public FIRST_RULE FIRST_RULE1 { get; }
                                     public FIRST_RULE FIRST_RULE2 { get; }
+
+                                    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                                    {
+                                        return visitor.Accept(this, context);
+                                    }
                                 }
                             }
                         }
@@ -645,6 +677,11 @@
                             public FIRST_RULE FIRST_RULE1 { get; }
                             public groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 { get; }
                             public groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1 { get; }
+
+                            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                            {
+                                return visitor.Accept(this, context);
+                            }
                         }
 
                         public sealed class FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbynogroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ : FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
@@ -659,6 +696,11 @@
 
                             public FIRST_RULE FIRST_RULE1 { get; }
                             public groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ1 { get; }
+
+                            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                            {
+                                return visitor.Accept(this, context);
+                            }
                         }
                     }
                 }
