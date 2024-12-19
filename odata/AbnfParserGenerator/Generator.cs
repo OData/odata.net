@@ -592,9 +592,8 @@
                             propertyDefinitions);
                     }
 
-                    //// TODO i'm not convinced this is implemented correctly:
-                    ////return RepetitionToNestedGroupingClass.Instance.Visit(concatenation.Repetition, context);
-                    return null;
+                    //// TODO this call might not be working correctly:
+                    return RepetitionToNestedGroupingClass.Instance.Visit(concatenation.Repetition, context);
                 }
 
                 private sealed class ConcatenationToNestedGroupingClasses
