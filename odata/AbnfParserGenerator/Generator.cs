@@ -194,7 +194,7 @@
                             AccessModifier.Public,
                             propertyDefinitions.Select(propertyDefinition =>
                                 new MethodParameter(propertyDefinition.Type, propertyDefinition.Name)),
-                            string.Empty),
+                            string.Empty), //// TODO add setter calls
                     },
                     Enumerable.Empty<MethodDefinition>(),
                     nestedGroupingClasses,
@@ -211,7 +211,25 @@
 
                 public IEnumerable<Class> Generate(Alternation alternation, (string BaseType, Root.Void @void) context)
                 {
+                    yield return ConcatenationToDisciminatedUnionMember.Instance.Generate(alternation.Concatenation, context);
+                    foreach (var inner in alternation.Inners)
+                    {
+                        yield return InnerToDiscriminatedUnionMember.Instance.Generate(inner, context);
+                    }
+                }
 
+                private sealed class InnerToDiscriminatedUnionMember
+                {
+                    private InnerToDiscriminatedUnionMember()
+                    {
+                    }
+
+                    public static InnerToDiscriminatedUnionMember Instance { get; } = new InnerToDiscriminatedUnionMember();
+
+                    public Class Generate(Alternation.Inner inner, (string BaseType, Root.Void @void) context)
+                    {
+                        return ConcatenationToDisciminatedUnionMember.Instance.Generate(inner.Concatenation, context);
+                    }
                 }
 
                 private sealed class ConcatenationToDisciminatedUnionMember
@@ -247,8 +265,11 @@
                                     AccessModifier.Public,
                                     propertyDefinitions.Select(propertyDefinition =>
                                         new MethodParameter(propertyDefinition.Type, propertyDefinition.Name)),
-                                    string.Empty),
+                                    string.Empty), //// TODO add setter calls
                             },
+                            Enumerable.Empty<MethodDefinition>(),
+                            nestedGroupingClasses,
+                            propertyDefinitions);
                     }
                 }
             }
