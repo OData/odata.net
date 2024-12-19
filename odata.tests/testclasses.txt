@@ -159,7 +159,6 @@ public abstract class rulewithnameSECOND_RULE
                 }
 
                 protected internal abstract TResult Accept(FIRST_RULEfollowedbyoneFIRST_RULE node, TContext context);
-
                 protected internal abstract TResult Accept(FIRST_RULEfollowedbynoFIRST_RULE node, TContext context);
             }
 
