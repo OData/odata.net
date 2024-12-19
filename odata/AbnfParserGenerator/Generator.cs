@@ -51,6 +51,7 @@
                 {
                     var ruleNameBuilder = new StringBuilder();
                     RuleNameToClassName.Instance.Generate(rule.RuleName, ruleNameBuilder);
+                    ruleNameBuilder.Append()
                     return ElementsToClass.Instance.Generate(rule.Elements, (ruleNameBuilder.ToString(), context));
                 }
 
@@ -968,45 +969,61 @@
             public Root.Void Generate(RuleName ruleName, StringBuilder context)
             {
                 context.Append("rulewithname");
-                context.Append(char.ToUpperInvariant(AlphaToChar.Instance.Visit(ruleName.Alpha, default)));
-                foreach (var inner in ruleName.Inners)
-                {
-                    InnerToString.Instance.Visit(inner, context);
-                }
+                RuleNameToString.Instance.Generate(ruleName, context);
+                context.Replace('-', '_');
 
                 return default;
-            }
-
-            private sealed class InnerToString : RuleName.Inner.Visitor<Root.Void, StringBuilder>
-            {
-                private InnerToString()
-                {
-                }
-
-                public static InnerToString Instance { get; } = new InnerToString();
-
-                protected internal override Root.Void Accept(RuleName.Inner.AlphaInner node, StringBuilder context)
-                {
-                    context.Append(char.ToUpperInvariant(AlphaToChar.Instance.Visit(node.Alpha, default)));
-                    return default;
-                }
-
-                protected internal override Root.Void Accept(RuleName.Inner.DigitInner node, StringBuilder context)
-                {
-                    context.Append(DigitToInt.Instance.Visit(node.Digit, default).ToString());
-                    return default;
-                }
-
-                protected internal override Root.Void Accept(RuleName.Inner.DashInner node, StringBuilder context)
-                {
-                    //// TODO add a visitor for the dash CST node
-                    context.Append("_");
-                    return default;
-                }
             }
         }
     }
 
+    public sealed class RuleNameToString
+    {
+        private RuleNameToString()
+        {
+        }
+
+        public static RuleNameToString Instance { get; } = new RuleNameToString();
+
+        public Root.Void Generate(RuleName ruleName, StringBuilder context)
+        {
+            context.Append(char.ToUpperInvariant(AlphaToChar.Instance.Visit(ruleName.Alpha, default)));
+            foreach (var inner in ruleName.Inners)
+            {
+                InnerToString.Instance.Visit(inner, context);
+            }
+
+            return default;
+        }
+
+        private sealed class InnerToString : RuleName.Inner.Visitor<Root.Void, StringBuilder>
+        {
+            private InnerToString()
+            {
+            }
+
+            public static InnerToString Instance { get; } = new InnerToString();
+
+            protected internal override Root.Void Accept(RuleName.Inner.AlphaInner node, StringBuilder context)
+            {
+                context.Append(char.ToUpperInvariant(AlphaToChar.Instance.Visit(node.Alpha, default)));
+                return default;
+            }
+
+            protected internal override Root.Void Accept(RuleName.Inner.DigitInner node, StringBuilder context)
+            {
+                context.Append(DigitToInt.Instance.Visit(node.Digit, default).ToString());
+                return default;
+            }
+
+            protected internal override Root.Void Accept(RuleName.Inner.DashInner node, StringBuilder context)
+            {
+                //// TODO add a visitor for the dash CST node
+                context.Append("-");
+                return default;
+            }
+        }
+    }
     public sealed class AlphaToChar : Alpha.Visitor<char, Root.Void>
     {
         private AlphaToChar()
