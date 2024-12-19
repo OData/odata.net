@@ -311,28 +311,82 @@
 
             protected internal override Root.Void Accept(Element.RuleName node, StringBuilder context)
             {
-                RuleNameToString.Instance.Convert(node.Value, context);
+                RuleNameToString.Instance.Generate(node.Value, context);
                 return default;
             }
 
             protected internal override Root.Void Accept(Element.Group node, StringBuilder context)
             {
+                GroupToClassName.Instance.Generate(node.Value, context);
+                return default;
             }
 
             protected internal override Root.Void Accept(Element.Option node, StringBuilder context)
             {
+                OptionToClassName.Instance.Generate(node.Value, context);
+                return default;
             }
 
             protected internal override Root.Void Accept(Element.CharVal node, StringBuilder context)
             {
+                //// TODO do this;
+                return default;
             }
 
             protected internal override Root.Void Accept(Element.NumVal node, StringBuilder context)
             {
+                //// TODO do this;
+                return default;
             }
 
             protected internal override Root.Void Accept(Element.ProseVal node, StringBuilder context)
             {
+                //// TODO do this;
+                return default;
+            }
+        }
+
+        private sealed class OptionToClassName
+        {
+            private OptionToClassName()
+            {
+            }
+
+            public static OptionToClassName Instance { get; } = new OptionToClassName();
+
+            public Root.Void Generate(Option option, StringBuilder context)
+            {
+                context.Append("anoptional");
+                var needsGrouping = OptionToHasMultipleConcatenations.Instance.Generate(option, default);
+                if (needsGrouping)
+                {
+                    //// in the classes, this will still be a discriminated union, but do you want name it something specific to options? and use a different symbol?
+                    context.Append("groupingofᴖ");
+                }
+
+                AlternationToClassName.Instance.Generate(option.Alternation, context);
+
+                if (needsGrouping)
+                {
+                    context.Append("ᴖ");
+                }
+
+                return default;
+            }
+
+            private sealed class OptionToHasMultipleConcatenations
+            {
+                private OptionToHasMultipleConcatenations()
+                {
+                }
+
+                public static OptionToHasMultipleConcatenations Instance { get; } = new OptionToHasMultipleConcatenations();
+
+                public bool Generate(Option option, Root.Void context)
+                {
+                    //// TODO traverse the CST nodes instead of this shortcut
+                    return option.Alternation.Inners.Any();
+                }
             }
         }
 
@@ -346,7 +400,7 @@
 
             protected internal override Root.Void Accept(Repeat.Count node, StringBuilder context)
             {
-                var count = DigitsToInt.Instance.Convert(node.Digits, default);
+                var count = DigitsToInt.Instance.Generate(node.Digits, default);
                 IntToNumberWord(count, context);
                 return default;
             }
@@ -363,7 +417,7 @@
                     else
                     {
                         context.Append("betweenZEROand");
-                        var count = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
+                        var count = DigitsToInt.Instance.Generate(node.SuffixDigits, default);
                         IntToNumberWord(count, context);
                         return default;
                     }
@@ -373,18 +427,18 @@
                     if (!node.SuffixDigits.Any())
                     {
                         context.Append("atleast");
-                        var count = DigitsToInt.Instance.Convert(node.PrefixDigits, default);
+                        var count = DigitsToInt.Instance.Generate(node.PrefixDigits, default);
                         IntToNumberWord(count, context);
                         return default;
                     }
                     else
                     {
                         context.Append("between");
-                        var prefixCount = DigitsToInt.Instance.Convert(node.PrefixDigits, default);
+                        var prefixCount = DigitsToInt.Instance.Generate(node.PrefixDigits, default);
                         IntToNumberWord(prefixCount, context);
                         context.Append("and");
 
-                        var suffixCount = DigitsToInt.Instance.Convert(node.SuffixDigits, default);
+                        var suffixCount = DigitsToInt.Instance.Generate(node.SuffixDigits, default);
                         IntToNumberWord(suffixCount, context);
                         return default;
                     }
@@ -469,7 +523,7 @@
 
         public static RuleNameToString Instance { get; } = new RuleNameToString();
 
-        public Root.Void Convert(RuleName ruleName, StringBuilder context)
+        public Root.Void Generate(RuleName ruleName, StringBuilder context)
         {
             context.Append(AlphaToChar.Instance.Visit(ruleName.Alpha, default));
             foreach (var inner in ruleName.Inners)
@@ -788,7 +842,7 @@
 
         public static DigitsToInt Instance { get; } = new DigitsToInt();
 
-        public int Convert(IEnumerable<Digit> digits, Root.Void context)
+        public int Generate(IEnumerable<Digit> digits, Root.Void context)
         {
             var value = 0;
             foreach (var digit in digits)
