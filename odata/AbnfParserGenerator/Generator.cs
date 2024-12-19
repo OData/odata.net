@@ -85,14 +85,14 @@
 
             public Class Generate(Alternation alternation, (string ClassName, Root.Void @void) context)
             {
+                var nestedGroupingClasses = AlternationToNestedGroupingClasses
+                    .Instance
+                    .Generate(alternation, context.@void)
+                    .NotNull();
                 if (alternation.Inners.Any())
                 {
                     // if there are multiple concatenations, then we are going to need a discriminated union to distinguish them
                     //// TODO and nested grouping classes
-                    var foo = AlternationToNestedGroupingClasses
-                        .Instance
-                        .Generate(alternation, context.@void)
-                        .NotNull();
                     var discriminatedUnionMembers = AlternationToDiscriminatedUnionMembers.Instance.Generate(alternation, context);
                     return new Class(
                         AccessModifier.Public,
@@ -127,7 +127,7 @@
                                 },
                                 null),
                         },
-                        foo
+                        nestedGroupingClasses
                             .Concat(
                                 discriminatedUnionMembers)
                             .Prepend(
@@ -193,10 +193,6 @@
                 }
 
                 // there is no need for a discriminated union, so let's just create the class
-                var nestedGroupingClasses = AlternationToNestedGroupingClasses
-                    .Instance
-                    .Generate(alternation, context.@void)
-                    .NotNull();
                 var propertyDefinitions = ConcatenationToPropertyDefinitions
                     .Instance
                     .Generate(alternation.Concatenation, context.@void);
@@ -232,15 +228,11 @@
 
                 public IEnumerable<Class?> Generate(Alternation alternation, Root.Void context)
                 {
-                    return ConcatenationToNestedGroupingClasses
-                        .Instance
-                        .Generate(alternation.Concatenation, context)
-                        .Concat(
-                            alternation
-                                .Inners
-                                .SelectMany(inner => InnerToNestedGroupingClasses
-                                    .Instance
-                                    .Generate(inner, context)));
+                    yield return ConcatenationToNestedGroupingClasses.Instance.Generate(alternation.Concatenation, context);
+                    foreach (var inner in alternation.Inners)
+                    {
+                        yield return InnerToNestedGroupingClasses.Instance.Generate(inner, context);
+                    }
                 }
 
                 private sealed class InnerToNestedGroupingClasses
@@ -251,7 +243,7 @@
 
                     public static InnerToNestedGroupingClasses Instance { get; } = new InnerToNestedGroupingClasses();
 
-                    public IEnumerable<Class?> Generate(Alternation.Inner inner, Root.Void context)
+                    public Class? Generate(Alternation.Inner inner, Root.Void context)
                     {
                         return ConcatenationToNestedGroupingClasses.Instance.Generate(inner.Concatenation, context);
                     }
@@ -324,10 +316,13 @@
                         else
                         {
                             //// TODO it's possible that you'll never have nested grouping classes because the two possible callers of this method are either going to be single rules or things that are grouping because of an alternation
-                            nestedGroupingClasses = ConcatenationToNestedGroupingClasses
-                                .Instance
-                                .Generate(concatenation, context.@void)
-                                .NotNull();
+                            //// TODO i don't think this is right
+                            nestedGroupingClasses = new[]
+                            {
+                                ConcatenationToNestedGroupingClasses
+                                    .Instance
+                                    .Generate(concatenation, context.@void)
+                            }.NotNull();
                             propertyDefinitions = ConcatenationToPropertyDefinitions
                                 .Instance
                                 .Generate(concatenation, context.@void);
@@ -561,34 +556,29 @@
 
                 public static ConcatenationToNestedGroupingClasses Instance { get; } = new ConcatenationToNestedGroupingClasses();
 
-                public IEnumerable<Class?> Generate(Concatenation concatenation, Root.Void context)
+                public Class? Generate(Concatenation concatenation, Root.Void context)
                 {
-                    if (!concatenation.Inners.Any())
+                    //// TODO if this is a single repetiton and that repetition doesn't isn't a group or option, we won't have a nested class
+                    if (concatenation.Inners.Any())
                     {
-                        yield break;
+                        var classNameBuilder = new StringBuilder();
+                        ConcatenationToClassName.Instance.Generate(concatenation, classNameBuilder);
+                        var className = classNameBuilder.ToString();
+                        return new Class(
+                            AccessModifier.Public,
+                            false,
+                            className,
+                            Enumerable.Empty<string>(), //// TODO
+                            null, //// TODO
+                            Enumerable.Empty<ConstructorDefinition>(), //// TODO
+                            Enumerable.Empty<MethodDefinition>(), //// TODO
+                            Enumerable.Empty<Class>(), //// TODO
+                            Enumerable.Empty<PropertyDefinition>()); //// TODO
                     }
 
-                    //// TODO it should return 1 if the concatenation 
-
-                    yield return RepetitionToNestedGroupingClass.Instance.Visit(concatenation.Repetition, context);
-                    foreach (var inner in concatenation.Inners)
-                    {
-                        yield return InnerToNestedGroupingClass.Instance.Generate(inner, context);
-                    }
-                }
-
-                private sealed class InnerToNestedGroupingClass
-                {
-                    private InnerToNestedGroupingClass()
-                    {
-                    }
-
-                    public static InnerToNestedGroupingClass Instance { get; } = new InnerToNestedGroupingClass();
-
-                    public Class? Generate(Concatenation.Inner inner, Root.Void context)
-                    {
-                        return RepetitionToNestedGroupingClass.Instance.Visit(inner.Repetition, context);
-                    }
+                    //// TODO i'm not convinced this is implemented correctly
+                    ////return RepetitionToNestedGroupingClass.Instance.Visit(concatenation.Repetition, context);
+                    return null;
                 }
 
                 private sealed class RepetitionToNestedGroupingClass : Repetition.Visitor<Class?, Root.Void>
