@@ -132,6 +132,159 @@
                     Enumerable.Empty<PropertyDefinition>()); //// TODO add these
             }
 
+            private sealed class ConcatenationToPropertyDefinitions
+            {
+                private ConcatenationToPropertyDefinitions()
+                {
+                }
+
+                public static ConcatenationToPropertyDefinitions Instance { get; } = new ConcatenationToPropertyDefinitions();
+
+                public IEnumerable<PropertyDefinition> Generate(Concatenation concatenation, Root.Void context)
+                {
+                    
+                }
+
+                private sealed class RepetitionToPropertyDefinition : Repetition.Visitor<PropertyDefinition, Root.Void>
+                {
+                    private RepetitionToPropertyDefinition()
+                    {
+                    }
+
+                    public static RepetitionToPropertyDefinition Instance { get; } = new RepetitionToPropertyDefinition();
+
+                    protected internal override PropertyDefinition Accept(Repetition.ElementOnly node, Root.Void context)
+                    {
+                        return ElementToPropertyDefinition.Instance.Visit(node.Element, context);
+                    }
+
+                    protected internal override PropertyDefinition Accept(Repetition.RepeatAndElement node, Root.Void context)
+                    {
+                        
+                    }
+
+                    private sealed class ElementToPropertyDefinition : Element.Visitor<PropertyDefinition, (Dictionary<string, int> PropertyTypeCounts, bool IsCollection)>
+                    {
+                        private ElementToPropertyDefinition()
+                        {
+                        }
+
+                        public static ElementToPropertyDefinition Instance { get; } = new ElementToPropertyDefinition();
+
+                        protected internal override PropertyDefinition Accept(
+                            Element.RuleName node, 
+                            (Dictionary<string, int> PropertyTypeCounts, bool IsCollection) context)
+                        {
+                            var propertyTypeBuilder = new StringBuilder();
+                            RuleNameToString.Instance.Generate(node.Value, propertyTypeBuilder);
+                            var propertyType = propertyTypeBuilder.ToString();
+
+                            if (!context.PropertyTypeCounts.TryGetValue(propertyType, out var propertyTypeCount))
+                            {
+                                propertyTypeCount = 0;
+                            }
+
+                            ++propertyTypeCount;
+                            context.PropertyTypeCounts[propertyType] = propertyTypeCount;
+
+                            return new PropertyDefinition(
+                                AccessModifier.Public,
+                                context.IsCollection ? $"IEnumerable<{propertyType}>" : propertyType,
+                                $"{propertyType}{propertyTypeCount}",
+                                true,
+                                false);
+                        }
+
+                        protected internal override PropertyDefinition Accept(
+                            Element.Group node, 
+                            (Dictionary<string, int> PropertyTypeCounts, bool IsCollection) context)
+                        {
+                            var propertyTypeBuilder = new StringBuilder();
+                            GroupToClassName.Instance.Generate(node.Value, propertyTypeBuilder);
+                            var propertyType = propertyTypeBuilder.ToString();
+
+                            if (!context.PropertyTypeCounts.TryGetValue(propertyType, out var propertyTypeCount))
+                            {
+                                propertyTypeCount = 0;
+                            }
+
+                            ++propertyTypeCount;
+                            context.PropertyTypeCounts[propertyType] = propertyTypeCount;
+
+                            return new PropertyDefinition(
+                                AccessModifier.Public,
+                                context.IsCollection ? $"IEnumerable<{propertyType}>" : propertyType,
+                                $"{propertyType}{propertyTypeCount}",
+                                true,
+                                false);
+                        }
+
+                        protected internal override PropertyDefinition Accept(
+                            Element.Option node,
+                            (Dictionary<string, int> PropertyTypeCounts, bool IsCollection) context)
+                        {
+                            var propertyTypeBuilder = new StringBuilder();
+                            OptionToClassName.Instance.Generate(node.Value, propertyTypeBuilder);
+                            var propertyType = propertyTypeBuilder.ToString();
+
+                            if (!context.PropertyTypeCounts.TryGetValue(propertyType, out var propertyTypeCount))
+                            {
+                                propertyTypeCount = 0;
+                            }
+
+                            ++propertyTypeCount;
+                            context.PropertyTypeCounts[propertyType] = propertyTypeCount;
+
+                            return new PropertyDefinition(
+                                AccessModifier.Public,
+                                context.IsCollection ? $"IEnumerable<{propertyType}>" : propertyType,
+                                $"{propertyType}{propertyTypeCount}",
+                                true,
+                                false);
+                        }
+
+                        protected internal override PropertyDefinition Accept(
+                            Element.CharVal node, 
+                            (Dictionary<string, int> PropertyTypeCounts, bool IsCollection) context)
+                        {
+                            //// TODO
+                            return new PropertyDefinition(
+                                AccessModifier.Public,
+                                "int",
+                                "TODO",
+                                true,
+                                false);
+                        }
+
+                        protected internal override PropertyDefinition Accept(
+                            Element.NumVal node, 
+                            (Dictionary<string, int> PropertyTypeCounts, bool IsCollection) context)
+                        {
+                            //// TODO
+                            return new PropertyDefinition(
+                                AccessModifier.Public,
+                                "int",
+                                "TODO",
+                                true,
+                                false);
+                        }
+
+                        protected internal override PropertyDefinition Accept(
+                            Element.ProseVal node, 
+                            (Dictionary<string, int> PropertyTypeCounts, bool IsCollection) context)
+                        {
+                            //// TODO
+                            return new PropertyDefinition(
+                                AccessModifier.Public,
+                                "int",
+                                "TODO",
+                                true,
+                                false);
+                        }
+                    }
+                }
+            }
+
             private sealed class ConcatenationToNestedGroupingClasses
             {
                 private ConcatenationToNestedGroupingClasses()
