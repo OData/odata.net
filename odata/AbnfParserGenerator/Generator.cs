@@ -89,6 +89,7 @@
                 {
                     // if there are multiple concatenations, then we are going to need a discriminated union to distinguish them
                     //// TODO discriminatedunion members, du member visitor methods, and nested grouping classes
+                    var discriminatedUnionMembers = AlternationToDiscriminatedUnionMembers.Instance.Generate(alternation, context);
                     return new Class(
                         AccessModifier.Public,
                         true,
@@ -122,39 +123,38 @@
                                 },
                                 null),
                         },
-                        new[]
-                        {
-                            new Class(
-                                AccessModifier.Public,
-                                true,
-                                "Visitor",
-                                new[]
-                                {
-                                    "TResult",
-                                    "TContext",
-                                },
-                                null,
-                                Enumerable.Empty<ConstructorDefinition>(),
-                                new[]
-                                {
-                                    new MethodDefinition(
-                                        AccessModifier.Public,
-                                        null,
-                                        false,
+                        discriminatedUnionMembers
+                            .Prepend(
+                                new Class(
+                                    AccessModifier.Public,
+                                    true,
+                                    "Visitor",
+                                    new[]
+                                    {
                                         "TResult",
-                                        Enumerable.Empty<string>(),
-                                        "Visit",
-                                        new[]
-                                        {
-                                            new MethodParameter(context.ClassName, "node"),
-                                            new MethodParameter("TContext", "context"),
-                                        },
-                                        "return node.Dispatch(this, context);"),
-                                    //// TODO add methods for each DU member
-                                },
-                                Enumerable.Empty<Class>(),
-                                Enumerable.Empty<PropertyDefinition>()),
-                        },
+                                        "TContext",
+                                    },
+                                    null,
+                                    Enumerable.Empty<ConstructorDefinition>(),
+                                    new[]
+                                    {
+                                        new MethodDefinition(
+                                            AccessModifier.Public,
+                                            null,
+                                            false,
+                                            "TResult",
+                                            Enumerable.Empty<string>(),
+                                            "Visit",
+                                            new[]
+                                            {
+                                                new MethodParameter(context.ClassName, "node"),
+                                                new MethodParameter("TContext", "context"),
+                                            },
+                                            "return node.Dispatch(this, context);"),
+                                        //// TODO add methods for each DU member
+                                    },
+                                    Enumerable.Empty<Class>(),
+                                    Enumerable.Empty<PropertyDefinition>())),
                         Enumerable.Empty<PropertyDefinition>());
                 }
 
