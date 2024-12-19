@@ -271,7 +271,10 @@
                                     AccessModifier.Public,
                                     propertyDefinitions.Select(propertyDefinition =>
                                         new MethodParameter(propertyDefinition.Type, propertyDefinition.Name)),
-                                    string.Empty), //// TODO add setter calls
+                                    string.Join(
+                                        Environment.NewLine,
+                                        propertyDefinitions.Select(propertyDefinition =>
+                                            $"this.{propertyDefinition.Name} = {propertyDefinition.Name}"))),
                             },
                             Enumerable.Empty<MethodDefinition>(),
                             nestedGroupingClasses,
