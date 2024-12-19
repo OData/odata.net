@@ -74,13 +74,13 @@ public abstract class rulewithnameSECOND_RULE
                     return node.Dispatch(this, context);
                 }
 
-                protected internal abstract TResult Accept(FIRST_RULEfollowedbyoneFIRST_RULE node, TContext context);
-                protected internal abstract TResult Accept(FIRST_RULEfollowedbynoFIRST_RULE node, TContext context);
+                protected internal abstract TResult Accept(FIRST_RULEfollowedbyoneoptionalFIRST_RULE node, TContext context);
+                protected internal abstract TResult Accept(FIRST_RULEfollowedbynooptionalFIRST_RULE node, TContext context);
             }
 
-            public sealed class FIRST_RULEfollowedbyoneFIRST_RULE : groupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖ
+            public sealed class FIRST_RULEfollowedbyoneoptionalFIRST_RULE : groupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖ
             {
-                public FIRST_RULEfollowedbyoneFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
+                public FIRST_RULEfollowedbyoneoptionalFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
                 {
                     this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
                     this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
@@ -95,9 +95,9 @@ public abstract class rulewithnameSECOND_RULE
                 }
             }
 
-            public sealed class FIRST_RULEfollowedbynoFIRST_RULE : groupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖ
+            public sealed class FIRST_RULEfollowedbynooptionalFIRST_RULE : groupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖ
             {
-                public FIRST_RULEfollowedbynoFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1)
+                public FIRST_RULEfollowedbynooptionalFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1)
                 {
                     this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
                 }
@@ -158,13 +158,13 @@ public abstract class rulewithnameSECOND_RULE
                     return node.Dispatch(this, context);
                 }
 
-                protected internal abstract TResult Accept(FIRST_RULEfollowedbyoneFIRST_RULE node, TContext context);
-                protected internal abstract TResult Accept(FIRST_RULEfollowedbynoFIRST_RULE node, TContext context);
+                protected internal abstract TResult Accept(FIRST_RULEfollowedbyoneoptionalFIRST_RULE node, TContext context);
+                protected internal abstract TResult Accept(FIRST_RULEfollowedbynooptionalFIRST_RULE node, TContext context);
             }
 
-            public sealed class FIRST_RULEfollowedbyoneFIRST_RULE : groupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖ
+            public sealed class FIRST_RULEfollowedbyoneoptionalFIRST_RULE : groupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖ
             {
-                public FIRST_RULEfollowedbyoneFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
+                public FIRST_RULEfollowedbyoneoptionalFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
                 {
                     this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
                     this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
@@ -179,9 +179,9 @@ public abstract class rulewithnameSECOND_RULE
                 }
             }
 
-            public sealed class FIRST_RULEfollowedbynoFIRST_RULE : groupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖ
+            public sealed class FIRST_RULEfollowedbynooptionalFIRST_RULE : groupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖ
             {
-                public FIRST_RULEfollowedbynoFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1)
+                public FIRST_RULEfollowedbynooptionalFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1)
                 {
                     this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
                 }
@@ -242,8 +242,8 @@ public abstract class rulewithnameSECOND_RULE
                 return node.Dispatch(this, context);
             }
 
-            protected internal abstract TResult Accept(FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbyonegroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ node, TContext context);
-            protected internal abstract TResult Accept(FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbynogroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ node, TContext context);
+            protected internal abstract TResult Accept(FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbyoneoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ node, TContext context);
+            protected internal abstract TResult Accept(FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbynooptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ node, TContext context);
         }
 
         public sealed class groupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖ
@@ -270,13 +270,13 @@ public abstract class rulewithnameSECOND_RULE
                         return node.Dispatch(this, context);
                     }
 
-                    protected internal abstract TResult Accept(FIRST_RULEfollowedbyoneFIRST_RULE node, TContext context);
+                    protected internal abstract TResult Accept(FIRST_RULEfollowedbyoneoptionalFIRST_RULE node, TContext context);
                     protected internal abstract TResult Accept(FIRST_RULEfollwedbynoFIRST_RULE node, TContext context);
                 }
 
-                public sealed class FIRST_RULEfollowedbyoneFIRST_RULE : FIRST_RULEfollowedbyoptionalFIRST_RULE
+                public sealed class FIRST_RULEfollowedbyoneoptionalFIRST_RULE : FIRST_RULEfollowedbyoptionalFIRST_RULE
                 {
-                    public FIRST_RULEfollowedbyoneFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
+                    public FIRST_RULEfollowedbyoneoptionalFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
                     {
                         this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
                         this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
@@ -322,9 +322,9 @@ public abstract class rulewithnameSECOND_RULE
             public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
         }
 
-        public sealed class FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbyonegroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ : groupingofᴖFIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbyoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖᴖ
+        public sealed class FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbyoneoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ : groupingofᴖFIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbyoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖᴖ
         {
-            public FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbyonegroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(
+            public FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbyoneoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(
                 rulewithnameFIRST_RULE rulewithnameFIRST_RULE1,
                 groupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖ1,
                 groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ1)
@@ -344,9 +344,9 @@ public abstract class rulewithnameSECOND_RULE
             }
         }
 
-        public sealed class FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbynogroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ : groupingofᴖFIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbyoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖᴖ
+        public sealed class FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbynooptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ : groupingofᴖFIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbyoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖᴖ
         {
-            public FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbynogroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(
+            public FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖfollowedbynooptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(
                 rulewithnameFIRST_RULE rulewithnameFIRST_RULE1,
                 groupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖ groupingofᴖFIRST_RULEfollowedbyoptionalFIRST_RULEᴖ1)
             {
