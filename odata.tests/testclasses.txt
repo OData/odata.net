@@ -59,7 +59,61 @@ public abstract class rulewithnameSECOND_RULE
         public IEnumerable<rulewithnameFIRST_RULE> rulewithnameFIRST_RULE2 { get; }
         public IEnumerable<rulewithnameFIRST_RULE> rulewithnameFIRST_RULE3 { get; }
 
-        public sealed class groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
+        public abstract class groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
+        {
+            private groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ()
+            {
+            }
+
+            protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+            public abstract class Visitor<TResult, TContext>
+            {
+                public TResult Visit(FIRST_RULEfollowedbyanoptionalFIRST_RULE node, TContext context)
+                {
+                    return node.Dispatch(this, context);
+                }
+
+                protected internal abstract TResult Accept(FIRST_RULEfollowedbyoneFIRST_RULE node, TContext context);
+
+                protected internal abstract TResult Accept(FIRST_RULEfollowedbynoFIRST_RULE node, TContext context);
+            }
+
+            public sealed class FIRST_RULEfollowedbyoneFIRST_RULE : groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
+            {
+                public FIRST_RULEfollowedbyoneFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
+                {
+                    this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
+                    this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
+                }
+
+                public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
+                public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
+
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
+            }
+
+            public sealed class FIRST_RULEfollowedbynoFIRST_RULE : groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
+            {
+                public FIRST_RULEfollowedbynoFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1)
+                {
+                    this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
+                }
+
+                public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
+
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
+            }
+        }
+
+        //// TODO remove this class
+        /*public sealed class groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ
         {
             public groupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖ(FIRST_RULEfollowedbyanoptionalFIRST_RULE FIRST_RULEfollowedbyanoptionalFIRST_RULE1)
             {
@@ -120,7 +174,7 @@ public abstract class rulewithnameSECOND_RULE
                     }
                 }
             }
-        }
+        }*/
 
         public sealed class groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
         {
