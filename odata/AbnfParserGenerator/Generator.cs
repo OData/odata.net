@@ -462,6 +462,10 @@
                             var propertyTypeBuilder = new StringBuilder();
                             GroupToClassName.Instance.Generate(node.Value, propertyTypeBuilder);
                             var propertyType = propertyTypeBuilder.ToString();
+                            if (context.IsCollection)
+                            {
+                                propertyType = $"IEnumerable<{propertyType}>";
+                            }
 
                             if (!context.PropertyTypeCounts.TryGetValue(propertyType, out var propertyTypeCount))
                             {
@@ -473,7 +477,7 @@
 
                             return new PropertyDefinition(
                                 AccessModifier.Public,
-                                context.IsCollection ? $"IEnumerable<{propertyType}>" : propertyType,
+                                propertyType,
                                 $"{propertyType}{propertyTypeCount}",
                                 true,
                                 false);
