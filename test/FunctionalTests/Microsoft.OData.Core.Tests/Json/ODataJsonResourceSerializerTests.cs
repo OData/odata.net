@@ -312,6 +312,27 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public async Task WriteNavigationLinkMetadataAsync_WritesCountMetadata()
+        {
+            var nestedResourceInfo = new ODataNestedResourceInfo
+            {
+                Name = "BestSeller",
+                IsCollection = true,
+                Count = 42
+            };
+
+            var result = await SetupJsonResourceSerializerAndRunTestAsync(
+                (jsonResourceSerializer) =>
+                {
+                    return jsonResourceSerializer.WriteNavigationLinkMetadataAsync(
+                        nestedResourceInfo,
+                        new NullDuplicatePropertyNameChecker(), true);
+                });
+
+            Assert.Equal("{\"BestSeller@odata.count\":42", result);
+        }
+
+        [Fact]
         public async Task WriteNestedResourceInfoContextUrlAsync_WritesNestedResourceInfoContextUrl()
         {
             var nestedResourceInfo = new ODataNestedResourceInfo
