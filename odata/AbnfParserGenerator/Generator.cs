@@ -565,6 +565,10 @@
                         var propertyDefinitions = ConcatenationToPropertyDefinitions
                             .Instance
                             .Generate(concatenation, context);
+                        var nestedGroupingClasses = ConcatenationToNestedGroupingClasses
+                            .Instance
+                            .Generate(concatenation, context)
+                            .NotNull();
 
                         return new Class(
                             AccessModifier.Public,
@@ -584,7 +588,7 @@
                                             $"this.{propertyDefinition.Name} = {propertyDefinition.Name};")),
                             },
                             Enumerable.Empty<MethodDefinition>(),
-                            Enumerable.Empty<Class>(), //// TODO
+                            nestedGroupingClasses, //// TODO
                             propertyDefinitions); //// TODO
                     }
 
@@ -617,7 +621,7 @@
                         {
                         }
 
-                        public static InnerToNestedGroupingClass Instance { get; }
+                        public static InnerToNestedGroupingClass Instance { get; } = new InnerToNestedGroupingClass();
 
                         public Class? Generate(Concatenation.Inner inner, Root.Void context)
                         {
