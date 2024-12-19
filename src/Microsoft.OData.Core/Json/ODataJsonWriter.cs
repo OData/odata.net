@@ -968,7 +968,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(this.writingResponse, "Deferred links are only supported in response, we should have verified this already.");
 
             // A deferred nested resource info is just the link metadata, no value.
-            this.jsonResourceSerializer.WriteNavigationLinkMetadata(nestedResourceInfo, this.DuplicatePropertyNameChecker);
+            this.jsonResourceSerializer.WriteNavigationLinkMetadata(nestedResourceInfo, this.DuplicatePropertyNameChecker, count: true);
         }
 
         /// <summary>
@@ -999,7 +999,7 @@ namespace Microsoft.OData.Json
                 }
 
                 // Write the nested resource info metadata first. The rest is written by the content resource or resource set.
-                this.jsonResourceSerializer.WriteNavigationLinkMetadata(nestedResourceInfo, this.DuplicatePropertyNameChecker);
+                this.jsonResourceSerializer.WriteNavigationLinkMetadata(nestedResourceInfo, this.DuplicatePropertyNameChecker, count: false);
             }
             else
             {
@@ -2038,7 +2038,7 @@ namespace Microsoft.OData.Json
             // A deferred nested resource info is just the link metadata, no value.
             return this.jsonResourceSerializer.WriteNavigationLinkMetadataAsync(
                 nestedResourceInfo,
-                this.DuplicatePropertyNameChecker);
+                this.DuplicatePropertyNameChecker, count: true);
         }
 
         /// <summary>
@@ -2078,7 +2078,7 @@ namespace Microsoft.OData.Json
                     // Write the nested resource info metadata first. The rest is written by the content resource or resource set.
                     await this.jsonResourceSerializer.WriteNavigationLinkMetadataAsync(
                         innerNestedResourceInfo,
-                        this.DuplicatePropertyNameChecker).ConfigureAwait(false);
+                        this.DuplicatePropertyNameChecker, count: false).ConfigureAwait(false);
                 }
             }
             else
