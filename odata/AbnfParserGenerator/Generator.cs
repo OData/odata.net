@@ -180,7 +180,7 @@
                     // if there are options present, then we are going to need a discriminated union to distinguish whether the option was taken or not
                     var discriminatedUnionMembers = ConcatenationWithOptionToDiscriminatedUnionMembers
                         .Instance
-                        .Generate(alternation.Concatenation, context.@void);
+                        .Generate(alternation.Concatenation, context);
 
                     return new Class(
                         AccessModifier.Public,
@@ -294,130 +294,68 @@
 
                 public static ConcatenationWithOptionToDiscriminatedUnionMembers Instance { get; } = new ConcatenationWithOptionToDiscriminatedUnionMembers();
 
-                public IEnumerable<Class> Generate(Concatenation concatenation, Root.Void context)
+                public IEnumerable<Class> Generate(Concatenation concatenation, (string BaseType, Root.Void) context)
                 {
-                    var combinations = Generate(
-                        concatenation.Inners.Select(inner => inner.Repetition).Prepend(concatenation.Repetition).ToList(),
-                        0);
-                    return combinations
-                        .Select(combination =>
-                            new Class(
-                                AccessModifier.Public,
-                                false,
-                                combination.DuMemberName,
-                                Enumerable.Empty<string>(), //// TODO
-                                null, //// TODO
-                                Enumerable.Empty<ConstructorDefinition>(), //// TODO
-                                Enumerable.Empty<MethodDefinition>(), //// TODO
-                                Enumerable.Empty<Class>(), //// TODO
-                                combination.Properties)); //// TODO
+                    return Combinations(
+                        concatenation
+                            .Inners
+                            .Select(inner => inner.Repetition)
+                            .Prepend(concatenation.Repetition)
+                            .ToList(),
+                        0)
+                    .Select(combination => Generate(combination, context.BaseType));
                 }
 
-                private static IEnumerable<(
-                    string DuMemberName,
-                    IEnumerable<PropertyDefinition> Properties
-                    )> Generate(IReadOnlyList<Repetition> repetitions, int index)
+                private static Class Generate(
+                    (string ClassName, IEnumerable<Repetition> Repetitions) repetitionCombination,
+                    string baseType)
                 {
-                    var repetition = repetitions[index];
+                    return new Class(
+                        AccessModifier.Public,
+                        false,
+                        repetitionCombination.ClassName,
+                        Enumerable.Empty<string>(),
+                        baseType,
+                        Enumerable.Empty<ConstructorDefinition>(), //// TODO
+                        Enumerable.Empty<MethodDefinition>(),
+                        Enumerable.Empty<Class>(), //// TODO
+                        Enumerable.Empty<PropertyDefinition>()); //// TODO
+                        
+                }
 
-                    var repetitonClassNameBuilder = new StringBuilder();
-                    RepetitionToClassName.Instance.Visit(repetition, repetitonClassNameBuilder);
-                    var repetitionClassName = repetitonClassNameBuilder.ToString();
-
-                    //// TODO get these names actually correct
-                    //// TODO this method is a mess
-                    if (index == repetitions.Count - 1)
+                private static IEnumerable<(string ClassName, IEnumerable<Repetition> Repetitions)> Combinations(
+                    IReadOnlyList<Repetition> concatenation,
+                    int index)
+                {
+                    if (index == concatenation.Count)
                     {
-                        if (RepetitionToIsOptional.Instance.Visit(repetition, default))
-                        {
-
-                            yield return
-                                (
-                                    "followedbyone" + "asdf",
-                                    new[]
-                                    {
-                                        new PropertyDefinition(
-                                            AccessModifier.Public,
-                                            repetitionClassName, //// TODO get this right
-                                            repetitionClassName, //// TODO get this right
-                                            true,
-                                            false),
-                                    }
-                                );
-                            yield return 
-                                (
-                                    "followedbyno" + "qwer",
-                                    Enumerable.Empty<PropertyDefinition>()
-                                );
-                        }
-                        else
-                        {
-                            yield return
-                                (
-                                    "followedby" + "zxcv",
-                                    new[]
-                                    {
-                                        new PropertyDefinition(
-                                            AccessModifier.Public, 
-                                            repetitionClassName, 
-                                            repetitionClassName,
-                                            true, 
-                                            false),
-                                    }
-                                );
-                        }
+                        yield return (string.Empty, Enumerable.Empty<Repetition>());
                     }
                     else
                     {
-                        if (RepetitionToIsOptional.Instance.Visit(repetition, default))
+                        var repetition = concatenation[index];
+
+                        var repetitonClassNameBuilder = new StringBuilder();
+                        RepetitionToClassName.Instance.Visit(repetition, repetitonClassNameBuilder);
+                        var repetitionClassName = repetitonClassNameBuilder.ToString();
+
+                        foreach (var combination in Combinations(concatenation, index + 1))
                         {
-                            foreach (var combination in Generate(repetitions, index + 1))
+                            if (RepetitionToIsOptional.Instance.Visit(repetition, default))
                             {
-                                yield return
-                                    (
-                                        "followedbyone" + "asdf" + combination.DuMemberName,
-                                        combination
-                                            .Properties
-                                            .Append(
-                                                new PropertyDefinition(
-                                                    AccessModifier.Public,
-                                                    repetitionClassName,
-                                                    repetitionClassName,
-                                                    true,
-                                                    false))
-                                    );
-                                yield return
-                                    (
-                                        "followedbyno" + "qwer" + combination.DuMemberName,
-                                        combination
-                                            .Properties
-                                            .Append(
-                                                new PropertyDefinition(
-                                                    AccessModifier.Public,
-                                                    repetitionClassName,
-                                                    repetitionClassName,
-                                                    true,
-                                                    false))
+                                yield return (
+                                    "followedbyone" + repetitionClassName + combination.ClassName,
+                                    combination.Repetitions.Prepend(repetition));
+                                yield return (
+                                    "followedbyno" + repetitionClassName + combination.ClassName,
+                                    combination.Repetitions
                                     );
                             }
-                        }
-                        else
-                        {
-                            foreach (var combination in Generate(repetitions, index + 1))
+                            else
                             {
-                                yield return
-                                    (
-                                        "followedby" + "zxcv" + combination.DuMemberName,
-                                        combination
-                                            .Properties
-                                            .Append(
-                                                new PropertyDefinition(
-                                                    AccessModifier.Public,
-                                                    repetitionClassName,
-                                                    repetitionClassName,
-                                                    true,
-                                                    false))
-                                    );
+                                yield return (
+                                    "followedby" + repetitionClassName + combination.ClassName,
+                                    combination.Repetitions.Prepend(repetition));
                             }
                         }
                     }
@@ -1181,7 +1119,7 @@
                 var needsGrouping = OptionToHasMultipleConcatenations.Instance.Generate(option, default);
                 if (needsGrouping)
                 {
-                    //// in the classes, this will still be a discriminated union, but do you want name it something specific to options? and use a different symbol?
+                    //// TODO in the classes, this will still be a discriminated union, but do you want name it something specific to options? and use a different symbol?
                     context.Append("groupingofᴖ");
                 }
 
