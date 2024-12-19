@@ -32,14 +32,14 @@ public abstract class rulewithnameSECOND_RULE
 
     public sealed class groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
     {
-        public groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE FIRST_RULE2)
+        public groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
         {
             this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
-            this.FIRST_RULE2 = FIRST_RULE2;
+            this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
         }
 
         public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
-        public rulewithnameFIRST_RULE FIRST_RULE2 { get; }
+        public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
     }
 
     public sealed class groupingofᴖFIRST_RULEfollowedbyanynumberofgroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanynumberofanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖfollowedbyatmostONEFIRST_RULEfollowedbyatleastONEFIRST_RULEᴖ
@@ -95,14 +95,14 @@ public abstract class rulewithnameSECOND_RULE
 
                 public sealed class FIRST_RULEfollowedbyoneFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
                 {
-                    public FIRST_RULEfollowedbyoneFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE FIRST_RULE2)
+                    public FIRST_RULEfollowedbyoneFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
                     {
                         this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
-                        this.FIRST_RULE2 = FIRST_RULE2;
+                        this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
                     }
 
                     public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
-                    public rulewithnameFIRST_RULE FIRST_RULE2 { get; }
+                    public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
 
                     protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                     {
@@ -129,14 +129,14 @@ public abstract class rulewithnameSECOND_RULE
 
         public sealed class groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
         {
-            public groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE FIRST_RULE2)
+            public groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
             {
                 this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
-                this.FIRST_RULE2 = FIRST_RULE2;
+                this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
             }
 
             public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
-            public rulewithnameFIRST_RULE FIRST_RULE2 { get; }
+            public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
         }
     }
 
@@ -200,14 +200,14 @@ public abstract class rulewithnameSECOND_RULE
 
                     public sealed class FIRST_RULEfollowedbyoneFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
                     {
-                        public FIRST_RULEfollowedbyoneFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE FIRST_RULE2)
+                        public FIRST_RULEfollowedbyoneFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
                         {
                             this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
-                            this.FIRST_RULE2 = FIRST_RULE2;
+                            this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
                         }
 
                         public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
-                        public rulewithnameFIRST_RULE FIRST_RULE2 { get; }
+                        public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
 
                         protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                         {
@@ -324,14 +324,14 @@ public abstract class rulewithnameSECOND_RULE
 
                     public sealed class FIRST_RULEfollowedbyoneFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
                     {
-                        public FIRST_RULEfollowedbyoneFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE FIRST_RULE2)
+                        public FIRST_RULEfollowedbyoneFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
                         {
                             this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
-                            this.FIRST_RULE2 = FIRST_RULE2;
+                            this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
                         }
 
                         public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
-                        public rulewithnameFIRST_RULE FIRST_RULE2 { get; }
+                        public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
 
                         protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                         {
@@ -341,14 +341,14 @@ public abstract class rulewithnameSECOND_RULE
 
                     public sealed class FIRST_RULEfollwedbynoFIRST_RULE : FIRST_RULEfollowedbyanoptionalFIRST_RULE
                     {
-                        public FIRST_RULEfollwedbynoFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE FIRST_RULE2)
+                        public FIRST_RULEfollwedbynoFIRST_RULE(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
                         {
                             this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
-                            this.FIRST_RULE2 = FIRST_RULE2;
+                            this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
                         }
 
                         public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
-                        public rulewithnameFIRST_RULE FIRST_RULE2 { get; }
+                        public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
 
                         protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                         {
@@ -360,14 +360,14 @@ public abstract class rulewithnameSECOND_RULE
 
             public sealed class groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
             {
-                public groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE FIRST_RULE2)
+                public groupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ(rulewithnameFIRST_RULE rulewithnameFIRST_RULE1, rulewithnameFIRST_RULE rulewithnameFIRST_RULE2)
                 {
                     this.rulewithnameFIRST_RULE1 = rulewithnameFIRST_RULE1;
-                    this.FIRST_RULE2 = FIRST_RULE2;
+                    this.rulewithnameFIRST_RULE2 = rulewithnameFIRST_RULE2;
                 }
 
                 public rulewithnameFIRST_RULE rulewithnameFIRST_RULE1 { get; }
-                public rulewithnameFIRST_RULE FIRST_RULE2 { get; }
+                public rulewithnameFIRST_RULE rulewithnameFIRST_RULE2 { get; }
             }
 
             public sealed class FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyonegroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ : FIRST_RULEfollowedbygroupingofᴖFIRST_RULEfollowedbyanoptionalFIRST_RULEᴖfollowedbyanoptionalgroupingofᴖFIRST_RULEfollowedbyFIRST_RULEᴖ
