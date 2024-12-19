@@ -349,9 +349,9 @@
                                    new MethodParameter("TContext", "context"),
                                },
                                "return visitor.Accept(this, context);"), 
-                        }, //// TODO
+                        },
                         Enumerable.Empty<Class>(), //// TODO
-                        properties); //// TODO
+                        properties);
                         
                 }
 
