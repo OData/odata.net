@@ -10,6 +10,20 @@
     using System.Runtime.CompilerServices;
     using System.Text;
 
+    /// <summary>
+    /// TODO i think you're going to have to make a third attempt; i think the remaining issue is that you
+    /// are inconsistent about where nested classes go (take the example where `rulename = (first second) third`;
+    /// the class for rulename should take in a grouping and a third; but since the rulename class is top level, you
+    /// can only put the grouping class nested in the rulename class; this is different from
+    /// `otherrule = (first second) / third`; in this case, you'll put the grouping nested in the otherrule class,
+    /// even though its the du member that takes it in the constructor
+    /// 
+    /// another tip is that you probably want a method for a discriminated union, a method for a du member, a
+    /// method for a standalone, etc. that way you don't feel so compelled to reuse any generators; if you do this,
+    /// then you can probably follow through with the idea of "just implement everything, even if there's
+    /// duplication, to make sure you don't miss anything" because most of the duplication will be boilerplate
+    /// instead of the logic for writing the generated code
+    /// </summary>
     public sealed class Generator
     {
         private Generator()
