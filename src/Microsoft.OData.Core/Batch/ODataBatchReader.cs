@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
 
     using System;
@@ -454,7 +455,7 @@ namespace Microsoft.OData
         {
             if (this.currentBatchSize == this.inputContext.MessageReaderSettings.MessageQuotas.MaxPartsPerBatch)
             {
-                throw new ODataException(Strings.ODataBatchReader_MaxBatchSizeExceeded(this.inputContext.MessageReaderSettings.MessageQuotas.MaxPartsPerBatch));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReader_MaxBatchSizeExceeded, this.inputContext.MessageReaderSettings.MessageQuotas.MaxPartsPerBatch));
             }
 
             this.currentBatchSize++;
@@ -467,7 +468,7 @@ namespace Microsoft.OData
         {
             if (this.currentChangeSetSize == this.inputContext.MessageReaderSettings.MessageQuotas.MaxOperationsPerChangeset)
             {
-                throw new ODataException(Strings.ODataBatchReader_MaxChangeSetSizeExceeded(this.inputContext.MessageReaderSettings.MessageQuotas.MaxOperationsPerChangeset));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReader_MaxChangeSetSizeExceeded, this.inputContext.MessageReaderSettings.MessageQuotas.MaxOperationsPerChangeset));
             }
 
             this.currentChangeSetSize++;
@@ -525,7 +526,7 @@ namespace Microsoft.OData
                     if (this.ReaderOperationState == OperationState.None)
                     {
                         // No message was created; fail
-                        throw new ODataException(Strings.ODataBatchReader_NoMessageWasCreatedForOperation);
+                        throw new ODataException(SRResources.ODataBatchReader_NoMessageWasCreatedForOperation);
                     }
 
                     // Reset the operation state; the operation state only
@@ -540,7 +541,7 @@ namespace Microsoft.OData
                         if (this.PayloadUriConverter.ContainsContentId(this.contentIdToAddOnNextRead))
                         {
                             throw new ODataException(
-                                Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(this.contentIdToAddOnNextRead));
+                                Error.Format(SRResources.ODataBatchReader_DuplicateContentIDsNotAllowed, this.contentIdToAddOnNextRead));
                         }
 
                         this.PayloadUriConverter.AddContentId(this.contentIdToAddOnNextRead);
@@ -570,7 +571,7 @@ namespace Microsoft.OData
                     // changeset (or the end boundary of the changeset).
                     if (this.isInChangeset)
                     {
-                        ThrowODataException(Strings.ODataBatchReaderStream_NestedChangesetsAreNotSupported);
+                        ThrowODataException(SRResources.ODataBatchReaderStream_NestedChangesetsAreNotSupported);
                     }
 
                     // Increment the batch size at the start of the changeset since we haven't counted it yet
@@ -597,11 +598,11 @@ namespace Microsoft.OData
                 case ODataBatchReaderState.Exception:    // fall through
                 case ODataBatchReaderState.Completed:
                     Debug.Assert(false, "Should have checked in VerifyCanRead that we are not in one of these states.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReader_ReadImplementation));
 
                 default:
                     Debug.Assert(false, "Unsupported reader state " + this.State + " detected.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReader_ReadImplementation));
             }
 
             return this.State != ODataBatchReaderState.Completed && this.State != ODataBatchReaderState.Exception;
@@ -636,7 +637,7 @@ namespace Microsoft.OData
                     if (this.ReaderOperationState == OperationState.None)
                     {
                         // No message was created; fail
-                        throw new ODataException(Strings.ODataBatchReader_NoMessageWasCreatedForOperation);
+                        throw new ODataException(SRResources.ODataBatchReader_NoMessageWasCreatedForOperation);
                     }
 
                     // Reset the operation state; the operation state only
@@ -651,7 +652,7 @@ namespace Microsoft.OData
                         if (this.PayloadUriConverter.ContainsContentId(this.contentIdToAddOnNextRead))
                         {
                             throw new ODataException(
-                                Strings.ODataBatchReader_DuplicateContentIDsNotAllowed(this.contentIdToAddOnNextRead));
+                                Error.Format(SRResources.ODataBatchReader_DuplicateContentIDsNotAllowed, this.contentIdToAddOnNextRead));
                         }
 
                         this.PayloadUriConverter.AddContentId(this.contentIdToAddOnNextRead);
@@ -682,7 +683,7 @@ namespace Microsoft.OData
                     // changeset (or the end boundary of the changeset).
                     if (this.isInChangeset)
                     {
-                        ThrowODataException(Strings.ODataBatchReaderStream_NestedChangesetsAreNotSupported);
+                        ThrowODataException(SRResources.ODataBatchReaderStream_NestedChangesetsAreNotSupported);
                     }
 
                     // Increment the batch size at the start of the changeset since we haven't counted it yet
@@ -711,11 +712,11 @@ namespace Microsoft.OData
                 case ODataBatchReaderState.Exception:    // fall through
                 case ODataBatchReaderState.Completed:
                     Debug.Assert(false, "Should have checked in VerifyCanRead that we are not in one of these states.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReader_ReadImplementation));
 
                 default:
                     Debug.Assert(false, "Unsupported reader state " + this.State + " detected.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataBatchReader_ReadImplementation));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataBatchReader_ReadImplementation));
             }
 
             return this.State != ODataBatchReaderState.Completed && this.State != ODataBatchReaderState.Exception;
@@ -732,17 +733,17 @@ namespace Microsoft.OData
 
             if (this.inputContext.ReadingResponse)
             {
-                this.ThrowODataException(Strings.ODataBatchReader_CannotCreateRequestOperationWhenReadingResponse);
+                this.ThrowODataException(SRResources.ODataBatchReader_CannotCreateRequestOperationWhenReadingResponse);
             }
 
             if (this.State != ODataBatchReaderState.Operation)
             {
-                this.ThrowODataException(Strings.ODataBatchReader_InvalidStateForCreateOperationRequestMessage(this.State));
+                this.ThrowODataException(Error.Format(SRResources.ODataBatchReader_InvalidStateForCreateOperationRequestMessage, this.State));
             }
 
             if (this.operationState != OperationState.None)
             {
-                this.ThrowODataException(Strings.ODataBatchReader_OperationRequestMessageAlreadyCreated);
+                this.ThrowODataException(SRResources.ODataBatchReader_OperationRequestMessageAlreadyCreated);
             }
         }
 
@@ -757,17 +758,17 @@ namespace Microsoft.OData
 
             if (!this.inputContext.ReadingResponse)
             {
-                this.ThrowODataException(Strings.ODataBatchReader_CannotCreateResponseOperationWhenReadingRequest);
+                this.ThrowODataException(SRResources.ODataBatchReader_CannotCreateResponseOperationWhenReadingRequest);
             }
 
             if (this.State != ODataBatchReaderState.Operation)
             {
-                this.ThrowODataException(Strings.ODataBatchReader_InvalidStateForCreateOperationResponseMessage(this.State));
+                this.ThrowODataException(Error.Format(SRResources.ODataBatchReader_InvalidStateForCreateOperationResponseMessage, this.State));
             }
 
             if (this.operationState != OperationState.None)
             {
-                this.ThrowODataException(Strings.ODataBatchReader_OperationResponseMessageAlreadyCreated);
+                this.ThrowODataException(SRResources.ODataBatchReader_OperationResponseMessageAlreadyCreated);
             }
         }
 
@@ -782,7 +783,7 @@ namespace Microsoft.OData
 
             if (this.State == ODataBatchReaderState.Exception || this.State == ODataBatchReaderState.Completed)
             {
-                throw new ODataException(Strings.ODataBatchReader_ReadOrReadAsyncCalledInInvalidState(this.State));
+                throw new ODataException(Error.Format(SRResources.ODataBatchReader_ReadOrReadAsyncCalledInInvalidState, this.State));
             }
         }
 
@@ -796,7 +797,7 @@ namespace Microsoft.OData
             // If the operation stream was requested but not yet disposed, the batch reader can't be used to do anything.
             if (this.operationState == OperationState.StreamRequested)
             {
-                throw new ODataException(Strings.ODataBatchReader_CannotUseReaderWhileOperationStreamActive);
+                throw new ODataException(SRResources.ODataBatchReader_CannotUseReaderWhileOperationStreamActive);
             }
         }
 
@@ -810,14 +811,14 @@ namespace Microsoft.OData
             {
                 if (!this.synchronous)
                 {
-                    throw new ODataException(Strings.ODataBatchReader_SyncCallOnAsyncReader);
+                    throw new ODataException(SRResources.ODataBatchReader_SyncCallOnAsyncReader);
                 }
             }
             else
             {
                 if (this.synchronous)
                 {
-                    throw new ODataException(Strings.ODataBatchReader_AsyncCallOnSyncReader);
+                    throw new ODataException(SRResources.ODataBatchReader_AsyncCallOnSyncReader);
                 }
             }
         }

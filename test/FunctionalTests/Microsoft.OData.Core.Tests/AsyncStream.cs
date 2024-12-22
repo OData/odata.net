@@ -64,14 +64,7 @@ namespace Microsoft.OData.Tests
 
         public override void Flush()
         {
-#if NETCOREAPP
             throw new SynchronousIOException();
-#else
-            // We allow synchronous flushing in older frameworks
-            // because we also allow synchronous Dispose()
-            // which often calls Flush()
-            this.innerStream.Flush();
-#endif
         }
 
         public override int Read(byte[] buffer, int offset, int count)
@@ -83,47 +76,26 @@ namespace Microsoft.OData.Tests
             throw new SynchronousIOException();
         }
 
-#if NETCOREAPP
         public override int Read(Span<byte> buffer)
         {
             throw new SynchronousIOException();
         }
-#endif
 
         public override void WriteByte(byte value) => throw new SynchronousIOException();
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-#if NETCOREAPP
             throw new SynchronousIOException();
-#else
-            // We allow synchronous flushing in older frameworks
-            // because we also allow synchronous Dispose()
-            // which often calls Flush()
-            this.innerStream.Write(buffer, offset, count);
-#endif
         }
 
-#if NETCOREAPP
         public override void CopyTo(Stream destination, int bufferSize) => throw new SynchronousIOException();
-#endif
 
 
-#if NETCOREAPP
         public override void Write(ReadOnlySpan<byte> buffer) => throw new SynchronousIOException();
-#endif
 
-#if NETCOREAPP
         protected override void Dispose(bool disposing) => throw new SynchronousIOException();
-#else
-        // In .NET Core <= 3.1 we don't support the async alternative DisposeAsync()
-        // So let's allow sync Dispose there cause there's no alternative
-        protected override void Dispose(bool disposing) => this.innerStream.Dispose();
-#endif
 
-#if NETCOREAPP
         public override void Close() => throw new SynchronousIOException();
-#endif
 
         public override long Seek(long offset, SeekOrigin origin)
         {
@@ -135,10 +107,8 @@ namespace Microsoft.OData.Tests
             this.innerStream.SetLength(value);
         }
 
-#if NETCOREAPP
         public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) =>
             this.innerStream.ReadAsync(buffer, cancellationToken);
-#endif
 
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
             => this.innerStream.ReadAsync(buffer, offset, count, cancellationToken);
@@ -146,25 +116,20 @@ namespace Microsoft.OData.Tests
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
             => this.innerStream.WriteAsync(buffer, offset, count, cancellationToken);
 
-#if NETCOREAPP
 
         public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
             => this.innerStream.WriteAsync(buffer, cancellationToken);
-#endif
 
         public override Task FlushAsync(CancellationToken cancellationToken) => this.innerStream.FlushAsync(cancellationToken);
 
-#if NETCOREAPP
         public override async ValueTask DisposeAsync()
         {
             await this.innerStream.DisposeAsync();
             this.Disposed = true;
         }
-#endif
         public override Task CopyToAsync(Stream destination, int bufferSize, CancellationToken cancellationToken) =>
             this.innerStream.CopyToAsync(destination, bufferSize, cancellationToken);
 
-#if NETCOREAPP
         public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state) =>
             this.innerStream.BeginRead(buffer, offset, count, callback, state);
 
@@ -174,7 +139,6 @@ namespace Microsoft.OData.Tests
         public override int EndRead(IAsyncResult asyncResult) => this.innerStream.EndRead(asyncResult);
 
         public override void EndWrite(IAsyncResult asyncResult) => this.innerStream.EndWrite(asyncResult);
-#endif
 
         public override string ToString() => this.innerStream.ToString();
     }

@@ -12,7 +12,7 @@ using System.Text;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser.Aggregation;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -167,7 +167,7 @@ namespace Microsoft.OData.UriParser
                         {
                             if ((selectPathItem.HasOptions && OverLaps(selectPathItem, existingItem)) || (existingItem.HasOptions && OverLaps(existingItem, selectPathItem)))
                             {
-                                throw new ODataException(ODataErrorStrings.SelectTreeNormalizer_MultipleSelecTermWithSamePathFound(ToPathString(selectTermToken.PathToProperty)));
+                                throw new ODataException(Error.Format(SRResources.SelectTreeNormalizer_MultipleSelecTermWithSamePathFound, ToPathString(selectTermToken.PathToProperty)));
                             }
 
                             // two items without options are identical -- for backward compat just ignore the new one
@@ -354,14 +354,14 @@ namespace Microsoft.OData.UriParser
             IEdmProperty edmProperty = this.configuration.Resolver.ResolveProperty(currentLevelEntityType, firstNonTypeToken.Identifier);
             if (edmProperty == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(currentLevelEntityType.FullTypeName(), currentToken.Identifier));
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, currentLevelEntityType.FullTypeName(), currentToken.Identifier));
             }
 
             IEdmNavigationProperty currentNavProp = edmProperty as IEdmNavigationProperty;
             IEdmStructuralProperty currentComplexProp = edmProperty as IEdmStructuralProperty;
             if (currentNavProp == null && currentComplexProp == null)
             {
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty(currentToken.Identifier, currentLevelEntityType.FullTypeName()));
+                throw new ODataException(Error.Format(SRResources.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty, currentToken.Identifier, currentLevelEntityType.FullTypeName()));
             }
 
             if (currentComplexProp != null)
@@ -384,7 +384,7 @@ namespace Microsoft.OData.UriParser
                 if (derivedType == null)
                 {
                     // Exception example: The type Fully.Qualified.Namespace.UndefinedType is not defined in the model.
-                    throw new ODataException(ODataErrorStrings.ExpandItemBinder_CannotFindType(firstNonTypeToken.NextToken.Identifier));
+                    throw new ODataException(Error.Format(SRResources.ExpandItemBinder_CannotFindType, firstNonTypeToken.NextToken.Identifier));
                 }
 
                 // In this example: $expand=Customer/Fully.Qualified.Namespace.VipCustomer
@@ -395,7 +395,7 @@ namespace Microsoft.OData.UriParser
             // ensure that we're always dealing with proper V4 syntax
             if (firstNonTypeToken?.NextToken?.NextToken != null && !hasDerivedTypeSegment)
             {
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
+                throw new ODataException(SRResources.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
             }
 
             if ((firstNonTypeToken.NextToken != null && !hasDerivedTypeSegment) || 
@@ -414,7 +414,7 @@ namespace Microsoft.OData.UriParser
                 }
                 else
                 {
-                    throw new ODataException(ODataErrorStrings.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
+                    throw new ODataException(SRResources.ExpandItemBinder_TraversingMultipleNavPropsInTheSamePath);
                 }
             }
 
@@ -641,7 +641,7 @@ namespace Microsoft.OData.UriParser
                 // * or Namespace.*
                 if (pathToken.NextToken != null)
                 {
-                    throw new ODataException(ODataErrorStrings.SelectExpandBinder_InvalidIdentifierAfterWildcard(pathToken.NextToken.Identifier));
+                    throw new ODataException(Error.Format(SRResources.SelectExpandBinder_InvalidIdentifierAfterWildcard, pathToken.NextToken.Identifier));
                 }
 
                 VerifyNoQueryOptionsNested(selectToken, pathToken.Identifier);
@@ -673,7 +673,7 @@ namespace Microsoft.OData.UriParser
                 tokenIn = firstNonTypeToken as NonSystemToken;
                 if (tokenIn == null)
                 {
-                    throw new ODataException(ODataErrorStrings.SelectExpandBinder_SystemTokenInSelect(firstNonTypeToken.Identifier));
+                    throw new ODataException(Error.Format(SRResources.SelectExpandBinder_SystemTokenInSelect, firstNonTypeToken.Identifier));
                 }
             }
 
@@ -742,7 +742,7 @@ namespace Microsoft.OData.UriParser
                         }
                         else
                         {
-                            throw new ODataException(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+                            throw new ODataException(SRResources.SelectBinder_MultiLevelPathInSelect);
                         }
                     }
 
@@ -774,21 +774,21 @@ namespace Microsoft.OData.UriParser
             // non-navigation cases do not allow further segments in $select.
             if (tokenIn.NextToken != null)
             {
-                throw new ODataException(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+                throw new ODataException(SRResources.SelectBinder_MultiLevelPathInSelect);
             }
 
             // Later, we can consider to create a "DynamicOperationSegment" to handle this.
             // But now, Let's throw exception.
             if (lastSegment == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_InvalidIdentifierInQueryOption(tokenIn.Identifier));
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_InvalidIdentifierInQueryOption, tokenIn.Identifier));
             }
 
             // navigation property is not allowed to append sub path in the selection.
             NavigationPropertySegment navPropSegment = pathSoFar.LastOrDefault() as NavigationPropertySegment;
             if (navPropSegment != null && tokenIn.NextToken != null)
             {
-                throw new ODataException(ODataErrorStrings.SelectBinder_MultiLevelPathInSelect);
+                throw new ODataException(SRResources.SelectBinder_MultiLevelPathInSelect);
             }
 
             return pathSoFar;
@@ -825,7 +825,7 @@ namespace Microsoft.OData.UriParser
 
             if (currentToken.NextToken == null)
             {
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty(currentToken.Identifier, edmProperty.DeclaringType.FullTypeName()));
+                throw new ODataException(Error.Format(SRResources.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty, currentToken.Identifier, edmProperty.DeclaringType.FullTypeName()));
             }
 
             currentToken = currentToken.NextToken;
@@ -841,7 +841,7 @@ namespace Microsoft.OData.UriParser
             IEdmStructuredType currentType = complexType as IEdmStructuredType;
             if (currentType == null)
             {
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_InvaidSegmentInExpand(currentToken.Identifier));
+                throw new ODataException(Error.Format(SRResources.ExpandItemBinder_InvaidSegmentInExpand, currentToken.Identifier));
             }
 
             if (currentToken.IsNamespaceOrContainerQualified())
@@ -852,7 +852,7 @@ namespace Microsoft.OData.UriParser
             IEdmProperty property = this.configuration.Resolver.ResolveProperty(currentType, currentToken.Identifier);
             if (edmProperty == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_PropertyNotDeclared(currentType.FullTypeName(), currentToken.Identifier));
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, currentType.FullTypeName(), currentToken.Identifier));
             }
 
             IEdmStructuralProperty complexProp = property as IEdmStructuralProperty;
@@ -868,7 +868,7 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty(currentToken.Identifier, currentType.FullTypeName()));
+                throw new ODataException(Error.Format(SRResources.ExpandItemBinder_PropertyIsNotANavigationPropertyOrComplexProperty, currentToken.Identifier, currentType.FullTypeName()));
             }
         }
 
@@ -891,7 +891,7 @@ namespace Microsoft.OData.UriParser
 
             if (sourceType != null && relatedType != null && !UriEdmHelpers.IsRelatedTo(sourceType, relatedType))
             {
-                throw new ODataException(ODataErrorStrings.ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType(property.Name, relatedType.FullTypeName(), sourceType.FullTypeName()));
+                throw new ODataException(Error.Format(SRResources.ExpandItemBinder_LevelsNotAllowedOnIncompatibleRelatedType, property.Name, relatedType.FullTypeName(), sourceType.FullTypeName()));
             }
 
             return new LevelsClause(levelsOption.Value < 0, levelsOption.Value);
@@ -961,7 +961,7 @@ namespace Microsoft.OData.UriParser
                 if (current is SystemToken)
                 {
                     // It's not allowed to set a system token in a select clause.
-                    throw new ODataException(ODataErrorStrings.SelectExpandBinder_SystemTokenInSelect(current.Identifier));
+                    throw new ODataException(Error.Format(SRResources.SelectExpandBinder_SystemTokenInSelect, current.Identifier));
                 }
 
                 current = current.NextToken;
@@ -995,7 +995,7 @@ namespace Microsoft.OData.UriParser
                     selectToken.TopOption != null ||
                     selectToken.SkipOption != null)
                 {
-                    throw new ODataException(ODataErrorStrings.SelectExpandBinder_InvalidQueryOptionNestedSelection(identifier));
+                    throw new ODataException(Error.Format(SRResources.SelectExpandBinder_InvalidQueryOptionNestedSelection, identifier));
                 }
             }
         }

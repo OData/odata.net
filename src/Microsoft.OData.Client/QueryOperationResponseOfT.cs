@@ -52,7 +52,7 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    throw new InvalidOperationException(Strings.MaterializeFromObject_CountNotPresent);
+                    throw new InvalidOperationException(SRResources.MaterializeFromObject_CountNotPresent);
                 }
             }
         }

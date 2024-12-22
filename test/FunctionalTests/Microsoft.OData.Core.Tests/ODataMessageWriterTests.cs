@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,10 +18,7 @@ using Microsoft.OData.Tests.Json;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm.Csdl;
 using Xunit;
-
-#if NETCOREAPP
-using System.Text.Json;
-#endif
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests
 {
@@ -35,7 +33,7 @@ namespace Microsoft.OData.Tests
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings { JsonPCallback = "functionName" };
             Action constructorCall = () => new ODataMessageWriter(new DummyRequestMessage(), settings);
-            constructorCall.Throws<ODataException>(Strings.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
+            constructorCall.Throws<ODataException>(SRResources.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
         }
 
         [Fact]
@@ -53,7 +51,7 @@ namespace Microsoft.OData.Tests
             var writer = new ODataMessageWriter(new DummyRequestMessage());
             var entityElementType = new EdmEntityTypeReference(new EdmEntityType("Fake", "Fake"), true);
             Action createWriterWithEntityCollectionType = () => writer.CreateODataCollectionWriter(entityElementType);
-            createWriterWithEntityCollectionType.Throws<ODataException>(Strings.ODataMessageWriter_NonCollectionType("Fake.Fake"));
+            createWriterWithEntityCollectionType.Throws<ODataException>(Error.Format(SRResources.ODataMessageWriter_NonCollectionType, "Fake.Fake"));
         }
 
         [Fact]
@@ -194,7 +192,6 @@ namespace Microsoft.OData.Tests
             write.Throws<ODataException>("The value of type 'System.UInt16' could not be converted to a raw string.");
         }
 
-#if NETCOREAPP
         #region "ODataUtf8JsonWriter support"
         [Fact]
         public void SupportsODataUtf8JsonWriter()
@@ -289,7 +286,7 @@ namespace Microsoft.OData.Tests
                 Value = "This is a test ия"
             });
 
-            writePropertyAction.Throws<ODataException>(Strings.ODataMessageWriter_JsonWriterFactory_ReturnedNull(false, Encoding.UTF8.WebName));
+            writePropertyAction.Throws<ODataException>(Error.Format(SRResources.ODataMessageWriter_JsonWriterFactory_ReturnedNull, false, Encoding.UTF8.WebName));
         }
 
         [Fact]
@@ -349,9 +346,7 @@ namespace Microsoft.OData.Tests
         }
 
         #endregion "ODataUtf8JsonWriter support"
-#endif
 
-#if NETCOREAPP
         #region "ODataJsonElementValue support"
         [Fact]
         public void WriteEntityWithJsonElementValues()
@@ -700,7 +695,6 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expected, result);
         }
         #endregion
-#endif
 
         [Fact]
         public void WriteMetadataDocument_WorksForJsonCsdl()
@@ -710,7 +704,6 @@ namespace Microsoft.OData.Tests
 
             string contentType = "application/json";
 
-#if NETCOREAPP
             // Act
             string payload = this.WriteAndGetPayload(edmModel, contentType, omWriter =>
             {
@@ -741,18 +734,8 @@ namespace Microsoft.OData.Tests
     }
   }
 }", payload);
-#else
-            Action test = () => this.WriteAndGetPayload(edmModel, contentType, omWriter =>
-            {
-                omWriter.WriteMetadataDocument();
-            });
-
-            ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal("The JSON metadata is not supported at this platform. It's only supported at platform implementing .NETStardard 2.0.", exception.Message);
-#endif
         }
 
-#if NETCOREAPP
         [Fact]
         public async Task WriteMetadataDocumentAsync_WorksForJsonCsdl()
         {
@@ -925,7 +908,6 @@ namespace Microsoft.OData.Tests
                 Assert.Null(exception);
             }
         }
-#endif
 
         [Fact]
         public async Task WriteMetadataDocumentAsync_WorksForXmlCsdl()
@@ -1085,7 +1067,6 @@ namespace Microsoft.OData.Tests
         }
 
         #region "DisposeAsync"
-#if NETCOREAPP
 
         [Fact]
         public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously()
@@ -1327,7 +1308,6 @@ namespace Microsoft.OData.Tests
                 "</Schema></edmx:DataServices></edmx:Edmx>", payload);
         }
 
-#endif
         #endregion
 
         private static IEdmModel _edmModel;
@@ -1632,11 +1612,7 @@ namespace Microsoft.OData.Tests
                 };
             }
 
-#if NETCOREAPP
             await using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
-#else
-            using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
-#endif
             {
                 await test(msgWriter);
             }
@@ -1653,11 +1629,7 @@ namespace Microsoft.OData.Tests
                 string contents = await reader.ReadToEndAsync();
 
                 // Dispose stream manually to avoid synchronous I/O
-#if NETCOREAPP
                 await message.Stream.DisposeAsync();
-#else
-                message.Stream.Dispose();
-#endif
                 return contents;
             }
         }

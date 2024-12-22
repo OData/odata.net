@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Concurrent;
@@ -126,7 +127,7 @@ namespace Microsoft.OData
             IList<ODataMediaTypeFormat> supportedMediaTypes = mediaTypeResolver.GetMediaTypeFormats(payloadKind).ToList();
             if (supportedMediaTypes == null || supportedMediaTypes.Count == 0)
             {
-                throw new ODataContentTypeException(Strings.MediaTypeUtils_DidNotFindMatchingMediaType(null, settings.AcceptableMediaTypes));
+                throw new ODataContentTypeException(Error.Format(SRResources.MediaTypeUtils_DidNotFindMatchingMediaType, null, settings.AcceptableMediaTypes));
             }
 
             if (settings.UseFormat == true)
@@ -163,7 +164,7 @@ namespace Microsoft.OData
                     {
                         // We're calling the ToArray here since not all platforms support the string.Join which takes IEnumerable.
                         string supportedTypesAsString = String.Join(", ", supportedMediaTypes.Select(mt => mt.MediaType.ToText()).ToArray());
-                        throw new ODataContentTypeException(Strings.MediaTypeUtils_DidNotFindMatchingMediaType(supportedTypesAsString, settings.AcceptableMediaTypes));
+                        throw new ODataContentTypeException(Error.Format(SRResources.MediaTypeUtils_DidNotFindMatchingMediaType, supportedTypesAsString, settings.AcceptableMediaTypes));
                     }
 
                     selectedMediaTypeWithFormat = supportedMediaTypes[matchInfo.TargetTypeIndex];
@@ -331,7 +332,7 @@ namespace Microsoft.OData
             if (HttpUtils.CompareMediaTypeNames(MimeConstants.MimeStar, mediaType.Type) ||
                 HttpUtils.CompareMediaTypeNames(MimeConstants.MimeStar, mediaType.SubType))
             {
-                throw new ODataContentTypeException(Strings.ODataMessageReader_WildcardInContentType(mediaType.FullTypeName));
+                throw new ODataContentTypeException(Error.Format(SRResources.ODataMessageReader_WildcardInContentType, mediaType.FullTypeName));
             }
         }
 
@@ -352,7 +353,7 @@ namespace Microsoft.OData
                 return contentType.Remove(0, MimeConstants.MimeTextPlain.Length).Insert(0, MimeConstants.TextJavaScript);
             }
 
-            throw new ODataException(Strings.ODataMessageWriter_JsonPaddingOnInvalidContentType(contentType));
+            throw new ODataException(Error.Format(SRResources.ODataMessageWriter_JsonPaddingOnInvalidContentType, contentType));
         }
 
         /// <summary>
@@ -406,7 +407,7 @@ namespace Microsoft.OData
             // We're calling the ToArray here since not all platforms support the string.Join which takes IEnumerable.
             var str = String.Join(", ", mediaTypeResolver.GetMediaTypeFormats(supportedPayloadKinds[0]).ToList().Select(x => x.MediaType));
             string supportedTypesAsString = String.Join(", ", supportedPayloadKinds.SelectMany(pk => mediaTypeResolver.GetMediaTypeFormats(pk).Select(mt => mt.MediaType.ToText())).ToArray());
-            throw new ODataContentTypeException(Strings.MediaTypeUtils_CannotDetermineFormatFromContentType(str, contentTypeName));
+            throw new ODataContentTypeException(Error.Format(SRResources.MediaTypeUtils_CannotDetermineFormatFromContentType, str, contentTypeName));
         }
 
         /// <summary>
@@ -432,7 +433,7 @@ namespace Microsoft.OData
             IList<KeyValuePair<ODataMediaType, string>> specifiedTypes = HttpUtils.MediaTypesFromString(contentTypeHeader);
             if (specifiedTypes.Count != 1)
             {
-                throw new ODataContentTypeException(Strings.MediaTypeUtils_NoOrMoreThanOneContentTypeSpecified(contentTypeHeader));
+                throw new ODataContentTypeException(Error.Format(SRResources.MediaTypeUtils_NoOrMoreThanOneContentTypeSpecified, contentTypeHeader));
             }
 
             ODataMediaType contentType = specifiedTypes[0].Key;
@@ -465,7 +466,7 @@ namespace Microsoft.OData
                 }
             }
 
-            throw new ODataException(Strings.ODataUtils_DidNotFindDefaultMediaType(specifiedFormat));
+            throw new ODataException(Error.Format(SRResources.ODataUtils_DidNotFindDefaultMediaType, specifiedFormat));
         }
 
         /// <summary>

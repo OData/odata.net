@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.MultipartMixed
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -152,7 +153,7 @@ namespace Microsoft.OData.MultipartMixed
             if (boundaryParameters.Count() > 1)
             {
                 throw new ODataContentTypeException(
-                    Strings.MediaTypeUtils_NoOrMoreThanOneContentTypeSpecified(mediaType.ToText()));
+                    Error.Format(SRResources.MediaTypeUtils_NoOrMoreThanOneContentTypeSpecified, mediaType.ToText()));
             }
             else if (boundaryParameters.Count() == 1)
             {

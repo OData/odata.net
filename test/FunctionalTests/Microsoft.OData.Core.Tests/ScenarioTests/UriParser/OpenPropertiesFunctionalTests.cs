@@ -11,7 +11,7 @@ using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action parse = () => ParseFilter("PhantomProperty ne 'Bug'", HardCodedTestModel.TestModel, personType);
 
             var expectedMessage =
-                ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
+                Error.Format(SRResources.MetadataBinder_PropertyNotDeclared,
                     personType.FullTypeName(),
                     "PhantomProperty");
 
@@ -112,7 +112,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action parse = () => ParseFilter("PhantomProperty1/PhantomProperty2 eq 'abc'", HardCodedTestModel.TestModel, personType);
 
             var expectedMessage =
-                ODataErrorStrings.MetadataBinder_PropertyNotDeclared(
+                Error.Format(SRResources.MetadataBinder_PropertyNotDeclared,
                     personType.FullTypeName(),
                     "PhantomProperty1");
 
@@ -170,7 +170,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action parse = () => ParseFilter("Critics/Fully.Qualified.Namespace.Dog/any()", HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
 
             var expectedMessage =
-                ODataErrorStrings.MetadataBinder_HierarchyNotFollowed(
+                Error.Format(SRResources.MetadataBinder_HierarchyNotFollowed,
                     HardCodedTestModel.GetDogType().FullTypeName(),
                     "<null>");
 

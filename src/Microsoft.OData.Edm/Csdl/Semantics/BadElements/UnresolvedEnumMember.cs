@@ -19,7 +19,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private static readonly Func<UnresolvedEnumMember, IEdmEnumMemberValue> ComputeValueFunc = (me) => ComputeValue();
 
         public UnresolvedEnumMember(string name, IEdmEnumType declaringType, EdmLocation location)
-            : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedEnumMember, Edm.Strings.Bad_UnresolvedEnumMember(name)) })
+            : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedEnumMember, Error.Format(SRResources.Bad_UnresolvedEnumMember, name)) })
         {
             this.name = name ?? string.Empty;
             this.declaringType = declaringType;

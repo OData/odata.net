@@ -70,7 +70,7 @@ namespace Microsoft.OData.Edm.Csdl
                     this.WriteODataCsdl();
                     break;
                 default:
-                    throw new InvalidOperationException(Strings.UnknownEnumVal_CsdlTarget(this.target.ToString()));
+                    throw new InvalidOperationException(Error.Format(SRResources.UnknownEnumVal_CsdlTarget, this.target.ToString()));
             }
         }
 
@@ -89,7 +89,7 @@ namespace Microsoft.OData.Edm.Csdl
                     await this.WriteODataCsdlAsync().ConfigureAwait(false);
                     break;
                 default:
-                    throw new InvalidOperationException(Strings.UnknownEnumVal_CsdlTarget(this.target.ToString()));
+                    throw new InvalidOperationException(Error.Format(SRResources.UnknownEnumVal_CsdlTarget, this.target.ToString()));
             }
         }
 

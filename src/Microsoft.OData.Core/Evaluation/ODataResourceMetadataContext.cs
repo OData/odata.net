@@ -11,6 +11,7 @@ namespace Microsoft.OData.Evaluation
     using System.Diagnostics;
     using System.Linq;
     using Microsoft.OData;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Vocabularies.V1;
@@ -248,7 +249,7 @@ namespace Microsoft.OData.Evaluation
             {
                 if (isRequired)
                 {
-                    throw new ODataException(Strings.EdmValueUtils_PropertyDoesntExist(GetResourceTypeName(resource, entityType), propertyName));
+                    throw new ODataException(Error.Format(SRResources.EdmValueUtils_PropertyDoesntExist, GetResourceTypeName(resource, entityType), propertyName));
                 }
                 else
                 {
@@ -274,18 +275,17 @@ namespace Microsoft.OData.Evaluation
             object propertyValue = (propertyInfo as ODataProperty)?.Value;
             if (propertyValue == null && validateNotNull)
             {
-                throw new ODataException(Strings.ODataResourceMetadataContext_NullKeyValue(propertyInfo.Name, GetResourceTypeName(resource, entityType)));
+                throw new ODataException(Error.Format(SRResources.ODataResourceMetadataContext_NullKeyValue, propertyInfo.Name, GetResourceTypeName(resource, entityType)));
             }
 
             if (propertyValue is ODataValue && !(propertyValue is ODataEnumValue))
             {
-#if NETCOREAPP3_1_OR_GREATER
                 if (propertyValue is ODataJsonElementValue)
                 {
                     return propertyValue;
                 }
-#endif
-                throw new ODataException(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues(propertyInfo.Name, GetResourceTypeName(resource, entityType)));
+
+                throw new ODataException(Error.Format(SRResources.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues, propertyInfo.Name, GetResourceTypeName(resource, entityType)));
             }
 
             return propertyValue;
@@ -305,7 +305,7 @@ namespace Microsoft.OData.Evaluation
             {
                 if (throwOnError)
                 {
-                    throw new ODataException(Strings.ODataResourceMetadataContext_EntityTypeWithNoKeyProperties(GetResourceTypeName(resource, actualEntityType)));
+                    throw new ODataException(Error.Format(SRResources.ODataResourceMetadataContext_EntityTypeWithNoKeyProperties, GetResourceTypeName(resource, actualEntityType)));
                 }
                 else
                 {
@@ -320,7 +320,7 @@ namespace Microsoft.OData.Evaluation
                 {
                     if (throwOnError)
                     {
-                        throw new ODataException(Strings.ODataResourceMetadataContext_NullKeyValue(keyProperties[keyProperty].Key, GetResourceTypeName(resource, actualEntityType)));
+                        throw new ODataException(Error.Format(SRResources.ODataResourceMetadataContext_NullKeyValue, keyProperties[keyProperty].Key, GetResourceTypeName(resource, actualEntityType)));
                     }
                     else
                     {
@@ -451,7 +451,7 @@ namespace Microsoft.OData.Evaluation
                 {
                     if (String.IsNullOrEmpty(this.Resource.TypeName))
                     {
-                        throw new ODataException(Strings.ODataResourceTypeContext_ODataResourceTypeNameMissing);
+                        throw new ODataException(SRResources.ODataResourceTypeContext_ODataResourceTypeNameMissing);
                     }
 
                     return this.Resource.TypeName;
@@ -683,7 +683,7 @@ namespace Microsoft.OData.Evaluation
                                 IEdmStructuralProperty property = this.actualResourceType.StructuralProperties().FirstOrDefault(p => p.Name == pathExpression.PathSegments.LastOrDefault());
                                 if (property == null)
                                 {
-                                    throw new ODataException(Strings.EdmValueUtils_PropertyDoesntExist(this.ActualResourceTypeName, pathExpression.PathSegments.LastOrDefault()));
+                                    throw new ODataException(Error.Format(SRResources.EdmValueUtils_PropertyDoesntExist, this.ActualResourceTypeName, pathExpression.PathSegments.LastOrDefault()));
                                 }
 
                                 yield return property;

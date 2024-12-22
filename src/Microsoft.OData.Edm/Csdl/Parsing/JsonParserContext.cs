@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -224,4 +223,3 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         }
     }
 }
-#endif

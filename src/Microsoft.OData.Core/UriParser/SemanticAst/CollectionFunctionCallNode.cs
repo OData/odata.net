@@ -11,7 +11,7 @@ namespace Microsoft.OData.UriParser
     using System.Collections.ObjectModel;
     using System.Linq;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Node to represent a function call that returns a Collection
@@ -71,7 +71,7 @@ namespace Microsoft.OData.UriParser
 
             if (!this.itemType.IsPrimitive() && !this.itemType.IsComplex() && !this.itemType.IsEnum())
             {
-                throw new ArgumentException(ODataErrorStrings.Nodes_CollectionFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
+                throw new ArgumentException(SRResources.Nodes_CollectionFunctionCallNode_ItemTypeMustBePrimitiveOrComplexOrEnum);
             }
 
             this.source = source;

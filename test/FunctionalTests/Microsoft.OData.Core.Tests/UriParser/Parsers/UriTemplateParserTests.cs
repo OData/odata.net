@@ -10,6 +10,7 @@ using System.Linq;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -73,7 +74,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People({1})"));
             Action action = () => uriParser.ParsePath();
-            action.Throws<ODataException>(Strings.RequestUriProcessor_SyntaxError);
+            action.Throws<ODataException>(SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -103,7 +104,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             Action action = () => uriParser.ParsePath();
-            action.Throws<ODataException>(Strings.RequestUriProcessor_SyntaxError);
+            action.Throws<ODataException>(SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -205,7 +206,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://host"), new Uri("http://host/People(1)/Fully.Qualified.Namespace.HasHat(onCat={why555})"));
             Action action = () => uriParser.ParsePath();
-            action.Throws<ODataException>(Strings.ExpressionLexer_ExpectedLiteralToken("{why555}"));
+            action.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_ExpectedLiteralToken, "{why555}"));
         }
 
         [Fact]
@@ -271,7 +272,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             Action action = () => uriParser.ParsePath();
-            action.Throws<ODataUnrecognizedPathException>(Strings.RequestUriProcessor_MustBeLeafSegment("{some}"));
+            action.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "{some}"));
         }
 
         [Fact]
@@ -283,7 +284,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             Action action = () => uriParser.ParsePath();
-            action.Throws<ODataUnrecognizedPathException>(Strings.RequestUriProcessor_MustBeLeafSegment("{some}"));
+            action.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "{some}"));
         }
 
         [Fact]
@@ -295,7 +296,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             };
 
             Action action = () => uriParser.ParsePath();
-            action.Throws<ODataUnrecognizedPathException>(Strings.RequestUriProcessor_ResourceNotFound("{some}"));
+            action.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "{some}"));
         }
         #endregion
 
@@ -371,13 +372,13 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var errorCases = new[]
             {
-                new {Input = "{"    , Error = Strings.ExpressionLexer_UnbalancedBracketExpression},
-                new {Input = "}"    , Error = Strings.ExpressionLexer_InvalidCharacter("}", 6, "onCat=}")},
-                new {Input = "{}1"  , Error = Strings.ExpressionLexer_SyntaxError(9, "onCat={}1")},
-                new {Input = "}{"   , Error = Strings.ExpressionLexer_InvalidCharacter("}", 6, "onCat=}{")},
-                new {Input = "{{}"  , Error = Strings.ExpressionLexer_UnbalancedBracketExpression}, // Thrown by ODataPathParser::TryBindingParametersAndMatchingOperation
-                new {Input = "{}}"  , Error = Strings.ExpressionLexer_InvalidCharacter("}", 8, "onCat={}}")},
-                new {Input = "{#}"  , Error = Strings.RequestUriProcessor_SyntaxError},
+                new {Input = "{"    , Error = SRResources.ExpressionLexer_UnbalancedBracketExpression},
+                new {Input = "}"    , Error = Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", 6, "onCat=}")},
+                new {Input = "{}1"  , Error = Error.Format(SRResources.ExpressionLexer_SyntaxError, 9, "onCat={}1")},
+                new {Input = "}{"   , Error = Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", 6, "onCat=}{")},
+                new {Input = "{{}"  , Error = SRResources.ExpressionLexer_UnbalancedBracketExpression}, // Thrown by ODataPathParser::TryBindingParametersAndMatchingOperation
+                new {Input = "{}}"  , Error = Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", 8, "onCat={}}")},
+                new {Input = "{#}"  , Error = SRResources.RequestUriProcessor_SyntaxError},
             };
 
             foreach (var errorCase in errorCases)
@@ -397,13 +398,13 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var errorCases = new[]
             {
-                new {Input = "{"    , Error = Strings.ExpressionLexer_UnbalancedBracketExpression},
-                new {Input = "}"    , Error = Strings.ExpressionLexer_InvalidCharacter("}", 1, "(})")},
-                new {Input = "{}1"  , Error = Strings.UriQueryExpressionParser_CloseParenOrCommaExpected(3, "({}1)")}, //Strings.BadRequest_KeyCountMismatch("Fully.Qualified.Namespace.Person")},
-                new {Input = "}{"   , Error = Strings.ExpressionLexer_InvalidCharacter("}", 1, "(}{)")},
-                new {Input = "{{}"  , Error = Strings.ExpressionLexer_UnbalancedBracketExpression}, // Thrown by ODataPathParser::TryBindKeyFromParentheses
-                new {Input = "{}}"  , Error = Strings.ExpressionLexer_InvalidCharacter("}", 3, "({}})")},
-                new {Input = "{#}"  , Error = Strings.RequestUriProcessor_SyntaxError},
+                new {Input = "{"    , Error = SRResources.ExpressionLexer_UnbalancedBracketExpression},
+                new {Input = "}"    , Error = Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", 1, "(})")},
+                new {Input = "{}1"  , Error = Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, 3, "({}1)")}, //Strings.BadRequest_KeyCountMismatch("Fully.Qualified.Namespace.Person")},
+                new {Input = "}{"   , Error = Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", 1, "(}{)")},
+                new {Input = "{{}"  , Error = SRResources.ExpressionLexer_UnbalancedBracketExpression}, // Thrown by ODataPathParser::TryBindKeyFromParentheses
+                new {Input = "{}}"  , Error = Error.Format(SRResources.ExpressionLexer_InvalidCharacter, "}", 3, "({}})")},
+                new {Input = "{#}"  , Error = SRResources.RequestUriProcessor_SyntaxError},
             };
 
             foreach (var errorCase in errorCases)

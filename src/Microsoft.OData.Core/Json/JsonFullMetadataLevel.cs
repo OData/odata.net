@@ -10,6 +10,7 @@ namespace Microsoft.OData.Json
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Evaluation;
 
@@ -56,7 +57,7 @@ namespace Microsoft.OData.Json
             {
                 if (this.metadataDocumentUri == null)
                 {
-                    throw new ODataException(Strings.ODataOutputContext_MetadataDocumentUriMissing);
+                    throw new ODataException(SRResources.ODataOutputContext_MetadataDocumentUriMissing);
                 }
 
                 return this.metadataDocumentUri;

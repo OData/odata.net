@@ -15,6 +15,7 @@ namespace Microsoft.OData
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -22,11 +23,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Writer class used to write all OData payloads (entries, resource sets, metadata documents, service documents, etc.).
     /// </summary>
-#if NETCOREAPP
     public sealed class ODataMessageWriter : IDisposable, IAsyncDisposable
-#else
-    public sealed class ODataMessageWriter : IDisposable
-#endif
     {
         /// <summary>The message for which the message writer was created.</summary>
         private readonly ODataMessage message;
@@ -705,7 +702,6 @@ namespace Microsoft.OData
             GC.SuppressFinalize(this);
         }
 
-#if NETCOREAPP
         /// <summary>
         /// <see cref="System.IAsyncDisposable.DisposeAsync"/> implementation to asynchronously
         /// clean up unmanaged resources of the writer.
@@ -720,7 +716,6 @@ namespace Microsoft.OData
             this.Dispose(false);
             GC.SuppressFinalize(this);
         }
-#endif
 
         /// <summary>
         /// Sets the content-type and OData-Version headers on the message used by the message writer.
@@ -890,7 +885,7 @@ namespace Microsoft.OData
         {
             if (!this.writingResponse)
             {
-                throw new ODataException(Strings.ODataMessageWriter_AsyncInRequest);
+                throw new ODataException(SRResources.ODataMessageWriter_AsyncInRequest);
             }
 
             // VerifyWriterNotDisposedAndNotUsed changes the state of the message writer, it should be called after
@@ -913,7 +908,7 @@ namespace Microsoft.OData
         {
             if (!this.writingResponse)
             {
-                throw new ODataException(Strings.ODataMessageWriter_DeltaInRequest);
+                throw new ODataException(SRResources.ODataMessageWriter_DeltaInRequest);
             }
 
             // VerifyWriterNotDisposedAndNotUsed changes the state of the message writer, it should be called after
@@ -939,7 +934,7 @@ namespace Microsoft.OData
         {
             if (itemTypeReference != null && !(itemTypeReference.IsPrimitive() || itemTypeReference.IsComplex() || itemTypeReference.IsEnum() || itemTypeReference.IsTypeDefinition()))
             {
-                throw new ODataException(Strings.ODataMessageWriter_NonCollectionType(itemTypeReference.FullName()));
+                throw new ODataException(Error.Format(SRResources.ODataMessageWriter_NonCollectionType, itemTypeReference.FullName()));
             }
 
             this.VerifyWriterNotDisposedAndNotUsed();
@@ -961,7 +956,7 @@ namespace Microsoft.OData
         {
             if (this.writingResponse)
             {
-                throw new ODataException(Strings.ODataParameterWriter_CannotCreateParameterWriterOnResponseMessage);
+                throw new ODataException(SRResources.ODataParameterWriter_CannotCreateParameterWriterOnResponseMessage);
             }
 
             if (operation != null)
@@ -969,7 +964,7 @@ namespace Microsoft.OData
                 // check that we have a user model
                 if (!this.model.IsUserModel())
                 {
-                    throw new ODataException(Strings.ODataMessageWriter_CannotSpecifyOperationWithoutModel);
+                    throw new ODataException(SRResources.ODataMessageWriter_CannotSpecifyOperationWithoutModel);
                 }
             }
 
@@ -986,7 +981,7 @@ namespace Microsoft.OData
 
             if (!this.writingResponse)
             {
-                throw new ODataException(Strings.ODataMessageWriter_ServiceDocumentInRequest);
+                throw new ODataException(SRResources.ODataMessageWriter_ServiceDocumentInRequest);
             }
 
             // VerifyWriterNotDisposedAndNotUsed changes the state of the message writer, it should be called after
@@ -1004,7 +999,7 @@ namespace Microsoft.OData
 
             if (property.Value is ODataStreamReferenceValue)
             {
-                throw new ODataException(Strings.ODataMessageWriter_CannotWriteStreamPropertyAsTopLevelProperty(property.Name));
+                throw new ODataException(Error.Format(SRResources.ODataMessageWriter_CannotWriteStreamPropertyAsTopLevelProperty, property.Name));
             }
 
             this.VerifyWriterNotDisposedAndNotUsed();
@@ -1021,7 +1016,7 @@ namespace Microsoft.OData
             if (!this.writingResponse)
             {
                 // errors can only be written for response messages
-                throw new ODataException(Strings.ODataMessageWriter_ErrorPayloadInRequest);
+                throw new ODataException(SRResources.ODataMessageWriter_ErrorPayloadInRequest);
             }
 
             // Note that this verifies that the writer is only used once, so it also verifies that
@@ -1047,12 +1042,12 @@ namespace Microsoft.OData
             if (!this.writingResponse)
             {
                 // errors can only be written for response messages
-                throw new ODataException(Strings.ODataMessageWriter_ErrorPayloadInRequest);
+                throw new ODataException(SRResources.ODataMessageWriter_ErrorPayloadInRequest);
             }
 
             if (this.writeErrorCalled)
             {
-                throw new ODataException(Strings.ODataMessageWriter_WriteErrorAlreadyCalled);
+                throw new ODataException(SRResources.ODataMessageWriter_WriteErrorAlreadyCalled);
             }
 
             this.writeErrorCalled = true;
@@ -1073,7 +1068,7 @@ namespace Microsoft.OData
             // Top-level EntityReferenceLinks payload write requests are not allowed.
             if (!this.writingResponse)
             {
-                throw new ODataException(Strings.ODataMessageWriter_EntityReferenceLinksInRequestNotAllowed);
+                throw new ODataException(SRResources.ODataMessageWriter_EntityReferenceLinksInRequestNotAllowed);
             }
 
             // VerifyWriterNotDisposedAndNotUsed changes the state of the message writer, it should be called after
@@ -1103,7 +1098,7 @@ namespace Microsoft.OData
             {
                 // TODO: OIPI doc seems to indicate in Section 2.2.6.4.1 that 'null' is permissible but the product does not support it.
                 // We also throw in this case.
-                throw new ODataException(Strings.ODataMessageWriter_CannotWriteNullInRawFormat);
+                throw new ODataException(SRResources.ODataMessageWriter_CannotWriteNullInRawFormat);
             }
 
             this.VerifyWriterNotDisposedAndNotUsed();
@@ -1121,13 +1116,13 @@ namespace Microsoft.OData
         {
             if (!this.writingResponse)
             {
-                throw new ODataException(Strings.ODataMessageWriter_MetadataDocumentInRequest);
+                throw new ODataException(SRResources.ODataMessageWriter_MetadataDocumentInRequest);
             }
 
             // check that we have a user model
             if (!this.model.IsUserModel())
             {
-                throw new ODataException(Strings.ODataMessageWriter_CannotWriteMetadataWithoutModel);
+                throw new ODataException(SRResources.ODataMessageWriter_CannotWriteMetadataWithoutModel);
             }
 
             // VerifyWriterNotDisposedAndNotUsed changes the state of the message writer, it should be called after
@@ -1144,7 +1139,7 @@ namespace Microsoft.OData
             this.VerifyNotDisposed();
             if (this.writeMethodCalled)
             {
-                throw new ODataException(Strings.ODataMessageWriter_WriterAlreadyUsed);
+                throw new ODataException(SRResources.ODataMessageWriter_WriterAlreadyUsed);
             }
 
             this.writeMethodCalled = true;
@@ -1184,7 +1179,6 @@ namespace Microsoft.OData
             }
         }
 
-#if NETCOREAPP
         /// <summary>
         /// Asynchronously performs the actual cleanup work.
         /// </summary>
@@ -1204,7 +1198,6 @@ namespace Microsoft.OData
                 this.outputContext = null;
             }
         }
-#endif
 
         /// <summary>
         /// Verifies that, if a payload kind has been set via SetHeaders, the payload kind that
@@ -1219,7 +1212,7 @@ namespace Microsoft.OData
             {
                 // if a payload kind has been set via SetHeaders that is not the same as the payload kind
                 // that is attempted to write, we fail.
-                throw new ODataException(Strings.ODataMessageWriter_IncompatiblePayloadKinds(this.writerPayloadKind, payloadKindToWrite));
+                throw new ODataException(Error.Format(SRResources.ODataMessageWriter_IncompatiblePayloadKinds, this.writerPayloadKind, payloadKindToWrite));
             }
         }
 

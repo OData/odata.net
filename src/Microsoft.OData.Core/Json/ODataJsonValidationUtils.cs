@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Json
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Diagnostics;
@@ -41,12 +42,12 @@ namespace Microsoft.OData.Json
                 !ODataJsonUtils.IsMetadataReferenceProperty(propertyName) ||
                 propertyName[propertyName.Length - 1] == ODataConstants.ContextUriFragmentIndicator)
             {
-                throw new ODataException(Strings.ValidationUtils_InvalidMetadataReferenceProperty(propertyName));
+                throw new ODataException(Error.Format(SRResources.ValidationUtils_InvalidMetadataReferenceProperty, propertyName));
             }
 
             if (IsOpenMetadataReferencePropertyName(metadataDocumentUri, propertyName))
             {
-                throw new ODataException(Strings.ODataJsonValidationUtils_OpenMetadataReferencePropertyNotSupported(propertyName, UriUtils.UriToString(metadataDocumentUri)));
+                throw new ODataException(Error.Format(SRResources.ODataJsonValidationUtils_OpenMetadataReferencePropertyNotSupported, propertyName, UriUtils.UriToString(metadataDocumentUri)));
             }
         }
 
@@ -101,7 +102,7 @@ namespace Microsoft.OData.Json
 
             if (propertyValue == null)
             {
-                throw new ODataException(Strings.ODataJsonValidationUtils_OperationPropertyCannotBeNull(propertyName, metadata));
+                throw new ODataException(Error.Format(SRResources.ODataJsonValidationUtils_OperationPropertyCannotBeNull, propertyName, metadata));
             }
         }
     }

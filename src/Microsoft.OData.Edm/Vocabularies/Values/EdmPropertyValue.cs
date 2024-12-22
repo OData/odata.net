@@ -67,7 +67,7 @@ namespace Microsoft.OData.Edm.Vocabularies
 
                 if (this.value != null)
                 {
-                    throw new InvalidOperationException(Strings.ValueHasAlreadyBeenSet);
+                    throw new InvalidOperationException(SRResources.ValueHasAlreadyBeenSet);
                 }
 
                 this.value = value;

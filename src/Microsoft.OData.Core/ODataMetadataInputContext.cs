@@ -14,6 +14,7 @@ using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData
 {
@@ -93,7 +94,7 @@ namespace Microsoft.OData
                     builder.AppendLine(error.ToString());
                 }
 
-                throw new ODataException(Strings.ODataMetadataInputContext_ErrorReadingMetadata(builder.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataMetadataInputContext_ErrorReadingMetadata, builder.ToString()));
             }
 
             Debug.Assert(model != null, "model != null");
@@ -169,7 +170,7 @@ namespace Microsoft.OData
                     builder.AppendLine(error.ToString());
                 }
 
-                throw new ODataException(Strings.ODataMetadataInputContext_ErrorReadingMetadata(builder.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataMetadataInputContext_ErrorReadingMetadata, builder.ToString()));
             }
 
             Debug.Assert(model != null, "model != null");

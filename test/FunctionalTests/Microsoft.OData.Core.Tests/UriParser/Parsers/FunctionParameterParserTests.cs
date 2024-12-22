@@ -12,7 +12,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -182,7 +182,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 var result = TryParseOperationParameters("CanMoveToAddress", "address=null'Fully.Qualified.Namespace.Address'", null, out parsedParameters);
                 Assert.True(result);
             };
-            parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError(12, "address=null'Fully.Qualified.Namespace.Address'"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, 12, "address=null'Fully.Qualified.Namespace.Address'"));
         }
 
         [Fact]
@@ -190,7 +190,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             ICollection<OperationSegmentParameter> parsedParameters;
             Action parse = () => TryParseFunctionParameters("fakeFunc", "a='foo'", null, out parsedParameters);
-            parse.Throws<ODataException>(Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation("a", "IsAddressGood"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ODataParameterWriterCore_ParameterNameNotFoundInOperation, "a", "IsAddressGood"));
         }
 
         [Fact]
@@ -198,7 +198,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             ICollection<OperationSegmentParameter> parsedParameters;
             Action parse = () => TryParseFunctionParameters("fakeFunc", "a=1,2", null, out parsedParameters);
-            parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError(5, "a=1,2"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, 5, "a=1,2"));
         }
 
         [Fact]
@@ -277,7 +277,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ICollection<FunctionParameterToken> splitParameters;
             ODataUriParserConfiguration configuration = new ODataUriParserConfiguration(HardCodedTestModel.TestModel) { ParameterAliasValueAccessor = null };
             Action parse = () => FunctionParameterParser.TrySplitOperationParameters(/*"fakeFunc", */ "a=1)", configuration, out splitParameters);
-            parse.Throws<ODataException>(ODataErrorStrings.ExpressionLexer_SyntaxError(4, "a=1)"));
+            parse.Throws<ODataException>(Error.Format(SRResources.ExpressionLexer_SyntaxError, 4, "a=1)"));
         }
     }
 }

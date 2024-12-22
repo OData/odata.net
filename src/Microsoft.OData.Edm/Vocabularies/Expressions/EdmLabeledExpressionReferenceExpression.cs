@@ -50,7 +50,7 @@ namespace Microsoft.OData.Edm.Vocabularies
 
                 if (this.referencedLabeledExpression != null)
                 {
-                    throw new InvalidOperationException(Strings.ValueHasAlreadyBeenSet);
+                    throw new InvalidOperationException(SRResources.ValueHasAlreadyBeenSet);
                 }
 
                 this.referencedLabeledExpression = value;

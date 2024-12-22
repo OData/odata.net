@@ -8,7 +8,7 @@ using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -28,7 +28,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             IEdmOperationImport function;
             Action test = () => FunctionOverloadResolver.ResolveOperationImportFromList("Foo", parameters, model, out function, DefaultUriResolver);
-            test.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads("Foo"));
+            test.Throws<ODataException>(Error.Format(SRResources.FunctionOverloadResolver_MultipleOperationImportOverloads, "Foo"));
         }
 
         [Fact]
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             IEdmOperation function;
             Action test = () => FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Move", parameters, HardCodedTestModel.GetPersonType(), model, out function, DefaultUriResolver);
-            test.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates("Fully.Qualified.Namespace.Move"));
+            test.Throws<ODataException>(Error.Format(SRResources.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates, "Fully.Qualified.Namespace.Move"));
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             IEdmOperationImport function;
             Action resolve = () => FunctionOverloadResolver.ResolveOperationImportFromList("Action", parameters, model, out function, DefaultUriResolver);
-            resolve.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_MultipleActionImportOverloads("Action"));
+            resolve.Throws<ODataException>(Error.Format(SRResources.FunctionOverloadResolver_MultipleActionImportOverloads, "Action"));
         }
 
         [Fact]
@@ -61,7 +61,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
 
             IEdmOperation operation;
             Action resolve = () => FunctionOverloadResolver.ResolveOperationFromList("Test.Action", parameters, null, model, out operation, DefaultUriResolver);
-            resolve.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_MultipleActionOverloads("Test.Action"));
+            resolve.Throws<ODataException>(Error.Format(SRResources.FunctionOverloadResolver_MultipleActionOverloads, "Test.Action"));
         }
 
        [Fact]
@@ -210,7 +210,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             // Raise exception if more than one match.
             parameters = new string[] { "Parameter1", "Parameter4" };
             Action resolve = () => FunctionOverloadResolver.ResolveOperationImportFromList("FunctionImport", parameters, model, out functionImport, DefaultUriResolver);
-            resolve.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_MultipleOperationImportOverloads("FunctionImport"));
+            resolve.Throws<ODataException>(Error.Format(SRResources.FunctionOverloadResolver_MultipleOperationImportOverloads, "FunctionImport"));
         }
 
         [Fact]
@@ -311,7 +311,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             // Raise exception if more than one match.
             parameters = new string[] { "Parameter1", "Parameter4" };
             Action resolve = () => Assert.True(FunctionOverloadResolver.ResolveOperationFromList("Fully.Qualified.Namespace.Function", parameters, int32TypeReference.Definition, model, out function, DefaultUriResolver));
-            resolve.Throws<ODataException>(ODataErrorStrings.FunctionOverloadResolver_NoSingleMatchFound("Fully.Qualified.Namespace.Function", string.Join(",", parameters)));
+            resolve.Throws<ODataException>(Error.Format(SRResources.FunctionOverloadResolver_NoSingleMatchFound, "Fully.Qualified.Namespace.Function", string.Join(",", parameters)));
         }
 
         [Fact]

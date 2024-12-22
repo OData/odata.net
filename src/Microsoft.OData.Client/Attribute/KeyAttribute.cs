@@ -34,7 +34,7 @@ namespace Microsoft.OData.Client
             Util.CheckArgumentNull(keyNames, "keyNames");
             if (keyNames.Length == 0 || keyNames.Any(f => f == null || f.Length == 0))
             {
-                throw Error.Argument(Strings.DSKAttribute_MustSpecifyAtleastOnePropertyName, "keyNames");
+                throw Error.Argument(SRResources.DSKAttribute_MustSpecifyAtleastOnePropertyName, "keyNames");
             }
 
             this.keyNames = new ReadOnlyCollection<string>(keyNames);

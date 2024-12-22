@@ -58,7 +58,7 @@ namespace Microsoft.OData.Client.Materialization
         public object MaterializeEnumDataValueCollectionElement(Type collectionItemType, string wireTypeName, string item)
         {
             object materializedValue = null;
-            this.MaterializeODataEnumValue(collectionItemType, wireTypeName, item, () => DSClient.Strings.Collection_NullCollectionItemsNotSupported, out materializedValue);
+            this.MaterializeODataEnumValue(collectionItemType, wireTypeName, item, () => SRResources.Collection_NullCollectionItemsNotSupported, out materializedValue);
 
             return materializedValue;
         }

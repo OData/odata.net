@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections;
@@ -43,7 +44,7 @@ namespace Microsoft.OData
                     return value;
                 }
 
-                throw new KeyNotFoundException(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound(key));
+                throw new KeyNotFoundException(Error.Format(SRResources.ODataBatchOperationHeaderDictionary_KeyNotFound, key));
             }
 
             set

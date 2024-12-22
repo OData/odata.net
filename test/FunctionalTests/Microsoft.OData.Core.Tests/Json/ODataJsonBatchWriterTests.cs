@@ -108,11 +108,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     var operationRequestMessage = await jsonBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -145,11 +141,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     var operationRequestMessage = await jsonBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -183,11 +175,8 @@ namespace Microsoft.OData.Core.Tests.Json
                     var operationRequestMessage1 = await jsonBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP
+
                     await using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-#else
-                    using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-#endif
                     {
                         var jsonWriter = await messageWriter1.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -201,11 +190,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     var operationRequestMessage2 = await jsonBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
 
-#if NETCOREAPP
                     await using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
-#else
-                    using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
-#endif
                     {
                         var jsonWriter = await messageWriter2.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -244,11 +229,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     var operationRequestMessage1 = await jsonBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP
                     await using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-#else
-                    using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-#endif
                     {
                         var jsonWriter = await messageWriter1.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -262,11 +243,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     var operationRequestMessage2 = await jsonBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
 
-#if NETCOREAPP
                     await using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
-#else
-                    using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
-#endif
                     {
                         var jsonWriter = await messageWriter2.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -309,11 +286,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     var operationRequestMessage = await jsonBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -349,11 +322,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     var operationRequestMessage = await jsonBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), /*contentId*/ null);
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -385,11 +354,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
                     var operationResponseMessage = await jsonBatchWriter.CreateOperationResponseMessageAsync("1");
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationResponseMessage, this.settings, this.model))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationResponseMessage, this.settings, this.model))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -421,11 +386,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
                     var operationResponseMessage = await jsonBatchWriter.CreateOperationResponseMessageAsync("1");
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationResponseMessage, this.settings, this.model))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationResponseMessage, this.settings, this.model))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -497,7 +458,6 @@ namespace Microsoft.OData.Core.Tests.Json
                 result);
         }
 
-#if NETCOREAPP
         [Fact]
         public async Task WriteBatchResponseAsync_WithStreamCopy_UsingODataUtf8JsonWriter()
         {
@@ -552,7 +512,6 @@ namespace Microsoft.OData.Core.Tests.Json
                 "]}",
                 result);
         }
-#endif
 
         [Fact]
         public async Task WriteBatchRequestWithAbsoluteUriUsingHostHeaderAsync()
@@ -565,11 +524,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     var operationRequestMessage = await jsonBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/odata/Customers"), "1", BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -603,11 +558,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     var operationRequestMessage = await jsonBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri("/odata/Customers", UriKind.Relative), "1", BatchPayloadUriOption.RelativeUri);
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -662,7 +613,7 @@ namespace Microsoft.OData.Core.Tests.Json
                         await jsonBatchWriter.WriteStartChangesetAsync();
                     }));
 
-            Assert.Equal(Strings.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet, exception.Message);
         }
 
         [Fact]
@@ -677,7 +628,7 @@ namespace Microsoft.OData.Core.Tests.Json
                         await jsonBatchWriter.WriteEndChangesetAsync();
                     }));
 
-            Assert.Equal(Strings.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet, exception.Message);
         }
 
         [Fact]
@@ -693,7 +644,7 @@ namespace Microsoft.OData.Core.Tests.Json
                         await jsonBatchWriter.WriteEndBatchAsync();
                     }));
 
-            Assert.Equal(Strings.ODataBatchWriter_CannotCompleteBatchWithActiveChangeSet, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_CannotCompleteBatchWithActiveChangeSet, exception.Message);
         }
 
         [Fact]
@@ -707,7 +658,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     await jsonBatchWriter.WriteStartChangesetAsync();
                 }));
 
-            Assert.Equal(Strings.ODataBatchWriter_InvalidTransitionFromStart, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromStart, exception.Message);
         }
 
         [Fact]
@@ -722,7 +673,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     await jsonBatchWriter.WriteStartBatchAsync();
                 }));
 
-            Assert.Equal(Strings.ODataBatchWriter_InvalidTransitionFromBatchStarted, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromBatchStarted, exception.Message);
         }
 
         [Fact]
@@ -738,7 +689,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     await jsonBatchWriter.WriteStartBatchAsync();
                 }));
 
-            Assert.Equal(Strings.ODataBatchWriter_InvalidTransitionFromBatchCompleted, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromBatchCompleted, exception.Message);
         }
 
         [Fact]
@@ -753,7 +704,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 },
                 /*writingRequest*/ true));
 
-            Assert.Equal(Strings.ODataBatchWriter_CannotCreateResponseOperationWhenWritingRequest, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_CannotCreateResponseOperationWhenWritingRequest, exception.Message);
         }
 
         [Fact]
@@ -769,7 +720,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 },
                 /*writingRequest*/ false));
 
-            Assert.Equal(Strings.ODataBatchWriter_CannotCreateRequestOperationWhenWritingResponse, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_CannotCreateRequestOperationWhenWritingResponse, exception.Message);
         }
 
         [Fact]
@@ -786,7 +737,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     await jsonBatchWriter.WriteStartBatchAsync();
                 }));
 
-            Assert.Equal(Strings.ODataBatchWriter_InvalidTransitionFromChangeSetCompleted, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromChangeSetCompleted, exception.Message);
         }
 
         [Fact]
@@ -801,11 +752,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     var operationRequestMessage = await jsonBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -818,7 +765,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     await jsonBatchWriter.WriteStartBatchAsync();
                 }));
 
-            Assert.Equal(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamDisposed, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromOperationContentStreamDisposed, exception.Message);
         }
 
         [Fact]
@@ -833,11 +780,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     var operationRequestMessage = await jsonBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                     {
                         await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -846,7 +789,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     }
                 }));
 
-            Assert.Equal(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamRequested, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromOperationContentStreamRequested, exception.Message);
         }
 
         [Fact]
@@ -863,7 +806,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     await jsonBatchWriter.WriteStartBatchAsync();
                 }));
 
-            Assert.Equal(Strings.ODataBatchWriter_InvalidTransitionFromOperationCreated, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromOperationCreated, exception.Message);
         }
 
         [Fact]
@@ -879,7 +822,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     await jsonBatchWriter.WriteStartBatchAsync();
                 }));
 
-            Assert.Equal(Strings.ODataBatchWriter_InvalidTransitionFromChangeSetStarted, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_InvalidTransitionFromChangeSetStarted, exception.Message);
         }
 
         [Fact]
@@ -891,7 +834,7 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => jsonBatchWriter.WriteStartBatchAsync());
 
-            Assert.Equal(Strings.ODataBatchWriter_AsyncCallOnSyncWriter, exception.Message);
+            Assert.Equal(SRResources.ODataBatchWriter_AsyncCallOnSyncWriter, exception.Message);
         }
 
         [Fact]
@@ -908,7 +851,7 @@ namespace Microsoft.OData.Core.Tests.Json
                         "GET", new Uri($"{ServiceUri}/Customers(1)"), "1");
                 }));
 
-            Assert.Equal(Strings.ODataBatch_InvalidHttpMethodForChangeSetRequest("GET"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataBatch_InvalidHttpMethodForChangeSetRequest, "GET"), exception.Message);
         }
 
         [Fact]
@@ -925,7 +868,7 @@ namespace Microsoft.OData.Core.Tests.Json
                         "PUT", new Uri($"{ServiceUri}/Customers(1)"), /*contentId*/ null);
                 }));
 
-            Assert.Equal(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound(ODataConstants.ContentIdHeader), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataBatchOperationHeaderDictionary_KeyNotFound, ODataConstants.ContentIdHeader), exception.Message);
         }
 
         [Fact]
@@ -943,7 +886,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     await jsonBatchWriter.WriteStartChangesetAsync();
                 }));
 
-            Assert.Equal(Strings.ODataBatchWriter_MaxBatchSizeExceeded(1), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataBatchWriter_MaxBatchSizeExceeded, 1), exception.Message);
         }
 
         [Fact]
@@ -963,7 +906,7 @@ namespace Microsoft.OData.Core.Tests.Json
                         "PUT", new Uri($"{ServiceUri}/Customers(1)"), "2");
                 }));
 
-            Assert.Equal(Strings.ODataBatchWriter_MaxChangeSetSizeExceeded(1), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataBatchWriter_MaxChangeSetSizeExceeded, 1), exception.Message);
         }
 
         [Fact]
@@ -981,7 +924,7 @@ namespace Microsoft.OData.Core.Tests.Json
                         "PUT", new Uri($"{ServiceUri}/Customers(1)"), "1");
                 }));
 
-            Assert.Equal(Strings.ODataBatchWriter_DuplicateContentIDsNotAllowed("1"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataBatchWriter_DuplicateContentIDsNotAllowed, "1"), exception.Message);
         }
 
         [Fact]
@@ -1006,7 +949,7 @@ namespace Microsoft.OData.Core.Tests.Json
                         "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
                 }));
 
-            Assert.Equal(Strings.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed("2", "fd04fc24"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed, "2", "fd04fc24"), exception.Message);
         }
 
         #endregion Exception Cases

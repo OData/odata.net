@@ -2406,7 +2406,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 return @namespaces[0];
             }
 
-            throw new InvalidOperationException(Strings.Serializer_UnknownEdmVersion(edmVersion.ToString()));
+            throw new InvalidOperationException(Error.Format(SRResources.Serializer_UnknownEdmVersion, edmVersion.ToString()));
         }
 
         /// <summary>
@@ -2429,7 +2429,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 }
                 else
                 {
-                    throw new InvalidOperationException(Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(operationImport.Name));
+                    throw new InvalidOperationException(Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid, operationImport.Name));
                 }
             }
         }
@@ -2454,7 +2454,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 }
                 else
                 {
-                    throw new InvalidOperationException(Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(operationImport.Name));
+                    throw new InvalidOperationException(Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid, operationImport.Name));
                 }
             }
         }

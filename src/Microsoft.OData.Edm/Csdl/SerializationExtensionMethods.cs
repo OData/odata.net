@@ -102,7 +102,7 @@ namespace Microsoft.OData.Edm.Csdl
                 location != null &&
                 location.Value == EdmVocabularyAnnotationSerializationLocation.Inline)
             {
-                throw new InvalidOperationException(Strings.EdmVocabularyAnnotations_InvalidLocationForTargetPathAnnotation(targetPath.Path));
+                throw new InvalidOperationException(Error.Format(SRResources.EdmVocabularyAnnotations_InvalidLocationForTargetPathAnnotation, targetPath.Path));
             }
 
             model.SetAnnotationValue(annotation, EdmConstants.InternalUri, CsdlConstants.AnnotationSerializationLocationAnnotation, (object)location);

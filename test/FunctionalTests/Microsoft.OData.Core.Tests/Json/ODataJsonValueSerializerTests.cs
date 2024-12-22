@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core;
 using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
@@ -44,7 +45,7 @@ namespace Microsoft.OData.Tests.Json
 
             Action test = () => serializer.WriteCollectionValue(collectionValue, null, null, false, false, false);
 
-            test.Throws<ODataException>(Strings.ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest);
+            test.Throws<ODataException>(SRResources.ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest);
         }
 
         [Fact]
@@ -57,7 +58,7 @@ namespace Microsoft.OData.Tests.Json
             var stringCollectionTypeRef = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(true));
             Action test = () => serializer.WriteCollectionValue(collectionValue, stringCollectionTypeRef, null, false, false, false);
 
-            test.Throws<ODataException>(Strings.ValidationUtils_IncompatibleType("Collection(Edm.Int32)", "Collection(Edm.String)"));
+            test.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_IncompatibleType, "Collection(Edm.Int32)", "Collection(Edm.String)"));
         }
 
         [Fact]
@@ -70,7 +71,7 @@ namespace Microsoft.OData.Tests.Json
             var stringCollectionTypeRef = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(true));
             Action test = () => serializer.WriteCollectionValue(collectionValue, stringCollectionTypeRef, null, false, false, false);
 
-            test.Throws<ODataException>(Strings.ValidationUtils_IncompatibleType("Collection(Edm.Int32)", "Collection(Edm.String)"));
+            test.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_IncompatibleType, "Collection(Edm.Int32)", "Collection(Edm.String)"));
         }
 
         [Fact]
@@ -102,7 +103,7 @@ namespace Microsoft.OData.Tests.Json
             var stringCollectionTypeRef = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt32(false));
             Action test = () => serializer.WriteCollectionValue(collectionValue, stringCollectionTypeRef, null, false, false, false);
 
-            test.Throws<ODataException>(Strings.ValidationUtils_NonNullableCollectionElementsMustNotBeNull);
+            test.Throws<ODataException>(SRResources.ValidationUtils_NonNullableCollectionElementsMustNotBeNull);
         }
 
         [Fact]
@@ -114,7 +115,7 @@ namespace Microsoft.OData.Tests.Json
 
             Action test = () => serializer.WritePrimitiveValue("123", uint64);
 
-            test.Throws<ODataException>(Strings.ValidationUtils_IncompatiblePrimitiveItemType("Edm.String", true, "NS.UInt64", true));
+            test.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_IncompatiblePrimitiveItemType, "Edm.String", true, "NS.UInt64", true));
         }
 
         [Fact]
@@ -142,7 +143,7 @@ namespace Microsoft.OData.Tests.Json
 
             Action test = () => serializer.WriteResourceValue(resourceValue, null, false, null);
 
-            test.Throws<ODataException>(Strings.ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
+            test.Throws<ODataException>(SRResources.ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
         }
 
         [Fact]
@@ -336,7 +337,6 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(leaveOpen, !stream.Disposed);
         }
 
-#if NETCOREAPP
         [Fact]
         public void WriteStreamValue_UsingODataUtf8JsonWriter_WritesStreamValue()
         {
@@ -362,7 +362,6 @@ namespace Microsoft.OData.Tests.Json
 
             Assert.Equal("\"CjEyMzQ1Njc4OTA=\"", result);
         }
-#endif
 
         private ODataJsonValueSerializer CreateODataJsonValueSerializer(bool writingResponse, IServiceProvider serviceProvider = null)
         {
@@ -370,11 +369,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 MessageStream = stream,
                 MediaType = new ODataMediaType("application", "json"),
-#if NETCOREAPP1_1
-                Encoding = Encoding.GetEncoding(0),
-#else
                 Encoding = Encoding.Default,
-#endif
                 IsResponse = writingResponse,
                 IsAsync = false,
                 Model = model,

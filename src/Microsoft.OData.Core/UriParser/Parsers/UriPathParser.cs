@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -46,7 +47,7 @@ namespace Microsoft.OData.UriParser
 
             if (!UriUtils.UriInvariantInsensitiveIsBaseOf(serviceBaseUri, fullUri))
             {
-                throw new ODataException(Strings.UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri(fullUri, serviceBaseUri));
+                throw new ODataException(Error.Format(SRResources.UriQueryPathParser_RequestUriDoesNotHaveTheCorrectBaseUri, fullUri, serviceBaseUri));
             }
 
             // COMPAT 29: Slash in key lookup breaks URI parser
@@ -90,7 +91,7 @@ namespace Microsoft.OData.UriParser
 
                     if (segments.Count == this.maxSegments)
                     {
-                        throw new ODataException(Strings.UriQueryPathParser_TooManySegments);
+                        throw new ODataException(SRResources.UriQueryPathParser_TooManySegments);
                     }
 
                     segments.Add(Uri.UnescapeDataString(segment));
@@ -100,7 +101,7 @@ namespace Microsoft.OData.UriParser
             }
             catch (FormatException uriFormatException)
             {
-                throw new ODataException(Strings.UriQueryPathParser_SyntaxError, uriFormatException);
+                throw new ODataException(SRResources.UriQueryPathParser_SyntaxError, uriFormatException);
             }
         }
     }

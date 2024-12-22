@@ -11,6 +11,7 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Metadata
 {
@@ -223,7 +224,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                     Assert.Equal("color", keyInfo.Key);
                     keyInfo.Value.ShouldBeODataEnumValue("TestNS.Color", "2");
                 },
-                Strings.RequestUriProcessor_SyntaxError);
+                SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -243,7 +244,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                     Assert.Equal("color", keyInfo.Key);
                     keyInfo.Value.ShouldBeODataEnumValue("TestNS.Color", "2");
                 },
-                Strings.RequestUriProcessor_SyntaxError);
+                SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -265,7 +266,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
                     Assert.Equal("id", keyInfo1.Key);
                     Assert.Equal(1, keyInfo1.Value);
                 },
-                Strings.BadRequest_KeyMismatch(MoonType2.FullTypeName()));
+                Error.Format(SRResources.BadRequest_KeyMismatch, MoonType2.FullTypeName()));
         }
         #endregion
 
@@ -365,7 +366,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             var resolver = new ODataUriResolver { EnableCaseInsensitive = true };
 
             var exception = Assert.Throws<ODataException>(() => resolver.ResolveType(model, "ns.models.person"));
-            Assert.Equal(Strings.UriParserMetadata_MultipleMatchingTypesFound("ns.models.person"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.UriParserMetadata_MultipleMatchingTypesFound, "ns.models.person"), exception.Message);
         }
         #endregion
 
@@ -521,7 +522,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             var resolver = new ODataUriResolver { EnableCaseInsensitive = true };
 
             var exception = Assert.Throws<ODataException>(() => resolver.ResolveTerm(model, "ns.someTerm"));
-            Assert.Equal(Strings.UriParserMetadata_MultipleMatchingTypesFound("ns.someTerm"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.UriParserMetadata_MultipleMatchingTypesFound, "ns.someTerm"), exception.Message);
         }
         #endregion
 
@@ -587,7 +588,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
             var resolver = new ODataUriResolver { EnableCaseInsensitive = true };
 
             var exception = Assert.Throws<ODataException>(() => resolver.ResolveNavigationSource(model, "peoPle"));
-            Assert.Equal(Strings.UriParserMetadata_MultipleMatchingNavigationSourcesFound("peoPle"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.UriParserMetadata_MultipleMatchingNavigationSourcesFound, "peoPle"), exception.Message);
         }
         #endregion
 

@@ -12,6 +12,7 @@ using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
 {
@@ -98,7 +99,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             var stream = new MemoryStream();
             ODataJsonOutputContext outputContext = CreateJsonOutputContext(stream, writingResponse: true, userModel: null, serviceDocumentUri: null);
             Action action = () => new ODataJsonWriter(outputContext, navigationSource: null, resourceType: null, writingResourceSet: true);
-            action.Throws<ODataException>(Strings.ODataOutputContext_MetadataDocumentUriMissing);
+            action.Throws<ODataException>(SRResources.ODataOutputContext_MetadataDocumentUriMissing);
         }
 
         [Fact]
@@ -145,10 +146,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         }
 
         [Fact]
-        public void ShouldThrowWhenWritingFeedResponseWithoutUserModelAndWithoutSetName()
+        public void ShouldWriteContextUriWhenWritingFeedResponseWithoutUserModelAndWithoutSetName()
         {
-            Action action = () => this.WriteNestedItemsAndValidatePayload(entitySetFullName: null, derivedEntityTypeFullName: "NS.MyDerivedEntityType", nestedItemToWrite: new[] { new ODataResourceSet() }, expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/NS.MyDerivedEntityType\",\"value\":[]}", writingResponse: true);
-            action.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+            this.WriteNestedItemsAndValidatePayload(entitySetFullName: null, derivedEntityTypeFullName: "NS.MyDerivedEntityType", nestedItemToWrite: new[] { new ODataResourceSet() }, expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(NS.MyDerivedEntityType)\",\"value\":[]}", writingResponse: true);
         }
 
         [Fact]
@@ -170,10 +170,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         }
 
         [Fact]
-        public void ShouldThrowWhenWritingEntryResponseWithoutUserModelAndWithoutSetName()
+        public void ShouldWriteContextUriForEntryResponseWithoutUserModelAndWithoutSetName()
         {
-            Action action = () => this.WriteNestedItemsAndValidatePayload(entitySetFullName: null, derivedEntityTypeFullName: "NS.MyDerivedEntityType", nestedItemToWrite: new[] { new ODataResource() }, expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/NS.MyDerivedEntityType/$entity\"}", writingResponse: true);
-            action.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+            this.WriteNestedItemsAndValidatePayload(entitySetFullName: null, derivedEntityTypeFullName: "NS.MyDerivedEntityType", nestedItemToWrite: new[] { new ODataResource() }, expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\"}", writingResponse: true);
         }
 
         [Fact]
@@ -195,10 +194,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         }
 
         [Fact]
-        public void ShouldThrowWhenWritingFeedResponseWithUserModelAndWithoutSet()
+        public void ShouldWriteContextUriWhenWritingFeedResponseWithUserModelAndWithoutSet()
         {
-            Action action = () => this.WriteNestedItemsAndValidatePayload(/*entitySet*/ null, this.derivedEntityType, nestedItemToWrite: new[] { new ODataResourceSet() }, expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/NS.MyDerivedEntityType\",\"value\":[]}", writingResponse: true);
-            action.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+            this.WriteNestedItemsAndValidatePayload(/*entitySet*/ null, this.derivedEntityType, nestedItemToWrite: new[] { new ODataResourceSet() }, expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#Collection(NS.MyDerivedEntityType)\",\"value\":[]}", writingResponse: true);
         }
 
         [Fact]
@@ -214,10 +212,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         }
 
         [Fact]
-        public void ShouldThrowWhenWritingEntryResponseWithUserModelAndWithoutSet()
+        public void ShouldWirteContextUriForEntryResponseWithUserModelAndWithoutSet()
         {
-            Action action = () => this.WriteNestedItemsAndValidatePayload(/*entitySet*/ null, this.derivedEntityType, nestedItemToWrite: new[] { new ODataResource() }, expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/NS.MyDerivedEntityType/$entity\"}", writingResponse: true);
-            action.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+            this.WriteNestedItemsAndValidatePayload(/*entitySet*/ null, this.derivedEntityType, nestedItemToWrite: new[] { new ODataResource() }, expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.MyDerivedEntityType\"}", writingResponse: true);
         }
         #endregion Context Uri tests
 
@@ -293,7 +290,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         {
             var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { new ODataProperty { Name = "StreamProperty", Value = new ODataStreamReferenceValue { ReadLink = new Uri("http://odata.org/test/Blob") } } } };
             Action action = () => this.WriteNestedItemsAndValidatePayload(entitySet: null, entityType: null, nestedItemToWrite: new[] { entry }, expectedPayload: "", writingResponse: false);
-            action.Throws<ODataException>(Strings.WriterValidationUtils_StreamPropertyInRequest("StreamProperty"));
+            action.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_StreamPropertyInRequest, "StreamProperty"));
         }
 
         [Fact]
@@ -301,7 +298,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         {
             var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { new ODataProperty { Name = "StreamProperty", Value = new ODataStreamReferenceValue { ReadLink = new Uri("http://odata.org/test/Blob") } } } };
             Action action = () => this.WriteNestedItemsAndValidatePayload(entitySetFullName: null, derivedEntityTypeFullName: null, nestedItemToWrite: new[] { entry }, expectedPayload: "", writingResponse: false);
-            action.Throws<ODataException>(Strings.WriterValidationUtils_StreamPropertyInRequest("StreamProperty"));
+            action.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_StreamPropertyInRequest, "StreamProperty"));
         }
         #endregion Stream Property tests
 
@@ -886,7 +883,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             entry.AddAction(new ODataAction { Metadata = new Uri("#Action1", UriKind.Relative) });
             const string expectedPayload = "{\"@odata.type\":\"#NS.MyDerivedEntityType\",\"#Action1\":{}}";
             Action action = () => this.WriteNestedItemsAndValidatePayload(entitySetFullName: null, derivedEntityTypeFullName: null, nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: false);
-            action.Throws<ODataException>(Strings.WriterValidationUtils_OperationInRequest("#Action1"));
+            action.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_OperationInRequest, "#Action1"));
         }
 
         [Fact]
@@ -896,7 +893,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             entry.AddAction(new ODataAction { Metadata = new Uri("#Action1", UriKind.Relative) });
             const string expectedPayload = "{\"@odata.type\":\"#NS.MyDerivedEntityType\",\"#Action1\":{}}";
             Action action = () => this.WriteNestedItemsAndValidatePayload(entitySet: null, entityType: null, nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: false);
-            action.Throws<ODataException>(Strings.WriterValidationUtils_OperationInRequest("#Action1"));
+            action.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_OperationInRequest, "#Action1"));
         }
         #endregion Actions tests
 
@@ -926,7 +923,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             entry.AddFunction(new ODataFunction {Metadata = new Uri("#Function1", UriKind.Relative)});
             const string expectedPayload = "{\"@odata.type\":\"#NS.MyDerivedEntityType\",\"#Function1\":{}}";
             Action action = () => this.WriteNestedItemsAndValidatePayload(entitySetFullName: null, derivedEntityTypeFullName: null, nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: false);
-            action.Throws<ODataException>(Strings.WriterValidationUtils_OperationInRequest("#Function1"));
+            action.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_OperationInRequest, "#Function1"));
         }
 
         [Fact]
@@ -936,7 +933,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             entry.AddFunction(new ODataFunction {Metadata = new Uri("#Function1", UriKind.Relative)});
             const string expectedPayload = "{\"@odata.type\":\"#NS.MyDerivedEntityType\",\"#Function1\":{}}";
             Action action = () => this.WriteNestedItemsAndValidatePayload(entitySet: null, entityType: null, nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: false);
-            action.Throws<ODataException>(Strings.WriterValidationUtils_OperationInRequest("#Function1"));
+            action.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_OperationInRequest, "#Function1"));
         }
         #endregion Functions tests
 
@@ -1203,9 +1200,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             ODataItem topLevelItem = nestedItemToWrite[0];
             ODataResourceSet topLevelFeed = topLevelItem as ODataResourceSet;
 
-            if (entitySetFullName != null)
+            if (entitySetFullName != null || derivedEntityTypeFullName != null)
             {
-                ODataResourceSerializationInfo serializationInfo = entitySetFullName == null ? null : new ODataResourceSerializationInfo { NavigationSourceName = entitySetFullName, NavigationSourceEntityTypeName = "NS.MyEntityType", ExpectedTypeName = derivedEntityTypeFullName ?? "NS.MyEntityType", NavigationSourceKind = EdmNavigationSourceKind.EntitySet };
+                ODataResourceSerializationInfo serializationInfo = entitySetFullName == null ?
+                  new ODataResourceSerializationInfo { ExpectedTypeName = derivedEntityTypeFullName, IsFromCollection = true } :
+                  new ODataResourceSerializationInfo { NavigationSourceName = entitySetFullName, NavigationSourceEntityTypeName = "NS.MyEntityType", ExpectedTypeName = derivedEntityTypeFullName ?? "NS.MyEntityType", NavigationSourceKind = EdmNavigationSourceKind.EntitySet };
+
                 if (topLevelFeed != null)
                 {
                     topLevelFeed.SetSerializationInfo(serializationInfo);

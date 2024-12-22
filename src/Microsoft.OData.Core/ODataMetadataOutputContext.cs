@@ -15,6 +15,7 @@ using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData
 {
@@ -30,11 +31,7 @@ namespace Microsoft.OData
         private XmlWriter xmlWriter;
 
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
-#if NETSTANDARD1_1
-        private AsyncBufferedStream asynchronousOutputStream;
-#else
         private Stream asynchronousOutputStream;
-#endif
 
         /// <summary>
         /// Constructor.
@@ -59,11 +56,7 @@ namespace Microsoft.OData
                 }
                 else
                 {
-#if NETSTANDARD1_1
-                    this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
-#else
                     this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, messageWriterSettings.BufferSize);
-#endif
                     outputStream = this.asynchronousOutputStream;
                 }
 
@@ -220,7 +213,6 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETCOREAPP
         protected override async ValueTask DisposeAsyncCore()
         {
             try
@@ -259,7 +251,6 @@ namespace Microsoft.OData
 
             await base.DisposeAsyncCore().ConfigureAwait(false);
         }
-#endif
 
         private void WriteMetadataDocumentImplementation()
         {
@@ -282,7 +273,7 @@ namespace Microsoft.OData
                     builder.AppendLine(error.ToString());
                 }
 
-                throw new ODataException(Strings.ODataMetadataOutputContext_ErrorWritingMetadata(builder.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataMetadataOutputContext_ErrorWritingMetadata, builder.ToString()));
             }
         }
 
@@ -306,7 +297,7 @@ namespace Microsoft.OData
                     builder.AppendLine(error.ToString());
                 }
 
-                throw new ODataException(Strings.ODataMetadataOutputContext_ErrorWritingMetadata(builder.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataMetadataOutputContext_ErrorWritingMetadata, builder.ToString()));
             }
         }
     }

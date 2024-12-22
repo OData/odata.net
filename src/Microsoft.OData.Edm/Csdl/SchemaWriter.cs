@@ -79,13 +79,13 @@ namespace Microsoft.OData.Edm.Csdl
             IEnumerable<EdmSchema> schemas = new EdmModelSchemaSeparationSerializationVisitor(model).GetSchemas();
             if (schemas.Count() > 1 && singleFileExpected)
             {
-                errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.SingleFileExpected, Edm.Strings.Serializer_SingleFileExpected) };
+                errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.SingleFileExpected, SRResources.Serializer_SingleFileExpected) };
                 return false;
             }
 
             if (!schemas.Any())
             {
-                errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.NoSchemasProduced, Edm.Strings.Serializer_NoSchemasProduced) };
+                errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.NoSchemasProduced, SRResources.Serializer_NoSchemasProduced) };
                 return false;
             }
 
@@ -109,13 +109,13 @@ namespace Microsoft.OData.Edm.Csdl
             IEnumerable<EdmSchema> schemas = await (new EdmModelSchemaSeparationSerializationVisitor(model)).GetSchemasAsync().ConfigureAwait(false);
             if (schemas.Count() > 1 && singleFileExpected)
             {
-                errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.SingleFileExpected, Edm.Strings.Serializer_SingleFileExpected) };
+                errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.SingleFileExpected, SRResources.Serializer_SingleFileExpected) };
                 return (false, errors);
             }
 
             if (!schemas.Any())
             {
-                errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.NoSchemasProduced, Edm.Strings.Serializer_NoSchemasProduced) };
+                errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.NoSchemasProduced, SRResources.Serializer_NoSchemasProduced) };
                 return (false, errors);
             }
 

@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -92,7 +91,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
                 case JsonValueKind.Undefined:
                 default:
-                    context.ReportError(EdmErrorCode.UnknownElementValueKind, Strings.CsdlJsonParser_UnknownJsonElementValueKind(element.ValueKind, context.Path));
+                    context.ReportError(EdmErrorCode.UnknownElementValueKind, Error.Format(SRResources.CsdlJsonParser_UnknownJsonElementValueKind, element.ValueKind, context.Path));
                     return null;
             }
         }
@@ -130,7 +129,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             // Any others?
             // Report error for unknown number
-            context.ReportError(EdmErrorCode.InvalidNumberType, Strings.CsdlJsonParser_InvalidJsonNumberType(element, context.Path));
+            context.ReportError(EdmErrorCode.InvalidNumberType, Error.Format(SRResources.CsdlJsonParser_InvalidJsonNumberType, element, context.Path));
             return null;
         }
 
@@ -455,7 +454,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 // So far, it's not supported. So report non-fatal error for all the annotations on record.
                 if (propertyName.IndexOf('@', StringComparison.Ordinal) != -1)
                 {
-                    context.ReportError(EdmErrorCode.UnsupportedElement, Strings.CsdlJsonParser_UnsupportedJsonMember(context.Path));
+                    context.ReportError(EdmErrorCode.UnsupportedElement, Error.Format(SRResources.CsdlJsonParser_UnsupportedJsonMember, context.Path));
                     return;
                 }
 
@@ -513,4 +512,3 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         }
     }
 }
-#endif

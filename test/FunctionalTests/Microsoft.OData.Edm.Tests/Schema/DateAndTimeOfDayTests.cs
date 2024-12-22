@@ -20,7 +20,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Action test = () => new Date(-2013, 8, 12);
 
             var exception = Assert.Throws<FormatException>(test);
-            Assert.Equal(Strings.Date_InvalidDateParameters(-2013, 8, 12), exception.Message);
+            Assert.Equal(Error.Format(SRResources.Date_InvalidDateParameters, -2013, 8, 12), exception.Message);
         }
 
         [Fact]
@@ -54,28 +54,20 @@ namespace Microsoft.OData.Edm.Tests.Library
             Action test = () => date.AddYears(-5000);
 
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-#if NETCOREAPP
-            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
-#else
-            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
-#endif
+            Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
         }
 
         [Fact]
-        public void TestDateAddYearsInvalidParmeters()
+        public void TestDateAddYearsInvalidParameters()
         {
             Date date = new Date(2013, 8, 12);
             Action test = () => date.AddYears(12000);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-#if NETCOREAPP
-            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
-#else
-            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
-#endif
+            Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
         }
 
         [Fact]
-        public void TesDatetAddMonths()
+        public void TesDateAddMonths()
         {
             Date date = new Date(2013, 8, 12);
             Date result = date.AddMonths(1);
@@ -88,24 +80,16 @@ namespace Microsoft.OData.Edm.Tests.Library
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddMonths(-5000);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-#if NETCOREAPP
-            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
-#else
-            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
-#endif
+            Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
         }
 
         [Fact]
-        public void TestDateAddMonthsInvalidParmeters()
+        public void TestDateAddMonthsInvalidParameters()
         {
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddMonths(120001);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-#if NETCOREAPP
-            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
-#else
-            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
-#endif
+            Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
         }
 
         [Fact]
@@ -122,24 +106,16 @@ namespace Microsoft.OData.Edm.Tests.Library
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddDays(-2);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-#if NETCOREAPP
-            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
-#else
-            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
-#endif
+            Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
         }
 
         [Fact]
-        public void TestDateAddDaysInvalidParmeters()
+        public void TestDateAddDaysInvalidParameters()
         {
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddDays(999999999);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-#if NETCOREAPP
-            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
-#else
-            Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
-#endif
+            Assert.Equal(SRResources.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
         }
 
         [Fact]
@@ -211,7 +187,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             {
                 Action test = () => Date.Parse(tuple.Item1, CultureInfo.InvariantCulture);
                 var exception = Assert.Throws<FormatException>(test);
-                Assert.Equal(Strings.Date_InvalidParsingString(tuple.Item1), exception.Message);
+                Assert.Equal(Error.Format(SRResources.Date_InvalidParsingString, tuple.Item1), exception.Message);
             }
 #endregion
 
@@ -295,7 +271,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Action test = () => date.CompareTo(now);
 
             var exception = Assert.Throws<ArgumentException>(test);
-            Assert.Equal(Strings.Date_InvalidCompareToTarget(now), exception.Message);
+            Assert.Equal(Error.Format(SRResources.Date_InvalidCompareToTarget, now), exception.Message);
         }
 
         [Fact]
@@ -383,7 +359,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             {
                 Action test = () => new TimeOfDay(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4);
                 var exception = Assert.Throws<FormatException>(test);
-                Assert.Equal(Strings.TimeOfDay_InvalidTimeOfDayParameters(tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4), exception.Message);
+                Assert.Equal(Error.Format(SRResources.TimeOfDay_InvalidTimeOfDayParameters, tuple.Item1, tuple.Item2, tuple.Item3, tuple.Item4), exception.Message);
             }
         }
 
@@ -395,7 +371,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             {
                 Action test = () => new TimeOfDay(value);
                 var exception = Assert.Throws<FormatException>(test);
-                Assert.Equal(Strings.TimeOfDay_TicksOutOfRange(value), exception.Message);
+                Assert.Equal(Error.Format(SRResources.TimeOfDay_TicksOutOfRange, value), exception.Message);
             }
         }
 
@@ -486,7 +462,7 @@ namespace Microsoft.OData.Edm.Tests.Library
                 TimeSpan timeSpan = new TimeSpan(value);
                 Action test = () => { TimeOfDay timeOfDay = timeSpan; };
                 var exception = Assert.Throws<FormatException>(test);
-                Assert.Equal(Strings.TimeOfDay_ConvertErrorFromTimeSpan(timeSpan), exception.Message);
+                Assert.Equal(Error.Format(SRResources.TimeOfDay_ConvertErrorFromTimeSpan, timeSpan), exception.Message);
             }
         }
 
@@ -652,7 +628,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             {
                 Action test = () => TimeOfDay.Parse(tuple.Item1);
                 var exception = Assert.Throws<FormatException>(test);
-                Assert.Equal(Strings.TimeOfDay_InvalidParsingString(tuple.Item1), exception.Message);
+                Assert.Equal(Error.Format(SRResources.TimeOfDay_InvalidParsingString, tuple.Item1), exception.Message);
             }
 #endregion
 
@@ -674,7 +650,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             DateTimeOffset now = DateTimeOffset.Now;
             Action test = () => time.CompareTo(now);
             var exception = Assert.Throws<ArgumentException>(test);
-            Assert.Equal(Strings.TimeOfDay_InvalidCompareToTarget(now), exception.Message);
+            Assert.Equal(Error.Format(SRResources.TimeOfDay_InvalidCompareToTarget, now), exception.Message);
         }
         [Fact]
         public void TestTimeOfDayOperator()

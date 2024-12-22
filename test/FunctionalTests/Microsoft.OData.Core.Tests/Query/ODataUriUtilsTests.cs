@@ -9,6 +9,7 @@ using System.Linq;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.Query
 {
@@ -40,7 +41,7 @@ namespace Microsoft.OData.Tests.Query
 
             Action test = () => ODataUriUtils.ConvertFromUriLiteral(value, ODataVersion.V4, EdmCoreModel.Instance, numberType);
 
-            test.Throws<ODataException>(Strings.ODataUriUtils_ConvertFromUriLiteralOverflowNumber("Edm.Int16", "Value was either too large or too small for an Int16."));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataUriUtils_ConvertFromUriLiteralOverflowNumber, "Edm.Int16", "Value was either too large or too small for an Int16."));
         }
 
         [Fact]
@@ -63,11 +64,7 @@ namespace Microsoft.OData.Tests.Query
         public void TestDecimalConvertFromUriLiteral(string value)
         {
             object dec = ODataUriUtils.ConvertFromUriLiteral(value, ODataVersion.V4);
-#if NETCOREAPP
             Assert.True(dec is double || dec is decimal);
-#else
-            Assert.True(dec is decimal);
-#endif
         }
 
         [Fact]
@@ -97,17 +94,9 @@ namespace Microsoft.OData.Tests.Query
         public void TestSingleConvertToUriLiteral()
         {
             string singleString = ODataUriUtils.ConvertToUriLiteral(float.MaxValue, ODataVersion.V4);
-#if NETCOREAPP
             Assert.Equal("3.4028235E+38", singleString);
-#else
-            Assert.Equal("3.40282347E+38", singleString);
-#endif 
             singleString = ODataUriUtils.ConvertToUriLiteral(float.MinValue, ODataVersion.V4);
-#if NETCOREAPP
             Assert.Equal("-3.4028235E+38", singleString);
-#else
-            Assert.Equal("-3.40282347E+38", singleString);
-#endif
             singleString = ODataUriUtils.ConvertToUriLiteral(1000000000000f, ODataVersion.V4);
             Assert.Equal("1E+12", singleString);
         }
@@ -119,11 +108,7 @@ namespace Microsoft.OData.Tests.Query
         public void TestSingleConvertFromUriLiteral(string value)
         {
             object singleNumber = ODataUriUtils.ConvertFromUriLiteral(value, ODataVersion.V4);
-#if NETCOREAPP
             Assert.True(singleNumber is float || singleNumber is double);
-#else
-            Assert.True(singleNumber is float);
-#endif
         }
 
         [Fact]
@@ -180,7 +165,7 @@ namespace Microsoft.OData.Tests.Query
 
             // Invalid base64 value.
             Action action = () => { ODataUriUtils.ConvertFromUriLiteral("binary'AwEEAQUJAgYFAwUJ='", ODataVersion.V4); };
-            action.Throws<ODataException>(Strings.UriQueryExpressionParser_UnrecognizedLiteral("Edm.Binary", "binary'AwEEAQUJAgYFAwUJ='", "0", "binary'AwEEAQUJAgYFAwUJ='"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriQueryExpressionParser_UnrecognizedLiteral, "Edm.Binary", "binary'AwEEAQUJAgYFAwUJ='", "0", "binary'AwEEAQUJAgYFAwUJ='"));
         }
 
 #region enum testings
@@ -236,11 +221,11 @@ namespace Microsoft.OData.Tests.Query
         {
             // Date is not in right format
             Action action = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-1T12:12:12-11:00", ODataVersion.V4);
-            action.Throws<ODataException>(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-07-1T12:12:12-11:00"));
+            action.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-07-1T12:12:12-11:00"));
 
             // Time is not in right format
             Action action2 = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-01T12:12:2-11:00", ODataVersion.V4);
-            action2.Throws<ODataException>(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-07-01T12:12:2-11:00"));
+            action2.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-07-01T12:12:2-11:00"));
 
             // Date and Time separator is incorrect
             // Call from DataUriUtils, it will parse till blank space which is a correct Date
@@ -249,24 +234,24 @@ namespace Microsoft.OData.Tests.Query
 
             // Date is not with limit
             Action action4 = () => ODataUriUtils.ConvertFromUriLiteral("1997-13-01T12:12:12-11:00", ODataVersion.V4);
-            action4.Throws<ODataException>(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-13-01T12:12:12-11:00"));
+            action4.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-13-01T12:12:12-11:00"));
 
             // Time is not within limit
             Action action5 = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-01T12:12:62-11:00", ODataVersion.V4);
-            action5.Throws<ODataException>(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-07-01T12:12:62-11:00"));
+            action5.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-07-01T12:12:62-11:00"));
 
             // Timezone separator is incorrect
             // Call from DataUriUtils, it will parse till blank space, so error message string is without timezone information.
             Action action6 = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-01T12:12:02 11:00", ODataVersion.V4);
-            action6.Throws<ODataException>(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-07-01T12:12:02"));
+            action6.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-07-01T12:12:02"));
 
             // Timezone is not within limit
             Action action7 = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-01T12:12:02-15:00", ODataVersion.V4);
-            action7.Throws<ODataException>(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-07-01T12:12:02-15:00"));
+            action7.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-07-01T12:12:02-15:00"));
 
             // Timezone is not specified
             Action action8 = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-01T12:12:02", ODataVersion.V4);
-            action8.Throws<ODataException>(Strings.UriUtils_DateTimeOffsetInvalidFormat("1997-07-01T12:12:02"));
+            action8.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-07-01T12:12:02"));
         }
 
         [Fact]
@@ -292,7 +277,7 @@ namespace Microsoft.OData.Tests.Query
         public void TestCollectionConvertWithMismatchedBracket()
         {
             Action parse = () => ODataUriUtils.ConvertFromUriLiteral("[1,2,3)", ODataVersion.V4, HardCodedTestModel.TestModel, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))));
-            parse.Throws<ODataException>(Strings.ExpressionLexer_UnbalancedBracketExpression);
+            parse.Throws<ODataException>(SRResources.ExpressionLexer_UnbalancedBracketExpression);
         }
 #endregion
 

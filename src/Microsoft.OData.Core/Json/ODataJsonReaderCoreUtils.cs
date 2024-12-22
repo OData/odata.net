@@ -12,7 +12,7 @@ namespace Microsoft.OData.Json
     using System.Diagnostics;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
     using System.Threading.Tasks;
 
     #endregion Namespaces
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Json
 
             if (spatialValue == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue);
+                throw new ODataException(SRResources.ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue);
             }
 
             return spatialValue;
@@ -174,7 +174,7 @@ namespace Microsoft.OData.Json
 
             if (spatialValue == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue);
+                throw new ODataException(SRResources.ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue);
             }
 
             return spatialValue;
@@ -192,11 +192,7 @@ namespace Microsoft.OData.Json
         /// <returns>true if a null value could be read from the JSON reader; otherwise false.</returns>
         /// <remarks>If the method detects a null value it will read it (position the reader after the null value);
         /// otherwise the reader does not move.</remarks>
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         internal static async ValueTask<bool> TryReadNullValueAsync(
-#else
-        internal static async Task<bool> TryReadNullValueAsync(
-#endif
             IJsonReader jsonReader,
             ODataInputContext inputContext,
             IEdmTypeReference expectedTypeReference,

@@ -22,13 +22,12 @@ namespace Microsoft.OData.Metadata
     using ErrorStrings = Microsoft.OData.Service.Strings;
 #endif
 #if ODATA_CLIENT
-    using ErrorStrings = Microsoft.OData.Client.Strings;
+    using Microsoft.OData.Client;
 #endif
 #if !ODATA_SERVICE && !ODATA_CLIENT
     using Microsoft.OData.Json;
     using Microsoft.OData.UriParser;
-    using ErrorStrings = Microsoft.OData.Strings;
-    using PlatformHelper = Microsoft.OData.PlatformHelper;
+    using Microsoft.OData.Core;
 #endif
     #endregion Namespaces
 
@@ -734,7 +733,7 @@ namespace Microsoft.OData.Metadata
                     return baseType.IsEquivalentTo(subtype);
 
                 default:
-                    throw new ODataException(ErrorStrings.General_InternalError(InternalErrorCodesCommon.EdmLibraryExtensions_IsAssignableFrom_Type));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodesCommon.EdmLibraryExtensions_IsAssignableFrom_Type));
             }
         }
 
@@ -900,7 +899,7 @@ namespace Microsoft.OData.Metadata
                     return EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeometryCollection);
 
                 default:
-                    throw new ODataException(ErrorStrings.General_InternalError(InternalErrorCodesCommon.EdmLibraryExtensions_BaseType));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodesCommon.EdmLibraryExtensions_BaseType));
             }
         }
 
@@ -980,7 +979,7 @@ namespace Microsoft.OData.Metadata
             }
             catch (OverflowException)
             {
-                throw new ODataException(ErrorStrings.EdmLibraryExtensions_ValueOverflowForUnderlyingType(value, expectedTypeReference.FullName()));
+                throw new ODataException(Error.Format(SRResources.EdmLibraryExtensions_ValueOverflowForUnderlyingType, value, expectedTypeReference.FullName()));
             }
         }
 
@@ -1240,7 +1239,7 @@ namespace Microsoft.OData.Metadata
                             return new EdmSpatialTypeReference(primitiveType, nullable, spatialTypeReference.SpatialReferenceIdentifier);
 
                         default:
-                            throw new ODataException(ErrorStrings.General_InternalError(InternalErrorCodesCommon.EdmLibraryExtensions_Clone_PrimitiveTypeKind));
+                            throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodesCommon.EdmLibraryExtensions_Clone_PrimitiveTypeKind));
                     }
 
                 case EdmTypeKind.Entity:
@@ -1260,7 +1259,7 @@ namespace Microsoft.OData.Metadata
 
                 case EdmTypeKind.None:  // fall through
                 default:
-                    throw new ODataException(ErrorStrings.General_InternalError(InternalErrorCodesCommon.EdmLibraryExtensions_Clone_TypeKind));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodesCommon.EdmLibraryExtensions_Clone_TypeKind));
             }
         }
 
@@ -1458,7 +1457,7 @@ namespace Microsoft.OData.Metadata
                     return subTypeKind == EdmPrimitiveTypeKind.GeometryMultiPoint;
 
                 default:
-                    throw new ODataException(ErrorStrings.General_InternalError(InternalErrorCodesCommon.EdmLibraryExtensions_IsAssignableFrom_Primitive));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodesCommon.EdmLibraryExtensions_IsAssignableFrom_Primitive));
             }
         }
 
@@ -1634,7 +1633,7 @@ namespace Microsoft.OData.Metadata
                     return new EdmTypeDefinitionReference((IEdmTypeDefinition)type, nullable);
                 case EdmTypeKind.None:
                 default:
-                    throw new ODataException(ErrorStrings.General_InternalError(InternalErrorCodesCommon.EdmLibraryExtensions_ToTypeReference));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodesCommon.EdmLibraryExtensions_ToTypeReference));
             }
         }
 
@@ -1834,7 +1833,7 @@ namespace Microsoft.OData.Metadata
                 {
                     if (operation.SchemaElementKind != operationKind)
                     {
-                        throw new ODataException(ErrorStrings.EdmLibraryExtensions_OperationGroupReturningActionsAndFunctionsModelInvalid(operationNameWithoutParameterTypes));
+                        throw new ODataException(Error.Format(SRResources.EdmLibraryExtensions_OperationGroupReturningActionsAndFunctionsModelInvalid, operationNameWithoutParameterTypes));
                     }
                 }
 
@@ -1896,7 +1895,7 @@ namespace Microsoft.OData.Metadata
             {
                 if (isNested)
                 {
-                    throw new ODataException(ErrorStrings.ValidationUtils_NestedCollectionsAreNotSupported);
+                    throw new ODataException(SRResources.ValidationUtils_NestedCollectionsAreNotSupported);
                 }
 
                 string innerTypeName = typeName.Substring(collectionTypeQualifierLength + 1, typeName.Length - (collectionTypeQualifierLength + 2));
@@ -2022,12 +2021,12 @@ namespace Microsoft.OData.Metadata
         {
             if (!operation.IsBound)
             {
-                throw new ODataException(ErrorStrings.EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid(operation.Name));
+                throw new ODataException(Error.Format(SRResources.EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid, operation.Name));
             }
 
             if (!operation.Parameters.Any())
             {
-                throw new ODataException(ErrorStrings.EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid(operation.Name));
+                throw new ODataException(Error.Format(SRResources.EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid, operation.Name));
             }
         }
 #endif
@@ -2086,7 +2085,7 @@ namespace Microsoft.OData.Metadata
                 case EdmPrimitiveTypeKind.GeometryCollection:
                     return new EdmSpatialTypeReference(primitiveType, nullable);
                 default:
-                    throw new ODataException(ErrorStrings.General_InternalError(InternalErrorCodesCommon.EdmLibraryExtensions_PrimitiveTypeReference));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodesCommon.EdmLibraryExtensions_PrimitiveTypeReference));
             }
         }
 

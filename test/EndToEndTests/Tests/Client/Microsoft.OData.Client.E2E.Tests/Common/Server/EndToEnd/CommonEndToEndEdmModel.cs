@@ -39,6 +39,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             builder.EntitySet<License>("Licenses");
             builder.EntitySet<MappedEntityType>("MappedEntityTypes");
             builder.EntitySet<Car>("Cars");
+            builder.EntitySet<Bank>("Banks");
+            builder.EntitySet<BankAccount>("BankAccounts");
 
             builder.Action("RetrieveProduct")
                 .Returns<int>();

@@ -8,7 +8,7 @@ using System;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.UriParser.Binders
 {
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             Action bind = () => binder.BindInnerPathSegment(token);
 
             string expectedMessage =
-                ODataErrorStrings.MetadataBinder_PropertyNotDeclared(HardCodedTestModel.GetDogType().FullTypeName(), MissingPropertyName);
+                Error.Format(SRResources.MetadataBinder_PropertyNotDeclared, HardCodedTestModel.GetDogType().FullTypeName(), MissingPropertyName);
             bind.Throws<ODataException>(expectedMessage);
         }
 
@@ -149,7 +149,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var token = new InnerPathToken("MyDog", new InnerPathToken("MyPeople", null, null), null);
 
             Action bind = () => binder.BindInnerPathSegment(token);
-            bind.Throws<ODataException>(Strings.MetadataBinder_PropertyAccessSourceNotSingleValue("MyDog"));
+            bind.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_PropertyAccessSourceNotSingleValue, "MyDog"));
         }
         #endregion
 
@@ -203,7 +203,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             var parent = new ConstantNode(null);
             Action targetMethod = () => InnerPathTokenBinder.EnsureParentIsResourceForNavProp(parent);
-            targetMethod.Throws<ODataException>(ODataErrorStrings.MetadataBinder_NavigationPropertyNotFollowingSingleEntityType);
+            targetMethod.Throws<ODataException>(SRResources.MetadataBinder_NavigationPropertyNotFollowingSingleEntityType);
         }
 
         [Fact]

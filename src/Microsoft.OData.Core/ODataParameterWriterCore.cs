@@ -14,6 +14,7 @@ namespace Microsoft.OData
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -326,7 +327,7 @@ namespace Microsoft.OData
         {
             // The parameter payload is written by the client and read by the server, we do not support
             // writing an in-stream error payload in this scenario.
-            throw new ODataException(Strings.ODataParameterWriter_InStreamErrorNotSupported);
+            throw new ODataException(SRResources.ODataParameterWriter_InStreamErrorNotSupported);
         }
 
         /// <inheritdoc/>
@@ -334,7 +335,7 @@ namespace Microsoft.OData
         {
             // The parameter payload is written by the client and read by the server, we do not support
             // writing an in-stream error payload in this scenario.
-            throw new ODataException(Strings.ODataParameterWriter_InStreamErrorNotSupported);
+            throw new ODataException(SRResources.ODataParameterWriter_InStreamErrorNotSupported);
         }
 
         /// <summary>
@@ -451,7 +452,7 @@ namespace Microsoft.OData
             this.VerifyCallAllowed(synchronousCall);
             if (this.State != ParameterWriterState.Start)
             {
-                throw new ODataException(Strings.ODataParameterWriterCore_CannotWriteStart);
+                throw new ODataException(SRResources.ODataParameterWriterCore_CannotWriteStart);
             }
         }
 
@@ -480,12 +481,12 @@ namespace Microsoft.OData
             this.VerifyNotInErrorOrCompletedState();
             if (this.State != ParameterWriterState.CanWriteParameter)
             {
-                throw new ODataException(Strings.ODataParameterWriterCore_CannotWriteParameter);
+                throw new ODataException(SRResources.ODataParameterWriterCore_CannotWriteParameter);
             }
 
             if (this.parameterNamesWritten.Contains(parameterName))
             {
-                throw new ODataException(Strings.ODataParameterWriterCore_DuplicatedParameterNameNotAllowed(parameterName));
+                throw new ODataException(Error.Format(SRResources.ODataParameterWriterCore_DuplicatedParameterNameNotAllowed, parameterName));
             }
 
             this.parameterNamesWritten.Add(parameterName);
@@ -505,12 +506,12 @@ namespace Microsoft.OData
             IEdmTypeReference parameterTypeReference = this.VerifyCanWriteParameterAndGetTypeReference(synchronousCall, parameterName);
             if (parameterTypeReference != null && !parameterTypeReference.IsODataPrimitiveTypeKind() && !parameterTypeReference.IsODataEnumTypeKind() && !parameterTypeReference.IsODataTypeDefinitionTypeKind())
             {
-                throw new ODataException(Strings.ODataParameterWriterCore_CannotWriteValueOnNonValueTypeKind(parameterName, parameterTypeReference.TypeKind()));
+                throw new ODataException(Error.Format(SRResources.ODataParameterWriterCore_CannotWriteValueOnNonValueTypeKind, parameterName, parameterTypeReference.TypeKind()));
             }
 
             if (parameterValue != null && (!EdmLibraryExtensions.IsPrimitiveType(parameterValue.GetType()) || parameterValue is Stream) && !(parameterValue is ODataEnumValue))
             {
-                throw new ODataException(Strings.ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType(parameterName, parameterValue.GetType()));
+                throw new ODataException(Error.Format(SRResources.ODataParameterWriterCore_CannotWriteValueOnNonSupportedValueType, parameterName, parameterValue.GetType()));
             }
 
             return parameterTypeReference;
@@ -530,7 +531,7 @@ namespace Microsoft.OData
             // TODO : Change to structureds Collection check
             if (parameterTypeReference != null && !parameterTypeReference.IsNonEntityCollectionType())
             {
-                throw new ODataException(Strings.ODataParameterWriterCore_CannotCreateCollectionWriterOnNonCollectionTypeKind(parameterName, parameterTypeReference.TypeKind()));
+                throw new ODataException(Error.Format(SRResources.ODataParameterWriterCore_CannotCreateCollectionWriterOnNonCollectionTypeKind, parameterName, parameterTypeReference.TypeKind()));
             }
 
             return parameterTypeReference == null ? null : parameterTypeReference.GetCollectionItemType();
@@ -548,7 +549,7 @@ namespace Microsoft.OData
             IEdmTypeReference parameterTypeReference = this.VerifyCanWriteParameterAndGetTypeReference(synchronousCall, parameterName);
             if (parameterTypeReference != null && !parameterTypeReference.IsStructured())
             {
-                throw new ODataException(Strings.ODataParameterWriterCore_CannotCreateResourceWriterOnNonEntityOrComplexTypeKind(parameterName, parameterTypeReference.TypeKind()));
+                throw new ODataException(Error.Format(SRResources.ODataParameterWriterCore_CannotCreateResourceWriterOnNonEntityOrComplexTypeKind, parameterName, parameterTypeReference.TypeKind()));
             }
 
             return parameterTypeReference;
@@ -566,7 +567,7 @@ namespace Microsoft.OData
             IEdmTypeReference parameterTypeReference = this.VerifyCanWriteParameterAndGetTypeReference(synchronousCall, parameterName);
             if (parameterTypeReference != null && !parameterTypeReference.IsStructuredCollectionType())
             {
-                throw new ODataException(Strings.ODataParameterWriterCore_CannotCreateResourceSetWriterOnNonStructuredCollectionTypeKind(parameterName, parameterTypeReference.TypeKind()));
+                throw new ODataException(Error.Format(SRResources.ODataParameterWriterCore_CannotCreateResourceSetWriterOnNonStructuredCollectionTypeKind, parameterName, parameterTypeReference.TypeKind()));
             }
 
             return parameterTypeReference;
@@ -584,7 +585,7 @@ namespace Microsoft.OData
                 IEdmOperationParameter parameter = this.operation.FindParameter(parameterName);
                 if (parameter == null)
                 {
-                    throw new ODataException(Strings.ODataParameterWriterCore_ParameterNameNotFoundInOperation(parameterName, this.operation.Name));
+                    throw new ODataException(Error.Format(SRResources.ODataParameterWriterCore_ParameterNameNotFoundInOperation, parameterName, this.operation.Name));
                 }
 
                 return this.outputContext.EdmTypeResolver.GetParameterType(parameter);
@@ -661,7 +662,7 @@ namespace Microsoft.OData
             this.VerifyNotInErrorOrCompletedState();
             if (this.State != ParameterWriterState.CanWriteParameter)
             {
-                throw new ODataException(Strings.ODataParameterWriterCore_CannotWriteEnd);
+                throw new ODataException(SRResources.ODataParameterWriterCore_CannotWriteEnd);
             }
 
             this.VerifyAllParametersWritten();
@@ -695,7 +696,7 @@ namespace Microsoft.OData
                     missingParameters = missingParameters.Select(name => String.Format(CultureInfo.InvariantCulture, "'{0}'", name));
 
                     // We're calling the ToArray here since not all platforms support the string.Join which takes IEnumerable.
-                    throw new ODataException(Strings.ODataParameterWriterCore_MissingParameterInParameterPayload(string.Join(", ", missingParameters.ToArray()), this.operation.Name));
+                    throw new ODataException(Error.Format(SRResources.ODataParameterWriterCore_MissingParameterInParameterPayload, string.Join(", ", missingParameters.ToArray()), this.operation.Name));
                 }
             }
         }
@@ -716,7 +717,7 @@ namespace Microsoft.OData
         {
             if (this.State == ParameterWriterState.Error || this.State == ParameterWriterState.Completed)
             {
-                throw new ODataException(Strings.ODataParameterWriterCore_CannotWriteInErrorOrCompletedState);
+                throw new ODataException(SRResources.ODataParameterWriterCore_CannotWriteInErrorOrCompletedState);
             }
         }
 
@@ -740,14 +741,14 @@ namespace Microsoft.OData
             {
                 if (!this.outputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataParameterWriterCore_SyncCallOnAsyncWriter);
+                    throw new ODataException(SRResources.ODataParameterWriterCore_SyncCallOnAsyncWriter);
                 }
             }
             else
             {
                 if (this.outputContext.Synchronous)
                 {
-                    throw new ODataException(Strings.ODataParameterWriterCore_AsyncCallOnSyncWriter);
+                    throw new ODataException(SRResources.ODataParameterWriterCore_AsyncCallOnSyncWriter);
                 }
             }
         }
@@ -902,37 +903,37 @@ namespace Microsoft.OData
                 case ParameterWriterState.Start:
                     if (newState != ParameterWriterState.CanWriteParameter && newState != ParameterWriterState.Completed)
                     {
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterWriterCore_ValidateTransition_InvalidTransitionFromStart));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataParameterWriterCore_ValidateTransition_InvalidTransitionFromStart));
                     }
 
                     break;
                 case ParameterWriterState.CanWriteParameter:
                     if (newState != ParameterWriterState.CanWriteParameter && newState != ParameterWriterState.ActiveSubWriter && newState != ParameterWriterState.Completed)
                     {
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterWriterCore_ValidateTransition_InvalidTransitionFromCanWriteParameter));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataParameterWriterCore_ValidateTransition_InvalidTransitionFromCanWriteParameter));
                     }
 
                     break;
                 case ParameterWriterState.ActiveSubWriter:
                     if (newState != ParameterWriterState.CanWriteParameter)
                     {
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterWriterCore_ValidateTransition_InvalidTransitionFromActiveSubWriter));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataParameterWriterCore_ValidateTransition_InvalidTransitionFromActiveSubWriter));
                     }
 
                     break;
                 case ParameterWriterState.Completed:
                     // we should never see a state transition when in state 'Completed'
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterWriterCore_ValidateTransition_InvalidTransitionFromCompleted));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataParameterWriterCore_ValidateTransition_InvalidTransitionFromCompleted));
                 case ParameterWriterState.Error:
                     if (newState != ParameterWriterState.Error)
                     {
                         // No more state transitions once we are in error state
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterWriterCore_ValidateTransition_InvalidTransitionFromError));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataParameterWriterCore_ValidateTransition_InvalidTransitionFromError));
                     }
 
                     break;
                 default:
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataParameterWriterCore_ValidateTransition_UnreachableCodePath));
+                    throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataParameterWriterCore_ValidateTransition_UnreachableCodePath));
             }
         }
 

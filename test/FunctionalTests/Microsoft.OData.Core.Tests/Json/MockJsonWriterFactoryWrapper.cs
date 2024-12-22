@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System;
 using System.IO;
 using System.Text;
@@ -57,4 +56,3 @@ namespace Microsoft.OData.Tests.Json
         public int NumCalls { get; private set; }
     }
 }
-#endif

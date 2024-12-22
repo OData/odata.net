@@ -50,12 +50,12 @@ namespace Microsoft.Spatial
         {
             if (double.IsNaN(latitude) || double.IsInfinity(latitude))
             {
-                throw new ArgumentException(Strings.InvalidPointCoordinate(latitude, "latitude"));
+                throw new ArgumentException(Error.Format(SRResources.InvalidPointCoordinate, latitude, "latitude"));
             }
 
             if (double.IsNaN(longitude) || double.IsInfinity(longitude))
             {
-                throw new ArgumentException(Strings.InvalidPointCoordinate(longitude, "longitude"));
+                throw new ArgumentException(Error.Format(SRResources.InvalidPointCoordinate, longitude, "longitude"));
             }
 
             this.latitude = latitude;
@@ -87,7 +87,7 @@ namespace Microsoft.Spatial
             {
                 if (this.IsEmpty)
                 {
-                    throw new NotSupportedException(Strings.Point_AccessCoordinateWhenEmpty);
+                    throw new NotSupportedException(SRResources.Point_AccessCoordinateWhenEmpty);
                 }
 
                 return this.latitude;
@@ -103,7 +103,7 @@ namespace Microsoft.Spatial
             {
                 if (this.IsEmpty)
                 {
-                    throw new NotSupportedException(Strings.Point_AccessCoordinateWhenEmpty);
+                    throw new NotSupportedException(SRResources.Point_AccessCoordinateWhenEmpty);
                 }
 
                 return this.longitude;

@@ -9,7 +9,7 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
     using System.Diagnostics;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Encapsulates the state of metadata binding.
@@ -174,7 +174,7 @@ namespace Microsoft.OData.UriParser
             // TODO: add BindingLimit, use uniform error message
             if (this.BindingRecursionDepth > this.configuration.Settings.FilterLimit)
             {
-                throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+                throw new ODataException(SRResources.UriQueryExpressionParser_TooDeep);
             }
         }
 

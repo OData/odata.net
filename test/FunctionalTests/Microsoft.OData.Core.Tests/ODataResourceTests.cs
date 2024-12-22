@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Tests.Evaluation;
@@ -33,7 +34,7 @@ namespace Microsoft.OData.Tests
                 }
             };
             var serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.BaseType", ExpectedTypeName = "ns.BaseType" };
-            var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, true);
+            var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null);
             var metadataContext = new TestMetadataContext();
             var entryMetadataContext = ODataResourceMetadataContext.Create(this.odataEntryWithFullBuilder, typeContext, serializationInfo, null, metadataContext, new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree), null);
             this.odataEntryWithFullBuilder.MetadataBuilder =
@@ -171,21 +172,13 @@ namespace Microsoft.OData.Tests
             this.odataEntry.InstanceAnnotations.Add(new ODataInstanceAnnotation("namespace.name", new ODataPrimitiveValue("value")));
             Assert.Single(this.odataEntry.InstanceAnnotations);
         }
-#if NETCOREAPP
+
         [Fact]
         public void SetNullValueToInstanceAnnotationsPropertyShouldThrow()
         {
             Action test = () => this.odataEntry.InstanceAnnotations = null;
             test.Throws<ArgumentNullException>("Value cannot be null. (Parameter 'value')");
         }
-#else
-        [Fact]
-        public void SetNullValueToInstanceAnnotationsPropertyShouldThrow()
-        {
-            Action test = () => this.odataEntry.InstanceAnnotations = null;
-            test.Throws<ArgumentNullException>("Value cannot be null.\r\nParameter name: value");
-        }
-#endif
 
         [Fact]
         public void SetListValueToInstanceAnnotationsPropertyShouldPass()
@@ -290,7 +283,7 @@ namespace Microsoft.OData.Tests
             };
 
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ODataResource_PropertyValueCannotBeODataResourceValue("ResourceProperty"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataResource_PropertyValueCannotBeODataResourceValue, "ResourceProperty"), exception.Message);
         }
 
         [Fact]
@@ -314,7 +307,7 @@ namespace Microsoft.OData.Tests
             };
 
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ODataResource_PropertyValueCannotBeODataResourceValue("CollectionProperty"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ODataResource_PropertyValueCannotBeODataResourceValue, "CollectionProperty"), exception.Message);
         }
 
         [Fact]

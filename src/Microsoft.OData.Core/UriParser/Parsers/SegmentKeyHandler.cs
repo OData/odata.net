@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using ErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -166,7 +166,7 @@ namespace Microsoft.OData.UriParser
 
             if (!key.AreValuesNamed && key.ValueCount > 1 && resolver.GetType() == typeof(ODataUriResolver))
             {
-                throw ExceptionUtil.CreateBadRequestError(ErrorStrings.RequestUriProcessor_KeysMustBeNamed);
+                throw ExceptionUtil.CreateBadRequestError(SRResources.RequestUriProcessor_KeysMustBeNamed);
             }
 
             IEnumerable<KeyValuePair<string, object>> keyPairs;

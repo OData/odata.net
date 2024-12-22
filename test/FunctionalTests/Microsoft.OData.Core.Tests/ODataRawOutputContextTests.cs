@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -69,11 +70,7 @@ namespace Microsoft.OData.Tests
 
                     writerSettings.SetServiceDocumentUri(new Uri(ServiceUri));
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(responseMessage, writerSettings, this.model))
-#else
-                    using (var messageWriter = new ODataMessageWriter(responseMessage, writerSettings, this.model))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
                         var customerResponse = new ODataResource
@@ -118,7 +115,7 @@ OData-Version: 4.0
                         await rawOutputContext.WriteInStreamErrorAsync(this.nullReferenceError, false);
                     }));
 
-            Assert.Equal(Strings.ODataAsyncWriter_CannotWriteInStreamErrorForAsync, exception.Message);
+            Assert.Equal(SRResources.ODataAsyncWriter_CannotWriteInStreamErrorForAsync, exception.Message);
         }
 
         [Fact]
@@ -132,7 +129,7 @@ OData-Version: 4.0
                         await rawOutputContext.WriteInStreamErrorAsync(this.nullReferenceError, false);
                     }));
 
-            Assert.Equal(Strings.ODataMessageWriter_CannotWriteInStreamErrorForRawValues, exception.Message);
+            Assert.Equal(SRResources.ODataMessageWriter_CannotWriteInStreamErrorForRawValues, exception.Message);
         }
 
         private async Task<string> SetupRawOutputContextAndRunTestAsync(Func<ODataRawOutputContext, Task> func)

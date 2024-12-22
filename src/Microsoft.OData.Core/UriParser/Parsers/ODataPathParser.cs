@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Metadata;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -103,7 +103,7 @@ namespace Microsoft.OData.UriParser
             // However System.Uri removes it, so any empty segment we see is a 404 error.
             if (identifier.Length == 0)
             {
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
+                throw ExceptionUtil.ResourceNotFoundError(SRResources.RequestUriProcessor_EmptySegmentInRequestUrl);
             }
         }
 
@@ -190,7 +190,7 @@ namespace Microsoft.OData.UriParser
                         }
                         else
                         {
-                            throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
+                            throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates, identifier));
                         }
                     }
 
@@ -257,7 +257,7 @@ namespace Microsoft.OData.UriParser
                         }
                         else
                         {
-                            throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates(identifier));
+                            throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.RequestUriProcessor_SegmentDoesNotSupportKeyPredicates, identifier));
                         }
                     }
 
@@ -290,7 +290,7 @@ namespace Microsoft.OData.UriParser
         {
             if (!isSingleResult)
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_CannotQueryCollections(identifier));
+                throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.RequestUriProcessor_CannotQueryCollections, identifier));
             }
         }
 
@@ -392,7 +392,7 @@ namespace Microsoft.OData.UriParser
                 {
                     if (operationImport.IsActionImport() || (operationImport.IsFunctionImport() && !((IEdmFunctionImport)operationImport).Function.IsComposable))
                     {
-                        throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(previous.Identifier));
+                        throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, previous.Identifier));
                     }
                 }
             }
@@ -404,7 +404,7 @@ namespace Microsoft.OData.UriParser
                 {
                     if (operation.IsAction() || (operation.IsFunction() && !((IEdmFunction)operation).IsComposable))
                     {
-                        throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(previous.Identifier));
+                        throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, previous.Identifier));
                     }
                 }
             }
@@ -421,7 +421,7 @@ namespace Microsoft.OData.UriParser
                 // Nothing can come after a $metadata, $value or $batch segment.
                 // Nothing can come after a service operation with void return type.
                 // Nothing can come after a collection property.
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(previous.Identifier));
+                throw ExceptionUtil.ResourceNotFoundError(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, previous.Identifier));
             }
         }
 
@@ -448,7 +448,7 @@ namespace Microsoft.OData.UriParser
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
             if ((previous.TargetKind != RequestTargetKind.Resource || previous.SingleResult) && previous.TargetKind != RequestTargetKind.Collection)
             {
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_CountNotSupported(previous.Identifier));
+                throw ExceptionUtil.ResourceNotFoundError(Error.Format(SRResources.RequestUriProcessor_CountNotSupported, previous.Identifier));
             }
 
             this.parsedSegments.Add(CountSegment.Instance);
@@ -527,18 +527,18 @@ namespace Microsoft.OData.UriParser
             int index = UriQueryConstants.FilterSegment.Length;
             if (segmentText.Length <= index + 2 || segmentText[index] != '(' || segmentText[segmentText.Length - 1] != ')')
             {
-                throw new ODataException(ODataErrorStrings.RequestUriProcessor_FilterPathSegmentSyntaxError);
+                throw new ODataException(SRResources.RequestUriProcessor_FilterPathSegmentSyntaxError);
             }
 
             // 3) Extract the expression and perform the rest of the validations on it.
             if (lastNavigationSource == null)
             {
-                throw new ODataException(ODataErrorStrings.RequestUriProcessor_NoNavigationSourceFound(UriQueryConstants.FilterSegment));
+                throw new ODataException(Error.Format(SRResources.RequestUriProcessor_NoNavigationSourceFound, UriQueryConstants.FilterSegment));
             }
 
             if (lastNavigationSource is IEdmSingleton || this.parsedSegments.Last() is KeySegment)
             {
-                throw new ODataException(ODataErrorStrings.RequestUriProcessor_CannotApplyFilterOnSingleEntities(lastNavigationSource.Name));
+                throw new ODataException(Error.Format(SRResources.RequestUriProcessor_CannotApplyFilterOnSingleEntities, lastNavigationSource.Name));
             }
 
             // The "index + 1" is to move past the '(' and the '-2' accounts for the two paren characters.
@@ -583,12 +583,12 @@ namespace Microsoft.OData.UriParser
             ODataPathSegment prevSegment = this.parsedSegments.Last();
             if (lastNavigationSource == null)
             {
-                throw new ODataException(ODataErrorStrings.RequestUriProcessor_NoNavigationSourceFound(UriQueryConstants.EachSegment));
+                throw new ODataException(Error.Format(SRResources.RequestUriProcessor_NoNavigationSourceFound, UriQueryConstants.EachSegment));
             }
 
             if (lastNavigationSource is IEdmSingleton || prevSegment is KeySegment)
             {
-                throw new ODataException(ODataErrorStrings.RequestUriProcessor_CannotApplyEachOnSingleEntities(lastNavigationSource.Name));
+                throw new ODataException(Error.Format(SRResources.RequestUriProcessor_CannotApplyEachOnSingleEntities, lastNavigationSource.Name));
             }
 
             EachSegment eachSegment = new EachSegment(lastNavigationSource, prevSegment.TargetEdmType.AsElementType());
@@ -638,7 +638,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (navPropSegment.TargetKind != RequestTargetKind.Resource)
                 {
-                    throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.PathParser_EntityReferenceNotSupported(navPropSegment.Identifier));
+                    throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.PathParser_EntityReferenceNotSupported, navPropSegment.Identifier));
                 }
 
                 // If this is a navigation property, find target navigation source
@@ -665,7 +665,7 @@ namespace Microsoft.OData.UriParser
                 if (lastSegment.TargetKind != RequestTargetKind.Resource)
                 {
                     throw ExceptionUtil.CreateBadRequestError(
-                        ODataErrorStrings.PathParser_EntityReferenceNotSupported(lastSegment.Identifier));
+                        Error.Format(SRResources.PathParser_EntityReferenceNotSupported, lastSegment.Identifier));
                 }
 
                 ReferenceSegment referenceSegment = new ReferenceSegment(lastNavigationSource);
@@ -677,7 +677,7 @@ namespace Microsoft.OData.UriParser
             string nextSegmentText;
             if (this.TryGetNextSegmentText(out nextSegmentText))
             {
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+                throw ExceptionUtil.ResourceNotFoundError(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, UriQueryConstants.RefSegment));
             }
 
             return true;
@@ -800,7 +800,7 @@ namespace Microsoft.OData.UriParser
             // Open navigation properties are not supported on OpenTypes.
             if (parenthesisExpression != null)
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.OpenNavigationPropertiesNotSupportedOnOpenTypes(identifier));
+                throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.OpenNavigationPropertiesNotSupportedOnOpenTypes, identifier));
             }
 
             ODataPathSegment segment = new DynamicPathSegment(identifier);
@@ -866,25 +866,25 @@ namespace Microsoft.OData.UriParser
             if (this.IdentifierIs(UriQueryConstants.CountSegment, identifier))
             {
                 // $count on root: throw
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_CountOnRoot);
+                throw ExceptionUtil.ResourceNotFoundError(SRResources.RequestUriProcessor_CountOnRoot);
             }
 
             if (this.IdentifierIs(UriQueryConstants.FilterSegment, identifier))
             {
                 // $filter on root: throw
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_FilterOnRoot);
+                throw ExceptionUtil.ResourceNotFoundError(SRResources.RequestUriProcessor_FilterOnRoot);
             }
 
             if (this.IdentifierIs(UriQueryConstants.EachSegment, identifier))
             {
                 // $each on root: throw
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_EachOnRoot);
+                throw ExceptionUtil.ResourceNotFoundError(SRResources.RequestUriProcessor_EachOnRoot);
             }
 
             if (this.IdentifierIs(UriQueryConstants.RefSegment, identifier))
             {
                 // $ref on root: throw
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_RefOnRoot);
+                throw ExceptionUtil.ResourceNotFoundError(SRResources.RequestUriProcessor_RefOnRoot);
             }
 
             if (this.configuration.BatchReferenceCallback != null && ContentIdRegex.IsMatch(identifier))
@@ -1124,12 +1124,12 @@ namespace Microsoft.OData.UriParser
 
             if (!UriEdmHelpers.IsBindingTypeValid(bindingType))
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_OperationSegmentBoundToANonEntityType);
+                throw ExceptionUtil.CreateBadRequestError(SRResources.RequestUriProcessor_OperationSegmentBoundToANonEntityType);
             }
 
             if (previousSegment != null && bindingType == null)
             {
-                throw new ODataException(ODataErrorStrings.FunctionCallBinder_CallingFunctionOnOpenProperty(identifier));
+                throw new ODataException(Error.Format(SRResources.FunctionCallBinder_CallingFunctionOnOpenProperty, identifier));
             }
 
             CreateOperationSegment(previousSegment, singleOperation, resolvedParameters, identifier, parenthesisExpression);
@@ -1151,7 +1151,7 @@ namespace Microsoft.OData.UriParser
             // If previous segment is cross-referenced then we explicitly disallow the service action call
             if (previousSegment is BatchReferenceSegment)
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset(identifier));
+                throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.RequestUriProcessor_BatchedActionOnEntityCreatedInSameChangeset, identifier));
             }
 
             CheckOperationTypeCastSegmentRestriction(singleOperation);
@@ -1202,7 +1202,7 @@ namespace Microsoft.OData.UriParser
             if (previous.TargetKind == RequestTargetKind.Primitive)
             {
                 // only $value is allowed after a primitive property
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment(previous.Identifier, text));
+                throw ExceptionUtil.ResourceNotFoundError(Error.Format(SRResources.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment, previous.Identifier, text));
             }
 
             // $ref
@@ -1352,7 +1352,7 @@ namespace Microsoft.OData.UriParser
                     // i.e. we should throw for entitySet(key):/ComposableEscapeFunctionPath::/InvalidEscapeFunction
                     if (!TryBindEscapeFunction())
                     {
-                        throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_ComposableEscapeFunctionShouldHaveValidParameter);
+                        throw ExceptionUtil.CreateBadRequestError(SRResources.RequestUriProcessor_ComposableEscapeFunctionShouldHaveValidParameter);
                     }
                 }
 
@@ -1393,7 +1393,7 @@ namespace Microsoft.OData.UriParser
 
             if (!targetEdmType.IsOrInheritsFrom(previousEdmType) && !previousEdmType.IsOrInheritsFrom(targetEdmType))
             {
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType(targetEdmType.FullTypeName(), previousEdmType.FullTypeName()));
+                throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.RequestUriProcessor_InvalidTypeIdentifier_UnrelatedType, targetEdmType.FullTypeName(), previousEdmType.FullTypeName()));
             }
 
             CheckTypeCastSegmentRestriction(previous, targetEdmType);
@@ -1419,7 +1419,7 @@ namespace Microsoft.OData.UriParser
                     }
                     else
                     {
-                        throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedAfterStructuralCollection(identifier));
+                        throw new ODataException(Error.Format(SRResources.PathParser_TypeCastOnlyAllowedAfterStructuralCollection, identifier));
                     }
                 }
             }
@@ -1489,7 +1489,7 @@ namespace Microsoft.OData.UriParser
                     && navigationSource is IEdmUnknownEntitySet)
                 {
                     // Specifically not throwing ODataUriParserException since it's more an an internal server error
-                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_TargetEntitySetNotFound(property.Name));
+                    throw new ODataException(Error.Format(SRResources.RequestUriProcessor_TargetEntitySetNotFound, property.Name));
                 }
 
                 segment = new NavigationPropertySegment(navigationProperty, navigationSource);
@@ -1516,7 +1516,7 @@ namespace Microsoft.OData.UriParser
                         segment.TargetKind = RequestTargetKind.Enum;
                         break;
                     default:
-                        Debug.Assert(property.Type.IsPrimitive() || property.Type.IsTypeDefinition(), "must be primitive type or type definition property");
+                        Debug.Assert(property.Type.IsPrimitive() || property.Type.IsTypeDefinition() || property.Type.IsUntyped(), "must be primitive type or type definition property");
                         segment.TargetKind = RequestTargetKind.Primitive;
                         break;
                 }
@@ -1583,13 +1583,13 @@ namespace Microsoft.OData.UriParser
                 // Only one segment is allowed after $each...
                 if (numOfSegmentsAfterDollarEach > 1)
                 {
-                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
+                    throw new ODataException(SRResources.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
                 }
 
                 // And if there exists a single segment after $each, then it must be an OperationSegment.
                 if (!(this.parsedSegments[index + 1] is OperationSegment))
                 {
-                    throw new ODataException(ODataErrorStrings.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
+                    throw new ODataException(SRResources.RequestUriProcessor_OnlySingleOperationCanFollowEachPathSegment);
                 }
             }
         }
@@ -1749,7 +1749,7 @@ namespace Microsoft.OData.UriParser
                 return;
             }
 
-            throw new ODataException(Strings.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint(fullTypeName, kind, name));
+            throw new ODataException(Error.Format(SRResources.PathParser_TypeCastOnlyAllowedInDerivedTypeConstraint, fullTypeName, kind, name));
         }
 
         private bool TryResolveEscapeFunction(ODataPathSegment previous, out string qualifiedName, out string parenthesisExpression, out bool anotherEscapeFunctionStarts, out IEdmFunction function)
@@ -1811,7 +1811,7 @@ namespace Microsoft.OData.UriParser
             if (function == null)
             {
                 // We need to throw because we have consumed segments from the queue and we don't put them back. This is fair because early checks did show an escape function bound to the type. 
-                throw ExceptionUtil.CreateBadRequestError(ODataErrorStrings.RequestUriProcessor_NoBoundEscapeFunctionSupported(bindingType.FullTypeName()));
+                throw ExceptionUtil.CreateBadRequestError(Error.Format(SRResources.RequestUriProcessor_NoBoundEscapeFunctionSupported, bindingType.FullTypeName()));
             }
 
             parenthesisExpression = function.Parameters.ElementAt(1).Name + "='" + (isComposableRequired ? identifier.Substring(0, identifier.Length - 1) : identifier) + "'";

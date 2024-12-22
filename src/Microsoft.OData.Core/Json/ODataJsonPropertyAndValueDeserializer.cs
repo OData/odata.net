@@ -15,7 +15,7 @@ namespace Microsoft.OData.Json
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -279,7 +279,7 @@ namespace Microsoft.OData.Json
                         TypeUtils.ParseQualifiedTypeName(payloadTypeName, out namespaceName, out name, out isCollection);
                         if (isCollection)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_CollectionTypeNotExpected(payloadTypeName));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_CollectionTypeNotExpected, payloadTypeName));
                         }
 
                         typeReference = new EdmTypeDefinition(namespaceName, name, typeReference.PrimitiveKind()).ToTypeReference(/*isNullable*/ true);
@@ -293,7 +293,7 @@ namespace Microsoft.OData.Json
                         TypeUtils.ParseQualifiedTypeName(payloadTypeName, out namespaceName, out name, out isCollection);
                         if (isCollection)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_CollectionTypeNotExpected(payloadTypeName));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_CollectionTypeNotExpected, payloadTypeName));
                         }
 
                         return new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(/*isNullable*/ true);
@@ -307,7 +307,7 @@ namespace Microsoft.OData.Json
                         TypeUtils.ParseQualifiedTypeName(payloadTypeName, out namespaceName, out name, out isCollection);
                         if (!isCollection)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_CollectionTypeExpected(payloadTypeName));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_CollectionTypeExpected, payloadTypeName));
                         }
 
                         return new EdmCollectionType(new EdmUntypedStructuredType(namespaceName, name).ToTypeReference(/*isNullable*/ true)).ToTypeReference(/*isNullable*/true);
@@ -582,7 +582,7 @@ namespace Microsoft.OData.Json
             {
                 if (isCollection == false)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_CannotReadSingletonNestedResource(nodeType, propertyName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_CannotReadSingletonNestedResource, nodeType, propertyName));
                 }
             }
             else if ((nodeType == JsonNodeType.PrimitiveValue && jsonReader.GetValue() == null) || nodeType == JsonNodeType.StartObject)
@@ -597,7 +597,7 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_CannotReadCollectionNestedResource(nodeType, propertyName));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_CannotReadCollectionNestedResource, nodeType, propertyName));
                     }
 
                 }
@@ -605,7 +605,7 @@ namespace Microsoft.OData.Json
             else
             {
                 Debug.Assert(nodeType == JsonNodeType.PrimitiveValue, "nodeType == JsonNodeType.PrimitiveValue");
-                throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_CannotReadNestedResource(propertyName));
+                throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_CannotReadNestedResource, propertyName));
             }
         }
 
@@ -663,7 +663,7 @@ namespace Microsoft.OData.Json
             // Check the odata.type annotation for the complex property, it should show inside the complex object.
             if (ValidateDataPropertyTypeNameAnnotation(resourceState.PropertyAndAnnotationCollector, nestedResourceInfo.Name) != null)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation(ODataAnnotationNames.ODataType));
+                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation, ODataAnnotationNames.ODataType));
             }
 
             return ODataJsonReaderNestedResourceInfo.CreateResourceReaderNestedResourceInfo(nestedResourceInfo, complexProperty, nestedResourceType);
@@ -720,7 +720,7 @@ namespace Microsoft.OData.Json
                     default:
                         if (messageReaderSettings.ThrowOnUndeclaredPropertyForNonOpenType)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation, nestedResourceInfo.Name, propertyAnnotation.Key));
                         }
 
                         break;
@@ -800,7 +800,7 @@ namespace Microsoft.OData.Json
 
                     case ODataAnnotationNames.ODataDeltaLink:   // Delta links are not supported on expanded resource sets.
                     default:
-                        throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation(nestedResourceInfo.Name, propertyAnnotation.Key));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation, nestedResourceInfo.Name, propertyAnnotation.Key));
                 }
             }
 
@@ -873,12 +873,12 @@ namespace Microsoft.OData.Json
                         LinkedList<ODataEntityReferenceLink> entityReferenceLinksList = propertyAnnotation.Value as LinkedList<ODataEntityReferenceLink>;
                         if (entityReferenceLinksList != null)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation, nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
                         }
 
                         if (isExpanded)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue, nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
                         }
 
                         Debug.Assert(
@@ -888,7 +888,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     default:
-                        throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation(
+                        throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation,
                             nestedResourceInfo.Name,
                             propertyAnnotation.Key,
                             ODataAnnotationNames.ODataBind));
@@ -934,7 +934,7 @@ namespace Microsoft.OData.Json
                         ODataEntityReferenceLink entityReferenceLink = propertyAnnotation.Value as ODataEntityReferenceLink;
                         if (entityReferenceLink != null)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_StringValueForCollectionBindPropertyAnnotation(nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_StringValueForCollectionBindPropertyAnnotation, nestedResourceInfo.Name, ODataAnnotationNames.ODataBind));
                         }
 
                         Debug.Assert(
@@ -944,7 +944,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     default:
-                        throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation(
+                        throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation,
                             nestedResourceInfo.Name,
                             propertyAnnotation.Key,
                             ODataAnnotationNames.ODataBind));
@@ -1130,7 +1130,7 @@ namespace Microsoft.OData.Json
             string typeName = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName(this.JsonReader.ReadStringValue()));
             if (typeName == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTypeName(typeName));
+                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTypeName, typeName));
             }
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
@@ -1155,7 +1155,7 @@ namespace Microsoft.OData.Json
                 return typeName;
             }
 
-            throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyAnnotationName));
+            throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, propertyAnnotationName));
         }
 
         /// <summary>
@@ -1219,7 +1219,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     default:
-                        throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_UnexpectedComplexCollectionPropertyAnnotation(propertyName, propertyAnnotation.Key));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_UnexpectedComplexCollectionPropertyAnnotation, propertyName, propertyAnnotation.Key));
                 }
             }
 
@@ -1323,7 +1323,7 @@ namespace Microsoft.OData.Json
                     bool isReordering = this.JsonReader is ReorderingJsonReader;
 
                     Func<string, object> propertyAnnotationReaderForTopLevelProperty =
-                        annotationName => { throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation(annotationName)); };
+                        annotationName => { throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation, annotationName)); };
 
                     // Read through all top-level properties, ignore the ones with reserved names (i.e., reserved
                     // characters in their name) and throw if we find none or more than one properties without reserved name.
@@ -1357,7 +1357,7 @@ namespace Microsoft.OData.Json
                                                 if (!object.ReferenceEquals(missingPropertyValue, propertyValue))
                                                 {
                                                     throw new ODataException(
-                                                        ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_TypePropertyAfterValueProperty(ODataAnnotationNames.ODataType, ODataJsonConstants.ODataValuePropertyName));
+                                                        Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_TypePropertyAfterValueProperty, ODataAnnotationNames.ODataType, ODataJsonConstants.ODataValuePropertyName));
                                                 }
 
                                                 payloadTypeName = this.ReadODataTypeAnnotationValue();
@@ -1365,7 +1365,7 @@ namespace Microsoft.OData.Json
                                         }
                                         else
                                         {
-                                            throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
+                                            throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, propertyName));
                                         }
 
                                         break;
@@ -1379,7 +1379,7 @@ namespace Microsoft.OData.Json
                                         break;
 
                                     case PropertyParsingResult.PropertyWithoutValue:
-                                        throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty(propertyName));
+                                        throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty, propertyName));
 
                                     case PropertyParsingResult.PropertyWithValue:
                                         if (string.Equals(ODataJsonConstants.ODataValuePropertyName, propertyName, StringComparison.Ordinal))
@@ -1398,7 +1398,7 @@ namespace Microsoft.OData.Json
                                         else
                                         {
                                             throw new ODataException(
-                                                ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyName(propertyName, ODataJsonConstants.ODataValuePropertyName));
+                                                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyName, propertyName, ODataJsonConstants.ODataValuePropertyName));
                                         }
 
                                         break;
@@ -1407,7 +1407,7 @@ namespace Microsoft.OData.Json
                                         break;
 
                                     case PropertyParsingResult.MetadataReferenceProperty:
-                                        throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                        throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
                                 }
                             });
                     }
@@ -1415,7 +1415,7 @@ namespace Microsoft.OData.Json
                     if (object.ReferenceEquals(missingPropertyValue, propertyValue))
                     {
                         // No property found; there should be exactly one property in the top-level property wrapper that does not have a reserved name.
-                        throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload);
+                        throw new ODataException(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload);
                     }
                 }
             }
@@ -1450,7 +1450,7 @@ namespace Microsoft.OData.Json
             IEdmType typeFromContextUri = this.ContextUriParseResult.EdmType;
             if (expectedPropertyTypeReference != null && !expectedPropertyTypeReference.Definition.IsAssignableFrom(typeFromContextUri))
             {
-                throw new ODataException(ODataErrorStrings.ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType(
+                throw new ODataException(Error.Format(SRResources.ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType,
                         UriUtils.UriToString(this.ContextUriParseResult.ContextUri),
                         typeFromContextUri.FullTypeName(),
                         expectedPropertyTypeReference.FullName()));
@@ -1561,7 +1561,7 @@ namespace Microsoft.OData.Json
             }
             catch (OverflowException)
             {
-                throw new ODataException(ODataErrorStrings.EdmLibraryExtensions_ValueOverflowForUnderlyingType(result, expectedValueTypeReference.FullName()));
+                throw new ODataException(Error.Format(SRResources.EdmLibraryExtensions_ValueOverflowForUnderlyingType, result, expectedValueTypeReference.FullName()));
             }
         }
 
@@ -1601,7 +1601,7 @@ namespace Microsoft.OData.Json
                 {
                     // We manually throw JSON exception here to get a nicer error message (we expect primitive value and got object).
                     // Otherwise the ReadPrimitiveValue would fail with something like "expected primitive value but found property/end object" which is rather confusing.
-                    throw new ODataException(ODataErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, propertyName));
+                    throw new ODataException(Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName, JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, propertyName));
                 }
 
                 result = this.JsonReader.ReadPrimitiveValue();
@@ -1613,7 +1613,7 @@ namespace Microsoft.OData.Json
                     {
                         if ((result is string) ^ this.JsonReader.IsIeee754Compatible)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter(expectedValueTypeReference.FullName()));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter, expectedValueTypeReference.FullName()));
                         }
                     }
 
@@ -1654,7 +1654,7 @@ namespace Microsoft.OData.Json
             {
                 // We manually throw JSON exception here to get a nicer error message (we expect primitive value and got object).
                 // Otherwise the ReadPrimitiveValue would fail with something like "expected primitive value but found property/end object" which is rather confusing.
-                throw new ODataException(ODataErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName(JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, propertyName));
+                throw new ODataException(Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName, JsonNodeType.PrimitiveValue, JsonNodeType.StartObject, propertyName));
             }
 
             string enumStr = this.JsonReader.ReadStringValue();
@@ -1686,7 +1686,7 @@ namespace Microsoft.OData.Json
                 {
                     string typeName = structuredTypeReference != null ? structuredTypeReference.FullName() : payloadTypeName;
                     throw new ODataException(
-                        ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_ODataResourceExpectedForProperty(propertyName, this.JsonReader.NodeType, typeName));
+                        Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_ODataResourceExpectedForProperty, propertyName, this.JsonReader.NodeType, typeName));
                 }
 
                 this.JsonReader.Read();
@@ -1745,11 +1745,11 @@ namespace Microsoft.OData.Json
                             case PropertyParsingResult.ODataInstanceAnnotation: // odata.*
                                 if (string.Equals(ODataAnnotationNames.ODataType, propertyName, StringComparison.Ordinal))
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_ResourceTypeAnnotationNotFirst);
+                                    throw new ODataException(SRResources.ODataJsonPropertyAndValueDeserializer_ResourceTypeAnnotationNotFirst);
                                 }
                                 else
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, propertyName));
                                 }
 
                             case PropertyParsingResult.CustomInstanceAnnotation: // custom instance annotation
@@ -1762,7 +1762,7 @@ namespace Microsoft.OData.Json
                                 break;
 
                             case PropertyParsingResult.PropertyWithoutValue:
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_ResourceValuePropertyAnnotationWithoutProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_ResourceValuePropertyAnnotationWithoutProperty, propertyName));
 
                             case PropertyParsingResult.PropertyWithValue:
                                 // Any other property is data
@@ -1811,7 +1811,7 @@ namespace Microsoft.OData.Json
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
                         }
                     });
             }
@@ -1938,7 +1938,7 @@ namespace Microsoft.OData.Json
                     if (targetTypeKind != EdmTypeKind.Collection || isDynamicProperty != true)
                     {
                         // A null value was found for the property named '{0}', which has the expected type '{1}[Nullable=False]'. The expected type '{1}[Nullable=False]' does not allow null values.
-                        throw new ODataException(ODataErrorStrings.ReaderValidationUtils_NullNamedValueForNonNullableType(propertyName, targetTypeReference.FullName()));
+                        throw new ODataException(Error.Format(SRResources.ReaderValidationUtils_NullNamedValueForNonNullableType, propertyName, targetTypeReference.FullName()));
                     }
                 }
 
@@ -1959,7 +1959,7 @@ namespace Microsoft.OData.Json
                         // for primitive values are property annotations, not instance annotations inside the value.
                         if (typeNameFoundInPayload)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue(ODataAnnotationNames.ODataType));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue, ODataAnnotationNames.ODataType));
                         }
 
                         result = this.ReadPrimitiveValue(
@@ -1998,7 +1998,7 @@ namespace Microsoft.OData.Json
                         {
                             // We manually throw JSON exception here to get a nicer error message (we expect array value and got object).
                             // Otherwise the ReadCollectionValue would fail with something like "expected array value but found property/end object" which is rather confusing.
-                            throw new ODataException(ODataErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName(JsonNodeType.StartArray, JsonNodeType.StartObject, propertyName));
+                            throw new ODataException(Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName, JsonNodeType.StartArray, JsonNodeType.StartObject, propertyName));
                         }
 
                         result = this.ReadCollectionValue(
@@ -2020,7 +2020,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     default:
-                        throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonPropertyAndValueDeserializer_ReadPropertyValue));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataJsonPropertyAndValueDeserializer_ReadPropertyValue));
                 }
 
                 // If we have no expected type make sure the collection items are of the same kind and specify the same name.
@@ -2149,7 +2149,7 @@ namespace Microsoft.OData.Json
                 object nullAnnotationValue = this.JsonReader.ReadPrimitiveValue();
                 if (!(nullAnnotationValue is bool) || (bool)nullAnnotationValue == false)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_InvalidValueForODataNullAnnotation(ODataAnnotationNames.ODataNull, ODataJsonConstants.ODataNullAnnotationTrueValue));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_InvalidValueForODataNullAnnotation, ODataAnnotationNames.ODataNull, ODataJsonConstants.ODataNullAnnotationTrueValue));
                 }
             }
 
@@ -2165,7 +2165,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(propertyAndAnnotationCollector != null, "propertyAndAnnotationCollector != null");
 
             // we use the ParseProperty method to ignore custom annotations.
-            Func<string, object> propertyAnnotationReaderForTopLevelNull = annotationName => { throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation(annotationName)); };
+            Func<string, object> propertyAnnotationReaderForTopLevelNull = annotationName => { throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation, annotationName)); };
             while (this.JsonReader.NodeType == JsonNodeType.Property)
             {
                 this.ProcessProperty(
@@ -2182,23 +2182,23 @@ namespace Microsoft.OData.Json
                     switch (propertyParsingResult)
                     {
                         case PropertyParsingResult.ODataInstanceAnnotation:
-                            throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, propertyName));
 
                         case PropertyParsingResult.CustomInstanceAnnotation:
                             this.JsonReader.SkipValue();
                             break;
 
                         case PropertyParsingResult.PropertyWithoutValue:
-                            throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty(propertyName));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty, propertyName));
 
                         case PropertyParsingResult.PropertyWithValue:
-                            throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload(propertyName));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload, propertyName));
 
                         case PropertyParsingResult.EndOfObject:
                             break;
 
                         case PropertyParsingResult.MetadataReferenceProperty:
-                            throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
                     }
                 });
             }
@@ -2380,7 +2380,7 @@ namespace Microsoft.OData.Json
             {
                 if (isCollection == false)
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_CannotReadSingletonNestedResource(nodeType, propertyName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_CannotReadSingletonNestedResource, nodeType, propertyName));
                 }
             }
             else if (
@@ -2401,7 +2401,7 @@ namespace Microsoft.OData.Json
                     }
                     else
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_CannotReadCollectionNestedResource(nodeType, propertyName));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_CannotReadCollectionNestedResource, nodeType, propertyName));
                     }
 
                 }
@@ -2409,7 +2409,7 @@ namespace Microsoft.OData.Json
             else
             {
                 Debug.Assert(nodeType == JsonNodeType.PrimitiveValue, "nodeType == JsonNodeType.PrimitiveValue");
-                throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_CannotReadNestedResource(propertyName));
+                throw new ODataException(Error.Format(SRResources.ODataJsonResourceDeserializer_CannotReadNestedResource, propertyName));
             }
         }
 
@@ -2436,7 +2436,8 @@ namespace Microsoft.OData.Json
                     await this.JsonReader.ReadStringValueAsync().ConfigureAwait(false)));
             if (typeName == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTypeName(typeName));
+                // TODO: It's meaningless to output an error message using "typeName == null". Should use the original JSON value to construct the error message.
+                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTypeName, typeName));
             }
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
@@ -2499,7 +2500,7 @@ namespace Microsoft.OData.Json
                 return typeName;
             }
 
-            throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyAnnotationName));
+            throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, propertyAnnotationName));
         }
 
         /// <summary>
@@ -2618,7 +2619,7 @@ namespace Microsoft.OData.Json
                     Func<string, Task<object>> readTopLevelPropertyAnnotationValueDelegate =
                         (annotationName) =>
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation(annotationName));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation, annotationName));
                         };
 
                     // Read through all top-level properties, ignore the ones with reserved names (i.e., reserved
@@ -2655,7 +2656,7 @@ namespace Microsoft.OData.Json
                                                 if (!object.ReferenceEquals(missingPropertyValue, propertyValue))
                                                 {
                                                     throw new ODataException(
-                                                        ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_TypePropertyAfterValueProperty(ODataAnnotationNames.ODataType, ODataJsonConstants.ODataValuePropertyName));
+                                                        Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_TypePropertyAfterValueProperty, ODataAnnotationNames.ODataType, ODataJsonConstants.ODataValuePropertyName));
                                                 }
 
                                                 payloadTypeName = await this.ReadODataTypeAnnotationValueAsync()
@@ -2664,7 +2665,7 @@ namespace Microsoft.OData.Json
                                         }
                                         else
                                         {
-                                            throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
+                                            throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, propertyName));
                                         }
 
                                         break;
@@ -2680,7 +2681,7 @@ namespace Microsoft.OData.Json
                                         break;
 
                                     case PropertyParsingResult.PropertyWithoutValue:
-                                        throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty(propertyName));
+                                        throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty, propertyName));
 
                                     case PropertyParsingResult.PropertyWithValue:
                                         if (string.Equals(ODataJsonConstants.ODataValuePropertyName, propertyName, StringComparison.Ordinal))
@@ -2699,7 +2700,7 @@ namespace Microsoft.OData.Json
                                         else
                                         {
                                             throw new ODataException(
-                                                ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyName(propertyName, ODataJsonConstants.ODataValuePropertyName));
+                                                Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyName, propertyName, ODataJsonConstants.ODataValuePropertyName));
                                         }
 
                                         break;
@@ -2708,7 +2709,7 @@ namespace Microsoft.OData.Json
                                         break;
 
                                     case PropertyParsingResult.MetadataReferenceProperty:
-                                        throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                        throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
                                 }
                             }).ConfigureAwait(false);
                     }
@@ -2716,7 +2717,7 @@ namespace Microsoft.OData.Json
                     if (object.ReferenceEquals(missingPropertyValue, propertyValue))
                     {
                         // No property found; there should be exactly one property in the top-level property wrapper that does not have a reserved name.
-                        throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload);
+                        throw new ODataException(SRResources.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload);
                     }
                 }
             }
@@ -2847,7 +2848,7 @@ namespace Microsoft.OData.Json
             }
             catch (OverflowException)
             {
-                throw new ODataException(ODataErrorStrings.EdmLibraryExtensions_ValueOverflowForUnderlyingType(result, expectedValueTypeReference.FullName()));
+                throw new ODataException(Error.Format(SRResources.EdmLibraryExtensions_ValueOverflowForUnderlyingType, result, expectedValueTypeReference.FullName()));
             }
         }
 
@@ -2897,7 +2898,7 @@ namespace Microsoft.OData.Json
                     // Otherwise the ReadPrimitiveValueAsync would fail with something like
                     // "expected primitive value but found property/end object" which is rather confusing.
                     throw new ODataException(
-                        ODataErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName(
+                        Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName,
                             JsonNodeType.PrimitiveValue,
                             JsonNodeType.StartObject,
                             propertyName));
@@ -2913,7 +2914,7 @@ namespace Microsoft.OData.Json
                     {
                         if ((result is string) ^ this.JsonReader.IsIeee754Compatible)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter(expectedValueTypeReference.FullName()));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonReaderUtils_ConflictBetweenInputFormatAndParameter, expectedValueTypeReference.FullName()));
                         }
                     }
 
@@ -2964,7 +2965,7 @@ namespace Microsoft.OData.Json
                 // Otherwise the ReadPrimitiveValue would fail with something like
                 // "expected primitive value but found property/end object" which is rather confusing.
                 throw new ODataException(
-                    ODataErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName(
+                    Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName,
                         JsonNodeType.PrimitiveValue,
                         JsonNodeType.StartObject,
                         propertyName));
@@ -3004,7 +3005,7 @@ namespace Microsoft.OData.Json
                 {
                     string typeName = structuredTypeReference != null ? structuredTypeReference.FullName() : payloadTypeName;
                     throw new ODataException(
-                        ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_ODataResourceExpectedForProperty(propertyName, this.JsonReader.NodeType, typeName));
+                        Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_ODataResourceExpectedForProperty, propertyName, this.JsonReader.NodeType, typeName));
                 }
 
                 await this.JsonReader.ReadAsync()
@@ -3069,11 +3070,11 @@ namespace Microsoft.OData.Json
                             case PropertyParsingResult.ODataInstanceAnnotation: // odata.*
                                 if (string.Equals(ODataAnnotationNames.ODataType, propertyName, StringComparison.Ordinal))
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_ResourceTypeAnnotationNotFirst);
+                                    throw new ODataException(SRResources.ODataJsonPropertyAndValueDeserializer_ResourceTypeAnnotationNotFirst);
                                 }
                                 else
                                 {
-                                    throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, propertyName));
                                 }
 
                             case PropertyParsingResult.CustomInstanceAnnotation: // custom instance annotation
@@ -3089,7 +3090,7 @@ namespace Microsoft.OData.Json
 
                             case PropertyParsingResult.PropertyWithoutValue:
                                 throw new ODataException(
-                                    ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_ResourceValuePropertyAnnotationWithoutProperty(propertyName));
+                                    Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_ResourceValuePropertyAnnotationWithoutProperty, propertyName));
 
                             case PropertyParsingResult.PropertyWithValue:
                                 // Any other property is data
@@ -3139,7 +3140,7 @@ namespace Microsoft.OData.Json
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
                         }
                     }).ConfigureAwait(false);
             }
@@ -3277,7 +3278,7 @@ namespace Microsoft.OData.Json
                     if (targetTypeKind != EdmTypeKind.Collection || isDynamicProperty != true)
                     {
                         // A null value was found for the property named '{0}', which has the expected type '{1}[Nullable=False]'. The expected type '{1}[Nullable=False]' does not allow null values.
-                        throw new ODataException(ODataErrorStrings.ReaderValidationUtils_NullNamedValueForNonNullableType(propertyName, targetTypeReference.FullName()));
+                        throw new ODataException(Error.Format(SRResources.ReaderValidationUtils_NullNamedValueForNonNullableType, propertyName, targetTypeReference.FullName()));
                     }
                 }
 
@@ -3298,7 +3299,7 @@ namespace Microsoft.OData.Json
                         // for primitive values are property annotations, not instance annotations inside the value.
                         if (typeNameFoundInPayload)
                         {
-                            throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue(ODataAnnotationNames.ODataType));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue, ODataAnnotationNames.ODataType));
                         }
 
                         result = await this.ReadPrimitiveValueAsync(
@@ -3341,7 +3342,7 @@ namespace Microsoft.OData.Json
                             // Otherwise the ReadCollectionValue would fail with something like
                             // "expected array value but found property/end object" which is rather confusing.
                             throw new ODataException(
-                                ODataErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName(
+                                Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName,
                                     JsonNodeType.StartArray,
                                     JsonNodeType.StartObject,
                                     propertyName));
@@ -3367,7 +3368,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     default:
-                        throw new ODataException(ODataErrorStrings.General_InternalError(InternalErrorCodes.ODataJsonPropertyAndValueDeserializer_ReadPropertyValue));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataJsonPropertyAndValueDeserializer_ReadPropertyValue));
                 }
 
                 // If we have no expected type make sure the collection items are of the same kind and specify the same name.
@@ -3530,7 +3531,7 @@ namespace Microsoft.OData.Json
                 if (!(nullAnnotationValue is bool) || (bool)nullAnnotationValue == false)
                 {
                     throw new ODataException(
-                        ODataErrorStrings.ODataJsonReaderUtils_InvalidValueForODataNullAnnotation(
+                        Error.Format(SRResources.ODataJsonReaderUtils_InvalidValueForODataNullAnnotation,
                             ODataAnnotationNames.ODataNull,
                             ODataJsonConstants.ODataNullAnnotationTrueValue));
                 }
@@ -3552,7 +3553,7 @@ namespace Microsoft.OData.Json
             Func<string, Task<object>> readTopLevelPropertyAnnotationValueDelegate =
                 (annotationName) =>
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation(annotationName));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation, annotationName));
                 };
 
             while (this.JsonReader.NodeType == JsonNodeType.Property)
@@ -3572,7 +3573,7 @@ namespace Microsoft.OData.Json
                         switch (propertyParsingResult)
                         {
                             case PropertyParsingResult.ODataInstanceAnnotation:
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, propertyName));
 
                             case PropertyParsingResult.CustomInstanceAnnotation:
                                 await this.JsonReader.SkipValueAsync()
@@ -3580,16 +3581,16 @@ namespace Microsoft.OData.Json
                                 break;
 
                             case PropertyParsingResult.PropertyWithoutValue:
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty, propertyName));
 
                             case PropertyParsingResult.PropertyWithValue:
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload, propertyName));
 
                             case PropertyParsingResult.EndOfObject:
                                 break;
 
                             case PropertyParsingResult.MetadataReferenceProperty:
-                                throw new ODataException(ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(propertyName));
+                                throw new ODataException(Error.Format(SRResources.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, propertyName));
                         }
                     }).ConfigureAwait(false);
             }

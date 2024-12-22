@@ -523,11 +523,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             string payload = reader.ReadToEnd();
             Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#People/$entity\",\"ID\":\"18446744073709551615\",\"Name\":\"Foo\",\"FavoriteNumber\":250.0,\"Age\":123,\"Guid\":-9223372036854775808,\"Weight\":123.45,\"Money\":79228162514264337593543950335}", payload);
 
-#if NETCOREAPP1_1
-            stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes(payload));
-#else
             stream = new MemoryStream(Encoding.Default.GetBytes(payload));
-#endif
             message = new InMemoryMessage { Stream = stream };
             message.StatusCode = 200;
 

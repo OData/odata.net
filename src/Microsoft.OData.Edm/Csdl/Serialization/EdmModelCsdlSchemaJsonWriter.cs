@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -3188,7 +3187,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 }
                 else
                 {
-                    throw new InvalidOperationException(Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(operationImport.Name));
+                    throw new InvalidOperationException(Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid, operationImport.Name));
                 }
             }
         }
@@ -3210,7 +3209,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 }
                 else
                 {
-                    throw new InvalidOperationException(Strings.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid(operationImport.Name));
+                    throw new InvalidOperationException(Error.Format(SRResources.EdmModel_Validator_Semantic_OperationImportEntitySetExpressionIsInvalid, operationImport.Name));
                 }
             }
 
@@ -3277,4 +3276,3 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
     }
 }
-#endif

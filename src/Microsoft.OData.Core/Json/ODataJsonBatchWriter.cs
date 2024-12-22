@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Json
 {
+    using Microsoft.OData.Core;
     #region Namespaces
 
     using System;
@@ -224,7 +225,7 @@ namespace Microsoft.OData.Json
             // The OData protocol spec does not define the behavior when an exception is encountered outside of a batch operation. The batch writer
             // should not allow WriteError in this case. Note that WCF DS Server does serialize the error in XML format when it encounters one outside of a
             // batch operation.
-            throw new ODataException(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
+            throw new ODataException(SRResources.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
         }
 
         public override async Task OnInStreamErrorAsync()
@@ -237,7 +238,7 @@ namespace Microsoft.OData.Json
             // The OData protocol spec does not define the behavior when an exception is encountered outside of a batch operation. The batch writer
             // should not allow WriteError in this case. Note that WCF DS Server does serialize the error in XML format when it encounters one outside of a
             // batch operation.
-            throw new ODataException(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
+            throw new ODataException(SRResources.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
         }
 
         /// <summary>
@@ -303,7 +304,7 @@ namespace Microsoft.OData.Json
                 // The dependsOnId must be an existing request ID.
                 if (id == contentId || !this.requestIdToAtomicGroupId.ContainsKey(id))
                 {
-                    throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(id, contentId));
+                    throw new ODataException(Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, id, contentId));
                 }
             }
         }
@@ -660,7 +661,7 @@ namespace Microsoft.OData.Json
                 if (dependsOnId.Equals(currentGroupId, StringComparison.Ordinal))
                 {
                     throw new ODataException(
-                        Strings.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed(requestId, dependsOnId));
+                        Error.Format(SRResources.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed, requestId, dependsOnId));
                 }
             }
             else
@@ -671,7 +672,7 @@ namespace Microsoft.OData.Json
 
                 if (!this.requestIdToAtomicGroupId.TryGetValue(dependsOnId, out groupId))
                 {
-                    throw new ODataException(Strings.ODataBatchReader_DependsOnIdNotFound(dependsOnId, requestId));
+                    throw new ODataException(Error.Format(SRResources.ODataBatchReader_DependsOnIdNotFound, dependsOnId, requestId));
                 }
                 else if (groupId != null)
                 {
@@ -682,7 +683,7 @@ namespace Microsoft.OData.Json
                     if (!groupId.Equals(currentGroupId, StringComparison.Ordinal))
                     {
                         throw new ODataException(
-                            Strings.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed(requestId, groupId));
+                            Error.Format(SRResources.ODataBatchReader_DependsOnRequestIdIsPartOfAtomicityGroupNotAllowed, requestId, groupId));
                     }
                 }
             }
@@ -703,7 +704,7 @@ namespace Microsoft.OData.Json
             {
                 // The Dictionary class will throw an exception if the key <paramref name="contentId"/>
                 // already exists. Convert and throw ODataException.
-                throw new ODataException(Strings.ODataBatchWriter_DuplicateContentIDsNotAllowed(contentId), ae);
+                throw new ODataException(Error.Format(SRResources.ODataBatchWriter_DuplicateContentIDsNotAllowed, contentId), ae);
             }
 
             // Add reverse lookup when current request is part of atomic group.

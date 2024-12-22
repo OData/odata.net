@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
@@ -110,7 +111,7 @@ namespace Microsoft.OData.Tests.Json
 
             //Note: Only testing one of three exceptions that occurs in the Validate ServiceDocumentElements because if one throws then we know that the code path is going through
             // the validation method. If the validation method is changed then in the future two exception tests might be needed.
-            WriteServiceDocumentShouldError(serviceDocument).Throws<ODataException>(Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
+            WriteServiceDocumentShouldError(serviceDocument).Throws<ODataException>(SRResources.ValidationUtils_WorkspaceResourceMustNotContainNullItem);
         }
 
         public static IEnumerable<object[]> GetWriteServiceDocumentTestData()
@@ -238,7 +239,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     FunctionImports = new List<ODataFunctionImportInfo> { null }
                 },
-                Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem
+                SRResources.ValidationUtils_WorkspaceResourceMustNotContainNullItem
             };
 
             // Null EntitySet (Singletons handled the same)
@@ -248,7 +249,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     EntitySets = new List<ODataEntitySetInfo> { null }
                 },
-                Strings.ValidationUtils_WorkspaceResourceMustNotContainNullItem
+                SRResources.ValidationUtils_WorkspaceResourceMustNotContainNullItem
             };
 
             // EntitySet with null value as Url (Singletons handled the same)
@@ -261,7 +262,7 @@ namespace Microsoft.OData.Tests.Json
                         new ODataEntitySetInfo { Name = "Customers", Url = null }
                     }
                 },
-                Strings.ValidationUtils_ResourceMustSpecifyUrl
+                SRResources.ValidationUtils_ResourceMustSpecifyUrl
             };
 
             // EntitySet with null value as Name (Singletons handled the same) 
@@ -274,7 +275,7 @@ namespace Microsoft.OData.Tests.Json
                         new ODataEntitySetInfo { Name = null, Url = new Uri("http://tempuri.org/Customers") }
                     }
                 },
-                Strings.ValidationUtils_ResourceMustSpecifyName("http://tempuri.org/Customers")
+                Error.Format(SRResources.ValidationUtils_ResourceMustSpecifyName, "http://tempuri.org/Customers")
             };
         }
 

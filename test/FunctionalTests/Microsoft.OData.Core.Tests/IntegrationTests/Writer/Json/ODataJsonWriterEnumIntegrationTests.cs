@@ -13,6 +13,7 @@ using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
 using Xunit;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
 {
@@ -649,11 +650,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
 
             // with model: write response
             Action action = () => { this.WriteResponseWithModelAndValidatePayload(mediaType, nestedItemToWrite, "no_expectedPayload", true); };
-            action.Throws<ODataException>(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue("ColorFlags", fullName));
+            action.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue, "ColorFlags", fullName));
 
             // with model: write request
             action = () => { this.WriteMinimalRequestWithModelAndValidatePayload(mediaType, nestedItemToWrite, "no_expectedPayload", true); };
-            action.Throws<ODataException>(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue("ColorFlags", fullName));
+            action.Throws<ODataException>(Error.Format(SRResources.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue, "ColorFlags", fullName));
         }
 
         [Fact]

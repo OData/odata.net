@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Json
 {
+    using Microsoft.OData.Core;
     #region Namespaces
 
     using System;
@@ -215,7 +216,7 @@ namespace Microsoft.OData.Json
                     // Throw an ODataException, if a duplicate json property was detected
                     if (jsonProperties.ContainsKey(propertyName))
                     {
-                        throw new ODataException(Strings.ODataJsonBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch(propertyName));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch, propertyName));
                     }
 
                     switch (propertyName)
@@ -270,7 +271,7 @@ namespace Microsoft.OData.Json
                                     // Throw an ODataException, if a duplicate header was detected
                                     if (headers.ContainsKeyOrdinal(headerName))
                                     {
-                                        throw new ODataException(Strings.ODataJsonBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch(headerName));
+                                        throw new ODataException(Error.Format(SRResources.ODataJsonBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch, headerName));
                                     }
 
                                     // Remember the Content-Type header value.
@@ -304,7 +305,7 @@ namespace Microsoft.OData.Json
                             break;
 
                         default:
-                            throw new ODataException(Strings.ODataJsonBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch(propertyName));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch, propertyName));
                     }
                 }
 
@@ -366,7 +367,7 @@ namespace Microsoft.OData.Json
                     // Throw an ODataException, if a duplicate json property was detected
                     if (jsonProperties.ContainsKey(propertyName))
                     {
-                        throw new ODataException(Strings.ODataJsonBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch(propertyName));
+                        throw new ODataException(Error.Format(SRResources.ODataJsonBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch, propertyName));
                     }
 
                     switch (propertyName)
@@ -422,7 +423,7 @@ namespace Microsoft.OData.Json
                                 // Throw an ODataException, if a duplicate header was detected
                                 if (headers.ContainsKeyOrdinal(headerName))
                                 {
-                                    throw new ODataException(Strings.ODataJsonBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch(headerName));
+                                    throw new ODataException(Error.Format(SRResources.ODataJsonBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch, headerName));
                                 }
 
                                 // Remember the Content-Type header value.
@@ -456,7 +457,7 @@ namespace Microsoft.OData.Json
                             break;
 
                         default:
-                            throw new ODataException(Strings.ODataJsonBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch(propertyName));
+                            throw new ODataException(Error.Format(SRResources.ODataJsonBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch, propertyName));
                     }
                 }
 

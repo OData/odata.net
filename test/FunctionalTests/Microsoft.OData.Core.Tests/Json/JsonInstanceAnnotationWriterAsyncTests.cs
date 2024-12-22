@@ -9,10 +9,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
-using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -230,7 +230,7 @@ namespace Microsoft.OData.Tests.Json
                     }));
 
             Assert.Equal(
-                ODataErrorStrings.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection("favorite.Coffee"),
+                Error.Format(SRResources.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection, "favorite.Coffee"),
                 exception.Message);
         }
 
@@ -414,11 +414,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 MessageStream = this.stream,
                 MediaType = new ODataMediaType("application", "json"),
-#if NETCOREAPP1_1
                 Encoding = Encoding.GetEncoding(0),
-#else
-                Encoding = Encoding.Default,
-#endif
                 IsResponse = writingResponse,
                 IsAsync = isAsync,
                 Model = model,

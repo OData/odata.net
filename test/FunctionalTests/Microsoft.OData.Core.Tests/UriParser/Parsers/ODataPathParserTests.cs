@@ -7,12 +7,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Tests.ScenarioTests.UriBuilder;
 using Microsoft.OData.UriParser;
 using Microsoft.Spatial;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.Parsers
 {
@@ -51,13 +51,13 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string queryPortion;
 
             Action emptyString = () => ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(string.Empty, out actualIdentifier, out queryPortion);
-            emptyString.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
+            emptyString.Throws<ODataUnrecognizedPathException>(SRResources.RequestUriProcessor_EmptySegmentInRequestUrl);
 
             Action noIdentifier = () => ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression("()", out actualIdentifier, out queryPortion);
-            noIdentifier.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
+            noIdentifier.Throws<ODataUnrecognizedPathException>(SRResources.RequestUriProcessor_EmptySegmentInRequestUrl);
 
             Action noEndParen = () => ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression("foo(", out actualIdentifier, out queryPortion);
-            noEndParen.Throws<ODataException>(ErrorStrings.RequestUriProcessor_SyntaxError);
+            noEndParen.Throws<ODataException>(SRResources.RequestUriProcessor_SyntaxError);
         }
 
         #region $ref cases
@@ -72,84 +72,84 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void EntityReferenceToNonexistentPropertyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "foo", "$ref" });
-            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_ResourceNotFound("foo"));
+            parsePath.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_ResourceNotFound, "foo"));
         }
 
         [Fact]
         public void EntityReferenceToOpenPropertyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Paintings(1)", "foo", "$ref" });
-            parsePath.Throws<ODataException>(ErrorStrings.PathParser_EntityReferenceNotSupported("foo"));
+            parsePath.Throws<ODataException>(Error.Format(SRResources.PathParser_EntityReferenceNotSupported, "foo"));
         }
 
         [Fact]
         public void EntityReferenceToPrimitivePropertyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Name", "$ref" });
-            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("Name", UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment, "Name", UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void FurtherCompositionAfterEntityReferenceShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "MyDog", "$ref", "MyPeople" });
-            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void FurtherCompositionAfterEntityReferenceWithKeyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "MyDog", "MyPeople(2)", "$ref", "MyDog" });
-            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void FurtherCompositionAfterEntityCollectionReferenceShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "MyDog", "MyPeople", "$ref", "1" });
-            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void KeyAfterEntityReferenceWithKeyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "MyDog", "MyPeople(5)", "$ref", "1" });
-            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void KeyAfterEntityReferenceShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "MyDog", "$ref", "5" });
-            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void EntityReferenceAfterEntityReferenceShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "MyDog", "$ref", "MyPeople", "$ref" });
-            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void AnythingAfterCountAfterEntityReferenceShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "MyDog", "MyPeople", "$ref", "$count", "foo" });
-            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void EntityReferenceForOpenPropertyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Paintings(1)", "foo", "MyDog", "$ref" });
-            parsePath.Throws<ODataException>(ErrorStrings.PathParser_EntityReferenceNotSupported("MyDog"));
+            parsePath.Throws<ODataException>(Error.Format(SRResources.PathParser_EntityReferenceNotSupported, "MyDog"));
         }
 
         [Fact]
         public void EntityReferenceForActionShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "Fully.Qualified.Namespace.Walk", "$ref" });
-            parsePath.Throws<ODataException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.Walk"));
+            parsePath.Throws<ODataException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "Fully.Qualified.Namespace.Walk"));
         }
 
         [Fact]
@@ -163,14 +163,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void CountAfterEntityReferenceShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "MyPeople", "$ref", "$count" });
-            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, UriQueryConstants.RefSegment));
         }
 
         [Fact]
         public void CountAfterEntityReferenceWithKeyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "MyPeople(5)", "$ref", "$count" });
-            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment(UriQueryConstants.RefSegment));
+            parsePath.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, UriQueryConstants.RefSegment));
         }
         #endregion
 
@@ -178,14 +178,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParenthesesAfterCollectionPropertyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "Nicknames()" });
-            parsePath.Throws<ODataException>(ErrorStrings.RequestUriProcessor_SyntaxError);
+            parsePath.Throws<ODataException>(SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
         public void ParenthesesAfterAnythingThatIsASingleResultShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "Color()" });
-            parsePath.Throws<ODataException>(ErrorStrings.RequestUriProcessor_SyntaxError);
+            parsePath.Throws<ODataException>(SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -210,7 +210,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void SingletonWithKeyShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Boss(1)" });
-            parsePath.Throws<ODataException>(ErrorStrings.RequestUriProcessor_SyntaxError);
+            parsePath.Throws<ODataException>(SRResources.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
@@ -405,7 +405,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             // short.MaxValue + 1 = 32768
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanShort(age=32768)" });
-            parsePath.Throws<ODataException>(ErrorStrings.MetadataBinder_CannotConvertToType("Edm.Int32", "Edm.Int16"));
+            parsePath.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Int32", "Edm.Int16"));
         }
 
         [Fact]
@@ -423,7 +423,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void TestDoubleArgumentOnSingleParameter()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.IsOlderThanSingle(age=123.45678987)" });
-            parsePath.Throws<ODataException>(ErrorStrings.MetadataBinder_CannotConvertToType("Edm.Double", "Edm.Single"));
+            parsePath.Throws<ODataException>(Error.Format(SRResources.MetadataBinder_CannotConvertToType, "Edm.Double", "Edm.Single"));
         }
         #endregion
 
@@ -440,14 +440,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ActionBoundToPrimitiveTypeShouldThrow()
         {
             Action bindToPrimitiveType = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "Color", "ChangeOwner" });
-            bindToPrimitiveType.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("Color", "ChangeOwner"));
+            bindToPrimitiveType.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment, "Color", "ChangeOwner"));
         }
 
         [Fact]
         public void CannotCallFunctionInOpenTypeSpace()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Paintings(0)", "OpenProperty", "Fully.Qualified.Namespace.FindMyOwner(dogsName='fido')" });
-            parsePath.Throws<ODataException>(ErrorStrings.FunctionCallBinder_CallingFunctionOnOpenProperty("Fully.Qualified.Namespace.FindMyOwner"));
+            parsePath.Throws<ODataException>(Error.Format(SRResources.FunctionCallBinder_CallingFunctionOnOpenProperty, "Fully.Qualified.Namespace.FindMyOwner"));
         }
 
         [Fact]
@@ -523,7 +523,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterSinglePrimitiveShouldFail()
         {
             Action parse = () => this.testSubject.ParsePath(new[] { "Lions(ID1=1,ID2=2)", "AngerLevel", "$count" });
-            parse.Throws<ODataUnrecognizedPathException>(Strings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("AngerLevel", "$count"));
+            parse.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment, "AngerLevel", "$count"));
         }
 
         [Fact]
@@ -705,7 +705,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterUnboundFunctionReturnsSinglePrimitiveShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "GetSomeNumber", "$count" });
-            parsePath.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment("GetSomeNumber", "$count"));
+            parsePath.Throws<ODataUnrecognizedPathException>(Error.Format(SRResources.RequestUriProcessor_ValueSegmentAfterScalarPropertySegment, "GetSomeNumber", "$count"));
         }
 
         [Fact]
@@ -747,7 +747,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         public void ParseCountAfterBoundFunctionReturnsSinglePrimitiveShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.HasJob", "$count" });
-            parsePath.Throws<ODataException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.HasJob"));
+            parsePath.Throws<ODataException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "Fully.Qualified.Namespace.HasJob"));
         }
 
         [Fact]
@@ -776,14 +776,14 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             var point = GeographyPoint.Create(1, 2);
             Action parsePath = () => this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.GetNearbyPriorAddresses(currentLocation=geography'" + SpatialHelpers.WriteSpatial(point) + "',limit=null)", "$count" });
-            parsePath.Throws<ODataException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.GetNearbyPriorAddresses"));
+            parsePath.Throws<ODataException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "Fully.Qualified.Namespace.GetNearbyPriorAddresses"));
         }
 
         [Fact]
         public void ParseCountAfterActionShouldFail()
         {
             Action parsePath = () => this.testSubject.ParsePath(new[] { "Dogs(1)", "Fully.Qualified.Namespace.Walk", "$count" });
-            parsePath.Throws<ODataException>(ErrorStrings.RequestUriProcessor_MustBeLeafSegment("Fully.Qualified.Namespace.Walk"));
+            parsePath.Throws<ODataException>(Error.Format(SRResources.RequestUriProcessor_MustBeLeafSegment, "Fully.Qualified.Namespace.Walk"));
         }
 
         [Fact]

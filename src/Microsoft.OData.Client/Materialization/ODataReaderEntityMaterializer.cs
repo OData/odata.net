@@ -145,7 +145,7 @@ namespace Microsoft.OData.Client.Materialization
                     {
                         if (entry != null)
                         {
-                            throw new InvalidOperationException(DSClient.Strings.Parser_SingleEntry_MultipleFound);
+                            throw new InvalidOperationException(SRResources.Parser_SingleEntry_MultipleFound);
                         }
 
                         entry = parser.CurrentEntry;
@@ -156,11 +156,11 @@ namespace Microsoft.OData.Client.Materialization
                 {
                     if (readFeed)
                     {
-                        throw new InvalidOperationException(DSClient.Strings.Parser_SingleEntry_NoneFound);
+                        throw new InvalidOperationException(SRResources.Parser_SingleEntry_NoneFound);
                     }
                     else
                     {
-                        throw new InvalidOperationException(DSClient.Strings.Parser_SingleEntry_ExpectedFeedOrEntry);
+                        throw new InvalidOperationException(SRResources.Parser_SingleEntry_ExpectedFeedOrEntry);
                     }
                 }
 
@@ -204,11 +204,11 @@ namespace Microsoft.OData.Client.Materialization
                 {
                     if (readDeltaResourceSet)
                     {
-                        throw new InvalidOperationException(DSClient.Strings.Parser_SingleEntry_NoneFound);
+                        throw new InvalidOperationException(SRResources.Parser_SingleEntry_NoneFound);
                     }
                     else
                     {
-                        throw new InvalidOperationException(DSClient.Strings.Parser_SingleEntry_ExpectedFeedOrEntry);
+                        throw new InvalidOperationException(SRResources.Parser_SingleEntry_ExpectedFeedOrEntry);
                     }
                 }
 

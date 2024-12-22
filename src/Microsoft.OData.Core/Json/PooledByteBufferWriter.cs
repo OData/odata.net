@@ -4,14 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
+using Microsoft.OData.Core;
 using System;
 using System.Buffers;
 using System.Diagnostics;
 
 namespace Microsoft.OData.Json
 {
-    // This class has been adapated from https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Text/Json/PooledByteBufferWriter.cs
+    // This class has been adapted from https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Text/Json/PooledByteBufferWriter.cs
     /// <summary>
     /// An implementation of <see cref="IBufferWriter{T}"/> that rents
     /// buffers from an array pool instead of allocating a new array every time.
@@ -204,7 +204,7 @@ namespace Microsoft.OData.Json
                     // If the size still exceeds the max size, then give up and throw an OOM.
                     if ((uint)newSize > MaximumBufferSize)
                     {
-                        throw new OutOfMemoryException(Strings.ODataMessageWriter_Buffer_Maximum_Size_Exceeded(newSize));
+                        throw new OutOfMemoryException(Error.Format(SRResources.ODataMessageWriter_Buffer_Maximum_Size_Exceeded, newSize));
                     }
                 }
 
@@ -226,4 +226,3 @@ namespace Microsoft.OData.Json
         }
     }
 }
-#endif

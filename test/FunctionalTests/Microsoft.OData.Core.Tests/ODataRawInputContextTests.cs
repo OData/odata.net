@@ -11,10 +11,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
-using ErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests
 {
@@ -244,7 +244,7 @@ OData-Version: 4.0
                     }));
 
             Assert.Equal(
-                ErrorStrings.ODataAsyncReader_InvalidNewLineEncountered(lastChar),
+                Error.Format(SRResources.ODataAsyncReader_InvalidNewLineEncountered, lastChar),
                 exception.Message);
         }
 
@@ -263,7 +263,7 @@ OData-Version: 4.0
                     }));
 
             Assert.Equal(
-                ErrorStrings.ODataAsyncReader_UnexpectedEndOfInput,
+                SRResources.ODataAsyncReader_UnexpectedEndOfInput,
                 exception.Message);
         }
 
@@ -285,7 +285,7 @@ Content-Type: application/json
                     }));
 
             Assert.Equal(
-                ErrorStrings.ODataAsyncReader_DuplicateHeaderFound("Content-Type"),
+                Error.Format(SRResources.ODataAsyncReader_DuplicateHeaderFound, "Content-Type"),
                 exception.Message);
         }
 

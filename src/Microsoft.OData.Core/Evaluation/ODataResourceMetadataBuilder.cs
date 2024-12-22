@@ -16,6 +16,7 @@ namespace Microsoft.OData.Evaluation
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.OData.Json;
+    using Microsoft.OData.Core;
     #endregion
 
     /// <summary>
@@ -144,13 +145,13 @@ namespace Microsoft.OData.Evaluation
 
                 if (property.ODataValue is ODataResourceValue)
                 {
-                    throw new ODataException(Strings.ODataResource_PropertyValueCannotBeODataResourceValue(property.Name));
+                    throw new ODataException(Error.Format(SRResources.ODataResource_PropertyValueCannotBeODataResourceValue, property.Name));
                 }
 
                 ODataCollectionValue collectionValue = property.ODataValue as ODataCollectionValue;
                 if (collectionValue != null && collectionValue.Items != null && collectionValue.Items.Any(t => t is ODataResourceValue))
                 {
-                    throw new ODataException(Strings.ODataResource_PropertyValueCannotBeODataResourceValue(property.Name));
+                    throw new ODataException(Error.Format(SRResources.ODataResource_PropertyValueCannotBeODataResourceValue, property.Name));
                 }
 
                 return true;

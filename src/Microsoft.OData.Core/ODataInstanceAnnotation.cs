@@ -8,6 +8,7 @@ namespace Microsoft.OData
 {
     using System;
     using System.Xml;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Json;
 
     /// <summary>
@@ -37,7 +38,7 @@ namespace Microsoft.OData
             if (!isCustomAnnotation && ODataAnnotationNames.IsODataAnnotationName(annotationName))
             {
                 // isCustomAnnotation==true includes '@odata.<unknown name>', which won't cause the below exception.
-                throw new ArgumentException(Strings.ODataInstanceAnnotation_ReservedNamesNotAllowed(annotationName, ODataJsonConstants.ODataAnnotationNamespacePrefix));
+                throw new ArgumentException(Error.Format(SRResources.ODataInstanceAnnotation_ReservedNamesNotAllowed, annotationName, ODataJsonConstants.ODataAnnotationNamespacePrefix));
             }
 
             ValidateName(annotationName);
@@ -64,7 +65,7 @@ namespace Microsoft.OData
         {
             if (name.IndexOf('.', StringComparison.Ordinal) < 0 || name[0] == '.' || name[name.Length - 1] == '.')
             {
-                throw new ArgumentException(Strings.ODataInstanceAnnotation_NeedPeriodInName(name));
+                throw new ArgumentException(Error.Format(SRResources.ODataInstanceAnnotation_NeedPeriodInName, name));
             }
 
             try
@@ -73,7 +74,7 @@ namespace Microsoft.OData
             }
             catch (XmlException e)
             {
-                throw new ArgumentException(Strings.ODataInstanceAnnotation_BadTermName(name), e);
+                throw new ArgumentException(Error.Format(SRResources.ODataInstanceAnnotation_BadTermName, name), e);
             }
         }
 
@@ -87,7 +88,7 @@ namespace Microsoft.OData
 
             if (value is ODataStreamReferenceValue)
             {
-                throw new ArgumentException(Strings.ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue, nameof(value));
+                throw new ArgumentException(SRResources.ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue, nameof(value));
             }
         }
     }

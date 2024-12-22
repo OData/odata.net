@@ -14,6 +14,7 @@ namespace Microsoft.OData.Evaluation
     using Microsoft.OData.Metadata;
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.Core;
     #endregion
 
     /// <summary>
@@ -131,11 +132,11 @@ namespace Microsoft.OData.Evaluation
                 case EdmNavigationSourceKind.Singleton:
                     uri = this.ComputeIdForSingleton();
                     break;
+                // Treat UnknownEntitySet as a containment
+                case EdmNavigationSourceKind.UnknownEntitySet:
                 case EdmNavigationSourceKind.ContainedEntitySet:
                     uri = this.ComputeIdForContainment();
                     break;
-                case EdmNavigationSourceKind.UnknownEntitySet:
-                    throw new ODataException(Strings.ODataMetadataBuilder_UnknownEntitySet(this.ResourceMetadataContext.TypeContext.NavigationSourceName));
                 default:
                     uri = this.ComputeId();
                     break;
@@ -152,7 +153,7 @@ namespace Microsoft.OData.Evaluation
         /// </returns>
         private Uri ComputeId()
         {
-            if (this.ResourceMetadataContext.KeyProperties.Any())
+            if (this.ResourceMetadataContext.TypeContext.NavigationSourceName != null && this.ResourceMetadataContext.KeyProperties.Any())
             {
                 Uri uri = this.UriBuilder.BuildBaseUri();
                 uri = this.UriBuilder.BuildEntitySetUri(uri, this.ResourceMetadataContext.TypeContext.NavigationSourceName);
@@ -181,7 +182,7 @@ namespace Microsoft.OData.Evaluation
 
                 if (odataPath == null || odataPath.Count == 0)
                 {
-                    throw new ODataException(Strings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
+                    throw new ODataException(SRResources.ODataMetadataBuilder_MissingParentIdOrContextUrl);
                 }
 
                 uri = this.GetContainingEntitySetUri(uri, odataPath);

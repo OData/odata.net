@@ -8,7 +8,7 @@ namespace Microsoft.OData.UriParser
 {
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Class responsible for binding a syntactic filter expression into a bound tree of semantic nodes.
@@ -51,7 +51,7 @@ namespace Microsoft.OData.UriParser
             if (expressionResultNode == null ||
                 (expressionResultNode.TypeReference != null && !expressionResultNode.TypeReference.IsODataPrimitiveTypeKind()))
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_FilterExpressionNotSingleValue);
+                throw new ODataException(SRResources.MetadataBinder_FilterExpressionNotSingleValue);
             }
 
             // The type may be null here if the query statically represents the null literal or an open property.
@@ -62,7 +62,7 @@ namespace Microsoft.OData.UriParser
                 if (primitiveExpressionResultType == null ||
                     primitiveExpressionResultType.PrimitiveKind() != EdmPrimitiveTypeKind.Boolean)
                 {
-                    throw new ODataException(ODataErrorStrings.MetadataBinder_FilterExpressionNotSingleValue);
+                    throw new ODataException(SRResources.MetadataBinder_FilterExpressionNotSingleValue);
                 }
             }
 

@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Core;
 using System;
 using Xunit;
 
@@ -42,7 +43,7 @@ namespace Microsoft.OData.Tests
         public void SettingTypeNameWithoutCollectionWrapperToCollectionTypeNameShouldThrow()
         {
             Action action = () => this.testSubject.CollectionTypeName = "Edm.String";
-            action.Throws<ODataException>(Strings.ValidationUtils_InvalidCollectionTypeName("Edm.String"));
+            action.Throws<ODataException>(Error.Format(SRResources.ValidationUtils_InvalidCollectionTypeName, "Edm.String"));
         }
 
         [Fact]

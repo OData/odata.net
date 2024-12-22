@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -122,7 +122,7 @@ namespace Microsoft.OData.UriParser
 
             if (navigationProperty.TargetMultiplicity() != EdmMultiplicity.Many)
             {
-                throw new ArgumentException(ODataErrorStrings.Nodes_CollectionNavigationNode_MustHaveManyMultiplicity);
+                throw new ArgumentException(SRResources.Nodes_CollectionNavigationNode_MustHaveManyMultiplicity);
             }
 
             this.navigationProperty = navigationProperty;

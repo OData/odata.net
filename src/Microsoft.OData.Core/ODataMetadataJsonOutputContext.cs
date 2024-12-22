@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,6 +12,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 
@@ -202,7 +202,6 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETCOREAPP
         protected override async ValueTask DisposeAsyncCore()
         {
             try
@@ -230,7 +229,6 @@ namespace Microsoft.OData
 
             await base.DisposeAsyncCore().ConfigureAwait(false);
         }
-#endif
 
         private void WriteMetadataDocumentImplementation()
         {
@@ -251,7 +249,7 @@ namespace Microsoft.OData
                     builder.AppendLine(error.ToString());
                 }
 
-                throw new ODataException(Strings.ODataMetadataOutputContext_ErrorWritingMetadata(builder.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataMetadataOutputContext_ErrorWritingMetadata, builder.ToString()));
             }
         }
 
@@ -273,7 +271,7 @@ namespace Microsoft.OData
                     builder.AppendLine(error.ToString());
                 }
 
-                throw new ODataException(Strings.ODataMetadataOutputContext_ErrorWritingMetadata(builder.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataMetadataOutputContext_ErrorWritingMetadata, builder.ToString()));
             }
         }
 
@@ -283,12 +281,7 @@ namespace Microsoft.OData
 
             await this.jsonWriter.FlushAsync().ConfigureAwait(false);
             await this.jsonWriter.DisposeAsync().ConfigureAwait(false);
-#if NETCOREAPP
             await this.asynchronousOutputStream.DisposeAsync().ConfigureAwait(false);
-#else
-            this.asynchronousOutputStream.Dispose();
-#endif
         }
     }
 }
-#endif

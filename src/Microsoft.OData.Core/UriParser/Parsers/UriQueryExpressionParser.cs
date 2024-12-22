@@ -14,7 +14,7 @@ namespace Microsoft.OData.UriParser
     using System.Linq;
     using Microsoft.OData.UriParser.Aggregation;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -270,7 +270,7 @@ namespace Microsoft.OData.UriParser
             // '('
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             lexer.NextToken();
@@ -292,7 +292,7 @@ namespace Microsoft.OData.UriParser
             // ")"
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -340,7 +340,7 @@ namespace Microsoft.OData.UriParser
             // '('
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -373,7 +373,7 @@ namespace Microsoft.OData.UriParser
                                 : new ExpandToken(nestedExpand.ExpandTerms.Concat(tempNestedExpand.ExpandTerms));
                             break;
                         default:
-                            throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                            throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_KeywordOrIdentifierExpected, supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
                     }
                 }
             }
@@ -381,7 +381,7 @@ namespace Microsoft.OData.UriParser
             // Leaf level expands require filter
             if (filterToken == null && nestedExpand == null)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_InnerMostExpandRequireFilter(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_InnerMostExpandRequireFilter, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             ExpandTermToken expandTermToken = new ExpandTermToken(pathToken, filterToken, null, null, null, null, null, null, null, nestedExpand);
@@ -390,7 +390,7 @@ namespace Microsoft.OData.UriParser
             // ")"
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -433,7 +433,7 @@ namespace Microsoft.OData.UriParser
                         transformationTokens.Add(ParseExpand());
                         break;
                     default:
-                        throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                        throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_KeywordOrIdentifierExpected, supportedKeywords, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
                 }
 
                 // '/' indicates there are more transformations
@@ -464,7 +464,7 @@ namespace Microsoft.OData.UriParser
             // '('
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -486,7 +486,7 @@ namespace Microsoft.OData.UriParser
             // ")"
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -549,7 +549,7 @@ namespace Microsoft.OData.UriParser
             // '('
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -557,7 +557,7 @@ namespace Microsoft.OData.UriParser
             // '('
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -570,7 +570,7 @@ namespace Microsoft.OData.UriParser
 
                 if (expression == null)
                 {
-                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_ExpressionExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                    throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
                 }
 
                 properties.Add(expression);
@@ -586,7 +586,7 @@ namespace Microsoft.OData.UriParser
             // ")"
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrOperatorExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -605,14 +605,14 @@ namespace Microsoft.OData.UriParser
                 }
                 else
                 {
-                    throw ParseError(ODataErrorStrings.UriQueryExpressionParser_KeywordOrIdentifierExpected(ExpressionConstants.KeywordAggregate, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                    throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_KeywordOrIdentifierExpected, ExpressionConstants.KeywordAggregate, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
                 }
             }
 
             // ")"
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -778,7 +778,7 @@ namespace Microsoft.OData.UriParser
 
                 if (typeParsingException == null)
                 {
-                    message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteral(
+                    message = Error.Format(SRResources.UriQueryExpressionParser_UnrecognizedLiteral,
                         targetTypeName,
                         tokenText,
                         lexer.CurrentToken.Position,
@@ -788,7 +788,7 @@ namespace Microsoft.OData.UriParser
                 }
                 else
                 {
-                    message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteralWithReason(
+                    message = Error.Format(SRResources.UriQueryExpressionParser_UnrecognizedLiteralWithReason,
                         targetTypeName,
                         tokenText,
                         lexer.CurrentToken.Position,
@@ -1130,7 +1130,7 @@ namespace Microsoft.OData.UriParser
                         QueryToken primitiveLiteralToken = TryParseLiteral(this.lexer);
                         if (primitiveLiteralToken == null)
                         {
-                            throw ParseError(ODataErrorStrings.UriQueryExpressionParser_ExpressionExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                            throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_ExpressionExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
                         }
 
                         return primitiveLiteralToken;
@@ -1146,14 +1146,14 @@ namespace Microsoft.OData.UriParser
         {
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
             QueryToken result = this.ParseExpression();
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrOperatorExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrOperatorExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -1191,7 +1191,7 @@ namespace Microsoft.OData.UriParser
             this.lexer.NextToken();
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.OpenParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_OpenParenExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_OpenParenExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             this.lexer.NextToken();
@@ -1213,7 +1213,7 @@ namespace Microsoft.OData.UriParser
             string parameter = this.lexer.CurrentToken.GetIdentifier().ToString();
             if (!this.parameters.Add(parameter))
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_RangeVariableAlreadyDeclared(parameter));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_RangeVariableAlreadyDeclared, parameter));
             }
 
             // read the ':' separating the range variable from the expression.
@@ -1224,7 +1224,7 @@ namespace Microsoft.OData.UriParser
             QueryToken expr = this.ParseExpression();
             if (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CloseParenOrCommaExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_CloseParenOrCommaExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             // forget about the range variable after parsing the expression for this lambda.
@@ -1275,7 +1275,7 @@ namespace Microsoft.OData.UriParser
         {
             if (!TokenIdentifierIs(ExpressionConstants.KeywordWith))
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_WithExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_WithExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             lexer.NextToken();
@@ -1305,7 +1305,7 @@ namespace Microsoft.OData.UriParser
                     if (!methodLabel.Contains(OData.ExpressionConstants.SymbolDot, StringComparison.Ordinal))
                     {
                         throw ParseError(
-                            ODataErrorStrings.UriQueryExpressionParser_UnrecognizedWithMethod(
+                            Error.Format(SRResources.UriQueryExpressionParser_UnrecognizedWithMethod,
                                 methodLabel.ToString(),
                                 identifierStartPosition,
                                 this.lexer.ExpressionText));
@@ -1322,7 +1322,7 @@ namespace Microsoft.OData.UriParser
         {
             if (!TokenIdentifierIs(ExpressionConstants.KeywordAs))
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_AsExpected(this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
+                throw ParseError(Error.Format(SRResources.UriQueryExpressionParser_AsExpected, this.lexer.CurrentToken.Position, this.lexer.ExpressionText));
             }
 
             lexer.NextToken();
@@ -1356,7 +1356,7 @@ namespace Microsoft.OData.UriParser
             this.recursionDepth++;
             if (this.recursionDepth > this.maxDepth)
             {
-                throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_TooDeep);
+                throw new ODataException(SRResources.UriQueryExpressionParser_TooDeep);
             }
         }
 

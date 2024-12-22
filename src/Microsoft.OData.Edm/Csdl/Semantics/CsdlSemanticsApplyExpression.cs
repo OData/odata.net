@@ -77,7 +77,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             int candidateCount = candidateFunctions.Count();
             if (candidateCount == 0)
             {
-                return new UnresolvedFunction(this.expression.Function, Edm.Strings.Bad_UnresolvedOperation(this.expression.Function), this.Location);
+                return new UnresolvedFunction(this.expression.Function, Error.Format(SRResources.Bad_UnresolvedOperation, this.expression.Function), this.Location);
             }
 
             candidateFunctions = candidateFunctions.Where(this.IsMatchingFunction);
@@ -88,7 +88,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 candidateCount = candidateFunctions.Count();
                 if (candidateCount != 1)
                 {
-                    return new UnresolvedFunction(this.expression.Function, Edm.Strings.Bad_AmbiguousOperation(this.expression.Function), this.Location);
+                    return new UnresolvedFunction(this.expression.Function, Error.Format(SRResources.Bad_AmbiguousOperation, this.expression.Function), this.Location);
                 }
 
                 return candidateFunctions.Single();
@@ -96,7 +96,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             if (candidateCount == 0)
             {
-                return new UnresolvedFunction(this.expression.Function, Edm.Strings.Bad_OperationParametersDontMatch(this.expression.Function), this.Location);
+                return new UnresolvedFunction(this.expression.Function, Error.Format(SRResources.Bad_OperationParametersDontMatch, this.expression.Function), this.Location);
             }
 
             return candidateFunctions.Single();

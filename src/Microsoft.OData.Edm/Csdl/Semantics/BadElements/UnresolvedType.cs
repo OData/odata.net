@@ -18,7 +18,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly string fullName;
 
         public UnresolvedType(string qualifiedName, EdmLocation location)
-            : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedType, Edm.Strings.Bad_UnresolvedType(qualifiedName)) })
+            : base(new EdmError[] { new EdmError(location, EdmErrorCode.BadUnresolvedType, Error.Format(SRResources.Bad_UnresolvedType, qualifiedName)) })
         {
             qualifiedName = qualifiedName ?? string.Empty;
             EdmUtil.TryGetNamespaceNameFromQualifiedName(qualifiedName, out this.namespaceName, out this.name, out this.fullName);

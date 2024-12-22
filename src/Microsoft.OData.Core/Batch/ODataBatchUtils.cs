@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -59,8 +60,8 @@ namespace Microsoft.OData
                 if (baseUri == null)
                 {
                     string errorMessage = UriUtils.UriToString(uri).StartsWith("$", StringComparison.Ordinal)
-                        ? Strings.ODataBatchUtils_RelativeUriStartingWithDollarUsedWithoutBaseUriSpecified(UriUtils.UriToString(uri))
-                        : Strings.ODataBatchUtils_RelativeUriUsedWithoutBaseUriSpecified(UriUtils.UriToString(uri));
+                        ? Error.Format(SRResources.ODataBatchUtils_RelativeUriStartingWithDollarUsedWithoutBaseUriSpecified, UriUtils.UriToString(uri))
+                        : Error.Format(SRResources.ODataBatchUtils_RelativeUriUsedWithoutBaseUriSpecified, UriUtils.UriToString(uri));
                     throw new ODataException(errorMessage);
                 }
 
@@ -94,7 +95,7 @@ namespace Microsoft.OData
                 int length = Int32.Parse(contentLengthValue, CultureInfo.InvariantCulture);
                 if (length < 0)
                 {
-                    throw new ODataException(Strings.ODataBatchReaderStream_InvalidContentLengthSpecified(contentLengthValue));
+                    throw new ODataException(Error.Format(SRResources.ODataBatchReaderStream_InvalidContentLengthSpecified, contentLengthValue));
                 }
 
                 return ODataReadStream.Create(batchReaderStream, operationListener, length, synchronous);
@@ -213,7 +214,7 @@ namespace Microsoft.OData
                 // ids, therefore it should contain the request id referenced by the Uri.
                 if (dependsOnRequestIds == null || !dependsOnRequestIds.Contains(referenceId))
                 {
-                    throw new ODataException(Strings.ODataBatchReader_ReferenceIdNotIncludedInDependsOn(
+                    throw new ODataException(Error.Format(SRResources.ODataBatchReader_ReferenceIdNotIncludedInDependsOn,
                         referenceId, UriUtils.UriToString(uri),
                         dependsOnRequestIds != null ? string.Join(",", dependsOnRequestIds.ToArray()) : "null"));
                 }

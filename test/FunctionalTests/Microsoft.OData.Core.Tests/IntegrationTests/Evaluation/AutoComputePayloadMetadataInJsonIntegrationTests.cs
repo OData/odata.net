@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core;
 using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
@@ -1044,7 +1045,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 
             // Assert
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent, exception.Message);
+            Assert.Equal(SRResources.ODataWriterCore_MultipleItemsInNestedResourceInfoWithContent, exception.Message);
         }
 
         [Fact]
@@ -2062,7 +2063,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             const string expandClause = "ExpandedNavLink($select=ContainedNonCollectionNavProp;$expand=ExpandedNavLink($select=ContainedNonCollectionNavProp))";
 
             Action test = () => this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause);
-            test.Throws<ODataException>(Strings.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
+            test.Throws<ODataException>(SRResources.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
         }
 
         [Fact]
@@ -2080,11 +2081,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             const string expandClause = "ExpandedNavLink($select=ContainedNonCollectionNavProp;$expand=ExpandedNavLink($select=ContainedNonCollectionNavProp))";
 
             Action test = () => this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause);
-            test.Throws<ODataException>(Strings.EdmValueUtils_PropertyDoesntExist("Namespace.EntityType", "ID"));
+            test.Throws<ODataException>(Error.Format(SRResources.EdmValueUtils_PropertyDoesntExist, "Namespace.EntityType", "ID"));
         }
 
         [Fact]
-        public void WritingInFullMetadataModeForNavigationPropertyWithoutBindingShouldThrowODataResourceTypeContext_MetadataOrSerializationInfoMissingException()
+        public void WritingInFullMetadataModeForNavigationPropertyWithoutBindingShouldPass()
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
@@ -2095,8 +2096,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             const string selectClause = "UnknownCollectionNavProp";
             const string expandClause = "ExpandedNavLink($expand=UnknownCollectionNavProp)";
 
-            Action test = () => this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause);
-            test.Throws<ODataException>(Strings.ODataMetadataBuilder_UnknownEntitySet("UnknownCollectionNavProp"));
+            this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause);
+            Assert.Equal(new Uri("http://example.com/EntitySet(123)/UnknownCollectionNavProp(234)"),this.entryWithOnlyData2.Id);
         }
 
         [Fact]
@@ -2986,11 +2987,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 
             ODataResource entry = entryList[0];
             Action getId = () => Assert.Equal(entry.Id, new Uri(""));
-            getId.Throws<ODataException>(Strings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
+            getId.Throws<ODataException>(SRResources.ODataMetadataBuilder_MissingParentIdOrContextUrl);
 
             entry = entryList[1];
             getId = () => Assert.Equal(entry.Id, new Uri(""));
-            getId.Throws<ODataException>(Strings.ODataMetadataBuilder_MissingParentIdOrContextUrl);
+            getId.Throws<ODataException>(SRResources.ODataMetadataBuilder_MissingParentIdOrContextUrl);
         }
 
 

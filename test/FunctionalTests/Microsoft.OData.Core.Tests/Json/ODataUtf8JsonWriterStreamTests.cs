@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System;
 using static Microsoft.OData.Json.ODataUtf8JsonWriter;
 using Xunit;
@@ -79,4 +78,3 @@ namespace Microsoft.OData.Core.Tests.Json
         }
     }
 }
-#endif

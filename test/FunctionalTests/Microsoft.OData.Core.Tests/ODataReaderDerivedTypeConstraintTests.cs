@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
@@ -144,7 +145,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => ReadEntityPayload(payload, this.edmModel, this.edmMe, this.edmCustomerType);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "navigation source", "Me"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.NormalCustomer", "navigation source", "Me"), exception.Message);
         }
         #endregion
 
@@ -217,7 +218,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => ReadEntitySetPayload(payload, this.edmModel, this.edmCustomers, this.edmCustomerType);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.VipCustomer", "navigation source", "Customers"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.VipCustomer", "navigation source", "Customers"), exception.Message);
         }
         #endregion
 
@@ -289,7 +290,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => ReadEntityPayload(payload, this.edmModel, this.edmCustomers, this.edmCustomerType);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "navigation source", "Customers"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.NormalCustomer", "navigation source", "Customers"), exception.Message);
         }
         #endregion
 
@@ -320,7 +321,7 @@ namespace Microsoft.OData.Tests
                 Assert.Equal(5, resource.Properties.OfType<ODataProperty>().Single().Value);
 
                 ODataNestedResourceInfo nestedResourceInfo = Assert.IsType<ODataNestedResourceInfo>(ms.Pop()); // FriendCustomer Nested resource info
-                Assert.Throws<ODataException>(() => nestedResourceInfo.Url);
+                Assert.Equal(new Uri("http://example.com/Customers(7)/FriendCustomer/FriendCustomer"), nestedResourceInfo.Url);
                 Assert.Equal("FriendCustomer", nestedResourceInfo.Name);
             };
 
@@ -364,7 +365,7 @@ namespace Microsoft.OData.Tests
                 Assert.Equal("NS.VipCustomer", resource.TypeName);
 
                 ODataNestedResourceInfo nestedResourceInfo = Assert.IsType<ODataNestedResourceInfo>(ms.Pop()); // FriendCustomer Nested resource info
-                Assert.Throws<ODataException>(() => nestedResourceInfo.Url);
+                Assert.Equal(new Uri("http://example.com/Customers(7)/FriendCustomer/NS.VipCustomer/FriendCustomer"), nestedResourceInfo.Url);
                 Assert.Equal("FriendCustomer", nestedResourceInfo.Name);
             };
 
@@ -403,7 +404,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => ReadEntityPayload(payload, this.edmModel, this.edmCustomers, this.edmCustomerType);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.VipCustomer", "nested resource", "FriendCustomer"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.VipCustomer", "nested resource", "FriendCustomer"), exception.Message);
         }
 
         [Fact]
@@ -428,7 +429,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => ReadEntityPayload(payload, this.edmModel, this.edmCustomers, this.edmCustomerType);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.VipCustomer", "nested resource", "FriendCustomers"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.VipCustomer", "nested resource", "FriendCustomers"), exception.Message);
         }
 
         #endregion
@@ -523,7 +524,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => ReadEntityPayload(payload, this.edmModel, this.edmMe, this.edmCustomerType);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.UsAddress", "nested resource", "Location"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.UsAddress", "nested resource", "Location"), exception.Message);
         }
 
         [Fact]
@@ -543,7 +544,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => ReadEntityPayload(payload, this.edmModel, this.edmCustomers, this.edmCustomerType);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.UsAddress", "nested resource", "Locations"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.UsAddress", "nested resource", "Locations"), exception.Message);
         }
 
         #endregion
@@ -595,7 +596,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => ReadEntityPayload(payload, this.edmModel, this.edmCustomers, this.edmCustomerType);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("Edm.Double", "property", "Data"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "Edm.Double", "property", "Data"), exception.Message);
         }
         #endregion
 
@@ -628,7 +629,7 @@ namespace Microsoft.OData.Tests
 
             Action test = () => ReadDeltaPayload(payload, this.edmModel, this.edmCustomerType, ODataVersion.V401);
             var exception = Assert.Throws<ODataException>(test);
-            Assert.Equal(Strings.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint("NS.NormalCustomer", "nested resource", "FriendCustomers"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.ReaderValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, "NS.NormalCustomer", "nested resource", "FriendCustomers"), exception.Message);
         }
         #endregion
 

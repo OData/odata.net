@@ -9,7 +9,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core;
 using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
@@ -18,10 +20,6 @@ using Microsoft.OData.Edm.Vocabularies.V1;
 using Microsoft.OData.Json;
 using Microsoft.Spatial;
 using Xunit;
-
-#if NETCOREAPP
-using System.Text.Json;
-#endif
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -488,7 +486,7 @@ namespace Microsoft.OData.Tests.Json
             var primitiveTypeProperty = new ODataProperty { Name = "PrimitiveConstraintProperty", Value = value };
             Action action = () => this.SerializeProperty(this.entityType, primitiveTypeProperty);
             var exception = Assert.Throws<ODataException>(action);
-            Assert.Equal(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "property", "PrimitiveConstraintProperty"), exception.Message);
+            Assert.Equal(Error.Format(SRResources.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint, fullTypeName, "property", "PrimitiveConstraintProperty"), exception.Message);
         }
 
         #region Serializing regular properties
@@ -583,7 +581,6 @@ namespace Microsoft.OData.Tests.Json
                 result);
         }
 
-#if NETCOREAPP
         [Fact]
         public void WritingJsonElementProperties_ShouldSerializeJsonInput()
         {
@@ -620,7 +617,6 @@ namespace Microsoft.OData.Tests.Json
             var result = SerializeProperty(null, property, configureServices);
             Assert.Equal("{\"JsonProp\":{\"foo\":\"bar\"}}", result);
         }
-#endif
 
         /// <summary>
         /// Serialize the given property as a non-top-level property in Json.

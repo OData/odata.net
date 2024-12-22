@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     using System;
     using System.Diagnostics;
 
@@ -55,7 +56,7 @@ namespace Microsoft.OData
                         return this.v401.Value;
 
                     default:
-                        throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataVersionCache_UnknownVersion));
+                        throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataVersionCache_UnknownVersion));
                 }
             }
         }

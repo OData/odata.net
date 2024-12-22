@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 namespace Microsoft.OData.Json
 {
     using System;
@@ -43,7 +42,7 @@ namespace Microsoft.OData.Json
             WriteItemWithSeparatorIfNeeded();
 
             this.currentTextWriterContentType = contentType;
-            this.isWritingJson = this.CheckIfWritingJson(this.currentTextWriterContentType);
+            this.isWritingJson = CheckIfWritingJson(this.currentTextWriterContentType);
 
             // We don't perform escaping when the content type is not JSON
             // since we assume the input to be already a valid JSON with all escaping handled by the caller.
@@ -129,7 +128,7 @@ namespace Microsoft.OData.Json
         /// Checks whether the current TextWriter is writing JSON
         /// </summary>
         /// <returns></returns>
-        private bool CheckIfWritingJson(string currentContentType)
+        private static bool CheckIfWritingJson(string currentContentType)
         {
             return string.IsNullOrEmpty(currentContentType) || currentContentType.StartsWith(MimeConstants.MimeApplicationJson, StringComparison.Ordinal);
         }
@@ -533,4 +532,3 @@ namespace Microsoft.OData.Json
         }
     }
 }
-#endif

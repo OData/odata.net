@@ -13,6 +13,7 @@ namespace Microsoft.OData
     using System.Xml;
     using System.Threading.Tasks;
     using Microsoft.OData.Metadata;
+    using Microsoft.OData.Core;
     #endregion Namespaces
 
     /// <summary>
@@ -62,21 +63,12 @@ namespace Microsoft.OData
 
             bool isJson = IsJsonMetadata(messageInfo.MediaType);
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
             if (isJson)
             {
                 return new ODataMetadataJsonInputContext(messageInfo, messageReaderSettings);
             }
 
             return new ODataMetadataInputContext(messageInfo, messageReaderSettings);
-#else
-            if (isJson)
-            {
-                throw new ODataException(Strings.ODataMetadataOutputContext_NotSupportJsonMetadata);
-            }
-
-            return new ODataMetadataInputContext(messageInfo, messageReaderSettings);
-#endif
         }
 
         /// <summary>
@@ -94,21 +86,12 @@ namespace Microsoft.OData
 
             bool isJson = IsJsonMetadata(messageInfo.MediaType);
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
             if (isJson)
             {
                 return new ODataMetadataJsonOutputContext(messageInfo, messageWriterSettings);
             }
 
             return new ODataMetadataOutputContext(messageInfo, messageWriterSettings);
-#else
-            if (isJson)
-            {
-                throw new ODataException(Strings.ODataMetadataOutputContext_NotSupportJsonMetadata);
-            }
-
-            return new ODataMetadataOutputContext(messageInfo, messageWriterSettings);
-#endif
         }
 
         /// <summary>
@@ -141,7 +124,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataMetadataFormat_CreateInputContextAsync));
+            throw new ODataException(Error.Format(SRResources.General_InternalError, InternalErrorCodes.ODataMetadataFormat_CreateInputContextAsync));
         }
 
         /// <summary>
@@ -159,21 +142,12 @@ namespace Microsoft.OData
 
             bool isJson = IsJsonMetadata(messageInfo.MediaType);
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
             if (isJson)
             {
                 return Task.FromResult<ODataOutputContext>(new ODataMetadataJsonOutputContext(messageInfo, messageWriterSettings));
             }
 
             return Task.FromResult<ODataOutputContext>(new ODataMetadataOutputContext(messageInfo, messageWriterSettings));
-#else
-            if (isJson)
-            {
-                throw new ODataException(Strings.ODataMetadataOutputContext_NotSupportJsonMetadata);
-            }
-
-            return Task.FromResult<ODataOutputContext>(new ODataMetadataOutputContext(messageInfo, messageWriterSettings));
-#endif
         }
 
         private static bool IsJsonMetadata(ODataMediaType contentType)

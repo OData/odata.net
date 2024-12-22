@@ -116,7 +116,7 @@ namespace Microsoft.OData.Client
             WebUtil.RaiseVersion(ref uriVersion, ew.uriVersion);
             if (ew.cantTranslateExpression)
             {
-                throw new NotSupportedException(Strings.ALinq_CantTranslateExpression(e.ToString()));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_CantTranslateExpression, e.ToString()));
             }
 
             return serialized;
@@ -229,7 +229,7 @@ namespace Microsoft.OData.Client
                 // because we cannot reference 'this' as a standalone expression; however
                 // if the parent is null for any reason, we fall back to the expression itself.
                 string expressionText = (this.parent != null) ? this.parent.ToString() : ire.ToString();
-                throw new NotSupportedException(Strings.ALinq_CantTranslateExpression(expressionText));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_CantTranslateExpression, expressionText));
             }
 
             // Write "$it" for input parameter reference inside any/all methods
@@ -426,7 +426,7 @@ namespace Microsoft.OData.Client
                         string declaringType = this.context.ResolveNameFromTypeInternal(m.Method.DeclaringType);
                         if (string.IsNullOrEmpty(declaringType))
                         {
-                            throw new NotSupportedException(Strings.ALinq_CantTranslateExpression(m.ToString()));
+                            throw new NotSupportedException(Error.Format(SRResources.ALinq_CantTranslateExpression, m.ToString()));
                         }
 
                         int index = declaringType.LastIndexOf('.');
@@ -472,7 +472,7 @@ namespace Microsoft.OData.Client
         {
             if (m.Member is FieldInfo)
             {
-                throw new NotSupportedException(Strings.ALinq_CantReferToPublicField(m.Member.Name));
+                throw new NotSupportedException(Error.Format(SRResources.ALinq_CantReferToPublicField, m.Member.Name));
             }
 
             Expression e = this.Visit(m.Expression);
@@ -572,7 +572,7 @@ namespace Microsoft.OData.Client
                             return c;
                         }
 
-                        throw new NotSupportedException(Strings.ALinq_CouldNotConvert(item));
+                        throw new NotSupportedException(Error.Format(SRResources.ALinq_CouldNotConvert, item));
                     }
 
                     listExpr.Append(uriLiteral);
@@ -581,7 +581,7 @@ namespace Microsoft.OData.Client
                 // Contains cannot be used with an empty static collection
                 if (listExpr.Length == 0)
                 {
-                    throw new InvalidOperationException(Strings.ALinq_ContainsNotValidOnEmptyCollection);
+                    throw new InvalidOperationException(SRResources.ALinq_ContainsNotValidOnEmptyCollection);
                 }
 
                 listExpr.Insert(0, UriHelper.LEFTPAREN);
@@ -604,7 +604,7 @@ namespace Microsoft.OData.Client
                         return c;
                     }
 
-                    throw new NotSupportedException(Strings.ALinq_CouldNotConvert(c.Value));
+                    throw new NotSupportedException(Error.Format(SRResources.ALinq_CouldNotConvert, c.Value));
                 }
             }
 
@@ -666,7 +666,7 @@ namespace Microsoft.OData.Client
                 case ExpressionType.TypeAs:
                     if (u.Operand.NodeType == ExpressionType.TypeAs)
                     {
-                        throw new NotSupportedException(Strings.ALinq_CannotUseTypeFiltersMultipleTimes);
+                        throw new NotSupportedException(SRResources.ALinq_CannotUseTypeFiltersMultipleTimes);
                     }
 
                     this.Visit(u.Operand);

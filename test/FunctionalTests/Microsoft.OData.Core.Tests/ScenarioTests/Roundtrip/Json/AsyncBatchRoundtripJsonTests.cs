@@ -7,6 +7,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -70,14 +71,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
-            test.Throws<ODataException>(Strings.ODataBatchReader_JsonBatchTopLevelPropertyMissing);
+            test.Throws<ODataException>(SRResources.ODataBatchReader_JsonBatchTopLevelPropertyMissing);
         }
 
         [Fact]
         public void AsyncBatchJsonTestWithInvalidBatchContentThrowsException()
         {
             Action test = () => AsyncBatchJsonTestFromSpecExample85(null);
-            test.Throws<ODataException>(Strings.JsonReader_InvalidNumberFormat("--"));
+            test.Throws<ODataException>(Error.Format(SRResources.JsonReader_InvalidNumberFormat, "--"));
         }
 
         [Fact]
@@ -87,7 +88,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                 BatchPayloadUriOption.AbsoluteUri,
                 batchContentTypeApplicationJson,
                 SkipBatchWriterStep.BatchStarted);
-            test.Throws<ODataException>(Strings.ODataBatchWriter_InvalidTransitionFromStart);
+            test.Throws<ODataException>(SRResources.ODataBatchWriter_InvalidTransitionFromStart);
         }
 
         [Fact]
@@ -105,7 +106,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
 
                 Action test = () => batchWriter.CreateOperationRequestMessage(
                     "POST", new Uri(serviceDocumentUri + "/Customers"), "1", payloadUriOption);
-                test.Throws<ODataException>(Strings.ODataBatchWriter_InvalidTransitionFromStart);
+                test.Throws<ODataException>(SRResources.ODataBatchWriter_InvalidTransitionFromStart);
             }
         }
 
@@ -143,7 +144,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
 
                 // Attempt to start another change set before ending the current one.
                 Action test = () => batchWriter.WriteStartChangeset();
-                test.Throws<ODataException>(Strings.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet);
+                test.Throws<ODataException>(SRResources.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet);
             }
         }
 
@@ -163,7 +164,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                 batchWriter.WriteStartChangeset();
 
                 Action test = () => batchWriter.WriteEndBatch();
-                test.Throws<ODataException>(Strings.ODataBatchWriter_CannotCompleteBatchWithActiveChangeSet);
+                test.Throws<ODataException>(SRResources.ODataBatchWriter_CannotCompleteBatchWithActiveChangeSet);
             }
         }
 
@@ -182,7 +183,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                 batchWriter.WriteStartBatch();
 
                 Action test = () => batchWriter.WriteEndChangeset();
-                test.Throws<ODataException>(Strings.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet);
+                test.Throws<ODataException>(SRResources.ODataBatchWriter_CannotCompleteChangeSetWithoutActiveChangeSet);
             }
         }
 
@@ -201,7 +202,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                 batchWriter.WriteStartBatch();
 
                 Action test = () => batchWriter.WriteStartBatch();
-                test.Throws<ODataException>(Strings.ODataBatchWriter_InvalidTransitionFromBatchStarted);
+                test.Throws<ODataException>(SRResources.ODataBatchWriter_InvalidTransitionFromBatchStarted);
             }
         }
 
@@ -221,7 +222,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                 batchWriter.WriteStartChangeset();
 
                 Action test = () => batchWriter.WriteStartChangeset();
-                test.Throws<ODataException>(Strings.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet);
+                test.Throws<ODataException>(SRResources.ODataBatchWriter_CannotStartChangeSetWithActiveChangeSet);
             }
         }
 
@@ -274,7 +275,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                 }
 
                 Action test = () => batchWriter.WriteStartBatch();
-                test.Throws<ODataException>(Strings.ODataBatchWriter_InvalidTransitionFromOperationContentStreamDisposed);
+                test.Throws<ODataException>(SRResources.ODataBatchWriter_InvalidTransitionFromOperationContentStreamDisposed);
             }
         }
 
@@ -295,7 +296,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                 batchWriter.WriteEndChangeset();
 
                 Action test = () => batchWriter.WriteStartBatch();
-                test.Throws<ODataException>(Strings.ODataBatchWriter_InvalidTransitionFromChangeSetCompleted);
+                test.Throws<ODataException>(SRResources.ODataBatchWriter_InvalidTransitionFromChangeSetCompleted);
             }
         }
 
@@ -317,7 +318,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                 batchWriter.WriteEndBatch();
 
                 Action test = () => batchWriter.WriteEndBatch();
-                test.Throws<ODataException>(Strings.ODataBatchWriter_InvalidTransitionFromBatchCompleted);
+                test.Throws<ODataException>(SRResources.ODataBatchWriter_InvalidTransitionFromBatchCompleted);
             }
         }
 
@@ -347,7 +348,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                     "POST", new Uri(serviceDocumentUri + "/Customers"), "1", payloadUriOption);
 
                 Action test = () => batchWriter.CreateOperationRequestMessage("PATCH", new Uri(serviceDocumentUri + "/Customers('ALFKI')"), "2", payloadUriOption);
-                test.Throws<ODataException>(Strings.ODataBatchWriter_MaxBatchSizeExceeded(maxPartsPerBatch));
+                test.Throws<ODataException>(Error.Format(SRResources.ODataBatchWriter_MaxBatchSizeExceeded, maxPartsPerBatch));
             }
         }
 
@@ -379,7 +380,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                     "POST", new Uri(serviceDocumentUri + "/Customers"), "1", payloadUriOption);
 
                 Action test = () => batchWriter.CreateOperationRequestMessage("PATCH", new Uri(serviceDocumentUri + "/Customers('ALFKI')"), "2", payloadUriOption);
-                test.Throws<ODataException>(Strings.ODataBatchWriter_MaxChangeSetSizeExceeded(maxOperationsPerChangeset));
+                test.Throws<ODataException>(Error.Format(SRResources.ODataBatchWriter_MaxChangeSetSizeExceeded, maxOperationsPerChangeset));
             }
         }
         #endregion
@@ -398,7 +399,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeMultipartMixed);
-            test.Throws<ODataException>(Strings.ODataBatchReaderStream_InvalidHeaderSpecified("--changeset_4faeec78-01a5-40c4-863e-9915be75db31--"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataBatchReaderStream_InvalidHeaderSpecified, "--changeset_4faeec78-01a5-40c4-863e-9915be75db31--"));
         }
 
         [Fact]
@@ -418,7 +419,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeMultipartMixed);
-            test.Throws<ODataException>(Strings.ODataBatchReaderStream_InvalidRequestLine("POSThttp://service/CustomersHTTP/1.1"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataBatchReaderStream_InvalidRequestLine, "POSThttp://service/CustomersHTTP/1.1"));
         }
 
         [Fact]
@@ -437,7 +438,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeMultipartMixed);
-            test.Throws<ODataException>(Strings.ODataBatchReaderStream_InvalidRequestLine("OData-Version: 4.0"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataBatchReaderStream_InvalidRequestLine, "OData-Version: 4.0"));
         }
 
         [Fact]
@@ -457,7 +458,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeMultipartMixed);
-            test.Throws<ODataException>(Strings.ODataBatchReaderStream_InvalidHttpVersionSpecified("HTTPLOL/1.1", ODataConstants.HttpVersionInBatching));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataBatchReaderStream_InvalidHttpVersionSpecified, "HTTPLOL/1.1", ODataConstants.HttpVersionInBatching));
         }
 
         [Fact]
@@ -477,7 +478,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeMultipartMixed);
-            test.Throws<ODataException>(Strings.ODataBatch_InvalidHttpMethodForChangeSetRequest("GET"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataBatch_InvalidHttpMethodForChangeSetRequest, "GET"));
         }
 
         [Fact]
@@ -539,7 +540,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                     {
                     }
                 };
-                test.Throws<ODataException>(Strings.ODataBatchReader_NoMessageWasCreatedForOperation);
+                test.Throws<ODataException>(SRResources.ODataBatchReader_NoMessageWasCreatedForOperation);
             }
         }
 
@@ -583,7 +584,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                         }
                     }
                 };
-                test.Throws<ODataException>(Strings.ODataBatchReader_MaxBatchSizeExceeded(maxPartsPerBatch));
+                test.Throws<ODataException>(Error.Format(SRResources.ODataBatchReader_MaxBatchSizeExceeded, maxPartsPerBatch));
             }
         }
 
@@ -627,7 +628,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                         }
                     }
                 };
-                test.Throws<ODataException>(Strings.ODataBatchReader_MaxChangeSetSizeExceeded(maxOperationsPerChangeset));
+                test.Throws<ODataException>(Error.Format(SRResources.ODataBatchReader_MaxChangeSetSizeExceeded, maxOperationsPerChangeset));
             }
         }
         #endregion
@@ -654,7 +655,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
-            test.Throws<ODataException>(Strings.ODataBatchReader_RequestPropertyMissing("METHOD"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataBatchReader_RequestPropertyMissing, "METHOD"));
         }
 
         [Fact]
@@ -676,7 +677,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             byte[] requestPayload = ConvertStringToByteArray(payload);
 
             Action test = () => this.ServiceReadAsyncBatchRequestAndWriteAsyncResponse(requestPayload, batchContentTypeApplicationJson);
-            test.Throws<ODataException>(Strings.ODataBatchReader_RequestPropertyMissing("URL"));
+            test.Throws<ODataException>(Error.Format(SRResources.ODataBatchReader_RequestPropertyMissing, "URL"));
         }
 
         [Fact]
@@ -1030,11 +1031,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
         {
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.AbsoluteUriUsingHostHeader, batchContentTypeMultipartMixed);
 
-#if NETCOREAPP1_1
-            var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
-#else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
-#endif
             Assert.True(payloadString.Contains("GET /Customers('ALFKI') HTTP/1.1") &&
                 payloadString.Contains("POST /Customers HTTP/1.1") &&
                 payloadString.Contains("PATCH /Customers('ALFKI') HTTP/1.1") &&
@@ -1049,11 +1046,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
         {
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.RelativeUri, batchContentTypeMultipartMixed);
 
-#if NETCOREAPP1_1
-            var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
-#else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
-#endif
             Assert.Contains("GET Customers('ALFKI') HTTP/1.1", payloadString);
             Assert.Contains("POST Customers HTTP/1.1", payloadString);
             Assert.Contains("PATCH Customers('ALFKI') HTTP/1.1", payloadString);
@@ -1071,11 +1064,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.AbsoluteUriUsingHostHeader, batchContentTypeApplicationJson,
                 SkipBatchWriterStep.None, baseUri);
 
-#if NETCOREAPP1_1
-            var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
-#else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
-#endif
 
             Assert.Contains("\"url\":\"/root/service/Customers('ALFKI')\"", payloadString);
             Assert.Contains("\"url\":\"/root/service/Customers\"", payloadString);
@@ -1093,11 +1082,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.RelativeUri, batchContentTypeApplicationJson,
                 SkipBatchWriterStep.None, baseUri);
 
-#if NETCOREAPP1_1
-            var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
-#else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
-#endif
 
             Assert.Contains("\"url\":\"Customers('ALFKI')\"", payloadString);
             Assert.Contains("\"url\":\"Customers\"", payloadString);

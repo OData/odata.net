@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.Json
 {
+    using Microsoft.OData.Core;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -130,7 +131,7 @@ namespace Microsoft.OData.Json
                 return stringValue;
             }
 
-            throw CreateException(Strings.JsonReaderExtensions_CannotReadValueAsString(value));
+            throw CreateException(Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsString, value));
         }
 
         /// <summary>
@@ -160,7 +161,7 @@ namespace Microsoft.OData.Json
                 return stringValue;
             }
 
-            throw CreateException(Strings.JsonReaderExtensions_CannotReadPropertyValueAsString(value, propertyName));
+            throw CreateException(Error.Format(SRResources.JsonReaderExtensions_CannotReadPropertyValueAsString, value, propertyName));
         }
 
         /// <summary>
@@ -191,7 +192,7 @@ namespace Microsoft.OData.Json
                 return (double)decimalValue;
             }
 
-            throw CreateException(Strings.JsonReaderExtensions_CannotReadValueAsDouble(value));
+            throw CreateException(Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsDouble, value));
         }
 
         /// <summary>
@@ -234,7 +235,7 @@ namespace Microsoft.OData.Json
             {
                 // Not all open scopes were closed:
                 // "Invalid JSON. Unexpected end of input was found in JSON content. Not all object and array scopes were closed."
-                throw JsonReaderExtensions.CreateException(Strings.JsonReader_EndOfInputWithOpenScope);
+                throw JsonReaderExtensions.CreateException(SRResources.JsonReader_EndOfInputWithOpenScope);
             }
         }
 
@@ -308,7 +309,7 @@ namespace Microsoft.OData.Json
                     {
                         // Not all open scopes were closed:
                         // "Invalid JSON. Unexpected end of input was found in JSON content. Not all object and array scopes were closed."
-                        throw JsonReaderExtensions.CreateException(Strings.JsonReader_EndOfInputWithOpenScope);
+                        throw JsonReaderExtensions.CreateException(SRResources.JsonReader_EndOfInputWithOpenScope);
                     }
 
                     jsonWriter.Flush();
@@ -584,11 +585,11 @@ namespace Microsoft.OData.Json
 
             if (!string.IsNullOrEmpty(propertyName))
             {
-                throw CreateException(Strings.JsonReaderExtensions_CannotReadPropertyValueAsString(value, propertyName));
+                throw CreateException(Error.Format(SRResources.JsonReaderExtensions_CannotReadPropertyValueAsString, value, propertyName));
             }
             else
             {
-                throw CreateException(Strings.JsonReaderExtensions_CannotReadValueAsString(value));
+                throw CreateException(Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsString, value));
             }
         }
 
@@ -637,7 +638,7 @@ namespace Microsoft.OData.Json
                 return (double)decimalValue;
             }
 
-            throw CreateException(Strings.JsonReaderExtensions_CannotReadValueAsDouble(value));
+            throw CreateException(Error.Format(SRResources.JsonReaderExtensions_CannotReadValueAsDouble, value));
         }
 
         /// <summary>
@@ -682,7 +683,7 @@ namespace Microsoft.OData.Json
             {
                 // Not all open scopes were closed:
                 // "Invalid JSON. Unexpected end of input was found in JSON content. Not all object and array scopes were closed."
-                throw CreateException(Strings.JsonReader_EndOfInputWithOpenScope);
+                throw CreateException(SRResources.JsonReader_EndOfInputWithOpenScope);
             }
         }
 
@@ -766,7 +767,7 @@ namespace Microsoft.OData.Json
                 {
                     // Not all open scopes were closed:
                     // "Invalid JSON. Unexpected end of input was found in JSON content. Not all object and array scopes were closed."
-                    throw CreateException(Strings.JsonReader_EndOfInputWithOpenScope);
+                    throw CreateException(SRResources.JsonReader_EndOfInputWithOpenScope);
                 }
 
                 await jsonWriter.FlushAsync()
@@ -947,7 +948,7 @@ namespace Microsoft.OData.Json
 
             if (jsonReader.NodeType != expectedNodeType)
             {
-                throw CreateException(Strings.JsonReaderExtensions_UnexpectedNodeDetected(expectedNodeType, jsonReader.NodeType));
+                throw CreateException(Error.Format(SRResources.JsonReaderExtensions_UnexpectedNodeDetected, expectedNodeType, jsonReader.NodeType));
             }
         }
 

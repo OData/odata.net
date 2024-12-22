@@ -167,7 +167,7 @@ namespace Microsoft.OData.Edm.Validation
             }
             else
             {
-                throw new InvalidOperationException(Edm.Strings.Serializer_UnknownEdmVersion(version.ToString()));
+                throw new InvalidOperationException(Error.Format(SRResources.Serializer_UnknownEdmVersion, version.ToString()));
             }
         }
 
@@ -212,7 +212,7 @@ namespace Microsoft.OData.Edm.Validation
 
             if (typeRules.Contains(rule))
             {
-                throw new InvalidOperationException(Edm.Strings.RuleSet_DuplicateRulesExistInRuleSet);
+                throw new InvalidOperationException(SRResources.RuleSet_DuplicateRulesExistInRuleSet);
             }
 
             typeRules.Add(rule);

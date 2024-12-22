@@ -13,7 +13,7 @@ namespace Microsoft.OData.UriParser
     using System.Linq;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     /// <summary>
     /// Class that knows how to bind key values.
@@ -63,7 +63,7 @@ namespace Microsoft.OData.UriParser
             }
             else
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues(collectionNode.ItemStructuredType.FullName()));
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_NotAllKeyPropertiesSpecifiedInKeyValues, collectionNode.ItemStructuredType.FullName()));
             }
         }
 
@@ -140,7 +140,7 @@ namespace Microsoft.OData.UriParser
 
                 if (!keyPropertyNames.Add(keyPropertyValue.KeyProperty.Name))
                 {
-                    throw new ODataException(ODataErrorStrings.MetadataBinder_DuplicitKeyPropertyInKeyValues(keyPropertyValue.KeyProperty.Name));
+                    throw new ODataException(Error.Format(SRResources.MetadataBinder_DuplicitKeyPropertyInKeyValues, keyPropertyValue.KeyProperty.Name));
                 }
 
                 keyPropertyValues.Add(keyPropertyValue);
@@ -190,7 +190,7 @@ namespace Microsoft.OData.UriParser
                     }
                     else
                     {
-                        throw new ODataException(ODataErrorStrings.MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties(collectionItemEntityType.FullTypeName()));
+                        throw new ODataException(Error.Format(SRResources.MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties, collectionItemEntityType.FullTypeName()));
                     }
                 }
             }

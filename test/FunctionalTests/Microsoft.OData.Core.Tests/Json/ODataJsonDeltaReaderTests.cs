@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
@@ -1234,7 +1235,7 @@ namespace Microsoft.OData.Tests.Json
                 while (reader.Read()) { }
             };
 
-            readAction.Throws<ODataException>(Strings.ODataJsonResourceDeserializer_UnexpectedDeletedEntryInResponsePayload);
+            readAction.Throws<ODataException>(SRResources.ODataJsonResourceDeserializer_UnexpectedDeletedEntryInResponsePayload);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1420,7 +1421,7 @@ namespace Microsoft.OData.Tests.Json
                 }
             };
 
-            readAction.Throws<ODataException>(Strings.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet("http://host/service/$metadata#Customers/$deletedEntity", "Customers", "Customers.Orders"));
+            readAction.Throws<ODataException>(Error.Format(SRResources.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet, "http://host/service/$metadata#Customers/$deletedEntity", "Customers", "Customers.Orders"));
         }
 
         #endregion
@@ -3966,7 +3967,7 @@ namespace Microsoft.OData.Tests.Json
                 readingDelta: false));
 
             Assert.Equal(
-                Strings.ODataJsonResourceDeserializer_UnexpectedDeletedEntryInResponsePayload,
+                SRResources.ODataJsonResourceDeserializer_UnexpectedDeletedEntryInResponsePayload,
                 exception.Message);
         }
 
@@ -3989,7 +3990,7 @@ namespace Microsoft.OData.Tests.Json
                 (jsonReader) => DoReadAsync(jsonReader)));
 
             Assert.Equal(
-                Strings.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet(
+                Error.Format(SRResources.ReaderValidationUtils_ContextUriValidationInvalidExpectedEntitySet,
                     "http://host/service/$metadata#Customers/$deletedEntity",
                     "Customers",
                     "Customers.Orders"),
@@ -4554,11 +4555,7 @@ namespace Microsoft.OData.Tests.Json
             var messageInfo = new ODataMessageInfo
             {
                 MediaType = new ODataMediaType("application", "json"),
-#if NETCOREAPP1_1
-                Encoding = Encoding.GetEncoding(0),
-#else
                 Encoding = Encoding.Default,
-#endif
                 IsResponse = isResponse,
                 IsAsync = isAsync,
                 Model = this.Model,

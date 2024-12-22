@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -93,7 +92,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                                 }
                             }
 
-                            context.ReportError(EdmErrorCode.UnexpectedElement, Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, propertyValue.ValueKind));
+                            context.ReportError(EdmErrorCode.UnexpectedElement, Error.Format(SRResources.CsdlJsonParser_UnexpectedJsonMember, context.Path, propertyValue.ValueKind));
                             break;
                     }
                 });
@@ -271,7 +270,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                     default:
                         // The item objects doesn't contain vocabulary annotation.
                         context.ReportError(EdmErrorCode.UnexpectedElement,
-                            Strings.CsdlJsonParser_UnexpectedJsonMember(context.Path, propertyValue.ValueKind));
+                            Error.Format(SRResources.CsdlJsonParser_UnexpectedJsonMember, context.Path, propertyValue.ValueKind));
                         break;
                 }
             });
@@ -328,7 +327,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 // This document object MUST contain the member $Version.
                 if (version == null)
                 {
-                    context.ReportError(EdmErrorCode.InvalidVersionNumber, Strings.CsdlJsonParser_InvalidCsdlVersion(context.Path));
+                    context.ReportError(EdmErrorCode.InvalidVersionNumber, Error.Format(SRResources.CsdlJsonParser_InvalidCsdlVersion, context.Path));
                 }
             }
 
@@ -336,4 +335,3 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         }
     }
 }
-#endif

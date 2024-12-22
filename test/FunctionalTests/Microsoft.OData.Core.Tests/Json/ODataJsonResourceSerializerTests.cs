@@ -325,8 +325,7 @@ namespace Microsoft.OData.Tests.Json
                 CreateCategorySerializationInfo(),
                 /* navigationSource */ null,
                 /* navigationSourceEntityType */ null,
-                /* expectedResourceType */ null,
-                /* throwIfMissingTypeInfo */ true);
+                /* expectedResourceType */ null);
             var contextUrlInfo = ODataContextUrlInfo.Create(
                 typeContext,
                 this.messageWriterSettings.Version ?? ODataVersion.V4,
@@ -417,8 +416,7 @@ namespace Microsoft.OData.Tests.Json
                 /* serializationInfo */ null,
                 this.categoriesEntitySet,
                 this.categoryEntityType,
-                this.categoryEntityType,
-                /* throwIfMissingTypeInfo */ true);
+                this.categoryEntityType);
 
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
                 (jsonResourceSerializer) =>
@@ -439,8 +437,7 @@ namespace Microsoft.OData.Tests.Json
                 CreateCategorySerializationInfo(),
                 /* navigationSource */ null,
                 /* navigationSourceEntityType */ null,
-                /* expectedResourceType */ null,
-                /* throwIfMissingTypeInfo */ true);
+                /* expectedResourceType */ null);
 
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
                 (jsonResourceSerializer) =>
@@ -460,8 +457,7 @@ namespace Microsoft.OData.Tests.Json
                 CreateCategorySerializationInfo(),
                 /* navigationSource */ null,
                 /* navigationSourceEntityType */ null,
-                /* expectedResourceType */ null,
-                /* throwIfMissingTypeInfo */ true);
+                /* expectedResourceType */ null);
 
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
                 (jsonResourceSerializer) =>

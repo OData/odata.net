@@ -97,7 +97,7 @@ namespace Microsoft.OData.Client
                 // Fail if the collection entity type does not implement INotifyPropertyChanged.
                 if (!typeof(INotifyPropertyChanged).IsAssignableFrom(entityType))
                 {
-                    throw new InvalidOperationException(Strings.DataBinding_NotifyPropertyChangedNotImpl(entityType));
+                    throw new InvalidOperationException(Error.Format(SRResources.DataBinding_NotifyPropertyChangedNotImpl, entityType));
                 }
 
                 typeof(BindingGraph)
@@ -164,7 +164,7 @@ namespace Microsoft.OData.Client
                 // Attach CollectionChanged event listener and fail if the collection type doesn't support notification
                 if (!this.AttachPrimitiveOrComplexCollectionNotification(collection))
                 {
-                    throw new InvalidOperationException(Strings.DataBinding_NotifyCollectionChangedNotImpl(collection.GetType()));
+                    throw new InvalidOperationException(Error.Format(SRResources.DataBinding_NotifyCollectionChangedNotImpl, collection.GetType()));
                 }
 
                 // If the collection contains complex objects, bind to all of the objects in the collection
@@ -173,7 +173,7 @@ namespace Microsoft.OData.Client
                     // Fail if the collection contains a complex type that does not implement INotifyPropertyChanged.
                     if (!typeof(INotifyPropertyChanged).IsAssignableFrom(collectionItemType))
                     {
-                        throw new InvalidOperationException(Strings.DataBinding_NotifyPropertyChangedNotImpl(collectionItemType));
+                        throw new InvalidOperationException(Error.Format(SRResources.DataBinding_NotifyPropertyChangedNotImpl, collectionItemType));
                     }
 
                     // Recursively bind to all of the complex objects in the collection and any nested complex objects or collections
@@ -182,7 +182,7 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                throw new InvalidOperationException(Strings.DataBinding_CollectionAssociatedWithMultipleEntities(collection.GetType()));
+                throw new InvalidOperationException(Error.Format(SRResources.DataBinding_CollectionAssociatedWithMultipleEntities, collection.GetType()));
             }
         }
 
@@ -227,7 +227,7 @@ namespace Microsoft.OData.Client
                     // Register for entity notifications, fail if the entity does not implement INotifyPropertyChanged.
                     if (!this.AttachEntityOrComplexObjectNotification(target))
                     {
-                        throw new InvalidOperationException(Strings.DataBinding_NotifyPropertyChangedNotImpl(target.GetType()));
+                        throw new InvalidOperationException(Error.Format(SRResources.DataBinding_NotifyPropertyChangedNotImpl, target.GetType()));
                     }
 
                     addedNewEntity = true;
@@ -236,7 +236,7 @@ namespace Microsoft.OData.Client
                 // Add relationship. Connect the from end to the target.
                 if (this.graph.ExistsEdge(edgeSource, target, sourceVertex.IsDataServiceCollection ? null : sourceProperty))
                 {
-                    throw new InvalidOperationException(Strings.DataBinding_EntityAlreadyInCollection(target.GetType()));
+                    throw new InvalidOperationException(Error.Format(SRResources.DataBinding_EntityAlreadyInCollection, target.GetType()));
                 }
 
                 this.graph.AddEdge(edgeSource, target, sourceVertex.IsDataServiceCollection ? null : sourceProperty);
@@ -538,7 +538,7 @@ namespace Microsoft.OData.Client
                 // Register for complex type notifications, fail if the complex type does not implement INotifyPropertyChanged.
                 if (!this.AttachEntityOrComplexObjectNotification(target))
                 {
-                    throw new InvalidOperationException(Strings.DataBinding_NotifyPropertyChangedNotImpl(target.GetType()));
+                    throw new InvalidOperationException(Error.Format(SRResources.DataBinding_NotifyPropertyChangedNotImpl, target.GetType()));
                 }
 
                 this.graph.AddEdge(source, target, sourceProperty);
@@ -548,7 +548,7 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                throw new InvalidOperationException(Strings.DataBinding_ComplexObjectAssociatedWithMultipleEntities(target.GetType()));
+                throw new InvalidOperationException(Error.Format(SRResources.DataBinding_ComplexObjectAssociatedWithMultipleEntities, target.GetType()));
             }
         }
 

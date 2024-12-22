@@ -7,9 +7,7 @@
 using System;
 using Xunit;
 using System.IO;
-#if NETCOREAPP3_1_OR_GREATER
 using System.Text.Json;
-#endif
 
 namespace Microsoft.OData.Tests
 {
@@ -54,7 +52,6 @@ namespace Microsoft.OData.Tests
             Feature4 = 8,
         }
 
-#if NETCOREAPP3_1_OR_GREATER
         [Fact]
         public void ConvertsJsonElementToODataValue()
         {
@@ -74,6 +71,5 @@ namespace Microsoft.OData.Tests
 
             Assert.Equal(jsonString, output);
         }
-#endif
     }
 }

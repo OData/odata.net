@@ -9,6 +9,7 @@ namespace Microsoft.OData.Evaluation
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
@@ -204,7 +205,7 @@ namespace Microsoft.OData.Evaluation
             {
                 if (this.metadataDocumentUri == null)
                 {
-                    throw new ODataException(Strings.ODataJsonResourceMetadataContext_MetadataAnnotationMustBeInPayload(ODataAnnotationNames.ODataContext));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonResourceMetadataContext_MetadataAnnotationMustBeInPayload, ODataAnnotationNames.ODataContext));
                 }
 
                 Debug.Assert(this.metadataDocumentUri.IsAbsoluteUri, "this.metadataDocumentUri.IsAbsoluteUri");
@@ -267,8 +268,7 @@ namespace Microsoft.OData.Evaluation
                     IEdmEntityType navigationSourceElementType = this.edmTypeResolver.GetElementType(navigationSource);
                     IODataResourceTypeContext typeContext =
                         ODataResourceTypeContext.Create( /*serializationInfo*/
-                            null, navigationSource, navigationSourceElementType, resourceState.ResourceTypeFromMetadata ?? resourceState.ResourceType,
-                            /*throwIfMissingTypeInfo*/ true);
+                            null, navigationSource, navigationSourceElementType, resourceState.ResourceTypeFromMetadata ?? resourceState.ResourceType);
 
                     IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(
                         resource,

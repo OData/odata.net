@@ -73,7 +73,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             DateTimeOffset? value;
             if (!EdmValueParser.TryParseDateTimeOffset(this.expression.Value, out value))
             {
-                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidDateTimeOffset, Edm.Strings.ValueParser_InvalidDateTimeOffset(this.expression.Value)) };
+                return new EdmError[] { new EdmError(this.Location, EdmErrorCode.InvalidDateTimeOffset, Error.Format(SRResources.ValueParser_InvalidDateTimeOffset, this.expression.Value)) };
             }
             else
             {

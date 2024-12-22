@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Json
@@ -771,14 +772,14 @@ namespace Microsoft.OData.Json
 
             if (operations.Count() > 1 && operations.Any(o => o.Target == null))
             {
-                throw new ODataException(Strings.ODataJsonResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget(operations.Key));
+                throw new ODataException(Error.Format(SRResources.ODataJsonResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget, operations.Key));
             }
 
             foreach (IGrouping<string, ODataOperation> operationsByTarget in operations.GroupBy(this.GetOperationTargetUriString))
             {
                 if (operationsByTarget.Count() > 1)
                 {
-                    throw new ODataException(Strings.ODataJsonResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget(operations.Key, operationsByTarget.Key));
+                    throw new ODataException(Error.Format(SRResources.ODataJsonResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget, operations.Key, operationsByTarget.Key));
                 }
             }
         }

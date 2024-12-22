@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
@@ -141,7 +142,7 @@ namespace Microsoft.OData.Tests.Json
                         return jsonEntityReferenceLinkSerializer.WriteEntityReferenceLinksAsync(entityReferenceLinks);
                     }));
 
-            Assert.Equal(Strings.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull, exception.Message);
+            Assert.Equal(SRResources.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull, exception.Message);
         }
 
         [Fact]
@@ -159,7 +160,7 @@ namespace Microsoft.OData.Tests.Json
                         return jsonEntityReferenceLinkSerializer.WriteEntityReferenceLinkAsync(entityReferenceLink);
                     }));
 
-            Assert.Equal(Strings.WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull, exception.Message);
+            Assert.Equal(SRResources.WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull, exception.Message);
         }
 
         private ODataJsonEntityReferenceLinkSerializer CreateODataJsonEntityReferenceLinkSerializer(
@@ -171,11 +172,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 MessageStream = this.stream,
                 MediaType = new ODataMediaType("application", "json"),
-#if NETCOREAPP1_1
-                Encoding = Encoding.GetEncoding(0),
-#else
                 Encoding = Encoding.Default,
-#endif
                 IsResponse = writingResponse,
                 IsAsync = isAsync,
                 Model = this.model,

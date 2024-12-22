@@ -14,6 +14,7 @@ namespace Microsoft.OData.Json
     using System.Text;
     using System.Threading.Tasks;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     #endregion Namespaces
 
@@ -838,7 +839,6 @@ namespace Microsoft.OData.Json
             base.Dispose(disposing);
         }
 
-#if NETCOREAPP
         protected override async ValueTask DisposeAsyncCore()
         {
             try
@@ -880,7 +880,6 @@ namespace Microsoft.OData.Json
                 this.jsonWriter = null;
             }
         }
-#endif
 
         /// <summary>
         /// Creates a new JSON writer of <see cref="IJsonWriter"/>.
@@ -911,7 +910,7 @@ namespace Microsoft.OData.Json
 
                 if (jsonWriter == null)
                 {
-                    throw new ODataException(Strings.ODataMessageWriter_JsonWriterFactory_ReturnedNull(isIeee754Compatible, encoding.WebName));
+                    throw new ODataException(Error.Format(SRResources.ODataMessageWriter_JsonWriterFactory_ReturnedNull, isIeee754Compatible, encoding.WebName));
                 }
             }
 

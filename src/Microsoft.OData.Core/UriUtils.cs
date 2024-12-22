@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Xml;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData
@@ -187,7 +188,7 @@ namespace Microsoft.OData
                 if (m)
                 {
                     // The format should be exactly "yyyy-mm-ddThh:mm:ss('.'s+)?(zzzzzz)?" and each field value is within valid range
-                    throw new ODataException(Strings.UriUtils_DateTimeOffsetInvalidFormat(text.ToString()), exception);
+                    throw new ODataException(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, text.ToString()), exception);
                 }
 
                 return false;
@@ -195,7 +196,7 @@ namespace Microsoft.OData
             catch (ArgumentOutOfRangeException exception)
             {
                 // This means the timezone number is bigger than 14:00, inclusive exception has detail exception.
-                throw new ODataException(Strings.UriUtils_DateTimeOffsetInvalidFormat(text.ToString()), exception);
+                throw new ODataException(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, text.ToString()), exception);
             }
         }
 

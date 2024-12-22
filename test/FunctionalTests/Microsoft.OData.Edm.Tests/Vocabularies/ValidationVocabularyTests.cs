@@ -128,11 +128,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             XmlWriter xw = XmlWriter.Create(sw, settings);
             this._validationModel.TryWriteSchema(xw, out errors);
             xw.Flush();
-#if NETCOREAPP1_1
-            xw.Dispose();
-#else
             xw.Close();
-#endif
             string output = sw.ToString();
 
             Assert.True(!errors.Any(), "No Errors");

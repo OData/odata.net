@@ -127,7 +127,7 @@ namespace Microsoft.OData.Edm.Validation
                 case EdmExpressionKind.EnumMember:
                     return TryCastEnumConstantAsType((IEdmEnumMemberExpression)expression, type, matchExactly, out discoveredErrors);
                 default:
-                    discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionNotValidForTheAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionNotValidForTheAssertedType) };
+                    discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionNotValidForTheAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionNotValidForTheAssertedType) };
                     return false;
             }
         }
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsPrimitive())
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.PrimitiveConstantExpressionNotValidForNonPrimitiveType, Edm.Strings.EdmModel_Validator_Semantic_PrimitiveConstantExpressionNotValidForNonPrimitiveType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.PrimitiveConstantExpressionNotValidForNonPrimitiveType, SRResources.EdmModel_Validator_Semantic_PrimitiveConstantExpressionNotValidForNonPrimitiveType) };
                 return false;
             }
 
@@ -165,7 +165,7 @@ namespace Microsoft.OData.Edm.Validation
                 case EdmValueKind.TimeOfDay:
                     return TryCastTimeOfDayConstantAsType((IEdmTimeOfDayConstantExpression)expression, type, out discoveredErrors);
                 default:
-                    discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                    discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                     return false;
             }
         }
@@ -174,7 +174,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsNullable)
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.NullCannotBeAssertedToBeANonNullableType, Edm.Strings.EdmModel_Validator_Semantic_NullCannotBeAssertedToBeANonNullableType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.NullCannotBeAssertedToBeANonNullableType, SRResources.EdmModel_Validator_Semantic_NullCannotBeAssertedToBeANonNullableType) };
                 return false;
             }
 
@@ -195,7 +195,7 @@ namespace Microsoft.OData.Edm.Validation
                     IEdmStructuredType structuredResult = result as IEdmStructuredType;
                     if (structuredResult == null)
                     {
-                        discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.PathIsNotValidForTheGivenContext, Edm.Strings.EdmModel_Validator_Semantic_PathIsNotValidForTheGivenContext(segment)) };
+                        discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.PathIsNotValidForTheGivenContext, Error.Format(SRResources.EdmModel_Validator_Semantic_PathIsNotValidForTheGivenContext, segment)) };
                         return false;
                     }
 
@@ -244,7 +244,7 @@ namespace Microsoft.OData.Edm.Validation
 
             if (!type.IsStructured())
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.RecordExpressionNotValidForNonStructuredType, Edm.Strings.EdmModel_Validator_Semantic_RecordExpressionNotValidForNonStructuredType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.RecordExpressionNotValidForNonStructuredType, SRResources.EdmModel_Validator_Semantic_RecordExpressionNotValidForNonStructuredType) };
                 return false;
             }
 
@@ -257,7 +257,7 @@ namespace Microsoft.OData.Edm.Validation
                 IEdmPropertyConstructor expressionProperty = expression.Properties.FirstOrDefault(p => p.Name == typeProperty.Name);
                 if (expressionProperty == null)
                 {
-                    errors.Add(new EdmError(expression.Location(), EdmErrorCode.RecordExpressionMissingRequiredProperty, Edm.Strings.EdmModel_Validator_Semantic_RecordExpressionMissingProperty(typeProperty.Name)));
+                    errors.Add(new EdmError(expression.Location(), EdmErrorCode.RecordExpressionMissingRequiredProperty, Error.Format(SRResources.EdmModel_Validator_Semantic_RecordExpressionMissingProperty, typeProperty.Name)));
                 }
                 else
                 {
@@ -280,7 +280,7 @@ namespace Microsoft.OData.Edm.Validation
                 {
                     if (!foundProperties.Contains(property.Name))
                     {
-                        errors.Add(new EdmError(expression.Location(), EdmErrorCode.RecordExpressionHasExtraProperties, Edm.Strings.EdmModel_Validator_Semantic_RecordExpressionHasExtraProperties(property.Name)));
+                        errors.Add(new EdmError(expression.Location(), EdmErrorCode.RecordExpressionHasExtraProperties, Error.Format(SRResources.EdmModel_Validator_Semantic_RecordExpressionHasExtraProperties, property.Name)));
                     }
                 }
             }
@@ -299,7 +299,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsCollection())
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.CollectionExpressionNotValidForNonCollectionType, Edm.Strings.EdmModel_Validator_Semantic_CollectionExpressionNotValidForNonCollectionType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.CollectionExpressionNotValidForNonCollectionType, SRResources.EdmModel_Validator_Semantic_CollectionExpressionNotValidForNonCollectionType) };
                 return false;
             }
 
@@ -321,7 +321,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsGuid())
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                 return false;
             }
 
@@ -333,7 +333,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsFloating())
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                 return false;
             }
 
@@ -345,7 +345,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsDecimal())
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                 return false;
             }
 
@@ -357,7 +357,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsDateTimeOffset())
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                 return false;
             }
 
@@ -369,7 +369,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsDuration())
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                 return false;
             }
 
@@ -381,7 +381,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsDate())
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                 return false;
             }
 
@@ -393,7 +393,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsTimeOfDay())
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                 return false;
             }
 
@@ -405,7 +405,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsBoolean())
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                 return false;
             }
 
@@ -417,14 +417,14 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsString())
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                 return false;
             }
 
             IEdmStringTypeReference stringType = type.AsString();
             if (stringType.MaxLength.HasValue && expression.Value.Length > stringType.MaxLength.Value)
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.StringConstantLengthOutOfRange, Edm.Strings.EdmModel_Validator_Semantic_StringConstantLengthOutOfRange(expression.Value.Length, stringType.MaxLength.Value)) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.StringConstantLengthOutOfRange, Error.Format(SRResources.EdmModel_Validator_Semantic_StringConstantLengthOutOfRange, expression.Value.Length, stringType.MaxLength.Value)) };
                 return false;
             }
 
@@ -436,7 +436,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsIntegral())
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                 return false;
             }
 
@@ -453,7 +453,7 @@ namespace Microsoft.OData.Edm.Validation
                 case EdmPrimitiveTypeKind.SByte:
                     return TryCastIntegerConstantInRange(expression, SByte.MinValue, SByte.MaxValue, out discoveredErrors);
                 default:
-                    discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                    discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                     return false;
             }
         }
@@ -462,7 +462,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (expression.Value < min || expression.Value > max)
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.IntegerConstantValueOutOfRange, Edm.Strings.EdmModel_Validator_Semantic_IntegerConstantValueOutOfRange) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.IntegerConstantValueOutOfRange, SRResources.EdmModel_Validator_Semantic_IntegerConstantValueOutOfRange) };
                 return false;
             }
 
@@ -474,14 +474,14 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!type.IsBinary())
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionPrimitiveKindNotValidForAssertedType) };
                 return false;
             }
 
             IEdmBinaryTypeReference binaryType = type.AsBinary();
             if (binaryType.MaxLength.HasValue && expression.Value.Length > binaryType.MaxLength.Value)
             {
-                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.BinaryConstantLengthOutOfRange, Edm.Strings.EdmModel_Validator_Semantic_BinaryConstantLengthOutOfRange(expression.Value.Length, binaryType.MaxLength.Value)) };
+                discoveredErrors = new EdmError[] { new EdmError(expression.Location(), EdmErrorCode.BinaryConstantLengthOutOfRange, Error.Format(SRResources.EdmModel_Validator_Semantic_BinaryConstantLengthOutOfRange, expression.Value.Length, binaryType.MaxLength.Value)) };
                 return false;
             }
 
@@ -498,7 +498,7 @@ namespace Microsoft.OData.Edm.Validation
                     new EdmError(
                         expression.Location(),
                         EdmErrorCode.ExpressionEnumKindNotValidForAssertedType,
-                        Edm.Strings.EdmModel_Validator_Semantic_ExpressionEnumKindNotValidForAssertedType)
+                        SRResources.EdmModel_Validator_Semantic_ExpressionEnumKindNotValidForAssertedType)
                 };
                 return false;
             }
@@ -538,7 +538,7 @@ namespace Microsoft.OData.Edm.Validation
             {
                 if (!expressionType.IsEquivalentTo(assertedType))
                 {
-                    discoveredErrors = new EdmError[] { new EdmError(location, EdmErrorCode.ExpressionNotValidForTheAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionNotValidForTheAssertedType) };
+                    discoveredErrors = new EdmError[] { new EdmError(location, EdmErrorCode.ExpressionNotValidForTheAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionNotValidForTheAssertedType) };
                     return false;
                 }
             }
@@ -557,7 +557,7 @@ namespace Microsoft.OData.Edm.Validation
                     IEdmPrimitiveType primitiveAssertedType = assertedType as IEdmPrimitiveType;
                     if (!primitiveExpressionType.PrimitiveKind.PromotesTo(primitiveAssertedType.PrimitiveKind))
                     {
-                        discoveredErrors = new EdmError[] { new EdmError(location, EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionPrimitiveKindCannotPromoteToAssertedType(expressionType.ToTraceString(), assertedType.ToTraceString())) };
+                        discoveredErrors = new EdmError[] { new EdmError(location, EdmErrorCode.ExpressionPrimitiveKindNotValidForAssertedType, Error.Format(SRResources.EdmModel_Validator_Semantic_ExpressionPrimitiveKindCannotPromoteToAssertedType, expressionType.ToTraceString(), assertedType.ToTraceString())) };
                         return false;
                     }
                 }
@@ -565,7 +565,7 @@ namespace Microsoft.OData.Edm.Validation
                 {
                     if (!expressionType.IsOrInheritsFrom(assertedType))
                     {
-                        discoveredErrors = new EdmError[] { new EdmError(location, EdmErrorCode.ExpressionNotValidForTheAssertedType, Edm.Strings.EdmModel_Validator_Semantic_ExpressionNotValidForTheAssertedType) };
+                        discoveredErrors = new EdmError[] { new EdmError(location, EdmErrorCode.ExpressionNotValidForTheAssertedType, SRResources.EdmModel_Validator_Semantic_ExpressionNotValidForTheAssertedType) };
                         return false;
                     }
                 }
@@ -579,7 +579,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             if (!assertedType.IsNullable && expressionType.IsNullable)
             {
-                discoveredErrors = new EdmError[] { new EdmError(location, EdmErrorCode.CannotAssertNullableTypeAsNonNullableType, Edm.Strings.EdmModel_Validator_Semantic_CannotAssertNullableTypeAsNonNullableType(expressionType.FullName())) };
+                discoveredErrors = new EdmError[] { new EdmError(location, EdmErrorCode.CannotAssertNullableTypeAsNonNullableType, Error.Format(SRResources.EdmModel_Validator_Semantic_CannotAssertNullableTypeAsNonNullableType, expressionType.FullName())) };
                 return false;
             }
 

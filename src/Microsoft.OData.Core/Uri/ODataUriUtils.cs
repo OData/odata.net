@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData
 {
@@ -46,7 +46,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(value, "value");
             if (typeReference != null && model == null)
             {
-                throw new ODataException(ODataErrorStrings.ODataUriUtils_ConvertFromUriLiteralTypeRefWithoutModel);
+                throw new ODataException(SRResources.ODataUriUtils_ConvertFromUriLiteralTypeRefWithoutModel);
             }
 
             if (model == null)

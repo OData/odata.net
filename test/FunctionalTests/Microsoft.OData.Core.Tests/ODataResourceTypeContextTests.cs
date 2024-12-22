@@ -47,17 +47,17 @@ namespace Microsoft.OData.Tests
 
             SerializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "MyCustomers", NavigationSourceEntityTypeName = "ns.MyCustomer", ExpectedTypeName = "ns.MyVipCustomer" };
             SerializationInfoWithEdmUnknowEntitySet = new ODataResourceSerializationInfo() { NavigationSourceName = null, NavigationSourceEntityTypeName = "ns.MyCustomer", ExpectedTypeName = "ns.MyVipCustomer", NavigationSourceKind = EdmNavigationSourceKind.UnknownEntitySet };
-            TypeContextWithoutModel = ODataResourceTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, throwIfMissingTypeInfo: true);
-            TypeContextWithModel = ODataResourceTypeContext.Create(/*serializationInfo*/null, EntitySet, EntitySetElementType, ExpectedEntityType, throwIfMissingTypeInfo: true);
-            TypeContextWithEdmUnknowEntitySet = ODataResourceTypeContext.Create(SerializationInfoWithEdmUnknowEntitySet, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, throwIfMissingTypeInfo: true);
-            BaseTypeContextThatThrows = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, throwIfMissingTypeInfo: true);
-            BaseTypeContextThatWillNotThrow = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, throwIfMissingTypeInfo: false);
+            TypeContextWithoutModel = ODataResourceTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null);
+            TypeContextWithModel = ODataResourceTypeContext.Create(/*serializationInfo*/null, EntitySet, EntitySetElementType, ExpectedEntityType);
+            TypeContextWithEdmUnknowEntitySet = ODataResourceTypeContext.Create(SerializationInfoWithEdmUnknowEntitySet, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null);
+            BaseTypeContextThatThrows = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null);
+            BaseTypeContextThatWillNotThrow = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null);
         }
 
         [Fact]
         public void ShouldCreateSubclassWithoutModelWhenSerializationInfoIsGiven()
         {
-            var typeContext = ODataResourceTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, throwIfMissingTypeInfo: true);
+            var typeContext = ODataResourceTypeContext.Create(SerializationInfo, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null);
             Assert.NotNull(typeContext);
             Assert.EndsWith("WithoutModel", typeContext.GetType().Name);
         }
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ShouldCreateSubclassWithModelWhenMetadataIsGiven()
         {
-            var typeContext = ODataResourceTypeContext.Create(/*serializationInfo*/null, EntitySet, EntitySetElementType, ExpectedEntityType, throwIfMissingTypeInfo: true);
+            var typeContext = ODataResourceTypeContext.Create(/*serializationInfo*/null, EntitySet, EntitySetElementType, ExpectedEntityType);
             Assert.NotNull(typeContext);
             Assert.EndsWith("WithModel", typeContext.GetType().Name);
         }
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Tests
         public void ShouldCreateSubclassWithModelWhenExpectedTypeisGiven()
         {
             var typeContext = ODataResourceTypeContext.Create(null, navigationSource: null,
-                navigationSourceEntityType: null, expectedResourceType: ComplexType, throwIfMissingTypeInfo: false);
+                navigationSourceEntityType: null, expectedResourceType: ComplexType);
             Assert.NotNull(typeContext);
             Assert.EndsWith("WithModel", typeContext.GetType().Name);
         }
@@ -82,7 +82,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ShouldCreateSubclassWithoutModelWhenBothSerializationInfoAndMetadataAreGiven()
         {
-            var typeContext = ODataResourceTypeContext.Create(SerializationInfo, EntitySet, EntitySetElementType, ExpectedEntityType, throwIfMissingTypeInfo: true);
+            var typeContext = ODataResourceTypeContext.Create(SerializationInfo, EntitySet, EntitySetElementType, ExpectedEntityType);
             Assert.NotNull(typeContext);
             Assert.EndsWith("WithoutModel", typeContext.GetType().Name);
         }
@@ -90,14 +90,14 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ShouldCreateBaseClassWhenSerializationInfoAndUserModelAreBothMissingAndThrowIfMissingTypeInfoIsTrue()
         {
-            var typeContext = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, throwIfMissingTypeInfo: true);
+            var typeContext = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null);
             Assert.IsType<ODataResourceTypeContext>(typeContext);
         }
 
         [Fact]
         public void ShouldCreateBaseClassWhenSerializationInfoAndUserModelAreBothMissingAndThrowIfMissingTypeInfoIsFalse()
         {
-            var typeContext = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null, throwIfMissingTypeInfo: false);
+            var typeContext = ODataResourceTypeContext.Create(serializationInfo: null, navigationSource: null, navigationSourceEntityType: null, expectedResourceType: null);
             Assert.IsType<ODataResourceTypeContext>(typeContext);
         }
 
@@ -154,20 +154,6 @@ namespace Microsoft.OData.Tests
         #endregion TypeContextWithModel
 
         #region BaseTypeContextThatThrows
-        [Fact]
-        public void BaseTypeContextThatThrowsShouldThrowForEntitySetName()
-        {
-            Action test = () => Assert.Null(BaseTypeContextThatThrows.NavigationSourceName);
-            test.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
-        }
-
-        [Fact]
-        public void BaseTypeContextThatThrowsShouldThrowForEntitySetElementTypeName()
-        {
-            Action test = () => Assert.Null(BaseTypeContextThatThrows.NavigationSourceEntityTypeName);
-            test.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
-        }
-
         [Fact]
         public void BaseTypeContextThatThrowsShouldReturnNullExpectedEntityTypeName()
         {

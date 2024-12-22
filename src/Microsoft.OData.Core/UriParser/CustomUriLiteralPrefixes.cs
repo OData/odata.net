@@ -11,7 +11,7 @@ namespace Microsoft.OData.UriParser
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Edm;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion
 
@@ -56,7 +56,7 @@ namespace Microsoft.OData.UriParser
                 // Check if literal does already exists
                 if (CustomLiteralPrefixesOfEdmTypes.ContainsKey(literalPrefix))
                 {
-                    throw new ODataException(ODataErrorStrings.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists(literalPrefix));
+                    throw new ODataException(Error.Format(SRResources.CustomUriTypePrefixLiterals_AddCustomUriTypePrefixLiteralAlreadyExists, literalPrefix));
                 }
 
                 CustomLiteralPrefixesOfEdmTypes.Add(literalPrefix, literalEdmTypeReference);

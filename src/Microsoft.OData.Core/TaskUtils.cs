@@ -90,13 +90,7 @@ namespace Microsoft.OData.Client
         /// <returns>An already completed task with the specified exception.</returns>
         internal static Task<T> GetFaultedTask<T>(Exception exception)
         {
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
             return Task.FromException<T>(exception);
-#else
-            TaskCompletionSource<T> taskCompletionSource = new TaskCompletionSource<T>();
-            taskCompletionSource.SetException(exception);
-            return taskCompletionSource.Task;
-#endif
         }
 #endregion
 

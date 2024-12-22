@@ -6,6 +6,7 @@
 
 using System;
 using System.IO;
+using Microsoft.OData.Core;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -606,7 +607,7 @@ namespace Microsoft.OData.Tests.Json
             },
             null);
 
-            writeWithExtraValue.Throws<ODataException>(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
+            writeWithExtraValue.Throws<ODataException>(Error.Format(SRResources.ODataWriterCore_PropertyValueAlreadyWritten, "textAsStream"));
         }
 
         [Fact]
@@ -631,7 +632,7 @@ namespace Microsoft.OData.Tests.Json
             },
             null);
 
-            writeWithExtraValue.Throws<ODataException>(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
+            writeWithExtraValue.Throws<ODataException>(Error.Format(SRResources.ODataWriterCore_PropertyValueAlreadyWritten, "textAsStream"));
         }
 
         [Fact]
@@ -656,7 +657,7 @@ namespace Microsoft.OData.Tests.Json
             },
             null);
 
-            writeWithExtraValue.Throws<ODataException>(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
+            writeWithExtraValue.Throws<ODataException>(Error.Format(SRResources.ODataWriterCore_PropertyValueAlreadyWritten, "textAsStream"));
         }
 
         [Fact]
@@ -681,7 +682,7 @@ namespace Microsoft.OData.Tests.Json
             },
             null);
 
-            writeWithExtraValue.Throws<ODataException>(Strings.DuplicatePropertyNamesNotAllowed("textAsStream"));
+            writeWithExtraValue.Throws<ODataException>(Error.Format(SRResources.DuplicatePropertyNamesNotAllowed, "textAsStream"));
         }
 
         [Fact]
@@ -706,7 +707,7 @@ namespace Microsoft.OData.Tests.Json
             },
             null);
 
-            writeWithExtraValue.Throws<ODataException>(Strings.DuplicatePropertyNamesNotAllowed("textAsStream"));
+            writeWithExtraValue.Throws<ODataException>(Error.Format(SRResources.DuplicatePropertyNamesNotAllowed, "textAsStream"));
         }
 
         [Fact]
@@ -727,7 +728,7 @@ namespace Microsoft.OData.Tests.Json
             },
             null);
 
-            writeWithExtraValue.Throws<ODataException>(Strings.ODataWriterCore_PropertyValueAlreadyWritten("textAsStream"));
+            writeWithExtraValue.Throws<ODataException>(Error.Format(SRResources.ODataWriterCore_PropertyValueAlreadyWritten, "textAsStream"));
         }
         #region Test Helper Methods
 

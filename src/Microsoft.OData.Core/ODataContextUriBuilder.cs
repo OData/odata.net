@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using Microsoft.OData.Core;
     #region Namespaces
     using System;
     using System.Collections.Generic;
@@ -65,7 +66,7 @@ namespace Microsoft.OData
         {
             if (baseContextUrl == null && throwIfMissingInfo)
             {
-                throw new ODataException(Strings.ODataOutputContext_MetadataDocumentUriMissing);
+                throw new ODataException(SRResources.ODataOutputContext_MetadataDocumentUriMissing);
             }
 
             return new ODataContextUriBuilder(baseContextUrl, throwIfMissingInfo);
@@ -97,7 +98,7 @@ namespace Microsoft.OData
             }
             else
             {
-                throw new ODataException(Strings.ODataContextUriBuilder_UnsupportedPayloadKind(payloadKind.ToString()));
+                throw new ODataException(Error.Format(SRResources.ODataContextUriBuilder_UnsupportedPayloadKind, payloadKind.ToString()));
             }
 
             switch (payloadKind)
@@ -172,25 +173,40 @@ namespace Microsoft.OData
             }
             else
             {
-                // No path information
-                switch (info.DeltaKind)
-                {
-                    case ODataDeltaKind.ResourceSet:
-                        return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeltaResourceSet, UriKind.Relative);
-                    case ODataDeltaKind.DeletedEntry:
-                        return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeletedEntry, UriKind.Relative);
-                    case ODataDeltaKind.Link:
-                        return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeltaLink, UriKind.Relative);
-                    case ODataDeltaKind.DeletedLink:
-                        return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeletedLink, UriKind.Relative);
-                }
-
                 if (!string.IsNullOrEmpty(info.TypeName))
                 {   // #TypeName
                     builder.Append(info.TypeName);
+
+                    switch (info.DeltaKind)
+                    {
+                        case ODataDeltaKind.ResourceSet:
+                            builder.Append(ODataConstants.UriSegmentSeparatorChar + ODataConstants.DeltaResourceSet);
+                            break;
+                        case ODataDeltaKind.DeletedEntry:
+                            builder.Append(ODataConstants.UriSegmentSeparatorChar + ODataConstants.DeletedEntry);
+                            break;
+                        case ODataDeltaKind.Link:
+                            builder.Append(ODataConstants.UriSegmentSeparatorChar + ODataConstants.DeltaLink);
+                            break;
+                        case ODataDeltaKind.DeletedLink:
+                            builder.Append(ODataConstants.UriSegmentSeparatorChar + ODataConstants.DeletedLink);
+                            break;
+                    }
                 }
                 else
                 {
+                    switch (info.DeltaKind)
+                    {
+                        case ODataDeltaKind.ResourceSet:
+                            return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeltaResourceSet, UriKind.Relative);
+                        case ODataDeltaKind.DeletedEntry:
+                            return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeletedEntry, UriKind.Relative);
+                        case ODataDeltaKind.Link:
+                            return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeltaLink, UriKind.Relative);
+                        case ODataDeltaKind.DeletedLink:
+                            return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeletedLink, UriKind.Relative);
+                    }
+
                     return null;
                 }
             }
@@ -227,7 +243,7 @@ namespace Microsoft.OData
         {
             if (string.IsNullOrEmpty(contextUrlInfo.TypeName))
             {
-                throw new ODataException(Strings.ODataContextUriBuilder_TypeNameMissingForProperty);
+                throw new ODataException(SRResources.ODataContextUriBuilder_TypeNameMissingForProperty);
             }
         }
 
@@ -239,7 +255,7 @@ namespace Microsoft.OData
         {
             if (string.IsNullOrEmpty(contextUrlInfo.TypeName))
             {
-                throw new ODataException(Strings.ODataContextUriBuilder_TypeNameMissingForTopLevelCollection);
+                throw new ODataException(SRResources.ODataContextUriBuilder_TypeNameMissingForTopLevelCollection);
             }
         }
 
@@ -255,7 +271,7 @@ namespace Microsoft.OData
             {
                 if (string.IsNullOrEmpty(contextUrlInfo.TypeName))
                 {
-                    throw new ODataException(Strings.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
+                    throw new ODataException(SRResources.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
                 }
 
                 return;
@@ -269,7 +285,7 @@ namespace Microsoft.OData
                 contextUrlInfo.IsUnknownEntitySet && string.IsNullOrEmpty(contextUrlInfo.NavigationSource) &&
                 string.IsNullOrEmpty(contextUrlInfo.TypeName))
             {
-                throw new ODataException(Strings.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
+                throw new ODataException(SRResources.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
             }
         }
 
@@ -281,7 +297,7 @@ namespace Microsoft.OData
         {
             if (string.IsNullOrEmpty(contextUrlInfo.ResourcePath))
             {
-                throw new ODataException(Strings.ODataContextUriBuilder_ODataUriMissingForIndividualProperty);
+                throw new ODataException(SRResources.ODataContextUriBuilder_ODataUriMissingForIndividualProperty);
             }
         }
 

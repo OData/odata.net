@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System;
 using System.IO;
 using System.Linq;
@@ -116,4 +115,3 @@ namespace Microsoft.OData.Tests.Json
         }
     }
 }
-#endif

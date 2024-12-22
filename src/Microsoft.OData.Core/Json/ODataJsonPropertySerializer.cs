@@ -13,6 +13,7 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Threading.Tasks;
+    using Microsoft.OData.Core;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Evaluation;
     #endregion Namespaces
@@ -195,7 +196,7 @@ namespace Microsoft.OData.Json
             {
                 if (isTopLevel)
                 {
-                    throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                    throw new ODataException(Error.Format(SRResources.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue, property.Name));
                 }
 
                 this.WriteResourceProperty(property, resourceValue, isOpenPropertyType);
@@ -209,7 +210,7 @@ namespace Microsoft.OData.Json
                 {
                     if (collectionValue.Items != null && collectionValue.Items.Any(i => i is ODataResourceValue))
                     {
-                        throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                        throw new ODataException(Error.Format(SRResources.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue, property.Name));
                     }
                 }
 
@@ -224,13 +225,11 @@ namespace Microsoft.OData.Json
                 return;
             }
 
-#if NETCOREAPP
             if (value is ODataJsonElementValue jsonElementValue)
             {
                 this.WriteJsonElementProperty(jsonElementValue);
                 return;
             }
-#endif
         }
 
 
@@ -418,7 +417,7 @@ namespace Microsoft.OData.Json
             {
                 if (isTopLevel)
                 {
-                    throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                    throw new ODataException(Error.Format(SRResources.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue, property.Name));
                 }
 
                 await this.WriteResourcePropertyAsync(property, resourceValue, isOpenPropertyType)
@@ -433,7 +432,7 @@ namespace Microsoft.OData.Json
                 {
                     if (collectionValue.Items != null && collectionValue.Items.Any(i => i is ODataResourceValue))
                     {
-                        throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                        throw new ODataException(Error.Format(SRResources.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue, property.Name));
                     }
                 }
 
@@ -450,16 +449,13 @@ namespace Microsoft.OData.Json
                 return;
             }
 
-#if NETCOREAPP
             if (value is ODataJsonElementValue jsonElementValue)
             {
                 await this.WriteJsonElementPropertyAsync(jsonElementValue)
                     .ConfigureAwait(false);
                 return;
             }
-#endif
         }
-
 
         /// <summary>
         /// Asynchronously writes the property information for a property.
@@ -532,18 +528,15 @@ namespace Microsoft.OData.Json
             return;
         }
 
-#if NETCOREAPP
         /// <summary>
         /// Writes a <see cref="System.Text.Json.JsonElement"/> property.
         /// </summary>
-        /// <param name="jsonElementvalue">The value to be written.</param>
-        private void WriteJsonElementProperty(ODataJsonElementValue jsonElementvalue)
+        /// <param name="jsonElementValue">The value to be written.</param>
+        private void WriteJsonElementProperty(ODataJsonElementValue jsonElementValue)
         {
             this.JsonWriter.WriteName(this.currentPropertyInfo.WireName);
-            this.JsonWriter.WriteValue(jsonElementvalue.Value);
+            this.JsonWriter.WriteValue(jsonElementValue.Value);
         }
-
-#endif
 
         private void WriteStreamValue(IODataStreamReferenceInfo streamInfo, string propertyName, ODataResourceMetadataBuilder metadataBuilder)
         {
@@ -670,7 +663,7 @@ namespace Microsoft.OData.Json
                     // ...
                     // If the property is single-valued and has the null value, the service responds with 204 No Content.
                     // ...
-                    throw new ODataException(Strings.ODataMessageWriter_CannotWriteTopLevelNull);
+                    throw new ODataException(SRResources.ODataMessageWriter_CannotWriteTopLevelNull);
                 }
             }
             else
@@ -941,20 +934,17 @@ namespace Microsoft.OData.Json
                 .ConfigureAwait(false);
         }
 
-#if NETCOREAPP
         /// <summary>
         /// Asynchronously writes an <see cref="System.Text.Json.JsonElement"/> value.
         /// </summary>
-        /// <param name="jsonElementvalue">The value to be written.</param>
-        private async Task WriteJsonElementPropertyAsync(ODataJsonElementValue jsonElementvalue)
+        /// <param name="jsonElementValue">The value to be written.</param>
+        private async Task WriteJsonElementPropertyAsync(ODataJsonElementValue jsonElementValue)
         {
             await this.JsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
                 .ConfigureAwait(false);
-            await this.JsonWriter.WriteValueAsync(jsonElementvalue.Value)
+            await this.JsonWriter.WriteValueAsync(jsonElementValue.Value)
                 .ConfigureAwait(false);
         }
-
-#endif
 
         /// <summary>
         /// Asynchronosly writes a stream reference value.
@@ -1111,7 +1101,7 @@ namespace Microsoft.OData.Json
                     // ...
                     // If the property is single-valued and has the null value, the service responds with 204 No Content.
                     // ...
-                    throw new ODataException(Strings.ODataMessageWriter_CannotWriteTopLevelNull);
+                    throw new ODataException(SRResources.ODataMessageWriter_CannotWriteTopLevelNull);
                 }
             }
             else

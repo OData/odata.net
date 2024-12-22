@@ -405,7 +405,7 @@ namespace Microsoft.OData.Client
                                 ClientTypeAnnotation type = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
                                 if (type.IsMediaLinkEntry || entityDescriptor.IsMediaLinkEntry)
                                 {
-                                    throw Error.NotSupported(Strings.Context_BatchNotSupportedForMediaLink);
+                                    throw Error.NotSupported(SRResources.Context_BatchNotSupportedForMediaLink);
                                 }
                             }
                             else if (entityDescriptor.State == EntityStates.Unchanged || entityDescriptor.State == EntityStates.Modified)
@@ -414,14 +414,14 @@ namespace Microsoft.OData.Client
                                 // It's OK to PUT the MLE alone inside a batch mode though
                                 if (entityDescriptor.SaveStream != null)
                                 {
-                                    throw Error.NotSupported(Strings.Context_BatchNotSupportedForMediaLink);
+                                    throw Error.NotSupported(SRResources.Context_BatchNotSupportedForMediaLink);
                                 }
                             }
                         }
                         else if (descriptor.DescriptorKind == DescriptorKind.NamedStream)
                         {
                             // Similar to MR, we do not support adding named streams in batch mode.
-                            throw Error.NotSupported(Strings.Context_BatchNotSupportedForNamedStreams);
+                            throw Error.NotSupported(SRResources.Context_BatchNotSupportedForNamedStreams);
                         }
 
                         ODataRequestMessageWrapper operationRequestMessage;
@@ -471,7 +471,7 @@ namespace Microsoft.OData.Client
             {
                 if ((this.batchResponseMessage == null) || (this.batchResponseMessage.StatusCode == (int)HttpStatusCode.NoContent))
                 {   // we always expect a response to our batch POST request
-                    throw Error.InvalidOperation(Strings.Batch_ExpectedResponse(1));
+                    throw Error.InvalidOperation(Error.Format(SRResources.Batch_ExpectedResponse, 1));
                 }
 
                 Func<Stream> getResponseStream = () => this.ResponseStream;
@@ -519,7 +519,7 @@ namespace Microsoft.OData.Client
                             (HttpStatusCode)this.batchResponseMessage.StatusCode);
                     }
 
-                    throw Error.InvalidOperation(Strings.Batch_ExpectedContentType(this.batchResponseMessage.GetHeader(XmlConstants.HttpContentType)), inner);
+                    throw Error.InvalidOperation(Error.Format(SRResources.Batch_ExpectedContentType, this.batchResponseMessage.GetHeader(XmlConstants.HttpContentType)), inner);
                 }
 
                 DataServiceResponse response = this.HandleBatchResponseInternal(batchReader);
@@ -541,7 +541,7 @@ namespace Microsoft.OData.Client
                 HeaderCollection headers = new HeaderCollection(this.batchResponseMessage);
                 int statusCode = this.batchResponseMessage == null ? (int)HttpStatusCode.InternalServerError : (int)this.batchResponseMessage.StatusCode;
                 DataServiceResponse response = new DataServiceResponse(headers, statusCode, Enumerable.Empty<OperationResponse>(), this.IsBatchRequest);
-                throw new DataServiceRequestException(Strings.DataServiceException_GeneralError, ex, response);
+                throw new DataServiceRequestException(SRResources.DataServiceException_GeneralError, ex, response);
             }
             finally
             {
@@ -608,7 +608,7 @@ namespace Microsoft.OData.Client
                 // Users need to inspect each OperationResponse to get the exception information from the failed operations.
                 if (exception != null)
                 {
-                    throw new DataServiceRequestException(Strings.DataServiceException_GeneralError, exception, response);
+                    throw new DataServiceRequestException(SRResources.DataServiceException_GeneralError, exception, response);
                 }
             }
 
@@ -810,7 +810,7 @@ namespace Microsoft.OData.Client
                      (!this.IsBatchRequest || this.ChangedEntries.FirstOrDefault(o => o.SaveError != null) == null))) ||
                     (this.Queries != null && queryCount != this.Queries.Length))
                 {
-                    throw Error.InvalidOperation(Strings.Batch_IncompleteResponseCount);
+                    throw Error.InvalidOperation(SRResources.Batch_IncompleteResponseCount);
                 }
             }
             finally

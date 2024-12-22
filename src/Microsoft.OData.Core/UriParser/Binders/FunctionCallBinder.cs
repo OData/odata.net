@@ -14,7 +14,7 @@ using System.Globalization;
 using System.Linq;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
-using ODataErrorStrings = Microsoft.OData.Strings;
+using Microsoft.OData.Core;
 
 namespace Microsoft.OData.UriParser
 {
@@ -79,7 +79,7 @@ namespace Microsoft.OData.UriParser
                 SingleValueNode argumentNode = argumentNodes[i] as SingleValueNode;
                 if (argumentNode == null)
                 {
-                    throw new ODataException(ODataErrorStrings.MetadataBinder_FunctionArgumentNotSingleValue(functionName));
+                    throw new ODataException(Error.Format(SRResources.MetadataBinder_FunctionArgumentNotSingleValue, functionName));
                 }
 
                 ret[i] = argumentNode;
@@ -112,7 +112,7 @@ namespace Microsoft.OData.UriParser
                 KeyValuePair<string, FunctionSignatureWithReturnType> found = nameSignatures.FirstOrDefault(pair => pair.Value.ArgumentTypes.Length == argumentCount);
                 if (found.Equals(TypePromotionUtils.NotFoundKeyValuePair))
                 {
-                    throw new ODataException(ODataErrorStrings.FunctionCallBinder_CannotFindASuitableOverload(functionCallToken, argumentTypes.Length));
+                    throw new ODataException(Error.Format(SRResources.FunctionCallBinder_CannotFindASuitableOverload, functionCallToken, argumentTypes.Length));
                 }
                 else
                 {
@@ -128,7 +128,7 @@ namespace Microsoft.OData.UriParser
                     TypePromotionUtils.FindBestFunctionSignature(nameSignatures, argumentNodes, functionCallToken);
                 if (nameSignature.Equals(TypePromotionUtils.NotFoundKeyValuePair))
                 {
-                    throw new ODataException(ODataErrorStrings.MetadataBinder_NoApplicableFunctionFound(
+                    throw new ODataException(Error.Format(SRResources.MetadataBinder_NoApplicableFunctionFound,
                         functionCallToken,
                         UriFunctionsHelper.BuildFunctionSignatureListDescription(functionCallToken, nameSignatures.Select(sig => sig.Value))));
                 }
@@ -170,7 +170,7 @@ namespace Microsoft.OData.UriParser
             if (!customFound && !builtInFound)
             {
                 // Not found in both built-in and custom.
-                throw new ODataException(ODataErrorStrings.MetadataBinder_UnknownFunction(functionCallToken));
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_UnknownFunction, functionCallToken));
             }
 
             if (!customFound)
@@ -288,7 +288,7 @@ namespace Microsoft.OData.UriParser
             if (functionCallToken.Source != null)
             {
                 // the parent must be null for a Uri function.
-                throw new ODataException(ODataErrorStrings.FunctionCallBinder_UriFunctionMustHaveHaveNullParent(functionCallToken.Name));
+                throw new ODataException(Error.Format(SRResources.FunctionCallBinder_UriFunctionMustHaveHaveNullParent, functionCallToken.Name));
             }
 
             // There are some functions (IsOf and Cast for example) that don't necessarily need to be bound to a function signature,
@@ -377,7 +377,7 @@ namespace Microsoft.OData.UriParser
             {
                 // if the parent exists, but has no type information, then we're in open type land, and we
                 // shouldn't go any farther.
-                throw new ODataException(ODataErrorStrings.FunctionCallBinder_CallingFunctionOnOpenProperty(identifier));
+                throw new ODataException(Error.Format(SRResources.FunctionCallBinder_CallingFunctionOnOpenProperty, identifier));
             }
 
             if (operation.IsAction())
@@ -451,7 +451,7 @@ namespace Microsoft.OData.UriParser
                 // TODO: considering another better exception
                 if (paraToken.ValueToken is EndPathToken)
                 {
-                    throw new ODataException(Strings.MetadataBinder_ParameterNotInScope(
+                    throw new ODataException(Error.Format(SRResources.MetadataBinder_ParameterNotInScope,
                         string.Format(CultureInfo.InvariantCulture, "{0}={1}", paraToken.ParameterName, (paraToken.ValueToken as EndPathToken).Identifier)));
                 }
 
@@ -717,7 +717,7 @@ namespace Microsoft.OData.UriParser
             if (args.Count != 1 && args.Count != 2)
             {
                 throw new ODataErrorException(
-                    ODataErrorStrings.MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands(args.Count));
+                    Error.Format(SRResources.MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands, args.Count));
             }
 
             ConstantNode typeArgument = args.Last() as ConstantNode;
@@ -730,12 +730,12 @@ namespace Microsoft.OData.UriParser
 
             if (returnType == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
+                throw new ODataException(SRResources.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
             }
 
             if (returnType.IsCollection())
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_CastOrIsOfCollectionsNotSupported);
+                throw new ODataException(SRResources.MetadataBinder_CastOrIsOfCollectionsNotSupported);
             }
 
             // if we only have one argument, then add the implicit range variable as the first argument.
@@ -751,7 +751,7 @@ namespace Microsoft.OData.UriParser
             }
             else if (!(args[0] is SingleValueNode))
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_CastOrIsOfCollectionsNotSupported);
+                throw new ODataException(SRResources.MetadataBinder_CastOrIsOfCollectionsNotSupported);
             }
 
             if (isCast && (args.Count == 2))
@@ -760,7 +760,7 @@ namespace Microsoft.OData.UriParser
                 if ((args[0].GetEdmTypeReference() is IEdmEnumTypeReference)
                     && !string.Equals(typeArgument.Value as string, Microsoft.OData.Metadata.EdmConstants.EdmStringTypeName, StringComparison.Ordinal))
                 {
-                    throw new ODataException(ODataErrorStrings.CastBinder_EnumOnlyCastToOrFromString);
+                    throw new ODataException(SRResources.CastBinder_EnumOnlyCastToOrFromString);
                 }
 
                 // throw if cast not-string to enum :
@@ -783,7 +783,7 @@ namespace Microsoft.OData.UriParser
                         }
                     }
 
-                    throw new ODataException(ODataErrorStrings.CastBinder_EnumOnlyCastToOrFromString);
+                    throw new ODataException(SRResources.CastBinder_EnumOnlyCastToOrFromString);
                 }
             }
 

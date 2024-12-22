@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System;
 using System.Buffers;
 using System.Diagnostics;
@@ -407,7 +406,7 @@ namespace Microsoft.OData.Json
         public override void WriteByte(byte value)
             => Write(new ReadOnlySpan<byte>(new byte[] { value }));
 
-        private static void ValidateBufferArguments(byte[] buffer, int offset, int size)
+        private static new void ValidateBufferArguments(byte[] buffer, int offset, int size)
         {
             if (buffer == null)
             {
@@ -425,5 +424,3 @@ namespace Microsoft.OData.Json
         }
     }
 }
- 
-#endif

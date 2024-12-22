@@ -11,8 +11,7 @@ namespace Microsoft.OData.UriParser
 
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
-    using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.OData.Core;
 
     #endregion Namespaces
 
@@ -79,7 +78,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (skip < 0)
                 {
-                    throw new ODataException(ODataErrorStrings.MetadataBinder_SkipRequiresNonNegativeInteger(skip));
+                    throw new ODataException(Error.Format(SRResources.MetadataBinder_SkipRequiresNonNegativeInteger, skip));
                 }
 
                 return skip;
@@ -100,7 +99,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (top < 0)
                 {
-                    throw new ODataException(ODataErrorStrings.MetadataBinder_TopRequiresNonNegativeInteger(top));
+                    throw new ODataException(Error.Format(SRResources.MetadataBinder_TopRequiresNonNegativeInteger, top));
                 }
 
                 return top;
@@ -122,12 +121,12 @@ namespace Microsoft.OData.UriParser
         {
             if (bindingState == null || bindingState.QueryOptions == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_QueryOptionsBindStateCannotBeNull);
+                throw new ODataException(SRResources.MetadataBinder_QueryOptionsBindStateCannotBeNull);
             }
 
             if (bindMethod == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_QueryOptionsBindMethodCannotBeNull);
+                throw new ODataException(SRResources.MetadataBinder_QueryOptionsBindMethodCannotBeNull);
             }
 
             List<QueryNode> customQueryOptionNodes = new List<QueryNode>();
@@ -203,12 +202,12 @@ namespace Microsoft.OData.UriParser
                     result = this.BindCountSegment((CountSegmentToken)token);
                     break;
                 default:
-                    throw new ODataException(ODataErrorStrings.MetadataBinder_UnsupportedQueryTokenKind(token.Kind));
+                    throw new ODataException(Error.Format(SRResources.MetadataBinder_UnsupportedQueryTokenKind, token.Kind));
             }
 
             if (result == null)
             {
-                throw new ODataException(ODataErrorStrings.MetadataBinder_BoundNodeCannotBeNull(token.Kind));
+                throw new ODataException(Error.Format(SRResources.MetadataBinder_BoundNodeCannotBeNull, token.Kind));
             }
 
             this.BindingState.RecurseLeave();
