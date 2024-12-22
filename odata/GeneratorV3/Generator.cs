@@ -374,6 +374,49 @@
                                         .Generate(
                                             concatenation, 
                                             (ConcatenationToClassName.Instance.Generate(concatenation), context.InnerClasses)));
+
+                                var visitor = new Class(AccessModifier.Public,
+                                    true,
+                                    "Visitor",
+                                    new[]
+                                    {
+                                        "TResult",
+                                        "TContext",
+                                    },
+                                    null,
+                                    Enumerable.Empty<ConstructorDefinition>(),
+                                    discriminatedUnionElements
+                                        .Select(element =>
+                                            new MethodDefinition(
+                                                AccessModifier.Protected | AccessModifier.Internal,
+                                                true,
+                                                false,
+                                                "TResult",
+                                                Enumerable.Empty<string>(),
+                                                "Accept",
+                                                new[]
+                                                {
+                                                    new MethodParameter($"{context.ClassName}.{element.Name}", "node"),
+                                                    new MethodParameter("TContext", "context"),
+                                                },
+                                                null))
+                                        .Prepend(
+                                            new MethodDefinition(
+                                                AccessModifier.Public,
+                                                null,
+                                                false,
+                                                "TResult",
+                                                Enumerable.Empty<string>(),
+                                                "Visit",
+                                                new[]
+                                                {
+                                                    new MethodParameter($"{InnersClassName}.{context.ClassName}", "node"),
+                                                    new MethodParameter("TContext", "context"),
+                                                },
+                                                "return node.Dispatch(this, context)")),
+                                    Enumerable.Empty<Class>(),
+                                    Enumerable.Empty<PropertyDefinition>());
+
                                 return new Class(
                                     AccessModifier.Public,
                                     true,
