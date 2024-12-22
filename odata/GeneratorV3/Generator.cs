@@ -36,6 +36,20 @@
         private static class CharacterSubstituions
         {
             public static char Dash { get; } = 'ⲻ'; //// TODO parameterize these
+
+            public static char OpenParenthesis { get; } = 'Ⲥ';
+
+            public static char CloseParenthesis { get; } = 'Ↄ';
+
+            public static char OpenBracket { get; } = '꘡';
+
+            public static char CloseBracket { get; } = '꘡';
+
+            public static char Asterisk { get; } = 'ж';
+
+            public static char Slash { get; } = 'Ⳇ';
+
+            public static char Space { get; } = '_';
         }
 
         public IEnumerable<Class> Generate(RuleList ruleList, Root.Void context)
@@ -265,7 +279,7 @@
 
                                     protected internal override PropertyDefinition Accept(
                                         Element.RuleName node, 
-                                        (bool IsCollection, Dictionary<string, int> PropertyTypeToCount) context)
+                                        (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
                                         var ruleName = RuleNameToClassName
                                             .Instance
@@ -344,6 +358,132 @@
             protected internal override Class? Accept(RuleList.Inner.CommentInner node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
             {
                 return null;
+            }
+        }
+
+        private sealed class GroupToClassName
+        {
+            private GroupToClassName()
+            {
+            }
+
+            public static GroupToClassName Instance { get; } = new GroupToClassName();
+
+            public string Generate(Group group)
+            {
+                return $"{CharacterSubstituions.OpenParenthesis}{AlternationToClassName.Instance.Generate(group.Alternation)}{CharacterSubstituions.CloseParenthesis}";
+            }
+        }
+
+        private sealed class AlternationToClassName
+        {
+            private AlternationToClassName()
+            {
+            }
+
+            public static AlternationToClassName Instance { get; } = new AlternationToClassName();
+
+            public string Generate(Alternation alternation)
+            {
+                var className = ConcatenationToClassName.Instance.Generate(alternation.Concatenation);
+                foreach (var inner in alternation.Inners)
+                {
+                    className += $"{CharacterSubstituions.Slash}{ConcatenationToClassName.Instance.Generate(inner.Concatenation)}";
+                }
+
+                return className;
+            }
+        }
+
+        private sealed class ConcatenationToClassName
+        {
+            private ConcatenationToClassName()
+            {
+            }
+
+            public static ConcatenationToClassName Instance { get; } = new ConcatenationToClassName();
+
+            public string Generate(Concatenation concatenation)
+            {
+                var className = RepetitionToClassName.Instance.Visit(concatenation.Repetition, default);
+                foreach (var inner in concatenation.Inners)
+                {
+                    className += $"{CharacterSubstituions.Space}{RepetitionToClassName.Instance.Visit(inner.Repetition, default)}";
+                }
+
+                return className;
+            }
+        }
+
+        private sealed class RepetitionToClassName : Repetition.Visitor<string, Root.Void>
+        {
+            private RepetitionToClassName()
+            {
+            }
+
+            public static RepetitionToClassName Instance { get; } = new RepetitionToClassName();
+
+            protected internal override string Accept(Repetition.ElementOnly node, Root.Void context)
+            {
+                return ElementToClassName.Instance.Visit(node.Element, context);
+            }
+
+            protected internal override string Accept(Repetition.RepeatAndElement node, Root.Void context)
+            {
+                return $"{RepeatToClassName.Instance.Visit(node.Repeat, context)}{ElementToClassName.Instance.Visit(node.Element, context)}";
+            }
+        }
+
+        private sealed class RepeatToClassName : Repeat.Visitor<string, Root.Void>
+        {
+            private RepeatToClassName()
+            {
+            }
+
+            public static RepeatToClassName Instance { get; } = new RepeatToClassName();
+
+            protected internal override string Accept(Repeat.Count node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(Repeat.Range node, Root.Void context)
+            {
+            }
+        }
+
+        private sealed class ElementToClassName : Element.Visitor<string, Root.Void>
+        {
+            private ElementToClassName()
+            {
+            }
+
+            public static ElementToClassName Instance { get; } = new ElementToClassName();
+
+            protected internal override string Accept(Element.RuleName node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(Element.Group node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(Element.Option node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(Element.CharVal node, Root.Void context)
+            {
+                throw new NotImplementedException("TODO");
+            }
+
+            protected internal override string Accept(Element.NumVal node, Root.Void context)
+            {
+                throw new NotImplementedException("TODO");
+            }
+
+            protected internal override string Accept(Element.ProseVal node, Root.Void context)
+            {
+                throw new NotImplementedException("TODO");
             }
         }
     }
