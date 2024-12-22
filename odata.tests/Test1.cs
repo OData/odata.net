@@ -327,7 +327,7 @@
             builder.Unindent();
             builder.AppendLine("}");
 
-            var csharp = builder.ToString();
+            var csharp = stringBuilder.ToString();
 
             var resultFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\TestNodes.result";
             File.WriteAllText(resultFilePath, csharp);
