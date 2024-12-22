@@ -332,7 +332,7 @@
 
             var csharp = stringBuilder.ToString();
 
-            var resultFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\TestNodes.result";
+            var resultFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\TestNodes2.result";
             File.WriteAllText(resultFilePath, csharp);
 
             var expectedFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\TestNodes.cs";

@@ -68,7 +68,7 @@ namespace GeneratorV3
         
         public sealed class firstⲻrule_жⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_ж꘡firstⲻrule_firstⲻrule꘡_ж1firstⲻrule_1жfirstⲻrule : secondⲻrule
         {
-            public firstⲻrule_жⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_ж꘡firstⲻrule_firstⲻrule꘡_ж1firstⲻrule_1жfirstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, Inners.꘡firstⲻrule_firstⲻrule꘡ ꘡firstⲻrule_firstⲻrule꘡_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_2, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_3)
+            public firstⲻrule_жⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_ж꘡firstⲻrule_firstⲻrule꘡_ж1firstⲻrule_1жfirstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.IEnumerable<Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ> Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, Inners.IEnumerable<Inners.꘡firstⲻrule_firstⲻrule꘡?> ꘡firstⲻrule_firstⲻrule꘡_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_2, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_3)
             {
                 this.firstⲻrule_1 = firstⲻrule_1;
                 this.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
@@ -78,8 +78,8 @@ namespace GeneratorV3
             }
             
             public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
-            public Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
-            public Inners.꘡firstⲻrule_firstⲻrule꘡ ꘡firstⲻrule_firstⲻrule꘡_1 { get; }
+            public Inners.IEnumerable<Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ> Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
+            public Inners.IEnumerable<Inners.꘡firstⲻrule_firstⲻrule꘡?> ꘡firstⲻrule_firstⲻrule꘡_1 { get; }
             public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_2 { get; }
             public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_3 { get; }
             
@@ -91,12 +91,12 @@ namespace GeneratorV3
         
         public sealed class ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ : secondⲻrule
         {
-            public ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ(Inners.ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ_1)
+            public ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ(Inners.Inners.ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ_1)
             {
                 this.ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ_1 = ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ_1;
             }
             
-            public Inners.ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ_1 { get; }
+            public Inners.Inners.ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -106,7 +106,7 @@ namespace GeneratorV3
         
         public sealed class firstⲻrule_Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_꘡firstⲻrule_firstⲻrule꘡ : secondⲻrule
         {
-            public firstⲻrule_Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_꘡firstⲻrule_firstⲻrule꘡(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, Inners.꘡firstⲻrule_firstⲻrule꘡ ꘡firstⲻrule_firstⲻrule꘡_1)
+            public firstⲻrule_Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_꘡firstⲻrule_firstⲻrule꘡(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, Inners.Inners.꘡firstⲻrule_firstⲻrule꘡? ꘡firstⲻrule_firstⲻrule꘡_1)
             {
                 this.firstⲻrule_1 = firstⲻrule_1;
                 this.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
@@ -114,8 +114,8 @@ namespace GeneratorV3
             }
             
             public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
-            public Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
-            public Inners.꘡firstⲻrule_firstⲻrule꘡ ꘡firstⲻrule_firstⲻrule꘡_1 { get; }
+            public Inners.Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
+            public Inners.Inners.꘡firstⲻrule_firstⲻrule꘡? ꘡firstⲻrule_firstⲻrule꘡_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -138,14 +138,14 @@ namespace GeneratorV3
         
         public sealed class Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ
         {
-            public Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.꘡firstⲻrule꘡ ꘡firstⲻrule꘡_1)
+            public Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.Inners.꘡firstⲻrule꘡? ꘡firstⲻrule꘡_1)
             {
                 this.firstⲻrule_1 = firstⲻrule_1;
                 this.꘡firstⲻrule꘡_1 = ꘡firstⲻrule꘡_1;
             }
             
             public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
-            public Inners.꘡firstⲻrule꘡ ꘡firstⲻrule꘡_1 { get; }
+            public Inners.Inners.꘡firstⲻrule꘡? ꘡firstⲻrule꘡_1 { get; }
         }
         
         public sealed class ꘡firstⲻrule_firstⲻrule꘡
@@ -196,12 +196,12 @@ namespace GeneratorV3
             
             public sealed class Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ : ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ
             {
-                public Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ(Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1)
+                public Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ(Inners.Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1)
                 {
                     this.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
                 }
                 
-                public Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
+                public Inners.Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
