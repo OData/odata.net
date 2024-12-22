@@ -1,5 +1,7 @@
 namespace GeneratorV3
 {
+    using System.Collections.Generic;
+    
     public sealed class firstⲻrule
     {
         public firstⲻrule(GeneratorV3.secondⲻrule secondⲻrule_1)
