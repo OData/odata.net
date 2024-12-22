@@ -303,6 +303,39 @@
 
                                     protected internal override PropertyDefinition Accept(Element.Option node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
+                                        var innerClassName = OptionToClassName.Instance.Generate(node.Value);
+
+                                        if (!context.InnerClasses.ContainsKey(innerClassName))
+                                        {
+                                            context.InnerClasses[innerClassName] = AlternationGenerator
+                                                .Instance
+                                                .Generate(
+                                                    node.Value.Alternation,
+                                                    (innerClassName, context.InnerClasses));
+                                        }
+
+                                        var propertyType = $"{InnersClassName}.{innerClassName}?";
+                                        if (context.IsCollection)
+                                        {
+                                            propertyType = $"IEnumerable<{propertyType}>";
+                                        }
+
+                                        if (!context.PropertyTypeToCount.TryGetValue(innerClassName, out var count))
+                                        {
+                                            count = 0;
+                                        }
+
+                                        ++count;
+                                        context.PropertyTypeToCount[innerClassName] = count;
+
+                                        var propertyName = $"{innerClassName}_{count}";
+
+                                        return new PropertyDefinition(
+                                            AccessModifier.Public,
+                                            $"{InnersClassName}.{innerClassName}",
+                                            propertyName,
+                                            true,
+                                            false);
                                     }
 
                                     protected internal override PropertyDefinition Accept(Element.CharVal node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
