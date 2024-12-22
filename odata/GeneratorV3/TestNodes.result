@@ -18,6 +18,8 @@ namespace GeneratorV3
         {
         }
         
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
         public abstract class Visitor<TResult, TContext>
         {
             public TResult Visit(Inners.secondⲻrule node, TContext context)
@@ -138,6 +140,8 @@ namespace GeneratorV3
             private ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ()
             {
             }
+            
+            protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
             
             public abstract class Visitor<TResult, TContext>
             {

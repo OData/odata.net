@@ -413,7 +413,7 @@
                                                     new MethodParameter($"{InnersClassName}.{context.ClassName}", "node"),
                                                     new MethodParameter("TContext", "context"),
                                                 },
-                                                "return node.Dispatch(this, context)")),
+                                                "return node.Dispatch(this, context);")),
                                     Enumerable.Empty<Class>(),
                                     Enumerable.Empty<PropertyDefinition>());
 
