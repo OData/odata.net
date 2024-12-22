@@ -1,11 +1,6 @@
 ﻿namespace GeneratorV3
 {
     using System.Collections.Generic;
-    using System.Security.Cryptography.X509Certificates;
-
-    class FⲺⲻˑᱹꓸжⲤↃᱼｰⳆ꘡Ʇoo
-    {
-    }
 
     public sealed class firstⲻrule
     {

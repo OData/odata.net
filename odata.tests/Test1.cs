@@ -317,6 +317,8 @@
             builder.AppendLine("namespace GeneratorV3"); //// TODO
             builder.AppendLine("{");
             builder.Indent();
+            builder.AppendLine("using System.Collections.Generic;");
+            builder.AppendLine();
 
             foreach (var @class in classes)
             {
