@@ -10,6 +10,10 @@
     using System.Runtime.CompilerServices;
     using System.Text;
 
+    class FⲺⲻˑᱹꓸжⲤↃᱼｰⳆ꘡Ʇoo
+    {
+    }
+
     /// <summary>
     /// TODO i think you're going to have to make a third attempt; i think the remaining issue is that you
     /// are inconsistent about where nested classes go (take the example where `rulename = (first second) third`;
