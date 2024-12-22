@@ -426,7 +426,7 @@
                                                 "Visit",
                                                 new[]
                                                 {
-                                                    new MethodParameter($"{InnersClassName}.{context.ClassName}", "node"),
+                                                    new MethodParameter($"{context.ClassName}", "node"), //// TODO it'd be really nice if you could fully qualify the type
                                                     new MethodParameter("TContext", "context"),
                                                 },
                                                 "return node.Dispatch(this, context);")),
