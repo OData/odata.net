@@ -31,9 +31,11 @@
 
         public static Generator Intance { get; } = new Generator();
 
+        private static string Namespace = "GeneratorV3"; //// TODO parameterize this
+
         private static class CharacterSubstituions
         {
-            public static char Dash { get; } = 'ⲻ';
+            public static char Dash { get; } = 'ⲻ'; //// TODO parameterize these
         }
 
         public IEnumerable<Class> Generate(RuleList ruleList, Root.Void context)
@@ -203,7 +205,7 @@
                                                     new MethodParameter(property.Type, property.Name)),
                                             properties
                                                 .Select(property =>
-                                                    $"this.{property.Name} = {property.Name};"))m
+                                                    $"this.{property.Name} = {property.Name};")),
                                     },
                                     Enumerable.Empty<MethodDefinition>(),
                                     Enumerable.Empty<Class>(),
