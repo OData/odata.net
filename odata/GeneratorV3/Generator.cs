@@ -430,7 +430,26 @@
                                             Enumerable.Empty<MethodParameter>(),
                                             Enumerable.Empty<string>()),
                                     },
-                                    Enumerable.Empty<MethodDefinition>(),
+                                    new[]
+                                    {
+                                        new MethodDefinition(
+                                            AccessModifier.Protected, 
+                                            true,
+                                            false,
+                                            "TResult",
+                                            new[]
+                                            {
+                                                "TResult",
+                                                "TContext",
+                                            },
+                                            "Dispatch",
+                                            new[]
+                                            {
+                                                new MethodParameter("Visitor<TResult, TContext>", "visitor"),
+                                                new MethodParameter("TContext", "context"),
+                                            },
+                                            null),
+                                    },
                                     discriminatedUnionElements.Prepend(visitor),
                                     Enumerable.Empty<PropertyDefinition>());
                             }

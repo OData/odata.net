@@ -18,6 +18,20 @@ namespace GeneratorV3
         {
         }
         
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(Inners.secondⲻrule node, TContext context)
+            {
+                return node.Dispatch(this, context)
+            }
+            
+            protected internal abstract TResult Accept(secondⲻrule.firstⲻrule node, TContext context);
+            protected internal abstract TResult Accept(secondⲻrule.firstⲻrule_firstⲻrule node, TContext context);
+            protected internal abstract TResult Accept(secondⲻrule.firstⲻrule_жⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_ж꘡firstⲻrule_firstⲻrule꘡_ж1firstⲻrule_1жfirstⲻrule node, TContext context);
+            protected internal abstract TResult Accept(secondⲻrule.ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ node, TContext context);
+            protected internal abstract TResult Accept(secondⲻrule.firstⲻrule_Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_꘡firstⲻrule_firstⲻrule꘡ node, TContext context);
+        }
+        
         public sealed class firstⲻrule
         {
             public firstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1)
@@ -123,6 +137,17 @@ namespace GeneratorV3
         {
             private ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ()
             {
+            }
+            
+            public abstract class Visitor<TResult, TContext>
+            {
+                public TResult Visit(Inners.ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ node, TContext context)
+                {
+                    return node.Dispatch(this, context)
+                }
+                
+                protected internal abstract TResult Accept(ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ.firstⲻrule node, TContext context);
+                protected internal abstract TResult Accept(ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ node, TContext context);
             }
             
             public sealed class firstⲻrule
