@@ -141,21 +141,21 @@
                             }
                             else
                             {
-                                return ConcatenationToSealed.Instance.Generate(alternation.Concatenation, context);
+                                return ConcatenationToClass.Instance.Generate(alternation.Concatenation, (context.ClassName, null, context.InnerClasses));
                             }
                         }
 
-                        private sealed class ConcatenationToSealed
+                        private sealed class ConcatenationToClass
                         {
-                            private ConcatenationToSealed()
+                            private ConcatenationToClass()
                             {
                             }
 
-                            public static ConcatenationToSealed Instance { get; } = new ConcatenationToSealed();
+                            public static ConcatenationToClass Instance { get; } = new ConcatenationToClass();
 
                             public Class Generate(
                                 Concatenation concatenation, 
-                                (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                (string ClassName, string? BaseType, Dictionary<string, Class> InnerClasses) context)
                             {
                                 var propertyTypeToCount = new Dictionary<string, int>();
                                 var properties = concatenation
@@ -175,7 +175,7 @@
                                     false,
                                     context.ClassName,
                                     Enumerable.Empty<string>(),
-                                    null,
+                                    context.BaseType,
                                     new[]
                                     {
                                         new ConstructorDefinition(
@@ -369,11 +369,11 @@
                             {
                                 //// TODO this should have the base type...
                                 var discriminatedUnionElements = concatenations
-                                    .Select(concatenation => ConcatenationToSealed
+                                    .Select(concatenation => ConcatenationToClass
                                         .Instance
                                         .Generate(
                                             concatenation, 
-                                            (ConcatenationToClassName.Instance.Generate(concatenation), context.InnerClasses)));
+                                            (ConcatenationToClassName.Instance.Generate(concatenation), context.ClassName, context.InnerClasses)));
 
                                 var visitor = new Class(AccessModifier.Public,
                                     true,
