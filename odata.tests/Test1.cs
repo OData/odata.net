@@ -300,6 +300,33 @@
             //// TODO make sure to flesh out the code quality checks for the generated code
         }
 
+        [TestMethod]
+        public void TestGeneratorV3()
+        {
+            var abnf = File.ReadAllText(@"C:\msgithub\odata.net\odata\GeneratorV3\test.abnf");
+            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(abnf);
+
+            var classes = GeneratorV3.Generator.Intance.Generate(cst, default);
+            
+            var classTranscriber = new ClassTranscriber();
+            var builder = new StringBuilder();
+            foreach (var @class in classes)
+            {
+                classTranscriber.Transcribe(@class, builder, "    ");
+                builder.AppendLine();
+            }
+
+            var csharp = builder.ToString();
+
+            var resultFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\TestNodes.result";
+            File.WriteAllText(resultFilePath, csharp);
+
+            var expectedFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\TestNodes.cs";
+            var expected = File.ReadAllText(expectedFilePath);
+
+            Assert.AreEqual(expected, csharp);
+        }
+
         private static string TestAbnf =
 """
 first-rule = second-rule
