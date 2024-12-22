@@ -296,7 +296,7 @@
 
                                         return new PropertyDefinition(
                                             AccessModifier.Public,
-                                            $"{InnersClassName}.{propertyType}",
+                                            propertyType,
                                             propertyName,
                                             true,
                                             false);
@@ -333,7 +333,7 @@
 
                                         return new PropertyDefinition(
                                             AccessModifier.Public,
-                                            $"{InnersClassName}.{propertyType}",
+                                            propertyType,
                                             propertyName,
                                             true,
                                             false);
