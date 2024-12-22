@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="GeneratorV3\TestNodes2.result" />
+    <None Remove="GeneratorV3\TestNodes2.result" />
   </ItemGroup>
 
   <ItemGroup>
