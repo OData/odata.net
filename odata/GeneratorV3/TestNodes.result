@@ -1,0 +1,145 @@
+public sealed class FIRSTⲻRULE
+{
+    public FIRSTⲻRULE(GeneratorV3.SECONDⲻRULE SECONDⲻRULE_1)
+    {
+        this.SECONDⲻRULE_1 = SECONDⲻRULE_1;
+    }
+    
+    public GeneratorV3.SECONDⲻRULE SECONDⲻRULE_1 { get; }
+}
+
+public abstract class SECONDⲻRULE
+{
+    private SECONDⲻRULE()
+    {
+    }
+    
+    public sealed class FIRSTⲻRULE
+    {
+        public FIRSTⲻRULE(GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1)
+        {
+            this.FIRSTⲻRULE_1 = FIRSTⲻRULE_1;
+        }
+        
+        public GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1 { get; }
+    }
+    
+    public sealed class FIRSTⲻRULE_FIRSTⲻRULE
+    {
+        public FIRSTⲻRULE_FIRSTⲻRULE(GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1, GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_2)
+        {
+            this.FIRSTⲻRULE_1 = FIRSTⲻRULE_1;
+            this.FIRSTⲻRULE_2 = FIRSTⲻRULE_2;
+        }
+        
+        public GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1 { get; }
+        public GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_2 { get; }
+    }
+    
+    public sealed class FIRSTⲻRULE_жⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_ж꘡FIRSTⲻRULE_FIRSTⲻRULE꘡_ж1FIRSTⲻRULE_1жFIRSTⲻRULE
+    {
+        public FIRSTⲻRULE_жⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_ж꘡FIRSTⲻRULE_FIRSTⲻRULE꘡_ж1FIRSTⲻRULE_1жFIRSTⲻRULE(GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1, Inners.ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_1, Inners.꘡FIRSTⲻRULE_FIRSTⲻRULE꘡ ꘡FIRSTⲻRULE_FIRSTⲻRULE꘡_1, IEnumerable<GeneratorV3.FIRSTⲻRULE> FIRSTⲻRULE_2, IEnumerable<GeneratorV3.FIRSTⲻRULE> FIRSTⲻRULE_3)
+        {
+            this.FIRSTⲻRULE_1 = FIRSTⲻRULE_1;
+            this.ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_1 = ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_1;
+            this.꘡FIRSTⲻRULE_FIRSTⲻRULE꘡_1 = ꘡FIRSTⲻRULE_FIRSTⲻRULE꘡_1;
+            this.FIRSTⲻRULE_2 = FIRSTⲻRULE_2;
+            this.FIRSTⲻRULE_3 = FIRSTⲻRULE_3;
+        }
+        
+        public GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1 { get; }
+        public Inners.ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_1 { get; }
+        public Inners.꘡FIRSTⲻRULE_FIRSTⲻRULE꘡ ꘡FIRSTⲻRULE_FIRSTⲻRULE꘡_1 { get; }
+        public IEnumerable<GeneratorV3.FIRSTⲻRULE> FIRSTⲻRULE_2 { get; }
+        public IEnumerable<GeneratorV3.FIRSTⲻRULE> FIRSTⲻRULE_3 { get; }
+    }
+    
+    public sealed class ⲤFIRSTⲻRULEⳆⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡ↃↃ
+    {
+        public ⲤFIRSTⲻRULEⳆⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡ↃↃ(Inners.ⲤFIRSTⲻRULEⳆⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡ↃↃ ⲤFIRSTⲻRULEⳆⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡ↃↃ_1)
+        {
+            this.ⲤFIRSTⲻRULEⳆⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡ↃↃ_1 = ⲤFIRSTⲻRULEⳆⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡ↃↃ_1;
+        }
+        
+        public Inners.ⲤFIRSTⲻRULEⳆⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡ↃↃ ⲤFIRSTⲻRULEⳆⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡ↃↃ_1 { get; }
+    }
+    
+    public sealed class FIRSTⲻRULE_ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_꘡FIRSTⲻRULE_FIRSTⲻRULE꘡
+    {
+        public FIRSTⲻRULE_ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_꘡FIRSTⲻRULE_FIRSTⲻRULE꘡(GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1, Inners.ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_1, Inners.꘡FIRSTⲻRULE_FIRSTⲻRULE꘡ ꘡FIRSTⲻRULE_FIRSTⲻRULE꘡_1)
+        {
+            this.FIRSTⲻRULE_1 = FIRSTⲻRULE_1;
+            this.ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_1 = ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_1;
+            this.꘡FIRSTⲻRULE_FIRSTⲻRULE꘡_1 = ꘡FIRSTⲻRULE_FIRSTⲻRULE꘡_1;
+        }
+        
+        public GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1 { get; }
+        public Inners.ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_1 { get; }
+        public Inners.꘡FIRSTⲻRULE_FIRSTⲻRULE꘡ ꘡FIRSTⲻRULE_FIRSTⲻRULE꘡_1 { get; }
+    }
+}
+
+public sealed class Inners
+{
+    public sealed class ꘡FIRSTⲻRULE꘡
+    {
+        public ꘡FIRSTⲻRULE꘡(GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1)
+        {
+            this.FIRSTⲻRULE_1 = FIRSTⲻRULE_1;
+        }
+        
+        public GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1 { get; }
+    }
+    
+    public sealed class ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ
+    {
+        public ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ(GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1, Inners.꘡FIRSTⲻRULE꘡ ꘡FIRSTⲻRULE꘡_1)
+        {
+            this.FIRSTⲻRULE_1 = FIRSTⲻRULE_1;
+            this.꘡FIRSTⲻRULE꘡_1 = ꘡FIRSTⲻRULE꘡_1;
+        }
+        
+        public GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1 { get; }
+        public Inners.꘡FIRSTⲻRULE꘡ ꘡FIRSTⲻRULE꘡_1 { get; }
+    }
+    
+    public sealed class ꘡FIRSTⲻRULE_FIRSTⲻRULE꘡
+    {
+        public ꘡FIRSTⲻRULE_FIRSTⲻRULE꘡(GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1, GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_2)
+        {
+            this.FIRSTⲻRULE_1 = FIRSTⲻRULE_1;
+            this.FIRSTⲻRULE_2 = FIRSTⲻRULE_2;
+        }
+        
+        public GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1 { get; }
+        public GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_2 { get; }
+    }
+    
+    public abstract class ⲤFIRSTⲻRULEⳆⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡ↃↃ
+    {
+        private ⲤFIRSTⲻRULEⳆⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡ↃↃ()
+        {
+        }
+        
+        public sealed class FIRSTⲻRULE
+        {
+            public FIRSTⲻRULE(GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1)
+            {
+                this.FIRSTⲻRULE_1 = FIRSTⲻRULE_1;
+            }
+            
+            public GeneratorV3.FIRSTⲻRULE FIRSTⲻRULE_1 { get; }
+        }
+        
+        public sealed class ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ
+        {
+            public ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ(Inners.ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_1)
+            {
+                this.ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_1 = ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_1;
+            }
+            
+            public Inners.ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ ⲤFIRSTⲻRULE_꘡FIRSTⲻRULE꘡Ↄ_1 { get; }
+        }
+    }
+}
+

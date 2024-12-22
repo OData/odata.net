@@ -572,7 +572,7 @@
             {
                 var stringBuilder = new StringBuilder();
 
-                stringBuilder.Append(char.ToUpperInvariant(AlphaToChar.Instance.Visit(ruleName.Alpha, default)));
+                stringBuilder.Append(AlphaToChar.Instance.Visit(ruleName.Alpha, default));
                 foreach (var inner in ruleName.Inners)
                 {
                     InnerToString.Instance.Visit(inner, stringBuilder);
@@ -591,7 +591,7 @@
 
                 protected internal override Root.Void Accept(RuleName.Inner.AlphaInner node, StringBuilder context)
                 {
-                    context.Append(char.ToUpperInvariant(AlphaToChar.Instance.Visit(node.Alpha, default)));
+                    context.Append(AlphaToChar.Instance.Visit(node.Alpha, default));
                     return default;
                 }
 
