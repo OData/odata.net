@@ -7,6 +7,7 @@
     using Root.OdataResourcePath.CombinatorParsers;
     using Root.OdataResourcePath.Transcribers;
     using Sprache;
+    using System;
     using System.Linq;
     using System.Text;
     using static AbnfParser.CstNodes.RuleList.Inner;
@@ -310,12 +311,21 @@
             var classes = GeneratorV3.Generator.Intance.Generate(cst, default);
             
             var classTranscriber = new ClassTranscriber();
-            var builder = new StringBuilder();
+
+            var stringBuilder = new StringBuilder();
+            var builder = new Builder(stringBuilder, "    ");
+            builder.AppendLine("namespace GeneratorV3"); //// TODO
+            builder.AppendLine("{");
+            builder.Indent();
+
             foreach (var @class in classes)
             {
-                classTranscriber.Transcribe(@class, builder, "    ");
+                classTranscriber.Transcribe(@class, builder);
                 builder.AppendLine();
             }
+
+            builder.Unindent();
+            builder.AppendLine("}");
 
             var csharp = builder.ToString();
 
@@ -339,107 +349,102 @@ second-rule = first-rule
 
 """;
 
-        private sealed class ClassTranscriber
+        private sealed class Builder
         {
-            private sealed class Builder
+            private readonly StringBuilder builder;
+            private readonly string indent;
+            private string currentIndent;
+            private bool isNewLine;
+
+            public Builder(StringBuilder builder, string indent)
             {
-                private readonly StringBuilder builder;
-                private readonly string indent;
-                private string currentIndent;
-                private bool isNewLine;
+                this.builder = builder;
+                this.indent = indent;
 
-                public Builder(StringBuilder builder, string indent)
+                this.currentIndent = string.Empty;
+                this.isNewLine = true;
+            }
+
+            private void AppendIndent()
+            {
+                if (this.isNewLine)
                 {
-                    this.builder = builder;
-                    this.indent = indent;
-
-                    this.currentIndent = string.Empty;
-                    this.isNewLine = true;
-                }
-
-                private void AppendIndent()
-                {
-                    if (this.isNewLine)
-                    {
-                        this.builder.Append(this.currentIndent);
-                    }
-                }
-
-                public Builder Append(string value)
-                {
-                    this.AppendIndent();
-                    this.isNewLine = false;
-                    this.builder.Append(value);
-                    return this;
-                }
-
-                public Builder AppendLine()
-                {
-                    this.AppendIndent();
-                    this.isNewLine = true;
-                    this.builder.AppendLine();
-                    return this;
-                }
-
-                public Builder AppendLine(string value)
-                {
-                    this.AppendIndent();
-                    this.isNewLine = true;
-                    this.builder.AppendLine(value);
-                    return this;
-                }
-
-                public Builder AppendJoin(string separator, IEnumerable<string> values)
-                {
-                    this.AppendIndent();
-                    this.isNewLine = false;
-                    this.builder.AppendJoin(separator, values);
-                    return this;
-                }
-
-                public Builder Indent()
-                {
-                    this.currentIndent += this.indent;
-                    return this;
-                }
-
-                public Builder Unindent()
-                {
-                    this.currentIndent = this.currentIndent.Substring(this.indent.Length);
-                    return this;
-                }
-
-                public Builder AppendJoin<TElement>(string separator, IEnumerable<TElement> values, Action<TElement, Builder> selector)
-                {
-                    this.AppendIndent();
-                    this.isNewLine = false;
-                    using (var valuesEnumerator = values.GetEnumerator())
-                    {
-                        if (!valuesEnumerator.MoveNext())
-                        {
-                            return this;
-                        }
-
-                        selector(valuesEnumerator.Current, this);
-                        while (valuesEnumerator.MoveNext())
-                        {
-                            this.Append(separator);
-                            selector(valuesEnumerator.Current, this);
-                        }
-
-                        return this;
-                    }
+                    this.builder.Append(this.currentIndent);
                 }
             }
 
+            public Builder Append(string value)
+            {
+                this.AppendIndent();
+                this.isNewLine = false;
+                this.builder.Append(value);
+                return this;
+            }
+
+            public Builder AppendLine()
+            {
+                this.AppendIndent();
+                this.isNewLine = true;
+                this.builder.AppendLine();
+                return this;
+            }
+
+            public Builder AppendLine(string value)
+            {
+                this.AppendIndent();
+                this.isNewLine = true;
+                this.builder.AppendLine(value);
+                return this;
+            }
+
+            public Builder AppendJoin(string separator, IEnumerable<string> values)
+            {
+                this.AppendIndent();
+                this.isNewLine = false;
+                this.builder.AppendJoin(separator, values);
+                return this;
+            }
+
+            public Builder Indent()
+            {
+                this.currentIndent += this.indent;
+                return this;
+            }
+
+            public Builder Unindent()
+            {
+                this.currentIndent = this.currentIndent.Substring(this.indent.Length);
+                return this;
+            }
+
+            public Builder AppendJoin<TElement>(string separator, IEnumerable<TElement> values, Action<TElement, Builder> selector)
+            {
+                this.AppendIndent();
+                this.isNewLine = false;
+                using (var valuesEnumerator = values.GetEnumerator())
+                {
+                    if (!valuesEnumerator.MoveNext())
+                    {
+                        return this;
+                    }
+
+                    selector(valuesEnumerator.Current, this);
+                    while (valuesEnumerator.MoveNext())
+                    {
+                        this.Append(separator);
+                        selector(valuesEnumerator.Current, this);
+                    }
+
+                    return this;
+                }
+            }
+        }
+
+        private sealed class ClassTranscriber
+        {
             public void Transcribe(AbnfParserGenerator.Class @class, StringBuilder stringBuilder, string indent)
             {
-                var builder = new Builder(stringBuilder, indent);
-                builder.AppendLine("namespace GeneratorV3"); //// TODO
-                builder.AppendLine("{");
-                builder.Indent();
-                Transcribe(@class, builder);
-                builder.Unindent();
+                Transcribe(@class, new Builder(stringBuilder, indent));
             }
 
             private void Transcribe(AbnfParserGenerator.AccessModifier accessModifier, Builder builder)
@@ -465,7 +470,7 @@ second-rule = first-rule
                 }
             }
 
-            private void Transcribe(AbnfParserGenerator.Class @class, Builder builder)
+            public void Transcribe(AbnfParserGenerator.Class @class, Builder builder)
             {
                 Transcribe(@class.AccessModifier, builder);
                 if (@class.IsAbstract != null)
