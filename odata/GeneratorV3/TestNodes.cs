@@ -126,6 +126,16 @@
 
     public static class Inners
     {
+        public sealed class Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ
+        {
+            public Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ(Inners.firstⲻrule_꘡firstⲻrule꘡ firstⲻrule_꘡firstⲻrule꘡_1)
+            {
+                this.firstⲻrule_꘡firstⲻrule꘡_1 = firstⲻrule_꘡firstⲻrule꘡_1;
+            }
+
+            public Inners.firstⲻrule_꘡firstⲻrule꘡ firstⲻrule_꘡firstⲻrule꘡_1 { get; }
+        }
+
         public sealed class ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ
         {
             public ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ(Inners.firstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ firstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_1)
@@ -214,16 +224,6 @@
             public IEnumerable<Inners.firstⲻrule_firstⲻrule?> firstⲻrule_firstⲻrules_1 { get; }
             public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_1 { get; }
             public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_2 { get; }
-        }
-
-        public sealed class Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ
-        {
-            public Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ(Inners.firstⲻrule_꘡firstⲻrule꘡ firstⲻrule_꘡firstⲻrule꘡_1)
-            {
-                this.firstⲻrule_꘡firstⲻrule꘡_1 = firstⲻrule_꘡firstⲻrule꘡_1;
-            }
-
-            public Inners.firstⲻrule_꘡firstⲻrule꘡ firstⲻrule_꘡firstⲻrule꘡_1 { get; }
         }
 
         public sealed class firstⲻrule_firstⲻrule
