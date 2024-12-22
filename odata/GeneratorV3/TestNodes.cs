@@ -9,7 +9,7 @@
             this.secondⲻrule_1 = secondⲻrule_1;
         }
 
-        public secondⲻrule secondⲻrule_1 { get; }
+        public GeneratorV3.secondⲻrule secondⲻrule_1 { get; }
     }
 
     public abstract class secondⲻrule
