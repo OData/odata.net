@@ -366,6 +366,29 @@
 
                             public Class Generate(IEnumerable<Concatenation> concatenations, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                             {
+                                //// TODO this should have the base type...
+                                var discriminatedUnionElements = concatenations
+                                    .Select(concatenation => ConcatenationToSealed
+                                        .Instance
+                                        .Generate(
+                                            concatenation, 
+                                            (ConcatenationToClassName.Instance.Generate(concatenation), context.InnerClasses)));
+                                return new Class(
+                                    AccessModifier.Public,
+                                    true,
+                                    context.ClassName,
+                                    Enumerable.Empty<string>(),
+                                    null,
+                                    new[]
+                                    {
+                                        new ConstructorDefinition(
+                                            AccessModifier.Private,
+                                            Enumerable.Empty<MethodParameter>(),
+                                            Enumerable.Empty<string>()),
+                                    },
+                                    Enumerable.Empty<MethodDefinition>(),
+                                    discriminatedUnionElements, //// TODO add visitor
+                                    Enumerable.Empty<PropertyDefinition>());
                             }
                         }
                     }
