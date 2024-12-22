@@ -49,14 +49,16 @@
             }
         }
 
-        public sealed class firstⲻrule_firstⲻrule : secondⲻrule //// TODO i don't really like using _ for spaces *and* for the property name conflict resolution
+        public sealed class firstⲻrule_firstⲻrule : secondⲻrule
         {
-            public firstⲻrule_firstⲻrule(Inners.firstⲻrule_firstⲻrule firstⲻrule_firstⲻrule_1)
+            public firstⲻrule_firstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, GeneratorV3.firstⲻrule firstⲻrule_2)
             {
-                this.firstⲻrule_firstⲻrule_1 = firstⲻrule_firstⲻrule_1;
+                this.firstⲻrule_1 = firstⲻrule_1;
+                this.firstⲻrule_2 = firstⲻrule_2;
             }
 
-            public Inners.firstⲻrule_firstⲻrule firstⲻrule_firstⲻrule_1 { get; }
+            public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
+            public GeneratorV3.firstⲻrule firstⲻrule_2 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
