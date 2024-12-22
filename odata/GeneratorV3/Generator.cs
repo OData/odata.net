@@ -40,16 +40,28 @@
 
         public IEnumerable<Class> Generate(RuleList ruleList, Root.Void context)
         {
+            var innerClasses = new Dictionary<string, Class>();
             return ruleList
                 .Inners
                 .Select(
                     inner => RuleListInnerGenerator
                         .Instance
-                        .Visit(inner, context))
-                .NotNull();
+                        .Visit(inner, (innerClasses, context)))
+                .NotNull()
+                .Append(
+                    new Class(
+                        AccessModifier.Public,
+                        false, //// TODO this should be static
+                        "Inners", //// TODO how to make sure this doesn't conflict?
+                        Enumerable.Empty<string>(),
+                        null,
+                        Enumerable.Empty<ConstructorDefinition>(),
+                        Enumerable.Empty<MethodDefinition>(),
+                        innerClasses.Values,
+                        Enumerable.Empty<PropertyDefinition>()));
         }
 
-        private sealed class RuleListInnerGenerator : RuleList.Inner.Visitor<Class?, Root.Void>
+        private sealed class RuleListInnerGenerator : RuleList.Inner.Visitor<Class?, (Dictionary<string, Class> InnerClasses, Root.Void @void)>
         {
             private RuleListInnerGenerator()
             {
@@ -57,7 +69,7 @@
 
             public static RuleListInnerGenerator Instance { get; } = new RuleListInnerGenerator();
 
-            protected internal override Class? Accept(RuleList.Inner.RuleInner node, Root.Void context)
+            protected internal override Class? Accept(RuleList.Inner.RuleInner node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
             {
                 return RuleGenerator.Instance.Generate(node.Rule, context);
             }
@@ -70,10 +82,10 @@
 
                 public static RuleGenerator Instance { get; } = new RuleGenerator();
 
-                public Class Generate(Rule rule, Root.Void context)
+                public Class Generate(Rule rule, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
                 {
-                    var className = RuleNameToClassName.Instance.Generate(rule.RuleName, context);
-                    return ElementsGenerator.Instance.Generate(rule.Elements, (className, context));
+                    var className = RuleNameToClassName.Instance.Generate(rule.RuleName, context.@void);
+                    return ElementsGenerator.Instance.Generate(rule.Elements, (className, context.InnerClasses));
                 }
 
                 private sealed class RuleNameToClassName
@@ -134,7 +146,7 @@
 
                     public static ElementsGenerator Instance { get; } = new ElementsGenerator();
 
-                    public Class Generate(Elements elements, (string ClassName, Root.Void @void) context)
+                    public Class Generate(Elements elements, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                     {
                         return AlternationGenerator.Instance.Generate(elements.Alternation, context);
                     }
@@ -147,7 +159,7 @@
 
                         public static AlternationGenerator Instance { get; } = new AlternationGenerator();
 
-                        public Class Generate(Alternation alternation, (string ClassName, Root.Void @void) context)
+                        public Class Generate(Alternation alternation, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                         {
                             if (alternation.Inners.Any())
                             {
@@ -177,8 +189,9 @@
 
                             public Class Generate(
                                 Concatenation concatenation, 
-                                (string ClassName, Root.Void @void) context)
+                                (string ClassName, Dictionary<string, Class> InnerClasses) context)
                             {
+                                var propertyTypeToCount = new Dictionary<string, int>();
                                 var properties = concatenation
                                     .Inners
                                     .Select(
@@ -189,7 +202,7 @@
                                         .Instance
                                         .Visit(
                                             repetition, 
-                                            context.@void));
+                                            (propertyTypeToCount, context.InnerClasses)));
                                 return new Class(
                                     AccessModifier.Public,
                                     false,
@@ -212,7 +225,7 @@
                                     properties);
                             }
 
-                            private sealed class RepetitonToPropertyDefinition : Repetition.Visitor<PropertyDefinition, Root.Void>
+                            private sealed class RepetitonToPropertyDefinition : Repetition.Visitor<PropertyDefinition, (Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses)>
                             {
                                 private RepetitonToPropertyDefinition()
                                 {
@@ -222,27 +235,27 @@
 
                                 protected internal override PropertyDefinition Accept(
                                     Repetition.ElementOnly node, 
-                                    Root.Void context)
+                                    (Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                 {
                                     return ElementToPropertyDefinition
                                         .Instance
                                         .Visit(
                                             node.Element, 
-                                            (false, context));
+                                            (false, context.PropertyTypeToCount, context.InnerClasses));
                                 }
 
                                 protected internal override PropertyDefinition Accept(
-                                    Repetition.RepeatAndElement node, 
-                                    Root.Void context)
+                                    Repetition.RepeatAndElement node,
+                                    (Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                 {
                                     return ElementToPropertyDefinition
                                         .Instance
                                         .Visit(
                                             node.Element,
-                                            (true, context));
+                                            (true, context.PropertyTypeToCount, context.InnerClasses));
                                 }
 
-                                private sealed class ElementToPropertyDefinition : Element.Visitor<PropertyDefinition, (bool IsCollection, Root.Void @void)>
+                                private sealed class ElementToPropertyDefinition : Element.Visitor<PropertyDefinition, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses)>
                                 {
                                     private ElementToPropertyDefinition()
                                     {
@@ -250,28 +263,63 @@
 
                                     public static ElementToPropertyDefinition Instance { get; } = new ElementToPropertyDefinition();
 
-                                    protected internal override PropertyDefinition Accept(Element.RuleName node, (bool IsCollection, Root.Void @void) context)
+                                    protected internal override PropertyDefinition Accept(
+                                        Element.RuleName node, 
+                                        (bool IsCollection, Dictionary<string, int> PropertyTypeToCount) context)
+                                    {
+                                        var ruleName = RuleNameToClassName
+                                            .Instance
+                                            .Generate(
+                                                node.Value,
+                                                default);
+                                        var propertyType = $"{Namespace}.ruleName";
+                                        if (context.IsCollection)
+                                        {
+                                            propertyType = $"IEnumerable<{propertyType}>";
+                                        }
+
+                                        if (!context.PropertyTypeToCount.TryGetValue(ruleName, out var count))
+                                        {
+                                            count = 0;
+                                        }
+
+                                        ++count;
+                                        context.PropertyTypeToCount[ruleName] = count;
+
+                                        var propertyName = $"{ruleName}_{count}";
+
+                                        return new PropertyDefinition(
+                                            AccessModifier.Public,
+                                            propertyType,
+                                            propertyName,
+                                            true,
+                                            false);
+                                    }
+
+                                    protected internal override PropertyDefinition Accept(
+                                        Element.Group node, 
+                                        (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
+                                    {
+
+                                    }
+
+                                    protected internal override PropertyDefinition Accept(Element.Option node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
                                     }
 
-                                    protected internal override PropertyDefinition Accept(Element.Group node, (bool IsCollection, Root.Void @void) context)
+                                    protected internal override PropertyDefinition Accept(Element.CharVal node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
+                                        throw new NotImplementedException("TODO");
                                     }
 
-                                    protected internal override PropertyDefinition Accept(Element.Option node, (bool IsCollection, Root.Void @void) context)
+                                    protected internal override PropertyDefinition Accept(Element.NumVal node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
+                                        throw new NotImplementedException("TODO");
                                     }
 
-                                    protected internal override PropertyDefinition Accept(Element.CharVal node, (bool IsCollection, Root.Void @void) context)
+                                    protected internal override PropertyDefinition Accept(Element.ProseVal node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
-                                    }
-
-                                    protected internal override PropertyDefinition Accept(Element.NumVal node, (bool IsCollection, Root.Void @void) context)
-                                    {
-                                    }
-
-                                    protected internal override PropertyDefinition Accept(Element.ProseVal node, (bool IsCollection, Root.Void @void) context)
-                                    {
+                                        throw new NotImplementedException("TODO");
                                     }
                                 }
                             }
@@ -285,7 +333,7 @@
 
                             public static ConcatenationsToDiscriminatedUnion Instance { get; } = new ConcatenationsToDiscriminatedUnion();
 
-                            public Class Generate(IEnumerable<Concatenation> concatenations, (string ClassName, Root.Void @void) context)
+                            public Class Generate(IEnumerable<Concatenation> concatenations, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                             {
                             }
                         }
@@ -293,7 +341,7 @@
                 }
             }
 
-            protected internal override Class? Accept(RuleList.Inner.CommentInner node, Root.Void context)
+            protected internal override Class? Accept(RuleList.Inner.CommentInner node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
             {
                 return null;
             }

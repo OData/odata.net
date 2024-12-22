@@ -198,8 +198,8 @@
                 this.firstⲻrule_2 = firstⲻrule_2;
             }
 
-            public firstⲻrule firstⲻrule_1 { get; }
-            public firstⲻrule? firstⲻrule_2 { get; }
+            public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
+            public GeneratorV3.firstⲻrule? firstⲻrule_2 { get; }
         }
 
         public sealed class firstⲻrule_ꓸжⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_ж꘡firstⲻrule_firstⲻrule꘡_ж1firstⲻrule_1жfirstⲻrule
