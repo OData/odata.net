@@ -102,56 +102,6 @@
                     return ElementsGenerator.Instance.Generate(rule.Elements, (className, context.InnerClasses));
                 }
 
-                private sealed class RuleNameToClassName
-                {
-                    private RuleNameToClassName()
-                    {
-                    }
-
-                    public static RuleNameToClassName Instance { get; } = new RuleNameToClassName();
-
-                    public string Generate(RuleName ruleName, Root.Void context)
-                    {
-                        var stringBuilder = new StringBuilder();
-
-                        stringBuilder.Append(char.ToUpperInvariant(AlphaToChar.Instance.Visit(ruleName.Alpha, default)));
-                        foreach (var inner in ruleName.Inners)
-                        {
-                            InnerToString.Instance.Visit(inner, stringBuilder);
-                        }
-
-                        return stringBuilder.ToString();
-                    }
-
-                    private sealed class InnerToString : RuleName.Inner.Visitor<Root.Void, StringBuilder>
-                    {
-                        private InnerToString()
-                        {
-                        }
-
-                        public static InnerToString Instance { get; } = new InnerToString();
-
-                        protected internal override Root.Void Accept(RuleName.Inner.AlphaInner node, StringBuilder context)
-                        {
-                            context.Append(char.ToUpperInvariant(AlphaToChar.Instance.Visit(node.Alpha, default)));
-                            return default;
-                        }
-
-                        protected internal override Root.Void Accept(RuleName.Inner.DigitInner node, StringBuilder context)
-                        {
-                            context.Append(DigitToInt.Instance.Visit(node.Digit, default).ToString());
-                            return default;
-                        }
-
-                        protected internal override Root.Void Accept(RuleName.Inner.DashInner node, StringBuilder context)
-                        {
-                            //// TODO create classes to traverse the individual CST nodes
-                            context.Append(CharacterSubstituions.Dash);
-                            return default;
-                        }
-                    }
-                }
-
                 private sealed class ElementsGenerator
                 {
                     private ElementsGenerator()
@@ -444,10 +394,25 @@
 
             protected internal override string Accept(Repeat.Count node, Root.Void context)
             {
+                return DigitsToInt.Instance.Generate(node.Digits, context).ToString();
             }
 
             protected internal override string Accept(Repeat.Range node, Root.Void context)
             {
+                var className = string.Empty;
+                if (node.PrefixDigits.Any())
+                {
+                    className += DigitsToInt.Instance.Generate(node.PrefixDigits, context).ToString();
+                }
+
+                className += CharacterSubstituions.Asterisk;
+
+                if (node.SuffixDigits.Any())
+                {
+                    className += DigitsToInt.Instance.Generate(node.SuffixDigits, context).ToString();
+                }
+
+                return className;
             }
         }
 
@@ -461,14 +426,17 @@
 
             protected internal override string Accept(Element.RuleName node, Root.Void context)
             {
+                return RuleNameToClassName.Instance.Generate(node.Value, context);
             }
 
             protected internal override string Accept(Element.Group node, Root.Void context)
             {
+                return GroupToClassName.Instance.Generate(node.Value);
             }
 
             protected internal override string Accept(Element.Option node, Root.Void context)
             {
+                return OptionToClassName.Instance.Generate(node.Value);
             }
 
             protected internal override string Accept(Element.CharVal node, Root.Void context)
@@ -485,6 +453,91 @@
             {
                 throw new NotImplementedException("TODO");
             }
+        }
+
+        private sealed class OptionToClassName
+        {
+            private OptionToClassName()
+            {
+            }
+
+            public static OptionToClassName Instance { get; } = new OptionToClassName();
+
+            public string Generate(Option option)
+            {
+                return $"{CharacterSubstituions.OpenBracket}{AlternationToClassName.Instance.Generate(option.Alternation)}{CharacterSubstituions.CloseBracket}";
+            }
+        }
+
+        private sealed class RuleNameToClassName
+        {
+            private RuleNameToClassName()
+            {
+            }
+
+            public static RuleNameToClassName Instance { get; } = new RuleNameToClassName();
+
+            public string Generate(RuleName ruleName, Root.Void context)
+            {
+                var stringBuilder = new StringBuilder();
+
+                stringBuilder.Append(char.ToUpperInvariant(AlphaToChar.Instance.Visit(ruleName.Alpha, default)));
+                foreach (var inner in ruleName.Inners)
+                {
+                    InnerToString.Instance.Visit(inner, stringBuilder);
+                }
+
+                return stringBuilder.ToString();
+            }
+
+            private sealed class InnerToString : RuleName.Inner.Visitor<Root.Void, StringBuilder>
+            {
+                private InnerToString()
+                {
+                }
+
+                public static InnerToString Instance { get; } = new InnerToString();
+
+                protected internal override Root.Void Accept(RuleName.Inner.AlphaInner node, StringBuilder context)
+                {
+                    context.Append(char.ToUpperInvariant(AlphaToChar.Instance.Visit(node.Alpha, default)));
+                    return default;
+                }
+
+                protected internal override Root.Void Accept(RuleName.Inner.DigitInner node, StringBuilder context)
+                {
+                    context.Append(DigitToInt.Instance.Visit(node.Digit, default).ToString());
+                    return default;
+                }
+
+                protected internal override Root.Void Accept(RuleName.Inner.DashInner node, StringBuilder context)
+                {
+                    //// TODO create classes to traverse the individual CST nodes
+                    context.Append(CharacterSubstituions.Dash);
+                    return default;
+                }
+            }
+        }
+    }
+
+    public sealed class DigitsToInt
+    {
+        private DigitsToInt()
+        {
+        }
+
+        public static DigitsToInt Instance { get; } = new DigitsToInt();
+
+        public int Generate(IEnumerable<Digit> digits, Root.Void context)
+        {
+            var value = 0;
+            foreach (var digit in digits)
+            {
+                value *= 10;
+                value += DigitToInt.Instance.Visit(digit, default);
+            }
+
+            return value;
         }
     }
 
