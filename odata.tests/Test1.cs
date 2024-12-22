@@ -300,6 +300,7 @@
             //// TODO make "optionals" not be nullable
             //// TODO you are entirely skipping out on incremental definitions, by the way
             //// TODO make sure to flesh out the code quality checks for the generated code
+            //// TODO it could happen that someojne has first-rule = first-rule / second-rule in which case the du name first-rule with conflict with one of its elements
         }
 
         [TestMethod]

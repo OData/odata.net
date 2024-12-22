@@ -24,7 +24,7 @@ namespace GeneratorV3
         {
             public TResult Visit(Inners.secondⲻrule node, TContext context)
             {
-                return node.Dispatch(this, context)
+                return node.Dispatch(this, context);
             }
             
             protected internal abstract TResult Accept(secondⲻrule.firstⲻrule node, TContext context);
@@ -147,7 +147,7 @@ namespace GeneratorV3
             {
                 public TResult Visit(Inners.ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ node, TContext context)
                 {
-                    return node.Dispatch(this, context)
+                    return node.Dispatch(this, context);
                 }
                 
                 protected internal abstract TResult Accept(ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ.firstⲻrule node, TContext context);

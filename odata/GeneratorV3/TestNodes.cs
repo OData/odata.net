@@ -34,11 +34,6 @@
             protected internal abstract TResult Accept(secondⲻrule.firstⲻrule_Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_꘡firstⲻrule_firstⲻrule꘡ node, TContext context);
         }
 
-        /*public sealed class secondⲻrule
-        {
-        //// TODO this *could* happen in the ABNF
-        }*/
-
         public sealed class firstⲻrule : secondⲻrule
         {
             public firstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1)
