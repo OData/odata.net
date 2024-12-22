@@ -168,7 +168,8 @@
                                         .Instance
                                         .Visit(
                                             repetition, 
-                                            (propertyTypeToCount, context.InnerClasses)));
+                                            (propertyTypeToCount, context.InnerClasses)))
+                                    .ToList();
                                 return new Class(
                                     AccessModifier.Public,
                                     false,
