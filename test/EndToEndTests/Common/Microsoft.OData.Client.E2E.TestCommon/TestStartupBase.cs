@@ -25,6 +25,8 @@ namespace Microsoft.OData.Client.E2E.TestCommon
         {
             ConfigureBeforeRouting(app, env);
 
+            app.UseODataRouteDebug();
+
             app.UseODataBatching();
 
             app.UseRouting();

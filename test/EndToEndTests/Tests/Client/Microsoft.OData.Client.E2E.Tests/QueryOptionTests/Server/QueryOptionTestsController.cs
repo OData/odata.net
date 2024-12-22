@@ -85,6 +85,20 @@ namespace Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Server
         }
 
         [EnableQuery]
+        [HttpGet("odata/Customers({key})/Numbers")]
+        public IActionResult GetNumbersFromCustomer([FromRoute] int key)
+        {
+            var customer = _dataSource.Customers?.SingleOrDefault(a => a.PersonID == key);
+
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(customer.Numbers);
+        }
+
+        [EnableQuery]
         [HttpGet("odata/ProductDetails")]
         public IActionResult GetProductDetails()
         {
