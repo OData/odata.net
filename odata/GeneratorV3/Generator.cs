@@ -141,7 +141,7 @@
                             }
                             else
                             {
-                                return ConcatenationToClass.Instance.Generate(alternation.Concatenation, (context.ClassName, null, context.InnerClasses));
+                                return ConcatenationToClass.Instance.Generate(alternation.Concatenation, (context.ClassName, null, Enumerable.Empty<MethodDefinition>(), context.InnerClasses));
                             }
                         }
 
@@ -155,7 +155,7 @@
 
                             public Class Generate(
                                 Concatenation concatenation, 
-                                (string ClassName, string? BaseType, Dictionary<string, Class> InnerClasses) context)
+                                (string ClassName, string? BaseType, IEnumerable<MethodDefinition> MethodDefinitions, Dictionary<string, Class> InnerClasses) context)
                             {
                                 var propertyTypeToCount = new Dictionary<string, int>();
                                 var properties = concatenation
@@ -187,7 +187,7 @@
                                                 .Select(property =>
                                                     $"this.{property.Name} = {property.Name};")),
                                     },
-                                    Enumerable.Empty<MethodDefinition>(),
+                                    context.MethodDefinitions,
                                     Enumerable.Empty<Class>(),
                                     properties);
                             }
@@ -367,13 +367,29 @@
 
                             public Class Generate(IEnumerable<Concatenation> concatenations, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                             {
-                                //// TODO this should have the base type...
+                                var dispatchMethod = new MethodDefinition(
+                                    AccessModifier.Protected,
+                                    false,
+                                    true,
+                                    "TResult",
+                                    new[]
+                                    {
+                                        "TResult",
+                                        "TContext",
+                                    },
+                                    "Dispatch",
+                                    new[]
+                                    {
+                                        new MethodParameter("Visitor<TResult, TContext>", "visitor"),
+                                        new MethodParameter("TContext", "context"),
+                                    },
+                                    "return visitor.Accept(this, context);");
                                 var discriminatedUnionElements = concatenations
                                     .Select(concatenation => ConcatenationToClass
                                         .Instance
                                         .Generate(
                                             concatenation, 
-                                            (ConcatenationToClassName.Instance.Generate(concatenation), context.ClassName, context.InnerClasses)));
+                                            (ConcatenationToClassName.Instance.Generate(concatenation), context.ClassName, new[] { dispatchMethod }, context.InnerClasses)));
 
                                 var visitor = new Class(AccessModifier.Public,
                                     true,
