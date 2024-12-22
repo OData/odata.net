@@ -42,6 +42,11 @@ namespace GeneratorV3
             }
             
             public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
         
         public sealed class firstⲻrule_firstⲻrule : secondⲻrule
@@ -54,6 +59,11 @@ namespace GeneratorV3
             
             public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
             public GeneratorV3.firstⲻrule firstⲻrule_2 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
         
         public sealed class firstⲻrule_жⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_ж꘡firstⲻrule_firstⲻrule꘡_ж1firstⲻrule_1жfirstⲻrule : secondⲻrule
@@ -72,6 +82,11 @@ namespace GeneratorV3
             public Inners.꘡firstⲻrule_firstⲻrule꘡ ꘡firstⲻrule_firstⲻrule꘡_1 { get; }
             public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_2 { get; }
             public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_3 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
         
         public sealed class ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ : secondⲻrule
@@ -82,6 +97,11 @@ namespace GeneratorV3
             }
             
             public Inners.ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
         
         public sealed class firstⲻrule_Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_꘡firstⲻrule_firstⲻrule꘡ : secondⲻrule
@@ -96,6 +116,11 @@ namespace GeneratorV3
             public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
             public Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
             public Inners.꘡firstⲻrule_firstⲻrule꘡ ꘡firstⲻrule_firstⲻrule꘡_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
     }
     
@@ -162,6 +187,11 @@ namespace GeneratorV3
                 }
                 
                 public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
+                
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
             }
             
             public sealed class Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ : ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ
@@ -172,6 +202,11 @@ namespace GeneratorV3
                 }
                 
                 public Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
+                
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
             }
         }
     }
