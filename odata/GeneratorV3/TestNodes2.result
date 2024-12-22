@@ -1,0 +1,214 @@
+namespace GeneratorV3
+{
+    using System.Collections.Generic;
+    
+    public sealed class firstⲻrule
+    {
+        public firstⲻrule(GeneratorV3.secondⲻrule secondⲻrule_1)
+        {
+            this.secondⲻrule_1 = secondⲻrule_1;
+        }
+        
+        public GeneratorV3.secondⲻrule secondⲻrule_1 { get; }
+    }
+    
+    public abstract class secondⲻrule
+    {
+        private secondⲻrule()
+        {
+        }
+        
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(secondⲻrule node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+            
+            protected internal abstract TResult Accept(secondⲻrule.firstⲻrule node, TContext context);
+            protected internal abstract TResult Accept(secondⲻrule.firstⲻrule_firstⲻrule node, TContext context);
+            protected internal abstract TResult Accept(secondⲻrule.firstⲻrule_жⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_ж꘡firstⲻrule_firstⲻrule꘡_ж1firstⲻrule_1жfirstⲻrule node, TContext context);
+            protected internal abstract TResult Accept(secondⲻrule.ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ node, TContext context);
+            protected internal abstract TResult Accept(secondⲻrule.firstⲻrule_Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_꘡firstⲻrule_firstⲻrule꘡ node, TContext context);
+        }
+        
+        public sealed class firstⲻrule : secondⲻrule
+        {
+            public firstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1)
+            {
+                this.firstⲻrule_1 = firstⲻrule_1;
+            }
+            
+            public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class firstⲻrule_firstⲻrule : secondⲻrule
+        {
+            public firstⲻrule_firstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, GeneratorV3.firstⲻrule firstⲻrule_2)
+            {
+                this.firstⲻrule_1 = firstⲻrule_1;
+                this.firstⲻrule_2 = firstⲻrule_2;
+            }
+            
+            public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
+            public GeneratorV3.firstⲻrule firstⲻrule_2 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class firstⲻrule_жⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_ж꘡firstⲻrule_firstⲻrule꘡_ж1firstⲻrule_1жfirstⲻrule : secondⲻrule
+        {
+            public firstⲻrule_жⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_ж꘡firstⲻrule_firstⲻrule꘡_ж1firstⲻrule_1жfirstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, IEnumerable<Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ> Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, IEnumerable<Inners.꘡firstⲻrule_firstⲻrule꘡?> ꘡firstⲻrule_firstⲻrule꘡_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_2, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_3)
+            {
+                this.firstⲻrule_1 = firstⲻrule_1;
+                this.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
+                this.꘡firstⲻrule_firstⲻrule꘡_1 = ꘡firstⲻrule_firstⲻrule꘡_1;
+                this.firstⲻrule_2 = firstⲻrule_2;
+                this.firstⲻrule_3 = firstⲻrule_3;
+            }
+            
+            public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
+            public IEnumerable<Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ> Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
+            public IEnumerable<Inners.꘡firstⲻrule_firstⲻrule꘡?> ꘡firstⲻrule_firstⲻrule꘡_1 { get; }
+            public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_2 { get; }
+            public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_3 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ : secondⲻrule
+        {
+            public ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ(Inners.ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ_1)
+            {
+                this.ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ_1 = ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ_1;
+            }
+            
+            public Inners.ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class firstⲻrule_Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_꘡firstⲻrule_firstⲻrule꘡ : secondⲻrule
+        {
+            public firstⲻrule_Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_꘡firstⲻrule_firstⲻrule꘡(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, Inners.꘡firstⲻrule_firstⲻrule꘡? ꘡firstⲻrule_firstⲻrule꘡_1)
+            {
+                this.firstⲻrule_1 = firstⲻrule_1;
+                this.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
+                this.꘡firstⲻrule_firstⲻrule꘡_1 = ꘡firstⲻrule_firstⲻrule꘡_1;
+            }
+            
+            public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
+            public Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
+            public Inners.꘡firstⲻrule_firstⲻrule꘡? ꘡firstⲻrule_firstⲻrule꘡_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+    }
+    
+    public sealed class Inners
+    {
+        public sealed class ꘡firstⲻrule꘡
+        {
+            public ꘡firstⲻrule꘡(GeneratorV3.firstⲻrule firstⲻrule_1)
+            {
+                this.firstⲻrule_1 = firstⲻrule_1;
+            }
+            
+            public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
+        }
+        
+        public sealed class Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ
+        {
+            public Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.꘡firstⲻrule꘡? ꘡firstⲻrule꘡_1)
+            {
+                this.firstⲻrule_1 = firstⲻrule_1;
+                this.꘡firstⲻrule꘡_1 = ꘡firstⲻrule꘡_1;
+            }
+            
+            public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
+            public Inners.꘡firstⲻrule꘡? ꘡firstⲻrule꘡_1 { get; }
+        }
+        
+        public sealed class ꘡firstⲻrule_firstⲻrule꘡
+        {
+            public ꘡firstⲻrule_firstⲻrule꘡(GeneratorV3.firstⲻrule firstⲻrule_1, GeneratorV3.firstⲻrule firstⲻrule_2)
+            {
+                this.firstⲻrule_1 = firstⲻrule_1;
+                this.firstⲻrule_2 = firstⲻrule_2;
+            }
+            
+            public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
+            public GeneratorV3.firstⲻrule firstⲻrule_2 { get; }
+        }
+        
+        public abstract class ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ
+        {
+            private ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ()
+            {
+            }
+            
+            protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+            
+            public abstract class Visitor<TResult, TContext>
+            {
+                public TResult Visit(ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ node, TContext context)
+                {
+                    return node.Dispatch(this, context);
+                }
+                
+                protected internal abstract TResult Accept(ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ.firstⲻrule node, TContext context);
+                protected internal abstract TResult Accept(ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ node, TContext context);
+            }
+            
+            public sealed class firstⲻrule : ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ
+            {
+                public firstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1)
+                {
+                    this.firstⲻrule_1 = firstⲻrule_1;
+                }
+                
+                public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
+                
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
+            }
+            
+            public sealed class Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ : ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ
+            {
+                public Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ(Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1)
+                {
+                    this.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
+                }
+                
+                public Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
+                
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
+            }
+        }
+    }
+    
+}
