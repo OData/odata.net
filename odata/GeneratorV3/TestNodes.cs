@@ -68,20 +68,20 @@
 
         public sealed class firstⲻrule_ꓸжⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_ж꘡firstⲻrule_firstⲻrule꘡_ж1firstⲻrule_1жfirstⲻrule : secondⲻrule
         {
-            public firstⲻrule_ꓸжⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_ж꘡firstⲻrule_firstⲻrule꘡_ж1firstⲻrule_1жfirstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ? Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, IEnumerable<Inners.firstⲻrule_firstⲻrule?> ꘡firstⲻrule_firstⲻrule꘡_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_2)
+            public firstⲻrule_ꓸжⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_ж꘡firstⲻrule_firstⲻrule꘡_ж1firstⲻrule_1жfirstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ? Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, IEnumerable<Inners.firstⲻrule_firstⲻrule?> ꘡firstⲻrule_firstⲻrule꘡_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_2, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_3)
             {
                 this.firstⲻrule_1 = firstⲻrule_1;
                 this.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
                 this.꘡firstⲻrule_firstⲻrule꘡_1 = ꘡firstⲻrule_firstⲻrule꘡_1;
-                this.firstⲻrules_1 = firstⲻrules_1;
-                this.firstⲻrules_2 = firstⲻrules_2;
+                this.firstⲻrule_2 = firstⲻrule_2;
+                this.firstⲻrule_3 = firstⲻrule_3;
             }
 
             public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
             public Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ? Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
             public IEnumerable<Inners.firstⲻrule_firstⲻrule?> ꘡firstⲻrule_firstⲻrule꘡_1 { get; }
-            public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_1 { get; }
-            public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_2 { get; }
+            public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_2 { get; }
+            public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_3 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
