@@ -268,7 +268,14 @@
                                     {
                                         var innerClassName = GroupToClassName.Instance.Generate(node.Value);
 
-                                        // TODO we need an "inner" class
+                                        if (!context.InnerClasses.ContainsKey(innerClassName))
+                                        {
+                                            context.InnerClasses[innerClassName] = AlternationGenerator
+                                                .Instance
+                                                .Generate(
+                                                    node.Value.Alternation, 
+                                                    (innerClassName, context.InnerClasses));
+                                        }
 
                                         var propertyType = $"{InnersClassName}.{innerClassName}";
                                         if (context.IsCollection)
