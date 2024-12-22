@@ -33,6 +33,8 @@
 
         private static string Namespace = "GeneratorV3"; //// TODO parameterize this
 
+        private static string InnersClassName = "Inners"; //// TODO parameterize this
+
         private static class CharacterSubstituions
         {
             public static char Dash { get; } = 'ⲻ'; //// TODO parameterize these
@@ -66,7 +68,7 @@
                     new Class(
                         AccessModifier.Public,
                         false, //// TODO this should be static
-                        "Inners", //// TODO how to make sure this doesn't conflict?
+                        InnersClassName, //// TODO how to make sure this doesn't conflict?
                         Enumerable.Empty<string>(),
                         null,
                         Enumerable.Empty<ConstructorDefinition>(),
@@ -236,7 +238,7 @@
                                             .Generate(
                                                 node.Value,
                                                 default);
-                                        var propertyType = $"{Namespace}.ruleName";
+                                        var propertyType = $"{Namespace}.{ruleName}";
                                         if (context.IsCollection)
                                         {
                                             propertyType = $"IEnumerable<{propertyType}>";
@@ -264,7 +266,32 @@
                                         Element.Group node, 
                                         (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
+                                        var innerClassName = GroupToClassName.Instance.Generate(node.Value);
 
+                                        // TODO we need an "inner" class
+
+                                        var propertyType = $"{InnersClassName}.{innerClassName}";
+                                        if (context.IsCollection)
+                                        {
+                                            propertyType = $"IEnumerable<{propertyType}>";
+                                        }
+
+                                        if (!context.PropertyTypeToCount.TryGetValue(innerClassName, out var count))
+                                        {
+                                            count = 0;
+                                        }
+
+                                        ++count;
+                                        context.PropertyTypeToCount[innerClassName] = count;
+
+                                        var propertyName = $"{innerClassName}_{count}";
+
+                                        return new PropertyDefinition(
+                                            AccessModifier.Public,
+                                            $"{InnersClassName}.{innerClassName}",
+                                            propertyName,
+                                            true,
+                                            false);
                                     }
 
                                     protected internal override PropertyDefinition Accept(Element.Option node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
