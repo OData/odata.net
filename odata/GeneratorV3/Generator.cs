@@ -218,12 +218,59 @@
 
                                 public static RepetitonToPropertyDefinition Instance { get; } = new RepetitonToPropertyDefinition();
 
-                                protected internal override PropertyDefinition Accept(Repetition.ElementOnly node, Root.Void context)
+                                protected internal override PropertyDefinition Accept(
+                                    Repetition.ElementOnly node, 
+                                    Root.Void context)
                                 {
+                                    return ElementToPropertyDefinition
+                                        .Instance
+                                        .Visit(
+                                            node.Element, 
+                                            (false, context));
                                 }
 
-                                protected internal override PropertyDefinition Accept(Repetition.RepeatAndElement node, Root.Void context)
+                                protected internal override PropertyDefinition Accept(
+                                    Repetition.RepeatAndElement node, 
+                                    Root.Void context)
                                 {
+                                    return ElementToPropertyDefinition
+                                        .Instance
+                                        .Visit(
+                                            node.Element,
+                                            (true, context));
+                                }
+
+                                private sealed class ElementToPropertyDefinition : Element.Visitor<PropertyDefinition, (bool IsCollection, Root.Void @void)>
+                                {
+                                    private ElementToPropertyDefinition()
+                                    {
+                                    }
+
+                                    public static ElementToPropertyDefinition Instance { get; } = new ElementToPropertyDefinition();
+
+                                    protected internal override PropertyDefinition Accept(Element.RuleName node, (bool IsCollection, Root.Void @void) context)
+                                    {
+                                    }
+
+                                    protected internal override PropertyDefinition Accept(Element.Group node, (bool IsCollection, Root.Void @void) context)
+                                    {
+                                    }
+
+                                    protected internal override PropertyDefinition Accept(Element.Option node, (bool IsCollection, Root.Void @void) context)
+                                    {
+                                    }
+
+                                    protected internal override PropertyDefinition Accept(Element.CharVal node, (bool IsCollection, Root.Void @void) context)
+                                    {
+                                    }
+
+                                    protected internal override PropertyDefinition Accept(Element.NumVal node, (bool IsCollection, Root.Void @void) context)
+                                    {
+                                    }
+
+                                    protected internal override PropertyDefinition Accept(Element.ProseVal node, (bool IsCollection, Root.Void @void) context)
+                                    {
+                                    }
                                 }
                             }
                         }
