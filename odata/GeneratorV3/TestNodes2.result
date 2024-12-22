@@ -22,7 +22,7 @@ namespace GeneratorV3
         
         public abstract class Visitor<TResult, TContext>
         {
-            public TResult Visit(Inners.secondⲻrule node, TContext context)
+            public TResult Visit(secondⲻrule node, TContext context)
             {
                 return node.Dispatch(this, context);
             }
@@ -170,7 +170,7 @@ namespace GeneratorV3
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(Inners.ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ node, TContext context)
+                public TResult Visit(ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }

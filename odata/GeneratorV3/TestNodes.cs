@@ -22,7 +22,7 @@
 
         public abstract class Visitor<TResult, TContext>
         {
-            public TResult Visit(GeneratorV3.secondⲻrule node, TContext context)
+            public TResult Visit(secondⲻrule node, TContext context)
             {
                 return node.Dispatch(this, context);
             }
