@@ -431,7 +431,7 @@
                                             Enumerable.Empty<string>()),
                                     },
                                     Enumerable.Empty<MethodDefinition>(),
-                                    discriminatedUnionElements, //// TODO add visitor
+                                    discriminatedUnionElements.Prepend(visitor),
                                     Enumerable.Empty<PropertyDefinition>());
                             }
                         }
