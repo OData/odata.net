@@ -490,7 +490,12 @@
 
             public string Generate(Group group)
             {
-                return $"{CharacterSubstituions.OpenParenthesis}{AlternationToClassName.Instance.Generate(group.Alternation)}{CharacterSubstituions.CloseParenthesis}";
+                var stringBuilder = new StringBuilder();
+                stringBuilder.Append(CharacterSubstituions.OpenParenthesis);
+                stringBuilder.Append(AlternationToClassName.Instance.Generate(group.Alternation));
+                stringBuilder.Append(CharacterSubstituions.CloseParenthesis);
+
+                return stringBuilder.ToString();
             }
         }
 
@@ -568,20 +573,20 @@
 
             protected internal override string Accept(Repeat.Range node, Root.Void context)
             {
-                var className = string.Empty;
+                var stringBuilder = new StringBuilder();
                 if (node.PrefixDigits.Any())
                 {
-                    className += DigitsToInt.Instance.Generate(node.PrefixDigits, context).ToString();
+                    stringBuilder.Append(DigitsToInt.Instance.Generate(node.PrefixDigits, context).ToString());
                 }
 
-                className += CharacterSubstituions.Asterisk;
+                stringBuilder.Append(CharacterSubstituions.Asterisk);
 
                 if (node.SuffixDigits.Any())
                 {
-                    className += DigitsToInt.Instance.Generate(node.SuffixDigits, context).ToString();
+                    stringBuilder.Append(DigitsToInt.Instance.Generate(node.SuffixDigits, context).ToString());
                 }
 
-                return className;
+                return stringBuilder.ToString();
             }
         }
 
