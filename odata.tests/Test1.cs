@@ -432,9 +432,14 @@ second-rule = first-rule
                 }
             }
 
-            public void Transcribe(AbnfParserGenerator.Class @class, StringBuilder builder, string indent)
+            public void Transcribe(AbnfParserGenerator.Class @class, StringBuilder stringBuilder, string indent)
             {
-                Transcribe(@class, new Builder(builder, indent));
+                var builder = new Builder(stringBuilder, indent);
+                builder.AppendLine("namespace GeneratorV3"); //// TODO
+                builder.AppendLine("{");
+                builder.Indent();
+                Transcribe(@class, builder);
+                builder.Unindent();
             }
 
             private void Transcribe(AbnfParserGenerator.AccessModifier accessModifier, Builder builder)
