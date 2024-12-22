@@ -1,6 +1,8 @@
 ﻿namespace GeneratorV3
 {
     using System.Collections.Generic;
+    using System.Linq;
+
     using AbnfParser.CstNodes;
     using AbnfParserGenerator;
 
@@ -14,6 +16,7 @@
 
         public IEnumerable<Class> Generate(RuleList ruleList, Root.Void context)
         {
+            return Enumerable.Empty<Class>();
         }
     }
 }
