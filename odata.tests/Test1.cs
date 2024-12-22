@@ -297,6 +297,7 @@
 
             //// TODO does the natural language classnames even make sense? would it make more sense to just make the class names the ABNF but replacing the symbol syntax with class friendly symbols?
             //// TODO you are entirely skipping out on incremental definitions, by the way
+            //// TODO make sure to flesh out the code quality checks for the generated code
         }
 
         private static string TestAbnf =

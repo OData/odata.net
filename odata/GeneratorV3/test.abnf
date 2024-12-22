@@ -1,0 +1,6 @@
+first-rule = second-rule
+second-rule = first-rule 
+            / first-rule first-rule 
+            / first-rule *(first-rule [first-rule]) *[first-rule first-rule] *1first-rule 1*first-rule 
+            / (first-rule / (first-rule [first-rule]))
+            / first-rule (first-rule [first-rule]) [first-rule first-rule]
