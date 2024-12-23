@@ -47,7 +47,7 @@
 
             public static char CloseBracket { get; } = '꘡';
 
-            public static char Asterisk { get; } = 'ж';
+            public static string Asterisk { get; } = "asterisk"; //// TODO 'ж';
 
             public static char Slash { get; } = 'Ⳇ';
 
