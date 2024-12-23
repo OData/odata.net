@@ -652,6 +652,7 @@
                                                 while (!HexDigsEqual(next, high))
                                                 {
                                                     yield return next;
+                                                    next = Next(next);
                                                 }
 
                                                 yield return high;
