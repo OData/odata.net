@@ -160,16 +160,6 @@
             public GeneratorV3.firstⲻrule firstⲻrule_2 { get; }
         }
 
-        public sealed class openfirstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡ↃↃ
-        {
-            public openfirstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡ↃↃ(Inners.firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1)
-            {
-                this.firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
-            }
-
-            public Inners.firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
-        }
-
         public abstract class firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ
         {
             private firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ()
@@ -218,6 +208,16 @@
                     return visitor.Accept(this, context);
                 }
             }
+        }
+
+        public sealed class openfirstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡ↃↃ
+        {
+            public openfirstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡ↃↃ(Inners.firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1)
+            {
+                this.firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
+            }
+
+            public Inners.firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
         }
 
         public sealed class firstⲻrule_asteriskopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_asterisk꘡firstⲻrule_firstⲻrule꘡_asterisk1firstⲻrule_1asteriskfirstⲻrule
