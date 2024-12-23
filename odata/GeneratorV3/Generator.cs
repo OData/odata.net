@@ -55,6 +55,10 @@
             public static char Space { get; } = '_';
 
             public static string DoubleQuote { get; } = "doublequote"; //// TODO
+
+            public static string Period { get; } = "period"; //// TODO
+
+            public static string Percent { get; } = "percent"; //// TODO
         }
 
         public IEnumerable<Class> Generate(RuleList ruleList, Root.Void context)
@@ -701,7 +705,7 @@
 
             protected internal override string Accept(Element.NumVal node, Root.Void context)
             {
-                return NumValToClassName.Instance.Visit(node.Value);
+                return NumValToClassName.Instance.Visit(node.Value, context);
             }
 
             protected internal override string Accept(Element.ProseVal node, Root.Void context)
@@ -720,10 +724,12 @@
 
             protected internal override string Accept(NumVal.BinVal node, Root.Void context)
             {
+                return $"{CharacterSubstituions.Percent}{BinValToClassName.Instance.Visit(node.Value, context)}";
             }
 
             protected internal override string Accept(NumVal.DecVal node, Root.Void context)
             {
+                return $"{CharacterSubstituions.Percent}{DecValToClassName.Instance.Visit(node.Value, context)}";
             }
 
             protected internal override string Accept(NumVal.HexVal node, Root.Void context)
@@ -731,7 +737,7 @@
             }
         }
 
-        private sealed class BinValToClassName
+        private sealed class BinValToClassName : BinVal.Visitor<string, Root.Void>
         {
             private BinValToClassName()
             {
@@ -739,7 +745,38 @@
 
             public static BinValToClassName Instance { get; } = new BinValToClassName();
 
+            protected internal override string Accept(BinVal.BitsOnly node, Root.Void context)
+            {
+            }
 
+            protected internal override string Accept(BinVal.ConcatenatedBits node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(BinVal.Range node, Root.Void context)
+            {
+            }
+        }
+
+        private sealed class DecValToClassName : DecVal.Visitor<string, Root.Void>
+        {
+            private DecValToClassName()
+            {
+            }
+
+            public static DecValToClassName Instance { get; } = new DecValToClassName();
+
+            protected internal override string Accept(DecVal.DecsOnly node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(DecVal.ConcatenatedDecs node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(DecVal.Range node, Root.Void context)
+            {
+            }
         }
 
         private sealed class CharValToClassName
