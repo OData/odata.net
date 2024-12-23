@@ -150,7 +150,7 @@ namespace GeneratorV3
         
         public sealed class Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ
         {
-            public Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ(Inners.groupInnerClassName firstⲻrule_꘡firstⲻrule꘡_1)
+            public Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ(Inners.firstⲻrule_꘡firstⲻrule꘡ firstⲻrule_꘡firstⲻrule꘡_1)
             {
                 this.firstⲻrule_꘡firstⲻrule꘡_1 = firstⲻrule_꘡firstⲻrule꘡_1
             }
@@ -222,7 +222,7 @@ namespace GeneratorV3
         
         public sealed class ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ
         {
-            public ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ(Inners.groupInnerClassName firstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_1)
+            public ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ(Inners.firstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ firstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_1)
             {
                 this.firstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = firstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_1
             }

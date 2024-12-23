@@ -294,7 +294,7 @@
                                                         },
                                                         new[]
                                                         {
-                                                            $"this.{groupInnerClassName}_1 = {groupInnerClassName}_1",
+                                                            $"this.{groupInnerClassName}_1 = {groupInnerClassName}_1;",
                                                         }),
                                                 },
                                                 Enumerable.Empty<MethodDefinition>(),
