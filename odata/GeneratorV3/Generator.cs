@@ -703,67 +703,83 @@
 
                                                     protected internal override bool Accept(Digit.x30 node, Digit context)
                                                     {
+                                                        return context is Digit.x30;
                                                     }
 
                                                     protected internal override bool Accept(Digit.x31 node, Digit context)
                                                     {
+                                                        return context is Digit.x31;
                                                     }
 
                                                     protected internal override bool Accept(Digit.x32 node, Digit context)
                                                     {
+                                                        return context is Digit.x32;
                                                     }
 
                                                     protected internal override bool Accept(Digit.x33 node, Digit context)
                                                     {
+                                                        return context is Digit.x33;
                                                     }
 
                                                     protected internal override bool Accept(Digit.x34 node, Digit context)
                                                     {
+                                                        return context is Digit.x34;
                                                     }
 
                                                     protected internal override bool Accept(Digit.x35 node, Digit context)
                                                     {
+                                                        return context is Digit.x35;
                                                     }
 
                                                     protected internal override bool Accept(Digit.x36 node, Digit context)
                                                     {
+                                                        return context is Digit.x36;
                                                     }
 
                                                     protected internal override bool Accept(Digit.x37 node, Digit context)
                                                     {
+                                                        return context is Digit.x37;
                                                     }
 
                                                     protected internal override bool Accept(Digit.x38 node, Digit context)
                                                     {
+                                                        return context is Digit.x38;
                                                     }
 
                                                     protected internal override bool Accept(Digit.x39 node, Digit context)
                                                     {
+                                                        return context is Digit.x39;
                                                     }
                                                 }
 
                                                 protected internal override bool Accept(HexDig.A node, HexDig context)
                                                 {
+                                                    return context is HexDig.A;
                                                 }
 
                                                 protected internal override bool Accept(HexDig.B node, HexDig context)
                                                 {
+                                                    return context is HexDig.B;
                                                 }
 
                                                 protected internal override bool Accept(HexDig.C node, HexDig context)
                                                 {
+                                                    return context is HexDig.C;
                                                 }
 
                                                 protected internal override bool Accept(HexDig.D node, HexDig context)
                                                 {
+                                                    return context is HexDig.D;
                                                 }
 
                                                 protected internal override bool Accept(HexDig.E node, HexDig context)
                                                 {
+                                                    return context is HexDig.E;
                                                 }
 
                                                 protected internal override bool Accept(HexDig.F node, HexDig context)
                                                 {
+                                                    return context is HexDig.F;
                                                 }
                                             }
 
