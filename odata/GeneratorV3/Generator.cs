@@ -734,6 +734,7 @@
 
             protected internal override string Accept(NumVal.HexVal node, Root.Void context)
             {
+                return $"{CharacterSubstituions.Percent}{HexValToClassName.Instance.Visit(node.Value, context)}";
             }
         }
 
@@ -775,6 +776,27 @@
             }
 
             protected internal override string Accept(DecVal.Range node, Root.Void context)
+            {
+            }
+        }
+
+        private sealed class HexValToClassName : HexVal.Visitor<string, Root.Void>
+        {
+            private HexValToClassName()
+            {
+            }
+
+            public static HexValToClassName Instance { get; } = new HexValToClassName();
+
+            protected internal override string Accept(HexVal.HexOnly node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(HexVal.ConcatenatedHex node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(HexVal.Range node, Root.Void context)
             {
             }
         }
