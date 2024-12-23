@@ -43,7 +43,7 @@
 
             public static char CloseParenthesis { get; } = 'Ↄ';
 
-            public static char OpenBracket { get; } = '꘡';
+            public static char OpenBracket { get; } = 'I'; //// TODO '꘡';
 
             public static char CloseBracket { get; } = '꘡';
 
