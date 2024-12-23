@@ -126,16 +126,6 @@ namespace GeneratorV3
     
     public static class Inners
     {
-        public sealed class firstⲻrule
-        {
-            public firstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1)
-            {
-                this.firstⲻrule_1 = firstⲻrule_1;
-            }
-            
-            public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
-        }
-        
         public sealed class firstⲻrule_꘡firstⲻrule꘡
         {
             public firstⲻrule_꘡firstⲻrule꘡(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.firstⲻrule? firstⲻrule_2)
