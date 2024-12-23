@@ -267,6 +267,7 @@
                                         Element.Group node, 
                                         (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
+                                        //// TODO if alternation is just a rule name, then we don't need an inner class and we need to use the GeneratorV3 namespace instead of inners
                                         var groupInnerClassName = AlternationToClassName.Instance.Generate(node.Value.Alternation);
                                         if (!context.InnerClasses.ContainsKey(groupInnerClassName))
                                         {
