@@ -1324,14 +1324,17 @@
 
             protected internal override string Accept(BinVal.BitsOnly node, Root.Void context)
             {
+                throw new NotImplementedException("TODO");
             }
 
             protected internal override string Accept(BinVal.ConcatenatedBits node, Root.Void context)
             {
+                throw new NotImplementedException("TODO");
             }
 
             protected internal override string Accept(BinVal.Range node, Root.Void context)
             {
+                throw new NotImplementedException("TODO");
             }
         }
 
@@ -1345,14 +1348,17 @@
 
             protected internal override string Accept(DecVal.DecsOnly node, Root.Void context)
             {
+                throw new NotImplementedException("TODO");
             }
 
             protected internal override string Accept(DecVal.ConcatenatedDecs node, Root.Void context)
             {
+                throw new NotImplementedException("TODO");
             }
 
             protected internal override string Accept(DecVal.Range node, Root.Void context)
             {
+                throw new NotImplementedException("TODO");
             }
         }
 
@@ -1366,14 +1372,25 @@
 
             protected internal override string Accept(HexVal.HexOnly node, Root.Void context)
             {
+                return $"x{HexDigsToClassName.Instance.Generate(node.HexDigs, context)}";
             }
 
             protected internal override string Accept(HexVal.ConcatenatedHex node, Root.Void context)
             {
+                var builder = new StringBuilder();
+                builder.Append($"x{HexDigsToClassName.Instance.Generate(node.HexDigs, context)}");
+                foreach (var inner in node.Inners)
+                {
+                    builder.Append(CharacterSubstituions.Period);
+                    builder.Append(HexDigsToClassName.Instance.Generate(inner.HexDigs, context));
+                }
+
+                return builder.ToString();
             }
 
             protected internal override string Accept(HexVal.Range node, Root.Void context)
             {
+                return $"x{HexDigsToClassName.Instance.Generate(node.HexDigs, context)}{CharacterSubstituions.Dash}{HexDigsToClassName.Instance.Generate(node.Inners.First().HexDigs, context)}";
             }
         }
 
