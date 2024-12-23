@@ -290,7 +290,7 @@
                                                         AccessModifier.Public,
                                                         new[]
                                                         {
-                                                            new MethodParameter(groupInnerClassName, $"{groupInnerClassName}_1"),
+                                                            new MethodParameter($"{InnersClassName}.groupInnerClassName", $"{groupInnerClassName}_1"),
                                                         },
                                                         new[]
                                                         {
