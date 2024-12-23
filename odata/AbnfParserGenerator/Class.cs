@@ -41,7 +41,7 @@
             IEnumerable<PropertyDefinition> properties)
         {
             AccessModifier = accessModifier;
-            ClassModifier = ClassModifier;
+            ClassModifier = classModifier;
             Name = name;
             GenericTypeParameters = genericTypeParameters;
             this.BaseType = baseType;
