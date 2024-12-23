@@ -219,24 +219,6 @@
 
             public Inners.firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
         }
-
-        public sealed class firstⲻrule_asteriskopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_asterisk꘡firstⲻrule_firstⲻrule꘡_asterisk1firstⲻrule_1asteriskfirstⲻrule
-        {
-            public firstⲻrule_asteriskopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_asterisk꘡firstⲻrule_firstⲻrule꘡_asterisk1firstⲻrule_1asteriskfirstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.openfirstⲻrule_꘡firstⲻrule꘡Ↄ? openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, IEnumerable<Inners.firstⲻrule_firstⲻrule?> firstⲻrule_firstⲻrules_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_2)
-            {
-                this.firstⲻrule_1 = firstⲻrule_1;
-                this.openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
-                this.firstⲻrule_firstⲻrules_1 = firstⲻrule_firstⲻrules_1;
-                this.firstⲻrules_1 = firstⲻrules_1;
-                this.firstⲻrules_2 = firstⲻrules_2;
-            }
-
-            public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
-            public Inners.openfirstⲻrule_꘡firstⲻrule꘡Ↄ? openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
-            public IEnumerable<Inners.firstⲻrule_firstⲻrule?> firstⲻrule_firstⲻrules_1 { get; }
-            public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_1 { get; }
-            public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_2 { get; }
-        }
     }
 
 }
