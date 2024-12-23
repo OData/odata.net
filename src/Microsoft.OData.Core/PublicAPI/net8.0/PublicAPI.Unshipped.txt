@@ -1,0 +1,2 @@
+Microsoft.OData.ODataNestedResourceInfo.Count.get -> long?
+Microsoft.OData.ODataNestedResourceInfo.Count.set -> void
