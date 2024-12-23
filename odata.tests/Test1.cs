@@ -311,7 +311,7 @@
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(abnf);
 
             var classes = GeneratorV3.Generator.Intance.Generate(cst, default);
-            
+
             var classTranscriber = new ClassTranscriber();
 
             var stringBuilder = new StringBuilder();
@@ -477,16 +477,17 @@ second-rule = first-rule
             public void Transcribe(AbnfParserGenerator.Class @class, Builder builder)
             {
                 Transcribe(@class.AccessModifier, builder);
-                if (@class.IsAbstract != null)
+                if (@class.ClassModifier == ClassModifier.Abstract)
                 {
-                    if (@class.IsAbstract.Value)
-                    {
-                        builder.Append("abstract ");
-                    }
-                    else
-                    {
-                        builder.Append("sealed ");
-                    }
+                    builder.Append("abstract ");
+                }
+                else if (@class.ClassModifier == ClassModifier.Sealed)
+                {
+                    builder.Append("sealed ");
+                }
+                else if (@class.ClassModifier == ClassModifier.Static)
+                {
+                    builder.Append("static ");
                 }
 
                 builder.Append("class ").Append(@class.Name);

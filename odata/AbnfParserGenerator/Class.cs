@@ -7,7 +7,24 @@
     {
         public Class(
             AccessModifier accessModifier,
-            bool? isAbstract,
+            bool? classModifier,
+            string name,
+            IEnumerable<string> genericTypeParameters,
+            string? baseType,
+            IEnumerable<ConstructorDefinition> constructors,
+            IEnumerable<MethodDefinition> methods,
+            IEnumerable<Class> nestedClasses,
+            IEnumerable<PropertyDefinition> properties)
+            : this(
+                  accessModifier,
+                  classModifier == null ? ClassModifier.None : classModifier.Value ? ClassModifier.Abstract : ClassModifier.Sealed)
+        {
+            //// TODO remove this overload
+        }
+
+        public Class(
+            AccessModifier accessModifier,
+            ClassModifier classModifier,
             string name,
             IEnumerable<string> genericTypeParameters,
             string? baseType,
@@ -17,7 +34,7 @@
             IEnumerable<PropertyDefinition> properties)
         {
             AccessModifier = accessModifier;
-            IsAbstract = isAbstract;
+            ClassModifier = ClassModifier;
             Name = name;
             GenericTypeParameters = genericTypeParameters;
             this.BaseType = baseType;
@@ -29,7 +46,7 @@
 
         public AccessModifier AccessModifier { get; }
 
-        public bool? IsAbstract { get; }
+        public ClassModifier ClassModifier { get; }
 
         public string Name { get; }
 
@@ -44,6 +61,14 @@
         public IEnumerable<Class> NestedClasses { get; }
 
         public IEnumerable<PropertyDefinition> Properties { get; }
+    }
+
+    public enum ClassModifier
+    {
+        None = 0,
+        Sealed = 1,
+        Abstract = 2,
+        Static = 3,
     }
 
     public sealed class PropertyDefinition

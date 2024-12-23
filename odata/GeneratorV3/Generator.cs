@@ -67,7 +67,7 @@
                 .Append(
                     new Class(
                         AccessModifier.Public,
-                        false, //// TODO this should be static
+                        ClassModifier.Static,
                         InnersClassName, //// TODO how to make sure this doesn't conflict?
                         Enumerable.Empty<string>(),
                         null,
@@ -172,7 +172,7 @@
                                     .ToList();
                                 return new Class(
                                     AccessModifier.Public,
-                                    false,
+                                    ClassModifier.Sealed,
                                     context.ClassName,
                                     Enumerable.Empty<string>(),
                                     context.BaseType,
@@ -280,7 +280,7 @@
                                         {
                                             var groupClass = new Class(
                                                 AccessModifier.Public,
-                                                false,
+                                                ClassModifier.Sealed,
                                                 groupClassName,
                                                 Enumerable.Empty<string>(),
                                                 null,
@@ -426,7 +426,7 @@
                                             (ConcatenationToClassName.Instance.Generate(concatenation), context.ClassName, new[] { dispatchMethod }, context.InnerClasses)));
 
                                 var visitor = new Class(AccessModifier.Public,
-                                    true,
+                                    ClassModifier.Abstract,
                                     "Visitor",
                                     new[]
                                     {
@@ -469,7 +469,7 @@
 
                                 return new Class(
                                     AccessModifier.Public,
-                                    true,
+                                    ClassModifier.Abstract,
                                     context.ClassName,
                                     Enumerable.Empty<string>(),
                                     null,
