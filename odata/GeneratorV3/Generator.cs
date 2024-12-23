@@ -555,6 +555,13 @@
                                                 var range = HexDigsRange(
                                                     node.HexDigs.ToList(),
                                                     node.Inners.First().HexDigs.ToList());
+                                                var duElements = range
+                                                        .Select(hexDigs => HexDigsToClass
+                                                            .Instance
+                                                            .Generate(
+                                                                hexDigs,
+                                                                (HexDigsToClassName.Instance.Generate(hexDigs, default), context.ClassName, context.InnerClasses)))
+                                                        .ToList();
 
                                                 return new Class(
                                                     AccessModifier.Public,
@@ -589,12 +596,7 @@
                                                             },
                                                             null),
                                                     },
-                                                    range
-                                                        .Select(hexDigs => HexDigsToClass
-                                                            .Instance
-                                                            .Generate(
-                                                                hexDigs,
-                                                                (HexDigsToClassName.Instance.Generate(hexDigs, default), context.ClassName, context.InnerClasses)))
+                                                    duElements
                                                         .Prepend(new Class(
                                                             AccessModifier.Public,
                                                             ClassModifier.Abstract,
@@ -606,8 +608,37 @@
                                                             },
                                                             null,
                                                             Enumerable.Empty<ConstructorDefinition>(),
-
-                                                            
+                                                            duElements
+                                                                .Select(element =>
+                                                                    new MethodDefinition(
+                                                                        AccessModifier.Protected | AccessModifier.Internal,
+                                                                        ClassModifier.Abstract,
+                                                                        false,
+                                                                        "TResult",
+                                                                        Enumerable.Empty<string>(),
+                                                                        "Accept",
+                                                                        new[]
+                                                                        {
+                                                                            new MethodParameter($"{context.ClassName}.{element.Name}", "node"),
+                                                                            new MethodParameter("TContext", "context"),
+                                                                        },
+                                                                        null))
+                                                                .Prepend(
+                                                                    new MethodDefinition(
+                                                                        AccessModifier.Public,
+                                                                        ClassModifier.None,
+                                                                        false,
+                                                                        "TResult",
+                                                                        Enumerable.Empty<string>(),
+                                                                        "Visit",
+                                                                        new[]
+                                                                        {
+                                                                            new MethodParameter(context.ClassName, "node"),
+                                                                            new MethodParameter("TContext", "context"),
+                                                                        },
+                                                                        "return node.Dispatch(this, context);")),
+                                                            Enumerable.Empty<Class>(),
+                                                            Enumerable.Empty<PropertyDefinition>())),
                                                     Enumerable.Empty<PropertyDefinition>());
 
                                             }
