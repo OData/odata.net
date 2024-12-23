@@ -490,69 +490,99 @@
 
                                                 public Class Generate(
                                                     IEnumerable<HexDig> hexDigs, 
-                                                    (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
+                                                    (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                                 {
-                                                    foreach (var hexDig in hexDigs)
-                                                    {
-                                                    }
+                                                    var propertyTypeToCount = new Dictionary<string, int>();
+                                                    var properties = HexDigsToProperties
+                                                        .Instance
+                                                        .Generate(
+                                                            hexDigs,
+                                                            (propertyTypeToCount, context.InnerClasses))
+                                                        .ToList();
+
+                                                    return new Class(
+                                                        AccessModifier.Public,
+                                                        ClassModifier.Sealed,
+                                                        context.ClassName,
+                                                        Enumerable.Empty<string>(),
+                                                        null,
+                                                        new[]
+                                                        {
+                                                            new ConstructorDefinition(
+                                                                AccessModifier.Public,
+                                                                properties
+                                                                    .Select(property =>
+                                                                        new MethodParameter(property.Type, property.Name)),
+                                                                properties
+                                                                    .Select(property =>
+                                                                        $"this.{property.Name} = {property.Name};")),
+                                                        },
+                                                        Enumerable.Empty<MethodDefinition>(),
+                                                        Enumerable.Empty<Class>(),
+                                                        properties);
                                                 }
 
-                                                private sealed class HexDigToClass : HexDig.Visitor<Class, Root.Void>
+                                                private sealed class HexDigsToProperties
                                                 {
-                                                    private HexDigToClass()
+                                                    private HexDigsToProperties()
                                                     {
                                                     }
 
-                                                    public static HexDigToClass Instance { get; } = new HexDigToClass();
+                                                    public static HexDigsToProperties Instance { get; } = new HexDigsToProperties();
 
-                                                    protected internal override Class Accept(HexDig.Digit node, Root.Void context)
+                                                    public IEnumerable<PropertyDefinition> Generate(
+                                                        IEnumerable<HexDig> hexDigs,
+                                                        (Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                                     {
-                                                    }
-
-                                                    protected internal override Class Accept(HexDig.A node, Root.Void context)
-                                                    {
-                                                        var className = HexDigToClassName.Instance.Visit(node, context);
-                                                        return new Class(
-                                                            AccessModifier.Public,
-                                                            ClassModifier.Sealed,
-                                                            className,
-                                                            Enumerable.Empty<string>(),
-                                                            null,
-                                                            new[]
+                                                        foreach (var hexDig in hexDigs)
+                                                        {
+                                                            var className = HexDigToClassName.Instance.Visit(hexDig, context.@void);
+                                                            if (!context.InnerClasses.ContainsKey(className))
                                                             {
-                                                                new ConstructorDefinition(
-                                                                    AccessModifier.Private,
-                                                                    Enumerable.Empty<MethodParameter>(),
-                                                                    Enumerable.Empty<string>()),
-                                                            },
-                                                            Enumerable.Empty<MethodDefinition>(),
-                                                            Enumerable.Empty<Class>(),
-                                                            new[]
-                                                            {
-                                                                new MethodDefinition(
+                                                                var @class = new Class(
                                                                     AccessModifier.Public,
-                                                                    )
-                                                            })
-                                                    }
+                                                                    ClassModifier.Sealed,
+                                                                    className,
+                                                                    Enumerable.Empty<string>(),
+                                                                    null,
+                                                                    new[]
+                                                                    {
+                                                                        new ConstructorDefinition(
+                                                                            AccessModifier.Private,
+                                                                            Enumerable.Empty<MethodParameter>(),
+                                                                            Enumerable.Empty<string>()),
+                                                                    },
+                                                                    Enumerable.Empty<MethodDefinition>(),
+                                                                    Enumerable.Empty<Class>(),
+                                                                    new[]
+                                                                    {
+                                                                        new PropertyDefinition(
+                                                                            AccessModifier.Public,
+                                                                            true,
+                                                                            className,
+                                                                            "Instance",
+                                                                            true,
+                                                                            false), //// TODO needs an initiatilizer
+                                                                    });
 
-                                                    protected internal override Class Accept(HexDig.B node, Root.Void context)
-                                                    {
-                                                    }
+                                                                context.InnerClasses[className] = @class;
+                                                            }
 
-                                                    protected internal override Class Accept(HexDig.C node, Root.Void context)
-                                                    {
-                                                    }
+                                                            if (!context.PropertyTypeToCount.TryGetValue(className, out var count))
+                                                            {
+                                                                count = 0;
+                                                            }
 
-                                                    protected internal override Class Accept(HexDig.D node, Root.Void context)
-                                                    {
-                                                    }
+                                                            ++count;
+                                                            context.PropertyTypeToCount[className] = count;
 
-                                                    protected internal override Class Accept(HexDig.E node, Root.Void context)
-                                                    {
-                                                    }
-
-                                                    protected internal override Class Accept(HexDig.F node, Root.Void context)
-                                                    {
+                                                            yield return new PropertyDefinition(
+                                                                AccessModifier.Public,
+                                                                $"{InnersClassName}.{className}",
+                                                                $"{className}_{count}",
+                                                                true,
+                                                                false);
+                                                        }
                                                     }
                                                 }
                                             }

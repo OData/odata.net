@@ -81,8 +81,20 @@
     public sealed class PropertyDefinition
     {
         public PropertyDefinition(AccessModifier accessModifier, string type, string name, bool hasGet, bool hasSet)
+            : this(
+                  accessModifier,
+                  false,
+                  type,
+                  name,
+                  hasGet,
+                  hasSet)
+        {
+        }
+
+        public PropertyDefinition(AccessModifier accessModifier, bool isStatic, string type, string name, bool hasGet, bool hasSet)
         {
             AccessModifier = accessModifier;
+            IsStatic = isStatic;
             Type = type;
             Name = name;
             HasGet = hasGet;
@@ -90,6 +102,8 @@
         }
 
         public AccessModifier AccessModifier { get; }
+
+        public bool IsStatic { get; }
 
         public string Type { get; }
 
