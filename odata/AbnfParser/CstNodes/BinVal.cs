@@ -82,7 +82,7 @@
 
             public x62 B { get; }
             public IEnumerable<Bit> Bits { get; }
-            public IEnumerable<Inner> Inners { get; }
+            public IEnumerable<Inner> Inners { get; } //// TODO this is actually only a one-of
 
             public sealed class Inner
             {

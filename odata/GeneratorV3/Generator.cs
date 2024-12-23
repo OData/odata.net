@@ -397,13 +397,13 @@
 
                                     protected internal override PropertyDefinition Accept(Element.NumVal node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
-                                        var innerClassName = NumValToClassName.Instance.Generate(node.Value);
+                                        var innerClassName = NumValToClassName.Instance.Visit(node.Value, default);
 
                                         if (!context.InnerClasses.ContainsKey(innerClassName))
                                         {
-                                            
+                                            var innerClass = NumValToClass.Instance.Visit(node.Value, (innerClassName, context.InnerClasses));
 
-                                            context.InnerClasses[innerClassName] = groupClass;
+                                            context.InnerClasses[innerClassName] = innerClass;
                                         }
 
                                         var propertyType = $"{InnersClassName}.{innerClassName}";
@@ -430,8 +430,25 @@
                                             false);
                                     }
 
-                                    private sealed class NumValToClass
+                                    private sealed class NumValToClass : NumVal.Visitor<Class, (string ClassName, Dictionary<string, Class> InnerClasses)>
                                     {
+                                        private NumValToClass()
+                                        {
+                                        }
+
+                                        public static NumValToClass Instance { get; } = new NumValToClass();
+
+                                        protected internal override Class Accept(NumVal.BinVal node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                        {
+                                        }
+
+                                        protected internal override Class Accept(NumVal.DecVal node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                        {
+                                        }
+
+                                        protected internal override Class Accept(NumVal.HexVal node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                        {
+                                        }
                                     }
 
                                     protected internal override PropertyDefinition Accept(Element.ProseVal node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
