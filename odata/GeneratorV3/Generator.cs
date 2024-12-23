@@ -1404,6 +1404,13 @@
 
             public string Generate(IEnumerable<HexDig> hexDigs, Root.Void context)
             {
+                var stringBuilder = new StringBuilder();
+                foreach (var hexDig in hexDigs)
+                {
+                    stringBuilder.Append(HexDigToClassName.Instance.Visit(hexDig, context));
+                }
+
+                return stringBuilder.ToString();
             }
         }
 
@@ -1417,30 +1424,37 @@
 
             protected internal override string Accept(HexDig.Digit node, Root.Void context)
             {
+                return DigitToInt.Instance.Visit(node.Value, context).ToString();
             }
 
             protected internal override string Accept(HexDig.A node, Root.Void context)
             {
+                return "A";
             }
 
             protected internal override string Accept(HexDig.B node, Root.Void context)
             {
+                return "B";
             }
 
             protected internal override string Accept(HexDig.C node, Root.Void context)
             {
+                return "C";
             }
 
             protected internal override string Accept(HexDig.D node, Root.Void context)
             {
+                return "D";
             }
 
             protected internal override string Accept(HexDig.E node, Root.Void context)
             {
+                return "E";
             }
 
             protected internal override string Accept(HexDig.F node, Root.Void context)
             {
+                return "F";
             }
         }
 
