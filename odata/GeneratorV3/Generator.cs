@@ -465,7 +465,7 @@
                                                 HexVal.HexOnly node, 
                                                 (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                             {
-                                                return HexDigsToClass.Instance.Generate(node.HexDigs, default);
+                                                return HexDigsToClass.Instance.Generate(node.HexDigs, (context.ClassName, null, context.InnerClasses));
                                             }
 
                                             protected internal override Class Accept(
@@ -526,7 +526,7 @@
                                                         var className = HexDigsToClassName.Instance.Generate(segment, default);
                                                         if (!context.InnerClasses.ContainsKey(className))
                                                         {
-                                                            var @class = HexDigsToClass.Instance.Generate(segment, (className, context.InnerClasses));
+                                                            var @class = HexDigsToClass.Instance.Generate(segment, (className, null, context.InnerClasses));
                                                             context.InnerClasses[className] = @class;
                                                         }
 
@@ -552,7 +552,240 @@
                                                 HexVal.Range node, 
                                                 (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                             {
-                                                node.Inners
+                                                var range = HexDigsRange(
+                                                    node.HexDigs.ToList(),
+                                                    node.Inners.First().HexDigs.ToList());
+
+                                                return new Class(
+                                                    AccessModifier.Public,
+                                                    ClassModifier.Abstract,
+                                                    context.ClassName,
+                                                    Enumerable.Empty<string>(),
+                                                    null,
+                                                    new[]
+                                                    {
+                                                        new ConstructorDefinition(
+                                                            AccessModifier.Private,
+                                                            Enumerable.Empty<MethodParameter>(),
+                                                            Enumerable.Empty<string>()),
+                                                    },
+                                                    new[]
+                                                    {
+                                                        new MethodDefinition(
+                                                            AccessModifier.Protected,
+                                                            ClassModifier.Abstract,
+                                                            false,
+                                                            "TResult",
+                                                            new[]
+                                                            {
+                                                                "TResult",
+                                                                "TContext",
+                                                            },
+                                                            "Dispatch",
+                                                            new[]
+                                                            {
+                                                                new MethodParameter("Visitor<TResult, TContext>", "visitor"),
+                                                                new MethodParameter("TContext", "context"),
+                                                            },
+                                                            null),
+                                                    },
+                                                    range
+                                                        .Select(hexDigs => HexDigsToClass
+                                                            .Instance
+                                                            .Generate(
+                                                                hexDigs,
+                                                                (HexDigsToClassName.Instance.Generate(hexDigs, default), context.ClassName, context.InnerClasses)))
+                                                        .Prepend(new Class(
+                                                            AccessModifier.Public,
+                                                            ClassModifier.Abstract,
+                                                            "Visitor",
+                                                            new[]
+                                                            {
+                                                                "TResult",
+                                                                "TContext",
+                                                            },
+                                                            null,
+                                                            Enumerable.Empty<ConstructorDefinition>(),
+
+                                                            
+                                                    Enumerable.Empty<PropertyDefinition>());
+
+                                            }
+
+                                            private static IEnumerable<IEnumerable<HexDig>> HexDigsRange(
+                                                IReadOnlyList<HexDig> low,
+                                                IReadOnlyList<HexDig> high)
+                                            {
+                                                yield return low;
+                                                var next = Next(low);
+                                                while (!HexDigsEqual(next, high))
+                                                {
+                                                    yield return next;
+                                                }
+
+                                                yield return high;
+                                            }
+
+                                            private static bool HexDigsEqual(IReadOnlyList<HexDig> first, IReadOnlyList<HexDig> second)
+                                            {
+                                                if (first.Count != second.Count)
+                                                {
+                                                    return false;
+                                                }
+
+                                                for (int i = 0; i < first.Count; ++i)
+                                                {
+                                                    if (!HexDigEqual.Instance.Visit(first[i], second[i]))
+                                                    {
+                                                        return false;
+                                                    }
+                                                }
+
+                                                return true;
+                                            }
+
+                                            private sealed class HexDigEqual : HexDig.Visitor<bool, HexDig>
+                                            {
+                                                private HexDigEqual()
+                                                {
+                                                }
+
+                                                public static HexDigEqual Instance { get; } = new HexDigEqual();
+
+                                                protected internal override bool Accept(HexDig.Digit node, HexDig context)
+                                                {
+                                                    if (!(context is HexDig.Digit digit))
+                                                    {
+                                                        return false;
+                                                    }
+
+                                                    return DigitEqual.Instance.Visit(node.Value, digit.Value);
+                                                }
+
+                                                private sealed class DigitEqual : Digit.Visitor<bool, Digit>
+                                                {
+                                                    private DigitEqual()
+                                                    {
+                                                    }
+
+                                                    public static DigitEqual Instance { get; } = new DigitEqual();
+
+                                                    protected internal override bool Accept(Digit.x30 node, Digit context)
+                                                    {
+                                                    }
+
+                                                    protected internal override bool Accept(Digit.x31 node, Digit context)
+                                                    {
+                                                    }
+
+                                                    protected internal override bool Accept(Digit.x32 node, Digit context)
+                                                    {
+                                                    }
+
+                                                    protected internal override bool Accept(Digit.x33 node, Digit context)
+                                                    {
+                                                    }
+
+                                                    protected internal override bool Accept(Digit.x34 node, Digit context)
+                                                    {
+                                                    }
+
+                                                    protected internal override bool Accept(Digit.x35 node, Digit context)
+                                                    {
+                                                    }
+
+                                                    protected internal override bool Accept(Digit.x36 node, Digit context)
+                                                    {
+                                                    }
+
+                                                    protected internal override bool Accept(Digit.x37 node, Digit context)
+                                                    {
+                                                    }
+
+                                                    protected internal override bool Accept(Digit.x38 node, Digit context)
+                                                    {
+                                                    }
+
+                                                    protected internal override bool Accept(Digit.x39 node, Digit context)
+                                                    {
+                                                    }
+                                                }
+
+                                                protected internal override bool Accept(HexDig.A node, HexDig context)
+                                                {
+                                                }
+
+                                                protected internal override bool Accept(HexDig.B node, HexDig context)
+                                                {
+                                                }
+
+                                                protected internal override bool Accept(HexDig.C node, HexDig context)
+                                                {
+                                                }
+
+                                                protected internal override bool Accept(HexDig.D node, HexDig context)
+                                                {
+                                                }
+
+                                                protected internal override bool Accept(HexDig.E node, HexDig context)
+                                                {
+                                                }
+
+                                                protected internal override bool Accept(HexDig.F node, HexDig context)
+                                                {
+                                                }
+                                            }
+
+                                            private static IReadOnlyList<HexDig> Next(IReadOnlyList<HexDig> previous)
+                                            {
+                                                var list = new HexDig[previous.Count];
+
+                                                var overflow = false;
+                                                for (int i = previous.Count - 1; i >= 0; --i)
+                                                {
+                                                    var result = HexDigPlusOne.Instance.Visit(previous[i], default);
+                                                    overflow = result.Overflow;
+                                                    list[i] = result.HexDig;
+                                                }
+
+                                                return list;
+                                            }
+
+                                            private sealed class HexDigPlusOne : HexDig.Visitor<(HexDig HexDig, bool Overflow), Root.Void>
+                                            {
+                                                private HexDigPlusOne()
+                                                {
+                                                }
+
+                                                public static HexDigPlusOne Instance { get; } = new HexDigPlusOne();
+
+                                                protected internal override (HexDig HexDig, bool Overflow) Accept(HexDig.Digit node, Root.Void context)
+                                                {
+                                                }
+
+                                                protected internal override (HexDig HexDig, bool Overflow) Accept(HexDig.A node, Root.Void context)
+                                                {
+                                                }
+
+                                                protected internal override (HexDig HexDig, bool Overflow) Accept(HexDig.B node, Root.Void context)
+                                                {
+                                                }
+
+                                                protected internal override (HexDig HexDig, bool Overflow) Accept(HexDig.C node, Root.Void context)
+                                                {
+                                                }
+
+                                                protected internal override (HexDig HexDig, bool Overflow) Accept(HexDig.D node, Root.Void context)
+                                                {
+                                                }
+
+                                                protected internal override (HexDig HexDig, bool Overflow) Accept(HexDig.E node, Root.Void context)
+                                                {
+                                                }
+
+                                                protected internal override (HexDig HexDig, bool Overflow) Accept(HexDig.F node, Root.Void context)
+                                                {
+                                                }
                                             }
 
                                             private sealed class HexDigsToClass
@@ -565,7 +798,7 @@
 
                                                 public Class Generate(
                                                     IEnumerable<HexDig> hexDigs, 
-                                                    (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                                    (string ClassName, string? BaseClass, Dictionary<string, Class> InnerClasses) context)
                                                 {
                                                     var propertyTypeToCount = new Dictionary<string, int>();
                                                     var properties = HexDigsToProperties
@@ -580,7 +813,7 @@
                                                         ClassModifier.Sealed,
                                                         context.ClassName,
                                                         Enumerable.Empty<string>(),
-                                                        null,
+                                                        context.BaseClass,
                                                         new[]
                                                         {
                                                             new ConstructorDefinition(
