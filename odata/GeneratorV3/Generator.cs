@@ -440,14 +440,37 @@
 
                                         protected internal override Class Accept(NumVal.BinVal node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                         {
+                                            throw new NotImplementedException("TODO");
                                         }
 
                                         protected internal override Class Accept(NumVal.DecVal node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                         {
+                                            throw new NotImplementedException("TODO");
                                         }
 
                                         protected internal override Class Accept(NumVal.HexVal node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                         {
+                                        }
+
+                                        private sealed class HexValToClass : HexVal.Visitor<Class, (string ClassName, Dictionary<string, Class> InnerClasses)>
+                                        {
+                                            private HexValToClass()
+                                            {
+                                            }
+
+                                            public static HexValToClass Instance { get; } = new HexValToClass();
+
+                                            protected internal override Class Accept(HexVal.HexOnly node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                            {
+                                            }
+
+                                            protected internal override Class Accept(HexVal.ConcatenatedHex node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                            {
+                                            }
+
+                                            protected internal override Class Accept(HexVal.Range node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                            {
+                                            }
                                         }
                                     }
 
