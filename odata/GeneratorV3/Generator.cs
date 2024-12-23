@@ -337,7 +337,7 @@
 
                                     protected internal override PropertyDefinition Accept(Element.Option node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
-                                        var innerClassName = OptionToClassName.Instance.Generate(node.Value);
+                                        var innerClassName = AlternationToClassName.Instance.Generate(node.Value.Alternation);
 
                                         if (!context.InnerClasses.ContainsKey(innerClassName))
                                         {
