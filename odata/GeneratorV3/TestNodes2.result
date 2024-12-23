@@ -155,7 +155,7 @@ namespace GeneratorV3
                 this.firstⲻrule_꘡firstⲻrule꘡_1 = firstⲻrule_꘡firstⲻrule꘡_1;
             }
             
-            public firstⲻrule_꘡firstⲻrule꘡ Inners.firstⲻrule_꘡firstⲻrule꘡_1 { get; }
+            public Inners.firstⲻrule_꘡firstⲻrule꘡ firstⲻrule_꘡firstⲻrule꘡_1 { get; }
         }
         
         public sealed class firstⲻrule_firstⲻrule
@@ -227,7 +227,7 @@ namespace GeneratorV3
                 this.firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
             }
             
-            public firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ Inners.firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
+            public Inners.firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
         }
     }
     
