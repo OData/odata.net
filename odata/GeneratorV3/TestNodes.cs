@@ -148,6 +148,18 @@
             public Inners.firstⲻrule_꘡firstⲻrule꘡ firstⲻrule_꘡firstⲻrule꘡_1 { get; }
         }
 
+        public sealed class firstⲻrule_firstⲻrule
+        {
+            public firstⲻrule_firstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, GeneratorV3.firstⲻrule firstⲻrule_2)
+            {
+                this.firstⲻrule_1 = firstⲻrule_1;
+                this.firstⲻrule_2 = firstⲻrule_2;
+            }
+
+            public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
+            public GeneratorV3.firstⲻrule firstⲻrule_2 { get; }
+        }
+
         public sealed class openfirstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡ↃↃ
         {
             public openfirstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡ↃↃ(Inners.firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1)
@@ -225,17 +237,6 @@
             public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_1 { get; }
             public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_2 { get; }
         }
-
-        public sealed class firstⲻrule_firstⲻrule
-        {
-            public firstⲻrule_firstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, GeneratorV3.firstⲻrule firstⲻrule_2)
-            {
-                this.firstⲻrule_1 = firstⲻrule_1;
-                this.firstⲻrule_2 = firstⲻrule_2;
-            }
-
-            public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
-            public GeneratorV3.firstⲻrule firstⲻrule_2 { get; }
-        }
     }
+
 }
