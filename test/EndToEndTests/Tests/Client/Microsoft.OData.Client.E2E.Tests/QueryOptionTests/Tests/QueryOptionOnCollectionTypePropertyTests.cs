@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ExpandQueryOptionTests.cs" company="Microsoft">
+// <copyright file="QueryOptionOnCollectionTypePropertyTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client.E2E.TestCommon;
 using Microsoft.OData.Client.E2E.TestCommon.Common;
 using Microsoft.OData.Client.E2E.TestCommon.Helpers;
+using Microsoft.OData.Client.E2E.TestCommon.Logs;
 using Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Default;
 using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
 using Microsoft.OData.Client.E2E.Tests.QueryOptionTests.Server;
@@ -52,6 +53,9 @@ public class QueryOptionOnCollectionTypePropertyTests : EndToEndTestBase<QueryOp
 
         _model = DefaultEdmModel.GetEdmModel();
         ResetDefaultDataSource();
+
+        // Add the custom TraceListener to log assertion failures
+        _ = new LogAssertTraceListener();
     }
 
     private const string MimeType = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
