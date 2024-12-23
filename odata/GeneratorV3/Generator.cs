@@ -309,8 +309,8 @@
                                                 {
                                                     new PropertyDefinition(
                                                         AccessModifier.Public,
-                                                        groupInnerClassName,
-                                                        $"{(isOnlyRuleName ? Namespace : InnersClassName)}.{groupInnerClassName}_1",
+                                                        $"{(isOnlyRuleName ? Namespace : InnersClassName)}.{groupInnerClassName}",
+                                                        $"{groupInnerClassName}_1",
                                                         true,
                                                         false),
                                                 });
