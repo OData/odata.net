@@ -268,8 +268,14 @@
                                         (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
                                         //// TODO if alternation is just a rule name, then we don't need an inner class and we need to use the GeneratorV3 namespace instead of inners
+                                        var isOnlyRuleName =
+                                            !node.Value.Alternation.Inners.Any() &&
+                                            !node.Value.Alternation.Concatenation.Inners.Any() &&
+                                            node.Value.Alternation.Concatenation.Repetition is Repetition.ElementOnly elementOnly &&
+                                            elementOnly.Element is Element.RuleName;
+                                        
                                         var groupInnerClassName = AlternationToClassName.Instance.Generate(node.Value.Alternation);
-                                        if (!context.InnerClasses.ContainsKey(groupInnerClassName))
+                                        if (!isOnlyRuleName && !context.InnerClasses.ContainsKey(groupInnerClassName))
                                         {
                                             context.InnerClasses[groupInnerClassName] = AlternationGenerator.Instance.Generate(node.Value.Alternation, (groupInnerClassName, context.InnerClasses));
                                         }
@@ -290,7 +296,7 @@
                                                         AccessModifier.Public,
                                                         new[]
                                                         {
-                                                            new MethodParameter($"{InnersClassName}.{groupInnerClassName}", $"{groupInnerClassName}_1"),
+                                                            new MethodParameter($"{(isOnlyRuleName ? Namespace : InnersClassName)}.{groupInnerClassName}", $"{groupInnerClassName}_1"),
                                                         },
                                                         new[]
                                                         {
@@ -304,7 +310,7 @@
                                                     new PropertyDefinition(
                                                         AccessModifier.Public,
                                                         groupInnerClassName,
-                                                        $"{groupInnerClassName}_1",
+                                                        $"{(isOnlyRuleName ? Namespace : InnersClassName)}.{groupInnerClassName}_1",
                                                         true,
                                                         false),
                                                 });
