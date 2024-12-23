@@ -39,7 +39,7 @@
         {
             public static char Dash { get; } = 'ⲻ'; //// TODO parameterize these
 
-            public static char OpenParenthesis { get; } = 'Ⲥ'; 
+            public static string OpenParenthesis { get; } = "open"; //// TODO 'Ⲥ'; 
 
             public static char CloseParenthesis { get; } = 'Ↄ';
 
