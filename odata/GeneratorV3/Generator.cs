@@ -472,6 +472,80 @@
                                                 HexVal.ConcatenatedHex node, 
                                                 (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                             {
+                                                var segments = node
+                                                    .Inners
+                                                    .Select(inner => inner.HexDigs)
+                                                    .Prepend(node.HexDigs);
+
+                                                var propertyTypeToCount = new Dictionary<string, int>();
+                                                var properties = SegmentsToProperties
+                                                    .Instance
+                                                    .Generate(
+                                                        segments,
+                                                        (propertyTypeToCount, context.InnerClasses))
+                                                    .ToList();
+
+                                                return new Class(
+                                                    AccessModifier.Public,
+                                                    ClassModifier.Sealed,
+                                                    context.ClassName,
+                                                    Enumerable.Empty<string>(),
+                                                    null,
+                                                    new[]
+                                                    {
+                                                        new ConstructorDefinition(
+                                                            AccessModifier.Public,
+                                                            properties
+                                                                .Select(property =>
+                                                                    new MethodParameter(
+                                                                        property.Type,
+                                                                        property.Name)),
+                                                            properties
+                                                                .Select(property =>
+                                                                    $"this.{property.Name} = {property.Name};")),
+                                                    },
+                                                    Enumerable.Empty<MethodDefinition>(),
+                                                    Enumerable.Empty<Class>(),
+                                                    properties);
+                                            }
+
+                                            private sealed class SegmentsToProperties
+                                            {
+                                                private SegmentsToProperties()
+                                                {
+                                                }
+
+                                                public static SegmentsToProperties Instance { get; } = new SegmentsToProperties();
+
+                                                public IEnumerable<PropertyDefinition> Generate(
+                                                    IEnumerable<IEnumerable<HexDig>> segments, 
+                                                    (Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
+                                                {
+                                                    foreach (var segment in segments)
+                                                    {
+                                                        var className = HexDigsToClassName.Instance.Generate(segment, default);
+                                                        if (!context.InnerClasses.ContainsKey(className))
+                                                        {
+                                                            var @class = HexDigsToClass.Instance.Generate(segment, (className, context.InnerClasses));
+                                                            context.InnerClasses[className] = @class;
+                                                        }
+
+                                                        if (!context.PropertyTypeToCount.TryGetValue(className, out var count))
+                                                        {
+                                                            count = 0;
+                                                        }
+
+                                                        ++count;
+                                                        context.PropertyTypeToCount[className] = count;
+
+                                                        yield return new PropertyDefinition(
+                                                            AccessModifier.Public,
+                                                            $"{InnersClassName}.{className}",
+                                                            $"{className}_{count}",
+                                                            true,
+                                                            false);
+                                                    }
+                                                }
                                             }
 
                                             protected internal override Class Accept(
@@ -952,6 +1026,19 @@
             }
 
             protected internal override string Accept(HexVal.Range node, Root.Void context)
+            {
+            }
+        }
+
+        private sealed class HexDigsToClassName
+        {
+            private HexDigsToClassName()
+            {
+            }
+
+            public static HexDigsToClassName Instance { get; } = new HexDigsToClassName();
+
+            public string Generate(IEnumerable<HexDig> hexDigs, Root.Void context)
             {
             }
         }
