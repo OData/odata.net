@@ -208,19 +208,19 @@
             }
         }
 
-        public sealed class firstⲻrule_ꓸжⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_ж꘡firstⲻrule_firstⲻrule꘡_ж1firstⲻrule_1жfirstⲻrule
+        public sealed class firstⲻrule_asteriskopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_asterisk꘡firstⲻrule_firstⲻrule꘡_asterisk1firstⲻrule_1asteriskfirstⲻrule
         {
-            public firstⲻrule_ꓸжⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_ж꘡firstⲻrule_firstⲻrule꘡_ж1firstⲻrule_1жfirstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ? Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, IEnumerable<Inners.firstⲻrule_firstⲻrule?> firstⲻrule_firstⲻrules_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_2)
+            public firstⲻrule_asteriskopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_asterisk꘡firstⲻrule_firstⲻrule꘡_asterisk1firstⲻrule_1asteriskfirstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.openfirstⲻrule_꘡firstⲻrule꘡Ↄ? openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, IEnumerable<Inners.firstⲻrule_firstⲻrule?> firstⲻrule_firstⲻrules_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_2)
             {
                 this.firstⲻrule_1 = firstⲻrule_1;
-                this.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
+                this.openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
                 this.firstⲻrule_firstⲻrules_1 = firstⲻrule_firstⲻrules_1;
                 this.firstⲻrules_1 = firstⲻrules_1;
                 this.firstⲻrules_2 = firstⲻrules_2;
             }
 
             public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
-            public Inners.Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ? Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
+            public Inners.openfirstⲻrule_꘡firstⲻrule꘡Ↄ? openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
             public IEnumerable<Inners.firstⲻrule_firstⲻrule?> firstⲻrule_firstⲻrules_1 { get; }
             public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_1 { get; }
             public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrules_2 { get; }
