@@ -662,7 +662,7 @@
 
             protected internal override string Accept(Element.CharVal node, Root.Void context)
             {
-                throw new NotImplementedException("TODO");
+                return CharValToClassName.Instance.Generate(node.Value);
             }
 
             protected internal override string Accept(Element.NumVal node, Root.Void context)
