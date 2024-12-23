@@ -787,12 +787,19 @@
                                             {
                                                 var list = new HexDig[previous.Count];
 
-                                                var overflow = false;
+                                                var overflow = true;
                                                 for (int i = previous.Count - 1; i >= 0; --i)
                                                 {
-                                                    var result = HexDigPlusOne.Instance.Visit(previous[i], default);
-                                                    overflow = result.Overflow;
-                                                    list[i] = result.HexDig;
+                                                    if (overflow)
+                                                    {
+                                                        var result = HexDigPlusOne.Instance.Visit(previous[i], default);
+                                                        overflow = result.Overflow;
+                                                        list[i] = result.HexDig;
+                                                    }
+                                                    else
+                                                    {
+                                                        list[i] = previous[i];
+                                                    }
                                                 }
 
                                                 return list;
