@@ -17,7 +17,14 @@
             IEnumerable<PropertyDefinition> properties)
             : this(
                   accessModifier,
-                  classModifier == null ? ClassModifier.None : classModifier.Value ? ClassModifier.Abstract : ClassModifier.Sealed)
+                  classModifier == null ? ClassModifier.None : classModifier.Value ? ClassModifier.Abstract : ClassModifier.Sealed,
+                  name,
+                  genericTypeParameters,
+                  baseType,
+                  constructors,
+                  methods,
+                  nestedClasses,
+                  properties)
         {
             //// TODO remove this overload
         }
