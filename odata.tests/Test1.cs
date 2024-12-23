@@ -629,16 +629,17 @@ second-rule = first-rule
                         }
 
                         Transcribe(method.AccessModifier, builder);
-                        if (method.IsAbstract != null)
+                        if (method.ClassModifier == ClassModifier.Abstract)
                         {
-                            if (method.IsAbstract.Value)
-                            {
-                                builder.Append("abstract ");
-                            }
-                            else
-                            {
-                                builder.Append("sealed ");
-                            }
+                            builder.Append("abstract ");
+                        }
+                        else if (method.ClassModifier == ClassModifier.Sealed)
+                        {
+                            builder.Append("sealed ");
+                        }
+                        else if (method.ClassModifier == ClassModifier.Static)
+                        {
+                            builder.Append("static ");
                         }
 
                         if (method.IsOverride)

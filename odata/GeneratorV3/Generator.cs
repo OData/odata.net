@@ -450,6 +450,7 @@
 
                                         protected internal override Class Accept(NumVal.HexVal node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                         {
+                                            return HexValToClass.Instance.Visit(node.Value, context);
                                         }
 
                                         private sealed class HexValToClass : HexVal.Visitor<Class, (string ClassName, Dictionary<string, Class> InnerClasses)>
@@ -460,16 +461,100 @@
 
                                             public static HexValToClass Instance { get; } = new HexValToClass();
 
-                                            protected internal override Class Accept(HexVal.HexOnly node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                            protected internal override Class Accept(
+                                                HexVal.HexOnly node, 
+                                                (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                            {
+                                                return HexDigsToClass.Instance.Generate(node.HexDigs, default);
+                                            }
+
+                                            protected internal override Class Accept(
+                                                HexVal.ConcatenatedHex node, 
+                                                (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                             {
                                             }
 
-                                            protected internal override Class Accept(HexVal.ConcatenatedHex node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                            protected internal override Class Accept(
+                                                HexVal.Range node, 
+                                                (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                             {
                                             }
 
-                                            protected internal override Class Accept(HexVal.Range node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                            private sealed class HexDigsToClass
                                             {
+                                                private HexDigsToClass()
+                                                {
+                                                }
+
+                                                public static HexDigsToClass Instance { get; } = new HexDigsToClass();
+
+                                                public Class Generate(
+                                                    IEnumerable<HexDig> hexDigs, 
+                                                    (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
+                                                {
+                                                    foreach (var hexDig in hexDigs)
+                                                    {
+                                                    }
+                                                }
+
+                                                private sealed class HexDigToClass : HexDig.Visitor<Class, Root.Void>
+                                                {
+                                                    private HexDigToClass()
+                                                    {
+                                                    }
+
+                                                    public static HexDigToClass Instance { get; } = new HexDigToClass();
+
+                                                    protected internal override Class Accept(HexDig.Digit node, Root.Void context)
+                                                    {
+                                                    }
+
+                                                    protected internal override Class Accept(HexDig.A node, Root.Void context)
+                                                    {
+                                                        var className = HexDigToClassName.Instance.Visit(node, context);
+                                                        return new Class(
+                                                            AccessModifier.Public,
+                                                            ClassModifier.Sealed,
+                                                            className,
+                                                            Enumerable.Empty<string>(),
+                                                            null,
+                                                            new[]
+                                                            {
+                                                                new ConstructorDefinition(
+                                                                    AccessModifier.Private,
+                                                                    Enumerable.Empty<MethodParameter>(),
+                                                                    Enumerable.Empty<string>()),
+                                                            },
+                                                            Enumerable.Empty<MethodDefinition>(),
+                                                            Enumerable.Empty<Class>(),
+                                                            new[]
+                                                            {
+                                                                new MethodDefinition(
+                                                                    AccessModifier.Public,
+                                                                    )
+                                                            })
+                                                    }
+
+                                                    protected internal override Class Accept(HexDig.B node, Root.Void context)
+                                                    {
+                                                    }
+
+                                                    protected internal override Class Accept(HexDig.C node, Root.Void context)
+                                                    {
+                                                    }
+
+                                                    protected internal override Class Accept(HexDig.D node, Root.Void context)
+                                                    {
+                                                    }
+
+                                                    protected internal override Class Accept(HexDig.E node, Root.Void context)
+                                                    {
+                                                    }
+
+                                                    protected internal override Class Accept(HexDig.F node, Root.Void context)
+                                                    {
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -837,6 +922,43 @@
             }
 
             protected internal override string Accept(HexVal.Range node, Root.Void context)
+            {
+            }
+        }
+
+        private sealed class HexDigToClassName : HexDig.Visitor<string, Root.Void>
+        {
+            private HexDigToClassName()
+            {
+            }
+
+            public static HexDigToClassName Instance { get; } = new HexDigToClassName();
+
+            protected internal override string Accept(HexDig.Digit node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(HexDig.A node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(HexDig.B node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(HexDig.C node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(HexDig.D node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(HexDig.E node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(HexDig.F node, Root.Void context)
             {
             }
         }

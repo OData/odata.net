@@ -103,9 +103,22 @@
     public sealed class MethodDefinition
     {
         public MethodDefinition(AccessModifier accessModifier, bool? isAbstract, bool @override, string returnType, IEnumerable<string> genericTypeParameters, string methodName, IEnumerable<MethodParameter> parameters, string? body)
+            : this(
+                  accessModifier,
+                  isAbstract == null ? ClassModifier.None : isAbstract.Value ? ClassModifier.Abstract : ClassModifier.Sealed,
+                  @override,
+                  returnType,
+                  genericTypeParameters,
+                  methodName,
+                  parameters, 
+                  body)
+        {
+        }
+
+        public MethodDefinition(AccessModifier accessModifier, ClassModifier classModifier, bool @override, string returnType, IEnumerable<string> genericTypeParameters, string methodName, IEnumerable<MethodParameter> parameters, string? body)
         {
             AccessModifier = accessModifier;
-            IsAbstract = isAbstract;
+            ClassModifier = classModifier;
             IsOverride = @override;
             ReturnType = returnType;
             GenericTypeParameters = genericTypeParameters;
@@ -116,7 +129,7 @@
 
         public AccessModifier AccessModifier { get; }
 
-        public bool? IsAbstract { get; }
+        public ClassModifier ClassModifier { get; }
 
         public bool IsOverride { get; }
 
