@@ -552,6 +552,7 @@
                                                 HexVal.Range node, 
                                                 (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                             {
+                                                node.Inners
                                             }
 
                                             private sealed class HexDigsToClass

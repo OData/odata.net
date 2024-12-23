@@ -82,7 +82,7 @@
 
             public x78 X { get; }
             public IEnumerable<HexDig> HexDigs { get; }
-            public IEnumerable<Inner> Inners { get; }
+            public IEnumerable<Inner> Inners { get; } //// TODO this is actually a one-of
 
             public sealed class Inner
             {
