@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using System.Xml.Linq;
     using AbnfParser.CstNodes;
     using AbnfParser.CstNodes.Core;
     using AbnfParserGenerator;
@@ -263,16 +264,19 @@
                                             false);
                                     }
 
+                                    private static bool IsOnlyRuleName(Alternation alternation)
+                                    {
+                                        return !alternation.Inners.Any() &&
+                                            !alternation.Concatenation.Inners.Any() &&
+                                            alternation.Concatenation.Repetition is Repetition.ElementOnly elementOnly &&
+                                            elementOnly.Element is Element.RuleName;
+                                    }
+
                                     protected internal override PropertyDefinition Accept(
                                         Element.Group node, 
                                         (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
-                                        //// TODO if alternation is just a rule name, then we don't need an inner class and we need to use the GeneratorV3 namespace instead of inners
-                                        var isOnlyRuleName =
-                                            !node.Value.Alternation.Inners.Any() &&
-                                            !node.Value.Alternation.Concatenation.Inners.Any() &&
-                                            node.Value.Alternation.Concatenation.Repetition is Repetition.ElementOnly elementOnly &&
-                                            elementOnly.Element is Element.RuleName;
+                                        var isOnlyRuleName = IsOnlyRuleName(node.Value.Alternation);
                                         
                                         var groupInnerClassName = AlternationToClassName.Instance.Generate(node.Value.Alternation);
                                         if (!isOnlyRuleName && !context.InnerClasses.ContainsKey(groupInnerClassName))
@@ -344,9 +348,10 @@
 
                                     protected internal override PropertyDefinition Accept(Element.Option node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
+                                        var isOnlyRuleName = IsOnlyRuleName(node.Value.Alternation);
                                         var innerClassName = AlternationToClassName.Instance.Generate(node.Value.Alternation);
 
-                                        if (!context.InnerClasses.ContainsKey(innerClassName))
+                                        if (!isOnlyRuleName && !context.InnerClasses.ContainsKey(innerClassName))
                                         {
                                             context.InnerClasses[innerClassName] = AlternationGenerator
                                                 .Instance
