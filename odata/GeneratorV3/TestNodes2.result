@@ -2,7 +2,7 @@ namespace GeneratorV3
 {
     using System.Collections.Generic;
     
-    public class firstⲻrule
+    public sealed class firstⲻrule
     {
         public firstⲻrule(GeneratorV3.secondⲻrule secondⲻrule_1)
         {
@@ -12,7 +12,7 @@ namespace GeneratorV3
         public GeneratorV3.secondⲻrule secondⲻrule_1 { get; }
     }
     
-    public class secondⲻrule
+    public abstract class secondⲻrule
     {
         private secondⲻrule()
         {
@@ -20,7 +20,7 @@ namespace GeneratorV3
         
         protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
         
-        public class Visitor<TResult, TContext>
+        public abstract class Visitor<TResult, TContext>
         {
             public TResult Visit(secondⲻrule node, TContext context)
             {
@@ -34,7 +34,7 @@ namespace GeneratorV3
             protected internal abstract TResult Accept(secondⲻrule.firstⲻrule_openfirstⲻrule_꘡firstⲻrule꘡Ↄ_꘡firstⲻrule_firstⲻrule꘡ node, TContext context);
         }
         
-        public class firstⲻrule : secondⲻrule
+        public sealed class firstⲻrule : secondⲻrule
         {
             public firstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1)
             {
@@ -49,7 +49,7 @@ namespace GeneratorV3
             }
         }
         
-        public class firstⲻrule_firstⲻrule : secondⲻrule
+        public sealed class firstⲻrule_firstⲻrule : secondⲻrule
         {
             public firstⲻrule_firstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, GeneratorV3.firstⲻrule firstⲻrule_2)
             {
@@ -66,7 +66,7 @@ namespace GeneratorV3
             }
         }
         
-        public class firstⲻrule_asteriskopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_asterisk꘡firstⲻrule_firstⲻrule꘡_asterisk1firstⲻrule_1asteriskfirstⲻrule : secondⲻrule
+        public sealed class firstⲻrule_asteriskopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_asterisk꘡firstⲻrule_firstⲻrule꘡_asterisk1firstⲻrule_1asteriskfirstⲻrule : secondⲻrule
         {
             public firstⲻrule_asteriskopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_asterisk꘡firstⲻrule_firstⲻrule꘡_asterisk1firstⲻrule_1asteriskfirstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, IEnumerable<Inners.openfirstⲻrule_꘡firstⲻrule꘡Ↄ> openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, IEnumerable<Inners.firstⲻrule_firstⲻrule?> firstⲻrule_firstⲻrule_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_2, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_3)
             {
@@ -89,7 +89,7 @@ namespace GeneratorV3
             }
         }
         
-        public class openfirstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡ↃↃ : secondⲻrule
+        public sealed class openfirstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡ↃↃ : secondⲻrule
         {
             public openfirstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡ↃↃ(Inners.openfirstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡ↃↃ openfirstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡ↃↃ_1)
             {
@@ -104,7 +104,7 @@ namespace GeneratorV3
             }
         }
         
-        public class firstⲻrule_openfirstⲻrule_꘡firstⲻrule꘡Ↄ_꘡firstⲻrule_firstⲻrule꘡ : secondⲻrule
+        public sealed class firstⲻrule_openfirstⲻrule_꘡firstⲻrule꘡Ↄ_꘡firstⲻrule_firstⲻrule꘡ : secondⲻrule
         {
             public firstⲻrule_openfirstⲻrule_꘡firstⲻrule꘡Ↄ_꘡firstⲻrule_firstⲻrule꘡(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.openfirstⲻrule_꘡firstⲻrule꘡Ↄ openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, Inners.firstⲻrule_firstⲻrule? firstⲻrule_firstⲻrule_1)
             {
@@ -124,9 +124,9 @@ namespace GeneratorV3
         }
     }
     
-    public class Inners
+    public static class Inners
     {
-        public class firstⲻrule
+        public sealed class firstⲻrule
         {
             public firstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1)
             {
@@ -136,7 +136,7 @@ namespace GeneratorV3
             public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
         }
         
-        public class firstⲻrule_꘡firstⲻrule꘡
+        public sealed class firstⲻrule_꘡firstⲻrule꘡
         {
             public firstⲻrule_꘡firstⲻrule꘡(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.firstⲻrule? firstⲻrule_2)
             {
@@ -148,7 +148,7 @@ namespace GeneratorV3
             public Inners.firstⲻrule? firstⲻrule_2 { get; }
         }
         
-        public class openfirstⲻrule_꘡firstⲻrule꘡Ↄ
+        public sealed class openfirstⲻrule_꘡firstⲻrule꘡Ↄ
         {
             public openfirstⲻrule_꘡firstⲻrule꘡Ↄ(Inners.firstⲻrule_꘡firstⲻrule꘡ firstⲻrule_꘡firstⲻrule꘡_1)
             {
@@ -158,7 +158,7 @@ namespace GeneratorV3
             public firstⲻrule_꘡firstⲻrule꘡ firstⲻrule_꘡firstⲻrule꘡_1 { get; }
         }
         
-        public class firstⲻrule_firstⲻrule
+        public sealed class firstⲻrule_firstⲻrule
         {
             public firstⲻrule_firstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, GeneratorV3.firstⲻrule firstⲻrule_2)
             {
@@ -170,7 +170,7 @@ namespace GeneratorV3
             public GeneratorV3.firstⲻrule firstⲻrule_2 { get; }
         }
         
-        public class firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ
+        public abstract class firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ
         {
             private firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ()
             {
@@ -178,7 +178,7 @@ namespace GeneratorV3
             
             protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
             
-            public class Visitor<TResult, TContext>
+            public abstract class Visitor<TResult, TContext>
             {
                 public TResult Visit(firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ node, TContext context)
                 {
@@ -189,7 +189,7 @@ namespace GeneratorV3
                 protected internal abstract TResult Accept(firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ.openfirstⲻrule_꘡firstⲻrule꘡Ↄ node, TContext context);
             }
             
-            public class firstⲻrule : firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ
+            public sealed class firstⲻrule : firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ
             {
                 public firstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1)
                 {
@@ -204,7 +204,7 @@ namespace GeneratorV3
                 }
             }
             
-            public class openfirstⲻrule_꘡firstⲻrule꘡Ↄ : firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ
+            public sealed class openfirstⲻrule_꘡firstⲻrule꘡Ↄ : firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ
             {
                 public openfirstⲻrule_꘡firstⲻrule꘡Ↄ(Inners.openfirstⲻrule_꘡firstⲻrule꘡Ↄ openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1)
                 {
@@ -220,7 +220,7 @@ namespace GeneratorV3
             }
         }
         
-        public class openfirstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡ↃↃ
+        public sealed class openfirstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡ↃↃ
         {
             public openfirstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡ↃↃ(Inners.firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_1)
             {
