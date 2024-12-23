@@ -170,7 +170,7 @@
 
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(Inners.firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ node, TContext context)
+                public TResult Visit(firstⲻruleⳆopenfirstⲻrule_꘡firstⲻrule꘡Ↄ node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
