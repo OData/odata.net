@@ -128,14 +128,14 @@ namespace GeneratorV3
     {
         public sealed class firstⲻrule_꘡firstⲻrule꘡
         {
-            public firstⲻrule_꘡firstⲻrule꘡(GeneratorV3.firstⲻrule firstⲻrule_1, Inners.firstⲻrule? firstⲻrule_2)
+            public firstⲻrule_꘡firstⲻrule꘡(GeneratorV3.firstⲻrule firstⲻrule_1, GeneratorV3.firstⲻrule? firstⲻrule_2)
             {
                 this.firstⲻrule_1 = firstⲻrule_1;
                 this.firstⲻrule_2 = firstⲻrule_2;
             }
             
             public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
-            public Inners.firstⲻrule? firstⲻrule_2 { get; }
+            public GeneratorV3.firstⲻrule? firstⲻrule_2 { get; }
         }
         
         public sealed class openfirstⲻrule_꘡firstⲻrule꘡Ↄ
