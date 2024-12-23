@@ -667,7 +667,8 @@
 
             protected internal override string Accept(Element.NumVal node, Root.Void context)
             {
-                throw new NotImplementedException("TODO");
+                //// TODO do you like this approach?
+                return node.GetType().Name;
             }
 
             protected internal override string Accept(Element.ProseVal node, Root.Void context)
