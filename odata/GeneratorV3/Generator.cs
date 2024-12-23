@@ -360,7 +360,7 @@
                                                     (innerClassName, context.InnerClasses));
                                         }
 
-                                        var propertyType = $"{InnersClassName}.{innerClassName}?";
+                                        var propertyType = $"{(isOnlyRuleName ? Namespace : InnersClassName)}.{innerClassName}?";
                                         if (context.IsCollection)
                                         {
                                             propertyType = $"IEnumerable<{propertyType}>";
