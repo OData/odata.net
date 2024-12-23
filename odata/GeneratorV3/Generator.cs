@@ -393,7 +393,41 @@
 
                                     protected internal override PropertyDefinition Accept(Element.NumVal node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
-                                        throw new NotImplementedException("TODO");
+                                        var innerClassName = NumValToClassName.Instance.Generate(node.Value);
+
+                                        if (!context.InnerClasses.ContainsKey(innerClassName))
+                                        {
+                                            
+
+                                            context.InnerClasses[innerClassName] = groupClass;
+                                        }
+
+                                        var propertyType = $"{InnersClassName}.{innerClassName}";
+                                        if (context.IsCollection)
+                                        {
+                                            propertyType = $"IEnumerable<{propertyType}>";
+                                        }
+
+                                        if (!context.PropertyTypeToCount.TryGetValue(innerClassName, out var count))
+                                        {
+                                            count = 0;
+                                        }
+
+                                        ++count;
+                                        context.PropertyTypeToCount[innerClassName] = count;
+
+                                        var propertyName = $"{innerClassName}_{count}";
+
+                                        return new PropertyDefinition(
+                                            AccessModifier.Public,
+                                            propertyType,
+                                            propertyName,
+                                            true,
+                                            false);
+                                    }
+
+                                    private sealed class NumValToClass
+                                    {
                                     }
 
                                     protected internal override PropertyDefinition Accept(Element.ProseVal node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
@@ -667,14 +701,45 @@
 
             protected internal override string Accept(Element.NumVal node, Root.Void context)
             {
-                //// TODO do you like this approach?
-                return node.GetType().Name;
+                return NumValToClassName.Instance.Visit(node.Value);
             }
 
             protected internal override string Accept(Element.ProseVal node, Root.Void context)
             {
                 throw new NotImplementedException("TODO");
             }
+        }
+
+        private sealed class NumValToClassName : NumVal.Visitor<string, Root.Void>
+        {
+            private NumValToClassName()
+            {
+            }
+
+            public static NumValToClassName Instance { get; } = new NumValToClassName();
+
+            protected internal override string Accept(NumVal.BinVal node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(NumVal.DecVal node, Root.Void context)
+            {
+            }
+
+            protected internal override string Accept(NumVal.HexVal node, Root.Void context)
+            {
+            }
+        }
+
+        private sealed class BinValToClassName
+        {
+            private BinValToClassName()
+            {
+            }
+
+            public static BinValToClassName Instance { get; } = new BinValToClassName();
+
+
         }
 
         private sealed class CharValToClassName
