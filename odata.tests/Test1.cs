@@ -342,6 +342,40 @@
             Assert.AreEqual(expected, csharp);
         }
 
+        [TestMethod]
+        public void GenerateForAbnf()
+        {
+            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
+            var coreRulesText = File.ReadAllText(coreRulesPath);
+            var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
+            var abnfRulesText = File.ReadAllText(abnfRulesPath);
+            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
+            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
+
+            var classes = GeneratorV3.Generator.Intance.Generate(cst, default);
+
+            var classTranscriber = new ClassTranscriber();
+
+            var stringBuilder = new StringBuilder();
+            var builder = new Builder(stringBuilder, "    ");
+            builder.AppendLine("namespace GeneratorV3");
+            builder.AppendLine("{");
+            builder.Indent();
+            builder.AppendLine("using System.Collections.Generic;");
+            builder.AppendLine();
+
+            foreach (var @class in classes)
+            {
+                classTranscriber.Transcribe(@class, builder);
+                builder.AppendLine();
+            }
+
+            builder.Unindent();
+            builder.AppendLine("}");
+
+            var csharp = stringBuilder.ToString();
+        }
+
         private static string TestAbnf =
 """
 first-rule = second-rule
