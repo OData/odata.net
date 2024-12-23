@@ -68,7 +68,7 @@
 
         public sealed class firstⲻrule_asteriskopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_asterisk꘡firstⲻrule_firstⲻrule꘡_asterisk1firstⲻrule_1asteriskfirstⲻrule : secondⲻrule
         {
-            public firstⲻrule_asteriskopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_asterisk꘡firstⲻrule_firstⲻrule꘡_asterisk1firstⲻrule_1asteriskfirstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, IEnumerable<Inners.openfirstⲻrule_꘡firstⲻrule꘡Ↄ?> openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, IEnumerable<Inners.firstⲻrule_firstⲻrule?> firstⲻrule_firstⲻrule_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_2, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_3)
+            public firstⲻrule_asteriskopenfirstⲻrule_꘡firstⲻrule꘡Ↄ_asterisk꘡firstⲻrule_firstⲻrule꘡_asterisk1firstⲻrule_1asteriskfirstⲻrule(GeneratorV3.firstⲻrule firstⲻrule_1, IEnumerable<Inners.openfirstⲻrule_꘡firstⲻrule꘡Ↄ> openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, IEnumerable<Inners.firstⲻrule_firstⲻrule?> firstⲻrule_firstⲻrule_1, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_2, IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_3)
             {
                 this.firstⲻrule_1 = firstⲻrule_1;
                 this.openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
@@ -78,7 +78,7 @@
             }
 
             public GeneratorV3.firstⲻrule firstⲻrule_1 { get; }
-            public IEnumerable<Inners.openfirstⲻrule_꘡firstⲻrule꘡Ↄ?> openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
+            public IEnumerable<Inners.openfirstⲻrule_꘡firstⲻrule꘡Ↄ> openfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 { get; }
             public IEnumerable<Inners.firstⲻrule_firstⲻrule?> firstⲻrule_firstⲻrule_1 { get; }
             public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_2 { get; }
             public IEnumerable<GeneratorV3.firstⲻrule> firstⲻrule_3 { get; }
