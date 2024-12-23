@@ -267,32 +267,65 @@
                                         Element.Group node, 
                                         (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
-                                        var innerClassName = GroupToClassName.Instance.Generate(node.Value);
-
-                                        if (!context.InnerClasses.ContainsKey(innerClassName))
+                                        var groupInnerClassName = AlternationToClassName.Instance.Generate(node.Value.Alternation);
+                                        if (!context.InnerClasses.ContainsKey(groupInnerClassName))
                                         {
-                                            context.InnerClasses[innerClassName] = AlternationGenerator
-                                                .Instance
-                                                .Generate(
-                                                    node.Value.Alternation, 
-                                                    (innerClassName, context.InnerClasses));
+                                            context.InnerClasses[groupInnerClassName] = AlternationGenerator.Instance.Generate(node.Value.Alternation, (groupInnerClassName, context.InnerClasses));
                                         }
 
-                                        var propertyType = $"{InnersClassName}.{innerClassName}";
+                                        var groupClassName = GroupToClassName.Instance.Generate(node.Value);
+
+                                        if (!context.InnerClasses.ContainsKey(groupClassName))
+                                        {
+                                            var groupClass = new Class(
+                                                AccessModifier.Public,
+                                                false,
+                                                groupClassName,
+                                                Enumerable.Empty<string>(),
+                                                null,
+                                                new[]
+                                                {
+                                                    new ConstructorDefinition(
+                                                        AccessModifier.Public,
+                                                        new[]
+                                                        {
+                                                            new MethodParameter(groupInnerClassName, $"{groupInnerClassName}_1"),
+                                                        },
+                                                        new[]
+                                                        {
+                                                            $"this.{groupInnerClassName}_1 = {groupInnerClassName}_1",
+                                                        }),
+                                                },
+                                                Enumerable.Empty<MethodDefinition>(),
+                                                Enumerable.Empty<Class>(),
+                                                new[]
+                                                {
+                                                    new PropertyDefinition(
+                                                        AccessModifier.Public,
+                                                        groupInnerClassName,
+                                                        $"{groupInnerClassName}_1",
+                                                        true,
+                                                        false),
+                                                });
+
+                                            context.InnerClasses[groupClassName] = groupClass;
+                                        }
+
+                                        var propertyType = $"{InnersClassName}.{groupClassName}";
                                         if (context.IsCollection)
                                         {
                                             propertyType = $"IEnumerable<{propertyType}>";
                                         }
 
-                                        if (!context.PropertyTypeToCount.TryGetValue(innerClassName, out var count))
+                                        if (!context.PropertyTypeToCount.TryGetValue(groupClassName, out var count))
                                         {
                                             count = 0;
                                         }
 
                                         ++count;
-                                        context.PropertyTypeToCount[innerClassName] = count;
+                                        context.PropertyTypeToCount[groupClassName] = count;
 
-                                        var propertyName = $"{innerClassName}_{count}";
+                                        var propertyName = $"{groupClassName}_{count}";
 
                                         return new PropertyDefinition(
                                             AccessModifier.Public,
