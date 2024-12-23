@@ -808,30 +808,96 @@
 
                                                 protected internal override (HexDig HexDig, bool Overflow) Accept(HexDig.Digit node, Root.Void context)
                                                 {
+                                                    return (DigitPlusOne.Instance.Visit(node.Value, default), false);
+                                                }
+
+                                                private sealed class DigitPlusOne : Digit.Visitor<HexDig, Root.Void>
+                                                {
+                                                    private DigitPlusOne()
+                                                    {
+                                                    }
+
+                                                    public static DigitPlusOne Instance { get; } = new DigitPlusOne();
+
+                                                    protected internal override HexDig Accept(Digit.x30 node, Root.Void context)
+                                                    {
+                                                        return new HexDig.Digit(new Digit.x31(x31.Instance));
+                                                    }
+
+                                                    protected internal override HexDig Accept(Digit.x31 node, Root.Void context)
+                                                    {
+                                                        return new HexDig.Digit(new Digit.x32(x32.Instance));
+                                                    }
+
+                                                    protected internal override HexDig Accept(Digit.x32 node, Root.Void context)
+                                                    {
+                                                        return new HexDig.Digit(new Digit.x33(x33.Instance));
+                                                    }
+
+                                                    protected internal override HexDig Accept(Digit.x33 node, Root.Void context)
+                                                    {
+                                                        return new HexDig.Digit(new Digit.x34(x34.Instance));
+                                                    }
+
+                                                    protected internal override HexDig Accept(Digit.x34 node, Root.Void context)
+                                                    {
+                                                        return new HexDig.Digit(new Digit.x35(x35.Instance));
+                                                    }
+
+                                                    protected internal override HexDig Accept(Digit.x35 node, Root.Void context)
+                                                    {
+                                                        return new HexDig.Digit(new Digit.x36(x36.Instance));
+                                                    }
+
+                                                    protected internal override HexDig Accept(Digit.x36 node, Root.Void context)
+                                                    {
+                                                        return new HexDig.Digit(new Digit.x37(x37.Instance));
+                                                    }
+
+                                                    protected internal override HexDig Accept(Digit.x37 node, Root.Void context)
+                                                    {
+                                                        return new HexDig.Digit(new Digit.x38(x38.Instance));
+                                                    }
+
+                                                    protected internal override HexDig Accept(Digit.x38 node, Root.Void context)
+                                                    {
+                                                        return new HexDig.Digit(new Digit.x39(x39.Instance));
+                                                    }
+
+                                                    protected internal override HexDig Accept(Digit.x39 node, Root.Void context)
+                                                    {
+                                                        return new HexDig.A(x41.Instance);
+                                                    }
                                                 }
 
                                                 protected internal override (HexDig HexDig, bool Overflow) Accept(HexDig.A node, Root.Void context)
                                                 {
+                                                    return (new HexDig.B(x42.Instance), false);
                                                 }
 
                                                 protected internal override (HexDig HexDig, bool Overflow) Accept(HexDig.B node, Root.Void context)
                                                 {
+                                                    return (new HexDig.C(x43.Instance), false);
                                                 }
 
                                                 protected internal override (HexDig HexDig, bool Overflow) Accept(HexDig.C node, Root.Void context)
                                                 {
+                                                    return (new HexDig.D(x44.Instance), false);
                                                 }
 
                                                 protected internal override (HexDig HexDig, bool Overflow) Accept(HexDig.D node, Root.Void context)
                                                 {
+                                                    return (new HexDig.E(x45.Instance), false);
                                                 }
 
                                                 protected internal override (HexDig HexDig, bool Overflow) Accept(HexDig.E node, Root.Void context)
                                                 {
+                                                    return (new HexDig.F(x46.Instance), false);
                                                 }
 
                                                 protected internal override (HexDig HexDig, bool Overflow) Accept(HexDig.F node, Root.Void context)
                                                 {
+                                                    return (new HexDig.Digit(new Digit.x30(x30.Instance)), true);
                                                 }
                                             }
 
