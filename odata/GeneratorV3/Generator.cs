@@ -957,7 +957,7 @@
                                                     {
                                                         foreach (var hexDig in hexDigs)
                                                         {
-                                                            var className = HexDigToClassName.Instance.Visit(hexDig, context.@void);
+                                                            var className = HexDigToClassName.Instance.Visit(hexDig, default);
                                                             if (!context.InnerClasses.ContainsKey(className))
                                                             {
                                                                 var @class = new Class(
