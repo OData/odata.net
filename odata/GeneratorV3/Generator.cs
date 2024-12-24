@@ -1621,6 +1621,65 @@
             }
         }
 
+        private sealed class DigitToClassName : Digit.Visitor<string, Root.Void>
+        {
+            private DigitToClassName()
+            {
+            }
+
+            public static DigitToClassName Instance { get; } = new DigitToClassName();
+
+            protected internal override string Accept(Digit.x30 node, Root.Void context)
+            {
+                return CharacterSubstituions.Zero;
+            }
+
+            protected internal override string Accept(Digit.x31 node, Root.Void context)
+            {
+                return CharacterSubstituions.One;
+            }
+
+            protected internal override string Accept(Digit.x32 node, Root.Void context)
+            {
+                return CharacterSubstituions.Two;
+            }
+
+            protected internal override string Accept(Digit.x33 node, Root.Void context)
+            {
+                return CharacterSubstituions.Three;
+            }
+
+            protected internal override string Accept(Digit.x34 node, Root.Void context)
+            {
+                return CharacterSubstituions.Four;
+            }
+
+            protected internal override string Accept(Digit.x35 node, Root.Void context)
+            {
+                return CharacterSubstituions.Five;
+            }
+
+            protected internal override string Accept(Digit.x36 node, Root.Void context)
+            {
+                return CharacterSubstituions.Six;
+            }
+
+            protected internal override string Accept(Digit.x37 node, Root.Void context)
+            {
+                return CharacterSubstituions.Seven;
+            }
+
+            protected internal override string Accept(Digit.x38 node, Root.Void context)
+            {
+                return CharacterSubstituions.Eight;
+            }
+
+            protected internal override string Accept(Digit.x39 node, Root.Void context)
+            {
+                return CharacterSubstituions.Nine;
+            }
+        }
+
         private sealed class CharValToClassName
         {
             private CharValToClassName()
