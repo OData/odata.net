@@ -32,7 +32,7 @@
 
         public static Generator Intance { get; } = new Generator();
 
-        private static string Namespace = "GeneratorV3"; //// TODO parameterize this
+        private static string Namespace = "GeneratorV3.Core"; //// TODO parameterize this
 
         private static string InnersClassName = "Inners"; //// TODO parameterize this
 
