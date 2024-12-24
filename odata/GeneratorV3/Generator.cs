@@ -506,7 +506,7 @@
                                                                 className,
                                                                 "Instance",
                                                                 true,
-                                                                false), //// TODO needs an initiatilizer
+                                                                false), //// TODO needs an initiatilizer //// TODO needs to be static
                                                         });
                                                     context.InnerClasses[className] = @class;
                                                 }
@@ -1125,7 +1125,7 @@
                                                                             className,
                                                                             "Instance",
                                                                             true,
-                                                                            false), //// TODO needs an initiatilizer
+                                                                            false), //// TODO needs an initiatilizer //// TODO needs to be static
                                                                     });
 
                                                                 context.InnerClasses[className] = @class;
