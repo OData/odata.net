@@ -1415,7 +1415,7 @@
 
             protected internal override string Accept(Repeat.Count node, Root.Void context)
             {
-                return DigitsToInt.Instance.Generate(node.Digits, context).ToString();
+                return DigitsToClassName.Instance.Generate(node.Digits);
             }
 
             protected internal override string Accept(Repeat.Range node, Root.Void context)
@@ -1423,14 +1423,34 @@
                 var stringBuilder = new StringBuilder();
                 if (node.PrefixDigits.Any())
                 {
-                    stringBuilder.Append(DigitsToInt.Instance.Generate(node.PrefixDigits, context).ToString());
+                    stringBuilder.Append(DigitsToClassName.Instance.Generate(node.PrefixDigits));
                 }
 
                 stringBuilder.Append(CharacterSubstituions.Asterisk);
 
                 if (node.SuffixDigits.Any())
                 {
-                    stringBuilder.Append(DigitsToInt.Instance.Generate(node.SuffixDigits, context).ToString());
+                    stringBuilder.Append(DigitsToClassName.Instance.Generate(node.SuffixDigits));
+                }
+
+                return stringBuilder.ToString();
+            }
+        }
+
+        private sealed class DigitsToClassName
+        {
+            private DigitsToClassName()
+            {
+            }
+
+            public static DigitsToClassName Instance { get; } = new DigitsToClassName();
+
+            public string Generate(IEnumerable<Digit> digits)
+            {
+                var stringBuilder = new StringBuilder();
+                foreach (var digit in digits)
+                {
+                    stringBuilder.Append(DigitToClassName.Instance.Visit(digit, default));
                 }
 
                 return stringBuilder.ToString();
