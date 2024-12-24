@@ -392,7 +392,557 @@
 
                                     protected internal override PropertyDefinition Accept(Element.CharVal node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
-                                        throw new NotImplementedException("TODO");
+                                        var innerClassName = CharValToClassName.Instance.Generate(node.Value);
+
+                                        if (!context.InnerClasses.ContainsKey(innerClassName))
+                                        {
+                                            var innerClass = CharValToClass.Instance.Generate(node.Value, (innerClassName, default));
+
+                                            context.InnerClasses[innerClassName] = innerClass;
+                                        }
+
+                                        var propertyType = $"{InnersClassName}.{innerClassName}";
+                                        if (context.IsCollection)
+                                        {
+                                            propertyType = $"IEnumerable<{propertyType}>";
+                                        }
+
+                                        if (!context.PropertyTypeToCount.TryGetValue(innerClassName, out var count))
+                                        {
+                                            count = 0;
+                                        }
+
+                                        ++count;
+                                        context.PropertyTypeToCount[innerClassName] = count;
+
+                                        var propertyName = $"{innerClassName}_{count}";
+
+                                        return new PropertyDefinition(
+                                            AccessModifier.Public,
+                                            propertyType,
+                                            propertyName,
+                                            true,
+                                            false);
+                                    }
+
+                                    private sealed class CharValToClass
+                                    {
+
+                                        private CharValToClass()
+                                        {
+                                        }
+
+                                        public static CharValToClass Instance { get; } = new CharValToClass();
+
+                                        public Class Generate(CharVal charVal, (string ClassName, Root.Void @void) context)
+                                        {
+                                            var properties = charVal
+                                                .Inners
+                                                .Select(inner => InnerToProperty
+                                                    .Instance
+                                                    .Visit(inner, context.@void))
+                                                .ToList();
+
+                                            return new Class(
+                                                AccessModifier.Public,
+                                                ClassModifier.Sealed,
+                                                context.ClassName,
+                                                Enumerable.Empty<string>(),
+                                                null,
+                                                new[]
+                                                {
+                                                    new ConstructorDefinition(
+                                                        AccessModifier.Public,
+                                                        properties
+                                                            .Select(property =>
+                                                                new MethodParameter(property.Type, property.Name)), //// TODO should this an other calls lower in the stack use the inners class qualifier?
+                                                        properties
+                                                            .Select(property =>
+                                                                $"this.{property.Name} = {property.Name};")),
+                                                },
+                                                Enumerable.Empty<MethodDefinition>(),
+                                                Enumerable.Empty<Class>(),
+                                                properties);
+                                        }
+
+                                        private sealed class InnerToProperty : CharVal.Inner.Visitor<PropertyDefinition, Root.Void>
+                                        {
+                                            private InnerToProperty()
+                                            {
+                                            }
+
+                                            public static InnerToProperty Instance { get; } = new InnerToProperty();
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x20 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x21 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x23 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x24 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x25 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x26 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x27 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x28 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x29 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x2A node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x2B node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x2C node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x2D node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x2E node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x2F node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x30 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x31 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x32 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x33 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x34 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x35 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x36 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x37 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x38 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x39 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x3A node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x3B node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x3C node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x3D node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x3E node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x3F node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x40 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x41 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x42 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x43 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x44 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x45 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x46 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x47 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x48 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x49 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x4A node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x4B node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x4C node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x4D node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x4E node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x4F node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x50 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x51 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x52 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x53 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x54 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x55 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x56 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x57 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x58 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x59 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x5A node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x5B node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x5C node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x5D node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x5E node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x5F node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x60 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x61 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x62 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x63 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x64 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x65 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x66 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x67 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x68 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x69 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x6A node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x6B node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x6C node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x6D node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x6E node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x6F node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x70 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x71 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x72 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x73 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x74 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x75 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x76 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x77 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x78 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x79 node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x7A node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x7B node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x7C node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x7D node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+
+                                            protected internal override PropertyDefinition Accept(CharVal.Inner.x7E node, Root.Void context)
+                                            {
+                                                throw new NotImplementedException();
+                                            }
+                                        }
                                     }
 
                                     protected internal override PropertyDefinition Accept(Element.NumVal node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
@@ -498,7 +1048,7 @@
                                                             properties
                                                                 .Select(property =>
                                                                     new MethodParameter(
-                                                                        property.Type,
+                                                                        property.Type, //// TODO should this an other calls lower in the stack use the inners class qualifier?
                                                                         property.Name)),
                                                             properties
                                                                 .Select(property =>
