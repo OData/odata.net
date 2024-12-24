@@ -60,25 +60,25 @@
 
             public static string Percent { get; } = "percent"; //// TODO
 
-            public static string Zero { get; } = "zero"; //// TODO
+            public static string Zero { get; } = "ZERO"; //// TODO
 
-            public static string One { get; } = "one"; //// TODO
+            public static string One { get; } = "ONE"; //// TODO
 
-            public static string Two { get; } = "two"; //// TODO
+            public static string Two { get; } = "TWO"; //// TODO
 
-            public static string Three { get; } = "three"; //// TODO
+            public static string Three { get; } = "THREE"; //// TODO
 
-            public static string Four { get; } = "four"; //// TODO
+            public static string Four { get; } = "FOUR"; //// TODO
 
-            public static string Five { get; } = "five"; //// TODO
+            public static string Five { get; } = "FIVE"; //// TODO
 
-            public static string Six { get; } = "six"; //// TODO
+            public static string Six { get; } = "SIX"; //// TODO
 
-            public static string Seven { get; } = "seven"; //// TODO
+            public static string Seven { get; } = "SEVEN"; //// TODO
 
-            public static string Eight { get; } = "eight"; //// TODO
+            public static string Eight { get; } = "EIGHT"; //// TODO
 
-            public static string Nine { get; } = "nine"; //// TODO
+            public static string Nine { get; } = "NINE"; //// TODO
         }
 
         public IEnumerable<Class> Generate(RuleList ruleList, Root.Void context)
