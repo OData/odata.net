@@ -1190,8 +1190,9 @@
                                     .Select(concatenation => ConcatenationToClass
                                         .Instance
                                         .Generate(
-                                            concatenation, 
-                                            (ConcatenationToClassName.Instance.Generate(concatenation), context.ClassName, new[] { dispatchMethod }, context.InnerClasses)));
+                                            concatenation,
+                                            (ConcatenationToClassName.Instance.Generate(concatenation), context.ClassName, new[] { dispatchMethod }, context.InnerClasses)))
+                                    .ToList();
 
                                 var visitor = new Class(AccessModifier.Public,
                                     ClassModifier.Abstract,
