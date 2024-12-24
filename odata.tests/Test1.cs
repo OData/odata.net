@@ -393,7 +393,7 @@
 
             var stringBuilder = new StringBuilder();
             var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine("namespace GeneratorV3");
+            builder.AppendLine("namespace GeneratorV3.Abnf");
             builder.AppendLine("{");
             builder.Indent();
             builder.AppendLine("using System.Collections.Generic;");
@@ -409,6 +409,9 @@
             builder.AppendLine("}");
 
             var csharp = stringBuilder.ToString();
+
+            var expectedFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\abnf.cs";
+            File.WriteAllText(expectedFilePath, csharp);
         }
 
         private static string TestAbnf =
