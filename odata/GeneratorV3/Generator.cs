@@ -1587,7 +1587,7 @@
 
             protected internal override string Accept(HexDig.Digit node, Root.Void context)
             {
-                return DigitToInt.Instance.Visit(node.Value, context).ToString();
+                return DigitToClassName.Instance.Visit(node.Value, context);
             }
 
             protected internal override string Accept(HexDig.A node, Root.Void context)
