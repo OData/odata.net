@@ -1611,7 +1611,7 @@
 
             public string Generate(CharVal charVal)
             {
-                return $"{CharacterSubstituions.DoubleQuote}{charVal.Inners.Select(inner => CharValInnerToClassName.Instance.Visit(inner, default))}{CharacterSubstituions.DoubleQuote}";
+                return $"{CharacterSubstituions.DoubleQuote}{string.Join(string.Empty, charVal.Inners.Select(inner => CharValInnerToClassName.Instance.Visit(inner, default)))}{CharacterSubstituions.DoubleQuote}";
             }
 
         }
