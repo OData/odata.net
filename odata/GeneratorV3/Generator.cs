@@ -1168,7 +1168,7 @@
                                                                             "Instance",
                                                                             true,
                                                                             false,
-                                                                            $"new {className}();"), //// TODO needs an initiatilizer //// TODO needs to be static
+                                                                            $"new {className}();"),
                                                                     });
 
                                                                 context.InnerClasses[className] = @class;
