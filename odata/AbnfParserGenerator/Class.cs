@@ -87,11 +87,12 @@
                   type,
                   name,
                   hasGet,
-                  hasSet)
+                  hasSet,
+                  null)
         {
         }
 
-        public PropertyDefinition(AccessModifier accessModifier, bool isStatic, string type, string name, bool hasGet, bool hasSet)
+        public PropertyDefinition(AccessModifier accessModifier, bool isStatic, string type, string name, bool hasGet, bool hasSet, string? initializer)
         {
             AccessModifier = accessModifier;
             IsStatic = isStatic;
@@ -99,6 +100,7 @@
             Name = name;
             HasGet = hasGet;
             HasSet = hasSet;
+            Initializer = initializer;
         }
 
         public AccessModifier AccessModifier { get; }
@@ -112,6 +114,8 @@
         public bool HasGet { get; }
 
         public bool HasSet { get; }
+
+        public string? Initializer { get; }
     }
 
     public sealed class MethodDefinition

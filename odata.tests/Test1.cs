@@ -613,6 +613,11 @@ second-rule = first-rule
                     foreach (var property in @class.Properties)
                     {
                         Transcribe(property.AccessModifier, builder);
+                        if (property.IsStatic)
+                        {
+                            builder.Append("static ");
+                        }
+
                         builder.Append(property.Type).Append(" ");
                         builder.Append(property.Name).Append(" ");
                         var needsBrace = true;
@@ -641,6 +646,11 @@ second-rule = first-rule
                         if (!needsBrace)
                         {
                             builder.Append("}");
+                        }
+
+                        if (property.Initializer != null)
+                        {
+                            builder.Append($" = {property.Initializer}");
                         }
 
                         builder.AppendLine();
