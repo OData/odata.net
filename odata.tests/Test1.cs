@@ -356,7 +356,7 @@
 
             var stringBuilder = new StringBuilder();
             var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine("namespace GeneratorV3");
+            builder.AppendLine("namespace GeneratorV3.Core");
             builder.AppendLine("{");
             builder.Indent();
             builder.AppendLine("using System.Collections.Generic;");
