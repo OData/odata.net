@@ -63,6 +63,7 @@
 
         public IEnumerable<Class> Generate(RuleList ruleList, Root.Void context)
         {
+            //// TODO doing this as the context means that you have to `tolist` all over the place to make sure that the nested classes of `inners` doesn't get modified while it is being enumerated
             var innerClasses = new Dictionary<string, Class>();
             return ruleList
                 .Inners
