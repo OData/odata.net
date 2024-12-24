@@ -452,7 +452,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public FOUR Instance { get; }
+            public static FOUR Instance { get; } = new FOUR();
         }
         
         public sealed class ONE
@@ -461,7 +461,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public ONE Instance { get; }
+            public static ONE Instance { get; } = new ONE();
         }
         
         public sealed class TWO
@@ -470,7 +470,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public TWO Instance { get; }
+            public static TWO Instance { get; } = new TWO();
         }
         
         public sealed class THREE
@@ -479,7 +479,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public THREE Instance { get; }
+            public static THREE Instance { get; } = new THREE();
         }
         
         public sealed class FIVE
@@ -488,7 +488,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public FIVE Instance { get; }
+            public static FIVE Instance { get; } = new FIVE();
         }
         
         public sealed class SIX
@@ -497,7 +497,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public SIX Instance { get; }
+            public static SIX Instance { get; } = new SIX();
         }
         
         public sealed class SEVEN
@@ -506,7 +506,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public SEVEN Instance { get; }
+            public static SEVEN Instance { get; } = new SEVEN();
         }
         
         public sealed class EIGHT
@@ -515,7 +515,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public EIGHT Instance { get; }
+            public static EIGHT Instance { get; } = new EIGHT();
         }
         
         public sealed class NINE
@@ -524,7 +524,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public NINE Instance { get; }
+            public static NINE Instance { get; } = new NINE();
         }
         
         public sealed class A
@@ -533,7 +533,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public A Instance { get; }
+            public static A Instance { get; } = new A();
         }
         
         public sealed class B
@@ -542,7 +542,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public B Instance { get; }
+            public static B Instance { get; } = new B();
         }
         
         public sealed class C
@@ -551,7 +551,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public C Instance { get; }
+            public static C Instance { get; } = new C();
         }
         
         public sealed class D
@@ -560,7 +560,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public D Instance { get; }
+            public static D Instance { get; } = new D();
         }
         
         public sealed class E
@@ -569,7 +569,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public E Instance { get; }
+            public static E Instance { get; } = new E();
         }
         
         public sealed class F
@@ -578,7 +578,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public F Instance { get; }
+            public static F Instance { get; } = new F();
         }
         
         public sealed class ZERO
@@ -587,7 +587,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public ZERO Instance { get; }
+            public static ZERO Instance { get; } = new ZERO();
         }
         
         public abstract class percentxFOURONEⲻFIVEA
@@ -1568,7 +1568,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public x30 Instance { get; }
+            public static x30 Instance { get; } = new x30();
         }
         
         public sealed class doublequotex30doublequote
@@ -1587,7 +1587,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public x31 Instance { get; }
+            public static x31 Instance { get; } = new x31();
         }
         
         public sealed class doublequotex31doublequote
@@ -4738,7 +4738,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public x41 Instance { get; }
+            public static x41 Instance { get; } = new x41();
         }
         
         public sealed class doublequotex41doublequote
@@ -4757,7 +4757,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public x42 Instance { get; }
+            public static x42 Instance { get; } = new x42();
         }
         
         public sealed class doublequotex42doublequote
@@ -4776,7 +4776,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public x43 Instance { get; }
+            public static x43 Instance { get; } = new x43();
         }
         
         public sealed class doublequotex43doublequote
@@ -4795,7 +4795,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public x44 Instance { get; }
+            public static x44 Instance { get; } = new x44();
         }
         
         public sealed class doublequotex44doublequote
@@ -4814,7 +4814,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public x45 Instance { get; }
+            public static x45 Instance { get; } = new x45();
         }
         
         public sealed class doublequotex45doublequote
@@ -4833,7 +4833,7 @@ namespace GeneratorV3.Core
             {
             }
             
-            public x46 Instance { get; }
+            public static x46 Instance { get; } = new x46();
         }
         
         public sealed class doublequotex46doublequote
