@@ -372,6 +372,9 @@
             builder.AppendLine("}");
 
             var csharp = stringBuilder.ToString();
+
+            var expectedFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\Core.cs";
+            File.WriteAllText(expectedFilePath, csharp);
         }
 
         [TestMethod]
