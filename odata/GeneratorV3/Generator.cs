@@ -1100,7 +1100,28 @@
                                                                     .Select(property =>
                                                                         $"this.{property.Name} = {property.Name};")),
                                                         },
-                                                        Enumerable.Empty<MethodDefinition>(),
+                                                        context.BaseClass == null ?
+                                                            Enumerable.Empty<MethodDefinition>() :
+                                                            new[]
+                                                            {
+                                                                new MethodDefinition(
+                                                                    AccessModifier.Protected,
+                                                                    ClassModifier.Sealed,
+                                                                    true,
+                                                                    "TResult",
+                                                                    new[]
+                                                                    {
+                                                                        "TResult",
+                                                                        "TContext",
+                                                                    },
+                                                                    "Dispatch",
+                                                                    new[]
+                                                                    {
+                                                                        new MethodParameter("Visitor<TResult, TContext>", "visitor"),
+                                                                        new MethodParameter("TContext", "context"),
+                                                                    },
+                                                                    "return visitor.Accept(this, context);"),
+                                                            }, //// TODO this is a really hacky way to add the dispatch method here; i think you had to do somethign similar elsewhere and did a better pattern there
                                                         Enumerable.Empty<Class>(),
                                                         properties);
                                                 }
