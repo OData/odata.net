@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
-using System.Reflection;
 using System.Xml;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -186,13 +185,14 @@ public class DurationTests : EndToEndTestBase<DurationTests.TestsStartup>
     #region Insert and update property value
 
     [Fact]
-    public void InsertAndUpdatePropertyValueTest()
+    public async Task InsertAndUpdatePropertyValueTest()
     {
+        // Query with filter
         var timespan = new TimeSpan((new Random()).Next());
-        var queryable = _context.Orders.Where(c => c.ShelfLife == timespan) as DataServiceQuery<Common.Client.Default.Order>;
-        Assert.NotNull(queryable);
-        Assert.EndsWith("/Orders?$filter=ShelfLife eq duration'" + XmlConvert.ToString(timespan) + "'", queryable.RequestUri.OriginalString, StringComparison.Ordinal);
-        Assert.Empty(queryable.ToList());
+        var orderQueryable = _context.Orders.Where(c => c.ShelfLife == timespan) as DataServiceQuery<Common.Client.Default.Order>;
+        Assert.NotNull(orderQueryable);
+        Assert.EndsWith($"/Orders?$filter=ShelfLife eq duration'{XmlConvert.ToString(timespan)}'", orderQueryable.RequestUri.OriginalString, StringComparison.Ordinal);
+        Assert.Empty(orderQueryable.ToList());
 
         int orderID = (new Random()).Next();
 
@@ -205,10 +205,10 @@ public class DurationTests : EndToEndTestBase<DurationTests.TestsStartup>
             OrderShelfLifes = new ObservableCollection<TimeSpan>() { timespan }
         };
         _context.AddToOrders(order);
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
 
         // Query and verify
-        var result = queryable.ToList();
+        var result = orderQueryable.ToList();
         Assert.Single(result);
         Assert.Equal(orderID, result[0].OrderID);
 
@@ -217,28 +217,30 @@ public class DurationTests : EndToEndTestBase<DurationTests.TestsStartup>
         order.ShelfLife = timespan;
         order.OrderShelfLifes = new ObservableCollection<TimeSpan>() { timespan };
         _context.UpdateObject(order);
-        _context.SaveChanges(SaveChangesOptions.ReplaceOnUpdate);
+        await _context.SaveChangesAsync(SaveChangesOptions.ReplaceOnUpdate);
 
         // Query Duration property
-        var queryable2 = _context.Orders.Where(c => c.OrderID == orderID).Select(c => c.ShelfLife).FirstOrDefault();
-        Assert.NotNull(queryable2);
-        Assert.Equal(timespan, queryable2);
+        var shelfLifeQueryable = _context.Orders.Where(c => c.OrderID == orderID).Select(c => new { c.ShelfLife }).FirstOrDefault();
+        Assert.NotNull(shelfLifeQueryable);
+        Assert.NotNull(shelfLifeQueryable.ShelfLife);
+        Assert.Equal(timespan, shelfLifeQueryable.ShelfLife);
 
         // Query collection of Duration property
-        var queryable3 = (from c in _context.Orders
+        var orderShelfLifesQueryable = (from c in _context.Orders
                           where c.OrderID == orderID
-                          select c.OrderShelfLifes).FirstOrDefault();
+                          select new { c.OrderShelfLifes }).FirstOrDefault();
 
-        Assert.NotNull(queryable3);
-        Assert.Single(queryable3);
-        Assert.Equal(timespan, queryable3[0]);
+        Assert.NotNull(orderShelfLifesQueryable);
+        Assert.NotNull(orderShelfLifesQueryable.OrderShelfLifes);
+        Assert.Single(orderShelfLifesQueryable.OrderShelfLifes);
+        Assert.Equal(timespan, orderShelfLifesQueryable.OrderShelfLifes[0]);
 
         // Delete entity and validate
         _context.DeleteObject(order);
-        _context.SaveChanges(SaveChangesOptions.ReplaceOnUpdate);
+        await _context.SaveChangesAsync(SaveChangesOptions.ReplaceOnUpdate);
 
-        var queryable4 = _context.Execute<Order>(new Uri("Orders()?$filter=ShelfLife eq duration'" + XmlConvert.ToString(timespan) + "'", UriKind.Relative));
-        Assert.Empty(queryable4);
+        var queryable = _context.Execute<Order>(new Uri($"Orders()?$filter=ShelfLife eq duration'{XmlConvert.ToString(timespan)}'", UriKind.Relative));
+        Assert.Empty(queryable);
     }
 
     #endregion

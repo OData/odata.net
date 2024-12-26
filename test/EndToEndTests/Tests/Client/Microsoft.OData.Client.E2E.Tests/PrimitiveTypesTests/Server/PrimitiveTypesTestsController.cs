@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
@@ -68,6 +69,15 @@ public class PrimitiveTypesTestsController : ODataController
 
     [EnableQuery]
     [HttpGet("odata/Orders")]
+    public IActionResult Orders()
+    {
+        var orders = _dataSource.Orders;
+
+        return Ok(orders);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/Orders()")]
     public IActionResult GetOrders()
     {
         var orders = _dataSource.Orders;
@@ -75,6 +85,7 @@ public class PrimitiveTypesTestsController : ODataController
         return Ok(orders);
     }
 
+    [EnableQuery]
     [HttpGet("odata/Orders/$count")]
     public IActionResult GetOrdersCount()
     {
@@ -108,6 +119,66 @@ public class PrimitiveTypesTestsController : ODataController
         }
 
         return Ok(order.CustomerForOrder);
+    }
+
+    [HttpPost("odata/Orders")]
+    public IActionResult PostOrder([FromBody] Order order)
+    {
+        _dataSource.Orders.Add(order);
+
+        return Created(order);
+    }
+
+    [HttpPut("odata/Orders({key})")]
+    public IActionResult PutOrder([FromRoute] int key, [FromBody] Order order)
+    {
+        var existsOrder = _dataSource.Orders?.SingleOrDefault(o => o.OrderID == key);
+
+        if (existsOrder == null)
+        {
+            return NotFound();
+        }
+
+        // Remove the current order from the data source
+        _dataSource.Orders.Remove(existsOrder);
+
+        existsOrder.ShelfLife = order.ShelfLife;
+        existsOrder.OrderShelfLifes = order.OrderShelfLifes;
+
+        // Add the updated order to the data source
+        _dataSource.Orders.Add(existsOrder);
+
+        return Ok(existsOrder);
+    }
+
+    [HttpPatch("odata/Orders({key})")]
+    public IActionResult PatchOrder([FromRoute] int key, [FromBody] Delta<Order> delta)
+    {
+        var order = _dataSource.Orders?.SingleOrDefault(o => o.OrderID == key);
+
+        if (order == null)
+        {
+            return NotFound();
+        }
+
+        var updatedOrder = delta.Patch(order);
+
+        return Ok(updatedOrder);
+    }
+
+    [HttpDelete("odata/Orders({key})")]
+    public IActionResult PatchOrder([FromRoute] int key)
+    {
+        var order = _dataSource.Orders?.SingleOrDefault(o => o.OrderID == key);
+
+        if (order == null)
+        {
+            return NotFound();
+        }
+
+        _dataSource.Orders.Remove(order);
+
+        return NoContent();
     }
 
     [HttpPost("odata/primitivetypes/Default.ResetDefaultDataSource")]
