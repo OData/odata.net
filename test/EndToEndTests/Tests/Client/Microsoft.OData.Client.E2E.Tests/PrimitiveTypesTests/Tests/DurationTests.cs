@@ -1,0 +1,263 @@
+﻿//---------------------------------------------------------------------
+// <copyright file="DurationTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System.Collections.ObjectModel;
+using System.Reflection;
+using System.Xml;
+using Microsoft.AspNetCore.OData;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Client.E2E.TestCommon;
+using Microsoft.OData.Client.E2E.TestCommon.Common;
+using Microsoft.OData.Client.E2E.TestCommon.Helpers;
+using Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Default;
+using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
+using Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Server;
+using Microsoft.OData.Edm;
+using Xunit;
+
+namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests;
+
+public class DurationTests : EndToEndTestBase<DurationTests.TestsStartup>
+{
+    private readonly Uri _baseUri;
+    private readonly Container _context;
+    private readonly IEdmModel _model;
+
+    public class TestsStartup : TestStartupBase
+    {
+        public override void ConfigureServices(IServiceCollection services)
+        {
+            services.ConfigureControllers(typeof(PrimitiveTypesTestsController), typeof(MetadataController));
+
+            services.AddControllers().AddOData(opt =>
+                opt.EnableQueryFeatures().AddRouteComponents("odata", DefaultEdmModel.GetEdmModel()));
+        }
+    }
+
+    public DurationTests(TestWebApplicationFactory<TestsStartup> fixture) 
+        : base(fixture)
+    {
+        if(Client.BaseAddress == null)
+        {
+            throw new ArgumentNullException(nameof(Client.BaseAddress), "Base address cannot be null");
+        }
+
+        _baseUri = new Uri(Client.BaseAddress, "odata/");
+
+        _context = new Container(_baseUri)
+        {
+            HttpClientFactory = HttpClientFactory
+        };
+
+        _model = DefaultEdmModel.GetEdmModel();
+        ResetDefaultDataSource();
+    }
+
+    public static IEnumerable<object[]> MimeTypesData
+    {
+        get
+        {
+            yield return new object[] { MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata };
+            yield return new object[] { MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata };
+            yield return new object[] { MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata };
+        }
+    }
+
+    #region Entity Set
+
+    [Theory]
+    [MemberData(nameof(MimeTypesData))]
+    public async Task QueryEntitySetTest(string mimeType)
+    {
+        // Arrange & Act
+        var queryText = "Customers";
+        var entries = await this.TestsHelper.QueryResourceSetsAsync(queryText, mimeType);
+
+        // Assert
+        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
+        {
+            foreach (var entry in entries)
+            {
+                if (entry.TypeName.EndsWith("Customer"))
+                {
+                    var timeBetweenLastTwoOrdersProperty = entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders") as ODataProperty;
+                    Assert.NotNull(timeBetweenLastTwoOrdersProperty);
+                    Assert.NotNull(timeBetweenLastTwoOrdersProperty.Value);
+                }
+            }
+        }
+    }
+
+    #endregion
+
+    #region Entity instance
+
+    [Theory]
+    [MemberData(nameof(MimeTypesData))]
+    public async Task QueryEntityInstanceTest(string mimeType)
+    {
+        // Arrange & Act
+        var queryText = "Customers(1)";
+        var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
+
+        // Assert
+        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
+        {
+            foreach (var entry in entries)
+            {
+                if (entry.TypeName.EndsWith("Customer"))
+                {
+                    var timeBetweenLastTwoOrdersProperty = entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders") as ODataProperty;
+                    Assert.NotNull(timeBetweenLastTwoOrdersProperty);
+                    Assert.Equal(new TimeSpan(1), timeBetweenLastTwoOrdersProperty.Value);
+                }
+            }
+        }
+    }
+
+    #endregion
+
+    #region Entity property
+
+    [Theory]
+    [MemberData(nameof(MimeTypesData))]
+    public async Task QueryEntityPropertyTest(string mimeType)
+    {
+        // Arrange & Act
+        var queryText = "Customers(1)/TimeBetweenLastTwoOrders";
+        var property = await this.TestsHelper.QueryPropertyAsync(queryText, mimeType);
+
+        // Assert
+        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
+        {
+            Assert.NotNull(property);
+            Assert.Equal(new TimeSpan(1), property.Value);
+        }
+    }
+
+    #endregion
+
+    #region Entity navigation 
+
+    [Theory]
+    [MemberData(nameof(MimeTypesData))]
+    public async Task QueryEntityNavigationTest(string mimeType)
+    {
+        // Arrange & Act
+        var queryText = "Orders(7)/CustomerForOrder";
+        var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
+
+        // Assert
+        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
+        {
+            foreach (var entry in entries)
+            {
+                if (entry.TypeName.EndsWith("Customer"))
+                {
+                    var timeBetweenLastTwoOrdersProperty = entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders") as ODataProperty;
+                    Assert.NotNull(timeBetweenLastTwoOrdersProperty);
+                    Assert.Equal(new TimeSpan(2), timeBetweenLastTwoOrdersProperty.Value);
+                }
+            }
+        }
+    }
+
+    #endregion
+
+    #region Entity property $value
+
+    [Fact]
+    public async Task QueryEntityPropertyValueTest()
+    {
+        // Arrange & Act
+        var queryText = "Customers(1)/TimeBetweenLastTwoOrders/$value";
+        var propertyValue = await this.TestsHelper.QueryPropertyValueInStringAsync(queryText);
+
+        // Assert
+        Assert.Equal("PT0.0000001S", propertyValue);
+    }
+
+    #endregion
+
+    #region Insert and update property value
+
+    [Fact]
+    public void InsertAndUpdatePropertyValueTest()
+    {
+        var timespan = new TimeSpan((new Random()).Next());
+        var queryable = _context.Orders.Where(c => c.ShelfLife == timespan) as DataServiceQuery<Common.Client.Default.Order>;
+        Assert.NotNull(queryable);
+        Assert.EndsWith("/Orders?$filter=ShelfLife eq duration'" + XmlConvert.ToString(timespan) + "'", queryable.RequestUri.OriginalString, StringComparison.Ordinal);
+        Assert.Empty(queryable.ToList());
+
+        int orderID = (new Random()).Next();
+
+        // Create an entity
+        var order = new Common.Client.Default.Order()
+        {
+            OrderID = orderID,
+            OrderDate = new DateTimeOffset(new DateTime(2011, 3, 4, 16, 3, 57)),
+            ShelfLife = timespan,
+            OrderShelfLifes = new ObservableCollection<TimeSpan>() { timespan }
+        };
+        _context.AddToOrders(order);
+        _context.SaveChanges();
+
+        // Query and verify
+        var result = queryable.ToList();
+        Assert.Single(result);
+        Assert.Equal(orderID, result[0].OrderID);
+
+        // Update the Duration properties
+        timespan = new TimeSpan((new Random()).Next());
+        order.ShelfLife = timespan;
+        order.OrderShelfLifes = new ObservableCollection<TimeSpan>() { timespan };
+        _context.UpdateObject(order);
+        _context.SaveChanges(SaveChangesOptions.ReplaceOnUpdate);
+
+        // Query Duration property
+        var queryable2 = _context.Orders.Where(c => c.OrderID == orderID).Select(c => c.ShelfLife).FirstOrDefault();
+        Assert.NotNull(queryable2);
+        Assert.Equal(timespan, queryable2);
+
+        // Query collection of Duration property
+        var queryable3 = (from c in _context.Orders
+                          where c.OrderID == orderID
+                          select c.OrderShelfLifes).FirstOrDefault();
+
+        Assert.NotNull(queryable3);
+        Assert.Single(queryable3);
+        Assert.Equal(timespan, queryable3[0]);
+
+        // Delete entity and validate
+        _context.DeleteObject(order);
+        _context.SaveChanges(SaveChangesOptions.ReplaceOnUpdate);
+
+        var queryable4 = _context.Execute<Order>(new Uri("Orders()?$filter=ShelfLife eq duration'" + XmlConvert.ToString(timespan) + "'", UriKind.Relative));
+        Assert.Empty(queryable4);
+    }
+
+    #endregion
+
+    #region Private methods
+
+    private ODataMessageReaderTestsHelper TestsHelper
+    {
+        get
+        {
+            return new ODataMessageReaderTestsHelper(_baseUri, _model, Client);
+        }
+    }
+
+    private void ResetDefaultDataSource()
+    {
+        var actionUri = new Uri(_baseUri + "primitivetypes/Default.ResetDefaultDataSource", UriKind.Absolute);
+        _context.Execute(actionUri, "POST");
+    }
+
+    #endregion
+}
