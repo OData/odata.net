@@ -38,7 +38,12 @@
 
             protected internal override Inners._openruleⳆopenasteriskcⲻwsp_cⲻnlↃↃ Accept(RuleList.Inner.CommentInner node, Void context)
             {
-                
+                return new Inners._openruleⳆopenasteriskcⲻwsp_cⲻnlↃↃ(
+                    new Inners._ruleⳆopenasteriskcⲻwsp_cⲻnlↃ._openasteriskcⲻwsp_cⲻnlↃ(
+                        new Inners._openasteriskcⲻwsp_cⲻnlↃ(
+                            new Inners._asteriskcⲻwsp_cⲻnl(
+                                node.Cwsps.Select(cwsp => CwspConverter.Instance.Visit(cwsp, default)),
+                                CnlConverter.Instance.Visit(node.Cnl, default)))));
             }
         }
     }
