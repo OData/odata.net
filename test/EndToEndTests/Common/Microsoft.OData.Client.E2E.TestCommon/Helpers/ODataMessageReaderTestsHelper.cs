@@ -107,6 +107,45 @@ public class ODataMessageReaderTestsHelper
         return entries;
     }
 
+    public async Task<(List<ODataResource>, List<ODataResourceSet>)> QueryResourceAndResourceSetsAsync(string queryText, string mimeType)
+
+    {
+        ODataMessageReaderSettings readerSettings = new() { BaseUri = BaseUri };
+        var requestUrl = new Uri(BaseUri.AbsoluteUri + queryText, UriKind.Absolute);
+
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", mimeType);
+
+        var responseMessage = await requestMessage.GetResponseAsync();
+
+        Assert.Equal(200, responseMessage.StatusCode);
+
+        var resourceEntries = new List<ODataResource>();
+        var resourceSetEntries = new List<ODataResourceSet>();
+        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
+        {
+            using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
+            {
+                var reader = await messageReader.CreateODataResourceSetReaderAsync();
+                while (await reader.ReadAsync())
+                {
+                    if (reader.State == ODataReaderState.ResourceEnd && reader.Item is ODataResource odataResource)
+                    {
+                        resourceEntries.Add(odataResource);
+                    }
+                    else if(reader.State == ODataReaderState.ResourceSetEnd && reader.Item is ODataResourceSet odataResourceSet)
+                    {
+                        resourceSetEntries.Add(odataResourceSet);
+                    }
+                }
+                Assert.Equal(ODataReaderState.Completed, reader.State);
+            }
+
+        }
+
+        return (resourceEntries, resourceSetEntries);
+    }
+
     /// <summary>
     /// Queries an OData resource set asynchronously based on the provided query text and MIME type.
     /// </summary>
