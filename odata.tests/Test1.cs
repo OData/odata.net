@@ -417,13 +417,8 @@
         [TestMethod]
         public void GenerateForOdata()
         {
-            //// TODO guard against c# reserved words (in this case, "ref" (maybe others))
-
-            /*var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
-            var coreRulesText = File.ReadAllText(coreRulesPath);*/
             var abnfRulesPath = @"C:\msgithub\odata.net\odata\odata.abnf";
             var abnfRulesText = File.ReadAllText(abnfRulesPath);
-            ////var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(abnfRulesText);
 
             var classes = GeneratorV3.Generator.Intance.Generate(cst, default);
