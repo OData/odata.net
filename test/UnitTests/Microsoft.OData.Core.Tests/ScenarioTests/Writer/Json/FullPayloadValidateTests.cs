@@ -982,9 +982,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
                             break;
 
                         case ODataReaderState.NestedResourceInfoStart:
-                            nestedResourceInfo = reader.Item as ODataNestedResourceInfo;
+                            //  The reader will return nested resource infos for all navigation properties since by default all properties are selected.
+                            if (reader.Item is ODataNestedResourceInfo nestedInfo && nestedInfo.Name == "ContainedCollectionNavProp")
+                            {
+                                nestedResourceInfo = nestedInfo;
+                            }
                             break;
-
                     }
                 }
             }
