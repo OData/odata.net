@@ -16,10 +16,10 @@ using Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys;
 using Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Server;
 using Microsoft.OData.Edm;
 using Xunit;
+using EdmDecimal = Microsoft.OData.Client.E2E.Tests.Common.Client.PrimitiveKeys.EdmDecimal;
+using EdmDouble = Microsoft.OData.Client.E2E.Tests.Common.Client.PrimitiveKeys.EdmDouble;
 using EdmInt64 = Microsoft.OData.Client.E2E.Tests.Common.Client.PrimitiveKeys.EdmInt64;
 using EdmSingle = Microsoft.OData.Client.E2E.Tests.Common.Client.PrimitiveKeys.EdmSingle;
-using EdmDouble = Microsoft.OData.Client.E2E.Tests.Common.Client.PrimitiveKeys.EdmDouble;
-using EdmDecimal = Microsoft.OData.Client.E2E.Tests.Common.Client.PrimitiveKeys.EdmDecimal;
 
 namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests;
 

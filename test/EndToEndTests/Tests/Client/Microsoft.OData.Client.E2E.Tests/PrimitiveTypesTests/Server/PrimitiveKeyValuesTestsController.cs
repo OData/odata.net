@@ -36,6 +36,67 @@ public class PrimitiveKeyValuesTestsController : ODataController
         return Ok(result);
     }
 
+    [EnableQuery]
+    [HttpGet("odata/EdmBooleanSet")]
+    public IActionResult GetEdmBooleans()
+    {
+        var result = _dataSource.EdmBooleans;
+        return Ok(result);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/EdmBooleanSet({key})")]
+    public IActionResult GetEdmBoolean([FromRoute] bool key)
+    {
+        var result = _dataSource.EdmBooleans?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
+    [HttpGet("odata/EdmInt16Set")]
+    public IActionResult GetEdmInt16s()
+    {
+        var result = _dataSource.EdmInt16s;
+        return Ok(result);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/EdmInt16Set({key})")]
+    public IActionResult GetEdmInt16([FromRoute] short key)
+    {
+        var result = _dataSource.EdmInt16s?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
+    [HttpGet("odata/EdmInt32Set")]
+    public IActionResult GetEdmInt32s()
+    {
+        var result = _dataSource.EdmInt32s;
+        return Ok(result);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/EdmInt32Set({key})")]
+    public IActionResult GetEdmInt32([FromRoute] int key)
+    {
+        var result = _dataSource.EdmInt32s?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
     [EnableQuery(PageSize = 2)]
     [HttpGet("odata/EdmInt64Set")]
     public IActionResult GetEdmInt64s()
@@ -115,7 +176,7 @@ public class PrimitiveKeyValuesTestsController : ODataController
 
     [EnableQuery(PageSize = 2)]
     [HttpGet("odata/EdmDecimalSet")]
-    public IActionResult EdmDecimals()
+    public IActionResult GetEdmDecimals()
     {
         var result = _dataSource.EdmDecimals;
         return Ok(result);
@@ -123,9 +184,70 @@ public class PrimitiveKeyValuesTestsController : ODataController
 
     [EnableQuery]
     [HttpGet("odata/EdmDecimalSet({key})")]
-    public IActionResult EdmDecimal([FromRoute] decimal key)
+    public IActionResult GetEdmDecimal([FromRoute] decimal key)
     {
         var result = _dataSource.EdmDecimals?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
+    [HttpGet("odata/EdmDateTimeOffsetSet")]
+    public IActionResult GetEdmDateTimeOffsets()
+    {
+        var result = _dataSource.EdmDateTimeOffsets;
+        return Ok(result);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/EdmDateTimeOffsetSet({key})")]
+    public IActionResult GetEdmDateTimeOffset([FromRoute] DateTimeOffset key)
+    {
+        var result = _dataSource.EdmDateTimeOffsets?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
+    [HttpGet("odata/EdmTimeSet")]
+    public IActionResult GetEdmTimes()
+    {
+        var result = _dataSource.EdmTimes;
+        return Ok(result);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/EdmTimeSet({key})")]
+    public IActionResult GetEdmTime([FromRoute] TimeSpan key)
+    {
+        var result = _dataSource.EdmTimes?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
+    [EnableQuery(PageSize = 2)]
+    [HttpGet("odata/EdmStringSet")]
+    public IActionResult GetEdmStrings()
+    {
+        var result = _dataSource.EdmStrings;
+        return Ok(result);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/EdmStringSet({key})")]
+    public IActionResult GetEdmString([FromRoute] string key)
+    {
+        var result = _dataSource.EdmStrings?.SingleOrDefault(a => a.Id == key);
         if (result == null)
         {
             return NotFound();
