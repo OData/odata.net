@@ -33,10 +33,11 @@ namespace Microsoft.OData.Tests
         /// <typeparam name="T">The type of the exception expected to be thrown</typeparam>
         /// <param name="testCode">A delegate to the code to be tested</param>
         /// <param name="errorMessage">The expected error message.</param>
-        public static void Throws<T>(this Action testCode, string errorMessage) where T : Exception
+        public static T Throws<T>(this Action testCode, string errorMessage) where T : Exception
         {
             T exception = Assert.Throws<T>(testCode);
             Assert.Equal(errorMessage, exception.Message);
+            return exception;
         }
 
         /// <summary>
@@ -45,10 +46,11 @@ namespace Microsoft.OData.Tests
         /// <typeparam name="T">The type of the exception expected to be thrown</typeparam>
         /// <param name="testCode">An async delegate to the code to be tested</param>
         /// <param name="errorMessage">The expected error message.</param>
-        public static async Task ThrowsAsync<T>(this Func<Task> testCode, string errorMessage) where T : Exception
+        public static async Task<T> ThrowsAsync<T>(this Func<Task> testCode, string errorMessage) where T : Exception
         {
             T exception = await Assert.ThrowsAsync<T>(testCode);
             Assert.Equal(errorMessage, exception.Message);
+            return exception;
         }
 
         /// <summary>

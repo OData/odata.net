@@ -221,11 +221,13 @@ namespace Microsoft.OData.Tests.Query
         {
             // Date is not in right format
             Action action = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-1T12:12:12-11:00", ODataVersion.V4);
-            action.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-07-1T12:12:12-11:00"));
+            ODataException exception = action.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-07-1T12:12:12-11:00"));
+            Assert.Equal("The string '1997-07-1T12:12:12-11:00' is not a valid AllXsd value.", exception.InnerException.Message);
 
             // Time is not in right format
             Action action2 = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-01T12:12:2-11:00", ODataVersion.V4);
-            action2.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-07-01T12:12:2-11:00"));
+            exception = action2.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-07-01T12:12:2-11:00"));
+            Assert.Equal("The string '1997-07-01T12:12:2-11:00' is not a valid AllXsd value.", exception.InnerException.Message);
 
             // Date and Time separator is incorrect
             // Call from DataUriUtils, it will parse till blank space which is a correct Date
@@ -247,11 +249,13 @@ namespace Microsoft.OData.Tests.Query
 
             // Timezone is not within limit
             Action action7 = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-01T12:12:02-15:00", ODataVersion.V4);
-            action7.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-07-01T12:12:02-15:00"));
+            exception = action7.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-07-01T12:12:02-15:00"));
+            Assert.Equal("Offset must be within plus or minus 14 hours. (Parameter 'offset')", exception.InnerException.Message);
 
             // Timezone is not specified
             Action action8 = () => ODataUriUtils.ConvertFromUriLiteral("1997-07-01T12:12:02", ODataVersion.V4);
-            action8.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-07-01T12:12:02"));
+            exception = action8.Throws<ODataException>(Error.Format(SRResources.UriUtils_DateTimeOffsetInvalidFormat, "1997-07-01T12:12:02"));
+            Assert.Equal("The time zone information is missing on the DateTimeOffset value '1997-07-01T12:12:02'. A DateTimeOffset value must contain the time zone information.", exception.InnerException.Message);
         }
 
         [Fact]
