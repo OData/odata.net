@@ -12,12 +12,18 @@
             AbnfParser.CstNodes.Repetition.ElementOnly node, 
             Root.Void context)
         {
+            return new Abnf._repetition(
+                null,
+                ElementConverter.Instance.Visit(node.Element, context));
         }
 
         protected internal override GeneratorV3.Abnf._repetition Accept(
             AbnfParser.CstNodes.Repetition.RepeatAndElement node, 
             Root.Void context)
         {
+            return new Abnf._repetition(
+                RepeatConverter.Instance.Visit(node.Repeat, context),
+                ElementConverter.Instance.Visit(node.Element, context));
         }
     }
 }
