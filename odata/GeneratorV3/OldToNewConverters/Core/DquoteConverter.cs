@@ -10,6 +10,10 @@
 
         public GeneratorV3.Abnf._DQUOTE Convert(AbnfParser.CstNodes.Core.Dquote dquote)
         {
+            return new Abnf._DQUOTE(
+                new Abnf.Inners._percentxTWOTWO(
+                    Abnf.Inners._TWO.Instance,
+                    Abnf.Inners._TWO.Instance));
         }
     }
 }
