@@ -296,6 +296,7 @@
 
             Assert.AreEqual(expected, csharp);
 
+            //// TODO _comment has a "doublequotex3bdoublequote" property name which should just be x3b
             //// TODO does the natural language classnames even make sense? would it make more sense to just make the class names the ABNF but replacing the symbol syntax with class friendly symbols?
             //// TODO i don't really like using _ for spaces *and* for the property name conflict resolution
             //// TODO make "optionals" not be nullable
