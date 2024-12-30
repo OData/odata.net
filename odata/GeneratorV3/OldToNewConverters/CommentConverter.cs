@@ -33,10 +33,16 @@
 
             protected internal override Abnf.Inners._openWSPⳆVCHARↃ Accept(Comment.Inner.InnerWsp node, Void context)
             {
+                return new Abnf.Inners._openWSPⳆVCHARↃ(
+                    new Abnf.Inners._WSPⳆVCHAR._WSP(
+                        WspConverter.Instance.Visit(node.Wsp, context)));
             }
 
             protected internal override Abnf.Inners._openWSPⳆVCHARↃ Accept(Comment.Inner.InnerVchar node, Void context)
             {
+                return new Abnf.Inners._openWSPⳆVCHARↃ(
+                    new Abnf.Inners._WSPⳆVCHAR._VCHAR(
+                        VcharConverter.Instance.Visit(node.Vchar, context)));
             }
         }
     }

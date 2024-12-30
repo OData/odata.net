@@ -1,9 +1,10 @@
 ﻿namespace GeneratorV3.OldToNewConverters
 {
+    using System.Linq;
+
     using AbnfParser.CstNodes;
     using GeneratorV3.Abnf;
     using Root;
-    using System.Linq;
 
     public sealed class RuleListConverter
     {
