@@ -10,6 +10,10 @@
 
         public GeneratorV3.Abnf._LF Convert(AbnfParser.CstNodes.Core.Lf lf)
         {
+            return new Abnf._LF(
+                new Abnf.Inners._percentxZEROA(
+                    Abnf.Inners._ZERO.Instance,
+                    Abnf.Inners._A.Instance));
         }
     }
 }

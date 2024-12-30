@@ -10,7 +10,10 @@
 
         protected internal override GeneratorV3.Abnf._VCHAR Accept(AbnfParser.CstNodes.Core.Vchar.x21 node, Root.Void context)
         {
-            
+            return new Abnf._VCHAR(
+                new Abnf.Inners._percentxTWOONEⲻSEVENE._TWOONE(
+                    Abnf.Inners._TWO.Instance,
+                    Abnf.Inners._ONE.Instance));
         }
 
         protected internal override GeneratorV3.Abnf._VCHAR Accept(AbnfParser.CstNodes.Core.Vchar.x22 node, Root.Void context)
