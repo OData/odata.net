@@ -22,7 +22,7 @@
                     x64Converter.Instance.Convert(node.D)),
                 node.Digits.Select(digit =>
                     DigitConverter.Instance.Visit(digit, context)),
-                null));
+                null);
         }
 
         protected internal override _decⲻval Accept(DecVal.ConcatenatedDecs node, Void context)
