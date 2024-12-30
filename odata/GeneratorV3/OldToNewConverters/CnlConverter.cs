@@ -13,10 +13,14 @@
 
         protected internal override _cⲻnl Accept(Cnl.Comment node, Root.Void context)
         {
+            return new GeneratorV3.Abnf._cⲻnl._comment(
+                CommentConverter.Instance.Convert(node.Value));
         }
 
         protected internal override _cⲻnl Accept(Cnl.Newline node, Root.Void context)
         {
+            return new GeneratorV3.Abnf._cⲻnl._CRLF(
+                CrLfConverter.Instance.Convert(node.Crlf));
         }
     }
 }

@@ -16,7 +16,11 @@ namespace GeneratorV3.OldToNewConverters
 
         public GeneratorV3.Abnf._rule Convert(AbnfParser.CstNodes.Rule rule)
         {
-            rule
+            return new Abnf._rule(
+                RuleNameConverter.Instance.Convert(rule.RuleName),
+                DefinedAsConverter.Instance.Visit(rule.DefinedAs, default),
+                ElementsConverter.Instance.Convert(rule.Elements),
+                CnlConverter.Instance.Visit(rule.Cnl, default));
         }
     }
 }
