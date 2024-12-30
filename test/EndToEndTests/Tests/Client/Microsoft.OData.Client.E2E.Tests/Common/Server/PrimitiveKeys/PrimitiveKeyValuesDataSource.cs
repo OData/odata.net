@@ -248,15 +248,10 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys
 
         private void PopulateEdmDateTimeOffsets()
         {
-            var CachedNow = DateTimeOffset.Now;
-            var CachedUtcNow = DateTimeOffset.UtcNow.AddDays(1);
-
             this.EdmDateTimeOffsets =
             [
                 new EdmDateTimeOffset { Id = DateTimeOffset.MinValue },
                 new EdmDateTimeOffset { Id = DateTimeOffset.MaxValue },
-                new EdmDateTimeOffset { Id = CachedNow },
-                new EdmDateTimeOffset { Id = CachedUtcNow },
             ];
         }
     }

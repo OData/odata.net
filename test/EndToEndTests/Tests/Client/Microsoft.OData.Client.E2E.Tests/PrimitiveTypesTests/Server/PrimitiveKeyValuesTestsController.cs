@@ -57,6 +57,7 @@ public class PrimitiveKeyValuesTestsController : ODataController
         return Ok(result);
     }
 
+    [EnableQuery]
     [HttpGet("odata/EdmInt16Set")]
     public IActionResult GetEdmInt16s()
     {
@@ -77,6 +78,7 @@ public class PrimitiveKeyValuesTestsController : ODataController
         return Ok(result);
     }
 
+    [EnableQuery]
     [HttpGet("odata/EdmInt32Set")]
     public IActionResult GetEdmInt32s()
     {
@@ -105,6 +107,7 @@ public class PrimitiveKeyValuesTestsController : ODataController
         return Ok(result);
     }
 
+    [EnableQuery]
     [HttpGet("odata/EdmInt64Set/$count")]
     public IActionResult GetEdmInt64sCount()
     {
@@ -133,6 +136,7 @@ public class PrimitiveKeyValuesTestsController : ODataController
         return Ok(result);
     }
 
+    [EnableQuery]
     [HttpGet("odata/EdmSingleSet/$count")]
     public IActionResult GetEdmSinglesCount()
     {
@@ -195,6 +199,7 @@ public class PrimitiveKeyValuesTestsController : ODataController
         return Ok(result);
     }
 
+    [EnableQuery]
     [HttpGet("odata/EdmDateTimeOffsetSet")]
     public IActionResult GetEdmDateTimeOffsets()
     {
@@ -215,6 +220,7 @@ public class PrimitiveKeyValuesTestsController : ODataController
         return Ok(result);
     }
 
+    [EnableQuery]
     [HttpGet("odata/EdmTimeSet")]
     public IActionResult GetEdmTimes()
     {

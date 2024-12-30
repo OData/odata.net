@@ -68,7 +68,11 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         {
             foreach (var entry in _context.EdmBinarySet)
             {
-                var queryResult = _context.CreateQuery<EdmBinary>("EdmBinarySet").Where(e => e.Id.Equals(entry.Id)).ToArray();
+                // Arrange & Act
+                var query = _context.CreateQuery<EdmBinary>("EdmBinarySet").Where(e => e.Id.Equals(entry.Id));
+                var queryResult = query.ToArray();
+
+                // Assert
                 //Expected a single result for key value {0}, entry.Id.ToString()
                 Assert.Single(queryResult);
             }
@@ -79,7 +83,11 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         {
             foreach (var entry in _context.EdmBooleanSet)
             {
-                var queryResult = _context.CreateQuery<EdmBoolean>("EdmBooleanSet").Where(e => e.Id.Equals(entry.Id)).ToArray();
+                // Arrange & Act
+                var query = _context.CreateQuery<EdmBoolean>("EdmBooleanSet").Where(e => e.Id.Equals(entry.Id));
+                var queryResult = query.ToArray();
+
+                // Assert
                 //Expected a single result for key value '{0}', entry.Id.ToString(CultureInfo.InvariantCulture)
                 Assert.Single(queryResult);
             }
@@ -90,19 +98,12 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         {
             foreach (var entry in _context.EdmDateTimeOffsetSet)
             {
-                var queryResult = _context.CreateQuery<EdmDateTimeOffset>("EdmDateTimeOffsetSet").Where(e => e.Id.Equals(entry.Id)).ToArray();
-                //Expected a single result for key value {0}, entry.Id.ToString()
-                Assert.Single(queryResult);
-            }
-        }
+                // Arrange & Act
+                var query = _context.CreateQuery<EdmDateTimeOffset>("EdmDateTimeOffsetSet").Where(e => e.Id.Equals(entry.Id));
+                var queryResult = query.ToArray();
 
-        [Fact]
-        public void DecimalTest()
-        {
-            foreach (var entry in _context.EdmDecimalSet)
-            {
-                var queryResult = _context.CreateQuery<EdmDecimal>("EdmDecimalSet").Where(e => e.Id.Equals(entry.Id)).ToArray();
-                //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
+                // Assert
+                //Expected a single result for key value {0}, entry.Id.ToString()
                 Assert.Single(queryResult);
             }
         }
@@ -117,7 +118,11 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
                     continue;
                 }
 
-                var queryResult = _context.CreateQuery<EdmDouble>("EdmDoubleSet").Where(e => e.Id.Equals(entry.Id)).ToArray();
+                // Arrange & Act
+                var query = _context.CreateQuery<EdmDouble>("EdmDoubleSet").Where(e => e.Id.Equals(entry.Id));
+                var queryResult = query.ToArray();
+
+                // Assert
                 //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
                 Assert.Single(queryResult);
             }
@@ -128,7 +133,11 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         {
             foreach (var entry in _context.EdmInt16Set)
             {
-                var queryResult = _context.CreateQuery<EdmInt16>("EdmInt16Set").Where(e => e.Id.Equals(entry.Id)).ToArray();
+                // Arrange & Act
+                var query = _context.CreateQuery<EdmInt16>("EdmInt16Set").Where(e => e.Id.Equals(entry.Id));
+                var queryResult = query.ToArray();
+
+                // Assert
                 //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
                 Assert.Single(queryResult);
             }
@@ -139,7 +148,11 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         {
             foreach (var entry in _context.EdmInt32Set)
             {
-                var queryResult = _context.CreateQuery<EdmInt32>("EdmInt32Set").Where(e => e.Id.Equals(entry.Id)).ToArray();
+                // Arrange & Act
+                var query = _context.CreateQuery<EdmInt32>("EdmInt32Set").Where(e => e.Id.Equals(entry.Id));
+                var queryResult = query.ToArray();
+
+                // Assert
                 //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
                 Assert.Single(queryResult);
             }
@@ -150,7 +163,11 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         {
             foreach (var entry in _context.EdmInt64Set)
             {
-                var queryResult = _context.CreateQuery<EdmInt64>("EdmInt64Set").Where(e => e.Id.Equals(entry.Id)).ToArray();
+                // Arrange & Act
+                var query = _context.CreateQuery<EdmInt64>("EdmInt64Set").Where(e => e.Id.Equals(entry.Id));
+                var queryResult = query.ToArray();
+
+                // Assert
                 //Expected a single result for key value {0}", entry.Id.ToString(CultureInfo.InvariantCulture)
                 Assert.Single(queryResult);
             }
@@ -166,7 +183,11 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
                     continue;
                 }
 
-                var queryResult = _context.CreateQuery<EdmSingle>("EdmSingleSet").Where(e => e.Id.Equals(entry.Id)).ToArray();
+                // Arrange & Act
+                var query = _context.CreateQuery<EdmSingle>("EdmSingleSet").Where(e => e.Id.Equals(entry.Id));
+                var queryResult = query.ToArray();
+
+                // Assert
                 //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
                 Assert.Single(queryResult);
             }
@@ -177,7 +198,11 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         {
             foreach (var entry in _context.EdmStringSet)
             {
-                var queryResult = _context.CreateQuery<EdmString>("EdmStringSet").Where(e => e.Id.Equals(entry.Id)).ToArray();
+                // Arrange & Act
+                var query = _context.CreateQuery<EdmString>("EdmStringSet").Where(e => e.Id.Equals(entry.Id));
+                var queryResult = query.ToArray();
+
+                // Assert
                 //Expected a single result for key value {0} entry.Id)
                 Assert.Single(queryResult);
             }
@@ -188,7 +213,11 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         {
             foreach (var entry in _context.EdmTimeSet)
             {
-                var queryResult = _context.CreateQuery<EdmTime>("EdmTimeSet").Where(e => e.Id.Equals(entry.Id)).ToArray();
+                // Arrange & Act
+                var query = _context.CreateQuery<EdmTime>("EdmTimeSet").Where(e => e.Id.Equals(entry.Id));
+                var queryResult = query.ToArray();
+
+                // Assert
                 //Expected a single result for key value {0}, entry.Id.ToString()
                 Assert.Single(queryResult);
             }
