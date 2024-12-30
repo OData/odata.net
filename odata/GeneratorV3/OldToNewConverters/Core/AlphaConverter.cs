@@ -10,7 +10,10 @@
 
         protected internal override GeneratorV3.Abnf._ALPHA Accept(AbnfParser.CstNodes.Core.Alpha.x41 node, Root.Void context)
         {
-            
+            return new GeneratorV3.Abnf._ALPHA._percentxFOURONEⲻFIVEA(
+                new GeneratorV3.Abnf.Inners._percentxFOURONEⲻFIVEA._FOURONE(
+                    Abnf.Inners._FOUR.Instance,
+                    Abnf.Inners._ONE.Instance));
         }
 
         protected internal override GeneratorV3.Abnf._ALPHA Accept(AbnfParser.CstNodes.Core.Alpha.x42 node, Root.Void context)

@@ -14,10 +14,16 @@
 
         protected internal override _BIT Accept(Bit.Zero node, Void context)
         {
+            return new _BIT._doublequotex30doublequote(
+                new Inners._doublequotex30doublequote(
+                    x30Converter.Instance.Convert(node.Value)));
         }
 
         protected internal override _BIT Accept(Bit.One node, Void context)
         {
+            return new _BIT._doublequotex31doublequote(
+                new Inners._doublequotex31doublequote(
+                    x31Converter.Instance.Convert(node.Value)));
         }
     }
 }
