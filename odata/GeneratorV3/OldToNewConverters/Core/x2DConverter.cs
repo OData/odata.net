@@ -10,6 +10,7 @@
 
         public GeneratorV3.Abnf.Inners._x2D Convert(AbnfParser.CstNodes.Core.x2D x2D)
         {
+            return Abnf.Inners._x2D.Instance;
         }
     }
 }

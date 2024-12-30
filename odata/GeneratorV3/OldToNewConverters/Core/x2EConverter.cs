@@ -10,6 +10,7 @@
 
         public GeneratorV3.Abnf.Inners._x2E Convert(AbnfParser.CstNodes.Core.x2E x2E)
         {
+            return Abnf.Inners._x2E.Instance;
         }
     }
 }

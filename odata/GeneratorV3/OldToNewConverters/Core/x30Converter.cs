@@ -10,6 +10,7 @@
 
         public Abnf.Inners._x30 Convert(AbnfParser.CstNodes.Core.x30 x30)
         {
+            return Abnf.Inners._x30.Instance;
         }
     }
 }

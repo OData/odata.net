@@ -10,6 +10,7 @@
 
         public GeneratorV3.Abnf.Inners._x28 Convert(AbnfParser.CstNodes.Core.x28 x28)
         {
+            return Abnf.Inners._x28.Instance;
         }
     }
 }

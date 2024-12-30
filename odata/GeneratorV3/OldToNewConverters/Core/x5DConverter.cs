@@ -10,6 +10,7 @@
 
         public GeneratorV3.Abnf.Inners._x5D Convert(AbnfParser.CstNodes.Core.x5D x5D)
         {
+            return Abnf.Inners._x5D.Instance;
         }
     }
 }
