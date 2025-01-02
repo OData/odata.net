@@ -291,6 +291,8 @@
 
                                     private readonly AlternationGenerator alternationGenerator;
 
+                                    private readonly CharValToClass charValToClass;
+
                                     public ElementToPropertyDefinition(
                                         string @namespace, 
                                         string innersClassName, 
@@ -299,6 +301,7 @@
                                         this.@namespace = @namespace;
                                         this.innersClassName = innersClassName;
                                         this.alternationGenerator = alternationGenerator;
+                                        this.charValToClass = new CharValToClass(innersClassName);
                                     }
 
                                     protected internal override PropertyDefinition Accept(
@@ -460,7 +463,7 @@
 
                                         if (!context.InnerClasses.ContainsKey(innerClassName))
                                         {
-                                            var innerClass = CharValToClass.Instance.Generate(node.Value, (innerClassName, context.InnerClasses));
+                                            var innerClass = this.charValToClass.Generate(node.Value, (innerClassName, context.InnerClasses));
 
                                             context.InnerClasses[innerClassName] = innerClass;
                                         }
@@ -491,20 +494,20 @@
 
                                     private sealed class CharValToClass
                                     {
+                                        private readonly InnerToProperty innerToProperty;
 
-                                        private CharValToClass()
+                                        public CharValToClass(string innersClassName)
                                         {
+                                            this.innerToProperty = new InnerToProperty(innersClassName);
                                         }
-
-                                        public static CharValToClass Instance { get; } = new CharValToClass();
 
                                         public Class Generate(CharVal charVal, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                         {
                                             var propertyTypeToCount = new Dictionary<string, int>();
                                             var properties = charVal
                                                 .Inners
-                                                .Select(inner => InnerToProperty
-                                                    .Instance
+                                                .Select(inner => this.
+                                                    innerToProperty
                                                     .Generate(inner, (propertyTypeToCount, context.InnerClasses)))
                                                 .ToList();
 
