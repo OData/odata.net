@@ -8,6 +8,7 @@
     using AbnfParser.CstNodes;
     using AbnfParser.CstNodes.Core;
     using AbnfParserGenerator;
+    using GeneratorV3.Odata;
     using Root;
 
     public static class NotNullExtension
@@ -26,13 +27,12 @@
 
     public sealed class CstNodesGenerator
     {
-        private CstNodesGenerator()
+        private readonly RuleListInnerGenerator ruleListInnerGenerator;
+
+        public CstNodesGenerator(string @namespace)
         {
+            this.ruleListInnerGenerator = new RuleListInnerGenerator(@namespace);
         }
-
-        public static CstNodesGenerator Intance { get; } = new CstNodesGenerator();
-
-        private static string Namespace = "GeneratorV3.Abnf"; //// TODO parameterize this
 
         private static string InnersClassName = "Inners"; //// TODO parameterize this
 
@@ -90,8 +90,8 @@
             return ruleList
                 .Inners
                 .Select(
-                    inner => RuleListInnerGenerator
-                        .Instance
+                    inner => this
+                        .ruleListInnerGenerator
                         .Visit(inner, (innerClasses, context)))
                 .NotNull()
                 .Append(
@@ -109,58 +109,64 @@
 
         private sealed class RuleListInnerGenerator : RuleList.Inner.Visitor<Class?, (Dictionary<string, Class> InnerClasses, Root.Void @void)>
         {
-            private RuleListInnerGenerator()
-            {
-            }
+            private readonly RuleGenerator ruleGenerator;
 
-            public static RuleListInnerGenerator Instance { get; } = new RuleListInnerGenerator();
+            public RuleListInnerGenerator(string @namespace)
+            {
+                this.ruleGenerator = new RuleGenerator(@namespace);
+            }
 
             protected internal override Class? Accept(RuleList.Inner.RuleInner node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
             {
-                return RuleGenerator.Instance.Generate(node.Rule, context);
+                return this.ruleGenerator.Generate(node.Rule, context);
             }
 
             private sealed class RuleGenerator
             {
-                private RuleGenerator()
-                {
-                }
+                private readonly ElementsGenerator elementsGenerator;
 
-                public static RuleGenerator Instance { get; } = new RuleGenerator();
+                public RuleGenerator(string @namespace)
+                {
+                    this.elementsGenerator = new ElementsGenerator(@namespace);
+                }
 
                 public Class Generate(Rule rule, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
                 {
                     var className = ClassNamePrefix + RuleNameToClassName.Instance.Generate(rule.RuleName, context.@void);
-                    return ElementsGenerator.Instance.Generate(rule.Elements, (className, context.InnerClasses));
+                    return this.elementsGenerator.Generate(rule.Elements, (className, context.InnerClasses));
                 }
 
                 private sealed class ElementsGenerator
                 {
-                    private ElementsGenerator()
-                    {
-                    }
+                    private readonly AlternationGenerator alternationGenerator;
 
-                    public static ElementsGenerator Instance { get; } = new ElementsGenerator();
+                    public ElementsGenerator(string @namespace)
+                    {
+                        this.alternationGenerator = new AlternationGenerator(@namespace);
+                    }
 
                     public Class Generate(Elements elements, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                     {
-                        return AlternationGenerator.Instance.Generate(elements.Alternation, context);
+                        return this.alternationGenerator.Generate(elements.Alternation, context);
                     }
 
                     private sealed class AlternationGenerator
                     {
-                        private AlternationGenerator()
-                        {
-                        }
+                        private readonly ConcatenationToClass concatenationToClass;
+                        private readonly ConcatenationsToDiscriminatedUnion concatenationsToDiscriminatedUnion;
 
-                        public static AlternationGenerator Instance { get; } = new AlternationGenerator();
+                        public AlternationGenerator(string @namespace)
+                        {
+                            this.concatenationToClass = new ConcatenationToClass(@namespace, this);
+                            this.concatenationsToDiscriminatedUnion = new ConcatenationsToDiscriminatedUnion(this.concatenationToClass);
+                        }
 
                         public Class Generate(Alternation alternation, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                         {
                             if (alternation.Inners.Any())
                             {
-                                return ConcatenationsToDiscriminatedUnion
-                                    .Instance
+                                return this
+                                    .concatenationsToDiscriminatedUnion
                                     .Generate(
                                         alternation
                                             .Inners
@@ -171,17 +177,18 @@
                             }
                             else
                             {
-                                return ConcatenationToClass.Instance.Generate(alternation.Concatenation, (context.ClassName, null, Enumerable.Empty<MethodDefinition>(), context.InnerClasses));
+                                return this.concatenationToClass.Generate(alternation.Concatenation, (context.ClassName, null, Enumerable.Empty<MethodDefinition>(), context.InnerClasses));
                             }
                         }
 
                         private sealed class ConcatenationToClass
                         {
-                            private ConcatenationToClass()
-                            {
-                            }
+                            private readonly RepetitonToPropertyDefinition repetitonToPropertyDefinition;
 
-                            public static ConcatenationToClass Instance { get; } = new ConcatenationToClass();
+                            public ConcatenationToClass(string @namespace, AlternationGenerator alternationGenerator)
+                            {
+                                this.repetitonToPropertyDefinition = new RepetitonToPropertyDefinition(@namespace, alternationGenerator);
+                            }
 
                             public Class Generate(
                                 Concatenation concatenation, 
@@ -194,8 +201,8 @@
                                         inner => inner.Repetition)
                                     .Prepend(
                                         concatenation.Repetition)
-                                    .Select(repetition => RepetitonToPropertyDefinition
-                                        .Instance
+                                    .Select(repetition => this.
+                                        repetitonToPropertyDefinition
                                         .Visit(
                                             repetition, 
                                             (propertyTypeToCount, context.InnerClasses)))
@@ -224,18 +231,19 @@
 
                             private sealed class RepetitonToPropertyDefinition : Repetition.Visitor<PropertyDefinition, (Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses)>
                             {
-                                private RepetitonToPropertyDefinition()
-                                {
-                                }
+                                private readonly ElementToPropertyDefinition elementToPropertyDefinition;
 
-                                public static RepetitonToPropertyDefinition Instance { get; } = new RepetitonToPropertyDefinition();
+                                public RepetitonToPropertyDefinition(string @namespace, AlternationGenerator alternationGenerator)
+                                {
+                                    this.elementToPropertyDefinition = new ElementToPropertyDefinition(@namespace, alternationGenerator);
+                                }
 
                                 protected internal override PropertyDefinition Accept(
                                     Repetition.ElementOnly node, 
                                     (Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                 {
-                                    return ElementToPropertyDefinition
-                                        .Instance
+                                    return this
+                                        .elementToPropertyDefinition
                                         .Visit(
                                             node.Element, 
                                             (false, context.PropertyTypeToCount, context.InnerClasses));
@@ -245,8 +253,8 @@
                                     Repetition.RepeatAndElement node,
                                     (Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                 {
-                                    return ElementToPropertyDefinition
-                                        .Instance
+                                    return this.
+                                        elementToPropertyDefinition
                                         .Visit(
                                             node.Element,
                                             (true, context.PropertyTypeToCount, context.InnerClasses));
@@ -254,11 +262,15 @@
 
                                 private sealed class ElementToPropertyDefinition : Element.Visitor<PropertyDefinition, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses)>
                                 {
-                                    private ElementToPropertyDefinition()
-                                    {
-                                    }
+                                    private readonly string @namespace;
 
-                                    public static ElementToPropertyDefinition Instance { get; } = new ElementToPropertyDefinition();
+                                    private readonly AlternationGenerator alternationGenerator;
+
+                                    public ElementToPropertyDefinition(string @namespace, AlternationGenerator alternationGenerator)
+                                    {
+                                        this.@namespace = @namespace;
+                                        this.alternationGenerator = alternationGenerator;
+                                    }
 
                                     protected internal override PropertyDefinition Accept(
                                         Element.RuleName node, 
@@ -269,7 +281,7 @@
                                             .Generate(
                                                 node.Value,
                                                 default);
-                                        var propertyType = $"{Namespace}.{ruleName}";
+                                        var propertyType = $"{this.@namespace}.{ruleName}";
                                         if (context.IsCollection)
                                         {
                                             propertyType = $"IEnumerable<{propertyType}>";
@@ -310,7 +322,7 @@
                                         var groupInnerClassName = ClassNamePrefix + AlternationToClassName.Instance.Generate(node.Value.Alternation);
                                         if (!isOnlyRuleName && !context.InnerClasses.ContainsKey(groupInnerClassName))
                                         {
-                                            context.InnerClasses[groupInnerClassName] = AlternationGenerator.Instance.Generate(node.Value.Alternation, (groupInnerClassName, context.InnerClasses));
+                                            context.InnerClasses[groupInnerClassName] = this.alternationGenerator.Generate(node.Value.Alternation, (groupInnerClassName, context.InnerClasses));
                                         }
 
                                         var groupClassName = ClassNamePrefix + GroupToClassName.Instance.Generate(node.Value);
@@ -329,7 +341,7 @@
                                                         AccessModifier.Public,
                                                         new[]
                                                         {
-                                                            new MethodParameter($"{(isOnlyRuleName ? Namespace : InnersClassName)}.{groupInnerClassName}", $"{groupInnerClassName}_1"),
+                                                            new MethodParameter($"{(isOnlyRuleName ? this.@namespace : InnersClassName)}.{groupInnerClassName}", $"{groupInnerClassName}_1"),
                                                         },
                                                         new[]
                                                         {
@@ -342,7 +354,7 @@
                                                 {
                                                     new PropertyDefinition(
                                                         AccessModifier.Public,
-                                                        $"{(isOnlyRuleName ? Namespace : InnersClassName)}.{groupInnerClassName}",
+                                                        $"{(isOnlyRuleName ? this.@namespace : InnersClassName)}.{groupInnerClassName}",
                                                         $"{groupInnerClassName}_1",
                                                         true,
                                                         false),
@@ -382,14 +394,14 @@
 
                                         if (!isOnlyRuleName && !context.InnerClasses.ContainsKey(innerClassName))
                                         {
-                                            context.InnerClasses[innerClassName] = AlternationGenerator
-                                                .Instance
+                                            context.InnerClasses[innerClassName] = this.
+                                                alternationGenerator
                                                 .Generate(
                                                     node.Value.Alternation,
                                                     (innerClassName, context.InnerClasses));
                                         }
 
-                                        var propertyType = $"{(isOnlyRuleName ? Namespace : InnersClassName)}.{innerClassName}?";
+                                        var propertyType = $"{(isOnlyRuleName ? this.@namespace : InnersClassName)}.{innerClassName}?";
                                         if (context.IsCollection)
                                         {
                                             propertyType = $"IEnumerable<{propertyType}>";
@@ -1207,11 +1219,12 @@
 
                         private sealed class ConcatenationsToDiscriminatedUnion
                         {
-                            private ConcatenationsToDiscriminatedUnion()
-                            {
-                            }
+                            private readonly ConcatenationToClass concatenationToClass;
 
-                            public static ConcatenationsToDiscriminatedUnion Instance { get; } = new ConcatenationsToDiscriminatedUnion();
+                            public ConcatenationsToDiscriminatedUnion(ConcatenationToClass concatenationToClass)
+                            {
+                                this.concatenationToClass = concatenationToClass;
+                            }
 
                             public Class Generate(IEnumerable<Concatenation> concatenations, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                             {
@@ -1233,8 +1246,8 @@
                                     },
                                     "return visitor.Accept(this, context);");
                                 var discriminatedUnionElements = concatenations
-                                    .Select(concatenation => ConcatenationToClass
-                                        .Instance
+                                    .Select(concatenation => this.
+                                        concatenationToClass
                                         .Generate(
                                             concatenation,
                                             (ClassNamePrefix + ConcatenationToClassName.Instance.Generate(concatenation), context.ClassName, new[] { dispatchMethod }, context.InnerClasses)))

@@ -296,10 +296,12 @@
 
             Assert.AreEqual(expected, csharp);
 
-            //// TODO _comment has a "doublequotex3bdoublequote" property name which should just be x3b
-            //// TODO does the natural language classnames even make sense? would it make more sense to just make the class names the ABNF but replacing the symbol syntax with class friendly symbols?
-            //// TODO i don't really like using _ for spaces *and* for the property name conflict resolution
+            //// TODO address todos in the cst generator
             //// TODO make "optionals" not be nullable
+            //// TODO implement parser generation
+            //// TODO implement transcriber generation
+            //// TODO implement generators using the generated cst
+            //// TODO i don't really like using _ for spaces *and* for the property name conflict resolution
             //// TODO you are entirely skipping out on incremental definitions, by the way
             //// TODO make sure to flesh out the code quality checks for the generated code
             //// TODO it could happen that someojne has first-rule = first-rule / second-rule in which case the du name first-rule with conflict with one of its elements
@@ -311,13 +313,15 @@
             var abnf = File.ReadAllText(@"C:\msgithub\odata.net\odata\GeneratorV3\test.abnf");
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(abnf);
 
-            var classes = GeneratorV3.CstNodesGenerator.Intance.Generate(cst, default);
+            var @namespace = "GeneratorV3";
+
+            var classes = new GeneratorV3.CstNodesGenerator(@namespace).Generate(cst, default);
 
             var classTranscriber = new ClassTranscriber();
 
             var stringBuilder = new StringBuilder();
             var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine("namespace GeneratorV3"); //// TODO
+            builder.AppendLine($"namespace {@namespace}"); //// TODO
             builder.AppendLine("{");
             builder.Indent();
             builder.AppendLine("using System.Collections.Generic;");
@@ -351,13 +355,14 @@
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
 
-            var classes = GeneratorV3.CstNodesGenerator.Intance.Generate(cst, default);
+            var @namespace = "GeneratorV3.Core";
+            var classes = new GeneratorV3.CstNodesGenerator(@namespace).Generate(cst, default);
 
             var classTranscriber = new ClassTranscriber();
 
             var stringBuilder = new StringBuilder();
             var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine("namespace GeneratorV3.Core");
+            builder.AppendLine($"namespace {@namespace}");
             builder.AppendLine("{");
             builder.Indent();
             builder.AppendLine("using System.Collections.Generic;");
@@ -388,13 +393,14 @@
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
 
-            var classes = GeneratorV3.CstNodesGenerator.Intance.Generate(cst, default);
+            var @namespace = "GeneratorV3.Abnf";
+            var classes = new GeneratorV3.CstNodesGenerator(@namespace).Generate(cst, default);
 
             var classTranscriber = new ClassTranscriber();
 
             var stringBuilder = new StringBuilder();
             var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine("namespace GeneratorV3.Abnf");
+            builder.AppendLine($"namespace {@namespace}");
             builder.AppendLine("{");
             builder.Indent();
             builder.AppendLine("using System.Collections.Generic;");
@@ -422,13 +428,14 @@
             var abnfRulesText = File.ReadAllText(abnfRulesPath);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(abnfRulesText);
 
-            var classes = GeneratorV3.CstNodesGenerator.Intance.Generate(cst, default);
+            var @namespace = "GeneratorV3.Odata";
+            var classes = new GeneratorV3.CstNodesGenerator(@namespace).Generate(cst, default);
 
             var classTranscriber = new ClassTranscriber();
 
             var stringBuilder = new StringBuilder();
             var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine("namespace GeneratorV3.Odata");
+            builder.AppendLine($"namespace {@namespace}");
             builder.AppendLine("{");
             builder.Indent();
             builder.AppendLine("using System.Collections.Generic;");
