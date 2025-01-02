@@ -807,7 +807,8 @@
                                                 this.segmentsToProperties = new SegmentsToProperties(
                                                     this.classNamePrefix,
                                                     innersClassName, 
-                                                    this.hexDigsToClass);
+                                                    this.hexDigsToClass,
+                                                    this.toClassNames);
                                             }
 
                                             protected internal override Class Accept(
