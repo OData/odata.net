@@ -32,10 +32,10 @@
                     x78Converter.Instance.Convert(node.X)),
                 node.HexDigs.Select(hexDig =>
                     HexDigConverter.Instance.Visit(hexDig, context)),
-                new Inners._ONEasteriskopendoublequotex2Edoublequote_ONEasteriskHEXDIGↃⳆopendoublequotex2Ddoublequote_ONEasteriskHEXDIGↃ._ONEasteriskopendoublequotex2Edoublequote_ONEasteriskHEXDIGↃ(
+                new Inners._1asteriskopendoublequotex2Edoublequote_1asteriskHEXDIGↃⳆopendoublequotex2Ddoublequote_1asteriskHEXDIGↃ._1asteriskopendoublequotex2Edoublequote_1asteriskHEXDIGↃ(
                     node.Inners.Select(inner =>
-                        new Inners._opendoublequotex2Edoublequote_ONEasteriskHEXDIGↃ(
-                            new Inners._doublequotex2Edoublequote_ONEasteriskHEXDIG(
+                        new Inners._opendoublequotex2Edoublequote_1asteriskHEXDIGↃ(
+                            new Inners._doublequotex2Edoublequote_1asteriskHEXDIG(
                                 new Inners._doublequotex2Edoublequote(
                                     x2EConverter.Instance.Convert(inner.Dot)),
                                 inner.HexDigs.Select(hexDig =>
@@ -49,9 +49,9 @@
                     x78Converter.Instance.Convert(node.X)),
                 node.HexDigs.Select(hexDig =>
                     HexDigConverter.Instance.Visit(hexDig, context)),
-                new Inners._ONEasteriskopendoublequotex2Edoublequote_ONEasteriskHEXDIGↃⳆopendoublequotex2Ddoublequote_ONEasteriskHEXDIGↃ._opendoublequotex2Ddoublequote_ONEasteriskHEXDIGↃ(
-                    new Inners._opendoublequotex2Ddoublequote_ONEasteriskHEXDIGↃ(
-                        new Inners._doublequotex2Ddoublequote_ONEasteriskHEXDIG(
+                new Inners._1asteriskopendoublequotex2Edoublequote_1asteriskHEXDIGↃⳆopendoublequotex2Ddoublequote_1asteriskHEXDIGↃ._opendoublequotex2Ddoublequote_1asteriskHEXDIGↃ(
+                    new Inners._opendoublequotex2Ddoublequote_1asteriskHEXDIGↃ(
+                        new Inners._doublequotex2Ddoublequote_1asteriskHEXDIG(
                             new Inners._doublequotex2Ddoublequote(
                                 x2DConverter.Instance.Convert(node.Inners.First().Dash)),
                             node.Inners.First().HexDigs.Select(hexDig =>
