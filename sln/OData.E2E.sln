@@ -17,13 +17,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{5D4916FD-F
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unitTests", "unitTests", "{F2A816DD-1537-4D00-B3BF-535F4FA8D724}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Client.Tests", "..\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj", "{B9F65944-971A-4665-B0F1-5FD413C0DAD8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Client.Tests", "..\test\UnitTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj", "{B9F65944-971A-4665-B0F1-5FD413C0DAD8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Core.Tests", "..\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj", "{6FEFB52A-B175-466C-92C3-58A5DF513440}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Core.Tests", "..\test\UnitTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj", "{6FEFB52A-B175-466C-92C3-58A5DF513440}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Edm.Tests", "..\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj", "{17E925D3-8840-41BD-B0DF-884334FB9812}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Edm.Tests", "..\test\UnitTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj", "{17E925D3-8840-41BD-B0DF-884334FB9812}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Spatial.Tests", "..\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj", "{F40112C3-4150-41DB-BDF2-1C34FC9B49D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Spatial.Tests", "..\test\UnitTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj", "{F40112C3-4150-41DB-BDF2-1C34FC9B49D6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "e2eTests", "e2eTests", "{57146ABA-0B08-4B0A-8D27-9A477FA0C2B5}"
 EndProject
@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.Client.E2E.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "helper", "helper", "{C2ADD565-E633-42A9-9956-9FF9FAF5E4B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.TestCommon", "..\test\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj", "{F9BF7E61-402B-4492-A4FE-F9549921741B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.TestCommon", "..\test\Common\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj", "{F9BF7E61-402B-4492-A4FE-F9549921741B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Test.OData.DependencyInjection", "..\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj", "{AB1B80D6-EAE2-41C0-A089-7CD492E85FE9}"
 EndProject

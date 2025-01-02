@@ -19,7 +19,7 @@
   <Choose>
     <When Condition=" '$(TestType)'=='Private' ">
       <ItemGroup>
-        <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />                  
+        <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
       </ItemGroup>
     </When>
   </Choose>

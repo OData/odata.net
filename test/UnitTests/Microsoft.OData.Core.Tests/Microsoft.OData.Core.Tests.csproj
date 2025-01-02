@@ -51,13 +51,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Common\ExceptionUtilities.cs" Link="ExceptionUtilities.cs" />
-    <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmConstants.cs" Link="EdmConstants.cs" />
-    <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmToStockModelConverter.cs" Link="EdmToStockModelConverter.cs" />
-    <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataExtensionMethods.cs" Link="MetadataExtensionMethods.cs" />
-    <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataUtils.cs" Link="MetadataUtils.cs" />
-    <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\TestModels.cs" Link="TestModels.cs" />
-    <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\ODataLibTest\ModelBuilder.cs" Link="ModelBuilder.cs" />
+    <Compile Include="..\..\FunctionalTests\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Common\ExceptionUtilities.cs" Link="ExceptionUtilities.cs" />
+    <Compile Include="..\..\FunctionalTests\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmConstants.cs" Link="EdmConstants.cs" />
+    <Compile Include="..\..\FunctionalTests\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmToStockModelConverter.cs" Link="EdmToStockModelConverter.cs" />
+    <Compile Include="..\..\FunctionalTests\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataExtensionMethods.cs" Link="MetadataExtensionMethods.cs" />
+    <Compile Include="..\..\FunctionalTests\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataUtils.cs" Link="MetadataUtils.cs" />
+    <Compile Include="..\..\FunctionalTests\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\TestModels.cs" Link="TestModels.cs" />
+    <Compile Include="..\..\FunctionalTests\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\ODataLibTest\ModelBuilder.cs" Link="ModelBuilder.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -70,7 +70,7 @@
     <ProjectReference Include="..\..\..\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
     <ProjectReference Include="..\..\..\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />
     <ProjectReference Include="..\..\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj" />
-    <ProjectReference Include="..\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj" />
+    <ProjectReference Include="..\..\Common\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(TargetFramework)' == 'net48'">

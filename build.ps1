@@ -137,10 +137,10 @@ $NightlyTestDlls = "microsoft.test.data.services.ddbasics.dll",
        "astoriaclientunittests.dll"
 
 # .NET Core tests are different and require the dotnet tool. The tool references the .csproj (VS2017) files instead of dlls
-$NetCoreXUnitTestProjs = "\test\FunctionalTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj",
-    "\test\FunctionalTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj",
-    "\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj",
-    "\test\FunctionalTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj"
+$NetCoreXUnitTestProjs = "\test\UnitTests\Microsoft.Spatial.Tests\Microsoft.Spatial.Tests.csproj",
+    "\test\UnitTests\Microsoft.OData.Edm.Tests\Microsoft.OData.Edm.Tests.csproj",
+    "\test\UnitTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.csproj",
+    "\test\UnitTests\Microsoft.OData.Client.Tests\Microsoft.OData.Client.Tests.csproj"
 	
 $NetCoreE2ETestProjs = "\test\FunctionalTests\Tests\DataServices\ddbasics\Microsoft.Test.Data.Services.DDBasics.csproj",
      "\test\FunctionalTests\Tests\DataServices\UnitTests\TDDUnitTests\Microsoft.OData.Service.TDDUnitTests.csproj",
