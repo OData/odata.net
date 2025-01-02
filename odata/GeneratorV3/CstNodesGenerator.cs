@@ -714,10 +714,14 @@
                                             private sealed class SegmentsToProperties
                                             {
                                                 private readonly string innersClassName;
+                                                private readonly HexDigsToClass hexDigsToClass;
 
-                                                public SegmentsToProperties(string innersClassName)
+                                                public SegmentsToProperties(
+                                                    string innersClassName,
+                                                    HexDigsToClass hexDigsToClass)
                                                 {
                                                     this.innersClassName = innersClassName;
+                                                    this.hexDigsToClass = hexDigsToClass;
                                                 }
 
                                                 public IEnumerable<PropertyDefinition> Generate(
@@ -729,7 +733,7 @@
                                                         var className = ClassNamePrefix + HexDigsToClassName.Instance.Generate(segment, default);
                                                         if (!context.InnerClasses.ContainsKey(className))
                                                         {
-                                                            var @class = HexDigsToClass.Instance.Generate(segment, (className, null, context.InnerClasses));
+                                                            var @class = this.hexDigsToClass.Generate(segment, (className, null, context.InnerClasses));
                                                             context.InnerClasses[className] = @class;
                                                         }
 
