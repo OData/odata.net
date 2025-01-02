@@ -109,7 +109,7 @@
 
         public string Dash { get; }
 
-        public string OpenParenthesis { get; } //// TODO 'Ⲥ'; 
+        public string OpenParenthesis { get; }
 
         public string CloseParenthesis { get; }
 
