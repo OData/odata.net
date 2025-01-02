@@ -405,7 +405,7 @@
             return new GeneratorV3.Abnf._ALPHA._percentxSIXONEⲻSEVENA(
                 new GeneratorV3.Abnf.Inners._percentxSIXONEⲻSEVENA._SEVENEIGHT(
                     Abnf.Inners._SEVEN.Instance,
-                    Abnf.Inners._SEVEN.Instance));
+                    Abnf.Inners._EIGHT.Instance));
         }
 
         protected internal override GeneratorV3.Abnf._ALPHA Accept(AbnfParser.CstNodes.Core.Alpha.x79 node, Root.Void context)
