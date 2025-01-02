@@ -1538,24 +1538,83 @@
             }
         }
 
+        private sealed class ToClassNames
+        {
+            public ToClassNames(CharacterSubstitutions characterSubstitutions)
+            {
+                this.GroupToClassName = new GroupToClassName(characterSubstitutions, this);
+                this.AlternationToClassName = new AlternationToClassName(characterSubstitutions, this);
+                this.ConcatenationToClassName = new ConcatenationToClassName(characterSubstitutions, this);
+                this.RepetitionToClassName = new RepetitionToClassName(characterSubstitutions, this);
+                this.RepeatToClassName = new RepeatToClassName(characterSubstitutions, this);
+                this.DigitsToClassName = new DigitsToClassName(this);
+                this.ElementToClassName = new ElementToClassName(this);
+                this.NumValToClassName = new NumValToClassName(characterSubstitutions, this);
+                this.BinValToClassName = new BinValToClassName(this);
+                this.DecValToClassName = new DecValToClassName(this);
+                this.HexValToClassName = new HexValToClassName(characterSubstitutions, this);
+                this.HexDigsToClassName = new HexDigsToClassName(this);
+                this.HexDigToClassName = new HexDigToClassName(this);
+                this.DigitToClassName = new DigitToClassName(this);
+                this.CharValToClassName = new CharValToClassName(characterSubstitutions, this);
+                this.CharValInnerToClassName = new CharValInnerToClassName(this);
+                this.OptionToClassName = new OptionToClassName(characterSubstitutions, this);
+                this.RuleNameToClassName = new RuleNameToClassName(characterSubstitutions, this);
+            }
+
+            public GroupToClassName GroupToClassName { get; }
+
+            public AlternationToClassName AlternationToClassName { get; }
+
+            public ConcatenationToClassName ConcatenationToClassName { get; }
+            
+            public RepetitionToClassName RepetitionToClassName { get; }
+
+            public RepeatToClassName RepeatToClassName { get; }
+
+            public DigitsToClassName DigitsToClassName { get; }
+
+            public ElementToClassName ElementToClassName { get; }
+
+            public NumValToClassName NumValToClassName { get; }
+
+            public BinValToClassName BinValToClassName { get; }
+
+            public DecValToClassName DecValToClassName { get; }
+
+            public HexValToClassName HexValToClassName { get; }
+
+            public HexDigsToClassName HexDigsToClassName { get; }
+
+            public HexDigToClassName HexDigToClassName { get; }
+            
+            public DigitToClassName DigitToClassName { get; }
+
+            public CharValToClassName CharValToClassName { get; }
+
+            public CharValInnerToClassName CharValInnerToClassName { get; }
+
+            public OptionToClassName OptionToClassName { get; }
+
+            public RuleNameToClassName RuleNameToClassName { get; }
+        }
+
         private sealed class GroupToClassName
         {
             private readonly CharacterSubstitutions characterSubstitutions;
+            private readonly ToClassNames toClassNames;
 
-            private readonly AlternationToClassName alternationToClassName;
-
-            public GroupToClassName(CharacterSubstitutions characterSubstitutions)
+            public GroupToClassName(CharacterSubstitutions characterSubstitutions, ToClassNames toClassNames)
             {
                 this.characterSubstitutions = characterSubstitutions;
-
-                this.alternationToClassName = new AlternationToClassName(this.characterSubstitutions);
+                this.toClassNames = toClassNames;
             }
 
             public string Generate(Group group)
             {
                 var stringBuilder = new StringBuilder();
                 stringBuilder.Append(characterSubstitutions.OpenParenthesis);
-                stringBuilder.Append(this.alternationToClassName.Generate(group.Alternation));
+                stringBuilder.Append(this.toClassNames.AlternationToClassName.Generate(group.Alternation));
                 stringBuilder.Append(characterSubstitutions.CloseParenthesis);
 
                 return stringBuilder.ToString();
@@ -1565,22 +1624,20 @@
         private sealed class AlternationToClassName
         {
             private readonly CharacterSubstitutions characterSubstitutions;
+            private readonly ToClassNames toClassNames;
 
-            private readonly ConcatenationToClassName concatenationToClassName;
-
-            public AlternationToClassName(CharacterSubstitutions characterSubstitutions)
+            public AlternationToClassName(CharacterSubstitutions characterSubstitutions, ToClassNames toClassNames)
             {
                 this.characterSubstitutions = characterSubstitutions;
-
-                this.concatenationToClassName = new ConcatenationToClassName(this.characterSubstitutions);
+                this.toClassNames = toClassNames;
             }
 
             public string Generate(Alternation alternation)
             {
-                var className = this.concatenationToClassName.Generate(alternation.Concatenation);
+                var className = this.toClassNames.ConcatenationToClassName.Generate(alternation.Concatenation);
                 foreach (var inner in alternation.Inners)
                 {
-                    className += $"{characterSubstitutions.Slash}{this.concatenationToClassName.Generate(inner.Concatenation)}";
+                    className += $"{characterSubstitutions.Slash}{this.toClassNames.ConcatenationToClassName.Generate(inner.Concatenation)}";
                 }
 
                 return className;
@@ -1590,22 +1647,20 @@
         private sealed class ConcatenationToClassName
         {
             private readonly CharacterSubstitutions characterSubstitutions;
+            private readonly ToClassNames toClassNames;
 
-            private readonly RepetitionToClassName repetitionToClassName;
-
-            public ConcatenationToClassName(CharacterSubstitutions characterSubstitutions)
+            public ConcatenationToClassName(CharacterSubstitutions characterSubstitutions, ToClassNames toClassNames)
             {
                 this.characterSubstitutions = characterSubstitutions;
-
-                this.repetitionToClassName = new RepetitionToClassName(this.characterSubstitutions);
+                this.toClassNames = toClassNames;
             }
 
             public string Generate(Concatenation concatenation)
             {
-                var className = this.repetitionToClassName.Visit(concatenation.Repetition, default);
+                var className = this.toClassNames.RepetitionToClassName.Visit(concatenation.Repetition, default);
                 foreach (var inner in concatenation.Inners)
                 {
-                    className += $"{characterSubstitutions.Space}{this.repetitionToClassName.Visit(inner.Repetition, default)}";
+                    className += $"{characterSubstitutions.Space}{this.toClassNames.RepetitionToClassName.Visit(inner.Repetition, default)}";
                 }
 
                 return className;
@@ -1614,38 +1669,38 @@
 
         private sealed class RepetitionToClassName : Repetition.Visitor<string, Root.Void>
         {
-            private readonly ElementToClassName elementToClassName;
-            private readonly RepeatToClassName repeatToClassName;
+            private readonly ToClassNames toClassNames;
 
-            public RepetitionToClassName(CharacterSubstitutions characterSubstitutions)
+            public RepetitionToClassName(CharacterSubstitutions characterSubstitutions, ToClassNames toClassNames)
             {
-                this.elementToClassName = new ElementToClassName(characterSubstitutions);
-                this.repeatToClassName = new RepeatToClassName(characterSubstitutions);
+                this.toClassNames = toClassNames;
             }
 
             protected internal override string Accept(Repetition.ElementOnly node, Root.Void context)
             {
-                return this.elementToClassName.Visit(node.Element, context);
+                return this.toClassNames.ElementToClassName.Visit(node.Element, context);
             }
 
             protected internal override string Accept(Repetition.RepeatAndElement node, Root.Void context)
             {
-                return $"{this.repeatToClassName.Visit(node.Repeat, context)}{this.elementToClassName.Visit(node.Element, context)}";
+                return $"{this.toClassNames.RepeatToClassName.Visit(node.Repeat, context)}{this.toClassNames.ElementToClassName.Visit(node.Element, context)}";
             }
         }
 
         private sealed class RepeatToClassName : Repeat.Visitor<string, Root.Void>
         {
             private readonly CharacterSubstitutions characterSubstitutions;
+            private readonly ToClassNames toClassNames;
 
-            public RepeatToClassName(CharacterSubstitutions characterSubstitutions)
+            public RepeatToClassName(CharacterSubstitutions characterSubstitutions, ToClassNames toClassNames)
             {
                 this.characterSubstitutions = characterSubstitutions;
+                this.toClassNames = toClassNames;
             }
 
             protected internal override string Accept(Repeat.Count node, Root.Void context)
             {
-                return DigitsToClassName.Instance.Generate(node.Digits);
+                return this.toClassNames.DigitsToClassName.Generate(node.Digits);
             }
 
             protected internal override string Accept(Repeat.Range node, Root.Void context)
@@ -1653,14 +1708,14 @@
                 var stringBuilder = new StringBuilder();
                 if (node.PrefixDigits.Any())
                 {
-                    stringBuilder.Append(DigitsToClassName.Instance.Generate(node.PrefixDigits));
+                    stringBuilder.Append(this.toClassNames.DigitsToClassName.Generate(node.PrefixDigits));
                 }
 
                 stringBuilder.Append(characterSubstitutions.Asterisk);
 
                 if (node.SuffixDigits.Any())
                 {
-                    stringBuilder.Append(DigitsToClassName.Instance.Generate(node.SuffixDigits));
+                    stringBuilder.Append(this.toClassNames.DigitsToClassName.Generate(node.SuffixDigits));
                 }
 
                 return stringBuilder.ToString();
@@ -1669,11 +1724,12 @@
 
         private sealed class DigitsToClassName
         {
-            private DigitsToClassName()
-            {
-            }
+            private readonly ToClassNames toClassNames;
 
-            public static DigitsToClassName Instance { get; } = new DigitsToClassName();
+            public DigitsToClassName(ToClassNames toClassNames)
+            {
+                this.toClassNames = toClassNames;
+            }
 
             public string Generate(IEnumerable<Digit> digits)
             {
@@ -1689,44 +1745,36 @@
 
         private sealed class ElementToClassName : Element.Visitor<string, Root.Void>
         {
-            private readonly RuleNameToClassName ruleNameToClassName;
-            private readonly GroupToClassName groupToClassName;
-            private readonly OptionToClassName optionToClassName;
-            private readonly CharValToClassName charValToClassName;
-            private readonly NumValToClassName numValToClassName;
+            private readonly ToClassNames toClassNames;
 
-            public ElementToClassName(CharacterSubstitutions characterSubstitutions)
+            public ElementToClassName(ToClassNames toClassNames)
             {
-                this.ruleNameToClassName = new RuleNameToClassName(characterSubstitutions);
-                this.groupToClassName = new GroupToClassName(characterSubstitutions);
-                this.optionToClassName = new OptionToClassName(characterSubstitutions);
-                this.charValToClassName = new CharValToClassName(characterSubstitutions);
-                this.numValToClassName = new NumValToClassName(characterSubstitutions);
+                this.toClassNames = toClassNames;
             }
 
             protected internal override string Accept(Element.RuleName node, Root.Void context)
             {
-                return this.ruleNameToClassName.Generate(node.Value, context);
+                return this.toClassNames.RuleNameToClassName.Generate(node.Value, context);
             }
 
             protected internal override string Accept(Element.Group node, Root.Void context)
             {
-                return this.groupToClassName.Generate(node.Value);
+                return this.toClassNames.GroupToClassName.Generate(node.Value);
             }
 
             protected internal override string Accept(Element.Option node, Root.Void context)
             {
-                return this.optionToClassName.Generate(node.Value);
+                return this.toClassNames.OptionToClassName.Generate(node.Value);
             }
 
             protected internal override string Accept(Element.CharVal node, Root.Void context)
             {
-                return this.charValToClassName.Generate(node.Value);
+                return this.toClassNames.CharValToClassName.Generate(node.Value);
             }
 
             protected internal override string Accept(Element.NumVal node, Root.Void context)
             {
-                return this.numValToClassName.Visit(node.Value, context);
+                return this.toClassNames.NumValToClassName.Visit(node.Value, context);
             }
 
             protected internal override string Accept(Element.ProseVal node, Root.Void context)
@@ -1738,39 +1786,38 @@
         private sealed class NumValToClassName : NumVal.Visitor<string, Root.Void>
         {
             private readonly CharacterSubstitutions characterSubstitutions;
+            private readonly ToClassNames toClassNames;
 
-            private readonly HexValToClassName hexValToClassName;
-
-            public NumValToClassName(CharacterSubstitutions characterSubstitutions)
+            public NumValToClassName(CharacterSubstitutions characterSubstitutions, ToClassNames toClassNames)
             {
                 this.characterSubstitutions = characterSubstitutions;
-
-                this.hexValToClassName = new HexValToClassName(this.characterSubstitutions);
+                this.toClassNames = toClassNames;
             }
 
             protected internal override string Accept(NumVal.BinVal node, Root.Void context)
             {
-                return $"{characterSubstitutions.Percent}{BinValToClassName.Instance.Visit(node.Value, context)}";
+                return $"{characterSubstitutions.Percent}{this.toClassNames.BinValToClassName.Visit(node.Value, context)}";
             }
 
             protected internal override string Accept(NumVal.DecVal node, Root.Void context)
             {
-                return $"{characterSubstitutions.Percent}{DecValToClassName.Instance.Visit(node.Value, context)}";
+                return $"{characterSubstitutions.Percent}{this.toClassNames.DecValToClassName.Visit(node.Value, context)}";
             }
 
             protected internal override string Accept(NumVal.HexVal node, Root.Void context)
             {
-                return $"{characterSubstitutions.Percent}{this.hexValToClassName.Visit(node.Value, context)}";
+                return $"{characterSubstitutions.Percent}{this.toClassNames.HexValToClassName.Visit(node.Value, context)}";
             }
         }
 
         private sealed class BinValToClassName : BinVal.Visitor<string, Root.Void>
         {
-            private BinValToClassName()
-            {
-            }
+            private readonly ToClassNames toClassNames;
 
-            public static BinValToClassName Instance { get; } = new BinValToClassName();
+            public BinValToClassName(ToClassNames toClassNames)
+            {
+                this.toClassNames = toClassNames;
+            }
 
             protected internal override string Accept(BinVal.BitsOnly node, Root.Void context)
             {
@@ -1790,11 +1837,12 @@
 
         private sealed class DecValToClassName : DecVal.Visitor<string, Root.Void>
         {
-            private DecValToClassName()
-            {
-            }
+            private readonly ToClassNames toClassNames;
 
-            public static DecValToClassName Instance { get; } = new DecValToClassName();
+            public DecValToClassName(ToClassNames toClassNames)
+            {
+                this.toClassNames = toClassNames;
+            }
 
             protected internal override string Accept(DecVal.DecsOnly node, Root.Void context)
             {
@@ -1815,25 +1863,27 @@
         private sealed class HexValToClassName : HexVal.Visitor<string, Root.Void>
         {
             private readonly CharacterSubstitutions characterSubstitutions;
+            private readonly ToClassNames toClassNames;
 
-            public HexValToClassName(CharacterSubstitutions characterSubstitutions)
+            public HexValToClassName(CharacterSubstitutions characterSubstitutions, ToClassNames toClassNames)
             {
                 this.characterSubstitutions = characterSubstitutions;
+                this.toClassNames = toClassNames;
             }
 
             protected internal override string Accept(HexVal.HexOnly node, Root.Void context)
             {
-                return $"x{HexDigsToClassName.Instance.Generate(node.HexDigs, context)}";
+                return $"x{this.toClassNames.HexDigsToClassName.Generate(node.HexDigs, context)}";
             }
 
             protected internal override string Accept(HexVal.ConcatenatedHex node, Root.Void context)
             {
                 var builder = new StringBuilder();
-                builder.Append($"x{HexDigsToClassName.Instance.Generate(node.HexDigs, context)}");
+                builder.Append($"x{this.toClassNames.HexDigsToClassName.Generate(node.HexDigs, context)}");
                 foreach (var inner in node.Inners)
                 {
                     builder.Append(characterSubstitutions.Period);
-                    builder.Append(HexDigsToClassName.Instance.Generate(inner.HexDigs, context));
+                    builder.Append(this.toClassNames.HexDigsToClassName.Generate(inner.HexDigs, context));
                 }
 
                 return builder.ToString();
@@ -1841,24 +1891,25 @@
 
             protected internal override string Accept(HexVal.Range node, Root.Void context)
             {
-                return $"x{HexDigsToClassName.Instance.Generate(node.HexDigs, context)}{characterSubstitutions.Dash}{HexDigsToClassName.Instance.Generate(node.Inners.First().HexDigs, context)}";
+                return $"x{this.toClassNames.HexDigsToClassName.Generate(node.HexDigs, context)}{characterSubstitutions.Dash}{HexDigsToClassName.Instance.Generate(node.Inners.First().HexDigs, context)}";
             }
         }
 
         private sealed class HexDigsToClassName
         {
-            private HexDigsToClassName()
-            {
-            }
+            private readonly ToClassNames toClassNames;
 
-            public static HexDigsToClassName Instance { get; } = new HexDigsToClassName();
+            public HexDigsToClassName(ToClassNames toClassNames)
+            {
+                this.toClassNames = toClassNames;
+            }
 
             public string Generate(IEnumerable<HexDig> hexDigs, Root.Void context)
             {
                 var stringBuilder = new StringBuilder();
                 foreach (var hexDig in hexDigs)
                 {
-                    stringBuilder.Append(HexDigToClassName.Instance.Visit(hexDig, context));
+                    stringBuilder.Append(this.toClassNames.HexDigToClassName.Visit(hexDig, context));
                 }
 
                 return stringBuilder.ToString();
@@ -1867,15 +1918,16 @@
 
         private sealed class HexDigToClassName : HexDig.Visitor<string, Root.Void>
         {
-            private HexDigToClassName()
-            {
-            }
+            private readonly ToClassNames toClassNames;
 
-            public static HexDigToClassName Instance { get; } = new HexDigToClassName();
+            public HexDigToClassName(ToClassNames toClassNames)
+            {
+                this.toClassNames = toClassNames;
+            }
 
             protected internal override string Accept(HexDig.Digit node, Root.Void context)
             {
-                return DigitToClassName.Instance.Visit(node.Value, context);
+                return this.toClassNames.DigitToClassName.Visit(node.Value, context);
             }
 
             protected internal override string Accept(HexDig.A node, Root.Void context)
@@ -1911,11 +1963,12 @@
 
         private sealed class DigitToClassName : Digit.Visitor<string, Root.Void>
         {
-            private DigitToClassName()
-            {
-            }
+            private readonly ToClassNames toClassNames;
 
-            public static DigitToClassName Instance { get; } = new DigitToClassName();
+            public DigitToClassName(ToClassNames toClassNames)
+            {
+                this.toClassNames = toClassNames;
+            }
 
             protected internal override string Accept(Digit.x30 node, Root.Void context)
             {
@@ -1971,26 +2024,29 @@
         private sealed class CharValToClassName
         {
             private readonly CharacterSubstitutions characterSubstitutions;
+            private readonly ToClassNames toClassNames;
 
-            public CharValToClassName(CharacterSubstitutions characterSubstitutions)
+            public CharValToClassName(CharacterSubstitutions characterSubstitutions, ToClassNames toClassNames)
             {
                 this.characterSubstitutions = characterSubstitutions;
+                this.toClassNames = toClassNames;
             }
 
             public string Generate(CharVal charVal)
             {
-                return $"{characterSubstitutions.DoubleQuote}{string.Join(string.Empty, charVal.Inners.Select(inner => CharValInnerToClassName.Instance.Visit(inner, default)))}{characterSubstitutions.DoubleQuote}";
+                return $"{characterSubstitutions.DoubleQuote}{string.Join(string.Empty, charVal.Inners.Select(inner => this.CharValInnerToClassName.Visit(inner, default)))}{characterSubstitutions.DoubleQuote}";
             }
 
         }
 
         private sealed class CharValInnerToClassName : CharVal.Inner.Visitor<string, Root.Void>
         {
-            private CharValInnerToClassName()
-            {
-            }
+            private readonly ToClassNames toClassNames;
 
-            public static CharValInnerToClassName Instance { get; } = new CharValInnerToClassName();
+            public CharValInnerToClassName(ToClassNames toClassNames)
+            {
+                this.toClassNames = toClassNames;
+            }
 
             protected internal override string Accept(CharVal.Inner.x20 node, Root.Void context)
             {
@@ -2467,19 +2523,17 @@
         private sealed class OptionToClassName
         {
             private readonly CharacterSubstitutions characterSubstitutions;
+            private readonly ToClassNames toClassNames;
 
-            private readonly AlternationToClassName alternationToClassName;
-
-            public OptionToClassName(CharacterSubstitutions characterSubstitutions)
+            public OptionToClassName(CharacterSubstitutions characterSubstitutions, ToClassNames toClassNames)
             {
                 this.characterSubstitutions = characterSubstitutions;
-
-                this.alternationToClassName = new AlternationToClassName(this.characterSubstitutions);
+                this.toClassNames = toClassNames;
             }
 
             public string Generate(Option option)
             {
-                return $"{characterSubstitutions.OpenBracket}{this.alternationToClassName.Generate(option.Alternation)}{characterSubstitutions.CloseBracket}";
+                return $"{characterSubstitutions.OpenBracket}{this.toClassNames.AlternationToClassName.Generate(option.Alternation)}{characterSubstitutions.CloseBracket}";
             }
         }
 
@@ -2487,7 +2541,7 @@
         {
             private readonly InnerToString innerToString;
 
-            public RuleNameToClassName(CharacterSubstitutions characterSubstitutions)
+            public RuleNameToClassName(CharacterSubstitutions characterSubstitutions, ToClassNames toClassName)
             {
                 this.innerToString = new InnerToString(characterSubstitutions);
             }
