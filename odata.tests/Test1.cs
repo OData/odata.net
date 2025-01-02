@@ -315,8 +315,7 @@
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(abnf);
 
             var @namespace = "GeneratorV3";
-
-            var classes = new GeneratorV3.CstNodesGenerator(@namespace).Generate(cst, default);
+            var classes = new GeneratorV3.CstNodesGenerator(@namespace, "Inners").Generate(cst, default);
 
             var classTranscriber = new ClassTranscriber();
 
@@ -357,7 +356,7 @@
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
 
             var @namespace = "GeneratorV3.Core";
-            var classes = new GeneratorV3.CstNodesGenerator(@namespace).Generate(cst, default);
+            var classes = new GeneratorV3.CstNodesGenerator(@namespace, "Inners").Generate(cst, default);
 
             var classTranscriber = new ClassTranscriber();
 
@@ -395,7 +394,7 @@
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
 
             var @namespace = "GeneratorV3.Abnf";
-            var classes = new GeneratorV3.CstNodesGenerator(@namespace).Generate(cst, default);
+            var classes = new GeneratorV3.CstNodesGenerator(@namespace, "Inners").Generate(cst, default);
 
             var classTranscriber = new ClassTranscriber();
 
@@ -430,7 +429,7 @@
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(abnfRulesText);
 
             var @namespace = "GeneratorV3.Odata";
-            var classes = new GeneratorV3.CstNodesGenerator(@namespace).Generate(cst, default);
+            var classes = new GeneratorV3.CstNodesGenerator(@namespace, "Inners").Generate(cst, default);
 
             var classTranscriber = new ClassTranscriber();
 
