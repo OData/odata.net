@@ -260,18 +260,19 @@
                             string classNamePrefix,
                             string @namespace, 
                             string innersClassName,
-                            CharacterSubstitutions characterSubstitutions)
+                            CharacterSubstitutions characterSubstitutions,
+                            ToClassNames toClassNames)
                         {
                             this.concatenationToClass = new ConcatenationToClass(
                                 classNamePrefix, 
                                 @namespace, 
                                 innersClassName,
-                                characterSubstitutions,
-                                this);
+                                this,
+                                toClassNames);
                             this.concatenationsToDiscriminatedUnion = new ConcatenationsToDiscriminatedUnion(
                                 classNamePrefix,
                                 this.concatenationToClass,
-                                characterSubstitutions);
+                                toClassNames);
                         }
 
                         public Class Generate(Alternation alternation, (string ClassName, Dictionary<string, Class> InnerClasses) context)
@@ -302,7 +303,6 @@
                                 string classNamePrefix,
                                 string @namespace, 
                                 string innersClassName,
-                                CharacterSubstitutions characterSubstitutions,
                                 AlternationGenerator alternationGenerator,
                                 ToClassNames toClassNames)
                             {
@@ -310,7 +310,6 @@
                                     classNamePrefix,
                                     @namespace, 
                                     innersClassName,
-                                    characterSubstitutions,
                                     alternationGenerator,
                                     toClassNames);
                             }
@@ -362,7 +361,6 @@
                                     string classNamePrefix,
                                     string @namespace,
                                     string innersClassName,
-                                    CharacterSubstitutions characterSubstitutions,
                                     AlternationGenerator alternationGenerator,
                                     ToClassNames toClassNames)
                                 {
@@ -370,7 +368,6 @@
                                         classNamePrefix,
                                         @namespace,
                                         innersClassName,
-                                        characterSubstitutions,
                                         alternationGenerator,
                                         toClassNames);
                                 }
@@ -412,7 +409,6 @@
                                         string classNamePrefix,
                                         string @namespace,
                                         string innersClassName,
-                                        CharacterSubstitutions characterSubstitutions,
                                         AlternationGenerator alternationGenerator,
                                         ToClassNames toClassNames)
                                     {
