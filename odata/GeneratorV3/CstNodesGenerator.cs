@@ -29,7 +29,7 @@
     {
         private readonly RuleListInnerGenerator ruleListInnerGenerator;
 
-        private readonly string innersClassName; //// TODO parameterize this //// TODO make sure this. is always used
+        private readonly string innersClassName;
 
         /// <summary>
         /// 
@@ -46,6 +46,7 @@
         public CstNodesGenerator(string @namespace, string innersClassName)
         {
             this.ruleListInnerGenerator = new RuleListInnerGenerator(@namespace, innersClassName);
+            this.innersClassName = innersClassName;
         }
 
         private static string ClassNamePrefix = "_"; //// TODO parameterize this probably?
@@ -110,7 +111,7 @@
                     new Class(
                         AccessModifier.Public,
                         ClassModifier.Static,
-                        innersClassName,
+                        this.innersClassName,
                         Enumerable.Empty<string>(),
                         null,
                         Enumerable.Empty<ConstructorDefinition>(),
@@ -376,7 +377,7 @@
                                                         AccessModifier.Public,
                                                         new[]
                                                         {
-                                                            new MethodParameter($"{(isOnlyRuleName ? this.@namespace : innersClassName)}.{groupInnerClassName}", $"{groupInnerClassName}_1"),
+                                                            new MethodParameter($"{(isOnlyRuleName ? this.@namespace : this.innersClassName)}.{groupInnerClassName}", $"{groupInnerClassName}_1"),
                                                         },
                                                         new[]
                                                         {
@@ -389,7 +390,7 @@
                                                 {
                                                     new PropertyDefinition(
                                                         AccessModifier.Public,
-                                                        $"{(isOnlyRuleName ? this.@namespace : innersClassName)}.{groupInnerClassName}",
+                                                        $"{(isOnlyRuleName ? this.@namespace : this.innersClassName)}.{groupInnerClassName}",
                                                         $"{groupInnerClassName}_1",
                                                         true,
                                                         false),
@@ -398,7 +399,7 @@
                                             context.InnerClasses[groupClassName] = groupClass;
                                         }
 
-                                        var propertyType = $"{innersClassName}.{groupClassName}";
+                                        var propertyType = $"{this.innersClassName}.{groupClassName}";
                                         if (context.IsCollection)
                                         {
                                             propertyType = $"IEnumerable<{propertyType}>";
@@ -436,7 +437,7 @@
                                                     (innerClassName, context.InnerClasses));
                                         }
 
-                                        var propertyType = $"{(isOnlyRuleName ? this.@namespace : innersClassName)}.{innerClassName}?";
+                                        var propertyType = $"{(isOnlyRuleName ? this.@namespace : this.innersClassName)}.{innerClassName}?";
                                         if (context.IsCollection)
                                         {
                                             propertyType = $"IEnumerable<{propertyType}>";
@@ -471,7 +472,7 @@
                                             context.InnerClasses[innerClassName] = innerClass;
                                         }
 
-                                        var propertyType = $"{innersClassName}.{innerClassName}";
+                                        var propertyType = $"{this.innersClassName}.{innerClassName}";
                                         if (context.IsCollection)
                                         {
                                             propertyType = $"IEnumerable<{propertyType}>";
@@ -592,7 +593,7 @@
 
                                                 return new PropertyDefinition(
                                                     AccessModifier.Public,
-                                                    $"{innersClassName}.{className}",
+                                                    $"{this.innersClassName}.{className}",
                                                     $"{className}_{count}",
                                                     true,
                                                     false);
@@ -611,7 +612,7 @@
                                             context.InnerClasses[innerClassName] = innerClass;
                                         }
 
-                                        var propertyType = $"{innersClassName}.{innerClassName}";
+                                        var propertyType = $"{this.innersClassName}.{innerClassName}";
                                         if (context.IsCollection)
                                         {
                                             propertyType = $"IEnumerable<{propertyType}>";
@@ -756,7 +757,7 @@
 
                                                         yield return new PropertyDefinition(
                                                             AccessModifier.Public,
-                                                            $"{innersClassName}.{className}",
+                                                            $"{this.innersClassName}.{className}",
                                                             $"{className}_{count}",
                                                             true,
                                                             false);
@@ -1247,7 +1248,7 @@
 
                                                             yield return new PropertyDefinition(
                                                                 AccessModifier.Public,
-                                                                $"{innersClassName}.{className}",
+                                                                $"{this.innersClassName}.{className}",
                                                                 $"{className}_{count}",
                                                                 true,
                                                                 false);
