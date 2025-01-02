@@ -1763,52 +1763,52 @@
 
             protected internal override string Accept(Digit.x30 node, Root.Void context)
             {
-                return CharacterSubstituions.Zero;
+                return "0";
             }
 
             protected internal override string Accept(Digit.x31 node, Root.Void context)
             {
-                return CharacterSubstituions.One;
+                return "1";
             }
 
             protected internal override string Accept(Digit.x32 node, Root.Void context)
             {
-                return CharacterSubstituions.Two;
+                return "2";
             }
 
             protected internal override string Accept(Digit.x33 node, Root.Void context)
             {
-                return CharacterSubstituions.Three;
+                return "3";
             }
 
             protected internal override string Accept(Digit.x34 node, Root.Void context)
             {
-                return CharacterSubstituions.Four;
+                return "4";
             }
 
             protected internal override string Accept(Digit.x35 node, Root.Void context)
             {
-                return CharacterSubstituions.Five;
+                return "5";
             }
 
             protected internal override string Accept(Digit.x36 node, Root.Void context)
             {
-                return CharacterSubstituions.Six;
+                return "6";
             }
 
             protected internal override string Accept(Digit.x37 node, Root.Void context)
             {
-                return CharacterSubstituions.Seven;
+                return "7";
             }
 
             protected internal override string Accept(Digit.x38 node, Root.Void context)
             {
-                return CharacterSubstituions.Eight;
+                return "8";
             }
 
             protected internal override string Accept(Digit.x39 node, Root.Void context)
             {
-                return CharacterSubstituions.Nine;
+                return "9";
             }
         }
 
