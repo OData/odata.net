@@ -96,7 +96,7 @@
 
         public static CharacterSubstitutions Default { get; } = new CharacterSubstitutions(
             "ⲻ",
-            "open",
+            "Ⲥ",
             "Ↄ",
             "꘡",
             "꘡",

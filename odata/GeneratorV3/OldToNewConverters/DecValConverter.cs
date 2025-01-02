@@ -32,9 +32,9 @@
                     x64Converter.Instance.Convert(node.D)),
                 node.Digits.Select(digit =>
                     DigitConverter.Instance.Visit(digit, context)),
-                new Inners._1asteriskopendoublequotex2Edoublequote_1asteriskDIGITↃⳆopendoublequotex2Ddoublequote_1asteriskDIGITↃ._1asteriskopendoublequotex2Edoublequote_1asteriskDIGITↃ(
+                new Inners._1asteriskⲤdoublequotex2Edoublequote_1asteriskDIGITↃⳆⲤdoublequotex2Ddoublequote_1asteriskDIGITↃ._1asteriskⲤdoublequotex2Edoublequote_1asteriskDIGITↃ(
                     node.Inners.Select(inner => 
-                        new Inners._opendoublequotex2Edoublequote_1asteriskDIGITↃ(
+                        new Inners._Ⲥdoublequotex2Edoublequote_1asteriskDIGITↃ(
                             new Inners._doublequotex2Edoublequote_1asteriskDIGIT(
                                 new Inners._doublequotex2Edoublequote(
                                     x2EConverter.Instance.Convert(inner.Dot)),
@@ -49,8 +49,8 @@
                     x64Converter.Instance.Convert(node.D)),
                 node.Digits.Select(digit =>
                     DigitConverter.Instance.Visit(digit, context)),
-                new Inners._1asteriskopendoublequotex2Edoublequote_1asteriskDIGITↃⳆopendoublequotex2Ddoublequote_1asteriskDIGITↃ._opendoublequotex2Ddoublequote_1asteriskDIGITↃ(
-                    new Inners._opendoublequotex2Ddoublequote_1asteriskDIGITↃ(
+                new Inners._1asteriskⲤdoublequotex2Edoublequote_1asteriskDIGITↃⳆⲤdoublequotex2Ddoublequote_1asteriskDIGITↃ._Ⲥdoublequotex2Ddoublequote_1asteriskDIGITↃ(
+                    new Inners._Ⲥdoublequotex2Ddoublequote_1asteriskDIGITↃ(
                         new Inners._doublequotex2Ddoublequote_1asteriskDIGIT(
                             new Inners._doublequotex2Ddoublequote(
                                 x2DConverter.Instance.Convert(node.Inners.First().Dash)),

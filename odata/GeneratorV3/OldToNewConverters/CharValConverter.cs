@@ -19,7 +19,7 @@
             return new _charⲻval(
                 DquoteConverter.Instance.Convert(charVal.OpenDquote),
                 charVal.Inners.Select(inner =>
-                    new Inners._openpercentx20ⲻ21Ⳇpercentx23ⲻ7EↃ(
+                    new Inners._Ⲥpercentx20ⲻ21Ⳇpercentx23ⲻ7EↃ(
                         InnerConverter.Instance.Visit(inner, default))),
                 DquoteConverter.Instance.Convert(charVal.CloseDquote));
         }

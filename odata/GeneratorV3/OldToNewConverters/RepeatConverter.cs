@@ -24,8 +24,8 @@
 
         protected internal override _repeat Accept(Repeat.Range node, Void context)
         {
-            return new _repeat._openasteriskDIGIT_doublequotex2Adoublequote_asteriskDIGITↃ(
-                new Inners._openasteriskDIGIT_doublequotex2Adoublequote_asteriskDIGITↃ(
+            return new _repeat._ⲤasteriskDIGIT_doublequotex2Adoublequote_asteriskDIGITↃ(
+                new Inners._ⲤasteriskDIGIT_doublequotex2Adoublequote_asteriskDIGITↃ(
                     new Inners._asteriskDIGIT_doublequotex2Adoublequote_asteriskDIGIT(
                         node.PrefixDigits.Select(digit =>
                             DigitConverter.Instance.Visit(digit, context)),

@@ -18,7 +18,7 @@
             return new _numⲻval(
                 new Inners._doublequotex25doublequote(
                     x25Converter.Instance.Convert(node.Percent)),
-                new Inners._openbinⲻvalⳆdecⲻvalⳆhexⲻvalↃ(
+                new Inners._ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃ(
                     new Inners._binⲻvalⳆdecⲻvalⳆhexⲻval._binⲻval(
                         BinValConverter.Instance.Visit(node.Value, context))));
         }
@@ -28,7 +28,7 @@
             return new _numⲻval(
                 new Inners._doublequotex25doublequote(
                     x25Converter.Instance.Convert(node.Percent)),
-                new Inners._openbinⲻvalⳆdecⲻvalⳆhexⲻvalↃ(
+                new Inners._ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃ(
                     new Inners._binⲻvalⳆdecⲻvalⳆhexⲻval._decⲻval(
                         DecValConverter.Instance.Visit(node.Value, context))));
         }
@@ -38,7 +38,7 @@
             return new _numⲻval(
                 new Inners._doublequotex25doublequote(
                     x25Converter.Instance.Convert(node.Percent)),
-                new Inners._openbinⲻvalⳆdecⲻvalⳆhexⲻvalↃ(
+                new Inners._ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃ(
                     new Inners._binⲻvalⳆdecⲻvalⳆhexⲻval._hexⲻval(
                         HexValConverter.Instance.Visit(node.Value, context))));
         }

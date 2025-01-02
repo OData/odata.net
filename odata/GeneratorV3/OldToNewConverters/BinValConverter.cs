@@ -32,9 +32,9 @@
                     x62Converter.Instance.Convert(node.B)),
                 node.Bits.Select(bit =>
                     BitConverter.Instance.Visit(bit, context)),
-                new Inners._1asteriskopendoublequotex2Edoublequote_1asteriskBITↃⳆopendoublequotex2Ddoublequote_1asteriskBITↃ._1asteriskopendoublequotex2Edoublequote_1asteriskBITↃ(
+                new Inners._1asteriskⲤdoublequotex2Edoublequote_1asteriskBITↃⳆⲤdoublequotex2Ddoublequote_1asteriskBITↃ._1asteriskⲤdoublequotex2Edoublequote_1asteriskBITↃ(
                     node.Inners.Select(inner =>
-                        new Inners._opendoublequotex2Edoublequote_1asteriskBITↃ(
+                        new Inners._Ⲥdoublequotex2Edoublequote_1asteriskBITↃ(
                             new Inners._doublequotex2Edoublequote_1asteriskBIT(
                                 new Inners._doublequotex2Edoublequote(
                                     x2EConverter.Instance.Convert(inner.Dot)),
@@ -49,8 +49,8 @@
                     x62Converter.Instance.Convert(node.B)),
                 node.Bits.Select(bit =>
                     BitConverter.Instance.Visit(bit, context)),
-                new Inners._1asteriskopendoublequotex2Edoublequote_1asteriskBITↃⳆopendoublequotex2Ddoublequote_1asteriskBITↃ._opendoublequotex2Ddoublequote_1asteriskBITↃ(
-                    new Inners._opendoublequotex2Ddoublequote_1asteriskBITↃ(
+                new Inners._1asteriskⲤdoublequotex2Edoublequote_1asteriskBITↃⳆⲤdoublequotex2Ddoublequote_1asteriskBITↃ._Ⲥdoublequotex2Ddoublequote_1asteriskBITↃ(
+                    new Inners._Ⲥdoublequotex2Ddoublequote_1asteriskBITↃ(
                         new Inners._doublequotex2Ddoublequote_1asteriskBIT(
                             new Inners._doublequotex2Ddoublequote(
                                 x2DConverter.Instance.Convert(node.Inners.First().Dash)),

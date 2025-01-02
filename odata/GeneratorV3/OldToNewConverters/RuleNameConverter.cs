@@ -19,7 +19,7 @@
             return new Abnf._rulename(
                 AlphaConverter.Instance.Visit(ruleName.Alpha, default),
                 ruleName.Inners.Select(inner =>
-                    new Abnf.Inners._openALPHAⳆDIGITⳆdoublequotex2DdoublequoteↃ(
+                    new Abnf.Inners._ⲤALPHAⳆDIGITⳆdoublequotex2DdoublequoteↃ(
                         InnerConverter.Instance.Visit(inner, default))));
         }
 

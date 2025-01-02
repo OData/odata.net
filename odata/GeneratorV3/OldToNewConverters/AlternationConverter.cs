@@ -18,7 +18,7 @@
             return new Abnf._alternation(
                 ConcatenationConverter.Instance.Convert(alternation.Concatenation),
                 alternation.Inners.Select(inner =>
-                    new Abnf.Inners._openasteriskcⲻwsp_doublequotex2Fdoublequote_asteriskcⲻwsp_concatenationↃ(
+                    new Abnf.Inners._Ⲥasteriskcⲻwsp_doublequotex2Fdoublequote_asteriskcⲻwsp_concatenationↃ(
                         InnerConverter.Instance.Convert(inner))));
         }
 

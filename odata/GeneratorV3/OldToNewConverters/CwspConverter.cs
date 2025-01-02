@@ -20,8 +20,8 @@
 
         protected internal override _cⲻwsp Accept(Cwsp.CnlAndWsp node, Root.Void context)
         {
-            return new _cⲻwsp._opencⲻnl_WSPↃ(
-                new Inners._opencⲻnl_WSPↃ(
+            return new _cⲻwsp._Ⲥcⲻnl_WSPↃ(
+                new Inners._Ⲥcⲻnl_WSPↃ(
                     new Inners._cⲻnl_WSP(
                         CnlConverter.Instance.Visit(node.Cnl, context),
                         WspConverter.Instance.Visit(node.Wsp, context))));

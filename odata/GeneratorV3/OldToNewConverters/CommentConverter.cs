@@ -23,7 +23,7 @@
                 CrLfConverter.Instance.Convert(comment.Crlf));
         }
 
-        private sealed class InnerConverter : AbnfParser.CstNodes.Comment.Inner.Visitor<GeneratorV3.Abnf.Inners._openWSPⳆVCHARↃ, Root.Void>
+        private sealed class InnerConverter : AbnfParser.CstNodes.Comment.Inner.Visitor<GeneratorV3.Abnf.Inners._ⲤWSPⳆVCHARↃ, Root.Void>
         {
             private InnerConverter()
             {
@@ -31,16 +31,16 @@
 
             public static InnerConverter Instance { get; } = new InnerConverter();
 
-            protected internal override Abnf.Inners._openWSPⳆVCHARↃ Accept(Comment.Inner.InnerWsp node, Void context)
+            protected internal override Abnf.Inners._ⲤWSPⳆVCHARↃ Accept(Comment.Inner.InnerWsp node, Void context)
             {
-                return new Abnf.Inners._openWSPⳆVCHARↃ(
+                return new Abnf.Inners._ⲤWSPⳆVCHARↃ(
                     new Abnf.Inners._WSPⳆVCHAR._WSP(
                         WspConverter.Instance.Visit(node.Wsp, context)));
             }
 
-            protected internal override Abnf.Inners._openWSPⳆVCHARↃ Accept(Comment.Inner.InnerVchar node, Void context)
+            protected internal override Abnf.Inners._ⲤWSPⳆVCHARↃ Accept(Comment.Inner.InnerVchar node, Void context)
             {
-                return new Abnf.Inners._openWSPⳆVCHARↃ(
+                return new Abnf.Inners._ⲤWSPⳆVCHARↃ(
                     new Abnf.Inners._WSPⳆVCHAR._VCHAR(
                         VcharConverter.Instance.Visit(node.Vchar, context)));
             }

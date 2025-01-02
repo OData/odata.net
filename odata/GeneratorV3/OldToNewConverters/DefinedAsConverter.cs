@@ -19,7 +19,7 @@
             return new _definedⲻas(
                 node.PrefixCwsps.Select(cwsp =>
                     CwspConverter.Instance.Visit(cwsp, context)),
-                new Inners._opendoublequotex3DdoublequoteⳆdoublequotex3Dx2FdoublequoteↃ(
+                new Inners._Ⲥdoublequotex3DdoublequoteⳆdoublequotex3Dx2FdoublequoteↃ(
                     new Inners._doublequotex3DdoublequoteⳆdoublequotex3Dx2Fdoublequote._doublequotex3Ddoublequote(
                         new Inners._doublequotex3Ddoublequote(
                             x3DConverter.Instance.Convert(node.Equals)))),
@@ -32,7 +32,7 @@
             return new _definedⲻas(
                 node.PrefixCwsps.Select(cwsp =>
                     CwspConverter.Instance.Visit(cwsp, context)),
-                new Inners._opendoublequotex3DdoublequoteⳆdoublequotex3Dx2FdoublequoteↃ(
+                new Inners._Ⲥdoublequotex3DdoublequoteⳆdoublequotex3Dx2FdoublequoteↃ(
                     new Inners._doublequotex3DdoublequoteⳆdoublequotex3Dx2Fdoublequote._doublequotex3Dx2Fdoublequote(
                         new Inners._doublequotex3Dx2Fdoublequote(
                             x3DConverter.Instance.Convert(node.Equals),
