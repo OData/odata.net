@@ -98,26 +98,6 @@
             public static string Period { get; } = "period"; //// TODO
 
             public static string Percent { get; } = "percent"; //// TODO
-
-            public static string Zero { get; } = "0"; //// TODO
-
-            public static string One { get; } = "1"; //// TODO
-
-            public static string Two { get; } = "2"; //// TODO
-
-            public static string Three { get; } = "3"; //// TODO
-
-            public static string Four { get; } = "4"; //// TODO
-
-            public static string Five { get; } = "5"; //// TODO
-
-            public static string Six { get; } = "6"; //// TODO
-
-            public static string Seven { get; } = "7"; //// TODO
-
-            public static string Eight { get; } = "8"; //// TODO
-
-            public static string Nine { get; } = "9"; //// TODO
         }
 
         public IEnumerable<Class> Generate(RuleList ruleList, Root.Void context)
