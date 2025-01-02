@@ -32,10 +32,10 @@
                     x62Converter.Instance.Convert(node.B)),
                 node.Bits.Select(bit =>
                     BitConverter.Instance.Visit(bit, context)),
-                new Inners._ONEasteriskopendoublequotex2Edoublequote_ONEasteriskBITↃⳆopendoublequotex2Ddoublequote_ONEasteriskBITↃ._ONEasteriskopendoublequotex2Edoublequote_ONEasteriskBITↃ(
+                new Inners._1asteriskopendoublequotex2Edoublequote_1asteriskBITↃⳆopendoublequotex2Ddoublequote_1asteriskBITↃ._1asteriskopendoublequotex2Edoublequote_1asteriskBITↃ(
                     node.Inners.Select(inner =>
-                        new Inners._opendoublequotex2Edoublequote_ONEasteriskBITↃ(
-                            new Inners._doublequotex2Edoublequote_ONEasteriskBIT(
+                        new Inners._opendoublequotex2Edoublequote_1asteriskBITↃ(
+                            new Inners._doublequotex2Edoublequote_1asteriskBIT(
                                 new Inners._doublequotex2Edoublequote(
                                     x2EConverter.Instance.Convert(inner.Dot)),
                                 inner.Bits.Select(bit =>
@@ -49,9 +49,9 @@
                     x62Converter.Instance.Convert(node.B)),
                 node.Bits.Select(bit =>
                     BitConverter.Instance.Visit(bit, context)),
-                new Inners._ONEasteriskopendoublequotex2Edoublequote_ONEasteriskBITↃⳆopendoublequotex2Ddoublequote_ONEasteriskBITↃ._opendoublequotex2Ddoublequote_ONEasteriskBITↃ(
-                    new Inners._opendoublequotex2Ddoublequote_ONEasteriskBITↃ(
-                        new Inners._doublequotex2Ddoublequote_ONEasteriskBIT(
+                new Inners._1asteriskopendoublequotex2Edoublequote_1asteriskBITↃⳆopendoublequotex2Ddoublequote_1asteriskBITↃ._opendoublequotex2Ddoublequote_1asteriskBITↃ(
+                    new Inners._opendoublequotex2Ddoublequote_1asteriskBITↃ(
+                        new Inners._doublequotex2Ddoublequote_1asteriskBIT(
                             new Inners._doublequotex2Ddoublequote(
                                 x2DConverter.Instance.Convert(node.Inners.First().Dash)),
                             node.Inners.First().Bits.Select(bit =>
