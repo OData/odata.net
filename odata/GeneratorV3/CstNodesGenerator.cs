@@ -40,7 +40,8 @@
         /// an "implied" rules, which is being referred to here as "inner" rules. When these are encountered, classes
         /// still need to be generated, but it is useful to separate them from the classes for the rules themselves. As
         /// a result, we will nest the "inner" rules in another class. This parameter species the name of the class that
-        /// the "inner" rules should be nested under.
+        /// the "inner" rules should be nested under. It is critical that the name selected for this class does not
+        /// conflict with the name of any rules in the ABNF.
         /// </param>
         public CstNodesGenerator(string @namespace, string innersClassName)
         {
@@ -109,7 +110,7 @@
                     new Class(
                         AccessModifier.Public,
                         ClassModifier.Static,
-                        innersClassName, //// TODO how to make sure this doesn't conflict?
+                        innersClassName,
                         Enumerable.Empty<string>(),
                         null,
                         Enumerable.Empty<ConstructorDefinition>(),
