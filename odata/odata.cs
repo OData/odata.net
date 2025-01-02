@@ -1588,15 +1588,15 @@ namespace GeneratorV3.Odata
     
     public sealed class _functionParameters
     {
-        public _functionParameters(GeneratorV3.Odata._OPEN _OPEN_1, Inners._functionParameter_asteriskⲤCOMMA_functionParameterↃ? _functionParameter_asteriskⲤCOMMA_functionParameterↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
+        public _functionParameters(GeneratorV3.Odata._OPEN _OPEN_1, Inners._functionParameter_ЖⲤCOMMA_functionParameterↃ? _functionParameter_ЖⲤCOMMA_functionParameterↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
         {
             this._OPEN_1 = _OPEN_1;
-            this._functionParameter_asteriskⲤCOMMA_functionParameterↃ_1 = _functionParameter_asteriskⲤCOMMA_functionParameterↃ_1;
+            this._functionParameter_ЖⲤCOMMA_functionParameterↃ_1 = _functionParameter_ЖⲤCOMMA_functionParameterↃ_1;
             this._CLOSE_1 = _CLOSE_1;
         }
         
         public GeneratorV3.Odata._OPEN _OPEN_1 { get; }
-        public Inners._functionParameter_asteriskⲤCOMMA_functionParameterↃ? _functionParameter_asteriskⲤCOMMA_functionParameterↃ_1 { get; }
+        public Inners._functionParameter_ЖⲤCOMMA_functionParameterↃ? _functionParameter_ЖⲤCOMMA_functionParameterↃ_1 { get; }
         public GeneratorV3.Odata._CLOSE _CLOSE_1 { get; }
     }
     
@@ -2365,7 +2365,7 @@ namespace GeneratorV3.Odata
             
             protected internal abstract TResult Accept(_expandItem._STAR_꘡refⳆOPEN_levels_CLOSE꘡ node, TContext context);
             protected internal abstract TResult Accept(_expandItem._doublequotex24x76x61x6Cx75x65doublequote node, TContext context);
-            protected internal abstract TResult Accept(_expandItem._expandPath_꘡ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE꘡ node, TContext context);
+            protected internal abstract TResult Accept(_expandItem._expandPath_꘡ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE꘡ node, TContext context);
         }
         
         public sealed class _STAR_꘡refⳆOPEN_levels_CLOSE꘡ : _expandItem
@@ -2400,16 +2400,16 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _expandPath_꘡ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE꘡ : _expandItem
+        public sealed class _expandPath_꘡ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE꘡ : _expandItem
         {
-            public _expandPath_꘡ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE꘡(GeneratorV3.Odata._expandPath _expandPath_1, Inners._ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE? _ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE_1)
+            public _expandPath_꘡ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE꘡(GeneratorV3.Odata._expandPath _expandPath_1, Inners._ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE? _ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE_1)
             {
                 this._expandPath_1 = _expandPath_1;
-                this._ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE_1 = _ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE_1;
+                this._ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE_1 = _ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE_1;
             }
             
             public GeneratorV3.Odata._expandPath _expandPath_1 { get; }
-            public Inners._ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE? _ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE_1 { get; }
+            public Inners._ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE? _ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2696,16 +2696,16 @@ namespace GeneratorV3.Odata
     
     public sealed class _levels
     {
-        public _levels(Inners._Ⲥdoublequotex24x6Cx65x76x65x6Cx73doublequoteⳆdoublequotex6Cx65x76x65x6Cx73doublequoteↃ _Ⲥdoublequotex24x6Cx65x76x65x6Cx73doublequoteⳆdoublequotex6Cx65x76x65x6Cx73doublequoteↃ_1, GeneratorV3.Odata._EQ _EQ_1, Inners._ⲤoneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequoteↃ _ⲤoneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequoteↃ_1)
+        public _levels(Inners._Ⲥdoublequotex24x6Cx65x76x65x6Cx73doublequoteⳆdoublequotex6Cx65x76x65x6Cx73doublequoteↃ _Ⲥdoublequotex24x6Cx65x76x65x6Cx73doublequoteⳆdoublequotex6Cx65x76x65x6Cx73doublequoteↃ_1, GeneratorV3.Odata._EQ _EQ_1, Inners._ⲤoneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequoteↃ _ⲤoneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequoteↃ_1)
         {
             this._Ⲥdoublequotex24x6Cx65x76x65x6Cx73doublequoteⳆdoublequotex6Cx65x76x65x6Cx73doublequoteↃ_1 = _Ⲥdoublequotex24x6Cx65x76x65x6Cx73doublequoteⳆdoublequotex6Cx65x76x65x6Cx73doublequoteↃ_1;
             this._EQ_1 = _EQ_1;
-            this._ⲤoneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequoteↃ_1 = _ⲤoneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequoteↃ_1;
+            this._ⲤoneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequoteↃ_1 = _ⲤoneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequoteↃ_1;
         }
         
         public Inners._Ⲥdoublequotex24x6Cx65x76x65x6Cx73doublequoteⳆdoublequotex6Cx65x76x65x6Cx73doublequoteↃ _Ⲥdoublequotex24x6Cx65x76x65x6Cx73doublequoteⳆdoublequotex6Cx65x76x65x6Cx73doublequoteↃ_1 { get; }
         public GeneratorV3.Odata._EQ _EQ_1 { get; }
-        public Inners._ⲤoneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequoteↃ _ⲤoneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequoteↃ_1 { get; }
+        public Inners._ⲤoneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequoteↃ _ⲤoneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequoteↃ_1 { get; }
     }
     
     public sealed class _filter
@@ -2794,16 +2794,16 @@ namespace GeneratorV3.Odata
     
     public sealed class _format
     {
-        public _format(Inners._Ⲥdoublequotex24x66x6Fx72x6Dx61x74doublequoteⳆdoublequotex66x6Fx72x6Dx61x74doublequoteↃ _Ⲥdoublequotex24x66x6Fx72x6Dx61x74doublequoteⳆdoublequotex66x6Fx72x6Dx61x74doublequoteↃ_1, GeneratorV3.Odata._EQ _EQ_1, Inners._Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpcharↃ _Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpcharↃ_1)
+        public _format(Inners._Ⲥdoublequotex24x66x6Fx72x6Dx61x74doublequoteⳆdoublequotex66x6Fx72x6Dx61x74doublequoteↃ _Ⲥdoublequotex24x66x6Fx72x6Dx61x74doublequoteⳆdoublequotex66x6Fx72x6Dx61x74doublequoteↃ_1, GeneratorV3.Odata._EQ _EQ_1, Inners._Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1ЖpcharↃ _Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1ЖpcharↃ_1)
         {
             this._Ⲥdoublequotex24x66x6Fx72x6Dx61x74doublequoteⳆdoublequotex66x6Fx72x6Dx61x74doublequoteↃ_1 = _Ⲥdoublequotex24x66x6Fx72x6Dx61x74doublequoteⳆdoublequotex66x6Fx72x6Dx61x74doublequoteↃ_1;
             this._EQ_1 = _EQ_1;
-            this._Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpcharↃ_1 = _Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpcharↃ_1;
+            this._Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1ЖpcharↃ_1 = _Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1ЖpcharↃ_1;
         }
         
         public Inners._Ⲥdoublequotex24x66x6Fx72x6Dx61x74doublequoteⳆdoublequotex66x6Fx72x6Dx61x74doublequoteↃ _Ⲥdoublequotex24x66x6Fx72x6Dx61x74doublequoteⳆdoublequotex66x6Fx72x6Dx61x74doublequoteↃ_1 { get; }
         public GeneratorV3.Odata._EQ _EQ_1 { get; }
-        public Inners._Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpcharↃ _Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpcharↃ_1 { get; }
+        public Inners._Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1ЖpcharↃ _Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1ЖpcharↃ_1 { get; }
     }
     
     public sealed class _inlinecount
@@ -2822,16 +2822,16 @@ namespace GeneratorV3.Odata
     
     public sealed class _schemaversion
     {
-        public _schemaversion(Inners._Ⲥdoublequotex24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteⳆdoublequotex73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteↃ _Ⲥdoublequotex24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteⳆdoublequotex73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteↃ_1, GeneratorV3.Odata._EQ _EQ_1, Inners._ⲤSTARⳆ1asteriskunreservedↃ _ⲤSTARⳆ1asteriskunreservedↃ_1)
+        public _schemaversion(Inners._Ⲥdoublequotex24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteⳆdoublequotex73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteↃ _Ⲥdoublequotex24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteⳆdoublequotex73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteↃ_1, GeneratorV3.Odata._EQ _EQ_1, Inners._ⲤSTARⳆ1ЖunreservedↃ _ⲤSTARⳆ1ЖunreservedↃ_1)
         {
             this._Ⲥdoublequotex24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteⳆdoublequotex73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteↃ_1 = _Ⲥdoublequotex24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteⳆdoublequotex73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteↃ_1;
             this._EQ_1 = _EQ_1;
-            this._ⲤSTARⳆ1asteriskunreservedↃ_1 = _ⲤSTARⳆ1asteriskunreservedↃ_1;
+            this._ⲤSTARⳆ1ЖunreservedↃ_1 = _ⲤSTARⳆ1ЖunreservedↃ_1;
         }
         
         public Inners._Ⲥdoublequotex24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteⳆdoublequotex73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteↃ _Ⲥdoublequotex24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteⳆdoublequotex73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteↃ_1 { get; }
         public GeneratorV3.Odata._EQ _EQ_1 { get; }
-        public Inners._ⲤSTARⳆ1asteriskunreservedↃ _ⲤSTARⳆ1asteriskunreservedↃ_1 { get; }
+        public Inners._ⲤSTARⳆ1ЖunreservedↃ _ⲤSTARⳆ1ЖunreservedↃ_1 { get; }
     }
     
     public sealed class _search
@@ -3028,9 +3028,9 @@ namespace GeneratorV3.Odata
             }
             
             protected internal abstract TResult Accept(_selectProperty._primitiveProperty node, TContext context);
-            protected internal abstract TResult Accept(_selectProperty._primitiveColProperty_꘡OPEN_selectOptionPC_asteriskⲤSEMI_selectOptionPCↃ_CLOSE꘡ node, TContext context);
+            protected internal abstract TResult Accept(_selectProperty._primitiveColProperty_꘡OPEN_selectOptionPC_ЖⲤSEMI_selectOptionPCↃ_CLOSE꘡ node, TContext context);
             protected internal abstract TResult Accept(_selectProperty._navigationProperty node, TContext context);
-            protected internal abstract TResult Accept(_selectProperty._selectPath_꘡OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty꘡ node, TContext context);
+            protected internal abstract TResult Accept(_selectProperty._selectPath_꘡OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty꘡ node, TContext context);
         }
         
         public sealed class _primitiveProperty : _selectProperty
@@ -3048,16 +3048,16 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _primitiveColProperty_꘡OPEN_selectOptionPC_asteriskⲤSEMI_selectOptionPCↃ_CLOSE꘡ : _selectProperty
+        public sealed class _primitiveColProperty_꘡OPEN_selectOptionPC_ЖⲤSEMI_selectOptionPCↃ_CLOSE꘡ : _selectProperty
         {
-            public _primitiveColProperty_꘡OPEN_selectOptionPC_asteriskⲤSEMI_selectOptionPCↃ_CLOSE꘡(GeneratorV3.Odata._primitiveColProperty _primitiveColProperty_1, Inners._OPEN_selectOptionPC_asteriskⲤSEMI_selectOptionPCↃ_CLOSE? _OPEN_selectOptionPC_asteriskⲤSEMI_selectOptionPCↃ_CLOSE_1)
+            public _primitiveColProperty_꘡OPEN_selectOptionPC_ЖⲤSEMI_selectOptionPCↃ_CLOSE꘡(GeneratorV3.Odata._primitiveColProperty _primitiveColProperty_1, Inners._OPEN_selectOptionPC_ЖⲤSEMI_selectOptionPCↃ_CLOSE? _OPEN_selectOptionPC_ЖⲤSEMI_selectOptionPCↃ_CLOSE_1)
             {
                 this._primitiveColProperty_1 = _primitiveColProperty_1;
-                this._OPEN_selectOptionPC_asteriskⲤSEMI_selectOptionPCↃ_CLOSE_1 = _OPEN_selectOptionPC_asteriskⲤSEMI_selectOptionPCↃ_CLOSE_1;
+                this._OPEN_selectOptionPC_ЖⲤSEMI_selectOptionPCↃ_CLOSE_1 = _OPEN_selectOptionPC_ЖⲤSEMI_selectOptionPCↃ_CLOSE_1;
             }
             
             public GeneratorV3.Odata._primitiveColProperty _primitiveColProperty_1 { get; }
-            public Inners._OPEN_selectOptionPC_asteriskⲤSEMI_selectOptionPCↃ_CLOSE? _OPEN_selectOptionPC_asteriskⲤSEMI_selectOptionPCↃ_CLOSE_1 { get; }
+            public Inners._OPEN_selectOptionPC_ЖⲤSEMI_selectOptionPCↃ_CLOSE? _OPEN_selectOptionPC_ЖⲤSEMI_selectOptionPCↃ_CLOSE_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3080,16 +3080,16 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _selectPath_꘡OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty꘡ : _selectProperty
+        public sealed class _selectPath_꘡OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty꘡ : _selectProperty
         {
-            public _selectPath_꘡OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty꘡(GeneratorV3.Odata._selectPath _selectPath_1, Inners._OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty? _OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty_1)
+            public _selectPath_꘡OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty꘡(GeneratorV3.Odata._selectPath _selectPath_1, Inners._OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty? _OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty_1)
             {
                 this._selectPath_1 = _selectPath_1;
-                this._OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty_1 = _OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty_1;
+                this._OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty_1 = _OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty_1;
             }
             
             public GeneratorV3.Odata._selectPath _selectPath_1 { get; }
-            public Inners._OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty? _OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty_1 { get; }
+            public Inners._OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty? _OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3549,7 +3549,7 @@ namespace GeneratorV3.Odata
             protected internal abstract TResult Accept(_contextFragment._doublequotex24x72x65x66doublequote node, TContext context);
             protected internal abstract TResult Accept(_contextFragment._doublequotex43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29doublequote node, TContext context);
             protected internal abstract TResult Accept(_contextFragment._doublequotex43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29doublequote node, TContext context);
-            protected internal abstract TResult Accept(_contextFragment._singletonEntity_꘡navigation_asteriskⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡꘡_꘡selectList꘡ node, TContext context);
+            protected internal abstract TResult Accept(_contextFragment._singletonEntity_꘡navigation_ЖⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡꘡_꘡selectList꘡ node, TContext context);
             protected internal abstract TResult Accept(_contextFragment._qualifiedTypeName_꘡selectList꘡ node, TContext context);
             protected internal abstract TResult Accept(_contextFragment._entitySet_Ⲥdoublequotex2Fx24x64x65x6Cx65x74x65x64x45x6Ex74x69x74x79doublequoteⳆdoublequotex2Fx24x6Cx69x6Ex6BdoublequoteⳆdoublequotex2Fx24x64x65x6Cx65x74x65x64x4Cx69x6Ex6BdoublequoteↃ node, TContext context);
             protected internal abstract TResult Accept(_contextFragment._entitySet_keyPredicate_doublequotex2Fdoublequote_contextPropertyPath_꘡selectList꘡ node, TContext context);
@@ -3616,17 +3616,17 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _singletonEntity_꘡navigation_asteriskⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡꘡_꘡selectList꘡ : _contextFragment
+        public sealed class _singletonEntity_꘡navigation_ЖⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡꘡_꘡selectList꘡ : _contextFragment
         {
-            public _singletonEntity_꘡navigation_asteriskⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡꘡_꘡selectList꘡(GeneratorV3.Odata._singletonEntity _singletonEntity_1, Inners._navigation_asteriskⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡? _navigation_asteriskⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡_1, GeneratorV3.Odata._selectList? _selectList_1)
+            public _singletonEntity_꘡navigation_ЖⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡꘡_꘡selectList꘡(GeneratorV3.Odata._singletonEntity _singletonEntity_1, Inners._navigation_ЖⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡? _navigation_ЖⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡_1, GeneratorV3.Odata._selectList? _selectList_1)
             {
                 this._singletonEntity_1 = _singletonEntity_1;
-                this._navigation_asteriskⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡_1 = _navigation_asteriskⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡_1;
+                this._navigation_ЖⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡_1 = _navigation_ЖⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡_1;
                 this._selectList_1 = _selectList_1;
             }
             
             public GeneratorV3.Odata._singletonEntity _singletonEntity_1 { get; }
-            public Inners._navigation_asteriskⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡? _navigation_asteriskⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡_1 { get; }
+            public Inners._navigation_ЖⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡? _navigation_ЖⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡_1 { get; }
             public GeneratorV3.Odata._selectList? _selectList_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -4339,23 +4339,23 @@ namespace GeneratorV3.Odata
                 return node.Dispatch(this, context);
             }
             
-            protected internal abstract TResult Accept(_collectionPathExpr._count_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ node, TContext context);
+            protected internal abstract TResult Accept(_collectionPathExpr._count_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ node, TContext context);
             protected internal abstract TResult Accept(_collectionPathExpr._doublequotex2Fdoublequote_boundFunctionExpr node, TContext context);
             protected internal abstract TResult Accept(_collectionPathExpr._doublequotex2Fdoublequote_annotationExpr node, TContext context);
             protected internal abstract TResult Accept(_collectionPathExpr._doublequotex2Fdoublequote_anyExpr node, TContext context);
             protected internal abstract TResult Accept(_collectionPathExpr._doublequotex2Fdoublequote_allExpr node, TContext context);
         }
         
-        public sealed class _count_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ : _collectionPathExpr
+        public sealed class _count_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ : _collectionPathExpr
         {
-            public _count_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡(GeneratorV3.Odata._count _count_1, Inners._OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE? _OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE_1)
+            public _count_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡(GeneratorV3.Odata._count _count_1, Inners._OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE? _OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE_1)
             {
                 this._count_1 = _count_1;
-                this._OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE_1 = _OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE_1;
+                this._OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE_1 = _OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE_1;
             }
             
             public GeneratorV3.Odata._count _count_1 { get; }
-            public Inners._OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE? _OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE_1 { get; }
+            public Inners._OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE? _OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4482,15 +4482,15 @@ namespace GeneratorV3.Odata
     
     public sealed class _functionExprParameters
     {
-        public _functionExprParameters(GeneratorV3.Odata._OPEN _OPEN_1, Inners._functionExprParameter_asteriskⲤCOMMA_functionExprParameterↃ? _functionExprParameter_asteriskⲤCOMMA_functionExprParameterↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
+        public _functionExprParameters(GeneratorV3.Odata._OPEN _OPEN_1, Inners._functionExprParameter_ЖⲤCOMMA_functionExprParameterↃ? _functionExprParameter_ЖⲤCOMMA_functionExprParameterↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
         {
             this._OPEN_1 = _OPEN_1;
-            this._functionExprParameter_asteriskⲤCOMMA_functionExprParameterↃ_1 = _functionExprParameter_asteriskⲤCOMMA_functionExprParameterↃ_1;
+            this._functionExprParameter_ЖⲤCOMMA_functionExprParameterↃ_1 = _functionExprParameter_ЖⲤCOMMA_functionExprParameterↃ_1;
             this._CLOSE_1 = _CLOSE_1;
         }
         
         public GeneratorV3.Odata._OPEN _OPEN_1 { get; }
-        public Inners._functionExprParameter_asteriskⲤCOMMA_functionExprParameterↃ? _functionExprParameter_asteriskⲤCOMMA_functionExprParameterↃ_1 { get; }
+        public Inners._functionExprParameter_ЖⲤCOMMA_functionExprParameterↃ? _functionExprParameter_ЖⲤCOMMA_functionExprParameterↃ_1 { get; }
         public GeneratorV3.Odata._CLOSE _CLOSE_1 { get; }
     }
     
@@ -6290,29 +6290,29 @@ namespace GeneratorV3.Odata
     
     public sealed class _complexColInUri
     {
-        public _complexColInUri(GeneratorV3.Odata._beginⲻarray _beginⲻarray_1, Inners._complexInUri_asteriskⲤvalueⲻseparator_complexInUriↃ? _complexInUri_asteriskⲤvalueⲻseparator_complexInUriↃ_1, GeneratorV3.Odata._endⲻarray _endⲻarray_1)
+        public _complexColInUri(GeneratorV3.Odata._beginⲻarray _beginⲻarray_1, Inners._complexInUri_ЖⲤvalueⲻseparator_complexInUriↃ? _complexInUri_ЖⲤvalueⲻseparator_complexInUriↃ_1, GeneratorV3.Odata._endⲻarray _endⲻarray_1)
         {
             this._beginⲻarray_1 = _beginⲻarray_1;
-            this._complexInUri_asteriskⲤvalueⲻseparator_complexInUriↃ_1 = _complexInUri_asteriskⲤvalueⲻseparator_complexInUriↃ_1;
+            this._complexInUri_ЖⲤvalueⲻseparator_complexInUriↃ_1 = _complexInUri_ЖⲤvalueⲻseparator_complexInUriↃ_1;
             this._endⲻarray_1 = _endⲻarray_1;
         }
         
         public GeneratorV3.Odata._beginⲻarray _beginⲻarray_1 { get; }
-        public Inners._complexInUri_asteriskⲤvalueⲻseparator_complexInUriↃ? _complexInUri_asteriskⲤvalueⲻseparator_complexInUriↃ_1 { get; }
+        public Inners._complexInUri_ЖⲤvalueⲻseparator_complexInUriↃ? _complexInUri_ЖⲤvalueⲻseparator_complexInUriↃ_1 { get; }
         public GeneratorV3.Odata._endⲻarray _endⲻarray_1 { get; }
     }
     
     public sealed class _complexInUri
     {
-        public _complexInUri(GeneratorV3.Odata._beginⲻobject _beginⲻobject_1, Inners._ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_asteriskⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ? _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_asteriskⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1, GeneratorV3.Odata._endⲻobject _endⲻobject_1)
+        public _complexInUri(GeneratorV3.Odata._beginⲻobject _beginⲻobject_1, Inners._ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ? _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1, GeneratorV3.Odata._endⲻobject _endⲻobject_1)
         {
             this._beginⲻobject_1 = _beginⲻobject_1;
-            this._ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_asteriskⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1 = _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_asteriskⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1;
+            this._ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1 = _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1;
             this._endⲻobject_1 = _endⲻobject_1;
         }
         
         public GeneratorV3.Odata._beginⲻobject _beginⲻobject_1 { get; }
-        public Inners._ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_asteriskⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ? _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_asteriskⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1 { get; }
+        public Inners._ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ? _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1 { get; }
         public GeneratorV3.Odata._endⲻobject _endⲻobject_1 { get; }
     }
     
@@ -6368,15 +6368,15 @@ namespace GeneratorV3.Odata
     
     public sealed class _primitiveColInUri
     {
-        public _primitiveColInUri(GeneratorV3.Odata._beginⲻarray _beginⲻarray_1, Inners._primitiveLiteralInJSON_asteriskⲤvalueⲻseparator_primitiveLiteralInJSONↃ? _primitiveLiteralInJSON_asteriskⲤvalueⲻseparator_primitiveLiteralInJSONↃ_1, GeneratorV3.Odata._endⲻarray _endⲻarray_1)
+        public _primitiveColInUri(GeneratorV3.Odata._beginⲻarray _beginⲻarray_1, Inners._primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ? _primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ_1, GeneratorV3.Odata._endⲻarray _endⲻarray_1)
         {
             this._beginⲻarray_1 = _beginⲻarray_1;
-            this._primitiveLiteralInJSON_asteriskⲤvalueⲻseparator_primitiveLiteralInJSONↃ_1 = _primitiveLiteralInJSON_asteriskⲤvalueⲻseparator_primitiveLiteralInJSONↃ_1;
+            this._primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ_1 = _primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ_1;
             this._endⲻarray_1 = _endⲻarray_1;
         }
         
         public GeneratorV3.Odata._beginⲻarray _beginⲻarray_1 { get; }
-        public Inners._primitiveLiteralInJSON_asteriskⲤvalueⲻseparator_primitiveLiteralInJSONↃ? _primitiveLiteralInJSON_asteriskⲤvalueⲻseparator_primitiveLiteralInJSONↃ_1 { get; }
+        public Inners._primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ? _primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ_1 { get; }
         public GeneratorV3.Odata._endⲻarray _endⲻarray_1 { get; }
     }
     
@@ -6528,15 +6528,15 @@ namespace GeneratorV3.Odata
     
     public sealed class _rootExprCol
     {
-        public _rootExprCol(GeneratorV3.Odata._beginⲻarray _beginⲻarray_1, Inners._rootExpr_asteriskⲤvalueⲻseparator_rootExprↃ? _rootExpr_asteriskⲤvalueⲻseparator_rootExprↃ_1, GeneratorV3.Odata._endⲻarray _endⲻarray_1)
+        public _rootExprCol(GeneratorV3.Odata._beginⲻarray _beginⲻarray_1, Inners._rootExpr_ЖⲤvalueⲻseparator_rootExprↃ? _rootExpr_ЖⲤvalueⲻseparator_rootExprↃ_1, GeneratorV3.Odata._endⲻarray _endⲻarray_1)
         {
             this._beginⲻarray_1 = _beginⲻarray_1;
-            this._rootExpr_asteriskⲤvalueⲻseparator_rootExprↃ_1 = _rootExpr_asteriskⲤvalueⲻseparator_rootExprↃ_1;
+            this._rootExpr_ЖⲤvalueⲻseparator_rootExprↃ_1 = _rootExpr_ЖⲤvalueⲻseparator_rootExprↃ_1;
             this._endⲻarray_1 = _endⲻarray_1;
         }
         
         public GeneratorV3.Odata._beginⲻarray _beginⲻarray_1 { get; }
-        public Inners._rootExpr_asteriskⲤvalueⲻseparator_rootExprↃ? _rootExpr_asteriskⲤvalueⲻseparator_rootExprↃ_1 { get; }
+        public Inners._rootExpr_ЖⲤvalueⲻseparator_rootExprↃ? _rootExpr_ЖⲤvalueⲻseparator_rootExprↃ_1 { get; }
         public GeneratorV3.Odata._endⲻarray _endⲻarray_1 { get; }
     }
     
@@ -7046,7 +7046,7 @@ namespace GeneratorV3.Odata
             }
             
             protected internal abstract TResult Accept(_int._doublequotex30doublequote node, TContext context);
-            protected internal abstract TResult Accept(_int._ⲤoneToNine_asteriskDIGITↃ node, TContext context);
+            protected internal abstract TResult Accept(_int._ⲤoneToNine_ЖDIGITↃ node, TContext context);
         }
         
         public sealed class _doublequotex30doublequote : _int
@@ -7064,14 +7064,14 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _ⲤoneToNine_asteriskDIGITↃ : _int
+        public sealed class _ⲤoneToNine_ЖDIGITↃ : _int
         {
-            public _ⲤoneToNine_asteriskDIGITↃ(Inners._ⲤoneToNine_asteriskDIGITↃ _ⲤoneToNine_asteriskDIGITↃ_1)
+            public _ⲤoneToNine_ЖDIGITↃ(Inners._ⲤoneToNine_ЖDIGITↃ _ⲤoneToNine_ЖDIGITↃ_1)
             {
-                this._ⲤoneToNine_asteriskDIGITↃ_1 = _ⲤoneToNine_asteriskDIGITↃ_1;
+                this._ⲤoneToNine_ЖDIGITↃ_1 = _ⲤoneToNine_ЖDIGITↃ_1;
             }
             
-            public Inners._ⲤoneToNine_asteriskDIGITↃ _ⲤoneToNine_asteriskDIGITↃ_1 { get; }
+            public Inners._ⲤoneToNine_ЖDIGITↃ _ⲤoneToNine_ЖDIGITↃ_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9301,24 +9301,24 @@ namespace GeneratorV3.Odata
                 return node.Dispatch(this, context);
             }
             
-            protected internal abstract TResult Accept(_decimalValue._꘡SIGN꘡_1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_꘡doublequotex65doublequote_꘡SIGN꘡_1asteriskDIGIT꘡ node, TContext context);
+            protected internal abstract TResult Accept(_decimalValue._꘡SIGN꘡_1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_꘡doublequotex65doublequote_꘡SIGN꘡_1ЖDIGIT꘡ node, TContext context);
             protected internal abstract TResult Accept(_decimalValue._nanInfinity node, TContext context);
         }
         
-        public sealed class _꘡SIGN꘡_1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_꘡doublequotex65doublequote_꘡SIGN꘡_1asteriskDIGIT꘡ : _decimalValue
+        public sealed class _꘡SIGN꘡_1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_꘡doublequotex65doublequote_꘡SIGN꘡_1ЖDIGIT꘡ : _decimalValue
         {
-            public _꘡SIGN꘡_1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_꘡doublequotex65doublequote_꘡SIGN꘡_1asteriskDIGIT꘡(GeneratorV3.Odata._SIGN? _SIGN_1, IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1, Inners._doublequotex2Edoublequote_1asteriskDIGIT? _doublequotex2Edoublequote_1asteriskDIGIT_1, Inners._doublequotex65doublequote_꘡SIGN꘡_1asteriskDIGIT? _doublequotex65doublequote_꘡SIGN꘡_1asteriskDIGIT_1)
+            public _꘡SIGN꘡_1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_꘡doublequotex65doublequote_꘡SIGN꘡_1ЖDIGIT꘡(GeneratorV3.Odata._SIGN? _SIGN_1, IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1, Inners._doublequotex2Edoublequote_1ЖDIGIT? _doublequotex2Edoublequote_1ЖDIGIT_1, Inners._doublequotex65doublequote_꘡SIGN꘡_1ЖDIGIT? _doublequotex65doublequote_꘡SIGN꘡_1ЖDIGIT_1)
             {
                 this._SIGN_1 = _SIGN_1;
                 this._DIGIT_1 = _DIGIT_1;
-                this._doublequotex2Edoublequote_1asteriskDIGIT_1 = _doublequotex2Edoublequote_1asteriskDIGIT_1;
-                this._doublequotex65doublequote_꘡SIGN꘡_1asteriskDIGIT_1 = _doublequotex65doublequote_꘡SIGN꘡_1asteriskDIGIT_1;
+                this._doublequotex2Edoublequote_1ЖDIGIT_1 = _doublequotex2Edoublequote_1ЖDIGIT_1;
+                this._doublequotex65doublequote_꘡SIGN꘡_1ЖDIGIT_1 = _doublequotex65doublequote_꘡SIGN꘡_1ЖDIGIT_1;
             }
             
             public GeneratorV3.Odata._SIGN? _SIGN_1 { get; }
             public IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1 { get; }
-            public Inners._doublequotex2Edoublequote_1asteriskDIGIT? _doublequotex2Edoublequote_1asteriskDIGIT_1 { get; }
-            public Inners._doublequotex65doublequote_꘡SIGN꘡_1asteriskDIGIT? _doublequotex65doublequote_꘡SIGN꘡_1asteriskDIGIT_1 { get; }
+            public Inners._doublequotex2Edoublequote_1ЖDIGIT? _doublequotex2Edoublequote_1ЖDIGIT_1 { get; }
+            public Inners._doublequotex65doublequote_꘡SIGN꘡_1ЖDIGIT? _doublequotex65doublequote_꘡SIGN꘡_1ЖDIGIT_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9604,18 +9604,18 @@ namespace GeneratorV3.Odata
     
     public sealed class _durationValue
     {
-        public _durationValue(GeneratorV3.Odata._SIGN? _SIGN_1, Inners._doublequotex50doublequote _doublequotex50doublequote_1, Inners._1asteriskDIGIT_doublequotex44doublequote? _1asteriskDIGIT_doublequotex44doublequote_1, Inners._doublequotex54doublequote_꘡1asteriskDIGIT_doublequotex48doublequote꘡_꘡1asteriskDIGIT_doublequotex4Ddoublequote꘡_꘡1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote꘡? _doublequotex54doublequote_꘡1asteriskDIGIT_doublequotex48doublequote꘡_꘡1asteriskDIGIT_doublequotex4Ddoublequote꘡_꘡1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote꘡_1)
+        public _durationValue(GeneratorV3.Odata._SIGN? _SIGN_1, Inners._doublequotex50doublequote _doublequotex50doublequote_1, Inners._1ЖDIGIT_doublequotex44doublequote? _1ЖDIGIT_doublequotex44doublequote_1, Inners._doublequotex54doublequote_꘡1ЖDIGIT_doublequotex48doublequote꘡_꘡1ЖDIGIT_doublequotex4Ddoublequote꘡_꘡1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote꘡? _doublequotex54doublequote_꘡1ЖDIGIT_doublequotex48doublequote꘡_꘡1ЖDIGIT_doublequotex4Ddoublequote꘡_꘡1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote꘡_1)
         {
             this._SIGN_1 = _SIGN_1;
             this._doublequotex50doublequote_1 = _doublequotex50doublequote_1;
-            this._1asteriskDIGIT_doublequotex44doublequote_1 = _1asteriskDIGIT_doublequotex44doublequote_1;
-            this._doublequotex54doublequote_꘡1asteriskDIGIT_doublequotex48doublequote꘡_꘡1asteriskDIGIT_doublequotex4Ddoublequote꘡_꘡1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote꘡_1 = _doublequotex54doublequote_꘡1asteriskDIGIT_doublequotex48doublequote꘡_꘡1asteriskDIGIT_doublequotex4Ddoublequote꘡_꘡1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote꘡_1;
+            this._1ЖDIGIT_doublequotex44doublequote_1 = _1ЖDIGIT_doublequotex44doublequote_1;
+            this._doublequotex54doublequote_꘡1ЖDIGIT_doublequotex48doublequote꘡_꘡1ЖDIGIT_doublequotex4Ddoublequote꘡_꘡1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote꘡_1 = _doublequotex54doublequote_꘡1ЖDIGIT_doublequotex48doublequote꘡_꘡1ЖDIGIT_doublequotex4Ddoublequote꘡_꘡1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote꘡_1;
         }
         
         public GeneratorV3.Odata._SIGN? _SIGN_1 { get; }
         public Inners._doublequotex50doublequote _doublequotex50doublequote_1 { get; }
-        public Inners._1asteriskDIGIT_doublequotex44doublequote? _1asteriskDIGIT_doublequotex44doublequote_1 { get; }
-        public Inners._doublequotex54doublequote_꘡1asteriskDIGIT_doublequotex48doublequote꘡_꘡1asteriskDIGIT_doublequotex4Ddoublequote꘡_꘡1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote꘡? _doublequotex54doublequote_꘡1asteriskDIGIT_doublequotex48doublequote꘡_꘡1asteriskDIGIT_doublequotex4Ddoublequote꘡_꘡1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote꘡_1 { get; }
+        public Inners._1ЖDIGIT_doublequotex44doublequote? _1ЖDIGIT_doublequotex44doublequote_1 { get; }
+        public Inners._doublequotex54doublequote_꘡1ЖDIGIT_doublequotex48doublequote꘡_꘡1ЖDIGIT_doublequotex4Ddoublequote꘡_꘡1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote꘡? _doublequotex54doublequote_꘡1ЖDIGIT_doublequotex48doublequote꘡_꘡1ЖDIGIT_doublequotex4Ddoublequote꘡_꘡1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote꘡_1 { get; }
     }
     
     public sealed class _timeOfDayValue
@@ -9810,14 +9810,14 @@ namespace GeneratorV3.Odata
     
     public sealed class _year
     {
-        public _year(Inners._doublequotex2Ddoublequote? _doublequotex2Ddoublequote_1, Inners._Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGITↃ _Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGITↃ_1)
+        public _year(Inners._doublequotex2Ddoublequote? _doublequotex2Ddoublequote_1, Inners._Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGITↃ _Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGITↃ_1)
         {
             this._doublequotex2Ddoublequote_1 = _doublequotex2Ddoublequote_1;
-            this._Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGITↃ_1 = _Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGITↃ_1;
+            this._Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGITↃ_1 = _Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGITↃ_1;
         }
         
         public Inners._doublequotex2Ddoublequote? _doublequotex2Ddoublequote_1 { get; }
-        public Inners._Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGITↃ _Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGITↃ_1 { get; }
+        public Inners._Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGITↃ _Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGITↃ_1 { get; }
     }
     
     public abstract class _month
@@ -10378,15 +10378,15 @@ namespace GeneratorV3.Odata
     
     public sealed class _multiLineStringLiteral
     {
-        public _multiLineStringLiteral(Inners._doublequotex4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67x28doublequote _doublequotex4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67x28doublequote_1, Inners._lineStringData_asteriskⲤCOMMA_lineStringDataↃ? _lineStringData_asteriskⲤCOMMA_lineStringDataↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
+        public _multiLineStringLiteral(Inners._doublequotex4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67x28doublequote _doublequotex4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67x28doublequote_1, Inners._lineStringData_ЖⲤCOMMA_lineStringDataↃ? _lineStringData_ЖⲤCOMMA_lineStringDataↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
         {
             this._doublequotex4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67x28doublequote_1 = _doublequotex4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67x28doublequote_1;
-            this._lineStringData_asteriskⲤCOMMA_lineStringDataↃ_1 = _lineStringData_asteriskⲤCOMMA_lineStringDataↃ_1;
+            this._lineStringData_ЖⲤCOMMA_lineStringDataↃ_1 = _lineStringData_ЖⲤCOMMA_lineStringDataↃ_1;
             this._CLOSE_1 = _CLOSE_1;
         }
         
         public Inners._doublequotex4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67x28doublequote _doublequotex4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67x28doublequote_1 { get; }
-        public Inners._lineStringData_asteriskⲤCOMMA_lineStringDataↃ? _lineStringData_asteriskⲤCOMMA_lineStringDataↃ_1 { get; }
+        public Inners._lineStringData_ЖⲤCOMMA_lineStringDataↃ? _lineStringData_ЖⲤCOMMA_lineStringDataↃ_1 { get; }
         public GeneratorV3.Odata._CLOSE _CLOSE_1 { get; }
     }
     
@@ -10420,15 +10420,15 @@ namespace GeneratorV3.Odata
     
     public sealed class _multiPointLiteral
     {
-        public _multiPointLiteral(Inners._doublequotex4Dx75x6Cx74x69x50x6Fx69x6Ex74x28doublequote _doublequotex4Dx75x6Cx74x69x50x6Fx69x6Ex74x28doublequote_1, Inners._pointData_asteriskⲤCOMMA_pointDataↃ? _pointData_asteriskⲤCOMMA_pointDataↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
+        public _multiPointLiteral(Inners._doublequotex4Dx75x6Cx74x69x50x6Fx69x6Ex74x28doublequote _doublequotex4Dx75x6Cx74x69x50x6Fx69x6Ex74x28doublequote_1, Inners._pointData_ЖⲤCOMMA_pointDataↃ? _pointData_ЖⲤCOMMA_pointDataↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
         {
             this._doublequotex4Dx75x6Cx74x69x50x6Fx69x6Ex74x28doublequote_1 = _doublequotex4Dx75x6Cx74x69x50x6Fx69x6Ex74x28doublequote_1;
-            this._pointData_asteriskⲤCOMMA_pointDataↃ_1 = _pointData_asteriskⲤCOMMA_pointDataↃ_1;
+            this._pointData_ЖⲤCOMMA_pointDataↃ_1 = _pointData_ЖⲤCOMMA_pointDataↃ_1;
             this._CLOSE_1 = _CLOSE_1;
         }
         
         public Inners._doublequotex4Dx75x6Cx74x69x50x6Fx69x6Ex74x28doublequote _doublequotex4Dx75x6Cx74x69x50x6Fx69x6Ex74x28doublequote_1 { get; }
-        public Inners._pointData_asteriskⲤCOMMA_pointDataↃ? _pointData_asteriskⲤCOMMA_pointDataↃ_1 { get; }
+        public Inners._pointData_ЖⲤCOMMA_pointDataↃ? _pointData_ЖⲤCOMMA_pointDataↃ_1 { get; }
         public GeneratorV3.Odata._CLOSE _CLOSE_1 { get; }
     }
     
@@ -10462,15 +10462,15 @@ namespace GeneratorV3.Odata
     
     public sealed class _multiPolygonLiteral
     {
-        public _multiPolygonLiteral(Inners._doublequotex4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Ex28doublequote _doublequotex4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Ex28doublequote_1, Inners._polygonData_asteriskⲤCOMMA_polygonDataↃ? _polygonData_asteriskⲤCOMMA_polygonDataↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
+        public _multiPolygonLiteral(Inners._doublequotex4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Ex28doublequote _doublequotex4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Ex28doublequote_1, Inners._polygonData_ЖⲤCOMMA_polygonDataↃ? _polygonData_ЖⲤCOMMA_polygonDataↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
         {
             this._doublequotex4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Ex28doublequote_1 = _doublequotex4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Ex28doublequote_1;
-            this._polygonData_asteriskⲤCOMMA_polygonDataↃ_1 = _polygonData_asteriskⲤCOMMA_polygonDataↃ_1;
+            this._polygonData_ЖⲤCOMMA_polygonDataↃ_1 = _polygonData_ЖⲤCOMMA_polygonDataↃ_1;
             this._CLOSE_1 = _CLOSE_1;
         }
         
         public Inners._doublequotex4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Ex28doublequote _doublequotex4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Ex28doublequote_1 { get; }
-        public Inners._polygonData_asteriskⲤCOMMA_polygonDataↃ? _polygonData_asteriskⲤCOMMA_polygonDataↃ_1 { get; }
+        public Inners._polygonData_ЖⲤCOMMA_polygonDataↃ? _polygonData_ЖⲤCOMMA_polygonDataↃ_1 { get; }
         public GeneratorV3.Odata._CLOSE _CLOSE_1 { get; }
     }
     
@@ -12122,12 +12122,12 @@ namespace GeneratorV3.Odata
             protected internal abstract TResult Accept(_IPv6address._6Ⲥh16_doublequotex3AdoublequoteↃ_ls32 node, TContext context);
             protected internal abstract TResult Accept(_IPv6address._doublequotex3Ax3Adoublequote_5Ⲥh16_doublequotex3AdoublequoteↃ_ls32 node, TContext context);
             protected internal abstract TResult Accept(_IPv6address._꘡h16꘡_doublequotex3Ax3Adoublequote_4Ⲥh16_doublequotex3AdoublequoteↃ_ls32 node, TContext context);
-            protected internal abstract TResult Accept(_IPv6address._꘡asterisk1Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_3Ⲥh16_doublequotex3AdoublequoteↃ_ls32 node, TContext context);
-            protected internal abstract TResult Accept(_IPv6address._꘡asterisk2Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_2Ⲥh16_doublequotex3AdoublequoteↃ_ls32 node, TContext context);
-            protected internal abstract TResult Accept(_IPv6address._꘡asterisk3Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_h16_doublequotex3Adoublequote_ls32 node, TContext context);
-            protected internal abstract TResult Accept(_IPv6address._꘡asterisk4Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_ls32 node, TContext context);
-            protected internal abstract TResult Accept(_IPv6address._꘡asterisk5Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_h16 node, TContext context);
-            protected internal abstract TResult Accept(_IPv6address._꘡asterisk6Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote node, TContext context);
+            protected internal abstract TResult Accept(_IPv6address._꘡Ж1Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_3Ⲥh16_doublequotex3AdoublequoteↃ_ls32 node, TContext context);
+            protected internal abstract TResult Accept(_IPv6address._꘡Ж2Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_2Ⲥh16_doublequotex3AdoublequoteↃ_ls32 node, TContext context);
+            protected internal abstract TResult Accept(_IPv6address._꘡Ж3Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_h16_doublequotex3Adoublequote_ls32 node, TContext context);
+            protected internal abstract TResult Accept(_IPv6address._꘡Ж4Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_ls32 node, TContext context);
+            protected internal abstract TResult Accept(_IPv6address._꘡Ж5Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_h16 node, TContext context);
+            protected internal abstract TResult Accept(_IPv6address._꘡Ж6Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote node, TContext context);
         }
         
         public sealed class _6Ⲥh16_doublequotex3AdoublequoteↃ_ls32 : _IPv6address
@@ -12187,17 +12187,17 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _꘡asterisk1Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_3Ⲥh16_doublequotex3AdoublequoteↃ_ls32 : _IPv6address
+        public sealed class _꘡Ж1Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_3Ⲥh16_doublequotex3AdoublequoteↃ_ls32 : _IPv6address
         {
-            public _꘡asterisk1Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_3Ⲥh16_doublequotex3AdoublequoteↃ_ls32(Inners._asterisk1Ⲥh16_doublequotex3AdoublequoteↃ_h16? _asterisk1Ⲥh16_doublequotex3AdoublequoteↃ_h16_1, Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1, IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._ls32 _ls32_1)
+            public _꘡Ж1Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_3Ⲥh16_doublequotex3AdoublequoteↃ_ls32(Inners._Ж1Ⲥh16_doublequotex3AdoublequoteↃ_h16? _Ж1Ⲥh16_doublequotex3AdoublequoteↃ_h16_1, Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1, IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._ls32 _ls32_1)
             {
-                this._asterisk1Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 = _asterisk1Ⲥh16_doublequotex3AdoublequoteↃ_h16_1;
+                this._Ж1Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 = _Ж1Ⲥh16_doublequotex3AdoublequoteↃ_h16_1;
                 this._doublequotex3Ax3Adoublequote_1 = _doublequotex3Ax3Adoublequote_1;
                 this._Ⲥh16_doublequotex3AdoublequoteↃ_1 = _Ⲥh16_doublequotex3AdoublequoteↃ_1;
                 this._ls32_1 = _ls32_1;
             }
             
-            public Inners._asterisk1Ⲥh16_doublequotex3AdoublequoteↃ_h16? _asterisk1Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 { get; }
+            public Inners._Ж1Ⲥh16_doublequotex3AdoublequoteↃ_h16? _Ж1Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 { get; }
             public Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1 { get; }
             public IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1 { get; }
             public GeneratorV3.Odata._ls32 _ls32_1 { get; }
@@ -12208,17 +12208,17 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _꘡asterisk2Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_2Ⲥh16_doublequotex3AdoublequoteↃ_ls32 : _IPv6address
+        public sealed class _꘡Ж2Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_2Ⲥh16_doublequotex3AdoublequoteↃ_ls32 : _IPv6address
         {
-            public _꘡asterisk2Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_2Ⲥh16_doublequotex3AdoublequoteↃ_ls32(Inners._asterisk2Ⲥh16_doublequotex3AdoublequoteↃ_h16? _asterisk2Ⲥh16_doublequotex3AdoublequoteↃ_h16_1, Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1, IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._ls32 _ls32_1)
+            public _꘡Ж2Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_2Ⲥh16_doublequotex3AdoublequoteↃ_ls32(Inners._Ж2Ⲥh16_doublequotex3AdoublequoteↃ_h16? _Ж2Ⲥh16_doublequotex3AdoublequoteↃ_h16_1, Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1, IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._ls32 _ls32_1)
             {
-                this._asterisk2Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 = _asterisk2Ⲥh16_doublequotex3AdoublequoteↃ_h16_1;
+                this._Ж2Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 = _Ж2Ⲥh16_doublequotex3AdoublequoteↃ_h16_1;
                 this._doublequotex3Ax3Adoublequote_1 = _doublequotex3Ax3Adoublequote_1;
                 this._Ⲥh16_doublequotex3AdoublequoteↃ_1 = _Ⲥh16_doublequotex3AdoublequoteↃ_1;
                 this._ls32_1 = _ls32_1;
             }
             
-            public Inners._asterisk2Ⲥh16_doublequotex3AdoublequoteↃ_h16? _asterisk2Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 { get; }
+            public Inners._Ж2Ⲥh16_doublequotex3AdoublequoteↃ_h16? _Ж2Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 { get; }
             public Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1 { get; }
             public IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1 { get; }
             public GeneratorV3.Odata._ls32 _ls32_1 { get; }
@@ -12229,18 +12229,18 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _꘡asterisk3Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_h16_doublequotex3Adoublequote_ls32 : _IPv6address
+        public sealed class _꘡Ж3Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_h16_doublequotex3Adoublequote_ls32 : _IPv6address
         {
-            public _꘡asterisk3Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_h16_doublequotex3Adoublequote_ls32(Inners._asterisk3Ⲥh16_doublequotex3AdoublequoteↃ_h16? _asterisk3Ⲥh16_doublequotex3AdoublequoteↃ_h16_1, Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1, GeneratorV3.Odata._h16 _h16_1, Inners._doublequotex3Adoublequote _doublequotex3Adoublequote_1, GeneratorV3.Odata._ls32 _ls32_1)
+            public _꘡Ж3Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_h16_doublequotex3Adoublequote_ls32(Inners._Ж3Ⲥh16_doublequotex3AdoublequoteↃ_h16? _Ж3Ⲥh16_doublequotex3AdoublequoteↃ_h16_1, Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1, GeneratorV3.Odata._h16 _h16_1, Inners._doublequotex3Adoublequote _doublequotex3Adoublequote_1, GeneratorV3.Odata._ls32 _ls32_1)
             {
-                this._asterisk3Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 = _asterisk3Ⲥh16_doublequotex3AdoublequoteↃ_h16_1;
+                this._Ж3Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 = _Ж3Ⲥh16_doublequotex3AdoublequoteↃ_h16_1;
                 this._doublequotex3Ax3Adoublequote_1 = _doublequotex3Ax3Adoublequote_1;
                 this._h16_1 = _h16_1;
                 this._doublequotex3Adoublequote_1 = _doublequotex3Adoublequote_1;
                 this._ls32_1 = _ls32_1;
             }
             
-            public Inners._asterisk3Ⲥh16_doublequotex3AdoublequoteↃ_h16? _asterisk3Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 { get; }
+            public Inners._Ж3Ⲥh16_doublequotex3AdoublequoteↃ_h16? _Ж3Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 { get; }
             public Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1 { get; }
             public GeneratorV3.Odata._h16 _h16_1 { get; }
             public Inners._doublequotex3Adoublequote _doublequotex3Adoublequote_1 { get; }
@@ -12252,16 +12252,16 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _꘡asterisk4Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_ls32 : _IPv6address
+        public sealed class _꘡Ж4Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_ls32 : _IPv6address
         {
-            public _꘡asterisk4Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_ls32(Inners._asterisk4Ⲥh16_doublequotex3AdoublequoteↃ_h16? _asterisk4Ⲥh16_doublequotex3AdoublequoteↃ_h16_1, Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1, GeneratorV3.Odata._ls32 _ls32_1)
+            public _꘡Ж4Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_ls32(Inners._Ж4Ⲥh16_doublequotex3AdoublequoteↃ_h16? _Ж4Ⲥh16_doublequotex3AdoublequoteↃ_h16_1, Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1, GeneratorV3.Odata._ls32 _ls32_1)
             {
-                this._asterisk4Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 = _asterisk4Ⲥh16_doublequotex3AdoublequoteↃ_h16_1;
+                this._Ж4Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 = _Ж4Ⲥh16_doublequotex3AdoublequoteↃ_h16_1;
                 this._doublequotex3Ax3Adoublequote_1 = _doublequotex3Ax3Adoublequote_1;
                 this._ls32_1 = _ls32_1;
             }
             
-            public Inners._asterisk4Ⲥh16_doublequotex3AdoublequoteↃ_h16? _asterisk4Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 { get; }
+            public Inners._Ж4Ⲥh16_doublequotex3AdoublequoteↃ_h16? _Ж4Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 { get; }
             public Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1 { get; }
             public GeneratorV3.Odata._ls32 _ls32_1 { get; }
             
@@ -12271,16 +12271,16 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _꘡asterisk5Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_h16 : _IPv6address
+        public sealed class _꘡Ж5Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_h16 : _IPv6address
         {
-            public _꘡asterisk5Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_h16(Inners._asterisk5Ⲥh16_doublequotex3AdoublequoteↃ_h16? _asterisk5Ⲥh16_doublequotex3AdoublequoteↃ_h16_1, Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1, GeneratorV3.Odata._h16 _h16_1)
+            public _꘡Ж5Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote_h16(Inners._Ж5Ⲥh16_doublequotex3AdoublequoteↃ_h16? _Ж5Ⲥh16_doublequotex3AdoublequoteↃ_h16_1, Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1, GeneratorV3.Odata._h16 _h16_1)
             {
-                this._asterisk5Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 = _asterisk5Ⲥh16_doublequotex3AdoublequoteↃ_h16_1;
+                this._Ж5Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 = _Ж5Ⲥh16_doublequotex3AdoublequoteↃ_h16_1;
                 this._doublequotex3Ax3Adoublequote_1 = _doublequotex3Ax3Adoublequote_1;
                 this._h16_1 = _h16_1;
             }
             
-            public Inners._asterisk5Ⲥh16_doublequotex3AdoublequoteↃ_h16? _asterisk5Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 { get; }
+            public Inners._Ж5Ⲥh16_doublequotex3AdoublequoteↃ_h16? _Ж5Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 { get; }
             public Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1 { get; }
             public GeneratorV3.Odata._h16 _h16_1 { get; }
             
@@ -12290,15 +12290,15 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _꘡asterisk6Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote : _IPv6address
+        public sealed class _꘡Ж6Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote : _IPv6address
         {
-            public _꘡asterisk6Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote(Inners._asterisk6Ⲥh16_doublequotex3AdoublequoteↃ_h16? _asterisk6Ⲥh16_doublequotex3AdoublequoteↃ_h16_1, Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1)
+            public _꘡Ж6Ⲥh16_doublequotex3AdoublequoteↃ_h16꘡_doublequotex3Ax3Adoublequote(Inners._Ж6Ⲥh16_doublequotex3AdoublequoteↃ_h16? _Ж6Ⲥh16_doublequotex3AdoublequoteↃ_h16_1, Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1)
             {
-                this._asterisk6Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 = _asterisk6Ⲥh16_doublequotex3AdoublequoteↃ_h16_1;
+                this._Ж6Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 = _Ж6Ⲥh16_doublequotex3AdoublequoteↃ_h16_1;
                 this._doublequotex3Ax3Adoublequote_1 = _doublequotex3Ax3Adoublequote_1;
             }
             
-            public Inners._asterisk6Ⲥh16_doublequotex3AdoublequoteↃ_h16? _asterisk6Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 { get; }
+            public Inners._Ж6Ⲥh16_doublequotex3AdoublequoteↃ_h16? _Ж6Ⲥh16_doublequotex3AdoublequoteↃ_h16_1 { get; }
             public Inners._doublequotex3Ax3Adoublequote _doublequotex3Ax3Adoublequote_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -12520,14 +12520,14 @@ namespace GeneratorV3.Odata
     
     public sealed class _pathⲻabsolute
     {
-        public _pathⲻabsolute(Inners._doublequotex2Fdoublequote _doublequotex2Fdoublequote_1, Inners._segmentⲻnz_asteriskⲤdoublequotex2Fdoublequote_segmentↃ? _segmentⲻnz_asteriskⲤdoublequotex2Fdoublequote_segmentↃ_1)
+        public _pathⲻabsolute(Inners._doublequotex2Fdoublequote _doublequotex2Fdoublequote_1, Inners._segmentⲻnz_ЖⲤdoublequotex2Fdoublequote_segmentↃ? _segmentⲻnz_ЖⲤdoublequotex2Fdoublequote_segmentↃ_1)
         {
             this._doublequotex2Fdoublequote_1 = _doublequotex2Fdoublequote_1;
-            this._segmentⲻnz_asteriskⲤdoublequotex2Fdoublequote_segmentↃ_1 = _segmentⲻnz_asteriskⲤdoublequotex2Fdoublequote_segmentↃ_1;
+            this._segmentⲻnz_ЖⲤdoublequotex2Fdoublequote_segmentↃ_1 = _segmentⲻnz_ЖⲤdoublequotex2Fdoublequote_segmentↃ_1;
         }
         
         public Inners._doublequotex2Fdoublequote _doublequotex2Fdoublequote_1 { get; }
-        public Inners._segmentⲻnz_asteriskⲤdoublequotex2Fdoublequote_segmentↃ? _segmentⲻnz_asteriskⲤdoublequotex2Fdoublequote_segmentↃ_1 { get; }
+        public Inners._segmentⲻnz_ЖⲤdoublequotex2Fdoublequote_segmentↃ? _segmentⲻnz_ЖⲤdoublequotex2Fdoublequote_segmentↃ_1 { get; }
     }
     
     public sealed class _pathⲻrootless
@@ -15492,9 +15492,9 @@ namespace GeneratorV3.Odata
             public Inners._COMMA_functionParameter _COMMA_functionParameter_1 { get; }
         }
         
-        public sealed class _functionParameter_asteriskⲤCOMMA_functionParameterↃ
+        public sealed class _functionParameter_ЖⲤCOMMA_functionParameterↃ
         {
-            public _functionParameter_asteriskⲤCOMMA_functionParameterↃ(GeneratorV3.Odata._functionParameter _functionParameter_1, IEnumerable<Inners._ⲤCOMMA_functionParameterↃ> _ⲤCOMMA_functionParameterↃ_1)
+            public _functionParameter_ЖⲤCOMMA_functionParameterↃ(GeneratorV3.Odata._functionParameter _functionParameter_1, IEnumerable<Inners._ⲤCOMMA_functionParameterↃ> _ⲤCOMMA_functionParameterↃ_1)
             {
                 this._functionParameter_1 = _functionParameter_1;
                 this._ⲤCOMMA_functionParameterↃ_1 = _ⲤCOMMA_functionParameterↃ_1;
@@ -16251,9 +16251,9 @@ namespace GeneratorV3.Odata
             public Inners._SEMI_expandRefOption _SEMI_expandRefOption_1 { get; }
         }
         
-        public sealed class _OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE
+        public sealed class _OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE
         {
-            public _OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE(GeneratorV3.Odata._OPEN _OPEN_1, GeneratorV3.Odata._expandRefOption _expandRefOption_1, IEnumerable<Inners._ⲤSEMI_expandRefOptionↃ> _ⲤSEMI_expandRefOptionↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
+            public _OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE(GeneratorV3.Odata._OPEN _OPEN_1, GeneratorV3.Odata._expandRefOption _expandRefOption_1, IEnumerable<Inners._ⲤSEMI_expandRefOptionↃ> _ⲤSEMI_expandRefOptionↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
             {
                 this._OPEN_1 = _OPEN_1;
                 this._expandRefOption_1 = _expandRefOption_1;
@@ -16289,9 +16289,9 @@ namespace GeneratorV3.Odata
             public Inners._SEMI_expandCountOption _SEMI_expandCountOption_1 { get; }
         }
         
-        public sealed class _OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE
+        public sealed class _OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE
         {
-            public _OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE(GeneratorV3.Odata._OPEN _OPEN_1, GeneratorV3.Odata._expandCountOption _expandCountOption_1, IEnumerable<Inners._ⲤSEMI_expandCountOptionↃ> _ⲤSEMI_expandCountOptionↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
+            public _OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE(GeneratorV3.Odata._OPEN _OPEN_1, GeneratorV3.Odata._expandCountOption _expandCountOption_1, IEnumerable<Inners._ⲤSEMI_expandCountOptionↃ> _ⲤSEMI_expandCountOptionↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
             {
                 this._OPEN_1 = _OPEN_1;
                 this._expandCountOption_1 = _expandCountOption_1;
@@ -16327,9 +16327,9 @@ namespace GeneratorV3.Odata
             public Inners._SEMI_expandOption _SEMI_expandOption_1 { get; }
         }
         
-        public abstract class _ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE
+        public abstract class _ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE
         {
-            private _ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE()
+            private _ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE()
             {
             }
             
@@ -16337,26 +16337,26 @@ namespace GeneratorV3.Odata
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(_ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE node, TContext context)
+                public TResult Visit(_ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
                 
-                protected internal abstract TResult Accept(_ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE._ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡ node, TContext context);
-                protected internal abstract TResult Accept(_ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE._count_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ node, TContext context);
-                protected internal abstract TResult Accept(_ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE._OPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE node, TContext context);
+                protected internal abstract TResult Accept(_ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE._ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡ node, TContext context);
+                protected internal abstract TResult Accept(_ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE._count_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ node, TContext context);
+                protected internal abstract TResult Accept(_ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE._OPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE node, TContext context);
             }
             
-            public sealed class _ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡ : _ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE
+            public sealed class _ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡ : _ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE
             {
-                public _ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡(GeneratorV3.Odata._ref _ref_1, Inners._OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE? _OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE_1)
+                public _ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡(GeneratorV3.Odata._ref _ref_1, Inners._OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE? _OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE_1)
                 {
                     this._ref_1 = _ref_1;
-                    this._OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE_1 = _OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE_1;
+                    this._OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE_1 = _OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE_1;
                 }
                 
                 public GeneratorV3.Odata._ref _ref_1 { get; }
-                public Inners._OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE? _OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE_1 { get; }
+                public Inners._OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE? _OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -16364,16 +16364,16 @@ namespace GeneratorV3.Odata
                 }
             }
             
-            public sealed class _count_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ : _ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE
+            public sealed class _count_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ : _ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE
             {
-                public _count_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡(GeneratorV3.Odata._count _count_1, Inners._OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE? _OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE_1)
+                public _count_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡(GeneratorV3.Odata._count _count_1, Inners._OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE? _OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE_1)
                 {
                     this._count_1 = _count_1;
-                    this._OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE_1 = _OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE_1;
+                    this._OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE_1 = _OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE_1;
                 }
                 
                 public GeneratorV3.Odata._count _count_1 { get; }
-                public Inners._OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE? _OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE_1 { get; }
+                public Inners._OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE? _OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -16381,9 +16381,9 @@ namespace GeneratorV3.Odata
                 }
             }
             
-            public sealed class _OPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE : _ref_꘡OPEN_expandRefOption_asteriskⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_asteriskⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE
+            public sealed class _OPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE : _ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE
             {
-                public _OPEN_expandOption_asteriskⲤSEMI_expandOptionↃ_CLOSE(GeneratorV3.Odata._OPEN _OPEN_1, GeneratorV3.Odata._expandOption _expandOption_1, IEnumerable<Inners._ⲤSEMI_expandOptionↃ> _ⲤSEMI_expandOptionↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
+                public _OPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE(GeneratorV3.Odata._OPEN _OPEN_1, GeneratorV3.Odata._expandOption _expandOption_1, IEnumerable<Inners._ⲤSEMI_expandOptionↃ> _ⲤSEMI_expandOptionↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
                 {
                     this._OPEN_1 = _OPEN_1;
                     this._expandOption_1 = _expandOption_1;
@@ -16765,9 +16765,9 @@ namespace GeneratorV3.Odata
             public Inners._x78 _x78_1 { get; }
         }
         
-        public abstract class _oneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequote
+        public abstract class _oneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequote
         {
-            private _oneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequote()
+            private _oneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequote()
             {
             }
             
@@ -16775,18 +16775,18 @@ namespace GeneratorV3.Odata
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(_oneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequote node, TContext context)
+                public TResult Visit(_oneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequote node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
                 
-                protected internal abstract TResult Accept(_oneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequote._oneToNine_asteriskDIGIT node, TContext context);
-                protected internal abstract TResult Accept(_oneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequote._doublequotex6Dx61x78doublequote node, TContext context);
+                protected internal abstract TResult Accept(_oneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequote._oneToNine_ЖDIGIT node, TContext context);
+                protected internal abstract TResult Accept(_oneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequote._doublequotex6Dx61x78doublequote node, TContext context);
             }
             
-            public sealed class _oneToNine_asteriskDIGIT : _oneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequote
+            public sealed class _oneToNine_ЖDIGIT : _oneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequote
             {
-                public _oneToNine_asteriskDIGIT(GeneratorV3.Odata._oneToNine _oneToNine_1, IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1)
+                public _oneToNine_ЖDIGIT(GeneratorV3.Odata._oneToNine _oneToNine_1, IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1)
                 {
                     this._oneToNine_1 = _oneToNine_1;
                     this._DIGIT_1 = _DIGIT_1;
@@ -16801,7 +16801,7 @@ namespace GeneratorV3.Odata
                 }
             }
             
-            public sealed class _doublequotex6Dx61x78doublequote : _oneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequote
+            public sealed class _doublequotex6Dx61x78doublequote : _oneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequote
             {
                 public _doublequotex6Dx61x78doublequote(Inners._doublequotex6Dx61x78doublequote _doublequotex6Dx61x78doublequote_1)
                 {
@@ -16817,14 +16817,14 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _ⲤoneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequoteↃ
+        public sealed class _ⲤoneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequoteↃ
         {
-            public _ⲤoneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequoteↃ(Inners._oneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequote _oneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequote_1)
+            public _ⲤoneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequoteↃ(Inners._oneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequote _oneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequote_1)
             {
-                this._oneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequote_1 = _oneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequote_1;
+                this._oneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequote_1 = _oneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequote_1;
             }
             
-            public Inners._oneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequote _oneToNine_asteriskDIGITⳆdoublequotex6Dx61x78doublequote_1 { get; }
+            public Inners._oneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequote _oneToNine_ЖDIGITⳆdoublequotex6Dx61x78doublequote_1 { get; }
         }
         
         public sealed class _doublequotex24x66x69x6Cx74x65x72doublequote
@@ -17598,9 +17598,9 @@ namespace GeneratorV3.Odata
             public Inners._x6C _x6C_1 { get; }
         }
         
-        public abstract class _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar
+        public abstract class _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar
         {
-            private _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar()
+            private _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar()
             {
             }
             
@@ -17608,18 +17608,18 @@ namespace GeneratorV3.Odata
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(_doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar node, TContext context)
+                public TResult Visit(_doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
                 
-                protected internal abstract TResult Accept(_doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar._doublequotex61x74x6Fx6Ddoublequote node, TContext context);
-                protected internal abstract TResult Accept(_doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar._doublequotex6Ax73x6Fx6Edoublequote node, TContext context);
-                protected internal abstract TResult Accept(_doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar._doublequotex78x6Dx6Cdoublequote node, TContext context);
-                protected internal abstract TResult Accept(_doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar._1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar node, TContext context);
+                protected internal abstract TResult Accept(_doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar._doublequotex61x74x6Fx6Ddoublequote node, TContext context);
+                protected internal abstract TResult Accept(_doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar._doublequotex6Ax73x6Fx6Edoublequote node, TContext context);
+                protected internal abstract TResult Accept(_doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar._doublequotex78x6Dx6Cdoublequote node, TContext context);
+                protected internal abstract TResult Accept(_doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar._1Жpchar_doublequotex2Fdoublequote_1Жpchar node, TContext context);
             }
             
-            public sealed class _doublequotex61x74x6Fx6Ddoublequote : _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar
+            public sealed class _doublequotex61x74x6Fx6Ddoublequote : _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar
             {
                 public _doublequotex61x74x6Fx6Ddoublequote(Inners._doublequotex61x74x6Fx6Ddoublequote _doublequotex61x74x6Fx6Ddoublequote_1)
                 {
@@ -17634,7 +17634,7 @@ namespace GeneratorV3.Odata
                 }
             }
             
-            public sealed class _doublequotex6Ax73x6Fx6Edoublequote : _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar
+            public sealed class _doublequotex6Ax73x6Fx6Edoublequote : _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar
             {
                 public _doublequotex6Ax73x6Fx6Edoublequote(Inners._doublequotex6Ax73x6Fx6Edoublequote _doublequotex6Ax73x6Fx6Edoublequote_1)
                 {
@@ -17649,7 +17649,7 @@ namespace GeneratorV3.Odata
                 }
             }
             
-            public sealed class _doublequotex78x6Dx6Cdoublequote : _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar
+            public sealed class _doublequotex78x6Dx6Cdoublequote : _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar
             {
                 public _doublequotex78x6Dx6Cdoublequote(Inners._doublequotex78x6Dx6Cdoublequote _doublequotex78x6Dx6Cdoublequote_1)
                 {
@@ -17664,9 +17664,9 @@ namespace GeneratorV3.Odata
                 }
             }
             
-            public sealed class _1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar : _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar
+            public sealed class _1Жpchar_doublequotex2Fdoublequote_1Жpchar : _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar
             {
-                public _1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar(IEnumerable<GeneratorV3.Odata._pchar> _pchar_1, Inners._doublequotex2Fdoublequote _doublequotex2Fdoublequote_1, IEnumerable<GeneratorV3.Odata._pchar> _pchar_2)
+                public _1Жpchar_doublequotex2Fdoublequote_1Жpchar(IEnumerable<GeneratorV3.Odata._pchar> _pchar_1, Inners._doublequotex2Fdoublequote _doublequotex2Fdoublequote_1, IEnumerable<GeneratorV3.Odata._pchar> _pchar_2)
                 {
                     this._pchar_1 = _pchar_1;
                     this._doublequotex2Fdoublequote_1 = _doublequotex2Fdoublequote_1;
@@ -17684,14 +17684,14 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpcharↃ
+        public sealed class _Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1ЖpcharↃ
         {
-            public _Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpcharↃ(Inners._doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar_1)
+            public _Ⲥdoublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1ЖpcharↃ(Inners._doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar_1)
             {
-                this._doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar_1 = _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar_1;
+                this._doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar_1 = _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar_1;
             }
             
-            public Inners._doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1asteriskpchar_doublequotex2Fdoublequote_1asteriskpchar_1 { get; }
+            public Inners._doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar _doublequotex61x74x6Fx6DdoublequoteⳆdoublequotex6Ax73x6Fx6EdoublequoteⳆdoublequotex78x6Dx6CdoublequoteⳆ1Жpchar_doublequotex2Fdoublequote_1Жpchar_1 { get; }
         }
         
         public sealed class _doublequotex24x63x6Fx75x6Ex74doublequote
@@ -17922,9 +17922,9 @@ namespace GeneratorV3.Odata
             public Inners._doublequotex24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteⳆdoublequotex73x63x68x65x6Dx61x76x65x72x73x69x6Fx6Edoublequote _doublequotex24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EdoublequoteⳆdoublequotex73x63x68x65x6Dx61x76x65x72x73x69x6Fx6Edoublequote_1 { get; }
         }
         
-        public abstract class _STARⳆ1asteriskunreserved
+        public abstract class _STARⳆ1Жunreserved
         {
-            private _STARⳆ1asteriskunreserved()
+            private _STARⳆ1Жunreserved()
             {
             }
             
@@ -17932,16 +17932,16 @@ namespace GeneratorV3.Odata
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(_STARⳆ1asteriskunreserved node, TContext context)
+                public TResult Visit(_STARⳆ1Жunreserved node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
                 
-                protected internal abstract TResult Accept(_STARⳆ1asteriskunreserved._STAR node, TContext context);
-                protected internal abstract TResult Accept(_STARⳆ1asteriskunreserved._1asteriskunreserved node, TContext context);
+                protected internal abstract TResult Accept(_STARⳆ1Жunreserved._STAR node, TContext context);
+                protected internal abstract TResult Accept(_STARⳆ1Жunreserved._1Жunreserved node, TContext context);
             }
             
-            public sealed class _STAR : _STARⳆ1asteriskunreserved
+            public sealed class _STAR : _STARⳆ1Жunreserved
             {
                 public _STAR(GeneratorV3.Odata._STAR _STAR_1)
                 {
@@ -17956,9 +17956,9 @@ namespace GeneratorV3.Odata
                 }
             }
             
-            public sealed class _1asteriskunreserved : _STARⳆ1asteriskunreserved
+            public sealed class _1Жunreserved : _STARⳆ1Жunreserved
             {
-                public _1asteriskunreserved(IEnumerable<GeneratorV3.Odata._unreserved> _unreserved_1)
+                public _1Жunreserved(IEnumerable<GeneratorV3.Odata._unreserved> _unreserved_1)
                 {
                     this._unreserved_1 = _unreserved_1;
                 }
@@ -17972,14 +17972,14 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _ⲤSTARⳆ1asteriskunreservedↃ
+        public sealed class _ⲤSTARⳆ1ЖunreservedↃ
         {
-            public _ⲤSTARⳆ1asteriskunreservedↃ(Inners._STARⳆ1asteriskunreserved _STARⳆ1asteriskunreserved_1)
+            public _ⲤSTARⳆ1ЖunreservedↃ(Inners._STARⳆ1Жunreserved _STARⳆ1Жunreserved_1)
             {
-                this._STARⳆ1asteriskunreserved_1 = _STARⳆ1asteriskunreserved_1;
+                this._STARⳆ1Жunreserved_1 = _STARⳆ1Жunreserved_1;
             }
             
-            public Inners._STARⳆ1asteriskunreserved _STARⳆ1asteriskunreserved_1 { get; }
+            public Inners._STARⳆ1Жunreserved _STARⳆ1Жunreserved_1 { get; }
         }
         
         public sealed class _doublequotex24x73x65x61x72x63x68doublequote
@@ -18710,9 +18710,9 @@ namespace GeneratorV3.Odata
             public Inners._SEMI_selectOptionPC _SEMI_selectOptionPC_1 { get; }
         }
         
-        public sealed class _OPEN_selectOptionPC_asteriskⲤSEMI_selectOptionPCↃ_CLOSE
+        public sealed class _OPEN_selectOptionPC_ЖⲤSEMI_selectOptionPCↃ_CLOSE
         {
-            public _OPEN_selectOptionPC_asteriskⲤSEMI_selectOptionPCↃ_CLOSE(GeneratorV3.Odata._OPEN _OPEN_1, GeneratorV3.Odata._selectOptionPC _selectOptionPC_1, IEnumerable<Inners._ⲤSEMI_selectOptionPCↃ> _ⲤSEMI_selectOptionPCↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
+            public _OPEN_selectOptionPC_ЖⲤSEMI_selectOptionPCↃ_CLOSE(GeneratorV3.Odata._OPEN _OPEN_1, GeneratorV3.Odata._selectOptionPC _selectOptionPC_1, IEnumerable<Inners._ⲤSEMI_selectOptionPCↃ> _ⲤSEMI_selectOptionPCↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
             {
                 this._OPEN_1 = _OPEN_1;
                 this._selectOptionPC_1 = _selectOptionPC_1;
@@ -18748,9 +18748,9 @@ namespace GeneratorV3.Odata
             public Inners._SEMI_selectOption _SEMI_selectOption_1 { get; }
         }
         
-        public abstract class _OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty
+        public abstract class _OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty
         {
-            private _OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty()
+            private _OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty()
             {
             }
             
@@ -18758,18 +18758,18 @@ namespace GeneratorV3.Odata
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(_OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty node, TContext context)
+                public TResult Visit(_OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
                 
-                protected internal abstract TResult Accept(_OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty._OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSE node, TContext context);
-                protected internal abstract TResult Accept(_OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty._doublequotex2Fdoublequote_selectProperty node, TContext context);
+                protected internal abstract TResult Accept(_OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty._OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSE node, TContext context);
+                protected internal abstract TResult Accept(_OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty._doublequotex2Fdoublequote_selectProperty node, TContext context);
             }
             
-            public sealed class _OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSE : _OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty
+            public sealed class _OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSE : _OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty
             {
-                public _OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSE(GeneratorV3.Odata._OPEN _OPEN_1, GeneratorV3.Odata._selectOption _selectOption_1, IEnumerable<Inners._ⲤSEMI_selectOptionↃ> _ⲤSEMI_selectOptionↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
+                public _OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSE(GeneratorV3.Odata._OPEN _OPEN_1, GeneratorV3.Odata._selectOption _selectOption_1, IEnumerable<Inners._ⲤSEMI_selectOptionↃ> _ⲤSEMI_selectOptionↃ_1, GeneratorV3.Odata._CLOSE _CLOSE_1)
                 {
                     this._OPEN_1 = _OPEN_1;
                     this._selectOption_1 = _selectOption_1;
@@ -18788,7 +18788,7 @@ namespace GeneratorV3.Odata
                 }
             }
             
-            public sealed class _doublequotex2Fdoublequote_selectProperty : _OPEN_selectOption_asteriskⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty
+            public sealed class _doublequotex2Fdoublequote_selectProperty : _OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆdoublequotex2Fdoublequote_selectProperty
             {
                 public _doublequotex2Fdoublequote_selectProperty(Inners._doublequotex2Fdoublequote _doublequotex2Fdoublequote_1, GeneratorV3.Odata._selectProperty _selectProperty_1)
                 {
@@ -19175,9 +19175,9 @@ namespace GeneratorV3.Odata
             public GeneratorV3.Odata._containmentNavigation _containmentNavigation_1 { get; }
         }
         
-        public sealed class _navigation_asteriskⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡
+        public sealed class _navigation_ЖⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡
         {
-            public _navigation_asteriskⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡(GeneratorV3.Odata._navigation _navigation_1, IEnumerable<Inners._ⲤcontainmentNavigationↃ> _ⲤcontainmentNavigationↃ_1, Inners._doublequotex2Fdoublequote_qualifiedEntityTypeName? _doublequotex2Fdoublequote_qualifiedEntityTypeName_1)
+            public _navigation_ЖⲤcontainmentNavigationↃ_꘡doublequotex2Fdoublequote_qualifiedEntityTypeName꘡(GeneratorV3.Odata._navigation _navigation_1, IEnumerable<Inners._ⲤcontainmentNavigationↃ> _ⲤcontainmentNavigationↃ_1, Inners._doublequotex2Fdoublequote_qualifiedEntityTypeName? _doublequotex2Fdoublequote_qualifiedEntityTypeName_1)
             {
                 this._navigation_1 = _navigation_1;
                 this._ⲤcontainmentNavigationↃ_1 = _ⲤcontainmentNavigationↃ_1;
@@ -20977,9 +20977,9 @@ namespace GeneratorV3.Odata
             public Inners._COMMA_functionExprParameter _COMMA_functionExprParameter_1 { get; }
         }
         
-        public sealed class _functionExprParameter_asteriskⲤCOMMA_functionExprParameterↃ
+        public sealed class _functionExprParameter_ЖⲤCOMMA_functionExprParameterↃ
         {
-            public _functionExprParameter_asteriskⲤCOMMA_functionExprParameterↃ(GeneratorV3.Odata._functionExprParameter _functionExprParameter_1, IEnumerable<Inners._ⲤCOMMA_functionExprParameterↃ> _ⲤCOMMA_functionExprParameterↃ_1)
+            public _functionExprParameter_ЖⲤCOMMA_functionExprParameterↃ(GeneratorV3.Odata._functionExprParameter _functionExprParameter_1, IEnumerable<Inners._ⲤCOMMA_functionExprParameterↃ> _ⲤCOMMA_functionExprParameterↃ_1)
             {
                 this._functionExprParameter_1 = _functionExprParameter_1;
                 this._ⲤCOMMA_functionExprParameterↃ_1 = _ⲤCOMMA_functionExprParameterↃ_1;
@@ -22231,9 +22231,9 @@ namespace GeneratorV3.Odata
             public Inners._valueⲻseparator_complexInUri _valueⲻseparator_complexInUri_1 { get; }
         }
         
-        public sealed class _complexInUri_asteriskⲤvalueⲻseparator_complexInUriↃ
+        public sealed class _complexInUri_ЖⲤvalueⲻseparator_complexInUriↃ
         {
-            public _complexInUri_asteriskⲤvalueⲻseparator_complexInUriↃ(GeneratorV3.Odata._complexInUri _complexInUri_1, IEnumerable<Inners._Ⲥvalueⲻseparator_complexInUriↃ> _Ⲥvalueⲻseparator_complexInUriↃ_1)
+            public _complexInUri_ЖⲤvalueⲻseparator_complexInUriↃ(GeneratorV3.Odata._complexInUri _complexInUri_1, IEnumerable<Inners._Ⲥvalueⲻseparator_complexInUriↃ> _Ⲥvalueⲻseparator_complexInUriↃ_1)
             {
                 this._complexInUri_1 = _complexInUri_1;
                 this._Ⲥvalueⲻseparator_complexInUriↃ_1 = _Ⲥvalueⲻseparator_complexInUriↃ_1;
@@ -22373,9 +22373,9 @@ namespace GeneratorV3.Odata
             public Inners._valueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ _valueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_1 { get; }
         }
         
-        public sealed class _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_asteriskⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ
+        public sealed class _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ
         {
-            public _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_asteriskⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ(Inners._ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_1, IEnumerable<Inners._Ⲥvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ> _Ⲥvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1)
+            public _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ(Inners._ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_1, IEnumerable<Inners._Ⲥvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ> _Ⲥvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1)
             {
                 this._ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_1 = _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_1;
                 this._Ⲥvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1 = _Ⲥvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1;
@@ -22463,9 +22463,9 @@ namespace GeneratorV3.Odata
             public Inners._valueⲻseparator_primitiveLiteralInJSON _valueⲻseparator_primitiveLiteralInJSON_1 { get; }
         }
         
-        public sealed class _primitiveLiteralInJSON_asteriskⲤvalueⲻseparator_primitiveLiteralInJSONↃ
+        public sealed class _primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ
         {
-            public _primitiveLiteralInJSON_asteriskⲤvalueⲻseparator_primitiveLiteralInJSONↃ(GeneratorV3.Odata._primitiveLiteralInJSON _primitiveLiteralInJSON_1, IEnumerable<Inners._Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ> _Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1)
+            public _primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ(GeneratorV3.Odata._primitiveLiteralInJSON _primitiveLiteralInJSON_1, IEnumerable<Inners._Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ> _Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1)
             {
                 this._primitiveLiteralInJSON_1 = _primitiveLiteralInJSON_1;
                 this._Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1 = _Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1;
@@ -22589,9 +22589,9 @@ namespace GeneratorV3.Odata
             public Inners._valueⲻseparator_rootExpr _valueⲻseparator_rootExpr_1 { get; }
         }
         
-        public sealed class _rootExpr_asteriskⲤvalueⲻseparator_rootExprↃ
+        public sealed class _rootExpr_ЖⲤvalueⲻseparator_rootExprↃ
         {
-            public _rootExpr_asteriskⲤvalueⲻseparator_rootExprↃ(GeneratorV3.Odata._rootExpr _rootExpr_1, IEnumerable<Inners._Ⲥvalueⲻseparator_rootExprↃ> _Ⲥvalueⲻseparator_rootExprↃ_1)
+            public _rootExpr_ЖⲤvalueⲻseparator_rootExprↃ(GeneratorV3.Odata._rootExpr _rootExpr_1, IEnumerable<Inners._Ⲥvalueⲻseparator_rootExprↃ> _Ⲥvalueⲻseparator_rootExprↃ_1)
             {
                 this._rootExpr_1 = _rootExpr_1;
                 this._Ⲥvalueⲻseparator_rootExprↃ_1 = _Ⲥvalueⲻseparator_rootExprↃ_1;
@@ -23451,9 +23451,9 @@ namespace GeneratorV3.Odata
             public Inners._x30 _x30_1 { get; }
         }
         
-        public sealed class _oneToNine_asteriskDIGIT
+        public sealed class _oneToNine_ЖDIGIT
         {
-            public _oneToNine_asteriskDIGIT(GeneratorV3.Odata._oneToNine _oneToNine_1, IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1)
+            public _oneToNine_ЖDIGIT(GeneratorV3.Odata._oneToNine _oneToNine_1, IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1)
             {
                 this._oneToNine_1 = _oneToNine_1;
                 this._DIGIT_1 = _DIGIT_1;
@@ -23463,14 +23463,14 @@ namespace GeneratorV3.Odata
             public IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1 { get; }
         }
         
-        public sealed class _ⲤoneToNine_asteriskDIGITↃ
+        public sealed class _ⲤoneToNine_ЖDIGITↃ
         {
-            public _ⲤoneToNine_asteriskDIGITↃ(Inners._oneToNine_asteriskDIGIT _oneToNine_asteriskDIGIT_1)
+            public _ⲤoneToNine_ЖDIGITↃ(Inners._oneToNine_ЖDIGIT _oneToNine_ЖDIGIT_1)
             {
-                this._oneToNine_asteriskDIGIT_1 = _oneToNine_asteriskDIGIT_1;
+                this._oneToNine_ЖDIGIT_1 = _oneToNine_ЖDIGIT_1;
             }
             
-            public Inners._oneToNine_asteriskDIGIT _oneToNine_asteriskDIGIT_1 { get; }
+            public Inners._oneToNine_ЖDIGIT _oneToNine_ЖDIGIT_1 { get; }
         }
         
         public sealed class _doublequotex65doublequote
@@ -25264,9 +25264,9 @@ namespace GeneratorV3.Odata
             public Inners._doublequotex3Dx3Ddoublequote _doublequotex3Dx3Ddoublequote_1 { get; }
         }
         
-        public sealed class _doublequotex2Edoublequote_1asteriskDIGIT
+        public sealed class _doublequotex2Edoublequote_1ЖDIGIT
         {
-            public _doublequotex2Edoublequote_1asteriskDIGIT(Inners._doublequotex2Edoublequote _doublequotex2Edoublequote_1, IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1)
+            public _doublequotex2Edoublequote_1ЖDIGIT(Inners._doublequotex2Edoublequote _doublequotex2Edoublequote_1, IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1)
             {
                 this._doublequotex2Edoublequote_1 = _doublequotex2Edoublequote_1;
                 this._DIGIT_1 = _DIGIT_1;
@@ -25276,9 +25276,9 @@ namespace GeneratorV3.Odata
             public IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1 { get; }
         }
         
-        public sealed class _doublequotex65doublequote_꘡SIGN꘡_1asteriskDIGIT
+        public sealed class _doublequotex65doublequote_꘡SIGN꘡_1ЖDIGIT
         {
-            public _doublequotex65doublequote_꘡SIGN꘡_1asteriskDIGIT(Inners._doublequotex65doublequote _doublequotex65doublequote_1, GeneratorV3.Odata._SIGN? _SIGN_1, IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1)
+            public _doublequotex65doublequote_꘡SIGN꘡_1ЖDIGIT(Inners._doublequotex65doublequote _doublequotex65doublequote_1, GeneratorV3.Odata._SIGN? _SIGN_1, IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1)
             {
                 this._doublequotex65doublequote_1 = _doublequotex65doublequote_1;
                 this._SIGN_1 = _SIGN_1;
@@ -25545,9 +25545,9 @@ namespace GeneratorV3.Odata
             public Inners._x44 _x44_1 { get; }
         }
         
-        public sealed class _1asteriskDIGIT_doublequotex44doublequote
+        public sealed class _1ЖDIGIT_doublequotex44doublequote
         {
-            public _1asteriskDIGIT_doublequotex44doublequote(IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1, Inners._doublequotex44doublequote _doublequotex44doublequote_1)
+            public _1ЖDIGIT_doublequotex44doublequote(IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1, Inners._doublequotex44doublequote _doublequotex44doublequote_1)
             {
                 this._DIGIT_1 = _DIGIT_1;
                 this._doublequotex44doublequote_1 = _doublequotex44doublequote_1;
@@ -25576,9 +25576,9 @@ namespace GeneratorV3.Odata
             public Inners._x48 _x48_1 { get; }
         }
         
-        public sealed class _1asteriskDIGIT_doublequotex48doublequote
+        public sealed class _1ЖDIGIT_doublequotex48doublequote
         {
-            public _1asteriskDIGIT_doublequotex48doublequote(IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1, Inners._doublequotex48doublequote _doublequotex48doublequote_1)
+            public _1ЖDIGIT_doublequotex48doublequote(IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1, Inners._doublequotex48doublequote _doublequotex48doublequote_1)
             {
                 this._DIGIT_1 = _DIGIT_1;
                 this._doublequotex48doublequote_1 = _doublequotex48doublequote_1;
@@ -25588,9 +25588,9 @@ namespace GeneratorV3.Odata
             public Inners._doublequotex48doublequote _doublequotex48doublequote_1 { get; }
         }
         
-        public sealed class _1asteriskDIGIT_doublequotex4Ddoublequote
+        public sealed class _1ЖDIGIT_doublequotex4Ddoublequote
         {
-            public _1asteriskDIGIT_doublequotex4Ddoublequote(IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1, Inners._doublequotex4Ddoublequote _doublequotex4Ddoublequote_1)
+            public _1ЖDIGIT_doublequotex4Ddoublequote(IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1, Inners._doublequotex4Ddoublequote _doublequotex4Ddoublequote_1)
             {
                 this._DIGIT_1 = _DIGIT_1;
                 this._doublequotex4Ddoublequote_1 = _doublequotex4Ddoublequote_1;
@@ -25610,34 +25610,34 @@ namespace GeneratorV3.Odata
             public Inners._x53 _x53_1 { get; }
         }
         
-        public sealed class _1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote
+        public sealed class _1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote
         {
-            public _1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote(IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1, Inners._doublequotex2Edoublequote_1asteriskDIGIT? _doublequotex2Edoublequote_1asteriskDIGIT_1, Inners._doublequotex53doublequote _doublequotex53doublequote_1)
+            public _1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote(IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1, Inners._doublequotex2Edoublequote_1ЖDIGIT? _doublequotex2Edoublequote_1ЖDIGIT_1, Inners._doublequotex53doublequote _doublequotex53doublequote_1)
             {
                 this._DIGIT_1 = _DIGIT_1;
-                this._doublequotex2Edoublequote_1asteriskDIGIT_1 = _doublequotex2Edoublequote_1asteriskDIGIT_1;
+                this._doublequotex2Edoublequote_1ЖDIGIT_1 = _doublequotex2Edoublequote_1ЖDIGIT_1;
                 this._doublequotex53doublequote_1 = _doublequotex53doublequote_1;
             }
             
             public IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1 { get; }
-            public Inners._doublequotex2Edoublequote_1asteriskDIGIT? _doublequotex2Edoublequote_1asteriskDIGIT_1 { get; }
+            public Inners._doublequotex2Edoublequote_1ЖDIGIT? _doublequotex2Edoublequote_1ЖDIGIT_1 { get; }
             public Inners._doublequotex53doublequote _doublequotex53doublequote_1 { get; }
         }
         
-        public sealed class _doublequotex54doublequote_꘡1asteriskDIGIT_doublequotex48doublequote꘡_꘡1asteriskDIGIT_doublequotex4Ddoublequote꘡_꘡1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote꘡
+        public sealed class _doublequotex54doublequote_꘡1ЖDIGIT_doublequotex48doublequote꘡_꘡1ЖDIGIT_doublequotex4Ddoublequote꘡_꘡1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote꘡
         {
-            public _doublequotex54doublequote_꘡1asteriskDIGIT_doublequotex48doublequote꘡_꘡1asteriskDIGIT_doublequotex4Ddoublequote꘡_꘡1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote꘡(Inners._doublequotex54doublequote _doublequotex54doublequote_1, Inners._1asteriskDIGIT_doublequotex48doublequote? _1asteriskDIGIT_doublequotex48doublequote_1, Inners._1asteriskDIGIT_doublequotex4Ddoublequote? _1asteriskDIGIT_doublequotex4Ddoublequote_1, Inners._1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote? _1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote_1)
+            public _doublequotex54doublequote_꘡1ЖDIGIT_doublequotex48doublequote꘡_꘡1ЖDIGIT_doublequotex4Ddoublequote꘡_꘡1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote꘡(Inners._doublequotex54doublequote _doublequotex54doublequote_1, Inners._1ЖDIGIT_doublequotex48doublequote? _1ЖDIGIT_doublequotex48doublequote_1, Inners._1ЖDIGIT_doublequotex4Ddoublequote? _1ЖDIGIT_doublequotex4Ddoublequote_1, Inners._1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote? _1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote_1)
             {
                 this._doublequotex54doublequote_1 = _doublequotex54doublequote_1;
-                this._1asteriskDIGIT_doublequotex48doublequote_1 = _1asteriskDIGIT_doublequotex48doublequote_1;
-                this._1asteriskDIGIT_doublequotex4Ddoublequote_1 = _1asteriskDIGIT_doublequotex4Ddoublequote_1;
-                this._1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote_1 = _1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote_1;
+                this._1ЖDIGIT_doublequotex48doublequote_1 = _1ЖDIGIT_doublequotex48doublequote_1;
+                this._1ЖDIGIT_doublequotex4Ddoublequote_1 = _1ЖDIGIT_doublequotex4Ddoublequote_1;
+                this._1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote_1 = _1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote_1;
             }
             
             public Inners._doublequotex54doublequote _doublequotex54doublequote_1 { get; }
-            public Inners._1asteriskDIGIT_doublequotex48doublequote? _1asteriskDIGIT_doublequotex48doublequote_1 { get; }
-            public Inners._1asteriskDIGIT_doublequotex4Ddoublequote? _1asteriskDIGIT_doublequotex4Ddoublequote_1 { get; }
-            public Inners._1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote? _1asteriskDIGIT_꘡doublequotex2Edoublequote_1asteriskDIGIT꘡_doublequotex53doublequote_1 { get; }
+            public Inners._1ЖDIGIT_doublequotex48doublequote? _1ЖDIGIT_doublequotex48doublequote_1 { get; }
+            public Inners._1ЖDIGIT_doublequotex4Ddoublequote? _1ЖDIGIT_doublequotex4Ddoublequote_1 { get; }
+            public Inners._1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote? _1ЖDIGIT_꘡doublequotex2Edoublequote_1ЖDIGIT꘡_doublequotex53doublequote_1 { get; }
         }
         
         public sealed class _doublequotex31doublequote
@@ -25843,9 +25843,9 @@ namespace GeneratorV3.Odata
             public Inners._doublequotex30doublequoteⳆdoublequotex31doublequoteⳆdoublequotex32doublequoteⳆdoublequotex33doublequoteⳆdoublequotex34doublequoteⳆdoublequotex35doublequote _doublequotex30doublequoteⳆdoublequotex31doublequoteⳆdoublequotex32doublequoteⳆdoublequotex33doublequoteⳆdoublequotex34doublequoteⳆdoublequotex35doublequote_1 { get; }
         }
         
-        public abstract class _doublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGIT
+        public abstract class _doublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGIT
         {
-            private _doublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGIT()
+            private _doublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGIT()
             {
             }
             
@@ -25853,16 +25853,16 @@ namespace GeneratorV3.Odata
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(_doublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGIT node, TContext context)
+                public TResult Visit(_doublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGIT node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
                 
-                protected internal abstract TResult Accept(_doublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGIT._doublequotex30doublequote_3DIGIT node, TContext context);
-                protected internal abstract TResult Accept(_doublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGIT._oneToNine_3asteriskDIGIT node, TContext context);
+                protected internal abstract TResult Accept(_doublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGIT._doublequotex30doublequote_3DIGIT node, TContext context);
+                protected internal abstract TResult Accept(_doublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGIT._oneToNine_3ЖDIGIT node, TContext context);
             }
             
-            public sealed class _doublequotex30doublequote_3DIGIT : _doublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGIT
+            public sealed class _doublequotex30doublequote_3DIGIT : _doublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGIT
             {
                 public _doublequotex30doublequote_3DIGIT(Inners._doublequotex30doublequote _doublequotex30doublequote_1, IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1)
                 {
@@ -25879,9 +25879,9 @@ namespace GeneratorV3.Odata
                 }
             }
             
-            public sealed class _oneToNine_3asteriskDIGIT : _doublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGIT
+            public sealed class _oneToNine_3ЖDIGIT : _doublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGIT
             {
-                public _oneToNine_3asteriskDIGIT(GeneratorV3.Odata._oneToNine _oneToNine_1, IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1)
+                public _oneToNine_3ЖDIGIT(GeneratorV3.Odata._oneToNine _oneToNine_1, IEnumerable<GeneratorV3.Odata._DIGIT> _DIGIT_1)
                 {
                     this._oneToNine_1 = _oneToNine_1;
                     this._DIGIT_1 = _DIGIT_1;
@@ -25897,14 +25897,14 @@ namespace GeneratorV3.Odata
             }
         }
         
-        public sealed class _Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGITↃ
+        public sealed class _Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGITↃ
         {
-            public _Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGITↃ(Inners._doublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGIT _doublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGIT_1)
+            public _Ⲥdoublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGITↃ(Inners._doublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGIT _doublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGIT_1)
             {
-                this._doublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGIT_1 = _doublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGIT_1;
+                this._doublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGIT_1 = _doublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGIT_1;
             }
             
-            public Inners._doublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGIT _doublequotex30doublequote_3DIGITⳆoneToNine_3asteriskDIGIT_1 { get; }
+            public Inners._doublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGIT _doublequotex30doublequote_3DIGITⳆoneToNine_3ЖDIGIT_1 { get; }
         }
         
         public abstract class _doublequotex30doublequoteⳆdoublequotex31doublequoteⳆdoublequotex32doublequote
@@ -26353,9 +26353,9 @@ namespace GeneratorV3.Odata
             public Inners._COMMA_lineStringData _COMMA_lineStringData_1 { get; }
         }
         
-        public sealed class _lineStringData_asteriskⲤCOMMA_lineStringDataↃ
+        public sealed class _lineStringData_ЖⲤCOMMA_lineStringDataↃ
         {
-            public _lineStringData_asteriskⲤCOMMA_lineStringDataↃ(GeneratorV3.Odata._lineStringData _lineStringData_1, IEnumerable<Inners._ⲤCOMMA_lineStringDataↃ> _ⲤCOMMA_lineStringDataↃ_1)
+            public _lineStringData_ЖⲤCOMMA_lineStringDataↃ(GeneratorV3.Odata._lineStringData _lineStringData_1, IEnumerable<Inners._ⲤCOMMA_lineStringDataↃ> _ⲤCOMMA_lineStringDataↃ_1)
             {
                 this._lineStringData_1 = _lineStringData_1;
                 this._ⲤCOMMA_lineStringDataↃ_1 = _ⲤCOMMA_lineStringDataↃ_1;
@@ -26417,9 +26417,9 @@ namespace GeneratorV3.Odata
             public Inners._COMMA_pointData _COMMA_pointData_1 { get; }
         }
         
-        public sealed class _pointData_asteriskⲤCOMMA_pointDataↃ
+        public sealed class _pointData_ЖⲤCOMMA_pointDataↃ
         {
-            public _pointData_asteriskⲤCOMMA_pointDataↃ(GeneratorV3.Odata._pointData _pointData_1, IEnumerable<Inners._ⲤCOMMA_pointDataↃ> _ⲤCOMMA_pointDataↃ_1)
+            public _pointData_ЖⲤCOMMA_pointDataↃ(GeneratorV3.Odata._pointData _pointData_1, IEnumerable<Inners._ⲤCOMMA_pointDataↃ> _ⲤCOMMA_pointDataↃ_1)
             {
                 this._pointData_1 = _pointData_1;
                 this._ⲤCOMMA_pointDataↃ_1 = _ⲤCOMMA_pointDataↃ_1;
@@ -26485,9 +26485,9 @@ namespace GeneratorV3.Odata
             public Inners._COMMA_polygonData _COMMA_polygonData_1 { get; }
         }
         
-        public sealed class _polygonData_asteriskⲤCOMMA_polygonDataↃ
+        public sealed class _polygonData_ЖⲤCOMMA_polygonDataↃ
         {
-            public _polygonData_asteriskⲤCOMMA_polygonDataↃ(GeneratorV3.Odata._polygonData _polygonData_1, IEnumerable<Inners._ⲤCOMMA_polygonDataↃ> _ⲤCOMMA_polygonDataↃ_1)
+            public _polygonData_ЖⲤCOMMA_polygonDataↃ(GeneratorV3.Odata._polygonData _polygonData_1, IEnumerable<Inners._ⲤCOMMA_polygonDataↃ> _ⲤCOMMA_polygonDataↃ_1)
             {
                 this._polygonData_1 = _polygonData_1;
                 this._ⲤCOMMA_polygonDataↃ_1 = _ⲤCOMMA_polygonDataↃ_1;
@@ -30770,9 +30770,9 @@ namespace GeneratorV3.Odata
             public Inners._x3A _x3A_2 { get; }
         }
         
-        public sealed class _asterisk1Ⲥh16_doublequotex3AdoublequoteↃ_h16
+        public sealed class _Ж1Ⲥh16_doublequotex3AdoublequoteↃ_h16
         {
-            public _asterisk1Ⲥh16_doublequotex3AdoublequoteↃ_h16(IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._h16 _h16_1)
+            public _Ж1Ⲥh16_doublequotex3AdoublequoteↃ_h16(IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._h16 _h16_1)
             {
                 this._Ⲥh16_doublequotex3AdoublequoteↃ_1 = _Ⲥh16_doublequotex3AdoublequoteↃ_1;
                 this._h16_1 = _h16_1;
@@ -30782,9 +30782,9 @@ namespace GeneratorV3.Odata
             public GeneratorV3.Odata._h16 _h16_1 { get; }
         }
         
-        public sealed class _asterisk2Ⲥh16_doublequotex3AdoublequoteↃ_h16
+        public sealed class _Ж2Ⲥh16_doublequotex3AdoublequoteↃ_h16
         {
-            public _asterisk2Ⲥh16_doublequotex3AdoublequoteↃ_h16(IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._h16 _h16_1)
+            public _Ж2Ⲥh16_doublequotex3AdoublequoteↃ_h16(IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._h16 _h16_1)
             {
                 this._Ⲥh16_doublequotex3AdoublequoteↃ_1 = _Ⲥh16_doublequotex3AdoublequoteↃ_1;
                 this._h16_1 = _h16_1;
@@ -30794,9 +30794,9 @@ namespace GeneratorV3.Odata
             public GeneratorV3.Odata._h16 _h16_1 { get; }
         }
         
-        public sealed class _asterisk3Ⲥh16_doublequotex3AdoublequoteↃ_h16
+        public sealed class _Ж3Ⲥh16_doublequotex3AdoublequoteↃ_h16
         {
-            public _asterisk3Ⲥh16_doublequotex3AdoublequoteↃ_h16(IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._h16 _h16_1)
+            public _Ж3Ⲥh16_doublequotex3AdoublequoteↃ_h16(IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._h16 _h16_1)
             {
                 this._Ⲥh16_doublequotex3AdoublequoteↃ_1 = _Ⲥh16_doublequotex3AdoublequoteↃ_1;
                 this._h16_1 = _h16_1;
@@ -30806,9 +30806,9 @@ namespace GeneratorV3.Odata
             public GeneratorV3.Odata._h16 _h16_1 { get; }
         }
         
-        public sealed class _asterisk4Ⲥh16_doublequotex3AdoublequoteↃ_h16
+        public sealed class _Ж4Ⲥh16_doublequotex3AdoublequoteↃ_h16
         {
-            public _asterisk4Ⲥh16_doublequotex3AdoublequoteↃ_h16(IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._h16 _h16_1)
+            public _Ж4Ⲥh16_doublequotex3AdoublequoteↃ_h16(IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._h16 _h16_1)
             {
                 this._Ⲥh16_doublequotex3AdoublequoteↃ_1 = _Ⲥh16_doublequotex3AdoublequoteↃ_1;
                 this._h16_1 = _h16_1;
@@ -30818,9 +30818,9 @@ namespace GeneratorV3.Odata
             public GeneratorV3.Odata._h16 _h16_1 { get; }
         }
         
-        public sealed class _asterisk5Ⲥh16_doublequotex3AdoublequoteↃ_h16
+        public sealed class _Ж5Ⲥh16_doublequotex3AdoublequoteↃ_h16
         {
-            public _asterisk5Ⲥh16_doublequotex3AdoublequoteↃ_h16(IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._h16 _h16_1)
+            public _Ж5Ⲥh16_doublequotex3AdoublequoteↃ_h16(IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._h16 _h16_1)
             {
                 this._Ⲥh16_doublequotex3AdoublequoteↃ_1 = _Ⲥh16_doublequotex3AdoublequoteↃ_1;
                 this._h16_1 = _h16_1;
@@ -30830,9 +30830,9 @@ namespace GeneratorV3.Odata
             public GeneratorV3.Odata._h16 _h16_1 { get; }
         }
         
-        public sealed class _asterisk6Ⲥh16_doublequotex3AdoublequoteↃ_h16
+        public sealed class _Ж6Ⲥh16_doublequotex3AdoublequoteↃ_h16
         {
-            public _asterisk6Ⲥh16_doublequotex3AdoublequoteↃ_h16(IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._h16 _h16_1)
+            public _Ж6Ⲥh16_doublequotex3AdoublequoteↃ_h16(IEnumerable<Inners._Ⲥh16_doublequotex3AdoublequoteↃ> _Ⲥh16_doublequotex3AdoublequoteↃ_1, GeneratorV3.Odata._h16 _h16_1)
             {
                 this._Ⲥh16_doublequotex3AdoublequoteↃ_1 = _Ⲥh16_doublequotex3AdoublequoteↃ_1;
                 this._h16_1 = _h16_1;
@@ -31390,9 +31390,9 @@ namespace GeneratorV3.Odata
             public Inners._doublequotex2Fdoublequote_segment _doublequotex2Fdoublequote_segment_1 { get; }
         }
         
-        public sealed class _segmentⲻnz_asteriskⲤdoublequotex2Fdoublequote_segmentↃ
+        public sealed class _segmentⲻnz_ЖⲤdoublequotex2Fdoublequote_segmentↃ
         {
-            public _segmentⲻnz_asteriskⲤdoublequotex2Fdoublequote_segmentↃ(GeneratorV3.Odata._segmentⲻnz _segmentⲻnz_1, IEnumerable<Inners._Ⲥdoublequotex2Fdoublequote_segmentↃ> _Ⲥdoublequotex2Fdoublequote_segmentↃ_1)
+            public _segmentⲻnz_ЖⲤdoublequotex2Fdoublequote_segmentↃ(GeneratorV3.Odata._segmentⲻnz _segmentⲻnz_1, IEnumerable<Inners._Ⲥdoublequotex2Fdoublequote_segmentↃ> _Ⲥdoublequotex2Fdoublequote_segmentↃ_1)
             {
                 this._segmentⲻnz_1 = _segmentⲻnz_1;
                 this._Ⲥdoublequotex2Fdoublequote_segmentↃ_1 = _Ⲥdoublequotex2Fdoublequote_segmentↃ_1;
