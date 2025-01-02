@@ -117,7 +117,7 @@
 
         public string CloseBracket { get; }
 
-        public string Asterisk { get; } //// TODO 'ж';Ж
+        public string Asterisk { get; }
 
         public string Slash { get; }
 
