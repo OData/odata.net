@@ -323,7 +323,7 @@
                                         this.alternationGenerator = alternationGenerator;
 
                                         this.charValToClass = new CharValToClass(classNamePrefix, innersClassName);
-                                        this.numValToClass = new NumValToClass(innersClassName);
+                                        this.numValToClass = new NumValToClass(classNamePrefix, innersClassName);
                                     }
 
                                     protected internal override PropertyDefinition Accept(
@@ -660,9 +660,9 @@
                                     {
                                         private readonly HexValToClass hexValToClass;
 
-                                        public NumValToClass(string innersClassName)
+                                        public NumValToClass(string classNamePrefix, string innersClassName)
                                         {
-                                            this.hexValToClass = new HexValToClass(innersClassName);
+                                            this.hexValToClass = new HexValToClass(classNamePrefix, innersClassName);
                                         }
 
                                         protected internal override Class Accept(NumVal.BinVal node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
@@ -685,10 +685,11 @@
                                             private readonly HexDigsToClass hexDigsToClass;
                                             private readonly SegmentsToProperties segmentsToProperties;
 
-                                            public HexValToClass(string innersClassName)
+                                            public HexValToClass(string classNamePrefix, string innersClassName)
                                             {
                                                 this.hexDigsToClass = new HexDigsToClass(innersClassName);
                                                 this.segmentsToProperties = new SegmentsToProperties(
+                                                    classNamePrefix,
                                                     innersClassName, 
                                                     this.hexDigsToClass);
                                             }
@@ -743,13 +744,16 @@
 
                                             private sealed class SegmentsToProperties
                                             {
+                                                private readonly string classNamePrefix;
                                                 private readonly string innersClassName;
                                                 private readonly HexDigsToClass hexDigsToClass;
 
                                                 public SegmentsToProperties(
+                                                    string classNamePrefix,
                                                     string innersClassName,
                                                     HexDigsToClass hexDigsToClass)
                                                 {
+                                                    this.classNamePrefix = classNamePrefix;
                                                     this.innersClassName = innersClassName;
                                                     this.hexDigsToClass = hexDigsToClass;
                                                 }
