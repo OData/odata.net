@@ -17,7 +17,7 @@
 
         protected internal override _repeat Accept(Repeat.Count node, Void context)
         {
-            return new _repeat._ONEasteriskDIGIT(
+            return new _repeat._1asteriskDIGIT(
                 node.Digits.Select(digit =>
                     DigitConverter.Instance.Visit(digit, context)));
         }
