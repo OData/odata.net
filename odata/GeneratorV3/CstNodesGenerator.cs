@@ -46,7 +46,7 @@
         /// Rules often compose several other elements at a time; when this happens, these end up being something akin to
         /// an "implied" rules, which is being referred to here as "inner" rules. When these are encountered, classes
         /// still need to be generated, but it is useful to separate them from the classes for the rules themselves. As
-        /// a result, we will nest the "inner" rules in another class. This property species the name of the class that
+        /// a result, we will nest the "inner" rules in another class. This property specifies the name of the class that
         /// the "inner" rules should be nested under. It is critical that the name selected for this class does not
         /// conflict with the name of any rules in the ABNF.
         /// </summary>
