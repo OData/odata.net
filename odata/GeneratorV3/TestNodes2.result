@@ -29,7 +29,7 @@ namespace GeneratorV3
             
             protected internal abstract TResult Accept(_secondⲻrule._firstⲻrule node, TContext context);
             protected internal abstract TResult Accept(_secondⲻrule._firstⲻrule_firstⲻrule node, TContext context);
-            protected internal abstract TResult Accept(_secondⲻrule._firstⲻrule_asteriskⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_asterisk꘡firstⲻrule_firstⲻrule꘡_asterisk1firstⲻrule_1asteriskfirstⲻrule node, TContext context);
+            protected internal abstract TResult Accept(_secondⲻrule._firstⲻrule_ЖⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_Ж꘡firstⲻrule_firstⲻrule꘡_Ж1firstⲻrule_1Жfirstⲻrule node, TContext context);
             protected internal abstract TResult Accept(_secondⲻrule._ⲤfirstⲻruleⳆⲤfirstⲻrule_꘡firstⲻrule꘡ↃↃ node, TContext context);
             protected internal abstract TResult Accept(_secondⲻrule._firstⲻrule_Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_꘡firstⲻrule_firstⲻrule꘡ node, TContext context);
         }
@@ -66,9 +66,9 @@ namespace GeneratorV3
             }
         }
         
-        public sealed class _firstⲻrule_asteriskⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_asterisk꘡firstⲻrule_firstⲻrule꘡_asterisk1firstⲻrule_1asteriskfirstⲻrule : _secondⲻrule
+        public sealed class _firstⲻrule_ЖⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_Ж꘡firstⲻrule_firstⲻrule꘡_Ж1firstⲻrule_1Жfirstⲻrule : _secondⲻrule
         {
-            public _firstⲻrule_asteriskⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_asterisk꘡firstⲻrule_firstⲻrule꘡_asterisk1firstⲻrule_1asteriskfirstⲻrule(GeneratorV3._firstⲻrule _firstⲻrule_1, IEnumerable<Inners._Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ> _Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, IEnumerable<Inners._firstⲻrule_firstⲻrule?> _firstⲻrule_firstⲻrule_1, IEnumerable<GeneratorV3._firstⲻrule> _firstⲻrule_2, IEnumerable<GeneratorV3._firstⲻrule> _firstⲻrule_3)
+            public _firstⲻrule_ЖⲤfirstⲻrule_꘡firstⲻrule꘡Ↄ_Ж꘡firstⲻrule_firstⲻrule꘡_Ж1firstⲻrule_1Жfirstⲻrule(GeneratorV3._firstⲻrule _firstⲻrule_1, IEnumerable<Inners._Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ> _Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1, IEnumerable<Inners._firstⲻrule_firstⲻrule?> _firstⲻrule_firstⲻrule_1, IEnumerable<GeneratorV3._firstⲻrule> _firstⲻrule_2, IEnumerable<GeneratorV3._firstⲻrule> _firstⲻrule_3)
             {
                 this._firstⲻrule_1 = _firstⲻrule_1;
                 this._Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1 = _Ⲥfirstⲻrule_꘡firstⲻrule꘡Ↄ_1;
