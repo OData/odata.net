@@ -12,7 +12,7 @@
         {
             return new Abnf._WSP._SP(
                 new Abnf._SP(
-                    new Abnf.Inners._percentx20(
+                    new Abnf.Inners._Ⰳx20(
                         Abnf.Inners._2.Instance,
                         Abnf.Inners._0.Instance)));
         }
@@ -21,7 +21,7 @@
         {
             return new Abnf._WSP._HTAB(
                 new Abnf._HTAB(
-                    new Abnf.Inners._percentx09(
+                    new Abnf.Inners._Ⰳx09(
                         Abnf.Inners._0.Instance,
                         Abnf.Inners._9.Instance)));
         }
