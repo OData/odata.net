@@ -769,8 +769,7 @@
                                             string innersClassName, 
                                             ToClassNames toClassNames)
                                         {
-                                            this.hexValToClass = new HexValToClass(classNamePrefix, innersClassName);
-                                            this.toClassNames = toClassNames;
+                                            this.hexValToClass = new HexValToClass(classNamePrefix, innersClassName, toClassNames);
                                         }
 
                                         protected internal override Class Accept(NumVal.BinVal node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
