@@ -270,7 +270,8 @@
                                 this);
                             this.concatenationsToDiscriminatedUnion = new ConcatenationsToDiscriminatedUnion(
                                 classNamePrefix,
-                                this.concatenationToClass);
+                                this.concatenationToClass,
+                                characterSubstitutions);
                         }
 
                         public Class Generate(Alternation alternation, (string ClassName, Dictionary<string, Class> InnerClasses) context)
