@@ -287,12 +287,11 @@
                                 private sealed class ElementToPropertyDefinition : Element.Visitor<PropertyDefinition, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses)>
                                 {
                                     private readonly string @namespace;
-
                                     private readonly string innersClassName;
 
                                     private readonly AlternationGenerator alternationGenerator;
-
                                     private readonly CharValToClass charValToClass;
+                                    private readonly NumValToClass numValToClass;
 
                                     public ElementToPropertyDefinition(
                                         string @namespace, 
@@ -301,8 +300,11 @@
                                     {
                                         this.@namespace = @namespace;
                                         this.innersClassName = innersClassName;
+
                                         this.alternationGenerator = alternationGenerator;
+
                                         this.charValToClass = new CharValToClass(innersClassName);
+                                        this.numValToClass = new NumValToClass(innersClassName);
                                     }
 
                                     protected internal override PropertyDefinition Accept(
@@ -604,7 +606,7 @@
 
                                         if (!context.InnerClasses.ContainsKey(innerClassName))
                                         {
-                                            var innerClass = NumValToClass.Instance.Visit(node.Value, (innerClassName, context.InnerClasses));
+                                            var innerClass = this.numValToClass.Visit(node.Value, (innerClassName, context.InnerClasses));
 
                                             context.InnerClasses[innerClassName] = innerClass;
                                         }
@@ -635,11 +637,12 @@
 
                                     private sealed class NumValToClass : NumVal.Visitor<Class, (string ClassName, Dictionary<string, Class> InnerClasses)>
                                     {
-                                        private NumValToClass()
-                                        {
-                                        }
+                                        private readonly HexValToClass hexValToClass;
 
-                                        public static NumValToClass Instance { get; } = new NumValToClass();
+                                        public NumValToClass(string innersClassName)
+                                        {
+                                            this.hexValToClass = new HexValToClass(innersClassName);
+                                        }
 
                                         protected internal override Class Accept(NumVal.BinVal node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                         {
@@ -653,7 +656,7 @@
 
                                         protected internal override Class Accept(NumVal.HexVal node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                         {
-                                            return HexValToClass.Instance.Visit(node.Value, context);
+                                            return this.hexValToClass.Visit(node.Value, context);
                                         }
 
                                         private sealed class HexValToClass : HexVal.Visitor<Class, (string ClassName, Dictionary<string, Class> InnerClasses)>
@@ -664,7 +667,9 @@
                                             public HexValToClass(string innersClassName)
                                             {
                                                 this.hexDigsToClass = new HexDigsToClass(innersClassName);
-                                                this.segmentsToProperties = new SegmentsToProperties(innersClassName);
+                                                this.segmentsToProperties = new SegmentsToProperties(
+                                                    innersClassName, 
+                                                    this.hexDigsToClass);
                                             }
 
                                             protected internal override Class Accept(
