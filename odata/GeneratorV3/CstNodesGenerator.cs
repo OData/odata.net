@@ -57,6 +57,7 @@
     {
         private readonly string innersClassName;
         private readonly RuleListInnerGenerator ruleListInnerGenerator;
+        private readonly string classNamePrefix = "_"; //// TODO parameterize this probably?
 
         public CstNodesGenerator(string @namespace)
             : this(@namespace, CstNodesGeneratorSettings.Default)
@@ -70,10 +71,11 @@
         public CstNodesGenerator(string @namespace, CstNodesGeneratorSettings settings)
         {
             this.innersClassName = settings.InnersClassName;
-            this.ruleListInnerGenerator = new RuleListInnerGenerator(@namespace, this.innersClassName);
+            this.ruleListInnerGenerator = new RuleListInnerGenerator(
+                settings.ClassNamePrefix, 
+                @namespace, 
+                this.innersClassName);
         }
-
-        private static string ClassNamePrefix = "_"; //// TODO parameterize this probably?
 
         private static class CharacterSubstituions
         {
@@ -128,9 +130,9 @@
         {
             private readonly RuleGenerator ruleGenerator;
 
-            public RuleListInnerGenerator(string @namespace, string innersClassName)
+            public RuleListInnerGenerator(string classNamePrefix, string @namespace, string innersClassName)
             {
-                this.ruleGenerator = new RuleGenerator(@namespace, innersClassName);
+                this.ruleGenerator = new RuleGenerator(classNamePrefix, @namespace, innersClassName);
             }
 
             protected internal override Class? Accept(RuleList.Inner.RuleInner node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
@@ -140,16 +142,18 @@
 
             private sealed class RuleGenerator
             {
+                private readonly string classNamePrefix;
                 private readonly ElementsGenerator elementsGenerator;
 
-                public RuleGenerator(string @namespace, string innersClassName)
+                public RuleGenerator(string classNamePrefix, string @namespace, string innersClassName)
                 {
+                    this.classNamePrefix = classNamePrefix;
                     this.elementsGenerator = new ElementsGenerator(@namespace, innersClassName);
                 }
 
                 public Class Generate(Rule rule, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
                 {
-                    var className = ClassNamePrefix + RuleNameToClassName.Instance.Generate(rule.RuleName, context.@void);
+                    var className = classNamePrefix + RuleNameToClassName.Instance.Generate(rule.RuleName, context.@void);
                     return this.elementsGenerator.Generate(rule.Elements, (className, context.InnerClasses));
                 }
 
@@ -316,7 +320,7 @@
                                         Element.RuleName node, 
                                         (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
-                                        var ruleName = ClassNamePrefix + RuleNameToClassName
+                                        var ruleName = classNamePrefix + RuleNameToClassName
                                             .Instance
                                             .Generate(
                                                 node.Value,
@@ -359,13 +363,13 @@
                                     {
                                         var isOnlyRuleName = IsOnlyRuleName(node.Value.Alternation);
                                         
-                                        var groupInnerClassName = ClassNamePrefix + AlternationToClassName.Instance.Generate(node.Value.Alternation);
+                                        var groupInnerClassName = classNamePrefix + AlternationToClassName.Instance.Generate(node.Value.Alternation);
                                         if (!isOnlyRuleName && !context.InnerClasses.ContainsKey(groupInnerClassName))
                                         {
                                             context.InnerClasses[groupInnerClassName] = this.alternationGenerator.Generate(node.Value.Alternation, (groupInnerClassName, context.InnerClasses));
                                         }
 
-                                        var groupClassName = ClassNamePrefix + GroupToClassName.Instance.Generate(node.Value);
+                                        var groupClassName = classNamePrefix + GroupToClassName.Instance.Generate(node.Value);
 
                                         if (!context.InnerClasses.ContainsKey(groupClassName))
                                         {
@@ -430,7 +434,7 @@
                                     protected internal override PropertyDefinition Accept(Element.Option node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
                                         var isOnlyRuleName = IsOnlyRuleName(node.Value.Alternation);
-                                        var innerClassName = ClassNamePrefix + AlternationToClassName.Instance.Generate(node.Value.Alternation);
+                                        var innerClassName = classNamePrefix + AlternationToClassName.Instance.Generate(node.Value.Alternation);
 
                                         if (!isOnlyRuleName && !context.InnerClasses.ContainsKey(innerClassName))
                                         {
@@ -467,7 +471,7 @@
 
                                     protected internal override PropertyDefinition Accept(Element.CharVal node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
-                                        var innerClassName = ClassNamePrefix + CharValToClassName.Instance.Generate(node.Value);
+                                        var innerClassName = classNamePrefix + CharValToClassName.Instance.Generate(node.Value);
 
                                         if (!context.InnerClasses.ContainsKey(innerClassName))
                                         {
@@ -554,7 +558,7 @@
                                                 CharVal.Inner inner, 
                                                 (Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                             {
-                                                var className = ClassNamePrefix + CharValInnerToClassName.Instance.Visit(inner, default);
+                                                var className = classNamePrefix + CharValInnerToClassName.Instance.Visit(inner, default);
 
                                                 if (!context.InnerClasses.ContainsKey(className))
                                                 {
@@ -607,7 +611,7 @@
 
                                     protected internal override PropertyDefinition Accept(Element.NumVal node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
-                                        var innerClassName = ClassNamePrefix + NumValToClassName.Instance.Visit(node.Value, default);
+                                        var innerClassName = classNamePrefix + NumValToClassName.Instance.Visit(node.Value, default);
 
                                         if (!context.InnerClasses.ContainsKey(innerClassName))
                                         {
@@ -744,7 +748,7 @@
                                                 {
                                                     foreach (var segment in segments)
                                                     {
-                                                        var className = ClassNamePrefix + HexDigsToClassName.Instance.Generate(segment, default);
+                                                        var className = classNamePrefix + HexDigsToClassName.Instance.Generate(segment, default);
                                                         if (!context.InnerClasses.ContainsKey(className))
                                                         {
                                                             var @class = this.hexDigsToClass.Generate(segment, (className, null, context.InnerClasses));
@@ -781,7 +785,7 @@
                                                             .hexDigsToClass
                                                             .Generate(
                                                                 hexDigs,
-                                                                (ClassNamePrefix + HexDigsToClassName.Instance.Generate(hexDigs, default), context.ClassName, context.InnerClasses)))
+                                                                (classNamePrefix + HexDigsToClassName.Instance.Generate(hexDigs, default), context.ClassName, context.InnerClasses)))
                                                         .ToList();
 
                                                 return new Class(
@@ -1209,7 +1213,7 @@
                                                     {
                                                         foreach (var hexDig in hexDigs)
                                                         {
-                                                            var className = ClassNamePrefix + HexDigToClassName.Instance.Visit(hexDig, default);
+                                                            var className = classNamePrefix + HexDigToClassName.Instance.Visit(hexDig, default);
                                                             if (!context.InnerClasses.ContainsKey(className))
                                                             {
                                                                 var @class = new Class(
@@ -1304,7 +1308,7 @@
                                         concatenationToClass
                                         .Generate(
                                             concatenation,
-                                            (ClassNamePrefix + ConcatenationToClassName.Instance.Generate(concatenation), context.ClassName, new[] { dispatchMethod }, context.InnerClasses)))
+                                            (classNamePrefix + ConcatenationToClassName.Instance.Generate(concatenation), context.ClassName, new[] { dispatchMethod }, context.InnerClasses)))
                                     .ToList();
 
                                 var visitor = new Class(AccessModifier.Public,
