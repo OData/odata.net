@@ -2,9 +2,9 @@ namespace GeneratorV3.Core
 {
     using System.Collections.Generic;
     
-    public abstract class ALPHA
+    public abstract class _ALPHA
     {
-        private ALPHA()
+        private _ALPHA()
         {
         }
         
@@ -12,23 +12,23 @@ namespace GeneratorV3.Core
         
         public abstract class Visitor<TResult, TContext>
         {
-            public TResult Visit(ALPHA node, TContext context)
+            public TResult Visit(_ALPHA node, TContext context)
             {
                 return node.Dispatch(this, context);
             }
             
-            protected internal abstract TResult Accept(ALPHA.percentxFOURONEⲻFIVEA node, TContext context);
-            protected internal abstract TResult Accept(ALPHA.percentxSIXONEⲻSEVENA node, TContext context);
+            protected internal abstract TResult Accept(_ALPHA._percentxFOURONEⲻFIVEA node, TContext context);
+            protected internal abstract TResult Accept(_ALPHA._percentxSIXONEⲻSEVENA node, TContext context);
         }
         
-        public sealed class percentxFOURONEⲻFIVEA : ALPHA
+        public sealed class _percentxFOURONEⲻFIVEA : _ALPHA
         {
-            public percentxFOURONEⲻFIVEA(Inners.percentxFOURONEⲻFIVEA percentxFOURONEⲻFIVEA_1)
+            public _percentxFOURONEⲻFIVEA(Inners._percentxFOURONEⲻFIVEA _percentxFOURONEⲻFIVEA_1)
             {
-                this.percentxFOURONEⲻFIVEA_1 = percentxFOURONEⲻFIVEA_1;
+                this._percentxFOURONEⲻFIVEA_1 = _percentxFOURONEⲻFIVEA_1;
             }
             
-            public Inners.percentxFOURONEⲻFIVEA percentxFOURONEⲻFIVEA_1 { get; }
+            public Inners._percentxFOURONEⲻFIVEA _percentxFOURONEⲻFIVEA_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -36,14 +36,14 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class percentxSIXONEⲻSEVENA : ALPHA
+        public sealed class _percentxSIXONEⲻSEVENA : _ALPHA
         {
-            public percentxSIXONEⲻSEVENA(Inners.percentxSIXONEⲻSEVENA percentxSIXONEⲻSEVENA_1)
+            public _percentxSIXONEⲻSEVENA(Inners._percentxSIXONEⲻSEVENA _percentxSIXONEⲻSEVENA_1)
             {
-                this.percentxSIXONEⲻSEVENA_1 = percentxSIXONEⲻSEVENA_1;
+                this._percentxSIXONEⲻSEVENA_1 = _percentxSIXONEⲻSEVENA_1;
             }
             
-            public Inners.percentxSIXONEⲻSEVENA percentxSIXONEⲻSEVENA_1 { get; }
+            public Inners._percentxSIXONEⲻSEVENA _percentxSIXONEⲻSEVENA_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -52,9 +52,9 @@ namespace GeneratorV3.Core
         }
     }
     
-    public abstract class BIT
+    public abstract class _BIT
     {
-        private BIT()
+        private _BIT()
         {
         }
         
@@ -62,81 +62,81 @@ namespace GeneratorV3.Core
         
         public abstract class Visitor<TResult, TContext>
         {
-            public TResult Visit(BIT node, TContext context)
+            public TResult Visit(_BIT node, TContext context)
             {
                 return node.Dispatch(this, context);
             }
             
-            protected internal abstract TResult Accept(BIT.doublequotex30doublequote node, TContext context);
-            protected internal abstract TResult Accept(BIT.doublequotex31doublequote node, TContext context);
+            protected internal abstract TResult Accept(_BIT._doublequotex30doublequote node, TContext context);
+            protected internal abstract TResult Accept(_BIT._doublequotex31doublequote node, TContext context);
         }
         
-        public sealed class doublequotex30doublequote : BIT
+        public sealed class _doublequotex30doublequote : _BIT
         {
-            public doublequotex30doublequote(Inners.doublequotex30doublequote doublequotex30doublequote_1)
+            public _doublequotex30doublequote(Inners._doublequotex30doublequote _doublequotex30doublequote_1)
             {
-                this.doublequotex30doublequote_1 = doublequotex30doublequote_1;
+                this._doublequotex30doublequote_1 = _doublequotex30doublequote_1;
             }
             
-            public Inners.doublequotex30doublequote doublequotex30doublequote_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class doublequotex31doublequote : BIT
-        {
-            public doublequotex31doublequote(Inners.doublequotex31doublequote doublequotex31doublequote_1)
-            {
-                this.doublequotex31doublequote_1 = doublequotex31doublequote_1;
-            }
-            
-            public Inners.doublequotex31doublequote doublequotex31doublequote_1 { get; }
+            public Inners._doublequotex30doublequote _doublequotex30doublequote_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
             }
         }
+        
+        public sealed class _doublequotex31doublequote : _BIT
+        {
+            public _doublequotex31doublequote(Inners._doublequotex31doublequote _doublequotex31doublequote_1)
+            {
+                this._doublequotex31doublequote_1 = _doublequotex31doublequote_1;
+            }
+            
+            public Inners._doublequotex31doublequote _doublequotex31doublequote_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
     }
     
-    public sealed class CHAR
+    public sealed class _CHAR
     {
-        public CHAR(Inners.percentxZEROONEⲻSEVENF percentxZEROONEⲻSEVENF_1)
+        public _CHAR(Inners._percentxZEROONEⲻSEVENF _percentxZEROONEⲻSEVENF_1)
         {
-            this.percentxZEROONEⲻSEVENF_1 = percentxZEROONEⲻSEVENF_1;
+            this._percentxZEROONEⲻSEVENF_1 = _percentxZEROONEⲻSEVENF_1;
         }
         
-        public Inners.percentxZEROONEⲻSEVENF percentxZEROONEⲻSEVENF_1 { get; }
+        public Inners._percentxZEROONEⲻSEVENF _percentxZEROONEⲻSEVENF_1 { get; }
     }
     
-    public sealed class CR
+    public sealed class _CR
     {
-        public CR(Inners.percentxZEROD percentxZEROD_1)
+        public _CR(Inners._percentxZEROD _percentxZEROD_1)
         {
-            this.percentxZEROD_1 = percentxZEROD_1;
+            this._percentxZEROD_1 = _percentxZEROD_1;
         }
         
-        public Inners.percentxZEROD percentxZEROD_1 { get; }
+        public Inners._percentxZEROD _percentxZEROD_1 { get; }
     }
     
-    public sealed class CRLF
+    public sealed class _CRLF
     {
-        public CRLF(GeneratorV3.Core.CR CR_1, GeneratorV3.Core.LF LF_1)
+        public _CRLF(GeneratorV3.Core._CR _CR_1, GeneratorV3.Core._LF _LF_1)
         {
-            this.CR_1 = CR_1;
-            this.LF_1 = LF_1;
+            this._CR_1 = _CR_1;
+            this._LF_1 = _LF_1;
         }
         
-        public GeneratorV3.Core.CR CR_1 { get; }
-        public GeneratorV3.Core.LF LF_1 { get; }
+        public GeneratorV3.Core._CR _CR_1 { get; }
+        public GeneratorV3.Core._LF _LF_1 { get; }
     }
     
-    public abstract class CTL
+    public abstract class _CTL
     {
-        private CTL()
+        private _CTL()
         {
         }
         
@@ -144,69 +144,69 @@ namespace GeneratorV3.Core
         
         public abstract class Visitor<TResult, TContext>
         {
-            public TResult Visit(CTL node, TContext context)
+            public TResult Visit(_CTL node, TContext context)
             {
                 return node.Dispatch(this, context);
             }
             
-            protected internal abstract TResult Accept(CTL.percentxZEROZEROⲻONEF node, TContext context);
-            protected internal abstract TResult Accept(CTL.percentxSEVENF node, TContext context);
+            protected internal abstract TResult Accept(_CTL._percentxZEROZEROⲻONEF node, TContext context);
+            protected internal abstract TResult Accept(_CTL._percentxSEVENF node, TContext context);
         }
         
-        public sealed class percentxZEROZEROⲻONEF : CTL
+        public sealed class _percentxZEROZEROⲻONEF : _CTL
         {
-            public percentxZEROZEROⲻONEF(Inners.percentxZEROZEROⲻONEF percentxZEROZEROⲻONEF_1)
+            public _percentxZEROZEROⲻONEF(Inners._percentxZEROZEROⲻONEF _percentxZEROZEROⲻONEF_1)
             {
-                this.percentxZEROZEROⲻONEF_1 = percentxZEROZEROⲻONEF_1;
+                this._percentxZEROZEROⲻONEF_1 = _percentxZEROZEROⲻONEF_1;
             }
             
-            public Inners.percentxZEROZEROⲻONEF percentxZEROZEROⲻONEF_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class percentxSEVENF : CTL
-        {
-            public percentxSEVENF(Inners.percentxSEVENF percentxSEVENF_1)
-            {
-                this.percentxSEVENF_1 = percentxSEVENF_1;
-            }
-            
-            public Inners.percentxSEVENF percentxSEVENF_1 { get; }
+            public Inners._percentxZEROZEROⲻONEF _percentxZEROZEROⲻONEF_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
             }
         }
+        
+        public sealed class _percentxSEVENF : _CTL
+        {
+            public _percentxSEVENF(Inners._percentxSEVENF _percentxSEVENF_1)
+            {
+                this._percentxSEVENF_1 = _percentxSEVENF_1;
+            }
+            
+            public Inners._percentxSEVENF _percentxSEVENF_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
     }
     
-    public sealed class DIGIT
+    public sealed class _DIGIT
     {
-        public DIGIT(Inners.percentxTHREEZEROⲻTHREENINE percentxTHREEZEROⲻTHREENINE_1)
+        public _DIGIT(Inners._percentxTHREEZEROⲻTHREENINE _percentxTHREEZEROⲻTHREENINE_1)
         {
-            this.percentxTHREEZEROⲻTHREENINE_1 = percentxTHREEZEROⲻTHREENINE_1;
+            this._percentxTHREEZEROⲻTHREENINE_1 = _percentxTHREEZEROⲻTHREENINE_1;
         }
         
-        public Inners.percentxTHREEZEROⲻTHREENINE percentxTHREEZEROⲻTHREENINE_1 { get; }
+        public Inners._percentxTHREEZEROⲻTHREENINE _percentxTHREEZEROⲻTHREENINE_1 { get; }
     }
     
-    public sealed class DQUOTE
+    public sealed class _DQUOTE
     {
-        public DQUOTE(Inners.percentxTWOTWO percentxTWOTWO_1)
+        public _DQUOTE(Inners._percentxTWOTWO _percentxTWOTWO_1)
         {
-            this.percentxTWOTWO_1 = percentxTWOTWO_1;
+            this._percentxTWOTWO_1 = _percentxTWOTWO_1;
         }
         
-        public Inners.percentxTWOTWO percentxTWOTWO_1 { get; }
+        public Inners._percentxTWOTWO _percentxTWOTWO_1 { get; }
     }
     
-    public abstract class HEXDIG
+    public abstract class _HEXDIG
     {
-        private HEXDIG()
+        private _HEXDIG()
         {
         }
         
@@ -214,28 +214,28 @@ namespace GeneratorV3.Core
         
         public abstract class Visitor<TResult, TContext>
         {
-            public TResult Visit(HEXDIG node, TContext context)
+            public TResult Visit(_HEXDIG node, TContext context)
             {
                 return node.Dispatch(this, context);
             }
             
-            protected internal abstract TResult Accept(HEXDIG.DIGIT node, TContext context);
-            protected internal abstract TResult Accept(HEXDIG.doublequotex41doublequote node, TContext context);
-            protected internal abstract TResult Accept(HEXDIG.doublequotex42doublequote node, TContext context);
-            protected internal abstract TResult Accept(HEXDIG.doublequotex43doublequote node, TContext context);
-            protected internal abstract TResult Accept(HEXDIG.doublequotex44doublequote node, TContext context);
-            protected internal abstract TResult Accept(HEXDIG.doublequotex45doublequote node, TContext context);
-            protected internal abstract TResult Accept(HEXDIG.doublequotex46doublequote node, TContext context);
+            protected internal abstract TResult Accept(_HEXDIG._DIGIT node, TContext context);
+            protected internal abstract TResult Accept(_HEXDIG._doublequotex41doublequote node, TContext context);
+            protected internal abstract TResult Accept(_HEXDIG._doublequotex42doublequote node, TContext context);
+            protected internal abstract TResult Accept(_HEXDIG._doublequotex43doublequote node, TContext context);
+            protected internal abstract TResult Accept(_HEXDIG._doublequotex44doublequote node, TContext context);
+            protected internal abstract TResult Accept(_HEXDIG._doublequotex45doublequote node, TContext context);
+            protected internal abstract TResult Accept(_HEXDIG._doublequotex46doublequote node, TContext context);
         }
         
-        public sealed class DIGIT : HEXDIG
+        public sealed class _DIGIT : _HEXDIG
         {
-            public DIGIT(GeneratorV3.Core.DIGIT DIGIT_1)
+            public _DIGIT(GeneratorV3.Core._DIGIT _DIGIT_1)
             {
-                this.DIGIT_1 = DIGIT_1;
+                this._DIGIT_1 = _DIGIT_1;
             }
             
-            public GeneratorV3.Core.DIGIT DIGIT_1 { get; }
+            public GeneratorV3.Core._DIGIT _DIGIT_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -243,14 +243,14 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class doublequotex41doublequote : HEXDIG
+        public sealed class _doublequotex41doublequote : _HEXDIG
         {
-            public doublequotex41doublequote(Inners.doublequotex41doublequote doublequotex41doublequote_1)
+            public _doublequotex41doublequote(Inners._doublequotex41doublequote _doublequotex41doublequote_1)
             {
-                this.doublequotex41doublequote_1 = doublequotex41doublequote_1;
+                this._doublequotex41doublequote_1 = _doublequotex41doublequote_1;
             }
             
-            public Inners.doublequotex41doublequote doublequotex41doublequote_1 { get; }
+            public Inners._doublequotex41doublequote _doublequotex41doublequote_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -258,14 +258,14 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class doublequotex42doublequote : HEXDIG
+        public sealed class _doublequotex42doublequote : _HEXDIG
         {
-            public doublequotex42doublequote(Inners.doublequotex42doublequote doublequotex42doublequote_1)
+            public _doublequotex42doublequote(Inners._doublequotex42doublequote _doublequotex42doublequote_1)
             {
-                this.doublequotex42doublequote_1 = doublequotex42doublequote_1;
+                this._doublequotex42doublequote_1 = _doublequotex42doublequote_1;
             }
             
-            public Inners.doublequotex42doublequote doublequotex42doublequote_1 { get; }
+            public Inners._doublequotex42doublequote _doublequotex42doublequote_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -273,14 +273,14 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class doublequotex43doublequote : HEXDIG
+        public sealed class _doublequotex43doublequote : _HEXDIG
         {
-            public doublequotex43doublequote(Inners.doublequotex43doublequote doublequotex43doublequote_1)
+            public _doublequotex43doublequote(Inners._doublequotex43doublequote _doublequotex43doublequote_1)
             {
-                this.doublequotex43doublequote_1 = doublequotex43doublequote_1;
+                this._doublequotex43doublequote_1 = _doublequotex43doublequote_1;
             }
             
-            public Inners.doublequotex43doublequote doublequotex43doublequote_1 { get; }
+            public Inners._doublequotex43doublequote _doublequotex43doublequote_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -288,14 +288,14 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class doublequotex44doublequote : HEXDIG
+        public sealed class _doublequotex44doublequote : _HEXDIG
         {
-            public doublequotex44doublequote(Inners.doublequotex44doublequote doublequotex44doublequote_1)
+            public _doublequotex44doublequote(Inners._doublequotex44doublequote _doublequotex44doublequote_1)
             {
-                this.doublequotex44doublequote_1 = doublequotex44doublequote_1;
+                this._doublequotex44doublequote_1 = _doublequotex44doublequote_1;
             }
             
-            public Inners.doublequotex44doublequote doublequotex44doublequote_1 { get; }
+            public Inners._doublequotex44doublequote _doublequotex44doublequote_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -303,14 +303,14 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class doublequotex45doublequote : HEXDIG
+        public sealed class _doublequotex45doublequote : _HEXDIG
         {
-            public doublequotex45doublequote(Inners.doublequotex45doublequote doublequotex45doublequote_1)
+            public _doublequotex45doublequote(Inners._doublequotex45doublequote _doublequotex45doublequote_1)
             {
-                this.doublequotex45doublequote_1 = doublequotex45doublequote_1;
+                this._doublequotex45doublequote_1 = _doublequotex45doublequote_1;
             }
             
-            public Inners.doublequotex45doublequote doublequotex45doublequote_1 { get; }
+            public Inners._doublequotex45doublequote _doublequotex45doublequote_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -318,14 +318,14 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class doublequotex46doublequote : HEXDIG
+        public sealed class _doublequotex46doublequote : _HEXDIG
         {
-            public doublequotex46doublequote(Inners.doublequotex46doublequote doublequotex46doublequote_1)
+            public _doublequotex46doublequote(Inners._doublequotex46doublequote _doublequotex46doublequote_1)
             {
-                this.doublequotex46doublequote_1 = doublequotex46doublequote_1;
+                this._doublequotex46doublequote_1 = _doublequotex46doublequote_1;
             }
             
-            public Inners.doublequotex46doublequote doublequotex46doublequote_1 { get; }
+            public Inners._doublequotex46doublequote _doublequotex46doublequote_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -334,69 +334,69 @@ namespace GeneratorV3.Core
         }
     }
     
-    public sealed class HTAB
+    public sealed class _HTAB
     {
-        public HTAB(Inners.percentxZERONINE percentxZERONINE_1)
+        public _HTAB(Inners._percentxZERONINE _percentxZERONINE_1)
         {
-            this.percentxZERONINE_1 = percentxZERONINE_1;
+            this._percentxZERONINE_1 = _percentxZERONINE_1;
         }
         
-        public Inners.percentxZERONINE percentxZERONINE_1 { get; }
+        public Inners._percentxZERONINE _percentxZERONINE_1 { get; }
     }
     
-    public sealed class LF
+    public sealed class _LF
     {
-        public LF(Inners.percentxZEROA percentxZEROA_1)
+        public _LF(Inners._percentxZEROA _percentxZEROA_1)
         {
-            this.percentxZEROA_1 = percentxZEROA_1;
+            this._percentxZEROA_1 = _percentxZEROA_1;
         }
         
-        public Inners.percentxZEROA percentxZEROA_1 { get; }
+        public Inners._percentxZEROA _percentxZEROA_1 { get; }
     }
     
-    public sealed class LWSP
+    public sealed class _LWSP
     {
-        public LWSP(IEnumerable<Inners.openWSPⳆCRLF_WSPↃ> openWSPⳆCRLF_WSPↃ_1)
+        public _LWSP(IEnumerable<Inners._openWSPⳆCRLF_WSPↃ> _openWSPⳆCRLF_WSPↃ_1)
         {
-            this.openWSPⳆCRLF_WSPↃ_1 = openWSPⳆCRLF_WSPↃ_1;
+            this._openWSPⳆCRLF_WSPↃ_1 = _openWSPⳆCRLF_WSPↃ_1;
         }
         
-        public IEnumerable<Inners.openWSPⳆCRLF_WSPↃ> openWSPⳆCRLF_WSPↃ_1 { get; }
+        public IEnumerable<Inners._openWSPⳆCRLF_WSPↃ> _openWSPⳆCRLF_WSPↃ_1 { get; }
     }
     
-    public sealed class OCTET
+    public sealed class _OCTET
     {
-        public OCTET(Inners.percentxZEROZEROⲻFF percentxZEROZEROⲻFF_1)
+        public _OCTET(Inners._percentxZEROZEROⲻFF _percentxZEROZEROⲻFF_1)
         {
-            this.percentxZEROZEROⲻFF_1 = percentxZEROZEROⲻFF_1;
+            this._percentxZEROZEROⲻFF_1 = _percentxZEROZEROⲻFF_1;
         }
         
-        public Inners.percentxZEROZEROⲻFF percentxZEROZEROⲻFF_1 { get; }
+        public Inners._percentxZEROZEROⲻFF _percentxZEROZEROⲻFF_1 { get; }
     }
     
-    public sealed class SP
+    public sealed class _SP
     {
-        public SP(Inners.percentxTWOZERO percentxTWOZERO_1)
+        public _SP(Inners._percentxTWOZERO _percentxTWOZERO_1)
         {
-            this.percentxTWOZERO_1 = percentxTWOZERO_1;
+            this._percentxTWOZERO_1 = _percentxTWOZERO_1;
         }
         
-        public Inners.percentxTWOZERO percentxTWOZERO_1 { get; }
+        public Inners._percentxTWOZERO _percentxTWOZERO_1 { get; }
     }
     
-    public sealed class VCHAR
+    public sealed class _VCHAR
     {
-        public VCHAR(Inners.percentxTWOONEⲻSEVENE percentxTWOONEⲻSEVENE_1)
+        public _VCHAR(Inners._percentxTWOONEⲻSEVENE _percentxTWOONEⲻSEVENE_1)
         {
-            this.percentxTWOONEⲻSEVENE_1 = percentxTWOONEⲻSEVENE_1;
+            this._percentxTWOONEⲻSEVENE_1 = _percentxTWOONEⲻSEVENE_1;
         }
         
-        public Inners.percentxTWOONEⲻSEVENE percentxTWOONEⲻSEVENE_1 { get; }
+        public Inners._percentxTWOONEⲻSEVENE _percentxTWOONEⲻSEVENE_1 { get; }
     }
     
-    public abstract class WSP
+    public abstract class _WSP
     {
-        private WSP()
+        private _WSP()
         {
         }
         
@@ -404,23 +404,23 @@ namespace GeneratorV3.Core
         
         public abstract class Visitor<TResult, TContext>
         {
-            public TResult Visit(WSP node, TContext context)
+            public TResult Visit(_WSP node, TContext context)
             {
                 return node.Dispatch(this, context);
             }
             
-            protected internal abstract TResult Accept(WSP.SP node, TContext context);
-            protected internal abstract TResult Accept(WSP.HTAB node, TContext context);
+            protected internal abstract TResult Accept(_WSP._SP node, TContext context);
+            protected internal abstract TResult Accept(_WSP._HTAB node, TContext context);
         }
         
-        public sealed class SP : WSP
+        public sealed class _SP : _WSP
         {
-            public SP(GeneratorV3.Core.SP SP_1)
+            public _SP(GeneratorV3.Core._SP _SP_1)
             {
-                this.SP_1 = SP_1;
+                this._SP_1 = _SP_1;
             }
             
-            public GeneratorV3.Core.SP SP_1 { get; }
+            public GeneratorV3.Core._SP _SP_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -428,14 +428,14 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class HTAB : WSP
+        public sealed class _HTAB : _WSP
         {
-            public HTAB(GeneratorV3.Core.HTAB HTAB_1)
+            public _HTAB(GeneratorV3.Core._HTAB _HTAB_1)
             {
-                this.HTAB_1 = HTAB_1;
+                this._HTAB_1 = _HTAB_1;
             }
             
-            public GeneratorV3.Core.HTAB HTAB_1 { get; }
+            public GeneratorV3.Core._HTAB _HTAB_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -446,153 +446,153 @@ namespace GeneratorV3.Core
     
     public static class Inners
     {
-        public sealed class FOUR
+        public sealed class _FOUR
         {
-            private FOUR()
+            private _FOUR()
             {
             }
             
-            public static FOUR Instance { get; } = new FOUR();
+            public static _FOUR Instance { get; } = new _FOUR();
         }
         
-        public sealed class ONE
+        public sealed class _ONE
         {
-            private ONE()
+            private _ONE()
             {
             }
             
-            public static ONE Instance { get; } = new ONE();
+            public static _ONE Instance { get; } = new _ONE();
         }
         
-        public sealed class TWO
+        public sealed class _TWO
         {
-            private TWO()
+            private _TWO()
             {
             }
             
-            public static TWO Instance { get; } = new TWO();
+            public static _TWO Instance { get; } = new _TWO();
         }
         
-        public sealed class THREE
+        public sealed class _THREE
         {
-            private THREE()
+            private _THREE()
             {
             }
             
-            public static THREE Instance { get; } = new THREE();
+            public static _THREE Instance { get; } = new _THREE();
         }
         
-        public sealed class FIVE
+        public sealed class _FIVE
         {
-            private FIVE()
+            private _FIVE()
             {
             }
             
-            public static FIVE Instance { get; } = new FIVE();
+            public static _FIVE Instance { get; } = new _FIVE();
         }
         
-        public sealed class SIX
+        public sealed class _SIX
         {
-            private SIX()
+            private _SIX()
             {
             }
             
-            public static SIX Instance { get; } = new SIX();
+            public static _SIX Instance { get; } = new _SIX();
         }
         
-        public sealed class SEVEN
+        public sealed class _SEVEN
         {
-            private SEVEN()
+            private _SEVEN()
             {
             }
             
-            public static SEVEN Instance { get; } = new SEVEN();
+            public static _SEVEN Instance { get; } = new _SEVEN();
         }
         
-        public sealed class EIGHT
+        public sealed class _EIGHT
         {
-            private EIGHT()
+            private _EIGHT()
             {
             }
             
-            public static EIGHT Instance { get; } = new EIGHT();
+            public static _EIGHT Instance { get; } = new _EIGHT();
         }
         
-        public sealed class NINE
+        public sealed class _NINE
         {
-            private NINE()
+            private _NINE()
             {
             }
             
-            public static NINE Instance { get; } = new NINE();
+            public static _NINE Instance { get; } = new _NINE();
         }
         
-        public sealed class A
+        public sealed class _A
         {
-            private A()
+            private _A()
             {
             }
             
-            public static A Instance { get; } = new A();
+            public static _A Instance { get; } = new _A();
         }
         
-        public sealed class B
+        public sealed class _B
         {
-            private B()
+            private _B()
             {
             }
             
-            public static B Instance { get; } = new B();
+            public static _B Instance { get; } = new _B();
         }
         
-        public sealed class C
+        public sealed class _C
         {
-            private C()
+            private _C()
             {
             }
             
-            public static C Instance { get; } = new C();
+            public static _C Instance { get; } = new _C();
         }
         
-        public sealed class D
+        public sealed class _D
         {
-            private D()
+            private _D()
             {
             }
             
-            public static D Instance { get; } = new D();
+            public static _D Instance { get; } = new _D();
         }
         
-        public sealed class E
+        public sealed class _E
         {
-            private E()
+            private _E()
             {
             }
             
-            public static E Instance { get; } = new E();
+            public static _E Instance { get; } = new _E();
         }
         
-        public sealed class F
+        public sealed class _F
         {
-            private F()
+            private _F()
             {
             }
             
-            public static F Instance { get; } = new F();
+            public static _F Instance { get; } = new _F();
         }
         
-        public sealed class ZERO
+        public sealed class _ZERO
         {
-            private ZERO()
+            private _ZERO()
             {
             }
             
-            public static ZERO Instance { get; } = new ZERO();
+            public static _ZERO Instance { get; } = new _ZERO();
         }
         
-        public abstract class percentxFOURONEⲻFIVEA
+        public abstract class _percentxFOURONEⲻFIVEA
         {
-            private percentxFOURONEⲻFIVEA()
+            private _percentxFOURONEⲻFIVEA()
             {
             }
             
@@ -600,49 +600,49 @@ namespace GeneratorV3.Core
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(percentxFOURONEⲻFIVEA node, TContext context)
+                public TResult Visit(_percentxFOURONEⲻFIVEA node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
                 
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOURONE node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOURTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOURTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOURFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOURFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOURSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOURSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOUREIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOURNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOURA node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOURB node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOURC node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOURD node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOURE node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FOURF node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FIVEZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FIVEONE node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FIVETWO node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FIVETHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FIVEFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FIVEFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FIVESIX node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FIVESEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FIVEEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FIVENINE node, TContext context);
-                protected internal abstract TResult Accept(percentxFOURONEⲻFIVEA.FIVEA node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOURONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOURTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOURTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOURFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOURFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOURSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOURSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOUREIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOURNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOURA node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOURB node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOURC node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOURD node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOURE node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FOURF node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FIVEZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FIVEONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FIVETWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FIVETHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FIVEFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FIVEFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FIVESIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FIVESEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FIVEEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FIVENINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxFOURONEⲻFIVEA._FIVEA node, TContext context);
             }
             
-            public sealed class FOURONE : percentxFOURONEⲻFIVEA
+            public sealed class _FOURONE : _percentxFOURONEⲻFIVEA
             {
-                public FOURONE(Inners.FOUR FOUR_1, Inners.ONE ONE_1)
+                public _FOURONE(Inners._FOUR _FOUR_1, Inners._ONE _ONE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.ONE_1 = ONE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -650,16 +650,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURTWO : percentxFOURONEⲻFIVEA
+            public sealed class _FOURTWO : _percentxFOURONEⲻFIVEA
             {
-                public FOURTWO(Inners.FOUR FOUR_1, Inners.TWO TWO_1)
+                public _FOURTWO(Inners._FOUR _FOUR_1, Inners._TWO _TWO_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.TWO_1 = TWO_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -667,16 +667,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURTHREE : percentxFOURONEⲻFIVEA
+            public sealed class _FOURTHREE : _percentxFOURONEⲻFIVEA
             {
-                public FOURTHREE(Inners.FOUR FOUR_1, Inners.THREE THREE_1)
+                public _FOURTHREE(Inners._FOUR _FOUR_1, Inners._THREE _THREE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.THREE_1 = THREE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -684,16 +684,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURFOUR : percentxFOURONEⲻFIVEA
+            public sealed class _FOURFOUR : _percentxFOURONEⲻFIVEA
             {
-                public FOURFOUR(Inners.FOUR FOUR_1, Inners.FOUR FOUR_2)
+                public _FOURFOUR(Inners._FOUR _FOUR_1, Inners._FOUR _FOUR_2)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.FOUR_2 = FOUR_2;
+                    this._FOUR_1 = _FOUR_1;
+                    this._FOUR_2 = _FOUR_2;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.FOUR FOUR_2 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._FOUR _FOUR_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -701,16 +701,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURFIVE : percentxFOURONEⲻFIVEA
+            public sealed class _FOURFIVE : _percentxFOURONEⲻFIVEA
             {
-                public FOURFIVE(Inners.FOUR FOUR_1, Inners.FIVE FIVE_1)
+                public _FOURFIVE(Inners._FOUR _FOUR_1, Inners._FIVE _FIVE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -718,16 +718,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURSIX : percentxFOURONEⲻFIVEA
+            public sealed class _FOURSIX : _percentxFOURONEⲻFIVEA
             {
-                public FOURSIX(Inners.FOUR FOUR_1, Inners.SIX SIX_1)
+                public _FOURSIX(Inners._FOUR _FOUR_1, Inners._SIX _SIX_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.SIX_1 = SIX_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -735,16 +735,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURSEVEN : percentxFOURONEⲻFIVEA
+            public sealed class _FOURSEVEN : _percentxFOURONEⲻFIVEA
             {
-                public FOURSEVEN(Inners.FOUR FOUR_1, Inners.SEVEN SEVEN_1)
+                public _FOURSEVEN(Inners._FOUR _FOUR_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -752,16 +752,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOUREIGHT : percentxFOURONEⲻFIVEA
+            public sealed class _FOUREIGHT : _percentxFOURONEⲻFIVEA
             {
-                public FOUREIGHT(Inners.FOUR FOUR_1, Inners.EIGHT EIGHT_1)
+                public _FOUREIGHT(Inners._FOUR _FOUR_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -769,16 +769,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURNINE : percentxFOURONEⲻFIVEA
+            public sealed class _FOURNINE : _percentxFOURONEⲻFIVEA
             {
-                public FOURNINE(Inners.FOUR FOUR_1, Inners.NINE NINE_1)
+                public _FOURNINE(Inners._FOUR _FOUR_1, Inners._NINE _NINE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.NINE_1 = NINE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -786,16 +786,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURA : percentxFOURONEⲻFIVEA
+            public sealed class _FOURA : _percentxFOURONEⲻFIVEA
             {
-                public FOURA(Inners.FOUR FOUR_1, Inners.A A_1)
+                public _FOURA(Inners._FOUR _FOUR_1, Inners._A _A_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.A_1 = A_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -803,16 +803,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURB : percentxFOURONEⲻFIVEA
+            public sealed class _FOURB : _percentxFOURONEⲻFIVEA
             {
-                public FOURB(Inners.FOUR FOUR_1, Inners.B B_1)
+                public _FOURB(Inners._FOUR _FOUR_1, Inners._B _B_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.B_1 = B_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -820,16 +820,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURC : percentxFOURONEⲻFIVEA
+            public sealed class _FOURC : _percentxFOURONEⲻFIVEA
             {
-                public FOURC(Inners.FOUR FOUR_1, Inners.C C_1)
+                public _FOURC(Inners._FOUR _FOUR_1, Inners._C _C_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.C_1 = C_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -837,16 +837,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURD : percentxFOURONEⲻFIVEA
+            public sealed class _FOURD : _percentxFOURONEⲻFIVEA
             {
-                public FOURD(Inners.FOUR FOUR_1, Inners.D D_1)
+                public _FOURD(Inners._FOUR _FOUR_1, Inners._D _D_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.D_1 = D_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -854,16 +854,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURE : percentxFOURONEⲻFIVEA
+            public sealed class _FOURE : _percentxFOURONEⲻFIVEA
             {
-                public FOURE(Inners.FOUR FOUR_1, Inners.E E_1)
+                public _FOURE(Inners._FOUR _FOUR_1, Inners._E _E_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.E_1 = E_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -871,16 +871,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURF : percentxFOURONEⲻFIVEA
+            public sealed class _FOURF : _percentxFOURONEⲻFIVEA
             {
-                public FOURF(Inners.FOUR FOUR_1, Inners.F F_1)
+                public _FOURF(Inners._FOUR _FOUR_1, Inners._F _F_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.F_1 = F_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -888,16 +888,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEZERO : percentxFOURONEⲻFIVEA
+            public sealed class _FIVEZERO : _percentxFOURONEⲻFIVEA
             {
-                public FIVEZERO(Inners.FIVE FIVE_1, Inners.ZERO ZERO_1)
+                public _FIVEZERO(Inners._FIVE _FIVE_1, Inners._ZERO _ZERO_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -905,16 +905,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEONE : percentxFOURONEⲻFIVEA
+            public sealed class _FIVEONE : _percentxFOURONEⲻFIVEA
             {
-                public FIVEONE(Inners.FIVE FIVE_1, Inners.ONE ONE_1)
+                public _FIVEONE(Inners._FIVE _FIVE_1, Inners._ONE _ONE_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.ONE_1 = ONE_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -922,16 +922,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVETWO : percentxFOURONEⲻFIVEA
+            public sealed class _FIVETWO : _percentxFOURONEⲻFIVEA
             {
-                public FIVETWO(Inners.FIVE FIVE_1, Inners.TWO TWO_1)
+                public _FIVETWO(Inners._FIVE _FIVE_1, Inners._TWO _TWO_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.TWO_1 = TWO_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -939,16 +939,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVETHREE : percentxFOURONEⲻFIVEA
+            public sealed class _FIVETHREE : _percentxFOURONEⲻFIVEA
             {
-                public FIVETHREE(Inners.FIVE FIVE_1, Inners.THREE THREE_1)
+                public _FIVETHREE(Inners._FIVE _FIVE_1, Inners._THREE _THREE_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.THREE_1 = THREE_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -956,16 +956,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEFOUR : percentxFOURONEⲻFIVEA
+            public sealed class _FIVEFOUR : _percentxFOURONEⲻFIVEA
             {
-                public FIVEFOUR(Inners.FIVE FIVE_1, Inners.FOUR FOUR_1)
+                public _FIVEFOUR(Inners._FIVE _FIVE_1, Inners._FOUR _FOUR_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -973,16 +973,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEFIVE : percentxFOURONEⲻFIVEA
+            public sealed class _FIVEFIVE : _percentxFOURONEⲻFIVEA
             {
-                public FIVEFIVE(Inners.FIVE FIVE_1, Inners.FIVE FIVE_2)
+                public _FIVEFIVE(Inners._FIVE _FIVE_1, Inners._FIVE _FIVE_2)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.FIVE_2 = FIVE_2;
+                    this._FIVE_1 = _FIVE_1;
+                    this._FIVE_2 = _FIVE_2;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.FIVE FIVE_2 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._FIVE _FIVE_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -990,16 +990,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVESIX : percentxFOURONEⲻFIVEA
+            public sealed class _FIVESIX : _percentxFOURONEⲻFIVEA
             {
-                public FIVESIX(Inners.FIVE FIVE_1, Inners.SIX SIX_1)
+                public _FIVESIX(Inners._FIVE _FIVE_1, Inners._SIX _SIX_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.SIX_1 = SIX_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1007,16 +1007,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVESEVEN : percentxFOURONEⲻFIVEA
+            public sealed class _FIVESEVEN : _percentxFOURONEⲻFIVEA
             {
-                public FIVESEVEN(Inners.FIVE FIVE_1, Inners.SEVEN SEVEN_1)
+                public _FIVESEVEN(Inners._FIVE _FIVE_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1024,16 +1024,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEEIGHT : percentxFOURONEⲻFIVEA
+            public sealed class _FIVEEIGHT : _percentxFOURONEⲻFIVEA
             {
-                public FIVEEIGHT(Inners.FIVE FIVE_1, Inners.EIGHT EIGHT_1)
+                public _FIVEEIGHT(Inners._FIVE _FIVE_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1041,16 +1041,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVENINE : percentxFOURONEⲻFIVEA
+            public sealed class _FIVENINE : _percentxFOURONEⲻFIVEA
             {
-                public FIVENINE(Inners.FIVE FIVE_1, Inners.NINE NINE_1)
+                public _FIVENINE(Inners._FIVE _FIVE_1, Inners._NINE _NINE_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.NINE_1 = NINE_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1058,16 +1058,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEA : percentxFOURONEⲻFIVEA
+            public sealed class _FIVEA : _percentxFOURONEⲻFIVEA
             {
-                public FIVEA(Inners.FIVE FIVE_1, Inners.A A_1)
+                public _FIVEA(Inners._FIVE _FIVE_1, Inners._A _A_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.A_1 = A_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1076,9 +1076,9 @@ namespace GeneratorV3.Core
             }
         }
         
-        public abstract class percentxSIXONEⲻSEVENA
+        public abstract class _percentxSIXONEⲻSEVENA
         {
-            private percentxSIXONEⲻSEVENA()
+            private _percentxSIXONEⲻSEVENA()
             {
             }
             
@@ -1086,49 +1086,49 @@ namespace GeneratorV3.Core
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(percentxSIXONEⲻSEVENA node, TContext context)
+                public TResult Visit(_percentxSIXONEⲻSEVENA node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
                 
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXONE node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXA node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXB node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXC node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXD node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXE node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SIXF node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SEVENZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SEVENONE node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SEVENTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SEVENTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SEVENFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SEVENFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SEVENSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SEVENSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SEVENEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SEVENNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxSIXONEⲻSEVENA.SEVENA node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXA node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXB node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXC node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXD node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXE node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SIXF node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SEVENZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SEVENONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SEVENTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SEVENTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SEVENFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SEVENFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SEVENSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SEVENSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SEVENEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SEVENNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxSIXONEⲻSEVENA._SEVENA node, TContext context);
             }
             
-            public sealed class SIXONE : percentxSIXONEⲻSEVENA
+            public sealed class _SIXONE : _percentxSIXONEⲻSEVENA
             {
-                public SIXONE(Inners.SIX SIX_1, Inners.ONE ONE_1)
+                public _SIXONE(Inners._SIX _SIX_1, Inners._ONE _ONE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.ONE_1 = ONE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1136,16 +1136,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXTWO : percentxSIXONEⲻSEVENA
+            public sealed class _SIXTWO : _percentxSIXONEⲻSEVENA
             {
-                public SIXTWO(Inners.SIX SIX_1, Inners.TWO TWO_1)
+                public _SIXTWO(Inners._SIX _SIX_1, Inners._TWO _TWO_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.TWO_1 = TWO_1;
+                    this._SIX_1 = _SIX_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1153,16 +1153,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXTHREE : percentxSIXONEⲻSEVENA
+            public sealed class _SIXTHREE : _percentxSIXONEⲻSEVENA
             {
-                public SIXTHREE(Inners.SIX SIX_1, Inners.THREE THREE_1)
+                public _SIXTHREE(Inners._SIX _SIX_1, Inners._THREE _THREE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.THREE_1 = THREE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1170,16 +1170,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXFOUR : percentxSIXONEⲻSEVENA
+            public sealed class _SIXFOUR : _percentxSIXONEⲻSEVENA
             {
-                public SIXFOUR(Inners.SIX SIX_1, Inners.FOUR FOUR_1)
+                public _SIXFOUR(Inners._SIX _SIX_1, Inners._FOUR _FOUR_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._SIX_1 = _SIX_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1187,16 +1187,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXFIVE : percentxSIXONEⲻSEVENA
+            public sealed class _SIXFIVE : _percentxSIXONEⲻSEVENA
             {
-                public SIXFIVE(Inners.SIX SIX_1, Inners.FIVE FIVE_1)
+                public _SIXFIVE(Inners._SIX _SIX_1, Inners._FIVE _FIVE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1204,16 +1204,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXSIX : percentxSIXONEⲻSEVENA
+            public sealed class _SIXSIX : _percentxSIXONEⲻSEVENA
             {
-                public SIXSIX(Inners.SIX SIX_1, Inners.SIX SIX_2)
+                public _SIXSIX(Inners._SIX _SIX_1, Inners._SIX _SIX_2)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.SIX_2 = SIX_2;
+                    this._SIX_1 = _SIX_1;
+                    this._SIX_2 = _SIX_2;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.SIX SIX_2 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._SIX _SIX_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1221,16 +1221,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXSEVEN : percentxSIXONEⲻSEVENA
+            public sealed class _SIXSEVEN : _percentxSIXONEⲻSEVENA
             {
-                public SIXSEVEN(Inners.SIX SIX_1, Inners.SEVEN SEVEN_1)
+                public _SIXSEVEN(Inners._SIX _SIX_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._SIX_1 = _SIX_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1238,16 +1238,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXEIGHT : percentxSIXONEⲻSEVENA
+            public sealed class _SIXEIGHT : _percentxSIXONEⲻSEVENA
             {
-                public SIXEIGHT(Inners.SIX SIX_1, Inners.EIGHT EIGHT_1)
+                public _SIXEIGHT(Inners._SIX _SIX_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._SIX_1 = _SIX_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1255,16 +1255,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXNINE : percentxSIXONEⲻSEVENA
+            public sealed class _SIXNINE : _percentxSIXONEⲻSEVENA
             {
-                public SIXNINE(Inners.SIX SIX_1, Inners.NINE NINE_1)
+                public _SIXNINE(Inners._SIX _SIX_1, Inners._NINE _NINE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.NINE_1 = NINE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1272,16 +1272,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXA : percentxSIXONEⲻSEVENA
+            public sealed class _SIXA : _percentxSIXONEⲻSEVENA
             {
-                public SIXA(Inners.SIX SIX_1, Inners.A A_1)
+                public _SIXA(Inners._SIX _SIX_1, Inners._A _A_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.A_1 = A_1;
+                    this._SIX_1 = _SIX_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1289,16 +1289,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXB : percentxSIXONEⲻSEVENA
+            public sealed class _SIXB : _percentxSIXONEⲻSEVENA
             {
-                public SIXB(Inners.SIX SIX_1, Inners.B B_1)
+                public _SIXB(Inners._SIX _SIX_1, Inners._B _B_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.B_1 = B_1;
+                    this._SIX_1 = _SIX_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1306,16 +1306,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXC : percentxSIXONEⲻSEVENA
+            public sealed class _SIXC : _percentxSIXONEⲻSEVENA
             {
-                public SIXC(Inners.SIX SIX_1, Inners.C C_1)
+                public _SIXC(Inners._SIX _SIX_1, Inners._C _C_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.C_1 = C_1;
+                    this._SIX_1 = _SIX_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1323,16 +1323,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXD : percentxSIXONEⲻSEVENA
+            public sealed class _SIXD : _percentxSIXONEⲻSEVENA
             {
-                public SIXD(Inners.SIX SIX_1, Inners.D D_1)
+                public _SIXD(Inners._SIX _SIX_1, Inners._D _D_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.D_1 = D_1;
+                    this._SIX_1 = _SIX_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1340,16 +1340,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXE : percentxSIXONEⲻSEVENA
+            public sealed class _SIXE : _percentxSIXONEⲻSEVENA
             {
-                public SIXE(Inners.SIX SIX_1, Inners.E E_1)
+                public _SIXE(Inners._SIX _SIX_1, Inners._E _E_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.E_1 = E_1;
+                    this._SIX_1 = _SIX_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1357,16 +1357,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXF : percentxSIXONEⲻSEVENA
+            public sealed class _SIXF : _percentxSIXONEⲻSEVENA
             {
-                public SIXF(Inners.SIX SIX_1, Inners.F F_1)
+                public _SIXF(Inners._SIX _SIX_1, Inners._F _F_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.F_1 = F_1;
+                    this._SIX_1 = _SIX_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1374,16 +1374,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENZERO : percentxSIXONEⲻSEVENA
+            public sealed class _SEVENZERO : _percentxSIXONEⲻSEVENA
             {
-                public SEVENZERO(Inners.SEVEN SEVEN_1, Inners.ZERO ZERO_1)
+                public _SEVENZERO(Inners._SEVEN _SEVEN_1, Inners._ZERO _ZERO_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1391,16 +1391,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENONE : percentxSIXONEⲻSEVENA
+            public sealed class _SEVENONE : _percentxSIXONEⲻSEVENA
             {
-                public SEVENONE(Inners.SEVEN SEVEN_1, Inners.ONE ONE_1)
+                public _SEVENONE(Inners._SEVEN _SEVEN_1, Inners._ONE _ONE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.ONE_1 = ONE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1408,16 +1408,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENTWO : percentxSIXONEⲻSEVENA
+            public sealed class _SEVENTWO : _percentxSIXONEⲻSEVENA
             {
-                public SEVENTWO(Inners.SEVEN SEVEN_1, Inners.TWO TWO_1)
+                public _SEVENTWO(Inners._SEVEN _SEVEN_1, Inners._TWO _TWO_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.TWO_1 = TWO_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1425,16 +1425,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENTHREE : percentxSIXONEⲻSEVENA
+            public sealed class _SEVENTHREE : _percentxSIXONEⲻSEVENA
             {
-                public SEVENTHREE(Inners.SEVEN SEVEN_1, Inners.THREE THREE_1)
+                public _SEVENTHREE(Inners._SEVEN _SEVEN_1, Inners._THREE _THREE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.THREE_1 = THREE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1442,16 +1442,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENFOUR : percentxSIXONEⲻSEVENA
+            public sealed class _SEVENFOUR : _percentxSIXONEⲻSEVENA
             {
-                public SEVENFOUR(Inners.SEVEN SEVEN_1, Inners.FOUR FOUR_1)
+                public _SEVENFOUR(Inners._SEVEN _SEVEN_1, Inners._FOUR _FOUR_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1459,16 +1459,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENFIVE : percentxSIXONEⲻSEVENA
+            public sealed class _SEVENFIVE : _percentxSIXONEⲻSEVENA
             {
-                public SEVENFIVE(Inners.SEVEN SEVEN_1, Inners.FIVE FIVE_1)
+                public _SEVENFIVE(Inners._SEVEN _SEVEN_1, Inners._FIVE _FIVE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1476,16 +1476,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENSIX : percentxSIXONEⲻSEVENA
+            public sealed class _SEVENSIX : _percentxSIXONEⲻSEVENA
             {
-                public SEVENSIX(Inners.SEVEN SEVEN_1, Inners.SIX SIX_1)
+                public _SEVENSIX(Inners._SEVEN _SEVEN_1, Inners._SIX _SIX_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.SIX_1 = SIX_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1493,16 +1493,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENSEVEN : percentxSIXONEⲻSEVENA
+            public sealed class _SEVENSEVEN : _percentxSIXONEⲻSEVENA
             {
-                public SEVENSEVEN(Inners.SEVEN SEVEN_1, Inners.SEVEN SEVEN_2)
+                public _SEVENSEVEN(Inners._SEVEN _SEVEN_1, Inners._SEVEN _SEVEN_2)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.SEVEN_2 = SEVEN_2;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._SEVEN_2 = _SEVEN_2;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.SEVEN SEVEN_2 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._SEVEN _SEVEN_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1510,16 +1510,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENEIGHT : percentxSIXONEⲻSEVENA
+            public sealed class _SEVENEIGHT : _percentxSIXONEⲻSEVENA
             {
-                public SEVENEIGHT(Inners.SEVEN SEVEN_1, Inners.EIGHT EIGHT_1)
+                public _SEVENEIGHT(Inners._SEVEN _SEVEN_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1527,16 +1527,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENNINE : percentxSIXONEⲻSEVENA
+            public sealed class _SEVENNINE : _percentxSIXONEⲻSEVENA
             {
-                public SEVENNINE(Inners.SEVEN SEVEN_1, Inners.NINE NINE_1)
+                public _SEVENNINE(Inners._SEVEN _SEVEN_1, Inners._NINE _NINE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.NINE_1 = NINE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1544,16 +1544,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENA : percentxSIXONEⲻSEVENA
+            public sealed class _SEVENA : _percentxSIXONEⲻSEVENA
             {
-                public SEVENA(Inners.SEVEN SEVEN_1, Inners.A A_1)
+                public _SEVENA(Inners._SEVEN _SEVEN_1, Inners._A _A_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.A_1 = A_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1562,47 +1562,47 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class x30
+        public sealed class _x30
         {
-            private x30()
+            private _x30()
             {
             }
             
-            public static x30 Instance { get; } = new x30();
+            public static _x30 Instance { get; } = new _x30();
         }
         
-        public sealed class doublequotex30doublequote
+        public sealed class _doublequotex30doublequote
         {
-            public doublequotex30doublequote(Inners.x30 x30_1)
+            public _doublequotex30doublequote(Inners._x30 _x30_1)
             {
-                this.x30_1 = x30_1;
+                this._x30_1 = _x30_1;
             }
             
-            public Inners.x30 x30_1 { get; }
+            public Inners._x30 _x30_1 { get; }
         }
         
-        public sealed class x31
+        public sealed class _x31
         {
-            private x31()
+            private _x31()
             {
             }
             
-            public static x31 Instance { get; } = new x31();
+            public static _x31 Instance { get; } = new _x31();
         }
         
-        public sealed class doublequotex31doublequote
+        public sealed class _doublequotex31doublequote
         {
-            public doublequotex31doublequote(Inners.x31 x31_1)
+            public _doublequotex31doublequote(Inners._x31 _x31_1)
             {
-                this.x31_1 = x31_1;
+                this._x31_1 = _x31_1;
             }
             
-            public Inners.x31 x31_1 { get; }
+            public Inners._x31 _x31_1 { get; }
         }
         
-        public abstract class percentxZEROONEⲻSEVENF
+        public abstract class _percentxZEROONEⲻSEVENF
         {
-            private percentxZEROONEⲻSEVENF()
+            private _percentxZEROONEⲻSEVENF()
             {
             }
             
@@ -1610,150 +1610,150 @@ namespace GeneratorV3.Core
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(percentxZEROONEⲻSEVENF node, TContext context)
+                public TResult Visit(_percentxZEROONEⲻSEVENF node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
                 
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZEROONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZEROTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZEROTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZEROFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZEROFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZEROSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZEROSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZEROEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZERONINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZEROA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZEROB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZEROC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZEROD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZEROE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ZEROF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONEZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONEONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONETWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONETHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONEFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONEFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONESIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONESEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONEEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONENINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONEA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONEB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONEC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONED node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONEE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.ONEF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWONINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.TWOF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREEZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREEONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREETWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREETHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREEFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREEFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREESIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREESEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREEEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREENINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREEA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREEB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREEC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREED node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREEE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.THREEF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOUREIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FOURF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVEZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVEONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVETWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVETHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVEFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVEFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVESIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVESEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVEEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVENINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVEA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVEB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVEC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVED node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVEE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.FIVEF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SIXF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVEND node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROONEⲻSEVENF.SEVENF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZEROONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZEROTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZEROTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZEROFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZEROFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZEROSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZEROSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZEROEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZERONINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZEROA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZEROB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZEROC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZEROD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZEROE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ZEROF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONEZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONEONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONETWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONETHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONEFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONEFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONESIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONESEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONEEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONENINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONEA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONEB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONEC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONED node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONEE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._ONEF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWONINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._TWOF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREEZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREEONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREETWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREETHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREEFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREEFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREESIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREESEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREEEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREENINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREEA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREEB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREEC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREED node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREEE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._THREEF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOUREIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FOURF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVEZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVEONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVETWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVETHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVEFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVEFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVESIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVESEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVEEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVENINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVEA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVEB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVEC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVED node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVEE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._FIVEF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SIXF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVEND node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROONEⲻSEVENF._SEVENF node, TContext context);
             }
             
-            public sealed class ZEROONE : percentxZEROONEⲻSEVENF
+            public sealed class _ZEROONE : _percentxZEROONEⲻSEVENF
             {
-                public ZEROONE(Inners.ZERO ZERO_1, Inners.ONE ONE_1)
+                public _ZEROONE(Inners._ZERO _ZERO_1, Inners._ONE _ONE_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.ONE_1 = ONE_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1761,16 +1761,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROTWO : percentxZEROONEⲻSEVENF
+            public sealed class _ZEROTWO : _percentxZEROONEⲻSEVENF
             {
-                public ZEROTWO(Inners.ZERO ZERO_1, Inners.TWO TWO_1)
+                public _ZEROTWO(Inners._ZERO _ZERO_1, Inners._TWO _TWO_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.TWO_1 = TWO_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1778,16 +1778,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROTHREE : percentxZEROONEⲻSEVENF
+            public sealed class _ZEROTHREE : _percentxZEROONEⲻSEVENF
             {
-                public ZEROTHREE(Inners.ZERO ZERO_1, Inners.THREE THREE_1)
+                public _ZEROTHREE(Inners._ZERO _ZERO_1, Inners._THREE _THREE_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.THREE_1 = THREE_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1795,16 +1795,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROFOUR : percentxZEROONEⲻSEVENF
+            public sealed class _ZEROFOUR : _percentxZEROONEⲻSEVENF
             {
-                public ZEROFOUR(Inners.ZERO ZERO_1, Inners.FOUR FOUR_1)
+                public _ZEROFOUR(Inners._ZERO _ZERO_1, Inners._FOUR _FOUR_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1812,16 +1812,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROFIVE : percentxZEROONEⲻSEVENF
+            public sealed class _ZEROFIVE : _percentxZEROONEⲻSEVENF
             {
-                public ZEROFIVE(Inners.ZERO ZERO_1, Inners.FIVE FIVE_1)
+                public _ZEROFIVE(Inners._ZERO _ZERO_1, Inners._FIVE _FIVE_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1829,16 +1829,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROSIX : percentxZEROONEⲻSEVENF
+            public sealed class _ZEROSIX : _percentxZEROONEⲻSEVENF
             {
-                public ZEROSIX(Inners.ZERO ZERO_1, Inners.SIX SIX_1)
+                public _ZEROSIX(Inners._ZERO _ZERO_1, Inners._SIX _SIX_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.SIX_1 = SIX_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1846,16 +1846,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROSEVEN : percentxZEROONEⲻSEVENF
+            public sealed class _ZEROSEVEN : _percentxZEROONEⲻSEVENF
             {
-                public ZEROSEVEN(Inners.ZERO ZERO_1, Inners.SEVEN SEVEN_1)
+                public _ZEROSEVEN(Inners._ZERO _ZERO_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1863,16 +1863,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROEIGHT : percentxZEROONEⲻSEVENF
+            public sealed class _ZEROEIGHT : _percentxZEROONEⲻSEVENF
             {
-                public ZEROEIGHT(Inners.ZERO ZERO_1, Inners.EIGHT EIGHT_1)
+                public _ZEROEIGHT(Inners._ZERO _ZERO_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1880,16 +1880,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZERONINE : percentxZEROONEⲻSEVENF
+            public sealed class _ZERONINE : _percentxZEROONEⲻSEVENF
             {
-                public ZERONINE(Inners.ZERO ZERO_1, Inners.NINE NINE_1)
+                public _ZERONINE(Inners._ZERO _ZERO_1, Inners._NINE _NINE_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.NINE_1 = NINE_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1897,16 +1897,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROA : percentxZEROONEⲻSEVENF
+            public sealed class _ZEROA : _percentxZEROONEⲻSEVENF
             {
-                public ZEROA(Inners.ZERO ZERO_1, Inners.A A_1)
+                public _ZEROA(Inners._ZERO _ZERO_1, Inners._A _A_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.A_1 = A_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1914,16 +1914,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROB : percentxZEROONEⲻSEVENF
+            public sealed class _ZEROB : _percentxZEROONEⲻSEVENF
             {
-                public ZEROB(Inners.ZERO ZERO_1, Inners.B B_1)
+                public _ZEROB(Inners._ZERO _ZERO_1, Inners._B _B_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.B_1 = B_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1931,16 +1931,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROC : percentxZEROONEⲻSEVENF
+            public sealed class _ZEROC : _percentxZEROONEⲻSEVENF
             {
-                public ZEROC(Inners.ZERO ZERO_1, Inners.C C_1)
+                public _ZEROC(Inners._ZERO _ZERO_1, Inners._C _C_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.C_1 = C_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1948,16 +1948,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROD : percentxZEROONEⲻSEVENF
+            public sealed class _ZEROD : _percentxZEROONEⲻSEVENF
             {
-                public ZEROD(Inners.ZERO ZERO_1, Inners.D D_1)
+                public _ZEROD(Inners._ZERO _ZERO_1, Inners._D _D_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.D_1 = D_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1965,16 +1965,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROE : percentxZEROONEⲻSEVENF
+            public sealed class _ZEROE : _percentxZEROONEⲻSEVENF
             {
-                public ZEROE(Inners.ZERO ZERO_1, Inners.E E_1)
+                public _ZEROE(Inners._ZERO _ZERO_1, Inners._E _E_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.E_1 = E_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1982,16 +1982,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROF : percentxZEROONEⲻSEVENF
+            public sealed class _ZEROF : _percentxZEROONEⲻSEVENF
             {
-                public ZEROF(Inners.ZERO ZERO_1, Inners.F F_1)
+                public _ZEROF(Inners._ZERO _ZERO_1, Inners._F _F_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.F_1 = F_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -1999,16 +1999,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEZERO : percentxZEROONEⲻSEVENF
+            public sealed class _ONEZERO : _percentxZEROONEⲻSEVENF
             {
-                public ONEZERO(Inners.ONE ONE_1, Inners.ZERO ZERO_1)
+                public _ONEZERO(Inners._ONE _ONE_1, Inners._ZERO _ZERO_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._ONE_1 = _ONE_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2016,16 +2016,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEONE : percentxZEROONEⲻSEVENF
+            public sealed class _ONEONE : _percentxZEROONEⲻSEVENF
             {
-                public ONEONE(Inners.ONE ONE_1, Inners.ONE ONE_2)
+                public _ONEONE(Inners._ONE _ONE_1, Inners._ONE _ONE_2)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.ONE_2 = ONE_2;
+                    this._ONE_1 = _ONE_1;
+                    this._ONE_2 = _ONE_2;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.ONE ONE_2 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._ONE _ONE_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2033,16 +2033,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONETWO : percentxZEROONEⲻSEVENF
+            public sealed class _ONETWO : _percentxZEROONEⲻSEVENF
             {
-                public ONETWO(Inners.ONE ONE_1, Inners.TWO TWO_1)
+                public _ONETWO(Inners._ONE _ONE_1, Inners._TWO _TWO_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.TWO_1 = TWO_1;
+                    this._ONE_1 = _ONE_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2050,16 +2050,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONETHREE : percentxZEROONEⲻSEVENF
+            public sealed class _ONETHREE : _percentxZEROONEⲻSEVENF
             {
-                public ONETHREE(Inners.ONE ONE_1, Inners.THREE THREE_1)
+                public _ONETHREE(Inners._ONE _ONE_1, Inners._THREE _THREE_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.THREE_1 = THREE_1;
+                    this._ONE_1 = _ONE_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2067,16 +2067,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEFOUR : percentxZEROONEⲻSEVENF
+            public sealed class _ONEFOUR : _percentxZEROONEⲻSEVENF
             {
-                public ONEFOUR(Inners.ONE ONE_1, Inners.FOUR FOUR_1)
+                public _ONEFOUR(Inners._ONE _ONE_1, Inners._FOUR _FOUR_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._ONE_1 = _ONE_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2084,16 +2084,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEFIVE : percentxZEROONEⲻSEVENF
+            public sealed class _ONEFIVE : _percentxZEROONEⲻSEVENF
             {
-                public ONEFIVE(Inners.ONE ONE_1, Inners.FIVE FIVE_1)
+                public _ONEFIVE(Inners._ONE _ONE_1, Inners._FIVE _FIVE_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._ONE_1 = _ONE_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2101,16 +2101,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONESIX : percentxZEROONEⲻSEVENF
+            public sealed class _ONESIX : _percentxZEROONEⲻSEVENF
             {
-                public ONESIX(Inners.ONE ONE_1, Inners.SIX SIX_1)
+                public _ONESIX(Inners._ONE _ONE_1, Inners._SIX _SIX_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.SIX_1 = SIX_1;
+                    this._ONE_1 = _ONE_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2118,16 +2118,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONESEVEN : percentxZEROONEⲻSEVENF
+            public sealed class _ONESEVEN : _percentxZEROONEⲻSEVENF
             {
-                public ONESEVEN(Inners.ONE ONE_1, Inners.SEVEN SEVEN_1)
+                public _ONESEVEN(Inners._ONE _ONE_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._ONE_1 = _ONE_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2135,16 +2135,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEEIGHT : percentxZEROONEⲻSEVENF
+            public sealed class _ONEEIGHT : _percentxZEROONEⲻSEVENF
             {
-                public ONEEIGHT(Inners.ONE ONE_1, Inners.EIGHT EIGHT_1)
+                public _ONEEIGHT(Inners._ONE _ONE_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._ONE_1 = _ONE_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2152,16 +2152,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONENINE : percentxZEROONEⲻSEVENF
+            public sealed class _ONENINE : _percentxZEROONEⲻSEVENF
             {
-                public ONENINE(Inners.ONE ONE_1, Inners.NINE NINE_1)
+                public _ONENINE(Inners._ONE _ONE_1, Inners._NINE _NINE_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.NINE_1 = NINE_1;
+                    this._ONE_1 = _ONE_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2169,16 +2169,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEA : percentxZEROONEⲻSEVENF
+            public sealed class _ONEA : _percentxZEROONEⲻSEVENF
             {
-                public ONEA(Inners.ONE ONE_1, Inners.A A_1)
+                public _ONEA(Inners._ONE _ONE_1, Inners._A _A_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.A_1 = A_1;
+                    this._ONE_1 = _ONE_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2186,16 +2186,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEB : percentxZEROONEⲻSEVENF
+            public sealed class _ONEB : _percentxZEROONEⲻSEVENF
             {
-                public ONEB(Inners.ONE ONE_1, Inners.B B_1)
+                public _ONEB(Inners._ONE _ONE_1, Inners._B _B_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.B_1 = B_1;
+                    this._ONE_1 = _ONE_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2203,16 +2203,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEC : percentxZEROONEⲻSEVENF
+            public sealed class _ONEC : _percentxZEROONEⲻSEVENF
             {
-                public ONEC(Inners.ONE ONE_1, Inners.C C_1)
+                public _ONEC(Inners._ONE _ONE_1, Inners._C _C_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.C_1 = C_1;
+                    this._ONE_1 = _ONE_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2220,16 +2220,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONED : percentxZEROONEⲻSEVENF
+            public sealed class _ONED : _percentxZEROONEⲻSEVENF
             {
-                public ONED(Inners.ONE ONE_1, Inners.D D_1)
+                public _ONED(Inners._ONE _ONE_1, Inners._D _D_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.D_1 = D_1;
+                    this._ONE_1 = _ONE_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2237,16 +2237,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEE : percentxZEROONEⲻSEVENF
+            public sealed class _ONEE : _percentxZEROONEⲻSEVENF
             {
-                public ONEE(Inners.ONE ONE_1, Inners.E E_1)
+                public _ONEE(Inners._ONE _ONE_1, Inners._E _E_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.E_1 = E_1;
+                    this._ONE_1 = _ONE_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2254,16 +2254,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEF : percentxZEROONEⲻSEVENF
+            public sealed class _ONEF : _percentxZEROONEⲻSEVENF
             {
-                public ONEF(Inners.ONE ONE_1, Inners.F F_1)
+                public _ONEF(Inners._ONE _ONE_1, Inners._F _F_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.F_1 = F_1;
+                    this._ONE_1 = _ONE_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2271,16 +2271,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOZERO : percentxZEROONEⲻSEVENF
+            public sealed class _TWOZERO : _percentxZEROONEⲻSEVENF
             {
-                public TWOZERO(Inners.TWO TWO_1, Inners.ZERO ZERO_1)
+                public _TWOZERO(Inners._TWO _TWO_1, Inners._ZERO _ZERO_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._TWO_1 = _TWO_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2288,16 +2288,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOONE : percentxZEROONEⲻSEVENF
+            public sealed class _TWOONE : _percentxZEROONEⲻSEVENF
             {
-                public TWOONE(Inners.TWO TWO_1, Inners.ONE ONE_1)
+                public _TWOONE(Inners._TWO _TWO_1, Inners._ONE _ONE_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.ONE_1 = ONE_1;
+                    this._TWO_1 = _TWO_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2305,16 +2305,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOTWO : percentxZEROONEⲻSEVENF
+            public sealed class _TWOTWO : _percentxZEROONEⲻSEVENF
             {
-                public TWOTWO(Inners.TWO TWO_1, Inners.TWO TWO_2)
+                public _TWOTWO(Inners._TWO _TWO_1, Inners._TWO _TWO_2)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.TWO_2 = TWO_2;
+                    this._TWO_1 = _TWO_1;
+                    this._TWO_2 = _TWO_2;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.TWO TWO_2 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._TWO _TWO_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2322,16 +2322,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOTHREE : percentxZEROONEⲻSEVENF
+            public sealed class _TWOTHREE : _percentxZEROONEⲻSEVENF
             {
-                public TWOTHREE(Inners.TWO TWO_1, Inners.THREE THREE_1)
+                public _TWOTHREE(Inners._TWO _TWO_1, Inners._THREE _THREE_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.THREE_1 = THREE_1;
+                    this._TWO_1 = _TWO_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2339,16 +2339,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOFOUR : percentxZEROONEⲻSEVENF
+            public sealed class _TWOFOUR : _percentxZEROONEⲻSEVENF
             {
-                public TWOFOUR(Inners.TWO TWO_1, Inners.FOUR FOUR_1)
+                public _TWOFOUR(Inners._TWO _TWO_1, Inners._FOUR _FOUR_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._TWO_1 = _TWO_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2356,16 +2356,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOFIVE : percentxZEROONEⲻSEVENF
+            public sealed class _TWOFIVE : _percentxZEROONEⲻSEVENF
             {
-                public TWOFIVE(Inners.TWO TWO_1, Inners.FIVE FIVE_1)
+                public _TWOFIVE(Inners._TWO _TWO_1, Inners._FIVE _FIVE_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._TWO_1 = _TWO_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2373,16 +2373,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOSIX : percentxZEROONEⲻSEVENF
+            public sealed class _TWOSIX : _percentxZEROONEⲻSEVENF
             {
-                public TWOSIX(Inners.TWO TWO_1, Inners.SIX SIX_1)
+                public _TWOSIX(Inners._TWO _TWO_1, Inners._SIX _SIX_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.SIX_1 = SIX_1;
+                    this._TWO_1 = _TWO_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2390,16 +2390,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOSEVEN : percentxZEROONEⲻSEVENF
+            public sealed class _TWOSEVEN : _percentxZEROONEⲻSEVENF
             {
-                public TWOSEVEN(Inners.TWO TWO_1, Inners.SEVEN SEVEN_1)
+                public _TWOSEVEN(Inners._TWO _TWO_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._TWO_1 = _TWO_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2407,16 +2407,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOEIGHT : percentxZEROONEⲻSEVENF
+            public sealed class _TWOEIGHT : _percentxZEROONEⲻSEVENF
             {
-                public TWOEIGHT(Inners.TWO TWO_1, Inners.EIGHT EIGHT_1)
+                public _TWOEIGHT(Inners._TWO _TWO_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._TWO_1 = _TWO_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2424,16 +2424,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWONINE : percentxZEROONEⲻSEVENF
+            public sealed class _TWONINE : _percentxZEROONEⲻSEVENF
             {
-                public TWONINE(Inners.TWO TWO_1, Inners.NINE NINE_1)
+                public _TWONINE(Inners._TWO _TWO_1, Inners._NINE _NINE_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.NINE_1 = NINE_1;
+                    this._TWO_1 = _TWO_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2441,16 +2441,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOA : percentxZEROONEⲻSEVENF
+            public sealed class _TWOA : _percentxZEROONEⲻSEVENF
             {
-                public TWOA(Inners.TWO TWO_1, Inners.A A_1)
+                public _TWOA(Inners._TWO _TWO_1, Inners._A _A_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.A_1 = A_1;
+                    this._TWO_1 = _TWO_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2458,16 +2458,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOB : percentxZEROONEⲻSEVENF
+            public sealed class _TWOB : _percentxZEROONEⲻSEVENF
             {
-                public TWOB(Inners.TWO TWO_1, Inners.B B_1)
+                public _TWOB(Inners._TWO _TWO_1, Inners._B _B_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.B_1 = B_1;
+                    this._TWO_1 = _TWO_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2475,16 +2475,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOC : percentxZEROONEⲻSEVENF
+            public sealed class _TWOC : _percentxZEROONEⲻSEVENF
             {
-                public TWOC(Inners.TWO TWO_1, Inners.C C_1)
+                public _TWOC(Inners._TWO _TWO_1, Inners._C _C_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.C_1 = C_1;
+                    this._TWO_1 = _TWO_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2492,16 +2492,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOD : percentxZEROONEⲻSEVENF
+            public sealed class _TWOD : _percentxZEROONEⲻSEVENF
             {
-                public TWOD(Inners.TWO TWO_1, Inners.D D_1)
+                public _TWOD(Inners._TWO _TWO_1, Inners._D _D_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.D_1 = D_1;
+                    this._TWO_1 = _TWO_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2509,16 +2509,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOE : percentxZEROONEⲻSEVENF
+            public sealed class _TWOE : _percentxZEROONEⲻSEVENF
             {
-                public TWOE(Inners.TWO TWO_1, Inners.E E_1)
+                public _TWOE(Inners._TWO _TWO_1, Inners._E _E_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.E_1 = E_1;
+                    this._TWO_1 = _TWO_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2526,16 +2526,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOF : percentxZEROONEⲻSEVENF
+            public sealed class _TWOF : _percentxZEROONEⲻSEVENF
             {
-                public TWOF(Inners.TWO TWO_1, Inners.F F_1)
+                public _TWOF(Inners._TWO _TWO_1, Inners._F _F_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.F_1 = F_1;
+                    this._TWO_1 = _TWO_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2543,16 +2543,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEZERO : percentxZEROONEⲻSEVENF
+            public sealed class _THREEZERO : _percentxZEROONEⲻSEVENF
             {
-                public THREEZERO(Inners.THREE THREE_1, Inners.ZERO ZERO_1)
+                public _THREEZERO(Inners._THREE _THREE_1, Inners._ZERO _ZERO_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._THREE_1 = _THREE_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2560,16 +2560,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEONE : percentxZEROONEⲻSEVENF
+            public sealed class _THREEONE : _percentxZEROONEⲻSEVENF
             {
-                public THREEONE(Inners.THREE THREE_1, Inners.ONE ONE_1)
+                public _THREEONE(Inners._THREE _THREE_1, Inners._ONE _ONE_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.ONE_1 = ONE_1;
+                    this._THREE_1 = _THREE_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2577,16 +2577,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREETWO : percentxZEROONEⲻSEVENF
+            public sealed class _THREETWO : _percentxZEROONEⲻSEVENF
             {
-                public THREETWO(Inners.THREE THREE_1, Inners.TWO TWO_1)
+                public _THREETWO(Inners._THREE _THREE_1, Inners._TWO _TWO_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.TWO_1 = TWO_1;
+                    this._THREE_1 = _THREE_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2594,16 +2594,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREETHREE : percentxZEROONEⲻSEVENF
+            public sealed class _THREETHREE : _percentxZEROONEⲻSEVENF
             {
-                public THREETHREE(Inners.THREE THREE_1, Inners.THREE THREE_2)
+                public _THREETHREE(Inners._THREE _THREE_1, Inners._THREE _THREE_2)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.THREE_2 = THREE_2;
+                    this._THREE_1 = _THREE_1;
+                    this._THREE_2 = _THREE_2;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.THREE THREE_2 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._THREE _THREE_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2611,16 +2611,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEFOUR : percentxZEROONEⲻSEVENF
+            public sealed class _THREEFOUR : _percentxZEROONEⲻSEVENF
             {
-                public THREEFOUR(Inners.THREE THREE_1, Inners.FOUR FOUR_1)
+                public _THREEFOUR(Inners._THREE _THREE_1, Inners._FOUR _FOUR_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._THREE_1 = _THREE_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2628,16 +2628,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEFIVE : percentxZEROONEⲻSEVENF
+            public sealed class _THREEFIVE : _percentxZEROONEⲻSEVENF
             {
-                public THREEFIVE(Inners.THREE THREE_1, Inners.FIVE FIVE_1)
+                public _THREEFIVE(Inners._THREE _THREE_1, Inners._FIVE _FIVE_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._THREE_1 = _THREE_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2645,16 +2645,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREESIX : percentxZEROONEⲻSEVENF
+            public sealed class _THREESIX : _percentxZEROONEⲻSEVENF
             {
-                public THREESIX(Inners.THREE THREE_1, Inners.SIX SIX_1)
+                public _THREESIX(Inners._THREE _THREE_1, Inners._SIX _SIX_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.SIX_1 = SIX_1;
+                    this._THREE_1 = _THREE_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2662,16 +2662,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREESEVEN : percentxZEROONEⲻSEVENF
+            public sealed class _THREESEVEN : _percentxZEROONEⲻSEVENF
             {
-                public THREESEVEN(Inners.THREE THREE_1, Inners.SEVEN SEVEN_1)
+                public _THREESEVEN(Inners._THREE _THREE_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._THREE_1 = _THREE_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2679,16 +2679,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEEIGHT : percentxZEROONEⲻSEVENF
+            public sealed class _THREEEIGHT : _percentxZEROONEⲻSEVENF
             {
-                public THREEEIGHT(Inners.THREE THREE_1, Inners.EIGHT EIGHT_1)
+                public _THREEEIGHT(Inners._THREE _THREE_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._THREE_1 = _THREE_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2696,16 +2696,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREENINE : percentxZEROONEⲻSEVENF
+            public sealed class _THREENINE : _percentxZEROONEⲻSEVENF
             {
-                public THREENINE(Inners.THREE THREE_1, Inners.NINE NINE_1)
+                public _THREENINE(Inners._THREE _THREE_1, Inners._NINE _NINE_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.NINE_1 = NINE_1;
+                    this._THREE_1 = _THREE_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2713,16 +2713,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEA : percentxZEROONEⲻSEVENF
+            public sealed class _THREEA : _percentxZEROONEⲻSEVENF
             {
-                public THREEA(Inners.THREE THREE_1, Inners.A A_1)
+                public _THREEA(Inners._THREE _THREE_1, Inners._A _A_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.A_1 = A_1;
+                    this._THREE_1 = _THREE_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2730,16 +2730,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEB : percentxZEROONEⲻSEVENF
+            public sealed class _THREEB : _percentxZEROONEⲻSEVENF
             {
-                public THREEB(Inners.THREE THREE_1, Inners.B B_1)
+                public _THREEB(Inners._THREE _THREE_1, Inners._B _B_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.B_1 = B_1;
+                    this._THREE_1 = _THREE_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2747,16 +2747,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEC : percentxZEROONEⲻSEVENF
+            public sealed class _THREEC : _percentxZEROONEⲻSEVENF
             {
-                public THREEC(Inners.THREE THREE_1, Inners.C C_1)
+                public _THREEC(Inners._THREE _THREE_1, Inners._C _C_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.C_1 = C_1;
+                    this._THREE_1 = _THREE_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2764,16 +2764,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREED : percentxZEROONEⲻSEVENF
+            public sealed class _THREED : _percentxZEROONEⲻSEVENF
             {
-                public THREED(Inners.THREE THREE_1, Inners.D D_1)
+                public _THREED(Inners._THREE _THREE_1, Inners._D _D_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.D_1 = D_1;
+                    this._THREE_1 = _THREE_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2781,16 +2781,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEE : percentxZEROONEⲻSEVENF
+            public sealed class _THREEE : _percentxZEROONEⲻSEVENF
             {
-                public THREEE(Inners.THREE THREE_1, Inners.E E_1)
+                public _THREEE(Inners._THREE _THREE_1, Inners._E _E_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.E_1 = E_1;
+                    this._THREE_1 = _THREE_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2798,16 +2798,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEF : percentxZEROONEⲻSEVENF
+            public sealed class _THREEF : _percentxZEROONEⲻSEVENF
             {
-                public THREEF(Inners.THREE THREE_1, Inners.F F_1)
+                public _THREEF(Inners._THREE _THREE_1, Inners._F _F_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.F_1 = F_1;
+                    this._THREE_1 = _THREE_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2815,16 +2815,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURZERO : percentxZEROONEⲻSEVENF
+            public sealed class _FOURZERO : _percentxZEROONEⲻSEVENF
             {
-                public FOURZERO(Inners.FOUR FOUR_1, Inners.ZERO ZERO_1)
+                public _FOURZERO(Inners._FOUR _FOUR_1, Inners._ZERO _ZERO_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2832,16 +2832,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURONE : percentxZEROONEⲻSEVENF
+            public sealed class _FOURONE : _percentxZEROONEⲻSEVENF
             {
-                public FOURONE(Inners.FOUR FOUR_1, Inners.ONE ONE_1)
+                public _FOURONE(Inners._FOUR _FOUR_1, Inners._ONE _ONE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.ONE_1 = ONE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2849,16 +2849,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURTWO : percentxZEROONEⲻSEVENF
+            public sealed class _FOURTWO : _percentxZEROONEⲻSEVENF
             {
-                public FOURTWO(Inners.FOUR FOUR_1, Inners.TWO TWO_1)
+                public _FOURTWO(Inners._FOUR _FOUR_1, Inners._TWO _TWO_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.TWO_1 = TWO_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2866,16 +2866,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURTHREE : percentxZEROONEⲻSEVENF
+            public sealed class _FOURTHREE : _percentxZEROONEⲻSEVENF
             {
-                public FOURTHREE(Inners.FOUR FOUR_1, Inners.THREE THREE_1)
+                public _FOURTHREE(Inners._FOUR _FOUR_1, Inners._THREE _THREE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.THREE_1 = THREE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2883,16 +2883,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURFOUR : percentxZEROONEⲻSEVENF
+            public sealed class _FOURFOUR : _percentxZEROONEⲻSEVENF
             {
-                public FOURFOUR(Inners.FOUR FOUR_1, Inners.FOUR FOUR_2)
+                public _FOURFOUR(Inners._FOUR _FOUR_1, Inners._FOUR _FOUR_2)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.FOUR_2 = FOUR_2;
+                    this._FOUR_1 = _FOUR_1;
+                    this._FOUR_2 = _FOUR_2;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.FOUR FOUR_2 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._FOUR _FOUR_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2900,16 +2900,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURFIVE : percentxZEROONEⲻSEVENF
+            public sealed class _FOURFIVE : _percentxZEROONEⲻSEVENF
             {
-                public FOURFIVE(Inners.FOUR FOUR_1, Inners.FIVE FIVE_1)
+                public _FOURFIVE(Inners._FOUR _FOUR_1, Inners._FIVE _FIVE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2917,16 +2917,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURSIX : percentxZEROONEⲻSEVENF
+            public sealed class _FOURSIX : _percentxZEROONEⲻSEVENF
             {
-                public FOURSIX(Inners.FOUR FOUR_1, Inners.SIX SIX_1)
+                public _FOURSIX(Inners._FOUR _FOUR_1, Inners._SIX _SIX_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.SIX_1 = SIX_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2934,16 +2934,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURSEVEN : percentxZEROONEⲻSEVENF
+            public sealed class _FOURSEVEN : _percentxZEROONEⲻSEVENF
             {
-                public FOURSEVEN(Inners.FOUR FOUR_1, Inners.SEVEN SEVEN_1)
+                public _FOURSEVEN(Inners._FOUR _FOUR_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2951,16 +2951,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOUREIGHT : percentxZEROONEⲻSEVENF
+            public sealed class _FOUREIGHT : _percentxZEROONEⲻSEVENF
             {
-                public FOUREIGHT(Inners.FOUR FOUR_1, Inners.EIGHT EIGHT_1)
+                public _FOUREIGHT(Inners._FOUR _FOUR_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2968,16 +2968,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURNINE : percentxZEROONEⲻSEVENF
+            public sealed class _FOURNINE : _percentxZEROONEⲻSEVENF
             {
-                public FOURNINE(Inners.FOUR FOUR_1, Inners.NINE NINE_1)
+                public _FOURNINE(Inners._FOUR _FOUR_1, Inners._NINE _NINE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.NINE_1 = NINE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -2985,16 +2985,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURA : percentxZEROONEⲻSEVENF
+            public sealed class _FOURA : _percentxZEROONEⲻSEVENF
             {
-                public FOURA(Inners.FOUR FOUR_1, Inners.A A_1)
+                public _FOURA(Inners._FOUR _FOUR_1, Inners._A _A_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.A_1 = A_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3002,16 +3002,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURB : percentxZEROONEⲻSEVENF
+            public sealed class _FOURB : _percentxZEROONEⲻSEVENF
             {
-                public FOURB(Inners.FOUR FOUR_1, Inners.B B_1)
+                public _FOURB(Inners._FOUR _FOUR_1, Inners._B _B_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.B_1 = B_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3019,16 +3019,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURC : percentxZEROONEⲻSEVENF
+            public sealed class _FOURC : _percentxZEROONEⲻSEVENF
             {
-                public FOURC(Inners.FOUR FOUR_1, Inners.C C_1)
+                public _FOURC(Inners._FOUR _FOUR_1, Inners._C _C_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.C_1 = C_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3036,16 +3036,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURD : percentxZEROONEⲻSEVENF
+            public sealed class _FOURD : _percentxZEROONEⲻSEVENF
             {
-                public FOURD(Inners.FOUR FOUR_1, Inners.D D_1)
+                public _FOURD(Inners._FOUR _FOUR_1, Inners._D _D_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.D_1 = D_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3053,16 +3053,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURE : percentxZEROONEⲻSEVENF
+            public sealed class _FOURE : _percentxZEROONEⲻSEVENF
             {
-                public FOURE(Inners.FOUR FOUR_1, Inners.E E_1)
+                public _FOURE(Inners._FOUR _FOUR_1, Inners._E _E_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.E_1 = E_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3070,16 +3070,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURF : percentxZEROONEⲻSEVENF
+            public sealed class _FOURF : _percentxZEROONEⲻSEVENF
             {
-                public FOURF(Inners.FOUR FOUR_1, Inners.F F_1)
+                public _FOURF(Inners._FOUR _FOUR_1, Inners._F _F_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.F_1 = F_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3087,16 +3087,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEZERO : percentxZEROONEⲻSEVENF
+            public sealed class _FIVEZERO : _percentxZEROONEⲻSEVENF
             {
-                public FIVEZERO(Inners.FIVE FIVE_1, Inners.ZERO ZERO_1)
+                public _FIVEZERO(Inners._FIVE _FIVE_1, Inners._ZERO _ZERO_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3104,16 +3104,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEONE : percentxZEROONEⲻSEVENF
+            public sealed class _FIVEONE : _percentxZEROONEⲻSEVENF
             {
-                public FIVEONE(Inners.FIVE FIVE_1, Inners.ONE ONE_1)
+                public _FIVEONE(Inners._FIVE _FIVE_1, Inners._ONE _ONE_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.ONE_1 = ONE_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3121,16 +3121,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVETWO : percentxZEROONEⲻSEVENF
+            public sealed class _FIVETWO : _percentxZEROONEⲻSEVENF
             {
-                public FIVETWO(Inners.FIVE FIVE_1, Inners.TWO TWO_1)
+                public _FIVETWO(Inners._FIVE _FIVE_1, Inners._TWO _TWO_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.TWO_1 = TWO_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3138,16 +3138,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVETHREE : percentxZEROONEⲻSEVENF
+            public sealed class _FIVETHREE : _percentxZEROONEⲻSEVENF
             {
-                public FIVETHREE(Inners.FIVE FIVE_1, Inners.THREE THREE_1)
+                public _FIVETHREE(Inners._FIVE _FIVE_1, Inners._THREE _THREE_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.THREE_1 = THREE_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3155,16 +3155,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEFOUR : percentxZEROONEⲻSEVENF
+            public sealed class _FIVEFOUR : _percentxZEROONEⲻSEVENF
             {
-                public FIVEFOUR(Inners.FIVE FIVE_1, Inners.FOUR FOUR_1)
+                public _FIVEFOUR(Inners._FIVE _FIVE_1, Inners._FOUR _FOUR_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3172,16 +3172,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEFIVE : percentxZEROONEⲻSEVENF
+            public sealed class _FIVEFIVE : _percentxZEROONEⲻSEVENF
             {
-                public FIVEFIVE(Inners.FIVE FIVE_1, Inners.FIVE FIVE_2)
+                public _FIVEFIVE(Inners._FIVE _FIVE_1, Inners._FIVE _FIVE_2)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.FIVE_2 = FIVE_2;
+                    this._FIVE_1 = _FIVE_1;
+                    this._FIVE_2 = _FIVE_2;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.FIVE FIVE_2 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._FIVE _FIVE_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3189,16 +3189,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVESIX : percentxZEROONEⲻSEVENF
+            public sealed class _FIVESIX : _percentxZEROONEⲻSEVENF
             {
-                public FIVESIX(Inners.FIVE FIVE_1, Inners.SIX SIX_1)
+                public _FIVESIX(Inners._FIVE _FIVE_1, Inners._SIX _SIX_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.SIX_1 = SIX_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3206,16 +3206,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVESEVEN : percentxZEROONEⲻSEVENF
+            public sealed class _FIVESEVEN : _percentxZEROONEⲻSEVENF
             {
-                public FIVESEVEN(Inners.FIVE FIVE_1, Inners.SEVEN SEVEN_1)
+                public _FIVESEVEN(Inners._FIVE _FIVE_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3223,16 +3223,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEEIGHT : percentxZEROONEⲻSEVENF
+            public sealed class _FIVEEIGHT : _percentxZEROONEⲻSEVENF
             {
-                public FIVEEIGHT(Inners.FIVE FIVE_1, Inners.EIGHT EIGHT_1)
+                public _FIVEEIGHT(Inners._FIVE _FIVE_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3240,16 +3240,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVENINE : percentxZEROONEⲻSEVENF
+            public sealed class _FIVENINE : _percentxZEROONEⲻSEVENF
             {
-                public FIVENINE(Inners.FIVE FIVE_1, Inners.NINE NINE_1)
+                public _FIVENINE(Inners._FIVE _FIVE_1, Inners._NINE _NINE_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.NINE_1 = NINE_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3257,16 +3257,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEA : percentxZEROONEⲻSEVENF
+            public sealed class _FIVEA : _percentxZEROONEⲻSEVENF
             {
-                public FIVEA(Inners.FIVE FIVE_1, Inners.A A_1)
+                public _FIVEA(Inners._FIVE _FIVE_1, Inners._A _A_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.A_1 = A_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3274,16 +3274,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEB : percentxZEROONEⲻSEVENF
+            public sealed class _FIVEB : _percentxZEROONEⲻSEVENF
             {
-                public FIVEB(Inners.FIVE FIVE_1, Inners.B B_1)
+                public _FIVEB(Inners._FIVE _FIVE_1, Inners._B _B_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.B_1 = B_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3291,16 +3291,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEC : percentxZEROONEⲻSEVENF
+            public sealed class _FIVEC : _percentxZEROONEⲻSEVENF
             {
-                public FIVEC(Inners.FIVE FIVE_1, Inners.C C_1)
+                public _FIVEC(Inners._FIVE _FIVE_1, Inners._C _C_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.C_1 = C_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3308,16 +3308,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVED : percentxZEROONEⲻSEVENF
+            public sealed class _FIVED : _percentxZEROONEⲻSEVENF
             {
-                public FIVED(Inners.FIVE FIVE_1, Inners.D D_1)
+                public _FIVED(Inners._FIVE _FIVE_1, Inners._D _D_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.D_1 = D_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3325,16 +3325,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEE : percentxZEROONEⲻSEVENF
+            public sealed class _FIVEE : _percentxZEROONEⲻSEVENF
             {
-                public FIVEE(Inners.FIVE FIVE_1, Inners.E E_1)
+                public _FIVEE(Inners._FIVE _FIVE_1, Inners._E _E_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.E_1 = E_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3342,16 +3342,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEF : percentxZEROONEⲻSEVENF
+            public sealed class _FIVEF : _percentxZEROONEⲻSEVENF
             {
-                public FIVEF(Inners.FIVE FIVE_1, Inners.F F_1)
+                public _FIVEF(Inners._FIVE _FIVE_1, Inners._F _F_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.F_1 = F_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3359,16 +3359,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXZERO : percentxZEROONEⲻSEVENF
+            public sealed class _SIXZERO : _percentxZEROONEⲻSEVENF
             {
-                public SIXZERO(Inners.SIX SIX_1, Inners.ZERO ZERO_1)
+                public _SIXZERO(Inners._SIX _SIX_1, Inners._ZERO _ZERO_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._SIX_1 = _SIX_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3376,16 +3376,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXONE : percentxZEROONEⲻSEVENF
+            public sealed class _SIXONE : _percentxZEROONEⲻSEVENF
             {
-                public SIXONE(Inners.SIX SIX_1, Inners.ONE ONE_1)
+                public _SIXONE(Inners._SIX _SIX_1, Inners._ONE _ONE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.ONE_1 = ONE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3393,16 +3393,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXTWO : percentxZEROONEⲻSEVENF
+            public sealed class _SIXTWO : _percentxZEROONEⲻSEVENF
             {
-                public SIXTWO(Inners.SIX SIX_1, Inners.TWO TWO_1)
+                public _SIXTWO(Inners._SIX _SIX_1, Inners._TWO _TWO_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.TWO_1 = TWO_1;
+                    this._SIX_1 = _SIX_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3410,16 +3410,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXTHREE : percentxZEROONEⲻSEVENF
+            public sealed class _SIXTHREE : _percentxZEROONEⲻSEVENF
             {
-                public SIXTHREE(Inners.SIX SIX_1, Inners.THREE THREE_1)
+                public _SIXTHREE(Inners._SIX _SIX_1, Inners._THREE _THREE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.THREE_1 = THREE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3427,16 +3427,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXFOUR : percentxZEROONEⲻSEVENF
+            public sealed class _SIXFOUR : _percentxZEROONEⲻSEVENF
             {
-                public SIXFOUR(Inners.SIX SIX_1, Inners.FOUR FOUR_1)
+                public _SIXFOUR(Inners._SIX _SIX_1, Inners._FOUR _FOUR_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._SIX_1 = _SIX_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3444,16 +3444,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXFIVE : percentxZEROONEⲻSEVENF
+            public sealed class _SIXFIVE : _percentxZEROONEⲻSEVENF
             {
-                public SIXFIVE(Inners.SIX SIX_1, Inners.FIVE FIVE_1)
+                public _SIXFIVE(Inners._SIX _SIX_1, Inners._FIVE _FIVE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3461,16 +3461,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXSIX : percentxZEROONEⲻSEVENF
+            public sealed class _SIXSIX : _percentxZEROONEⲻSEVENF
             {
-                public SIXSIX(Inners.SIX SIX_1, Inners.SIX SIX_2)
+                public _SIXSIX(Inners._SIX _SIX_1, Inners._SIX _SIX_2)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.SIX_2 = SIX_2;
+                    this._SIX_1 = _SIX_1;
+                    this._SIX_2 = _SIX_2;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.SIX SIX_2 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._SIX _SIX_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3478,16 +3478,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXSEVEN : percentxZEROONEⲻSEVENF
+            public sealed class _SIXSEVEN : _percentxZEROONEⲻSEVENF
             {
-                public SIXSEVEN(Inners.SIX SIX_1, Inners.SEVEN SEVEN_1)
+                public _SIXSEVEN(Inners._SIX _SIX_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._SIX_1 = _SIX_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3495,16 +3495,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXEIGHT : percentxZEROONEⲻSEVENF
+            public sealed class _SIXEIGHT : _percentxZEROONEⲻSEVENF
             {
-                public SIXEIGHT(Inners.SIX SIX_1, Inners.EIGHT EIGHT_1)
+                public _SIXEIGHT(Inners._SIX _SIX_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._SIX_1 = _SIX_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3512,16 +3512,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXNINE : percentxZEROONEⲻSEVENF
+            public sealed class _SIXNINE : _percentxZEROONEⲻSEVENF
             {
-                public SIXNINE(Inners.SIX SIX_1, Inners.NINE NINE_1)
+                public _SIXNINE(Inners._SIX _SIX_1, Inners._NINE _NINE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.NINE_1 = NINE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3529,16 +3529,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXA : percentxZEROONEⲻSEVENF
+            public sealed class _SIXA : _percentxZEROONEⲻSEVENF
             {
-                public SIXA(Inners.SIX SIX_1, Inners.A A_1)
+                public _SIXA(Inners._SIX _SIX_1, Inners._A _A_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.A_1 = A_1;
+                    this._SIX_1 = _SIX_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3546,16 +3546,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXB : percentxZEROONEⲻSEVENF
+            public sealed class _SIXB : _percentxZEROONEⲻSEVENF
             {
-                public SIXB(Inners.SIX SIX_1, Inners.B B_1)
+                public _SIXB(Inners._SIX _SIX_1, Inners._B _B_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.B_1 = B_1;
+                    this._SIX_1 = _SIX_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3563,16 +3563,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXC : percentxZEROONEⲻSEVENF
+            public sealed class _SIXC : _percentxZEROONEⲻSEVENF
             {
-                public SIXC(Inners.SIX SIX_1, Inners.C C_1)
+                public _SIXC(Inners._SIX _SIX_1, Inners._C _C_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.C_1 = C_1;
+                    this._SIX_1 = _SIX_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3580,16 +3580,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXD : percentxZEROONEⲻSEVENF
+            public sealed class _SIXD : _percentxZEROONEⲻSEVENF
             {
-                public SIXD(Inners.SIX SIX_1, Inners.D D_1)
+                public _SIXD(Inners._SIX _SIX_1, Inners._D _D_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.D_1 = D_1;
+                    this._SIX_1 = _SIX_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3597,16 +3597,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXE : percentxZEROONEⲻSEVENF
+            public sealed class _SIXE : _percentxZEROONEⲻSEVENF
             {
-                public SIXE(Inners.SIX SIX_1, Inners.E E_1)
+                public _SIXE(Inners._SIX _SIX_1, Inners._E _E_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.E_1 = E_1;
+                    this._SIX_1 = _SIX_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3614,16 +3614,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXF : percentxZEROONEⲻSEVENF
+            public sealed class _SIXF : _percentxZEROONEⲻSEVENF
             {
-                public SIXF(Inners.SIX SIX_1, Inners.F F_1)
+                public _SIXF(Inners._SIX _SIX_1, Inners._F _F_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.F_1 = F_1;
+                    this._SIX_1 = _SIX_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3631,16 +3631,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENZERO : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENZERO : _percentxZEROONEⲻSEVENF
             {
-                public SEVENZERO(Inners.SEVEN SEVEN_1, Inners.ZERO ZERO_1)
+                public _SEVENZERO(Inners._SEVEN _SEVEN_1, Inners._ZERO _ZERO_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3648,16 +3648,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENONE : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENONE : _percentxZEROONEⲻSEVENF
             {
-                public SEVENONE(Inners.SEVEN SEVEN_1, Inners.ONE ONE_1)
+                public _SEVENONE(Inners._SEVEN _SEVEN_1, Inners._ONE _ONE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.ONE_1 = ONE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3665,16 +3665,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENTWO : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENTWO : _percentxZEROONEⲻSEVENF
             {
-                public SEVENTWO(Inners.SEVEN SEVEN_1, Inners.TWO TWO_1)
+                public _SEVENTWO(Inners._SEVEN _SEVEN_1, Inners._TWO _TWO_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.TWO_1 = TWO_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3682,16 +3682,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENTHREE : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENTHREE : _percentxZEROONEⲻSEVENF
             {
-                public SEVENTHREE(Inners.SEVEN SEVEN_1, Inners.THREE THREE_1)
+                public _SEVENTHREE(Inners._SEVEN _SEVEN_1, Inners._THREE _THREE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.THREE_1 = THREE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3699,16 +3699,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENFOUR : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENFOUR : _percentxZEROONEⲻSEVENF
             {
-                public SEVENFOUR(Inners.SEVEN SEVEN_1, Inners.FOUR FOUR_1)
+                public _SEVENFOUR(Inners._SEVEN _SEVEN_1, Inners._FOUR _FOUR_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3716,16 +3716,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENFIVE : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENFIVE : _percentxZEROONEⲻSEVENF
             {
-                public SEVENFIVE(Inners.SEVEN SEVEN_1, Inners.FIVE FIVE_1)
+                public _SEVENFIVE(Inners._SEVEN _SEVEN_1, Inners._FIVE _FIVE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3733,16 +3733,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENSIX : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENSIX : _percentxZEROONEⲻSEVENF
             {
-                public SEVENSIX(Inners.SEVEN SEVEN_1, Inners.SIX SIX_1)
+                public _SEVENSIX(Inners._SEVEN _SEVEN_1, Inners._SIX _SIX_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.SIX_1 = SIX_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3750,16 +3750,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENSEVEN : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENSEVEN : _percentxZEROONEⲻSEVENF
             {
-                public SEVENSEVEN(Inners.SEVEN SEVEN_1, Inners.SEVEN SEVEN_2)
+                public _SEVENSEVEN(Inners._SEVEN _SEVEN_1, Inners._SEVEN _SEVEN_2)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.SEVEN_2 = SEVEN_2;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._SEVEN_2 = _SEVEN_2;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.SEVEN SEVEN_2 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._SEVEN _SEVEN_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3767,16 +3767,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENEIGHT : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENEIGHT : _percentxZEROONEⲻSEVENF
             {
-                public SEVENEIGHT(Inners.SEVEN SEVEN_1, Inners.EIGHT EIGHT_1)
+                public _SEVENEIGHT(Inners._SEVEN _SEVEN_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3784,16 +3784,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENNINE : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENNINE : _percentxZEROONEⲻSEVENF
             {
-                public SEVENNINE(Inners.SEVEN SEVEN_1, Inners.NINE NINE_1)
+                public _SEVENNINE(Inners._SEVEN _SEVEN_1, Inners._NINE _NINE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.NINE_1 = NINE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3801,16 +3801,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENA : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENA : _percentxZEROONEⲻSEVENF
             {
-                public SEVENA(Inners.SEVEN SEVEN_1, Inners.A A_1)
+                public _SEVENA(Inners._SEVEN _SEVEN_1, Inners._A _A_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.A_1 = A_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3818,16 +3818,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENB : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENB : _percentxZEROONEⲻSEVENF
             {
-                public SEVENB(Inners.SEVEN SEVEN_1, Inners.B B_1)
+                public _SEVENB(Inners._SEVEN _SEVEN_1, Inners._B _B_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.B_1 = B_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3835,16 +3835,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENC : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENC : _percentxZEROONEⲻSEVENF
             {
-                public SEVENC(Inners.SEVEN SEVEN_1, Inners.C C_1)
+                public _SEVENC(Inners._SEVEN _SEVEN_1, Inners._C _C_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.C_1 = C_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3852,16 +3852,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVEND : percentxZEROONEⲻSEVENF
+            public sealed class _SEVEND : _percentxZEROONEⲻSEVENF
             {
-                public SEVEND(Inners.SEVEN SEVEN_1, Inners.D D_1)
+                public _SEVEND(Inners._SEVEN _SEVEN_1, Inners._D _D_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.D_1 = D_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3869,16 +3869,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENE : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENE : _percentxZEROONEⲻSEVENF
             {
-                public SEVENE(Inners.SEVEN SEVEN_1, Inners.E E_1)
+                public _SEVENE(Inners._SEVEN _SEVEN_1, Inners._E _E_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.E_1 = E_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3886,16 +3886,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENF : percentxZEROONEⲻSEVENF
+            public sealed class _SEVENF : _percentxZEROONEⲻSEVENF
             {
-                public SEVENF(Inners.SEVEN SEVEN_1, Inners.F F_1)
+                public _SEVENF(Inners._SEVEN _SEVEN_1, Inners._F _F_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.F_1 = F_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3904,21 +3904,21 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class percentxZEROD
+        public sealed class _percentxZEROD
         {
-            public percentxZEROD(Inners.ZERO ZERO_1, Inners.D D_1)
+            public _percentxZEROD(Inners._ZERO _ZERO_1, Inners._D _D_1)
             {
-                this.ZERO_1 = ZERO_1;
-                this.D_1 = D_1;
+                this._ZERO_1 = _ZERO_1;
+                this._D_1 = _D_1;
             }
             
-            public Inners.ZERO ZERO_1 { get; }
-            public Inners.D D_1 { get; }
+            public Inners._ZERO _ZERO_1 { get; }
+            public Inners._D _D_1 { get; }
         }
         
-        public abstract class percentxZEROZEROⲻONEF
+        public abstract class _percentxZEROZEROⲻONEF
         {
-            private percentxZEROZEROⲻONEF()
+            private _percentxZEROZEROⲻONEF()
             {
             }
             
@@ -3926,55 +3926,55 @@ namespace GeneratorV3.Core
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(percentxZEROZEROⲻONEF node, TContext context)
+                public TResult Visit(_percentxZEROZEROⲻONEF node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
                 
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZERONINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ZEROF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONEZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONEONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONETWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONETHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONEFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONEFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONESIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONESEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONEEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONENINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONEA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONEB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONEC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONED node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONEE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻONEF.ONEF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZERONINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ZEROF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONEZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONEONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONETWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONETHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONEFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONEFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONESIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONESEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONEEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONENINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONEA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONEB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONEC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONED node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONEE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻONEF._ONEF node, TContext context);
             }
             
-            public sealed class ZEROZERO : percentxZEROZEROⲻONEF
+            public sealed class _ZEROZERO : _percentxZEROZEROⲻONEF
             {
-                public ZEROZERO(Inners.ZERO ZERO_1, Inners.ZERO ZERO_2)
+                public _ZEROZERO(Inners._ZERO _ZERO_1, Inners._ZERO _ZERO_2)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.ZERO_2 = ZERO_2;
+                    this._ZERO_1 = _ZERO_1;
+                    this._ZERO_2 = _ZERO_2;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.ZERO ZERO_2 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._ZERO _ZERO_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3982,16 +3982,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROONE : percentxZEROZEROⲻONEF
+            public sealed class _ZEROONE : _percentxZEROZEROⲻONEF
             {
-                public ZEROONE(Inners.ZERO ZERO_1, Inners.ONE ONE_1)
+                public _ZEROONE(Inners._ZERO _ZERO_1, Inners._ONE _ONE_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.ONE_1 = ONE_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -3999,16 +3999,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROTWO : percentxZEROZEROⲻONEF
+            public sealed class _ZEROTWO : _percentxZEROZEROⲻONEF
             {
-                public ZEROTWO(Inners.ZERO ZERO_1, Inners.TWO TWO_1)
+                public _ZEROTWO(Inners._ZERO _ZERO_1, Inners._TWO _TWO_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.TWO_1 = TWO_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4016,16 +4016,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROTHREE : percentxZEROZEROⲻONEF
+            public sealed class _ZEROTHREE : _percentxZEROZEROⲻONEF
             {
-                public ZEROTHREE(Inners.ZERO ZERO_1, Inners.THREE THREE_1)
+                public _ZEROTHREE(Inners._ZERO _ZERO_1, Inners._THREE _THREE_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.THREE_1 = THREE_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4033,16 +4033,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROFOUR : percentxZEROZEROⲻONEF
+            public sealed class _ZEROFOUR : _percentxZEROZEROⲻONEF
             {
-                public ZEROFOUR(Inners.ZERO ZERO_1, Inners.FOUR FOUR_1)
+                public _ZEROFOUR(Inners._ZERO _ZERO_1, Inners._FOUR _FOUR_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4050,16 +4050,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROFIVE : percentxZEROZEROⲻONEF
+            public sealed class _ZEROFIVE : _percentxZEROZEROⲻONEF
             {
-                public ZEROFIVE(Inners.ZERO ZERO_1, Inners.FIVE FIVE_1)
+                public _ZEROFIVE(Inners._ZERO _ZERO_1, Inners._FIVE _FIVE_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4067,16 +4067,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROSIX : percentxZEROZEROⲻONEF
+            public sealed class _ZEROSIX : _percentxZEROZEROⲻONEF
             {
-                public ZEROSIX(Inners.ZERO ZERO_1, Inners.SIX SIX_1)
+                public _ZEROSIX(Inners._ZERO _ZERO_1, Inners._SIX _SIX_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.SIX_1 = SIX_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4084,16 +4084,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROSEVEN : percentxZEROZEROⲻONEF
+            public sealed class _ZEROSEVEN : _percentxZEROZEROⲻONEF
             {
-                public ZEROSEVEN(Inners.ZERO ZERO_1, Inners.SEVEN SEVEN_1)
+                public _ZEROSEVEN(Inners._ZERO _ZERO_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4101,16 +4101,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROEIGHT : percentxZEROZEROⲻONEF
+            public sealed class _ZEROEIGHT : _percentxZEROZEROⲻONEF
             {
-                public ZEROEIGHT(Inners.ZERO ZERO_1, Inners.EIGHT EIGHT_1)
+                public _ZEROEIGHT(Inners._ZERO _ZERO_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4118,16 +4118,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZERONINE : percentxZEROZEROⲻONEF
+            public sealed class _ZERONINE : _percentxZEROZEROⲻONEF
             {
-                public ZERONINE(Inners.ZERO ZERO_1, Inners.NINE NINE_1)
+                public _ZERONINE(Inners._ZERO _ZERO_1, Inners._NINE _NINE_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.NINE_1 = NINE_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4135,16 +4135,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROA : percentxZEROZEROⲻONEF
+            public sealed class _ZEROA : _percentxZEROZEROⲻONEF
             {
-                public ZEROA(Inners.ZERO ZERO_1, Inners.A A_1)
+                public _ZEROA(Inners._ZERO _ZERO_1, Inners._A _A_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.A_1 = A_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4152,16 +4152,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROB : percentxZEROZEROⲻONEF
+            public sealed class _ZEROB : _percentxZEROZEROⲻONEF
             {
-                public ZEROB(Inners.ZERO ZERO_1, Inners.B B_1)
+                public _ZEROB(Inners._ZERO _ZERO_1, Inners._B _B_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.B_1 = B_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4169,16 +4169,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROC : percentxZEROZEROⲻONEF
+            public sealed class _ZEROC : _percentxZEROZEROⲻONEF
             {
-                public ZEROC(Inners.ZERO ZERO_1, Inners.C C_1)
+                public _ZEROC(Inners._ZERO _ZERO_1, Inners._C _C_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.C_1 = C_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4186,16 +4186,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROD : percentxZEROZEROⲻONEF
+            public sealed class _ZEROD : _percentxZEROZEROⲻONEF
             {
-                public ZEROD(Inners.ZERO ZERO_1, Inners.D D_1)
+                public _ZEROD(Inners._ZERO _ZERO_1, Inners._D _D_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.D_1 = D_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4203,16 +4203,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROE : percentxZEROZEROⲻONEF
+            public sealed class _ZEROE : _percentxZEROZEROⲻONEF
             {
-                public ZEROE(Inners.ZERO ZERO_1, Inners.E E_1)
+                public _ZEROE(Inners._ZERO _ZERO_1, Inners._E _E_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.E_1 = E_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4220,16 +4220,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROF : percentxZEROZEROⲻONEF
+            public sealed class _ZEROF : _percentxZEROZEROⲻONEF
             {
-                public ZEROF(Inners.ZERO ZERO_1, Inners.F F_1)
+                public _ZEROF(Inners._ZERO _ZERO_1, Inners._F _F_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.F_1 = F_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4237,16 +4237,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEZERO : percentxZEROZEROⲻONEF
+            public sealed class _ONEZERO : _percentxZEROZEROⲻONEF
             {
-                public ONEZERO(Inners.ONE ONE_1, Inners.ZERO ZERO_1)
+                public _ONEZERO(Inners._ONE _ONE_1, Inners._ZERO _ZERO_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._ONE_1 = _ONE_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4254,16 +4254,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEONE : percentxZEROZEROⲻONEF
+            public sealed class _ONEONE : _percentxZEROZEROⲻONEF
             {
-                public ONEONE(Inners.ONE ONE_1, Inners.ONE ONE_2)
+                public _ONEONE(Inners._ONE _ONE_1, Inners._ONE _ONE_2)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.ONE_2 = ONE_2;
+                    this._ONE_1 = _ONE_1;
+                    this._ONE_2 = _ONE_2;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.ONE ONE_2 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._ONE _ONE_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4271,16 +4271,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONETWO : percentxZEROZEROⲻONEF
+            public sealed class _ONETWO : _percentxZEROZEROⲻONEF
             {
-                public ONETWO(Inners.ONE ONE_1, Inners.TWO TWO_1)
+                public _ONETWO(Inners._ONE _ONE_1, Inners._TWO _TWO_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.TWO_1 = TWO_1;
+                    this._ONE_1 = _ONE_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4288,16 +4288,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONETHREE : percentxZEROZEROⲻONEF
+            public sealed class _ONETHREE : _percentxZEROZEROⲻONEF
             {
-                public ONETHREE(Inners.ONE ONE_1, Inners.THREE THREE_1)
+                public _ONETHREE(Inners._ONE _ONE_1, Inners._THREE _THREE_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.THREE_1 = THREE_1;
+                    this._ONE_1 = _ONE_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4305,16 +4305,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEFOUR : percentxZEROZEROⲻONEF
+            public sealed class _ONEFOUR : _percentxZEROZEROⲻONEF
             {
-                public ONEFOUR(Inners.ONE ONE_1, Inners.FOUR FOUR_1)
+                public _ONEFOUR(Inners._ONE _ONE_1, Inners._FOUR _FOUR_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._ONE_1 = _ONE_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4322,16 +4322,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEFIVE : percentxZEROZEROⲻONEF
+            public sealed class _ONEFIVE : _percentxZEROZEROⲻONEF
             {
-                public ONEFIVE(Inners.ONE ONE_1, Inners.FIVE FIVE_1)
+                public _ONEFIVE(Inners._ONE _ONE_1, Inners._FIVE _FIVE_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._ONE_1 = _ONE_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4339,16 +4339,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONESIX : percentxZEROZEROⲻONEF
+            public sealed class _ONESIX : _percentxZEROZEROⲻONEF
             {
-                public ONESIX(Inners.ONE ONE_1, Inners.SIX SIX_1)
+                public _ONESIX(Inners._ONE _ONE_1, Inners._SIX _SIX_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.SIX_1 = SIX_1;
+                    this._ONE_1 = _ONE_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4356,16 +4356,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONESEVEN : percentxZEROZEROⲻONEF
+            public sealed class _ONESEVEN : _percentxZEROZEROⲻONEF
             {
-                public ONESEVEN(Inners.ONE ONE_1, Inners.SEVEN SEVEN_1)
+                public _ONESEVEN(Inners._ONE _ONE_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._ONE_1 = _ONE_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4373,16 +4373,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEEIGHT : percentxZEROZEROⲻONEF
+            public sealed class _ONEEIGHT : _percentxZEROZEROⲻONEF
             {
-                public ONEEIGHT(Inners.ONE ONE_1, Inners.EIGHT EIGHT_1)
+                public _ONEEIGHT(Inners._ONE _ONE_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._ONE_1 = _ONE_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4390,16 +4390,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONENINE : percentxZEROZEROⲻONEF
+            public sealed class _ONENINE : _percentxZEROZEROⲻONEF
             {
-                public ONENINE(Inners.ONE ONE_1, Inners.NINE NINE_1)
+                public _ONENINE(Inners._ONE _ONE_1, Inners._NINE _NINE_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.NINE_1 = NINE_1;
+                    this._ONE_1 = _ONE_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4407,16 +4407,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEA : percentxZEROZEROⲻONEF
+            public sealed class _ONEA : _percentxZEROZEROⲻONEF
             {
-                public ONEA(Inners.ONE ONE_1, Inners.A A_1)
+                public _ONEA(Inners._ONE _ONE_1, Inners._A _A_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.A_1 = A_1;
+                    this._ONE_1 = _ONE_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4424,16 +4424,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEB : percentxZEROZEROⲻONEF
+            public sealed class _ONEB : _percentxZEROZEROⲻONEF
             {
-                public ONEB(Inners.ONE ONE_1, Inners.B B_1)
+                public _ONEB(Inners._ONE _ONE_1, Inners._B _B_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.B_1 = B_1;
+                    this._ONE_1 = _ONE_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4441,16 +4441,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEC : percentxZEROZEROⲻONEF
+            public sealed class _ONEC : _percentxZEROZEROⲻONEF
             {
-                public ONEC(Inners.ONE ONE_1, Inners.C C_1)
+                public _ONEC(Inners._ONE _ONE_1, Inners._C _C_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.C_1 = C_1;
+                    this._ONE_1 = _ONE_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4458,16 +4458,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONED : percentxZEROZEROⲻONEF
+            public sealed class _ONED : _percentxZEROZEROⲻONEF
             {
-                public ONED(Inners.ONE ONE_1, Inners.D D_1)
+                public _ONED(Inners._ONE _ONE_1, Inners._D _D_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.D_1 = D_1;
+                    this._ONE_1 = _ONE_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4475,16 +4475,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEE : percentxZEROZEROⲻONEF
+            public sealed class _ONEE : _percentxZEROZEROⲻONEF
             {
-                public ONEE(Inners.ONE ONE_1, Inners.E E_1)
+                public _ONEE(Inners._ONE _ONE_1, Inners._E _E_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.E_1 = E_1;
+                    this._ONE_1 = _ONE_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4492,16 +4492,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEF : percentxZEROZEROⲻONEF
+            public sealed class _ONEF : _percentxZEROZEROⲻONEF
             {
-                public ONEF(Inners.ONE ONE_1, Inners.F F_1)
+                public _ONEF(Inners._ONE _ONE_1, Inners._F _F_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.F_1 = F_1;
+                    this._ONE_1 = _ONE_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4510,21 +4510,21 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class percentxSEVENF
+        public sealed class _percentxSEVENF
         {
-            public percentxSEVENF(Inners.SEVEN SEVEN_1, Inners.F F_1)
+            public _percentxSEVENF(Inners._SEVEN _SEVEN_1, Inners._F _F_1)
             {
-                this.SEVEN_1 = SEVEN_1;
-                this.F_1 = F_1;
+                this._SEVEN_1 = _SEVEN_1;
+                this._F_1 = _F_1;
             }
             
-            public Inners.SEVEN SEVEN_1 { get; }
-            public Inners.F F_1 { get; }
+            public Inners._SEVEN _SEVEN_1 { get; }
+            public Inners._F _F_1 { get; }
         }
         
-        public abstract class percentxTHREEZEROⲻTHREENINE
+        public abstract class _percentxTHREEZEROⲻTHREENINE
         {
-            private percentxTHREEZEROⲻTHREENINE()
+            private _percentxTHREEZEROⲻTHREENINE()
             {
             }
             
@@ -4532,50 +4532,33 @@ namespace GeneratorV3.Core
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(percentxTHREEZEROⲻTHREENINE node, TContext context)
+                public TResult Visit(_percentxTHREEZEROⲻTHREENINE node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
                 
-                protected internal abstract TResult Accept(percentxTHREEZEROⲻTHREENINE.THREEZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxTHREEZEROⲻTHREENINE.THREEONE node, TContext context);
-                protected internal abstract TResult Accept(percentxTHREEZEROⲻTHREENINE.THREETWO node, TContext context);
-                protected internal abstract TResult Accept(percentxTHREEZEROⲻTHREENINE.THREETHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxTHREEZEROⲻTHREENINE.THREEFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxTHREEZEROⲻTHREENINE.THREEFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxTHREEZEROⲻTHREENINE.THREESIX node, TContext context);
-                protected internal abstract TResult Accept(percentxTHREEZEROⲻTHREENINE.THREESEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxTHREEZEROⲻTHREENINE.THREEEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxTHREEZEROⲻTHREENINE.THREENINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTHREEZEROⲻTHREENINE._THREEZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxTHREEZEROⲻTHREENINE._THREEONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTHREEZEROⲻTHREENINE._THREETWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxTHREEZEROⲻTHREENINE._THREETHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTHREEZEROⲻTHREENINE._THREEFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxTHREEZEROⲻTHREENINE._THREEFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTHREEZEROⲻTHREENINE._THREESIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxTHREEZEROⲻTHREENINE._THREESEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxTHREEZEROⲻTHREENINE._THREEEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxTHREEZEROⲻTHREENINE._THREENINE node, TContext context);
             }
             
-            public sealed class THREEZERO : percentxTHREEZEROⲻTHREENINE
+            public sealed class _THREEZERO : _percentxTHREEZEROⲻTHREENINE
             {
-                public THREEZERO(Inners.THREE THREE_1, Inners.ZERO ZERO_1)
+                public _THREEZERO(Inners._THREE _THREE_1, Inners._ZERO _ZERO_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._THREE_1 = _THREE_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
-                
-                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-                {
-                    return visitor.Accept(this, context);
-                }
-            }
-            
-            public sealed class THREEONE : percentxTHREEZEROⲻTHREENINE
-            {
-                public THREEONE(Inners.THREE THREE_1, Inners.ONE ONE_1)
-                {
-                    this.THREE_1 = THREE_1;
-                    this.ONE_1 = ONE_1;
-                }
-                
-                public Inners.THREE THREE_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4583,33 +4566,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREETWO : percentxTHREEZEROⲻTHREENINE
+            public sealed class _THREEONE : _percentxTHREEZEROⲻTHREENINE
             {
-                public THREETWO(Inners.THREE THREE_1, Inners.TWO TWO_1)
+                public _THREEONE(Inners._THREE _THREE_1, Inners._ONE _ONE_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.TWO_1 = TWO_1;
+                    this._THREE_1 = _THREE_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.TWO TWO_1 { get; }
-                
-                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-                {
-                    return visitor.Accept(this, context);
-                }
-            }
-            
-            public sealed class THREETHREE : percentxTHREEZEROⲻTHREENINE
-            {
-                public THREETHREE(Inners.THREE THREE_1, Inners.THREE THREE_2)
-                {
-                    this.THREE_1 = THREE_1;
-                    this.THREE_2 = THREE_2;
-                }
-                
-                public Inners.THREE THREE_1 { get; }
-                public Inners.THREE THREE_2 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4617,33 +4583,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEFOUR : percentxTHREEZEROⲻTHREENINE
+            public sealed class _THREETWO : _percentxTHREEZEROⲻTHREENINE
             {
-                public THREEFOUR(Inners.THREE THREE_1, Inners.FOUR FOUR_1)
+                public _THREETWO(Inners._THREE _THREE_1, Inners._TWO _TWO_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._THREE_1 = _THREE_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
-                
-                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-                {
-                    return visitor.Accept(this, context);
-                }
-            }
-            
-            public sealed class THREEFIVE : percentxTHREEZEROⲻTHREENINE
-            {
-                public THREEFIVE(Inners.THREE THREE_1, Inners.FIVE FIVE_1)
-                {
-                    this.THREE_1 = THREE_1;
-                    this.FIVE_1 = FIVE_1;
-                }
-                
-                public Inners.THREE THREE_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4651,33 +4600,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREESIX : percentxTHREEZEROⲻTHREENINE
+            public sealed class _THREETHREE : _percentxTHREEZEROⲻTHREENINE
             {
-                public THREESIX(Inners.THREE THREE_1, Inners.SIX SIX_1)
+                public _THREETHREE(Inners._THREE _THREE_1, Inners._THREE _THREE_2)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.SIX_1 = SIX_1;
+                    this._THREE_1 = _THREE_1;
+                    this._THREE_2 = _THREE_2;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.SIX SIX_1 { get; }
-                
-                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-                {
-                    return visitor.Accept(this, context);
-                }
-            }
-            
-            public sealed class THREESEVEN : percentxTHREEZEROⲻTHREENINE
-            {
-                public THREESEVEN(Inners.THREE THREE_1, Inners.SEVEN SEVEN_1)
-                {
-                    this.THREE_1 = THREE_1;
-                    this.SEVEN_1 = SEVEN_1;
-                }
-                
-                public Inners.THREE THREE_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._THREE _THREE_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4685,16 +4617,33 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEEIGHT : percentxTHREEZEROⲻTHREENINE
+            public sealed class _THREEFOUR : _percentxTHREEZEROⲻTHREENINE
             {
-                public THREEEIGHT(Inners.THREE THREE_1, Inners.EIGHT EIGHT_1)
+                public _THREEFOUR(Inners._THREE _THREE_1, Inners._FOUR _FOUR_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._THREE_1 = _THREE_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
+            }
+            
+            public sealed class _THREEFIVE : _percentxTHREEZEROⲻTHREENINE
+            {
+                public _THREEFIVE(Inners._THREE _THREE_1, Inners._FIVE _FIVE_1)
+                {
+                    this._THREE_1 = _THREE_1;
+                    this._FIVE_1 = _FIVE_1;
+                }
+                
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4702,16 +4651,67 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREENINE : percentxTHREEZEROⲻTHREENINE
+            public sealed class _THREESIX : _percentxTHREEZEROⲻTHREENINE
             {
-                public THREENINE(Inners.THREE THREE_1, Inners.NINE NINE_1)
+                public _THREESIX(Inners._THREE _THREE_1, Inners._SIX _SIX_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.NINE_1 = NINE_1;
+                    this._THREE_1 = _THREE_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
+            }
+            
+            public sealed class _THREESEVEN : _percentxTHREEZEROⲻTHREENINE
+            {
+                public _THREESEVEN(Inners._THREE _THREE_1, Inners._SEVEN _SEVEN_1)
+                {
+                    this._THREE_1 = _THREE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                }
+                
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
+            }
+            
+            public sealed class _THREEEIGHT : _percentxTHREEZEROⲻTHREENINE
+            {
+                public _THREEEIGHT(Inners._THREE _THREE_1, Inners._EIGHT _EIGHT_1)
+                {
+                    this._THREE_1 = _THREE_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                }
+                
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
+            }
+            
+            public sealed class _THREENINE : _percentxTHREEZEROⲻTHREENINE
+            {
+                public _THREENINE(Inners._THREE _THREE_1, Inners._NINE _NINE_1)
+                {
+                    this._THREE_1 = _THREE_1;
+                    this._NINE_1 = _NINE_1;
+                }
+                
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4720,159 +4720,159 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class percentxTWOTWO
+        public sealed class _percentxTWOTWO
         {
-            public percentxTWOTWO(Inners.TWO TWO_1, Inners.TWO TWO_2)
+            public _percentxTWOTWO(Inners._TWO _TWO_1, Inners._TWO _TWO_2)
             {
-                this.TWO_1 = TWO_1;
-                this.TWO_2 = TWO_2;
+                this._TWO_1 = _TWO_1;
+                this._TWO_2 = _TWO_2;
             }
             
-            public Inners.TWO TWO_1 { get; }
-            public Inners.TWO TWO_2 { get; }
+            public Inners._TWO _TWO_1 { get; }
+            public Inners._TWO _TWO_2 { get; }
         }
         
-        public sealed class x41
+        public sealed class _x41
         {
-            private x41()
-            {
-            }
-            
-            public static x41 Instance { get; } = new x41();
-        }
-        
-        public sealed class doublequotex41doublequote
-        {
-            public doublequotex41doublequote(Inners.x41 x41_1)
-            {
-                this.x41_1 = x41_1;
-            }
-            
-            public Inners.x41 x41_1 { get; }
-        }
-        
-        public sealed class x42
-        {
-            private x42()
+            private _x41()
             {
             }
             
-            public static x42 Instance { get; } = new x42();
+            public static _x41 Instance { get; } = new _x41();
         }
         
-        public sealed class doublequotex42doublequote
+        public sealed class _doublequotex41doublequote
         {
-            public doublequotex42doublequote(Inners.x42 x42_1)
+            public _doublequotex41doublequote(Inners._x41 _x41_1)
             {
-                this.x42_1 = x42_1;
+                this._x41_1 = _x41_1;
             }
             
-            public Inners.x42 x42_1 { get; }
+            public Inners._x41 _x41_1 { get; }
         }
         
-        public sealed class x43
+        public sealed class _x42
         {
-            private x43()
-            {
-            }
-            
-            public static x43 Instance { get; } = new x43();
-        }
-        
-        public sealed class doublequotex43doublequote
-        {
-            public doublequotex43doublequote(Inners.x43 x43_1)
-            {
-                this.x43_1 = x43_1;
-            }
-            
-            public Inners.x43 x43_1 { get; }
-        }
-        
-        public sealed class x44
-        {
-            private x44()
+            private _x42()
             {
             }
             
-            public static x44 Instance { get; } = new x44();
+            public static _x42 Instance { get; } = new _x42();
         }
         
-        public sealed class doublequotex44doublequote
+        public sealed class _doublequotex42doublequote
         {
-            public doublequotex44doublequote(Inners.x44 x44_1)
+            public _doublequotex42doublequote(Inners._x42 _x42_1)
             {
-                this.x44_1 = x44_1;
+                this._x42_1 = _x42_1;
             }
             
-            public Inners.x44 x44_1 { get; }
+            public Inners._x42 _x42_1 { get; }
         }
         
-        public sealed class x45
+        public sealed class _x43
         {
-            private x45()
-            {
-            }
-            
-            public static x45 Instance { get; } = new x45();
-        }
-        
-        public sealed class doublequotex45doublequote
-        {
-            public doublequotex45doublequote(Inners.x45 x45_1)
-            {
-                this.x45_1 = x45_1;
-            }
-            
-            public Inners.x45 x45_1 { get; }
-        }
-        
-        public sealed class x46
-        {
-            private x46()
+            private _x43()
             {
             }
             
-            public static x46 Instance { get; } = new x46();
+            public static _x43 Instance { get; } = new _x43();
         }
         
-        public sealed class doublequotex46doublequote
+        public sealed class _doublequotex43doublequote
         {
-            public doublequotex46doublequote(Inners.x46 x46_1)
+            public _doublequotex43doublequote(Inners._x43 _x43_1)
             {
-                this.x46_1 = x46_1;
+                this._x43_1 = _x43_1;
             }
             
-            public Inners.x46 x46_1 { get; }
+            public Inners._x43 _x43_1 { get; }
         }
         
-        public sealed class percentxZERONINE
+        public sealed class _x44
         {
-            public percentxZERONINE(Inners.ZERO ZERO_1, Inners.NINE NINE_1)
+            private _x44()
             {
-                this.ZERO_1 = ZERO_1;
-                this.NINE_1 = NINE_1;
             }
             
-            public Inners.ZERO ZERO_1 { get; }
-            public Inners.NINE NINE_1 { get; }
+            public static _x44 Instance { get; } = new _x44();
         }
         
-        public sealed class percentxZEROA
+        public sealed class _doublequotex44doublequote
         {
-            public percentxZEROA(Inners.ZERO ZERO_1, Inners.A A_1)
+            public _doublequotex44doublequote(Inners._x44 _x44_1)
             {
-                this.ZERO_1 = ZERO_1;
-                this.A_1 = A_1;
+                this._x44_1 = _x44_1;
             }
             
-            public Inners.ZERO ZERO_1 { get; }
-            public Inners.A A_1 { get; }
+            public Inners._x44 _x44_1 { get; }
         }
         
-        public abstract class WSPⳆCRLF_WSP
+        public sealed class _x45
         {
-            private WSPⳆCRLF_WSP()
+            private _x45()
+            {
+            }
+            
+            public static _x45 Instance { get; } = new _x45();
+        }
+        
+        public sealed class _doublequotex45doublequote
+        {
+            public _doublequotex45doublequote(Inners._x45 _x45_1)
+            {
+                this._x45_1 = _x45_1;
+            }
+            
+            public Inners._x45 _x45_1 { get; }
+        }
+        
+        public sealed class _x46
+        {
+            private _x46()
+            {
+            }
+            
+            public static _x46 Instance { get; } = new _x46();
+        }
+        
+        public sealed class _doublequotex46doublequote
+        {
+            public _doublequotex46doublequote(Inners._x46 _x46_1)
+            {
+                this._x46_1 = _x46_1;
+            }
+            
+            public Inners._x46 _x46_1 { get; }
+        }
+        
+        public sealed class _percentxZERONINE
+        {
+            public _percentxZERONINE(Inners._ZERO _ZERO_1, Inners._NINE _NINE_1)
+            {
+                this._ZERO_1 = _ZERO_1;
+                this._NINE_1 = _NINE_1;
+            }
+            
+            public Inners._ZERO _ZERO_1 { get; }
+            public Inners._NINE _NINE_1 { get; }
+        }
+        
+        public sealed class _percentxZEROA
+        {
+            public _percentxZEROA(Inners._ZERO _ZERO_1, Inners._A _A_1)
+            {
+                this._ZERO_1 = _ZERO_1;
+                this._A_1 = _A_1;
+            }
+            
+            public Inners._ZERO _ZERO_1 { get; }
+            public Inners._A _A_1 { get; }
+        }
+        
+        public abstract class _WSPⳆCRLF_WSP
+        {
+            private _WSPⳆCRLF_WSP()
             {
             }
             
@@ -4880,23 +4880,23 @@ namespace GeneratorV3.Core
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(WSPⳆCRLF_WSP node, TContext context)
+                public TResult Visit(_WSPⳆCRLF_WSP node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
                 
-                protected internal abstract TResult Accept(WSPⳆCRLF_WSP.WSP node, TContext context);
-                protected internal abstract TResult Accept(WSPⳆCRLF_WSP.CRLF_WSP node, TContext context);
+                protected internal abstract TResult Accept(_WSPⳆCRLF_WSP._WSP node, TContext context);
+                protected internal abstract TResult Accept(_WSPⳆCRLF_WSP._CRLF_WSP node, TContext context);
             }
             
-            public sealed class WSP : WSPⳆCRLF_WSP
+            public sealed class _WSP : _WSPⳆCRLF_WSP
             {
-                public WSP(GeneratorV3.Core.WSP WSP_1)
+                public _WSP(GeneratorV3.Core._WSP _WSP_1)
                 {
-                    this.WSP_1 = WSP_1;
+                    this._WSP_1 = _WSP_1;
                 }
                 
-                public GeneratorV3.Core.WSP WSP_1 { get; }
+                public GeneratorV3.Core._WSP _WSP_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4904,16 +4904,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CRLF_WSP : WSPⳆCRLF_WSP
+            public sealed class _CRLF_WSP : _WSPⳆCRLF_WSP
             {
-                public CRLF_WSP(GeneratorV3.Core.CRLF CRLF_1, GeneratorV3.Core.WSP WSP_1)
+                public _CRLF_WSP(GeneratorV3.Core._CRLF _CRLF_1, GeneratorV3.Core._WSP _WSP_1)
                 {
-                    this.CRLF_1 = CRLF_1;
-                    this.WSP_1 = WSP_1;
+                    this._CRLF_1 = _CRLF_1;
+                    this._WSP_1 = _WSP_1;
                 }
                 
-                public GeneratorV3.Core.CRLF CRLF_1 { get; }
-                public GeneratorV3.Core.WSP WSP_1 { get; }
+                public GeneratorV3.Core._CRLF _CRLF_1 { get; }
+                public GeneratorV3.Core._WSP _WSP_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -4922,19 +4922,19 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class openWSPⳆCRLF_WSPↃ
+        public sealed class _openWSPⳆCRLF_WSPↃ
         {
-            public openWSPⳆCRLF_WSPↃ(Inners.WSPⳆCRLF_WSP WSPⳆCRLF_WSP_1)
+            public _openWSPⳆCRLF_WSPↃ(Inners._WSPⳆCRLF_WSP _WSPⳆCRLF_WSP_1)
             {
-                this.WSPⳆCRLF_WSP_1 = WSPⳆCRLF_WSP_1;
+                this._WSPⳆCRLF_WSP_1 = _WSPⳆCRLF_WSP_1;
             }
             
-            public Inners.WSPⳆCRLF_WSP WSPⳆCRLF_WSP_1 { get; }
+            public Inners._WSPⳆCRLF_WSP _WSPⳆCRLF_WSP_1 { get; }
         }
         
-        public abstract class percentxZEROZEROⲻFF
+        public abstract class _percentxZEROZEROⲻFF
         {
-            private percentxZEROZEROⲻFF()
+            private _percentxZEROZEROⲻFF()
             {
             }
             
@@ -4942,279 +4942,279 @@ namespace GeneratorV3.Core
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(percentxZEROZEROⲻFF node, TContext context)
+                public TResult Visit(_percentxZEROZEROⲻFF node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
                 
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZERONINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ZEROF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONEZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONEONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONETWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONETHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONEFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONEFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONESIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONESEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONEEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONENINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONEA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONEB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONEC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONED node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONEE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ONEF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWONINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.TWOF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREEZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREEONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREETWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREETHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREEFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREEFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREESIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREESEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREEEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREENINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREEA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREEB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREEC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREED node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREEE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.THREEF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOUREIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FOURF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVEZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVEONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVETWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVETHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVEFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVEFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVESIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVESEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVEEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVENINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVEA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVEB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVEC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVED node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVEE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FIVEF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SIXF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVEND node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.SEVENF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EIGHTF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINEZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINEONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINETWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINETHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINEFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINEFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINESIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINESEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINEEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINENINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINEA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINEB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINEC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINED node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINEE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.NINEF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.AZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.AONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ATWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ATHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.AFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.AFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ASIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ASEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.AEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ANINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.AA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.AB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.AC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.AD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.AE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.AF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.BF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.CF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.DF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ETWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ETHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ESIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ESEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ENINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.ED node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.EF node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FONE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FA node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FB node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FC node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FD node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FE node, TContext context);
-                protected internal abstract TResult Accept(percentxZEROZEROⲻFF.FF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZERONINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ZEROF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONEZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONEONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONETWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONETHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONEFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONEFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONESIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONESEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONEEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONENINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONEA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONEB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONEC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONED node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONEE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ONEF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWONINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._TWOF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREEZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREEONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREETWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREETHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREEFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREEFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREESIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREESEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREEEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREENINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREEA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREEB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREEC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREED node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREEE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._THREEF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOUREIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FOURF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVEZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVEONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVETWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVETHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVEFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVEFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVESIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVESEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVEEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVENINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVEA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVEB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVEC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVED node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVEE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FIVEF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SIXF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVEND node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._SEVENF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EIGHTF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINEZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINEONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINETWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINETHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINEFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINEFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINESIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINESEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINEEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINENINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINEA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINEB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINEC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINED node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINEE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._NINEF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._AZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._AONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ATWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ATHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._AFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._AFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ASIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ASEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._AEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ANINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._AA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._AB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._AC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._AD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._AE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._AF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._BF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._CF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._DF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ETWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ETHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ESIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ESEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ENINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._ED node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._EF node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FA node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FB node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FC node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FD node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FE node, TContext context);
+                protected internal abstract TResult Accept(_percentxZEROZEROⲻFF._FF node, TContext context);
             }
             
-            public sealed class ZEROZERO : percentxZEROZEROⲻFF
+            public sealed class _ZEROZERO : _percentxZEROZEROⲻFF
             {
-                public ZEROZERO(Inners.ZERO ZERO_1, Inners.ZERO ZERO_2)
+                public _ZEROZERO(Inners._ZERO _ZERO_1, Inners._ZERO _ZERO_2)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.ZERO_2 = ZERO_2;
+                    this._ZERO_1 = _ZERO_1;
+                    this._ZERO_2 = _ZERO_2;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.ZERO ZERO_2 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._ZERO _ZERO_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5222,16 +5222,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROONE : percentxZEROZEROⲻFF
+            public sealed class _ZEROONE : _percentxZEROZEROⲻFF
             {
-                public ZEROONE(Inners.ZERO ZERO_1, Inners.ONE ONE_1)
+                public _ZEROONE(Inners._ZERO _ZERO_1, Inners._ONE _ONE_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.ONE_1 = ONE_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5239,16 +5239,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROTWO : percentxZEROZEROⲻFF
+            public sealed class _ZEROTWO : _percentxZEROZEROⲻFF
             {
-                public ZEROTWO(Inners.ZERO ZERO_1, Inners.TWO TWO_1)
+                public _ZEROTWO(Inners._ZERO _ZERO_1, Inners._TWO _TWO_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.TWO_1 = TWO_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5256,16 +5256,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROTHREE : percentxZEROZEROⲻFF
+            public sealed class _ZEROTHREE : _percentxZEROZEROⲻFF
             {
-                public ZEROTHREE(Inners.ZERO ZERO_1, Inners.THREE THREE_1)
+                public _ZEROTHREE(Inners._ZERO _ZERO_1, Inners._THREE _THREE_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.THREE_1 = THREE_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5273,16 +5273,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROFOUR : percentxZEROZEROⲻFF
+            public sealed class _ZEROFOUR : _percentxZEROZEROⲻFF
             {
-                public ZEROFOUR(Inners.ZERO ZERO_1, Inners.FOUR FOUR_1)
+                public _ZEROFOUR(Inners._ZERO _ZERO_1, Inners._FOUR _FOUR_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5290,16 +5290,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROFIVE : percentxZEROZEROⲻFF
+            public sealed class _ZEROFIVE : _percentxZEROZEROⲻFF
             {
-                public ZEROFIVE(Inners.ZERO ZERO_1, Inners.FIVE FIVE_1)
+                public _ZEROFIVE(Inners._ZERO _ZERO_1, Inners._FIVE _FIVE_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5307,16 +5307,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROSIX : percentxZEROZEROⲻFF
+            public sealed class _ZEROSIX : _percentxZEROZEROⲻFF
             {
-                public ZEROSIX(Inners.ZERO ZERO_1, Inners.SIX SIX_1)
+                public _ZEROSIX(Inners._ZERO _ZERO_1, Inners._SIX _SIX_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.SIX_1 = SIX_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5324,16 +5324,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROSEVEN : percentxZEROZEROⲻFF
+            public sealed class _ZEROSEVEN : _percentxZEROZEROⲻFF
             {
-                public ZEROSEVEN(Inners.ZERO ZERO_1, Inners.SEVEN SEVEN_1)
+                public _ZEROSEVEN(Inners._ZERO _ZERO_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5341,16 +5341,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROEIGHT : percentxZEROZEROⲻFF
+            public sealed class _ZEROEIGHT : _percentxZEROZEROⲻFF
             {
-                public ZEROEIGHT(Inners.ZERO ZERO_1, Inners.EIGHT EIGHT_1)
+                public _ZEROEIGHT(Inners._ZERO _ZERO_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5358,16 +5358,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZERONINE : percentxZEROZEROⲻFF
+            public sealed class _ZERONINE : _percentxZEROZEROⲻFF
             {
-                public ZERONINE(Inners.ZERO ZERO_1, Inners.NINE NINE_1)
+                public _ZERONINE(Inners._ZERO _ZERO_1, Inners._NINE _NINE_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.NINE_1 = NINE_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5375,16 +5375,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROA : percentxZEROZEROⲻFF
+            public sealed class _ZEROA : _percentxZEROZEROⲻFF
             {
-                public ZEROA(Inners.ZERO ZERO_1, Inners.A A_1)
+                public _ZEROA(Inners._ZERO _ZERO_1, Inners._A _A_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.A_1 = A_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5392,16 +5392,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROB : percentxZEROZEROⲻFF
+            public sealed class _ZEROB : _percentxZEROZEROⲻFF
             {
-                public ZEROB(Inners.ZERO ZERO_1, Inners.B B_1)
+                public _ZEROB(Inners._ZERO _ZERO_1, Inners._B _B_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.B_1 = B_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5409,16 +5409,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROC : percentxZEROZEROⲻFF
+            public sealed class _ZEROC : _percentxZEROZEROⲻFF
             {
-                public ZEROC(Inners.ZERO ZERO_1, Inners.C C_1)
+                public _ZEROC(Inners._ZERO _ZERO_1, Inners._C _C_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.C_1 = C_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5426,16 +5426,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROD : percentxZEROZEROⲻFF
+            public sealed class _ZEROD : _percentxZEROZEROⲻFF
             {
-                public ZEROD(Inners.ZERO ZERO_1, Inners.D D_1)
+                public _ZEROD(Inners._ZERO _ZERO_1, Inners._D _D_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.D_1 = D_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5443,16 +5443,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROE : percentxZEROZEROⲻFF
+            public sealed class _ZEROE : _percentxZEROZEROⲻFF
             {
-                public ZEROE(Inners.ZERO ZERO_1, Inners.E E_1)
+                public _ZEROE(Inners._ZERO _ZERO_1, Inners._E _E_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.E_1 = E_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5460,16 +5460,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ZEROF : percentxZEROZEROⲻFF
+            public sealed class _ZEROF : _percentxZEROZEROⲻFF
             {
-                public ZEROF(Inners.ZERO ZERO_1, Inners.F F_1)
+                public _ZEROF(Inners._ZERO _ZERO_1, Inners._F _F_1)
                 {
-                    this.ZERO_1 = ZERO_1;
-                    this.F_1 = F_1;
+                    this._ZERO_1 = _ZERO_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.ZERO ZERO_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5477,16 +5477,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEZERO : percentxZEROZEROⲻFF
+            public sealed class _ONEZERO : _percentxZEROZEROⲻFF
             {
-                public ONEZERO(Inners.ONE ONE_1, Inners.ZERO ZERO_1)
+                public _ONEZERO(Inners._ONE _ONE_1, Inners._ZERO _ZERO_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._ONE_1 = _ONE_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5494,16 +5494,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEONE : percentxZEROZEROⲻFF
+            public sealed class _ONEONE : _percentxZEROZEROⲻFF
             {
-                public ONEONE(Inners.ONE ONE_1, Inners.ONE ONE_2)
+                public _ONEONE(Inners._ONE _ONE_1, Inners._ONE _ONE_2)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.ONE_2 = ONE_2;
+                    this._ONE_1 = _ONE_1;
+                    this._ONE_2 = _ONE_2;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.ONE ONE_2 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._ONE _ONE_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5511,16 +5511,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONETWO : percentxZEROZEROⲻFF
+            public sealed class _ONETWO : _percentxZEROZEROⲻFF
             {
-                public ONETWO(Inners.ONE ONE_1, Inners.TWO TWO_1)
+                public _ONETWO(Inners._ONE _ONE_1, Inners._TWO _TWO_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.TWO_1 = TWO_1;
+                    this._ONE_1 = _ONE_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5528,16 +5528,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONETHREE : percentxZEROZEROⲻFF
+            public sealed class _ONETHREE : _percentxZEROZEROⲻFF
             {
-                public ONETHREE(Inners.ONE ONE_1, Inners.THREE THREE_1)
+                public _ONETHREE(Inners._ONE _ONE_1, Inners._THREE _THREE_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.THREE_1 = THREE_1;
+                    this._ONE_1 = _ONE_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5545,16 +5545,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEFOUR : percentxZEROZEROⲻFF
+            public sealed class _ONEFOUR : _percentxZEROZEROⲻFF
             {
-                public ONEFOUR(Inners.ONE ONE_1, Inners.FOUR FOUR_1)
+                public _ONEFOUR(Inners._ONE _ONE_1, Inners._FOUR _FOUR_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._ONE_1 = _ONE_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5562,16 +5562,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEFIVE : percentxZEROZEROⲻFF
+            public sealed class _ONEFIVE : _percentxZEROZEROⲻFF
             {
-                public ONEFIVE(Inners.ONE ONE_1, Inners.FIVE FIVE_1)
+                public _ONEFIVE(Inners._ONE _ONE_1, Inners._FIVE _FIVE_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._ONE_1 = _ONE_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5579,16 +5579,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONESIX : percentxZEROZEROⲻFF
+            public sealed class _ONESIX : _percentxZEROZEROⲻFF
             {
-                public ONESIX(Inners.ONE ONE_1, Inners.SIX SIX_1)
+                public _ONESIX(Inners._ONE _ONE_1, Inners._SIX _SIX_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.SIX_1 = SIX_1;
+                    this._ONE_1 = _ONE_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5596,16 +5596,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONESEVEN : percentxZEROZEROⲻFF
+            public sealed class _ONESEVEN : _percentxZEROZEROⲻFF
             {
-                public ONESEVEN(Inners.ONE ONE_1, Inners.SEVEN SEVEN_1)
+                public _ONESEVEN(Inners._ONE _ONE_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._ONE_1 = _ONE_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5613,16 +5613,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEEIGHT : percentxZEROZEROⲻFF
+            public sealed class _ONEEIGHT : _percentxZEROZEROⲻFF
             {
-                public ONEEIGHT(Inners.ONE ONE_1, Inners.EIGHT EIGHT_1)
+                public _ONEEIGHT(Inners._ONE _ONE_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._ONE_1 = _ONE_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5630,16 +5630,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONENINE : percentxZEROZEROⲻFF
+            public sealed class _ONENINE : _percentxZEROZEROⲻFF
             {
-                public ONENINE(Inners.ONE ONE_1, Inners.NINE NINE_1)
+                public _ONENINE(Inners._ONE _ONE_1, Inners._NINE _NINE_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.NINE_1 = NINE_1;
+                    this._ONE_1 = _ONE_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5647,16 +5647,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEA : percentxZEROZEROⲻFF
+            public sealed class _ONEA : _percentxZEROZEROⲻFF
             {
-                public ONEA(Inners.ONE ONE_1, Inners.A A_1)
+                public _ONEA(Inners._ONE _ONE_1, Inners._A _A_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.A_1 = A_1;
+                    this._ONE_1 = _ONE_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5664,16 +5664,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEB : percentxZEROZEROⲻFF
+            public sealed class _ONEB : _percentxZEROZEROⲻFF
             {
-                public ONEB(Inners.ONE ONE_1, Inners.B B_1)
+                public _ONEB(Inners._ONE _ONE_1, Inners._B _B_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.B_1 = B_1;
+                    this._ONE_1 = _ONE_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5681,16 +5681,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEC : percentxZEROZEROⲻFF
+            public sealed class _ONEC : _percentxZEROZEROⲻFF
             {
-                public ONEC(Inners.ONE ONE_1, Inners.C C_1)
+                public _ONEC(Inners._ONE _ONE_1, Inners._C _C_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.C_1 = C_1;
+                    this._ONE_1 = _ONE_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5698,16 +5698,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONED : percentxZEROZEROⲻFF
+            public sealed class _ONED : _percentxZEROZEROⲻFF
             {
-                public ONED(Inners.ONE ONE_1, Inners.D D_1)
+                public _ONED(Inners._ONE _ONE_1, Inners._D _D_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.D_1 = D_1;
+                    this._ONE_1 = _ONE_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5715,16 +5715,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEE : percentxZEROZEROⲻFF
+            public sealed class _ONEE : _percentxZEROZEROⲻFF
             {
-                public ONEE(Inners.ONE ONE_1, Inners.E E_1)
+                public _ONEE(Inners._ONE _ONE_1, Inners._E _E_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.E_1 = E_1;
+                    this._ONE_1 = _ONE_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5732,16 +5732,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ONEF : percentxZEROZEROⲻFF
+            public sealed class _ONEF : _percentxZEROZEROⲻFF
             {
-                public ONEF(Inners.ONE ONE_1, Inners.F F_1)
+                public _ONEF(Inners._ONE _ONE_1, Inners._F _F_1)
                 {
-                    this.ONE_1 = ONE_1;
-                    this.F_1 = F_1;
+                    this._ONE_1 = _ONE_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.ONE ONE_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5749,16 +5749,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOZERO : percentxZEROZEROⲻFF
+            public sealed class _TWOZERO : _percentxZEROZEROⲻFF
             {
-                public TWOZERO(Inners.TWO TWO_1, Inners.ZERO ZERO_1)
+                public _TWOZERO(Inners._TWO _TWO_1, Inners._ZERO _ZERO_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._TWO_1 = _TWO_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5766,16 +5766,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOONE : percentxZEROZEROⲻFF
+            public sealed class _TWOONE : _percentxZEROZEROⲻFF
             {
-                public TWOONE(Inners.TWO TWO_1, Inners.ONE ONE_1)
+                public _TWOONE(Inners._TWO _TWO_1, Inners._ONE _ONE_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.ONE_1 = ONE_1;
+                    this._TWO_1 = _TWO_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5783,16 +5783,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOTWO : percentxZEROZEROⲻFF
+            public sealed class _TWOTWO : _percentxZEROZEROⲻFF
             {
-                public TWOTWO(Inners.TWO TWO_1, Inners.TWO TWO_2)
+                public _TWOTWO(Inners._TWO _TWO_1, Inners._TWO _TWO_2)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.TWO_2 = TWO_2;
+                    this._TWO_1 = _TWO_1;
+                    this._TWO_2 = _TWO_2;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.TWO TWO_2 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._TWO _TWO_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5800,16 +5800,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOTHREE : percentxZEROZEROⲻFF
+            public sealed class _TWOTHREE : _percentxZEROZEROⲻFF
             {
-                public TWOTHREE(Inners.TWO TWO_1, Inners.THREE THREE_1)
+                public _TWOTHREE(Inners._TWO _TWO_1, Inners._THREE _THREE_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.THREE_1 = THREE_1;
+                    this._TWO_1 = _TWO_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5817,16 +5817,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOFOUR : percentxZEROZEROⲻFF
+            public sealed class _TWOFOUR : _percentxZEROZEROⲻFF
             {
-                public TWOFOUR(Inners.TWO TWO_1, Inners.FOUR FOUR_1)
+                public _TWOFOUR(Inners._TWO _TWO_1, Inners._FOUR _FOUR_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._TWO_1 = _TWO_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5834,16 +5834,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOFIVE : percentxZEROZEROⲻFF
+            public sealed class _TWOFIVE : _percentxZEROZEROⲻFF
             {
-                public TWOFIVE(Inners.TWO TWO_1, Inners.FIVE FIVE_1)
+                public _TWOFIVE(Inners._TWO _TWO_1, Inners._FIVE _FIVE_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._TWO_1 = _TWO_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5851,16 +5851,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOSIX : percentxZEROZEROⲻFF
+            public sealed class _TWOSIX : _percentxZEROZEROⲻFF
             {
-                public TWOSIX(Inners.TWO TWO_1, Inners.SIX SIX_1)
+                public _TWOSIX(Inners._TWO _TWO_1, Inners._SIX _SIX_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.SIX_1 = SIX_1;
+                    this._TWO_1 = _TWO_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5868,16 +5868,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOSEVEN : percentxZEROZEROⲻFF
+            public sealed class _TWOSEVEN : _percentxZEROZEROⲻFF
             {
-                public TWOSEVEN(Inners.TWO TWO_1, Inners.SEVEN SEVEN_1)
+                public _TWOSEVEN(Inners._TWO _TWO_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._TWO_1 = _TWO_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5885,16 +5885,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOEIGHT : percentxZEROZEROⲻFF
+            public sealed class _TWOEIGHT : _percentxZEROZEROⲻFF
             {
-                public TWOEIGHT(Inners.TWO TWO_1, Inners.EIGHT EIGHT_1)
+                public _TWOEIGHT(Inners._TWO _TWO_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._TWO_1 = _TWO_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5902,16 +5902,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWONINE : percentxZEROZEROⲻFF
+            public sealed class _TWONINE : _percentxZEROZEROⲻFF
             {
-                public TWONINE(Inners.TWO TWO_1, Inners.NINE NINE_1)
+                public _TWONINE(Inners._TWO _TWO_1, Inners._NINE _NINE_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.NINE_1 = NINE_1;
+                    this._TWO_1 = _TWO_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5919,16 +5919,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOA : percentxZEROZEROⲻFF
+            public sealed class _TWOA : _percentxZEROZEROⲻFF
             {
-                public TWOA(Inners.TWO TWO_1, Inners.A A_1)
+                public _TWOA(Inners._TWO _TWO_1, Inners._A _A_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.A_1 = A_1;
+                    this._TWO_1 = _TWO_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5936,16 +5936,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOB : percentxZEROZEROⲻFF
+            public sealed class _TWOB : _percentxZEROZEROⲻFF
             {
-                public TWOB(Inners.TWO TWO_1, Inners.B B_1)
+                public _TWOB(Inners._TWO _TWO_1, Inners._B _B_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.B_1 = B_1;
+                    this._TWO_1 = _TWO_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5953,16 +5953,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOC : percentxZEROZEROⲻFF
+            public sealed class _TWOC : _percentxZEROZEROⲻFF
             {
-                public TWOC(Inners.TWO TWO_1, Inners.C C_1)
+                public _TWOC(Inners._TWO _TWO_1, Inners._C _C_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.C_1 = C_1;
+                    this._TWO_1 = _TWO_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5970,16 +5970,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOD : percentxZEROZEROⲻFF
+            public sealed class _TWOD : _percentxZEROZEROⲻFF
             {
-                public TWOD(Inners.TWO TWO_1, Inners.D D_1)
+                public _TWOD(Inners._TWO _TWO_1, Inners._D _D_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.D_1 = D_1;
+                    this._TWO_1 = _TWO_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5987,16 +5987,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOE : percentxZEROZEROⲻFF
+            public sealed class _TWOE : _percentxZEROZEROⲻFF
             {
-                public TWOE(Inners.TWO TWO_1, Inners.E E_1)
+                public _TWOE(Inners._TWO _TWO_1, Inners._E _E_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.E_1 = E_1;
+                    this._TWO_1 = _TWO_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6004,16 +6004,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOF : percentxZEROZEROⲻFF
+            public sealed class _TWOF : _percentxZEROZEROⲻFF
             {
-                public TWOF(Inners.TWO TWO_1, Inners.F F_1)
+                public _TWOF(Inners._TWO _TWO_1, Inners._F _F_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.F_1 = F_1;
+                    this._TWO_1 = _TWO_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6021,16 +6021,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEZERO : percentxZEROZEROⲻFF
+            public sealed class _THREEZERO : _percentxZEROZEROⲻFF
             {
-                public THREEZERO(Inners.THREE THREE_1, Inners.ZERO ZERO_1)
+                public _THREEZERO(Inners._THREE _THREE_1, Inners._ZERO _ZERO_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._THREE_1 = _THREE_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6038,16 +6038,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEONE : percentxZEROZEROⲻFF
+            public sealed class _THREEONE : _percentxZEROZEROⲻFF
             {
-                public THREEONE(Inners.THREE THREE_1, Inners.ONE ONE_1)
+                public _THREEONE(Inners._THREE _THREE_1, Inners._ONE _ONE_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.ONE_1 = ONE_1;
+                    this._THREE_1 = _THREE_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6055,16 +6055,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREETWO : percentxZEROZEROⲻFF
+            public sealed class _THREETWO : _percentxZEROZEROⲻFF
             {
-                public THREETWO(Inners.THREE THREE_1, Inners.TWO TWO_1)
+                public _THREETWO(Inners._THREE _THREE_1, Inners._TWO _TWO_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.TWO_1 = TWO_1;
+                    this._THREE_1 = _THREE_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6072,16 +6072,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREETHREE : percentxZEROZEROⲻFF
+            public sealed class _THREETHREE : _percentxZEROZEROⲻFF
             {
-                public THREETHREE(Inners.THREE THREE_1, Inners.THREE THREE_2)
+                public _THREETHREE(Inners._THREE _THREE_1, Inners._THREE _THREE_2)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.THREE_2 = THREE_2;
+                    this._THREE_1 = _THREE_1;
+                    this._THREE_2 = _THREE_2;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.THREE THREE_2 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._THREE _THREE_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6089,16 +6089,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEFOUR : percentxZEROZEROⲻFF
+            public sealed class _THREEFOUR : _percentxZEROZEROⲻFF
             {
-                public THREEFOUR(Inners.THREE THREE_1, Inners.FOUR FOUR_1)
+                public _THREEFOUR(Inners._THREE _THREE_1, Inners._FOUR _FOUR_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._THREE_1 = _THREE_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6106,16 +6106,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEFIVE : percentxZEROZEROⲻFF
+            public sealed class _THREEFIVE : _percentxZEROZEROⲻFF
             {
-                public THREEFIVE(Inners.THREE THREE_1, Inners.FIVE FIVE_1)
+                public _THREEFIVE(Inners._THREE _THREE_1, Inners._FIVE _FIVE_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._THREE_1 = _THREE_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6123,16 +6123,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREESIX : percentxZEROZEROⲻFF
+            public sealed class _THREESIX : _percentxZEROZEROⲻFF
             {
-                public THREESIX(Inners.THREE THREE_1, Inners.SIX SIX_1)
+                public _THREESIX(Inners._THREE _THREE_1, Inners._SIX _SIX_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.SIX_1 = SIX_1;
+                    this._THREE_1 = _THREE_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6140,16 +6140,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREESEVEN : percentxZEROZEROⲻFF
+            public sealed class _THREESEVEN : _percentxZEROZEROⲻFF
             {
-                public THREESEVEN(Inners.THREE THREE_1, Inners.SEVEN SEVEN_1)
+                public _THREESEVEN(Inners._THREE _THREE_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._THREE_1 = _THREE_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6157,16 +6157,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEEIGHT : percentxZEROZEROⲻFF
+            public sealed class _THREEEIGHT : _percentxZEROZEROⲻFF
             {
-                public THREEEIGHT(Inners.THREE THREE_1, Inners.EIGHT EIGHT_1)
+                public _THREEEIGHT(Inners._THREE _THREE_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._THREE_1 = _THREE_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6174,16 +6174,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREENINE : percentxZEROZEROⲻFF
+            public sealed class _THREENINE : _percentxZEROZEROⲻFF
             {
-                public THREENINE(Inners.THREE THREE_1, Inners.NINE NINE_1)
+                public _THREENINE(Inners._THREE _THREE_1, Inners._NINE _NINE_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.NINE_1 = NINE_1;
+                    this._THREE_1 = _THREE_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6191,16 +6191,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEA : percentxZEROZEROⲻFF
+            public sealed class _THREEA : _percentxZEROZEROⲻFF
             {
-                public THREEA(Inners.THREE THREE_1, Inners.A A_1)
+                public _THREEA(Inners._THREE _THREE_1, Inners._A _A_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.A_1 = A_1;
+                    this._THREE_1 = _THREE_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6208,16 +6208,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEB : percentxZEROZEROⲻFF
+            public sealed class _THREEB : _percentxZEROZEROⲻFF
             {
-                public THREEB(Inners.THREE THREE_1, Inners.B B_1)
+                public _THREEB(Inners._THREE _THREE_1, Inners._B _B_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.B_1 = B_1;
+                    this._THREE_1 = _THREE_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6225,16 +6225,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEC : percentxZEROZEROⲻFF
+            public sealed class _THREEC : _percentxZEROZEROⲻFF
             {
-                public THREEC(Inners.THREE THREE_1, Inners.C C_1)
+                public _THREEC(Inners._THREE _THREE_1, Inners._C _C_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.C_1 = C_1;
+                    this._THREE_1 = _THREE_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6242,16 +6242,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREED : percentxZEROZEROⲻFF
+            public sealed class _THREED : _percentxZEROZEROⲻFF
             {
-                public THREED(Inners.THREE THREE_1, Inners.D D_1)
+                public _THREED(Inners._THREE _THREE_1, Inners._D _D_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.D_1 = D_1;
+                    this._THREE_1 = _THREE_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6259,16 +6259,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEE : percentxZEROZEROⲻFF
+            public sealed class _THREEE : _percentxZEROZEROⲻFF
             {
-                public THREEE(Inners.THREE THREE_1, Inners.E E_1)
+                public _THREEE(Inners._THREE _THREE_1, Inners._E _E_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.E_1 = E_1;
+                    this._THREE_1 = _THREE_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6276,16 +6276,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEF : percentxZEROZEROⲻFF
+            public sealed class _THREEF : _percentxZEROZEROⲻFF
             {
-                public THREEF(Inners.THREE THREE_1, Inners.F F_1)
+                public _THREEF(Inners._THREE _THREE_1, Inners._F _F_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.F_1 = F_1;
+                    this._THREE_1 = _THREE_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6293,16 +6293,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURZERO : percentxZEROZEROⲻFF
+            public sealed class _FOURZERO : _percentxZEROZEROⲻFF
             {
-                public FOURZERO(Inners.FOUR FOUR_1, Inners.ZERO ZERO_1)
+                public _FOURZERO(Inners._FOUR _FOUR_1, Inners._ZERO _ZERO_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6310,16 +6310,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURONE : percentxZEROZEROⲻFF
+            public sealed class _FOURONE : _percentxZEROZEROⲻFF
             {
-                public FOURONE(Inners.FOUR FOUR_1, Inners.ONE ONE_1)
+                public _FOURONE(Inners._FOUR _FOUR_1, Inners._ONE _ONE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.ONE_1 = ONE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6327,16 +6327,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURTWO : percentxZEROZEROⲻFF
+            public sealed class _FOURTWO : _percentxZEROZEROⲻFF
             {
-                public FOURTWO(Inners.FOUR FOUR_1, Inners.TWO TWO_1)
+                public _FOURTWO(Inners._FOUR _FOUR_1, Inners._TWO _TWO_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.TWO_1 = TWO_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6344,16 +6344,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURTHREE : percentxZEROZEROⲻFF
+            public sealed class _FOURTHREE : _percentxZEROZEROⲻFF
             {
-                public FOURTHREE(Inners.FOUR FOUR_1, Inners.THREE THREE_1)
+                public _FOURTHREE(Inners._FOUR _FOUR_1, Inners._THREE _THREE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.THREE_1 = THREE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6361,16 +6361,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURFOUR : percentxZEROZEROⲻFF
+            public sealed class _FOURFOUR : _percentxZEROZEROⲻFF
             {
-                public FOURFOUR(Inners.FOUR FOUR_1, Inners.FOUR FOUR_2)
+                public _FOURFOUR(Inners._FOUR _FOUR_1, Inners._FOUR _FOUR_2)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.FOUR_2 = FOUR_2;
+                    this._FOUR_1 = _FOUR_1;
+                    this._FOUR_2 = _FOUR_2;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.FOUR FOUR_2 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._FOUR _FOUR_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6378,16 +6378,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURFIVE : percentxZEROZEROⲻFF
+            public sealed class _FOURFIVE : _percentxZEROZEROⲻFF
             {
-                public FOURFIVE(Inners.FOUR FOUR_1, Inners.FIVE FIVE_1)
+                public _FOURFIVE(Inners._FOUR _FOUR_1, Inners._FIVE _FIVE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6395,16 +6395,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURSIX : percentxZEROZEROⲻFF
+            public sealed class _FOURSIX : _percentxZEROZEROⲻFF
             {
-                public FOURSIX(Inners.FOUR FOUR_1, Inners.SIX SIX_1)
+                public _FOURSIX(Inners._FOUR _FOUR_1, Inners._SIX _SIX_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.SIX_1 = SIX_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6412,16 +6412,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURSEVEN : percentxZEROZEROⲻFF
+            public sealed class _FOURSEVEN : _percentxZEROZEROⲻFF
             {
-                public FOURSEVEN(Inners.FOUR FOUR_1, Inners.SEVEN SEVEN_1)
+                public _FOURSEVEN(Inners._FOUR _FOUR_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6429,16 +6429,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOUREIGHT : percentxZEROZEROⲻFF
+            public sealed class _FOUREIGHT : _percentxZEROZEROⲻFF
             {
-                public FOUREIGHT(Inners.FOUR FOUR_1, Inners.EIGHT EIGHT_1)
+                public _FOUREIGHT(Inners._FOUR _FOUR_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6446,16 +6446,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURNINE : percentxZEROZEROⲻFF
+            public sealed class _FOURNINE : _percentxZEROZEROⲻFF
             {
-                public FOURNINE(Inners.FOUR FOUR_1, Inners.NINE NINE_1)
+                public _FOURNINE(Inners._FOUR _FOUR_1, Inners._NINE _NINE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.NINE_1 = NINE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6463,16 +6463,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURA : percentxZEROZEROⲻFF
+            public sealed class _FOURA : _percentxZEROZEROⲻFF
             {
-                public FOURA(Inners.FOUR FOUR_1, Inners.A A_1)
+                public _FOURA(Inners._FOUR _FOUR_1, Inners._A _A_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.A_1 = A_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6480,16 +6480,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURB : percentxZEROZEROⲻFF
+            public sealed class _FOURB : _percentxZEROZEROⲻFF
             {
-                public FOURB(Inners.FOUR FOUR_1, Inners.B B_1)
+                public _FOURB(Inners._FOUR _FOUR_1, Inners._B _B_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.B_1 = B_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6497,16 +6497,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURC : percentxZEROZEROⲻFF
+            public sealed class _FOURC : _percentxZEROZEROⲻFF
             {
-                public FOURC(Inners.FOUR FOUR_1, Inners.C C_1)
+                public _FOURC(Inners._FOUR _FOUR_1, Inners._C _C_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.C_1 = C_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6514,16 +6514,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURD : percentxZEROZEROⲻFF
+            public sealed class _FOURD : _percentxZEROZEROⲻFF
             {
-                public FOURD(Inners.FOUR FOUR_1, Inners.D D_1)
+                public _FOURD(Inners._FOUR _FOUR_1, Inners._D _D_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.D_1 = D_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6531,16 +6531,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURE : percentxZEROZEROⲻFF
+            public sealed class _FOURE : _percentxZEROZEROⲻFF
             {
-                public FOURE(Inners.FOUR FOUR_1, Inners.E E_1)
+                public _FOURE(Inners._FOUR _FOUR_1, Inners._E _E_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.E_1 = E_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6548,16 +6548,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURF : percentxZEROZEROⲻFF
+            public sealed class _FOURF : _percentxZEROZEROⲻFF
             {
-                public FOURF(Inners.FOUR FOUR_1, Inners.F F_1)
+                public _FOURF(Inners._FOUR _FOUR_1, Inners._F _F_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.F_1 = F_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6565,16 +6565,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEZERO : percentxZEROZEROⲻFF
+            public sealed class _FIVEZERO : _percentxZEROZEROⲻFF
             {
-                public FIVEZERO(Inners.FIVE FIVE_1, Inners.ZERO ZERO_1)
+                public _FIVEZERO(Inners._FIVE _FIVE_1, Inners._ZERO _ZERO_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6582,16 +6582,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEONE : percentxZEROZEROⲻFF
+            public sealed class _FIVEONE : _percentxZEROZEROⲻFF
             {
-                public FIVEONE(Inners.FIVE FIVE_1, Inners.ONE ONE_1)
+                public _FIVEONE(Inners._FIVE _FIVE_1, Inners._ONE _ONE_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.ONE_1 = ONE_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6599,16 +6599,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVETWO : percentxZEROZEROⲻFF
+            public sealed class _FIVETWO : _percentxZEROZEROⲻFF
             {
-                public FIVETWO(Inners.FIVE FIVE_1, Inners.TWO TWO_1)
+                public _FIVETWO(Inners._FIVE _FIVE_1, Inners._TWO _TWO_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.TWO_1 = TWO_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6616,16 +6616,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVETHREE : percentxZEROZEROⲻFF
+            public sealed class _FIVETHREE : _percentxZEROZEROⲻFF
             {
-                public FIVETHREE(Inners.FIVE FIVE_1, Inners.THREE THREE_1)
+                public _FIVETHREE(Inners._FIVE _FIVE_1, Inners._THREE _THREE_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.THREE_1 = THREE_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6633,16 +6633,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEFOUR : percentxZEROZEROⲻFF
+            public sealed class _FIVEFOUR : _percentxZEROZEROⲻFF
             {
-                public FIVEFOUR(Inners.FIVE FIVE_1, Inners.FOUR FOUR_1)
+                public _FIVEFOUR(Inners._FIVE _FIVE_1, Inners._FOUR _FOUR_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6650,16 +6650,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEFIVE : percentxZEROZEROⲻFF
+            public sealed class _FIVEFIVE : _percentxZEROZEROⲻFF
             {
-                public FIVEFIVE(Inners.FIVE FIVE_1, Inners.FIVE FIVE_2)
+                public _FIVEFIVE(Inners._FIVE _FIVE_1, Inners._FIVE _FIVE_2)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.FIVE_2 = FIVE_2;
+                    this._FIVE_1 = _FIVE_1;
+                    this._FIVE_2 = _FIVE_2;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.FIVE FIVE_2 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._FIVE _FIVE_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6667,16 +6667,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVESIX : percentxZEROZEROⲻFF
+            public sealed class _FIVESIX : _percentxZEROZEROⲻFF
             {
-                public FIVESIX(Inners.FIVE FIVE_1, Inners.SIX SIX_1)
+                public _FIVESIX(Inners._FIVE _FIVE_1, Inners._SIX _SIX_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.SIX_1 = SIX_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6684,16 +6684,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVESEVEN : percentxZEROZEROⲻFF
+            public sealed class _FIVESEVEN : _percentxZEROZEROⲻFF
             {
-                public FIVESEVEN(Inners.FIVE FIVE_1, Inners.SEVEN SEVEN_1)
+                public _FIVESEVEN(Inners._FIVE _FIVE_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6701,16 +6701,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEEIGHT : percentxZEROZEROⲻFF
+            public sealed class _FIVEEIGHT : _percentxZEROZEROⲻFF
             {
-                public FIVEEIGHT(Inners.FIVE FIVE_1, Inners.EIGHT EIGHT_1)
+                public _FIVEEIGHT(Inners._FIVE _FIVE_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6718,16 +6718,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVENINE : percentxZEROZEROⲻFF
+            public sealed class _FIVENINE : _percentxZEROZEROⲻFF
             {
-                public FIVENINE(Inners.FIVE FIVE_1, Inners.NINE NINE_1)
+                public _FIVENINE(Inners._FIVE _FIVE_1, Inners._NINE _NINE_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.NINE_1 = NINE_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6735,16 +6735,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEA : percentxZEROZEROⲻFF
+            public sealed class _FIVEA : _percentxZEROZEROⲻFF
             {
-                public FIVEA(Inners.FIVE FIVE_1, Inners.A A_1)
+                public _FIVEA(Inners._FIVE _FIVE_1, Inners._A _A_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.A_1 = A_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6752,16 +6752,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEB : percentxZEROZEROⲻFF
+            public sealed class _FIVEB : _percentxZEROZEROⲻFF
             {
-                public FIVEB(Inners.FIVE FIVE_1, Inners.B B_1)
+                public _FIVEB(Inners._FIVE _FIVE_1, Inners._B _B_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.B_1 = B_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6769,16 +6769,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEC : percentxZEROZEROⲻFF
+            public sealed class _FIVEC : _percentxZEROZEROⲻFF
             {
-                public FIVEC(Inners.FIVE FIVE_1, Inners.C C_1)
+                public _FIVEC(Inners._FIVE _FIVE_1, Inners._C _C_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.C_1 = C_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6786,16 +6786,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVED : percentxZEROZEROⲻFF
+            public sealed class _FIVED : _percentxZEROZEROⲻFF
             {
-                public FIVED(Inners.FIVE FIVE_1, Inners.D D_1)
+                public _FIVED(Inners._FIVE _FIVE_1, Inners._D _D_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.D_1 = D_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6803,16 +6803,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEE : percentxZEROZEROⲻFF
+            public sealed class _FIVEE : _percentxZEROZEROⲻFF
             {
-                public FIVEE(Inners.FIVE FIVE_1, Inners.E E_1)
+                public _FIVEE(Inners._FIVE _FIVE_1, Inners._E _E_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.E_1 = E_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6820,16 +6820,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEF : percentxZEROZEROⲻFF
+            public sealed class _FIVEF : _percentxZEROZEROⲻFF
             {
-                public FIVEF(Inners.FIVE FIVE_1, Inners.F F_1)
+                public _FIVEF(Inners._FIVE _FIVE_1, Inners._F _F_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.F_1 = F_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6837,16 +6837,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXZERO : percentxZEROZEROⲻFF
+            public sealed class _SIXZERO : _percentxZEROZEROⲻFF
             {
-                public SIXZERO(Inners.SIX SIX_1, Inners.ZERO ZERO_1)
+                public _SIXZERO(Inners._SIX _SIX_1, Inners._ZERO _ZERO_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._SIX_1 = _SIX_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6854,16 +6854,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXONE : percentxZEROZEROⲻFF
+            public sealed class _SIXONE : _percentxZEROZEROⲻFF
             {
-                public SIXONE(Inners.SIX SIX_1, Inners.ONE ONE_1)
+                public _SIXONE(Inners._SIX _SIX_1, Inners._ONE _ONE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.ONE_1 = ONE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6871,16 +6871,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXTWO : percentxZEROZEROⲻFF
+            public sealed class _SIXTWO : _percentxZEROZEROⲻFF
             {
-                public SIXTWO(Inners.SIX SIX_1, Inners.TWO TWO_1)
+                public _SIXTWO(Inners._SIX _SIX_1, Inners._TWO _TWO_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.TWO_1 = TWO_1;
+                    this._SIX_1 = _SIX_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6888,16 +6888,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXTHREE : percentxZEROZEROⲻFF
+            public sealed class _SIXTHREE : _percentxZEROZEROⲻFF
             {
-                public SIXTHREE(Inners.SIX SIX_1, Inners.THREE THREE_1)
+                public _SIXTHREE(Inners._SIX _SIX_1, Inners._THREE _THREE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.THREE_1 = THREE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6905,16 +6905,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXFOUR : percentxZEROZEROⲻFF
+            public sealed class _SIXFOUR : _percentxZEROZEROⲻFF
             {
-                public SIXFOUR(Inners.SIX SIX_1, Inners.FOUR FOUR_1)
+                public _SIXFOUR(Inners._SIX _SIX_1, Inners._FOUR _FOUR_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._SIX_1 = _SIX_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6922,16 +6922,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXFIVE : percentxZEROZEROⲻFF
+            public sealed class _SIXFIVE : _percentxZEROZEROⲻFF
             {
-                public SIXFIVE(Inners.SIX SIX_1, Inners.FIVE FIVE_1)
+                public _SIXFIVE(Inners._SIX _SIX_1, Inners._FIVE _FIVE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6939,16 +6939,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXSIX : percentxZEROZEROⲻFF
+            public sealed class _SIXSIX : _percentxZEROZEROⲻFF
             {
-                public SIXSIX(Inners.SIX SIX_1, Inners.SIX SIX_2)
+                public _SIXSIX(Inners._SIX _SIX_1, Inners._SIX _SIX_2)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.SIX_2 = SIX_2;
+                    this._SIX_1 = _SIX_1;
+                    this._SIX_2 = _SIX_2;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.SIX SIX_2 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._SIX _SIX_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6956,16 +6956,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXSEVEN : percentxZEROZEROⲻFF
+            public sealed class _SIXSEVEN : _percentxZEROZEROⲻFF
             {
-                public SIXSEVEN(Inners.SIX SIX_1, Inners.SEVEN SEVEN_1)
+                public _SIXSEVEN(Inners._SIX _SIX_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._SIX_1 = _SIX_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6973,16 +6973,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXEIGHT : percentxZEROZEROⲻFF
+            public sealed class _SIXEIGHT : _percentxZEROZEROⲻFF
             {
-                public SIXEIGHT(Inners.SIX SIX_1, Inners.EIGHT EIGHT_1)
+                public _SIXEIGHT(Inners._SIX _SIX_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._SIX_1 = _SIX_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -6990,16 +6990,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXNINE : percentxZEROZEROⲻFF
+            public sealed class _SIXNINE : _percentxZEROZEROⲻFF
             {
-                public SIXNINE(Inners.SIX SIX_1, Inners.NINE NINE_1)
+                public _SIXNINE(Inners._SIX _SIX_1, Inners._NINE _NINE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.NINE_1 = NINE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7007,16 +7007,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXA : percentxZEROZEROⲻFF
+            public sealed class _SIXA : _percentxZEROZEROⲻFF
             {
-                public SIXA(Inners.SIX SIX_1, Inners.A A_1)
+                public _SIXA(Inners._SIX _SIX_1, Inners._A _A_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.A_1 = A_1;
+                    this._SIX_1 = _SIX_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7024,16 +7024,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXB : percentxZEROZEROⲻFF
+            public sealed class _SIXB : _percentxZEROZEROⲻFF
             {
-                public SIXB(Inners.SIX SIX_1, Inners.B B_1)
+                public _SIXB(Inners._SIX _SIX_1, Inners._B _B_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.B_1 = B_1;
+                    this._SIX_1 = _SIX_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7041,16 +7041,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXC : percentxZEROZEROⲻFF
+            public sealed class _SIXC : _percentxZEROZEROⲻFF
             {
-                public SIXC(Inners.SIX SIX_1, Inners.C C_1)
+                public _SIXC(Inners._SIX _SIX_1, Inners._C _C_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.C_1 = C_1;
+                    this._SIX_1 = _SIX_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7058,16 +7058,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXD : percentxZEROZEROⲻFF
+            public sealed class _SIXD : _percentxZEROZEROⲻFF
             {
-                public SIXD(Inners.SIX SIX_1, Inners.D D_1)
+                public _SIXD(Inners._SIX _SIX_1, Inners._D _D_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.D_1 = D_1;
+                    this._SIX_1 = _SIX_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7075,16 +7075,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXE : percentxZEROZEROⲻFF
+            public sealed class _SIXE : _percentxZEROZEROⲻFF
             {
-                public SIXE(Inners.SIX SIX_1, Inners.E E_1)
+                public _SIXE(Inners._SIX _SIX_1, Inners._E _E_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.E_1 = E_1;
+                    this._SIX_1 = _SIX_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7092,16 +7092,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXF : percentxZEROZEROⲻFF
+            public sealed class _SIXF : _percentxZEROZEROⲻFF
             {
-                public SIXF(Inners.SIX SIX_1, Inners.F F_1)
+                public _SIXF(Inners._SIX _SIX_1, Inners._F _F_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.F_1 = F_1;
+                    this._SIX_1 = _SIX_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7109,16 +7109,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENZERO : percentxZEROZEROⲻFF
+            public sealed class _SEVENZERO : _percentxZEROZEROⲻFF
             {
-                public SEVENZERO(Inners.SEVEN SEVEN_1, Inners.ZERO ZERO_1)
+                public _SEVENZERO(Inners._SEVEN _SEVEN_1, Inners._ZERO _ZERO_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7126,16 +7126,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENONE : percentxZEROZEROⲻFF
+            public sealed class _SEVENONE : _percentxZEROZEROⲻFF
             {
-                public SEVENONE(Inners.SEVEN SEVEN_1, Inners.ONE ONE_1)
+                public _SEVENONE(Inners._SEVEN _SEVEN_1, Inners._ONE _ONE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.ONE_1 = ONE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7143,16 +7143,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENTWO : percentxZEROZEROⲻFF
+            public sealed class _SEVENTWO : _percentxZEROZEROⲻFF
             {
-                public SEVENTWO(Inners.SEVEN SEVEN_1, Inners.TWO TWO_1)
+                public _SEVENTWO(Inners._SEVEN _SEVEN_1, Inners._TWO _TWO_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.TWO_1 = TWO_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7160,16 +7160,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENTHREE : percentxZEROZEROⲻFF
+            public sealed class _SEVENTHREE : _percentxZEROZEROⲻFF
             {
-                public SEVENTHREE(Inners.SEVEN SEVEN_1, Inners.THREE THREE_1)
+                public _SEVENTHREE(Inners._SEVEN _SEVEN_1, Inners._THREE _THREE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.THREE_1 = THREE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7177,16 +7177,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENFOUR : percentxZEROZEROⲻFF
+            public sealed class _SEVENFOUR : _percentxZEROZEROⲻFF
             {
-                public SEVENFOUR(Inners.SEVEN SEVEN_1, Inners.FOUR FOUR_1)
+                public _SEVENFOUR(Inners._SEVEN _SEVEN_1, Inners._FOUR _FOUR_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7194,16 +7194,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENFIVE : percentxZEROZEROⲻFF
+            public sealed class _SEVENFIVE : _percentxZEROZEROⲻFF
             {
-                public SEVENFIVE(Inners.SEVEN SEVEN_1, Inners.FIVE FIVE_1)
+                public _SEVENFIVE(Inners._SEVEN _SEVEN_1, Inners._FIVE _FIVE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7211,16 +7211,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENSIX : percentxZEROZEROⲻFF
+            public sealed class _SEVENSIX : _percentxZEROZEROⲻFF
             {
-                public SEVENSIX(Inners.SEVEN SEVEN_1, Inners.SIX SIX_1)
+                public _SEVENSIX(Inners._SEVEN _SEVEN_1, Inners._SIX _SIX_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.SIX_1 = SIX_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7228,16 +7228,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENSEVEN : percentxZEROZEROⲻFF
+            public sealed class _SEVENSEVEN : _percentxZEROZEROⲻFF
             {
-                public SEVENSEVEN(Inners.SEVEN SEVEN_1, Inners.SEVEN SEVEN_2)
+                public _SEVENSEVEN(Inners._SEVEN _SEVEN_1, Inners._SEVEN _SEVEN_2)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.SEVEN_2 = SEVEN_2;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._SEVEN_2 = _SEVEN_2;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.SEVEN SEVEN_2 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._SEVEN _SEVEN_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7245,16 +7245,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENEIGHT : percentxZEROZEROⲻFF
+            public sealed class _SEVENEIGHT : _percentxZEROZEROⲻFF
             {
-                public SEVENEIGHT(Inners.SEVEN SEVEN_1, Inners.EIGHT EIGHT_1)
+                public _SEVENEIGHT(Inners._SEVEN _SEVEN_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7262,16 +7262,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENNINE : percentxZEROZEROⲻFF
+            public sealed class _SEVENNINE : _percentxZEROZEROⲻFF
             {
-                public SEVENNINE(Inners.SEVEN SEVEN_1, Inners.NINE NINE_1)
+                public _SEVENNINE(Inners._SEVEN _SEVEN_1, Inners._NINE _NINE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.NINE_1 = NINE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7279,16 +7279,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENA : percentxZEROZEROⲻFF
+            public sealed class _SEVENA : _percentxZEROZEROⲻFF
             {
-                public SEVENA(Inners.SEVEN SEVEN_1, Inners.A A_1)
+                public _SEVENA(Inners._SEVEN _SEVEN_1, Inners._A _A_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.A_1 = A_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7296,16 +7296,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENB : percentxZEROZEROⲻFF
+            public sealed class _SEVENB : _percentxZEROZEROⲻFF
             {
-                public SEVENB(Inners.SEVEN SEVEN_1, Inners.B B_1)
+                public _SEVENB(Inners._SEVEN _SEVEN_1, Inners._B _B_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.B_1 = B_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7313,16 +7313,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENC : percentxZEROZEROⲻFF
+            public sealed class _SEVENC : _percentxZEROZEROⲻFF
             {
-                public SEVENC(Inners.SEVEN SEVEN_1, Inners.C C_1)
+                public _SEVENC(Inners._SEVEN _SEVEN_1, Inners._C _C_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.C_1 = C_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7330,16 +7330,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVEND : percentxZEROZEROⲻFF
+            public sealed class _SEVEND : _percentxZEROZEROⲻFF
             {
-                public SEVEND(Inners.SEVEN SEVEN_1, Inners.D D_1)
+                public _SEVEND(Inners._SEVEN _SEVEN_1, Inners._D _D_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.D_1 = D_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7347,16 +7347,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENE : percentxZEROZEROⲻFF
+            public sealed class _SEVENE : _percentxZEROZEROⲻFF
             {
-                public SEVENE(Inners.SEVEN SEVEN_1, Inners.E E_1)
+                public _SEVENE(Inners._SEVEN _SEVEN_1, Inners._E _E_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.E_1 = E_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7364,16 +7364,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENF : percentxZEROZEROⲻFF
+            public sealed class _SEVENF : _percentxZEROZEROⲻFF
             {
-                public SEVENF(Inners.SEVEN SEVEN_1, Inners.F F_1)
+                public _SEVENF(Inners._SEVEN _SEVEN_1, Inners._F _F_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.F_1 = F_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7381,16 +7381,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTZERO : percentxZEROZEROⲻFF
+            public sealed class _EIGHTZERO : _percentxZEROZEROⲻFF
             {
-                public EIGHTZERO(Inners.EIGHT EIGHT_1, Inners.ZERO ZERO_1)
+                public _EIGHTZERO(Inners._EIGHT _EIGHT_1, Inners._ZERO _ZERO_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7398,16 +7398,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTONE : percentxZEROZEROⲻFF
+            public sealed class _EIGHTONE : _percentxZEROZEROⲻFF
             {
-                public EIGHTONE(Inners.EIGHT EIGHT_1, Inners.ONE ONE_1)
+                public _EIGHTONE(Inners._EIGHT _EIGHT_1, Inners._ONE _ONE_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.ONE_1 = ONE_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7415,16 +7415,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTTWO : percentxZEROZEROⲻFF
+            public sealed class _EIGHTTWO : _percentxZEROZEROⲻFF
             {
-                public EIGHTTWO(Inners.EIGHT EIGHT_1, Inners.TWO TWO_1)
+                public _EIGHTTWO(Inners._EIGHT _EIGHT_1, Inners._TWO _TWO_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.TWO_1 = TWO_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7432,16 +7432,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTTHREE : percentxZEROZEROⲻFF
+            public sealed class _EIGHTTHREE : _percentxZEROZEROⲻFF
             {
-                public EIGHTTHREE(Inners.EIGHT EIGHT_1, Inners.THREE THREE_1)
+                public _EIGHTTHREE(Inners._EIGHT _EIGHT_1, Inners._THREE _THREE_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.THREE_1 = THREE_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7449,16 +7449,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTFOUR : percentxZEROZEROⲻFF
+            public sealed class _EIGHTFOUR : _percentxZEROZEROⲻFF
             {
-                public EIGHTFOUR(Inners.EIGHT EIGHT_1, Inners.FOUR FOUR_1)
+                public _EIGHTFOUR(Inners._EIGHT _EIGHT_1, Inners._FOUR _FOUR_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7466,16 +7466,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTFIVE : percentxZEROZEROⲻFF
+            public sealed class _EIGHTFIVE : _percentxZEROZEROⲻFF
             {
-                public EIGHTFIVE(Inners.EIGHT EIGHT_1, Inners.FIVE FIVE_1)
+                public _EIGHTFIVE(Inners._EIGHT _EIGHT_1, Inners._FIVE _FIVE_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7483,16 +7483,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTSIX : percentxZEROZEROⲻFF
+            public sealed class _EIGHTSIX : _percentxZEROZEROⲻFF
             {
-                public EIGHTSIX(Inners.EIGHT EIGHT_1, Inners.SIX SIX_1)
+                public _EIGHTSIX(Inners._EIGHT _EIGHT_1, Inners._SIX _SIX_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.SIX_1 = SIX_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7500,16 +7500,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTSEVEN : percentxZEROZEROⲻFF
+            public sealed class _EIGHTSEVEN : _percentxZEROZEROⲻFF
             {
-                public EIGHTSEVEN(Inners.EIGHT EIGHT_1, Inners.SEVEN SEVEN_1)
+                public _EIGHTSEVEN(Inners._EIGHT _EIGHT_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7517,16 +7517,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTEIGHT : percentxZEROZEROⲻFF
+            public sealed class _EIGHTEIGHT : _percentxZEROZEROⲻFF
             {
-                public EIGHTEIGHT(Inners.EIGHT EIGHT_1, Inners.EIGHT EIGHT_2)
+                public _EIGHTEIGHT(Inners._EIGHT _EIGHT_1, Inners._EIGHT _EIGHT_2)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.EIGHT_2 = EIGHT_2;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._EIGHT_2 = _EIGHT_2;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.EIGHT EIGHT_2 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._EIGHT _EIGHT_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7534,16 +7534,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTNINE : percentxZEROZEROⲻFF
+            public sealed class _EIGHTNINE : _percentxZEROZEROⲻFF
             {
-                public EIGHTNINE(Inners.EIGHT EIGHT_1, Inners.NINE NINE_1)
+                public _EIGHTNINE(Inners._EIGHT _EIGHT_1, Inners._NINE _NINE_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.NINE_1 = NINE_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7551,16 +7551,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTA : percentxZEROZEROⲻFF
+            public sealed class _EIGHTA : _percentxZEROZEROⲻFF
             {
-                public EIGHTA(Inners.EIGHT EIGHT_1, Inners.A A_1)
+                public _EIGHTA(Inners._EIGHT _EIGHT_1, Inners._A _A_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.A_1 = A_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7568,16 +7568,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTB : percentxZEROZEROⲻFF
+            public sealed class _EIGHTB : _percentxZEROZEROⲻFF
             {
-                public EIGHTB(Inners.EIGHT EIGHT_1, Inners.B B_1)
+                public _EIGHTB(Inners._EIGHT _EIGHT_1, Inners._B _B_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.B_1 = B_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7585,16 +7585,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTC : percentxZEROZEROⲻFF
+            public sealed class _EIGHTC : _percentxZEROZEROⲻFF
             {
-                public EIGHTC(Inners.EIGHT EIGHT_1, Inners.C C_1)
+                public _EIGHTC(Inners._EIGHT _EIGHT_1, Inners._C _C_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.C_1 = C_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7602,16 +7602,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTD : percentxZEROZEROⲻFF
+            public sealed class _EIGHTD : _percentxZEROZEROⲻFF
             {
-                public EIGHTD(Inners.EIGHT EIGHT_1, Inners.D D_1)
+                public _EIGHTD(Inners._EIGHT _EIGHT_1, Inners._D _D_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.D_1 = D_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7619,16 +7619,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTE : percentxZEROZEROⲻFF
+            public sealed class _EIGHTE : _percentxZEROZEROⲻFF
             {
-                public EIGHTE(Inners.EIGHT EIGHT_1, Inners.E E_1)
+                public _EIGHTE(Inners._EIGHT _EIGHT_1, Inners._E _E_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.E_1 = E_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7636,16 +7636,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EIGHTF : percentxZEROZEROⲻFF
+            public sealed class _EIGHTF : _percentxZEROZEROⲻFF
             {
-                public EIGHTF(Inners.EIGHT EIGHT_1, Inners.F F_1)
+                public _EIGHTF(Inners._EIGHT _EIGHT_1, Inners._F _F_1)
                 {
-                    this.EIGHT_1 = EIGHT_1;
-                    this.F_1 = F_1;
+                    this._EIGHT_1 = _EIGHT_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.EIGHT EIGHT_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7653,16 +7653,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINEZERO : percentxZEROZEROⲻFF
+            public sealed class _NINEZERO : _percentxZEROZEROⲻFF
             {
-                public NINEZERO(Inners.NINE NINE_1, Inners.ZERO ZERO_1)
+                public _NINEZERO(Inners._NINE _NINE_1, Inners._ZERO _ZERO_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._NINE_1 = _NINE_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7670,16 +7670,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINEONE : percentxZEROZEROⲻFF
+            public sealed class _NINEONE : _percentxZEROZEROⲻFF
             {
-                public NINEONE(Inners.NINE NINE_1, Inners.ONE ONE_1)
+                public _NINEONE(Inners._NINE _NINE_1, Inners._ONE _ONE_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.ONE_1 = ONE_1;
+                    this._NINE_1 = _NINE_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7687,16 +7687,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINETWO : percentxZEROZEROⲻFF
+            public sealed class _NINETWO : _percentxZEROZEROⲻFF
             {
-                public NINETWO(Inners.NINE NINE_1, Inners.TWO TWO_1)
+                public _NINETWO(Inners._NINE _NINE_1, Inners._TWO _TWO_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.TWO_1 = TWO_1;
+                    this._NINE_1 = _NINE_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7704,16 +7704,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINETHREE : percentxZEROZEROⲻFF
+            public sealed class _NINETHREE : _percentxZEROZEROⲻFF
             {
-                public NINETHREE(Inners.NINE NINE_1, Inners.THREE THREE_1)
+                public _NINETHREE(Inners._NINE _NINE_1, Inners._THREE _THREE_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.THREE_1 = THREE_1;
+                    this._NINE_1 = _NINE_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7721,16 +7721,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINEFOUR : percentxZEROZEROⲻFF
+            public sealed class _NINEFOUR : _percentxZEROZEROⲻFF
             {
-                public NINEFOUR(Inners.NINE NINE_1, Inners.FOUR FOUR_1)
+                public _NINEFOUR(Inners._NINE _NINE_1, Inners._FOUR _FOUR_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._NINE_1 = _NINE_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7738,16 +7738,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINEFIVE : percentxZEROZEROⲻFF
+            public sealed class _NINEFIVE : _percentxZEROZEROⲻFF
             {
-                public NINEFIVE(Inners.NINE NINE_1, Inners.FIVE FIVE_1)
+                public _NINEFIVE(Inners._NINE _NINE_1, Inners._FIVE _FIVE_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._NINE_1 = _NINE_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7755,16 +7755,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINESIX : percentxZEROZEROⲻFF
+            public sealed class _NINESIX : _percentxZEROZEROⲻFF
             {
-                public NINESIX(Inners.NINE NINE_1, Inners.SIX SIX_1)
+                public _NINESIX(Inners._NINE _NINE_1, Inners._SIX _SIX_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.SIX_1 = SIX_1;
+                    this._NINE_1 = _NINE_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7772,16 +7772,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINESEVEN : percentxZEROZEROⲻFF
+            public sealed class _NINESEVEN : _percentxZEROZEROⲻFF
             {
-                public NINESEVEN(Inners.NINE NINE_1, Inners.SEVEN SEVEN_1)
+                public _NINESEVEN(Inners._NINE _NINE_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._NINE_1 = _NINE_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7789,16 +7789,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINEEIGHT : percentxZEROZEROⲻFF
+            public sealed class _NINEEIGHT : _percentxZEROZEROⲻFF
             {
-                public NINEEIGHT(Inners.NINE NINE_1, Inners.EIGHT EIGHT_1)
+                public _NINEEIGHT(Inners._NINE _NINE_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._NINE_1 = _NINE_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7806,16 +7806,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINENINE : percentxZEROZEROⲻFF
+            public sealed class _NINENINE : _percentxZEROZEROⲻFF
             {
-                public NINENINE(Inners.NINE NINE_1, Inners.NINE NINE_2)
+                public _NINENINE(Inners._NINE _NINE_1, Inners._NINE _NINE_2)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.NINE_2 = NINE_2;
+                    this._NINE_1 = _NINE_1;
+                    this._NINE_2 = _NINE_2;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.NINE NINE_2 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._NINE _NINE_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7823,16 +7823,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINEA : percentxZEROZEROⲻFF
+            public sealed class _NINEA : _percentxZEROZEROⲻFF
             {
-                public NINEA(Inners.NINE NINE_1, Inners.A A_1)
+                public _NINEA(Inners._NINE _NINE_1, Inners._A _A_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.A_1 = A_1;
+                    this._NINE_1 = _NINE_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7840,16 +7840,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINEB : percentxZEROZEROⲻFF
+            public sealed class _NINEB : _percentxZEROZEROⲻFF
             {
-                public NINEB(Inners.NINE NINE_1, Inners.B B_1)
+                public _NINEB(Inners._NINE _NINE_1, Inners._B _B_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.B_1 = B_1;
+                    this._NINE_1 = _NINE_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7857,16 +7857,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINEC : percentxZEROZEROⲻFF
+            public sealed class _NINEC : _percentxZEROZEROⲻFF
             {
-                public NINEC(Inners.NINE NINE_1, Inners.C C_1)
+                public _NINEC(Inners._NINE _NINE_1, Inners._C _C_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.C_1 = C_1;
+                    this._NINE_1 = _NINE_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7874,16 +7874,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINED : percentxZEROZEROⲻFF
+            public sealed class _NINED : _percentxZEROZEROⲻFF
             {
-                public NINED(Inners.NINE NINE_1, Inners.D D_1)
+                public _NINED(Inners._NINE _NINE_1, Inners._D _D_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.D_1 = D_1;
+                    this._NINE_1 = _NINE_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7891,16 +7891,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINEE : percentxZEROZEROⲻFF
+            public sealed class _NINEE : _percentxZEROZEROⲻFF
             {
-                public NINEE(Inners.NINE NINE_1, Inners.E E_1)
+                public _NINEE(Inners._NINE _NINE_1, Inners._E _E_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.E_1 = E_1;
+                    this._NINE_1 = _NINE_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7908,16 +7908,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class NINEF : percentxZEROZEROⲻFF
+            public sealed class _NINEF : _percentxZEROZEROⲻFF
             {
-                public NINEF(Inners.NINE NINE_1, Inners.F F_1)
+                public _NINEF(Inners._NINE _NINE_1, Inners._F _F_1)
                 {
-                    this.NINE_1 = NINE_1;
-                    this.F_1 = F_1;
+                    this._NINE_1 = _NINE_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.NINE NINE_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7925,16 +7925,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class AZERO : percentxZEROZEROⲻFF
+            public sealed class _AZERO : _percentxZEROZEROⲻFF
             {
-                public AZERO(Inners.A A_1, Inners.ZERO ZERO_1)
+                public _AZERO(Inners._A _A_1, Inners._ZERO _ZERO_1)
                 {
-                    this.A_1 = A_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._A_1 = _A_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7942,16 +7942,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class AONE : percentxZEROZEROⲻFF
+            public sealed class _AONE : _percentxZEROZEROⲻFF
             {
-                public AONE(Inners.A A_1, Inners.ONE ONE_1)
+                public _AONE(Inners._A _A_1, Inners._ONE _ONE_1)
                 {
-                    this.A_1 = A_1;
-                    this.ONE_1 = ONE_1;
+                    this._A_1 = _A_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7959,16 +7959,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ATWO : percentxZEROZEROⲻFF
+            public sealed class _ATWO : _percentxZEROZEROⲻFF
             {
-                public ATWO(Inners.A A_1, Inners.TWO TWO_1)
+                public _ATWO(Inners._A _A_1, Inners._TWO _TWO_1)
                 {
-                    this.A_1 = A_1;
-                    this.TWO_1 = TWO_1;
+                    this._A_1 = _A_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7976,16 +7976,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ATHREE : percentxZEROZEROⲻFF
+            public sealed class _ATHREE : _percentxZEROZEROⲻFF
             {
-                public ATHREE(Inners.A A_1, Inners.THREE THREE_1)
+                public _ATHREE(Inners._A _A_1, Inners._THREE _THREE_1)
                 {
-                    this.A_1 = A_1;
-                    this.THREE_1 = THREE_1;
+                    this._A_1 = _A_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -7993,16 +7993,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class AFOUR : percentxZEROZEROⲻFF
+            public sealed class _AFOUR : _percentxZEROZEROⲻFF
             {
-                public AFOUR(Inners.A A_1, Inners.FOUR FOUR_1)
+                public _AFOUR(Inners._A _A_1, Inners._FOUR _FOUR_1)
                 {
-                    this.A_1 = A_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._A_1 = _A_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8010,16 +8010,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class AFIVE : percentxZEROZEROⲻFF
+            public sealed class _AFIVE : _percentxZEROZEROⲻFF
             {
-                public AFIVE(Inners.A A_1, Inners.FIVE FIVE_1)
+                public _AFIVE(Inners._A _A_1, Inners._FIVE _FIVE_1)
                 {
-                    this.A_1 = A_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._A_1 = _A_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8027,16 +8027,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ASIX : percentxZEROZEROⲻFF
+            public sealed class _ASIX : _percentxZEROZEROⲻFF
             {
-                public ASIX(Inners.A A_1, Inners.SIX SIX_1)
+                public _ASIX(Inners._A _A_1, Inners._SIX _SIX_1)
                 {
-                    this.A_1 = A_1;
-                    this.SIX_1 = SIX_1;
+                    this._A_1 = _A_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8044,16 +8044,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ASEVEN : percentxZEROZEROⲻFF
+            public sealed class _ASEVEN : _percentxZEROZEROⲻFF
             {
-                public ASEVEN(Inners.A A_1, Inners.SEVEN SEVEN_1)
+                public _ASEVEN(Inners._A _A_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.A_1 = A_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._A_1 = _A_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8061,16 +8061,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class AEIGHT : percentxZEROZEROⲻFF
+            public sealed class _AEIGHT : _percentxZEROZEROⲻFF
             {
-                public AEIGHT(Inners.A A_1, Inners.EIGHT EIGHT_1)
+                public _AEIGHT(Inners._A _A_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.A_1 = A_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._A_1 = _A_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8078,16 +8078,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ANINE : percentxZEROZEROⲻFF
+            public sealed class _ANINE : _percentxZEROZEROⲻFF
             {
-                public ANINE(Inners.A A_1, Inners.NINE NINE_1)
+                public _ANINE(Inners._A _A_1, Inners._NINE _NINE_1)
                 {
-                    this.A_1 = A_1;
-                    this.NINE_1 = NINE_1;
+                    this._A_1 = _A_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8095,16 +8095,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class AA : percentxZEROZEROⲻFF
+            public sealed class _AA : _percentxZEROZEROⲻFF
             {
-                public AA(Inners.A A_1, Inners.A A_2)
+                public _AA(Inners._A _A_1, Inners._A _A_2)
                 {
-                    this.A_1 = A_1;
-                    this.A_2 = A_2;
+                    this._A_1 = _A_1;
+                    this._A_2 = _A_2;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.A A_2 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._A _A_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8112,16 +8112,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class AB : percentxZEROZEROⲻFF
+            public sealed class _AB : _percentxZEROZEROⲻFF
             {
-                public AB(Inners.A A_1, Inners.B B_1)
+                public _AB(Inners._A _A_1, Inners._B _B_1)
                 {
-                    this.A_1 = A_1;
-                    this.B_1 = B_1;
+                    this._A_1 = _A_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8129,16 +8129,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class AC : percentxZEROZEROⲻFF
+            public sealed class _AC : _percentxZEROZEROⲻFF
             {
-                public AC(Inners.A A_1, Inners.C C_1)
+                public _AC(Inners._A _A_1, Inners._C _C_1)
                 {
-                    this.A_1 = A_1;
-                    this.C_1 = C_1;
+                    this._A_1 = _A_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8146,16 +8146,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class AD : percentxZEROZEROⲻFF
+            public sealed class _AD : _percentxZEROZEROⲻFF
             {
-                public AD(Inners.A A_1, Inners.D D_1)
+                public _AD(Inners._A _A_1, Inners._D _D_1)
                 {
-                    this.A_1 = A_1;
-                    this.D_1 = D_1;
+                    this._A_1 = _A_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8163,16 +8163,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class AE : percentxZEROZEROⲻFF
+            public sealed class _AE : _percentxZEROZEROⲻFF
             {
-                public AE(Inners.A A_1, Inners.E E_1)
+                public _AE(Inners._A _A_1, Inners._E _E_1)
                 {
-                    this.A_1 = A_1;
-                    this.E_1 = E_1;
+                    this._A_1 = _A_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8180,16 +8180,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class AF : percentxZEROZEROⲻFF
+            public sealed class _AF : _percentxZEROZEROⲻFF
             {
-                public AF(Inners.A A_1, Inners.F F_1)
+                public _AF(Inners._A _A_1, Inners._F _F_1)
                 {
-                    this.A_1 = A_1;
-                    this.F_1 = F_1;
+                    this._A_1 = _A_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.A A_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._A _A_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8197,16 +8197,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BZERO : percentxZEROZEROⲻFF
+            public sealed class _BZERO : _percentxZEROZEROⲻFF
             {
-                public BZERO(Inners.B B_1, Inners.ZERO ZERO_1)
+                public _BZERO(Inners._B _B_1, Inners._ZERO _ZERO_1)
                 {
-                    this.B_1 = B_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._B_1 = _B_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8214,16 +8214,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BONE : percentxZEROZEROⲻFF
+            public sealed class _BONE : _percentxZEROZEROⲻFF
             {
-                public BONE(Inners.B B_1, Inners.ONE ONE_1)
+                public _BONE(Inners._B _B_1, Inners._ONE _ONE_1)
                 {
-                    this.B_1 = B_1;
-                    this.ONE_1 = ONE_1;
+                    this._B_1 = _B_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8231,16 +8231,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BTWO : percentxZEROZEROⲻFF
+            public sealed class _BTWO : _percentxZEROZEROⲻFF
             {
-                public BTWO(Inners.B B_1, Inners.TWO TWO_1)
+                public _BTWO(Inners._B _B_1, Inners._TWO _TWO_1)
                 {
-                    this.B_1 = B_1;
-                    this.TWO_1 = TWO_1;
+                    this._B_1 = _B_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8248,16 +8248,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BTHREE : percentxZEROZEROⲻFF
+            public sealed class _BTHREE : _percentxZEROZEROⲻFF
             {
-                public BTHREE(Inners.B B_1, Inners.THREE THREE_1)
+                public _BTHREE(Inners._B _B_1, Inners._THREE _THREE_1)
                 {
-                    this.B_1 = B_1;
-                    this.THREE_1 = THREE_1;
+                    this._B_1 = _B_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8265,16 +8265,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BFOUR : percentxZEROZEROⲻFF
+            public sealed class _BFOUR : _percentxZEROZEROⲻFF
             {
-                public BFOUR(Inners.B B_1, Inners.FOUR FOUR_1)
+                public _BFOUR(Inners._B _B_1, Inners._FOUR _FOUR_1)
                 {
-                    this.B_1 = B_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._B_1 = _B_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8282,16 +8282,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BFIVE : percentxZEROZEROⲻFF
+            public sealed class _BFIVE : _percentxZEROZEROⲻFF
             {
-                public BFIVE(Inners.B B_1, Inners.FIVE FIVE_1)
+                public _BFIVE(Inners._B _B_1, Inners._FIVE _FIVE_1)
                 {
-                    this.B_1 = B_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._B_1 = _B_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8299,16 +8299,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BSIX : percentxZEROZEROⲻFF
+            public sealed class _BSIX : _percentxZEROZEROⲻFF
             {
-                public BSIX(Inners.B B_1, Inners.SIX SIX_1)
+                public _BSIX(Inners._B _B_1, Inners._SIX _SIX_1)
                 {
-                    this.B_1 = B_1;
-                    this.SIX_1 = SIX_1;
+                    this._B_1 = _B_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8316,16 +8316,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BSEVEN : percentxZEROZEROⲻFF
+            public sealed class _BSEVEN : _percentxZEROZEROⲻFF
             {
-                public BSEVEN(Inners.B B_1, Inners.SEVEN SEVEN_1)
+                public _BSEVEN(Inners._B _B_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.B_1 = B_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._B_1 = _B_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8333,16 +8333,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BEIGHT : percentxZEROZEROⲻFF
+            public sealed class _BEIGHT : _percentxZEROZEROⲻFF
             {
-                public BEIGHT(Inners.B B_1, Inners.EIGHT EIGHT_1)
+                public _BEIGHT(Inners._B _B_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.B_1 = B_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._B_1 = _B_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8350,16 +8350,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BNINE : percentxZEROZEROⲻFF
+            public sealed class _BNINE : _percentxZEROZEROⲻFF
             {
-                public BNINE(Inners.B B_1, Inners.NINE NINE_1)
+                public _BNINE(Inners._B _B_1, Inners._NINE _NINE_1)
                 {
-                    this.B_1 = B_1;
-                    this.NINE_1 = NINE_1;
+                    this._B_1 = _B_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8367,16 +8367,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BA : percentxZEROZEROⲻFF
+            public sealed class _BA : _percentxZEROZEROⲻFF
             {
-                public BA(Inners.B B_1, Inners.A A_1)
+                public _BA(Inners._B _B_1, Inners._A _A_1)
                 {
-                    this.B_1 = B_1;
-                    this.A_1 = A_1;
+                    this._B_1 = _B_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8384,16 +8384,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BB : percentxZEROZEROⲻFF
+            public sealed class _BB : _percentxZEROZEROⲻFF
             {
-                public BB(Inners.B B_1, Inners.B B_2)
+                public _BB(Inners._B _B_1, Inners._B _B_2)
                 {
-                    this.B_1 = B_1;
-                    this.B_2 = B_2;
+                    this._B_1 = _B_1;
+                    this._B_2 = _B_2;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.B B_2 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._B _B_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8401,16 +8401,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BC : percentxZEROZEROⲻFF
+            public sealed class _BC : _percentxZEROZEROⲻFF
             {
-                public BC(Inners.B B_1, Inners.C C_1)
+                public _BC(Inners._B _B_1, Inners._C _C_1)
                 {
-                    this.B_1 = B_1;
-                    this.C_1 = C_1;
+                    this._B_1 = _B_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8418,16 +8418,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BD : percentxZEROZEROⲻFF
+            public sealed class _BD : _percentxZEROZEROⲻFF
             {
-                public BD(Inners.B B_1, Inners.D D_1)
+                public _BD(Inners._B _B_1, Inners._D _D_1)
                 {
-                    this.B_1 = B_1;
-                    this.D_1 = D_1;
+                    this._B_1 = _B_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8435,16 +8435,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BE : percentxZEROZEROⲻFF
+            public sealed class _BE : _percentxZEROZEROⲻFF
             {
-                public BE(Inners.B B_1, Inners.E E_1)
+                public _BE(Inners._B _B_1, Inners._E _E_1)
                 {
-                    this.B_1 = B_1;
-                    this.E_1 = E_1;
+                    this._B_1 = _B_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8452,16 +8452,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class BF : percentxZEROZEROⲻFF
+            public sealed class _BF : _percentxZEROZEROⲻFF
             {
-                public BF(Inners.B B_1, Inners.F F_1)
+                public _BF(Inners._B _B_1, Inners._F _F_1)
                 {
-                    this.B_1 = B_1;
-                    this.F_1 = F_1;
+                    this._B_1 = _B_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.B B_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._B _B_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8469,16 +8469,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CZERO : percentxZEROZEROⲻFF
+            public sealed class _CZERO : _percentxZEROZEROⲻFF
             {
-                public CZERO(Inners.C C_1, Inners.ZERO ZERO_1)
+                public _CZERO(Inners._C _C_1, Inners._ZERO _ZERO_1)
                 {
-                    this.C_1 = C_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._C_1 = _C_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8486,16 +8486,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CONE : percentxZEROZEROⲻFF
+            public sealed class _CONE : _percentxZEROZEROⲻFF
             {
-                public CONE(Inners.C C_1, Inners.ONE ONE_1)
+                public _CONE(Inners._C _C_1, Inners._ONE _ONE_1)
                 {
-                    this.C_1 = C_1;
-                    this.ONE_1 = ONE_1;
+                    this._C_1 = _C_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8503,16 +8503,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CTWO : percentxZEROZEROⲻFF
+            public sealed class _CTWO : _percentxZEROZEROⲻFF
             {
-                public CTWO(Inners.C C_1, Inners.TWO TWO_1)
+                public _CTWO(Inners._C _C_1, Inners._TWO _TWO_1)
                 {
-                    this.C_1 = C_1;
-                    this.TWO_1 = TWO_1;
+                    this._C_1 = _C_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8520,16 +8520,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CTHREE : percentxZEROZEROⲻFF
+            public sealed class _CTHREE : _percentxZEROZEROⲻFF
             {
-                public CTHREE(Inners.C C_1, Inners.THREE THREE_1)
+                public _CTHREE(Inners._C _C_1, Inners._THREE _THREE_1)
                 {
-                    this.C_1 = C_1;
-                    this.THREE_1 = THREE_1;
+                    this._C_1 = _C_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8537,16 +8537,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CFOUR : percentxZEROZEROⲻFF
+            public sealed class _CFOUR : _percentxZEROZEROⲻFF
             {
-                public CFOUR(Inners.C C_1, Inners.FOUR FOUR_1)
+                public _CFOUR(Inners._C _C_1, Inners._FOUR _FOUR_1)
                 {
-                    this.C_1 = C_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._C_1 = _C_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8554,16 +8554,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CFIVE : percentxZEROZEROⲻFF
+            public sealed class _CFIVE : _percentxZEROZEROⲻFF
             {
-                public CFIVE(Inners.C C_1, Inners.FIVE FIVE_1)
+                public _CFIVE(Inners._C _C_1, Inners._FIVE _FIVE_1)
                 {
-                    this.C_1 = C_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._C_1 = _C_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8571,16 +8571,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CSIX : percentxZEROZEROⲻFF
+            public sealed class _CSIX : _percentxZEROZEROⲻFF
             {
-                public CSIX(Inners.C C_1, Inners.SIX SIX_1)
+                public _CSIX(Inners._C _C_1, Inners._SIX _SIX_1)
                 {
-                    this.C_1 = C_1;
-                    this.SIX_1 = SIX_1;
+                    this._C_1 = _C_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8588,16 +8588,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CSEVEN : percentxZEROZEROⲻFF
+            public sealed class _CSEVEN : _percentxZEROZEROⲻFF
             {
-                public CSEVEN(Inners.C C_1, Inners.SEVEN SEVEN_1)
+                public _CSEVEN(Inners._C _C_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.C_1 = C_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._C_1 = _C_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8605,16 +8605,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CEIGHT : percentxZEROZEROⲻFF
+            public sealed class _CEIGHT : _percentxZEROZEROⲻFF
             {
-                public CEIGHT(Inners.C C_1, Inners.EIGHT EIGHT_1)
+                public _CEIGHT(Inners._C _C_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.C_1 = C_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._C_1 = _C_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8622,16 +8622,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CNINE : percentxZEROZEROⲻFF
+            public sealed class _CNINE : _percentxZEROZEROⲻFF
             {
-                public CNINE(Inners.C C_1, Inners.NINE NINE_1)
+                public _CNINE(Inners._C _C_1, Inners._NINE _NINE_1)
                 {
-                    this.C_1 = C_1;
-                    this.NINE_1 = NINE_1;
+                    this._C_1 = _C_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8639,16 +8639,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CA : percentxZEROZEROⲻFF
+            public sealed class _CA : _percentxZEROZEROⲻFF
             {
-                public CA(Inners.C C_1, Inners.A A_1)
+                public _CA(Inners._C _C_1, Inners._A _A_1)
                 {
-                    this.C_1 = C_1;
-                    this.A_1 = A_1;
+                    this._C_1 = _C_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8656,16 +8656,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CB : percentxZEROZEROⲻFF
+            public sealed class _CB : _percentxZEROZEROⲻFF
             {
-                public CB(Inners.C C_1, Inners.B B_1)
+                public _CB(Inners._C _C_1, Inners._B _B_1)
                 {
-                    this.C_1 = C_1;
-                    this.B_1 = B_1;
+                    this._C_1 = _C_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8673,16 +8673,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CC : percentxZEROZEROⲻFF
+            public sealed class _CC : _percentxZEROZEROⲻFF
             {
-                public CC(Inners.C C_1, Inners.C C_2)
+                public _CC(Inners._C _C_1, Inners._C _C_2)
                 {
-                    this.C_1 = C_1;
-                    this.C_2 = C_2;
+                    this._C_1 = _C_1;
+                    this._C_2 = _C_2;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.C C_2 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._C _C_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8690,16 +8690,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CD : percentxZEROZEROⲻFF
+            public sealed class _CD : _percentxZEROZEROⲻFF
             {
-                public CD(Inners.C C_1, Inners.D D_1)
+                public _CD(Inners._C _C_1, Inners._D _D_1)
                 {
-                    this.C_1 = C_1;
-                    this.D_1 = D_1;
+                    this._C_1 = _C_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8707,16 +8707,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CE : percentxZEROZEROⲻFF
+            public sealed class _CE : _percentxZEROZEROⲻFF
             {
-                public CE(Inners.C C_1, Inners.E E_1)
+                public _CE(Inners._C _C_1, Inners._E _E_1)
                 {
-                    this.C_1 = C_1;
-                    this.E_1 = E_1;
+                    this._C_1 = _C_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8724,16 +8724,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class CF : percentxZEROZEROⲻFF
+            public sealed class _CF : _percentxZEROZEROⲻFF
             {
-                public CF(Inners.C C_1, Inners.F F_1)
+                public _CF(Inners._C _C_1, Inners._F _F_1)
                 {
-                    this.C_1 = C_1;
-                    this.F_1 = F_1;
+                    this._C_1 = _C_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.C C_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._C _C_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8741,16 +8741,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DZERO : percentxZEROZEROⲻFF
+            public sealed class _DZERO : _percentxZEROZEROⲻFF
             {
-                public DZERO(Inners.D D_1, Inners.ZERO ZERO_1)
+                public _DZERO(Inners._D _D_1, Inners._ZERO _ZERO_1)
                 {
-                    this.D_1 = D_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._D_1 = _D_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8758,16 +8758,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DONE : percentxZEROZEROⲻFF
+            public sealed class _DONE : _percentxZEROZEROⲻFF
             {
-                public DONE(Inners.D D_1, Inners.ONE ONE_1)
+                public _DONE(Inners._D _D_1, Inners._ONE _ONE_1)
                 {
-                    this.D_1 = D_1;
-                    this.ONE_1 = ONE_1;
+                    this._D_1 = _D_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8775,16 +8775,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DTWO : percentxZEROZEROⲻFF
+            public sealed class _DTWO : _percentxZEROZEROⲻFF
             {
-                public DTWO(Inners.D D_1, Inners.TWO TWO_1)
+                public _DTWO(Inners._D _D_1, Inners._TWO _TWO_1)
                 {
-                    this.D_1 = D_1;
-                    this.TWO_1 = TWO_1;
+                    this._D_1 = _D_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8792,16 +8792,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DTHREE : percentxZEROZEROⲻFF
+            public sealed class _DTHREE : _percentxZEROZEROⲻFF
             {
-                public DTHREE(Inners.D D_1, Inners.THREE THREE_1)
+                public _DTHREE(Inners._D _D_1, Inners._THREE _THREE_1)
                 {
-                    this.D_1 = D_1;
-                    this.THREE_1 = THREE_1;
+                    this._D_1 = _D_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8809,16 +8809,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DFOUR : percentxZEROZEROⲻFF
+            public sealed class _DFOUR : _percentxZEROZEROⲻFF
             {
-                public DFOUR(Inners.D D_1, Inners.FOUR FOUR_1)
+                public _DFOUR(Inners._D _D_1, Inners._FOUR _FOUR_1)
                 {
-                    this.D_1 = D_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._D_1 = _D_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8826,16 +8826,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DFIVE : percentxZEROZEROⲻFF
+            public sealed class _DFIVE : _percentxZEROZEROⲻFF
             {
-                public DFIVE(Inners.D D_1, Inners.FIVE FIVE_1)
+                public _DFIVE(Inners._D _D_1, Inners._FIVE _FIVE_1)
                 {
-                    this.D_1 = D_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._D_1 = _D_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8843,16 +8843,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DSIX : percentxZEROZEROⲻFF
+            public sealed class _DSIX : _percentxZEROZEROⲻFF
             {
-                public DSIX(Inners.D D_1, Inners.SIX SIX_1)
+                public _DSIX(Inners._D _D_1, Inners._SIX _SIX_1)
                 {
-                    this.D_1 = D_1;
-                    this.SIX_1 = SIX_1;
+                    this._D_1 = _D_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8860,16 +8860,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DSEVEN : percentxZEROZEROⲻFF
+            public sealed class _DSEVEN : _percentxZEROZEROⲻFF
             {
-                public DSEVEN(Inners.D D_1, Inners.SEVEN SEVEN_1)
+                public _DSEVEN(Inners._D _D_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.D_1 = D_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._D_1 = _D_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8877,16 +8877,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DEIGHT : percentxZEROZEROⲻFF
+            public sealed class _DEIGHT : _percentxZEROZEROⲻFF
             {
-                public DEIGHT(Inners.D D_1, Inners.EIGHT EIGHT_1)
+                public _DEIGHT(Inners._D _D_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.D_1 = D_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._D_1 = _D_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8894,16 +8894,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DNINE : percentxZEROZEROⲻFF
+            public sealed class _DNINE : _percentxZEROZEROⲻFF
             {
-                public DNINE(Inners.D D_1, Inners.NINE NINE_1)
+                public _DNINE(Inners._D _D_1, Inners._NINE _NINE_1)
                 {
-                    this.D_1 = D_1;
-                    this.NINE_1 = NINE_1;
+                    this._D_1 = _D_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8911,16 +8911,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DA : percentxZEROZEROⲻFF
+            public sealed class _DA : _percentxZEROZEROⲻFF
             {
-                public DA(Inners.D D_1, Inners.A A_1)
+                public _DA(Inners._D _D_1, Inners._A _A_1)
                 {
-                    this.D_1 = D_1;
-                    this.A_1 = A_1;
+                    this._D_1 = _D_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8928,16 +8928,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DB : percentxZEROZEROⲻFF
+            public sealed class _DB : _percentxZEROZEROⲻFF
             {
-                public DB(Inners.D D_1, Inners.B B_1)
+                public _DB(Inners._D _D_1, Inners._B _B_1)
                 {
-                    this.D_1 = D_1;
-                    this.B_1 = B_1;
+                    this._D_1 = _D_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8945,16 +8945,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DC : percentxZEROZEROⲻFF
+            public sealed class _DC : _percentxZEROZEROⲻFF
             {
-                public DC(Inners.D D_1, Inners.C C_1)
+                public _DC(Inners._D _D_1, Inners._C _C_1)
                 {
-                    this.D_1 = D_1;
-                    this.C_1 = C_1;
+                    this._D_1 = _D_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8962,16 +8962,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DD : percentxZEROZEROⲻFF
+            public sealed class _DD : _percentxZEROZEROⲻFF
             {
-                public DD(Inners.D D_1, Inners.D D_2)
+                public _DD(Inners._D _D_1, Inners._D _D_2)
                 {
-                    this.D_1 = D_1;
-                    this.D_2 = D_2;
+                    this._D_1 = _D_1;
+                    this._D_2 = _D_2;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.D D_2 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._D _D_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8979,16 +8979,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DE : percentxZEROZEROⲻFF
+            public sealed class _DE : _percentxZEROZEROⲻFF
             {
-                public DE(Inners.D D_1, Inners.E E_1)
+                public _DE(Inners._D _D_1, Inners._E _E_1)
                 {
-                    this.D_1 = D_1;
-                    this.E_1 = E_1;
+                    this._D_1 = _D_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -8996,16 +8996,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class DF : percentxZEROZEROⲻFF
+            public sealed class _DF : _percentxZEROZEROⲻFF
             {
-                public DF(Inners.D D_1, Inners.F F_1)
+                public _DF(Inners._D _D_1, Inners._F _F_1)
                 {
-                    this.D_1 = D_1;
-                    this.F_1 = F_1;
+                    this._D_1 = _D_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.D D_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._D _D_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9013,16 +9013,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EZERO : percentxZEROZEROⲻFF
+            public sealed class _EZERO : _percentxZEROZEROⲻFF
             {
-                public EZERO(Inners.E E_1, Inners.ZERO ZERO_1)
+                public _EZERO(Inners._E _E_1, Inners._ZERO _ZERO_1)
                 {
-                    this.E_1 = E_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._E_1 = _E_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9030,16 +9030,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EONE : percentxZEROZEROⲻFF
+            public sealed class _EONE : _percentxZEROZEROⲻFF
             {
-                public EONE(Inners.E E_1, Inners.ONE ONE_1)
+                public _EONE(Inners._E _E_1, Inners._ONE _ONE_1)
                 {
-                    this.E_1 = E_1;
-                    this.ONE_1 = ONE_1;
+                    this._E_1 = _E_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9047,16 +9047,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ETWO : percentxZEROZEROⲻFF
+            public sealed class _ETWO : _percentxZEROZEROⲻFF
             {
-                public ETWO(Inners.E E_1, Inners.TWO TWO_1)
+                public _ETWO(Inners._E _E_1, Inners._TWO _TWO_1)
                 {
-                    this.E_1 = E_1;
-                    this.TWO_1 = TWO_1;
+                    this._E_1 = _E_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9064,16 +9064,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ETHREE : percentxZEROZEROⲻFF
+            public sealed class _ETHREE : _percentxZEROZEROⲻFF
             {
-                public ETHREE(Inners.E E_1, Inners.THREE THREE_1)
+                public _ETHREE(Inners._E _E_1, Inners._THREE _THREE_1)
                 {
-                    this.E_1 = E_1;
-                    this.THREE_1 = THREE_1;
+                    this._E_1 = _E_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9081,16 +9081,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EFOUR : percentxZEROZEROⲻFF
+            public sealed class _EFOUR : _percentxZEROZEROⲻFF
             {
-                public EFOUR(Inners.E E_1, Inners.FOUR FOUR_1)
+                public _EFOUR(Inners._E _E_1, Inners._FOUR _FOUR_1)
                 {
-                    this.E_1 = E_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._E_1 = _E_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9098,16 +9098,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EFIVE : percentxZEROZEROⲻFF
+            public sealed class _EFIVE : _percentxZEROZEROⲻFF
             {
-                public EFIVE(Inners.E E_1, Inners.FIVE FIVE_1)
+                public _EFIVE(Inners._E _E_1, Inners._FIVE _FIVE_1)
                 {
-                    this.E_1 = E_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._E_1 = _E_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9115,16 +9115,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ESIX : percentxZEROZEROⲻFF
+            public sealed class _ESIX : _percentxZEROZEROⲻFF
             {
-                public ESIX(Inners.E E_1, Inners.SIX SIX_1)
+                public _ESIX(Inners._E _E_1, Inners._SIX _SIX_1)
                 {
-                    this.E_1 = E_1;
-                    this.SIX_1 = SIX_1;
+                    this._E_1 = _E_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9132,16 +9132,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ESEVEN : percentxZEROZEROⲻFF
+            public sealed class _ESEVEN : _percentxZEROZEROⲻFF
             {
-                public ESEVEN(Inners.E E_1, Inners.SEVEN SEVEN_1)
+                public _ESEVEN(Inners._E _E_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.E_1 = E_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._E_1 = _E_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9149,16 +9149,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EEIGHT : percentxZEROZEROⲻFF
+            public sealed class _EEIGHT : _percentxZEROZEROⲻFF
             {
-                public EEIGHT(Inners.E E_1, Inners.EIGHT EIGHT_1)
+                public _EEIGHT(Inners._E _E_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.E_1 = E_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._E_1 = _E_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9166,16 +9166,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ENINE : percentxZEROZEROⲻFF
+            public sealed class _ENINE : _percentxZEROZEROⲻFF
             {
-                public ENINE(Inners.E E_1, Inners.NINE NINE_1)
+                public _ENINE(Inners._E _E_1, Inners._NINE _NINE_1)
                 {
-                    this.E_1 = E_1;
-                    this.NINE_1 = NINE_1;
+                    this._E_1 = _E_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9183,16 +9183,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EA : percentxZEROZEROⲻFF
+            public sealed class _EA : _percentxZEROZEROⲻFF
             {
-                public EA(Inners.E E_1, Inners.A A_1)
+                public _EA(Inners._E _E_1, Inners._A _A_1)
                 {
-                    this.E_1 = E_1;
-                    this.A_1 = A_1;
+                    this._E_1 = _E_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9200,16 +9200,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EB : percentxZEROZEROⲻFF
+            public sealed class _EB : _percentxZEROZEROⲻFF
             {
-                public EB(Inners.E E_1, Inners.B B_1)
+                public _EB(Inners._E _E_1, Inners._B _B_1)
                 {
-                    this.E_1 = E_1;
-                    this.B_1 = B_1;
+                    this._E_1 = _E_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9217,16 +9217,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EC : percentxZEROZEROⲻFF
+            public sealed class _EC : _percentxZEROZEROⲻFF
             {
-                public EC(Inners.E E_1, Inners.C C_1)
+                public _EC(Inners._E _E_1, Inners._C _C_1)
                 {
-                    this.E_1 = E_1;
-                    this.C_1 = C_1;
+                    this._E_1 = _E_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9234,16 +9234,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class ED : percentxZEROZEROⲻFF
+            public sealed class _ED : _percentxZEROZEROⲻFF
             {
-                public ED(Inners.E E_1, Inners.D D_1)
+                public _ED(Inners._E _E_1, Inners._D _D_1)
                 {
-                    this.E_1 = E_1;
-                    this.D_1 = D_1;
+                    this._E_1 = _E_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9251,16 +9251,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EE : percentxZEROZEROⲻFF
+            public sealed class _EE : _percentxZEROZEROⲻFF
             {
-                public EE(Inners.E E_1, Inners.E E_2)
+                public _EE(Inners._E _E_1, Inners._E _E_2)
                 {
-                    this.E_1 = E_1;
-                    this.E_2 = E_2;
+                    this._E_1 = _E_1;
+                    this._E_2 = _E_2;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.E E_2 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._E _E_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9268,16 +9268,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class EF : percentxZEROZEROⲻFF
+            public sealed class _EF : _percentxZEROZEROⲻFF
             {
-                public EF(Inners.E E_1, Inners.F F_1)
+                public _EF(Inners._E _E_1, Inners._F _F_1)
                 {
-                    this.E_1 = E_1;
-                    this.F_1 = F_1;
+                    this._E_1 = _E_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.E E_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._E _E_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9285,16 +9285,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FZERO : percentxZEROZEROⲻFF
+            public sealed class _FZERO : _percentxZEROZEROⲻFF
             {
-                public FZERO(Inners.F F_1, Inners.ZERO ZERO_1)
+                public _FZERO(Inners._F _F_1, Inners._ZERO _ZERO_1)
                 {
-                    this.F_1 = F_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._F_1 = _F_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9302,16 +9302,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FONE : percentxZEROZEROⲻFF
+            public sealed class _FONE : _percentxZEROZEROⲻFF
             {
-                public FONE(Inners.F F_1, Inners.ONE ONE_1)
+                public _FONE(Inners._F _F_1, Inners._ONE _ONE_1)
                 {
-                    this.F_1 = F_1;
-                    this.ONE_1 = ONE_1;
+                    this._F_1 = _F_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9319,16 +9319,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FTWO : percentxZEROZEROⲻFF
+            public sealed class _FTWO : _percentxZEROZEROⲻFF
             {
-                public FTWO(Inners.F F_1, Inners.TWO TWO_1)
+                public _FTWO(Inners._F _F_1, Inners._TWO _TWO_1)
                 {
-                    this.F_1 = F_1;
-                    this.TWO_1 = TWO_1;
+                    this._F_1 = _F_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9336,16 +9336,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FTHREE : percentxZEROZEROⲻFF
+            public sealed class _FTHREE : _percentxZEROZEROⲻFF
             {
-                public FTHREE(Inners.F F_1, Inners.THREE THREE_1)
+                public _FTHREE(Inners._F _F_1, Inners._THREE _THREE_1)
                 {
-                    this.F_1 = F_1;
-                    this.THREE_1 = THREE_1;
+                    this._F_1 = _F_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9353,16 +9353,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FFOUR : percentxZEROZEROⲻFF
+            public sealed class _FFOUR : _percentxZEROZEROⲻFF
             {
-                public FFOUR(Inners.F F_1, Inners.FOUR FOUR_1)
+                public _FFOUR(Inners._F _F_1, Inners._FOUR _FOUR_1)
                 {
-                    this.F_1 = F_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._F_1 = _F_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9370,16 +9370,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FFIVE : percentxZEROZEROⲻFF
+            public sealed class _FFIVE : _percentxZEROZEROⲻFF
             {
-                public FFIVE(Inners.F F_1, Inners.FIVE FIVE_1)
+                public _FFIVE(Inners._F _F_1, Inners._FIVE _FIVE_1)
                 {
-                    this.F_1 = F_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._F_1 = _F_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9387,16 +9387,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FSIX : percentxZEROZEROⲻFF
+            public sealed class _FSIX : _percentxZEROZEROⲻFF
             {
-                public FSIX(Inners.F F_1, Inners.SIX SIX_1)
+                public _FSIX(Inners._F _F_1, Inners._SIX _SIX_1)
                 {
-                    this.F_1 = F_1;
-                    this.SIX_1 = SIX_1;
+                    this._F_1 = _F_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9404,16 +9404,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FSEVEN : percentxZEROZEROⲻFF
+            public sealed class _FSEVEN : _percentxZEROZEROⲻFF
             {
-                public FSEVEN(Inners.F F_1, Inners.SEVEN SEVEN_1)
+                public _FSEVEN(Inners._F _F_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.F_1 = F_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._F_1 = _F_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9421,16 +9421,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FEIGHT : percentxZEROZEROⲻFF
+            public sealed class _FEIGHT : _percentxZEROZEROⲻFF
             {
-                public FEIGHT(Inners.F F_1, Inners.EIGHT EIGHT_1)
+                public _FEIGHT(Inners._F _F_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.F_1 = F_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._F_1 = _F_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9438,16 +9438,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FNINE : percentxZEROZEROⲻFF
+            public sealed class _FNINE : _percentxZEROZEROⲻFF
             {
-                public FNINE(Inners.F F_1, Inners.NINE NINE_1)
+                public _FNINE(Inners._F _F_1, Inners._NINE _NINE_1)
                 {
-                    this.F_1 = F_1;
-                    this.NINE_1 = NINE_1;
+                    this._F_1 = _F_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9455,16 +9455,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FA : percentxZEROZEROⲻFF
+            public sealed class _FA : _percentxZEROZEROⲻFF
             {
-                public FA(Inners.F F_1, Inners.A A_1)
+                public _FA(Inners._F _F_1, Inners._A _A_1)
                 {
-                    this.F_1 = F_1;
-                    this.A_1 = A_1;
+                    this._F_1 = _F_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9472,16 +9472,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FB : percentxZEROZEROⲻFF
+            public sealed class _FB : _percentxZEROZEROⲻFF
             {
-                public FB(Inners.F F_1, Inners.B B_1)
+                public _FB(Inners._F _F_1, Inners._B _B_1)
                 {
-                    this.F_1 = F_1;
-                    this.B_1 = B_1;
+                    this._F_1 = _F_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9489,16 +9489,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FC : percentxZEROZEROⲻFF
+            public sealed class _FC : _percentxZEROZEROⲻFF
             {
-                public FC(Inners.F F_1, Inners.C C_1)
+                public _FC(Inners._F _F_1, Inners._C _C_1)
                 {
-                    this.F_1 = F_1;
-                    this.C_1 = C_1;
+                    this._F_1 = _F_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9506,16 +9506,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FD : percentxZEROZEROⲻFF
+            public sealed class _FD : _percentxZEROZEROⲻFF
             {
-                public FD(Inners.F F_1, Inners.D D_1)
+                public _FD(Inners._F _F_1, Inners._D _D_1)
                 {
-                    this.F_1 = F_1;
-                    this.D_1 = D_1;
+                    this._F_1 = _F_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9523,16 +9523,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FE : percentxZEROZEROⲻFF
+            public sealed class _FE : _percentxZEROZEROⲻFF
             {
-                public FE(Inners.F F_1, Inners.E E_1)
+                public _FE(Inners._F _F_1, Inners._E _E_1)
                 {
-                    this.F_1 = F_1;
-                    this.E_1 = E_1;
+                    this._F_1 = _F_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9540,16 +9540,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FF : percentxZEROZEROⲻFF
+            public sealed class _FF : _percentxZEROZEROⲻFF
             {
-                public FF(Inners.F F_1, Inners.F F_2)
+                public _FF(Inners._F _F_1, Inners._F _F_2)
                 {
-                    this.F_1 = F_1;
-                    this.F_2 = F_2;
+                    this._F_1 = _F_1;
+                    this._F_2 = _F_2;
                 }
                 
-                public Inners.F F_1 { get; }
-                public Inners.F F_2 { get; }
+                public Inners._F _F_1 { get; }
+                public Inners._F _F_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9558,21 +9558,21 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class percentxTWOZERO
+        public sealed class _percentxTWOZERO
         {
-            public percentxTWOZERO(Inners.TWO TWO_1, Inners.ZERO ZERO_1)
+            public _percentxTWOZERO(Inners._TWO _TWO_1, Inners._ZERO _ZERO_1)
             {
-                this.TWO_1 = TWO_1;
-                this.ZERO_1 = ZERO_1;
+                this._TWO_1 = _TWO_1;
+                this._ZERO_1 = _ZERO_1;
             }
             
-            public Inners.TWO TWO_1 { get; }
-            public Inners.ZERO ZERO_1 { get; }
+            public Inners._TWO _TWO_1 { get; }
+            public Inners._ZERO _ZERO_1 { get; }
         }
         
-        public abstract class percentxTWOONEⲻSEVENE
+        public abstract class _percentxTWOONEⲻSEVENE
         {
-            private percentxTWOONEⲻSEVENE()
+            private _percentxTWOONEⲻSEVENE()
             {
             }
             
@@ -9580,117 +9580,117 @@ namespace GeneratorV3.Core
             
             public abstract class Visitor<TResult, TContext>
             {
-                public TResult Visit(percentxTWOONEⲻSEVENE node, TContext context)
+                public TResult Visit(_percentxTWOONEⲻSEVENE node, TContext context)
                 {
                     return node.Dispatch(this, context);
                 }
                 
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWOONE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWOTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWOTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWOFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWOFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWOSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWOSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWOEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWONINE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWOA node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWOB node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWOC node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWOD node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWOE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.TWOF node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREEZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREEONE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREETWO node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREETHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREEFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREEFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREESIX node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREESEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREEEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREENINE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREEA node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREEB node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREEC node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREED node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREEE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.THREEF node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURONE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOUREIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURA node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURB node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURC node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURD node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FOURF node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVEZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVEONE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVETWO node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVETHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVEFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVEFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVESIX node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVESEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVEEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVENINE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVEA node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVEB node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVEC node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVED node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVEE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.FIVEF node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXONE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXA node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXB node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXC node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXD node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SIXF node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVENZERO node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVENONE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVENTWO node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVENTHREE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVENFOUR node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVENFIVE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVENSIX node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVENSEVEN node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVENEIGHT node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVENNINE node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVENA node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVENB node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVENC node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVEND node, TContext context);
-                protected internal abstract TResult Accept(percentxTWOONEⲻSEVENE.SEVENE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWOONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWOTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWOTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWOFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWOFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWOSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWOSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWOEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWONINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWOA node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWOB node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWOC node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWOD node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWOE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._TWOF node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREEZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREEONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREETWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREETHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREEFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREEFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREESIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREESEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREEEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREENINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREEA node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREEB node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREEC node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREED node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREEE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._THREEF node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOUREIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURA node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURB node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURC node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURD node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FOURF node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVEZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVEONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVETWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVETHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVEFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVEFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVESIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVESEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVEEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVENINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVEA node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVEB node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVEC node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVED node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVEE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._FIVEF node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXA node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXB node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXC node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXD node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SIXF node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVENZERO node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVENONE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVENTWO node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVENTHREE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVENFOUR node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVENFIVE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVENSIX node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVENSEVEN node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVENEIGHT node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVENNINE node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVENA node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVENB node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVENC node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVEND node, TContext context);
+                protected internal abstract TResult Accept(_percentxTWOONEⲻSEVENE._SEVENE node, TContext context);
             }
             
-            public sealed class TWOONE : percentxTWOONEⲻSEVENE
+            public sealed class _TWOONE : _percentxTWOONEⲻSEVENE
             {
-                public TWOONE(Inners.TWO TWO_1, Inners.ONE ONE_1)
+                public _TWOONE(Inners._TWO _TWO_1, Inners._ONE _ONE_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.ONE_1 = ONE_1;
+                    this._TWO_1 = _TWO_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9698,16 +9698,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOTWO : percentxTWOONEⲻSEVENE
+            public sealed class _TWOTWO : _percentxTWOONEⲻSEVENE
             {
-                public TWOTWO(Inners.TWO TWO_1, Inners.TWO TWO_2)
+                public _TWOTWO(Inners._TWO _TWO_1, Inners._TWO _TWO_2)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.TWO_2 = TWO_2;
+                    this._TWO_1 = _TWO_1;
+                    this._TWO_2 = _TWO_2;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.TWO TWO_2 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._TWO _TWO_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9715,16 +9715,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOTHREE : percentxTWOONEⲻSEVENE
+            public sealed class _TWOTHREE : _percentxTWOONEⲻSEVENE
             {
-                public TWOTHREE(Inners.TWO TWO_1, Inners.THREE THREE_1)
+                public _TWOTHREE(Inners._TWO _TWO_1, Inners._THREE _THREE_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.THREE_1 = THREE_1;
+                    this._TWO_1 = _TWO_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9732,16 +9732,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOFOUR : percentxTWOONEⲻSEVENE
+            public sealed class _TWOFOUR : _percentxTWOONEⲻSEVENE
             {
-                public TWOFOUR(Inners.TWO TWO_1, Inners.FOUR FOUR_1)
+                public _TWOFOUR(Inners._TWO _TWO_1, Inners._FOUR _FOUR_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._TWO_1 = _TWO_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9749,16 +9749,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOFIVE : percentxTWOONEⲻSEVENE
+            public sealed class _TWOFIVE : _percentxTWOONEⲻSEVENE
             {
-                public TWOFIVE(Inners.TWO TWO_1, Inners.FIVE FIVE_1)
+                public _TWOFIVE(Inners._TWO _TWO_1, Inners._FIVE _FIVE_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._TWO_1 = _TWO_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9766,16 +9766,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOSIX : percentxTWOONEⲻSEVENE
+            public sealed class _TWOSIX : _percentxTWOONEⲻSEVENE
             {
-                public TWOSIX(Inners.TWO TWO_1, Inners.SIX SIX_1)
+                public _TWOSIX(Inners._TWO _TWO_1, Inners._SIX _SIX_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.SIX_1 = SIX_1;
+                    this._TWO_1 = _TWO_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9783,16 +9783,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOSEVEN : percentxTWOONEⲻSEVENE
+            public sealed class _TWOSEVEN : _percentxTWOONEⲻSEVENE
             {
-                public TWOSEVEN(Inners.TWO TWO_1, Inners.SEVEN SEVEN_1)
+                public _TWOSEVEN(Inners._TWO _TWO_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._TWO_1 = _TWO_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9800,16 +9800,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOEIGHT : percentxTWOONEⲻSEVENE
+            public sealed class _TWOEIGHT : _percentxTWOONEⲻSEVENE
             {
-                public TWOEIGHT(Inners.TWO TWO_1, Inners.EIGHT EIGHT_1)
+                public _TWOEIGHT(Inners._TWO _TWO_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._TWO_1 = _TWO_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9817,16 +9817,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWONINE : percentxTWOONEⲻSEVENE
+            public sealed class _TWONINE : _percentxTWOONEⲻSEVENE
             {
-                public TWONINE(Inners.TWO TWO_1, Inners.NINE NINE_1)
+                public _TWONINE(Inners._TWO _TWO_1, Inners._NINE _NINE_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.NINE_1 = NINE_1;
+                    this._TWO_1 = _TWO_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9834,16 +9834,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOA : percentxTWOONEⲻSEVENE
+            public sealed class _TWOA : _percentxTWOONEⲻSEVENE
             {
-                public TWOA(Inners.TWO TWO_1, Inners.A A_1)
+                public _TWOA(Inners._TWO _TWO_1, Inners._A _A_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.A_1 = A_1;
+                    this._TWO_1 = _TWO_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9851,16 +9851,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOB : percentxTWOONEⲻSEVENE
+            public sealed class _TWOB : _percentxTWOONEⲻSEVENE
             {
-                public TWOB(Inners.TWO TWO_1, Inners.B B_1)
+                public _TWOB(Inners._TWO _TWO_1, Inners._B _B_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.B_1 = B_1;
+                    this._TWO_1 = _TWO_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9868,16 +9868,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOC : percentxTWOONEⲻSEVENE
+            public sealed class _TWOC : _percentxTWOONEⲻSEVENE
             {
-                public TWOC(Inners.TWO TWO_1, Inners.C C_1)
+                public _TWOC(Inners._TWO _TWO_1, Inners._C _C_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.C_1 = C_1;
+                    this._TWO_1 = _TWO_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9885,16 +9885,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOD : percentxTWOONEⲻSEVENE
+            public sealed class _TWOD : _percentxTWOONEⲻSEVENE
             {
-                public TWOD(Inners.TWO TWO_1, Inners.D D_1)
+                public _TWOD(Inners._TWO _TWO_1, Inners._D _D_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.D_1 = D_1;
+                    this._TWO_1 = _TWO_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9902,16 +9902,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOE : percentxTWOONEⲻSEVENE
+            public sealed class _TWOE : _percentxTWOONEⲻSEVENE
             {
-                public TWOE(Inners.TWO TWO_1, Inners.E E_1)
+                public _TWOE(Inners._TWO _TWO_1, Inners._E _E_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.E_1 = E_1;
+                    this._TWO_1 = _TWO_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9919,16 +9919,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class TWOF : percentxTWOONEⲻSEVENE
+            public sealed class _TWOF : _percentxTWOONEⲻSEVENE
             {
-                public TWOF(Inners.TWO TWO_1, Inners.F F_1)
+                public _TWOF(Inners._TWO _TWO_1, Inners._F _F_1)
                 {
-                    this.TWO_1 = TWO_1;
-                    this.F_1 = F_1;
+                    this._TWO_1 = _TWO_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.TWO TWO_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9936,16 +9936,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEZERO : percentxTWOONEⲻSEVENE
+            public sealed class _THREEZERO : _percentxTWOONEⲻSEVENE
             {
-                public THREEZERO(Inners.THREE THREE_1, Inners.ZERO ZERO_1)
+                public _THREEZERO(Inners._THREE _THREE_1, Inners._ZERO _ZERO_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._THREE_1 = _THREE_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9953,16 +9953,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEONE : percentxTWOONEⲻSEVENE
+            public sealed class _THREEONE : _percentxTWOONEⲻSEVENE
             {
-                public THREEONE(Inners.THREE THREE_1, Inners.ONE ONE_1)
+                public _THREEONE(Inners._THREE _THREE_1, Inners._ONE _ONE_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.ONE_1 = ONE_1;
+                    this._THREE_1 = _THREE_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9970,16 +9970,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREETWO : percentxTWOONEⲻSEVENE
+            public sealed class _THREETWO : _percentxTWOONEⲻSEVENE
             {
-                public THREETWO(Inners.THREE THREE_1, Inners.TWO TWO_1)
+                public _THREETWO(Inners._THREE _THREE_1, Inners._TWO _TWO_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.TWO_1 = TWO_1;
+                    this._THREE_1 = _THREE_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -9987,16 +9987,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREETHREE : percentxTWOONEⲻSEVENE
+            public sealed class _THREETHREE : _percentxTWOONEⲻSEVENE
             {
-                public THREETHREE(Inners.THREE THREE_1, Inners.THREE THREE_2)
+                public _THREETHREE(Inners._THREE _THREE_1, Inners._THREE _THREE_2)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.THREE_2 = THREE_2;
+                    this._THREE_1 = _THREE_1;
+                    this._THREE_2 = _THREE_2;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.THREE THREE_2 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._THREE _THREE_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10004,16 +10004,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEFOUR : percentxTWOONEⲻSEVENE
+            public sealed class _THREEFOUR : _percentxTWOONEⲻSEVENE
             {
-                public THREEFOUR(Inners.THREE THREE_1, Inners.FOUR FOUR_1)
+                public _THREEFOUR(Inners._THREE _THREE_1, Inners._FOUR _FOUR_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._THREE_1 = _THREE_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10021,16 +10021,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEFIVE : percentxTWOONEⲻSEVENE
+            public sealed class _THREEFIVE : _percentxTWOONEⲻSEVENE
             {
-                public THREEFIVE(Inners.THREE THREE_1, Inners.FIVE FIVE_1)
+                public _THREEFIVE(Inners._THREE _THREE_1, Inners._FIVE _FIVE_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._THREE_1 = _THREE_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10038,16 +10038,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREESIX : percentxTWOONEⲻSEVENE
+            public sealed class _THREESIX : _percentxTWOONEⲻSEVENE
             {
-                public THREESIX(Inners.THREE THREE_1, Inners.SIX SIX_1)
+                public _THREESIX(Inners._THREE _THREE_1, Inners._SIX _SIX_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.SIX_1 = SIX_1;
+                    this._THREE_1 = _THREE_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10055,16 +10055,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREESEVEN : percentxTWOONEⲻSEVENE
+            public sealed class _THREESEVEN : _percentxTWOONEⲻSEVENE
             {
-                public THREESEVEN(Inners.THREE THREE_1, Inners.SEVEN SEVEN_1)
+                public _THREESEVEN(Inners._THREE _THREE_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._THREE_1 = _THREE_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10072,16 +10072,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEEIGHT : percentxTWOONEⲻSEVENE
+            public sealed class _THREEEIGHT : _percentxTWOONEⲻSEVENE
             {
-                public THREEEIGHT(Inners.THREE THREE_1, Inners.EIGHT EIGHT_1)
+                public _THREEEIGHT(Inners._THREE _THREE_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._THREE_1 = _THREE_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10089,16 +10089,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREENINE : percentxTWOONEⲻSEVENE
+            public sealed class _THREENINE : _percentxTWOONEⲻSEVENE
             {
-                public THREENINE(Inners.THREE THREE_1, Inners.NINE NINE_1)
+                public _THREENINE(Inners._THREE _THREE_1, Inners._NINE _NINE_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.NINE_1 = NINE_1;
+                    this._THREE_1 = _THREE_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10106,16 +10106,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEA : percentxTWOONEⲻSEVENE
+            public sealed class _THREEA : _percentxTWOONEⲻSEVENE
             {
-                public THREEA(Inners.THREE THREE_1, Inners.A A_1)
+                public _THREEA(Inners._THREE _THREE_1, Inners._A _A_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.A_1 = A_1;
+                    this._THREE_1 = _THREE_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10123,16 +10123,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEB : percentxTWOONEⲻSEVENE
+            public sealed class _THREEB : _percentxTWOONEⲻSEVENE
             {
-                public THREEB(Inners.THREE THREE_1, Inners.B B_1)
+                public _THREEB(Inners._THREE _THREE_1, Inners._B _B_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.B_1 = B_1;
+                    this._THREE_1 = _THREE_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10140,16 +10140,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEC : percentxTWOONEⲻSEVENE
+            public sealed class _THREEC : _percentxTWOONEⲻSEVENE
             {
-                public THREEC(Inners.THREE THREE_1, Inners.C C_1)
+                public _THREEC(Inners._THREE _THREE_1, Inners._C _C_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.C_1 = C_1;
+                    this._THREE_1 = _THREE_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10157,16 +10157,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREED : percentxTWOONEⲻSEVENE
+            public sealed class _THREED : _percentxTWOONEⲻSEVENE
             {
-                public THREED(Inners.THREE THREE_1, Inners.D D_1)
+                public _THREED(Inners._THREE _THREE_1, Inners._D _D_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.D_1 = D_1;
+                    this._THREE_1 = _THREE_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10174,16 +10174,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEE : percentxTWOONEⲻSEVENE
+            public sealed class _THREEE : _percentxTWOONEⲻSEVENE
             {
-                public THREEE(Inners.THREE THREE_1, Inners.E E_1)
+                public _THREEE(Inners._THREE _THREE_1, Inners._E _E_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.E_1 = E_1;
+                    this._THREE_1 = _THREE_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10191,16 +10191,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class THREEF : percentxTWOONEⲻSEVENE
+            public sealed class _THREEF : _percentxTWOONEⲻSEVENE
             {
-                public THREEF(Inners.THREE THREE_1, Inners.F F_1)
+                public _THREEF(Inners._THREE _THREE_1, Inners._F _F_1)
                 {
-                    this.THREE_1 = THREE_1;
-                    this.F_1 = F_1;
+                    this._THREE_1 = _THREE_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.THREE THREE_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10208,16 +10208,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURZERO : percentxTWOONEⲻSEVENE
+            public sealed class _FOURZERO : _percentxTWOONEⲻSEVENE
             {
-                public FOURZERO(Inners.FOUR FOUR_1, Inners.ZERO ZERO_1)
+                public _FOURZERO(Inners._FOUR _FOUR_1, Inners._ZERO _ZERO_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10225,16 +10225,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURONE : percentxTWOONEⲻSEVENE
+            public sealed class _FOURONE : _percentxTWOONEⲻSEVENE
             {
-                public FOURONE(Inners.FOUR FOUR_1, Inners.ONE ONE_1)
+                public _FOURONE(Inners._FOUR _FOUR_1, Inners._ONE _ONE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.ONE_1 = ONE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10242,16 +10242,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURTWO : percentxTWOONEⲻSEVENE
+            public sealed class _FOURTWO : _percentxTWOONEⲻSEVENE
             {
-                public FOURTWO(Inners.FOUR FOUR_1, Inners.TWO TWO_1)
+                public _FOURTWO(Inners._FOUR _FOUR_1, Inners._TWO _TWO_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.TWO_1 = TWO_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10259,16 +10259,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURTHREE : percentxTWOONEⲻSEVENE
+            public sealed class _FOURTHREE : _percentxTWOONEⲻSEVENE
             {
-                public FOURTHREE(Inners.FOUR FOUR_1, Inners.THREE THREE_1)
+                public _FOURTHREE(Inners._FOUR _FOUR_1, Inners._THREE _THREE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.THREE_1 = THREE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10276,16 +10276,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURFOUR : percentxTWOONEⲻSEVENE
+            public sealed class _FOURFOUR : _percentxTWOONEⲻSEVENE
             {
-                public FOURFOUR(Inners.FOUR FOUR_1, Inners.FOUR FOUR_2)
+                public _FOURFOUR(Inners._FOUR _FOUR_1, Inners._FOUR _FOUR_2)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.FOUR_2 = FOUR_2;
+                    this._FOUR_1 = _FOUR_1;
+                    this._FOUR_2 = _FOUR_2;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.FOUR FOUR_2 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._FOUR _FOUR_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10293,16 +10293,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURFIVE : percentxTWOONEⲻSEVENE
+            public sealed class _FOURFIVE : _percentxTWOONEⲻSEVENE
             {
-                public FOURFIVE(Inners.FOUR FOUR_1, Inners.FIVE FIVE_1)
+                public _FOURFIVE(Inners._FOUR _FOUR_1, Inners._FIVE _FIVE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10310,16 +10310,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURSIX : percentxTWOONEⲻSEVENE
+            public sealed class _FOURSIX : _percentxTWOONEⲻSEVENE
             {
-                public FOURSIX(Inners.FOUR FOUR_1, Inners.SIX SIX_1)
+                public _FOURSIX(Inners._FOUR _FOUR_1, Inners._SIX _SIX_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.SIX_1 = SIX_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10327,16 +10327,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURSEVEN : percentxTWOONEⲻSEVENE
+            public sealed class _FOURSEVEN : _percentxTWOONEⲻSEVENE
             {
-                public FOURSEVEN(Inners.FOUR FOUR_1, Inners.SEVEN SEVEN_1)
+                public _FOURSEVEN(Inners._FOUR _FOUR_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10344,16 +10344,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOUREIGHT : percentxTWOONEⲻSEVENE
+            public sealed class _FOUREIGHT : _percentxTWOONEⲻSEVENE
             {
-                public FOUREIGHT(Inners.FOUR FOUR_1, Inners.EIGHT EIGHT_1)
+                public _FOUREIGHT(Inners._FOUR _FOUR_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10361,16 +10361,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURNINE : percentxTWOONEⲻSEVENE
+            public sealed class _FOURNINE : _percentxTWOONEⲻSEVENE
             {
-                public FOURNINE(Inners.FOUR FOUR_1, Inners.NINE NINE_1)
+                public _FOURNINE(Inners._FOUR _FOUR_1, Inners._NINE _NINE_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.NINE_1 = NINE_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10378,16 +10378,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURA : percentxTWOONEⲻSEVENE
+            public sealed class _FOURA : _percentxTWOONEⲻSEVENE
             {
-                public FOURA(Inners.FOUR FOUR_1, Inners.A A_1)
+                public _FOURA(Inners._FOUR _FOUR_1, Inners._A _A_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.A_1 = A_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10395,16 +10395,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURB : percentxTWOONEⲻSEVENE
+            public sealed class _FOURB : _percentxTWOONEⲻSEVENE
             {
-                public FOURB(Inners.FOUR FOUR_1, Inners.B B_1)
+                public _FOURB(Inners._FOUR _FOUR_1, Inners._B _B_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.B_1 = B_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10412,16 +10412,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURC : percentxTWOONEⲻSEVENE
+            public sealed class _FOURC : _percentxTWOONEⲻSEVENE
             {
-                public FOURC(Inners.FOUR FOUR_1, Inners.C C_1)
+                public _FOURC(Inners._FOUR _FOUR_1, Inners._C _C_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.C_1 = C_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10429,16 +10429,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURD : percentxTWOONEⲻSEVENE
+            public sealed class _FOURD : _percentxTWOONEⲻSEVENE
             {
-                public FOURD(Inners.FOUR FOUR_1, Inners.D D_1)
+                public _FOURD(Inners._FOUR _FOUR_1, Inners._D _D_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.D_1 = D_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10446,16 +10446,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURE : percentxTWOONEⲻSEVENE
+            public sealed class _FOURE : _percentxTWOONEⲻSEVENE
             {
-                public FOURE(Inners.FOUR FOUR_1, Inners.E E_1)
+                public _FOURE(Inners._FOUR _FOUR_1, Inners._E _E_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.E_1 = E_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10463,16 +10463,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FOURF : percentxTWOONEⲻSEVENE
+            public sealed class _FOURF : _percentxTWOONEⲻSEVENE
             {
-                public FOURF(Inners.FOUR FOUR_1, Inners.F F_1)
+                public _FOURF(Inners._FOUR _FOUR_1, Inners._F _F_1)
                 {
-                    this.FOUR_1 = FOUR_1;
-                    this.F_1 = F_1;
+                    this._FOUR_1 = _FOUR_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.FOUR FOUR_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10480,16 +10480,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEZERO : percentxTWOONEⲻSEVENE
+            public sealed class _FIVEZERO : _percentxTWOONEⲻSEVENE
             {
-                public FIVEZERO(Inners.FIVE FIVE_1, Inners.ZERO ZERO_1)
+                public _FIVEZERO(Inners._FIVE _FIVE_1, Inners._ZERO _ZERO_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10497,16 +10497,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEONE : percentxTWOONEⲻSEVENE
+            public sealed class _FIVEONE : _percentxTWOONEⲻSEVENE
             {
-                public FIVEONE(Inners.FIVE FIVE_1, Inners.ONE ONE_1)
+                public _FIVEONE(Inners._FIVE _FIVE_1, Inners._ONE _ONE_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.ONE_1 = ONE_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10514,16 +10514,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVETWO : percentxTWOONEⲻSEVENE
+            public sealed class _FIVETWO : _percentxTWOONEⲻSEVENE
             {
-                public FIVETWO(Inners.FIVE FIVE_1, Inners.TWO TWO_1)
+                public _FIVETWO(Inners._FIVE _FIVE_1, Inners._TWO _TWO_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.TWO_1 = TWO_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10531,16 +10531,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVETHREE : percentxTWOONEⲻSEVENE
+            public sealed class _FIVETHREE : _percentxTWOONEⲻSEVENE
             {
-                public FIVETHREE(Inners.FIVE FIVE_1, Inners.THREE THREE_1)
+                public _FIVETHREE(Inners._FIVE _FIVE_1, Inners._THREE _THREE_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.THREE_1 = THREE_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10548,16 +10548,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEFOUR : percentxTWOONEⲻSEVENE
+            public sealed class _FIVEFOUR : _percentxTWOONEⲻSEVENE
             {
-                public FIVEFOUR(Inners.FIVE FIVE_1, Inners.FOUR FOUR_1)
+                public _FIVEFOUR(Inners._FIVE _FIVE_1, Inners._FOUR _FOUR_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10565,16 +10565,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEFIVE : percentxTWOONEⲻSEVENE
+            public sealed class _FIVEFIVE : _percentxTWOONEⲻSEVENE
             {
-                public FIVEFIVE(Inners.FIVE FIVE_1, Inners.FIVE FIVE_2)
+                public _FIVEFIVE(Inners._FIVE _FIVE_1, Inners._FIVE _FIVE_2)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.FIVE_2 = FIVE_2;
+                    this._FIVE_1 = _FIVE_1;
+                    this._FIVE_2 = _FIVE_2;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.FIVE FIVE_2 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._FIVE _FIVE_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10582,16 +10582,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVESIX : percentxTWOONEⲻSEVENE
+            public sealed class _FIVESIX : _percentxTWOONEⲻSEVENE
             {
-                public FIVESIX(Inners.FIVE FIVE_1, Inners.SIX SIX_1)
+                public _FIVESIX(Inners._FIVE _FIVE_1, Inners._SIX _SIX_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.SIX_1 = SIX_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10599,16 +10599,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVESEVEN : percentxTWOONEⲻSEVENE
+            public sealed class _FIVESEVEN : _percentxTWOONEⲻSEVENE
             {
-                public FIVESEVEN(Inners.FIVE FIVE_1, Inners.SEVEN SEVEN_1)
+                public _FIVESEVEN(Inners._FIVE _FIVE_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10616,16 +10616,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEEIGHT : percentxTWOONEⲻSEVENE
+            public sealed class _FIVEEIGHT : _percentxTWOONEⲻSEVENE
             {
-                public FIVEEIGHT(Inners.FIVE FIVE_1, Inners.EIGHT EIGHT_1)
+                public _FIVEEIGHT(Inners._FIVE _FIVE_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10633,16 +10633,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVENINE : percentxTWOONEⲻSEVENE
+            public sealed class _FIVENINE : _percentxTWOONEⲻSEVENE
             {
-                public FIVENINE(Inners.FIVE FIVE_1, Inners.NINE NINE_1)
+                public _FIVENINE(Inners._FIVE _FIVE_1, Inners._NINE _NINE_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.NINE_1 = NINE_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10650,16 +10650,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEA : percentxTWOONEⲻSEVENE
+            public sealed class _FIVEA : _percentxTWOONEⲻSEVENE
             {
-                public FIVEA(Inners.FIVE FIVE_1, Inners.A A_1)
+                public _FIVEA(Inners._FIVE _FIVE_1, Inners._A _A_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.A_1 = A_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10667,16 +10667,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEB : percentxTWOONEⲻSEVENE
+            public sealed class _FIVEB : _percentxTWOONEⲻSEVENE
             {
-                public FIVEB(Inners.FIVE FIVE_1, Inners.B B_1)
+                public _FIVEB(Inners._FIVE _FIVE_1, Inners._B _B_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.B_1 = B_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10684,16 +10684,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEC : percentxTWOONEⲻSEVENE
+            public sealed class _FIVEC : _percentxTWOONEⲻSEVENE
             {
-                public FIVEC(Inners.FIVE FIVE_1, Inners.C C_1)
+                public _FIVEC(Inners._FIVE _FIVE_1, Inners._C _C_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.C_1 = C_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10701,16 +10701,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVED : percentxTWOONEⲻSEVENE
+            public sealed class _FIVED : _percentxTWOONEⲻSEVENE
             {
-                public FIVED(Inners.FIVE FIVE_1, Inners.D D_1)
+                public _FIVED(Inners._FIVE _FIVE_1, Inners._D _D_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.D_1 = D_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10718,16 +10718,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEE : percentxTWOONEⲻSEVENE
+            public sealed class _FIVEE : _percentxTWOONEⲻSEVENE
             {
-                public FIVEE(Inners.FIVE FIVE_1, Inners.E E_1)
+                public _FIVEE(Inners._FIVE _FIVE_1, Inners._E _E_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.E_1 = E_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10735,16 +10735,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class FIVEF : percentxTWOONEⲻSEVENE
+            public sealed class _FIVEF : _percentxTWOONEⲻSEVENE
             {
-                public FIVEF(Inners.FIVE FIVE_1, Inners.F F_1)
+                public _FIVEF(Inners._FIVE _FIVE_1, Inners._F _F_1)
                 {
-                    this.FIVE_1 = FIVE_1;
-                    this.F_1 = F_1;
+                    this._FIVE_1 = _FIVE_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.FIVE FIVE_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10752,16 +10752,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXZERO : percentxTWOONEⲻSEVENE
+            public sealed class _SIXZERO : _percentxTWOONEⲻSEVENE
             {
-                public SIXZERO(Inners.SIX SIX_1, Inners.ZERO ZERO_1)
+                public _SIXZERO(Inners._SIX _SIX_1, Inners._ZERO _ZERO_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._SIX_1 = _SIX_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10769,16 +10769,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXONE : percentxTWOONEⲻSEVENE
+            public sealed class _SIXONE : _percentxTWOONEⲻSEVENE
             {
-                public SIXONE(Inners.SIX SIX_1, Inners.ONE ONE_1)
+                public _SIXONE(Inners._SIX _SIX_1, Inners._ONE _ONE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.ONE_1 = ONE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10786,16 +10786,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXTWO : percentxTWOONEⲻSEVENE
+            public sealed class _SIXTWO : _percentxTWOONEⲻSEVENE
             {
-                public SIXTWO(Inners.SIX SIX_1, Inners.TWO TWO_1)
+                public _SIXTWO(Inners._SIX _SIX_1, Inners._TWO _TWO_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.TWO_1 = TWO_1;
+                    this._SIX_1 = _SIX_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10803,16 +10803,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXTHREE : percentxTWOONEⲻSEVENE
+            public sealed class _SIXTHREE : _percentxTWOONEⲻSEVENE
             {
-                public SIXTHREE(Inners.SIX SIX_1, Inners.THREE THREE_1)
+                public _SIXTHREE(Inners._SIX _SIX_1, Inners._THREE _THREE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.THREE_1 = THREE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10820,16 +10820,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXFOUR : percentxTWOONEⲻSEVENE
+            public sealed class _SIXFOUR : _percentxTWOONEⲻSEVENE
             {
-                public SIXFOUR(Inners.SIX SIX_1, Inners.FOUR FOUR_1)
+                public _SIXFOUR(Inners._SIX _SIX_1, Inners._FOUR _FOUR_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._SIX_1 = _SIX_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10837,16 +10837,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXFIVE : percentxTWOONEⲻSEVENE
+            public sealed class _SIXFIVE : _percentxTWOONEⲻSEVENE
             {
-                public SIXFIVE(Inners.SIX SIX_1, Inners.FIVE FIVE_1)
+                public _SIXFIVE(Inners._SIX _SIX_1, Inners._FIVE _FIVE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10854,16 +10854,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXSIX : percentxTWOONEⲻSEVENE
+            public sealed class _SIXSIX : _percentxTWOONEⲻSEVENE
             {
-                public SIXSIX(Inners.SIX SIX_1, Inners.SIX SIX_2)
+                public _SIXSIX(Inners._SIX _SIX_1, Inners._SIX _SIX_2)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.SIX_2 = SIX_2;
+                    this._SIX_1 = _SIX_1;
+                    this._SIX_2 = _SIX_2;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.SIX SIX_2 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._SIX _SIX_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10871,16 +10871,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXSEVEN : percentxTWOONEⲻSEVENE
+            public sealed class _SIXSEVEN : _percentxTWOONEⲻSEVENE
             {
-                public SIXSEVEN(Inners.SIX SIX_1, Inners.SEVEN SEVEN_1)
+                public _SIXSEVEN(Inners._SIX _SIX_1, Inners._SEVEN _SEVEN_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.SEVEN_1 = SEVEN_1;
+                    this._SIX_1 = _SIX_1;
+                    this._SEVEN_1 = _SEVEN_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.SEVEN SEVEN_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10888,16 +10888,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXEIGHT : percentxTWOONEⲻSEVENE
+            public sealed class _SIXEIGHT : _percentxTWOONEⲻSEVENE
             {
-                public SIXEIGHT(Inners.SIX SIX_1, Inners.EIGHT EIGHT_1)
+                public _SIXEIGHT(Inners._SIX _SIX_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._SIX_1 = _SIX_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10905,16 +10905,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXNINE : percentxTWOONEⲻSEVENE
+            public sealed class _SIXNINE : _percentxTWOONEⲻSEVENE
             {
-                public SIXNINE(Inners.SIX SIX_1, Inners.NINE NINE_1)
+                public _SIXNINE(Inners._SIX _SIX_1, Inners._NINE _NINE_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.NINE_1 = NINE_1;
+                    this._SIX_1 = _SIX_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10922,16 +10922,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXA : percentxTWOONEⲻSEVENE
+            public sealed class _SIXA : _percentxTWOONEⲻSEVENE
             {
-                public SIXA(Inners.SIX SIX_1, Inners.A A_1)
+                public _SIXA(Inners._SIX _SIX_1, Inners._A _A_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.A_1 = A_1;
+                    this._SIX_1 = _SIX_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10939,16 +10939,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXB : percentxTWOONEⲻSEVENE
+            public sealed class _SIXB : _percentxTWOONEⲻSEVENE
             {
-                public SIXB(Inners.SIX SIX_1, Inners.B B_1)
+                public _SIXB(Inners._SIX _SIX_1, Inners._B _B_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.B_1 = B_1;
+                    this._SIX_1 = _SIX_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10956,16 +10956,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXC : percentxTWOONEⲻSEVENE
+            public sealed class _SIXC : _percentxTWOONEⲻSEVENE
             {
-                public SIXC(Inners.SIX SIX_1, Inners.C C_1)
+                public _SIXC(Inners._SIX _SIX_1, Inners._C _C_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.C_1 = C_1;
+                    this._SIX_1 = _SIX_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10973,16 +10973,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXD : percentxTWOONEⲻSEVENE
+            public sealed class _SIXD : _percentxTWOONEⲻSEVENE
             {
-                public SIXD(Inners.SIX SIX_1, Inners.D D_1)
+                public _SIXD(Inners._SIX _SIX_1, Inners._D _D_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.D_1 = D_1;
+                    this._SIX_1 = _SIX_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -10990,16 +10990,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXE : percentxTWOONEⲻSEVENE
+            public sealed class _SIXE : _percentxTWOONEⲻSEVENE
             {
-                public SIXE(Inners.SIX SIX_1, Inners.E E_1)
+                public _SIXE(Inners._SIX _SIX_1, Inners._E _E_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.E_1 = E_1;
+                    this._SIX_1 = _SIX_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11007,16 +11007,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SIXF : percentxTWOONEⲻSEVENE
+            public sealed class _SIXF : _percentxTWOONEⲻSEVENE
             {
-                public SIXF(Inners.SIX SIX_1, Inners.F F_1)
+                public _SIXF(Inners._SIX _SIX_1, Inners._F _F_1)
                 {
-                    this.SIX_1 = SIX_1;
-                    this.F_1 = F_1;
+                    this._SIX_1 = _SIX_1;
+                    this._F_1 = _F_1;
                 }
                 
-                public Inners.SIX SIX_1 { get; }
-                public Inners.F F_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
+                public Inners._F _F_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11024,16 +11024,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENZERO : percentxTWOONEⲻSEVENE
+            public sealed class _SEVENZERO : _percentxTWOONEⲻSEVENE
             {
-                public SEVENZERO(Inners.SEVEN SEVEN_1, Inners.ZERO ZERO_1)
+                public _SEVENZERO(Inners._SEVEN _SEVEN_1, Inners._ZERO _ZERO_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.ZERO_1 = ZERO_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._ZERO_1 = _ZERO_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.ZERO ZERO_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._ZERO _ZERO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11041,16 +11041,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENONE : percentxTWOONEⲻSEVENE
+            public sealed class _SEVENONE : _percentxTWOONEⲻSEVENE
             {
-                public SEVENONE(Inners.SEVEN SEVEN_1, Inners.ONE ONE_1)
+                public _SEVENONE(Inners._SEVEN _SEVEN_1, Inners._ONE _ONE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.ONE_1 = ONE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._ONE_1 = _ONE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.ONE ONE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._ONE _ONE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11058,16 +11058,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENTWO : percentxTWOONEⲻSEVENE
+            public sealed class _SEVENTWO : _percentxTWOONEⲻSEVENE
             {
-                public SEVENTWO(Inners.SEVEN SEVEN_1, Inners.TWO TWO_1)
+                public _SEVENTWO(Inners._SEVEN _SEVEN_1, Inners._TWO _TWO_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.TWO_1 = TWO_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._TWO_1 = _TWO_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.TWO TWO_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._TWO _TWO_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11075,16 +11075,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENTHREE : percentxTWOONEⲻSEVENE
+            public sealed class _SEVENTHREE : _percentxTWOONEⲻSEVENE
             {
-                public SEVENTHREE(Inners.SEVEN SEVEN_1, Inners.THREE THREE_1)
+                public _SEVENTHREE(Inners._SEVEN _SEVEN_1, Inners._THREE _THREE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.THREE_1 = THREE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._THREE_1 = _THREE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.THREE THREE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._THREE _THREE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11092,16 +11092,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENFOUR : percentxTWOONEⲻSEVENE
+            public sealed class _SEVENFOUR : _percentxTWOONEⲻSEVENE
             {
-                public SEVENFOUR(Inners.SEVEN SEVEN_1, Inners.FOUR FOUR_1)
+                public _SEVENFOUR(Inners._SEVEN _SEVEN_1, Inners._FOUR _FOUR_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.FOUR_1 = FOUR_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._FOUR_1 = _FOUR_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.FOUR FOUR_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._FOUR _FOUR_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11109,16 +11109,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENFIVE : percentxTWOONEⲻSEVENE
+            public sealed class _SEVENFIVE : _percentxTWOONEⲻSEVENE
             {
-                public SEVENFIVE(Inners.SEVEN SEVEN_1, Inners.FIVE FIVE_1)
+                public _SEVENFIVE(Inners._SEVEN _SEVEN_1, Inners._FIVE _FIVE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.FIVE_1 = FIVE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._FIVE_1 = _FIVE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.FIVE FIVE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._FIVE _FIVE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11126,16 +11126,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENSIX : percentxTWOONEⲻSEVENE
+            public sealed class _SEVENSIX : _percentxTWOONEⲻSEVENE
             {
-                public SEVENSIX(Inners.SEVEN SEVEN_1, Inners.SIX SIX_1)
+                public _SEVENSIX(Inners._SEVEN _SEVEN_1, Inners._SIX _SIX_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.SIX_1 = SIX_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._SIX_1 = _SIX_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.SIX SIX_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._SIX _SIX_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11143,16 +11143,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENSEVEN : percentxTWOONEⲻSEVENE
+            public sealed class _SEVENSEVEN : _percentxTWOONEⲻSEVENE
             {
-                public SEVENSEVEN(Inners.SEVEN SEVEN_1, Inners.SEVEN SEVEN_2)
+                public _SEVENSEVEN(Inners._SEVEN _SEVEN_1, Inners._SEVEN _SEVEN_2)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.SEVEN_2 = SEVEN_2;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._SEVEN_2 = _SEVEN_2;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.SEVEN SEVEN_2 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._SEVEN _SEVEN_2 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11160,16 +11160,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENEIGHT : percentxTWOONEⲻSEVENE
+            public sealed class _SEVENEIGHT : _percentxTWOONEⲻSEVENE
             {
-                public SEVENEIGHT(Inners.SEVEN SEVEN_1, Inners.EIGHT EIGHT_1)
+                public _SEVENEIGHT(Inners._SEVEN _SEVEN_1, Inners._EIGHT _EIGHT_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.EIGHT_1 = EIGHT_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._EIGHT_1 = _EIGHT_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.EIGHT EIGHT_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._EIGHT _EIGHT_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11177,16 +11177,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENNINE : percentxTWOONEⲻSEVENE
+            public sealed class _SEVENNINE : _percentxTWOONEⲻSEVENE
             {
-                public SEVENNINE(Inners.SEVEN SEVEN_1, Inners.NINE NINE_1)
+                public _SEVENNINE(Inners._SEVEN _SEVEN_1, Inners._NINE _NINE_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.NINE_1 = NINE_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._NINE_1 = _NINE_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.NINE NINE_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._NINE _NINE_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11194,16 +11194,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENA : percentxTWOONEⲻSEVENE
+            public sealed class _SEVENA : _percentxTWOONEⲻSEVENE
             {
-                public SEVENA(Inners.SEVEN SEVEN_1, Inners.A A_1)
+                public _SEVENA(Inners._SEVEN _SEVEN_1, Inners._A _A_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.A_1 = A_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._A_1 = _A_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.A A_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._A _A_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11211,16 +11211,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENB : percentxTWOONEⲻSEVENE
+            public sealed class _SEVENB : _percentxTWOONEⲻSEVENE
             {
-                public SEVENB(Inners.SEVEN SEVEN_1, Inners.B B_1)
+                public _SEVENB(Inners._SEVEN _SEVEN_1, Inners._B _B_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.B_1 = B_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._B_1 = _B_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.B B_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._B _B_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11228,16 +11228,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENC : percentxTWOONEⲻSEVENE
+            public sealed class _SEVENC : _percentxTWOONEⲻSEVENE
             {
-                public SEVENC(Inners.SEVEN SEVEN_1, Inners.C C_1)
+                public _SEVENC(Inners._SEVEN _SEVEN_1, Inners._C _C_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.C_1 = C_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._C_1 = _C_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.C C_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._C _C_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11245,16 +11245,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVEND : percentxTWOONEⲻSEVENE
+            public sealed class _SEVEND : _percentxTWOONEⲻSEVENE
             {
-                public SEVEND(Inners.SEVEN SEVEN_1, Inners.D D_1)
+                public _SEVEND(Inners._SEVEN _SEVEN_1, Inners._D _D_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.D_1 = D_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._D_1 = _D_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.D D_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._D _D_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11262,16 +11262,16 @@ namespace GeneratorV3.Core
                 }
             }
             
-            public sealed class SEVENE : percentxTWOONEⲻSEVENE
+            public sealed class _SEVENE : _percentxTWOONEⲻSEVENE
             {
-                public SEVENE(Inners.SEVEN SEVEN_1, Inners.E E_1)
+                public _SEVENE(Inners._SEVEN _SEVEN_1, Inners._E _E_1)
                 {
-                    this.SEVEN_1 = SEVEN_1;
-                    this.E_1 = E_1;
+                    this._SEVEN_1 = _SEVEN_1;
+                    this._E_1 = _E_1;
                 }
                 
-                public Inners.SEVEN SEVEN_1 { get; }
-                public Inners.E E_1 { get; }
+                public Inners._SEVEN _SEVEN_1 { get; }
+                public Inners._E _E_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
