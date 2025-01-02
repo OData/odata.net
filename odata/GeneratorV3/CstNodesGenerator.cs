@@ -1736,7 +1736,7 @@
                 var stringBuilder = new StringBuilder();
                 foreach (var digit in digits)
                 {
-                    stringBuilder.Append(DigitToClassName.Instance.Visit(digit, default));
+                    stringBuilder.Append(this.toClassNames.DigitToClassName.Visit(digit, default));
                 }
 
                 return stringBuilder.ToString();
@@ -1891,7 +1891,7 @@
 
             protected internal override string Accept(HexVal.Range node, Root.Void context)
             {
-                return $"x{this.toClassNames.HexDigsToClassName.Generate(node.HexDigs, context)}{characterSubstitutions.Dash}{HexDigsToClassName.Instance.Generate(node.Inners.First().HexDigs, context)}";
+                return $"x{this.toClassNames.HexDigsToClassName.Generate(node.HexDigs, context)}{characterSubstitutions.Dash}{this.toClassNames.HexDigsToClassName.Generate(node.Inners.First().HexDigs, context)}";
             }
         }
 
@@ -2034,7 +2034,7 @@
 
             public string Generate(CharVal charVal)
             {
-                return $"{characterSubstitutions.DoubleQuote}{string.Join(string.Empty, charVal.Inners.Select(inner => this.CharValInnerToClassName.Visit(inner, default)))}{characterSubstitutions.DoubleQuote}";
+                return $"{characterSubstitutions.DoubleQuote}{string.Join(string.Empty, charVal.Inners.Select(inner => this.toClassNames.CharValInnerToClassName.Visit(inner, default)))}{characterSubstitutions.DoubleQuote}";
             }
 
         }
