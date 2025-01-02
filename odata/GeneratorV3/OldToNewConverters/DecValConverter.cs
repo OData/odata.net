@@ -32,10 +32,10 @@
                     x64Converter.Instance.Convert(node.D)),
                 node.Digits.Select(digit =>
                     DigitConverter.Instance.Visit(digit, context)),
-                new Inners._ONEasteriskopendoublequotex2Edoublequote_ONEasteriskDIGITↃⳆopendoublequotex2Ddoublequote_ONEasteriskDIGITↃ._ONEasteriskopendoublequotex2Edoublequote_ONEasteriskDIGITↃ(
+                new Inners._1asteriskopendoublequotex2Edoublequote_1asteriskDIGITↃⳆopendoublequotex2Ddoublequote_1asteriskDIGITↃ._1asteriskopendoublequotex2Edoublequote_1asteriskDIGITↃ(
                     node.Inners.Select(inner => 
-                        new Inners._opendoublequotex2Edoublequote_ONEasteriskDIGITↃ(
-                            new Inners._doublequotex2Edoublequote_ONEasteriskDIGIT(
+                        new Inners._opendoublequotex2Edoublequote_1asteriskDIGITↃ(
+                            new Inners._doublequotex2Edoublequote_1asteriskDIGIT(
                                 new Inners._doublequotex2Edoublequote(
                                     x2EConverter.Instance.Convert(inner.Dot)),
                                 inner.Digits.Select(digit =>
@@ -49,9 +49,9 @@
                     x64Converter.Instance.Convert(node.D)),
                 node.Digits.Select(digit =>
                     DigitConverter.Instance.Visit(digit, context)),
-                new Inners._ONEasteriskopendoublequotex2Edoublequote_ONEasteriskDIGITↃⳆopendoublequotex2Ddoublequote_ONEasteriskDIGITↃ._opendoublequotex2Ddoublequote_ONEasteriskDIGITↃ(
-                    new Inners._opendoublequotex2Ddoublequote_ONEasteriskDIGITↃ(
-                        new Inners._doublequotex2Ddoublequote_ONEasteriskDIGIT(
+                new Inners._1asteriskopendoublequotex2Edoublequote_1asteriskDIGITↃⳆopendoublequotex2Ddoublequote_1asteriskDIGITↃ._opendoublequotex2Ddoublequote_1asteriskDIGITↃ(
+                    new Inners._opendoublequotex2Ddoublequote_1asteriskDIGITↃ(
+                        new Inners._doublequotex2Ddoublequote_1asteriskDIGIT(
                             new Inners._doublequotex2Ddoublequote(
                                 x2DConverter.Instance.Convert(node.Inners.First().Dash)),
                             node.Inners.First().Digits.Select(digit =>
