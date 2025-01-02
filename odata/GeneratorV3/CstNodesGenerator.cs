@@ -148,7 +148,7 @@
                 public RuleGenerator(string classNamePrefix, string @namespace, string innersClassName)
                 {
                     this.classNamePrefix = classNamePrefix;
-                    this.elementsGenerator = new ElementsGenerator(@namespace, innersClassName);
+                    this.elementsGenerator = new ElementsGenerator(classNamePrefix, @namespace, innersClassName);
                 }
 
                 public Class Generate(Rule rule, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
@@ -161,9 +161,9 @@
                 {
                     private readonly AlternationGenerator alternationGenerator;
 
-                    public ElementsGenerator(string @namespace, string innersClassName)
+                    public ElementsGenerator(string classNamePrefix, string @namespace, string innersClassName)
                     {
-                        this.alternationGenerator = new AlternationGenerator(@namespace, innersClassName);
+                        this.alternationGenerator = new AlternationGenerator(classNamePrefix, @namespace, innersClassName);
                     }
 
                     public Class Generate(Elements elements, (string ClassName, Dictionary<string, Class> InnerClasses) context)
@@ -176,9 +176,12 @@
                         private readonly ConcatenationToClass concatenationToClass;
                         private readonly ConcatenationsToDiscriminatedUnion concatenationsToDiscriminatedUnion;
 
-                        public AlternationGenerator(string @namespace, string innersClassName)
+                        public AlternationGenerator(
+                            string classNamePrefix,
+                            string @namespace, 
+                            string innersClassName)
                         {
-                            this.concatenationToClass = new ConcatenationToClass(@namespace, innersClassName, this);
+                            this.concatenationToClass = new ConcatenationToClass(classNamePrefix, @namespace, innersClassName, this);
                             this.concatenationsToDiscriminatedUnion = new ConcatenationsToDiscriminatedUnion(this.concatenationToClass);
                         }
 
@@ -207,11 +210,13 @@
                             private readonly RepetitonToPropertyDefinition repetitonToPropertyDefinition;
 
                             public ConcatenationToClass(
+                                string classNamePrefix,
                                 string @namespace, 
                                 string innersClassName,
                                 AlternationGenerator alternationGenerator)
                             {
                                 this.repetitonToPropertyDefinition = new RepetitonToPropertyDefinition(
+                                    classNamePrefix,
                                     @namespace, 
                                     innersClassName,
                                     alternationGenerator);
@@ -261,12 +266,14 @@
                                 private readonly ElementToPropertyDefinition elementToPropertyDefinition;
 
                                 public RepetitonToPropertyDefinition(
+                                    string classNamePrefix,
                                     string @namespace,
                                     string innersClassName, 
                                     AlternationGenerator alternationGenerator)
                                 {
                                     this.elementToPropertyDefinition = new ElementToPropertyDefinition(
-                                        @namespace, 
+                                        classNamePrefix,
+                                        @namespace,
                                         innersClassName,
                                         alternationGenerator);
                                 }
@@ -295,6 +302,7 @@
 
                                 private sealed class ElementToPropertyDefinition : Element.Visitor<PropertyDefinition, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses)>
                                 {
+                                    private readonly string classNamePrefix;
                                     private readonly string @namespace;
                                     private readonly string innersClassName;
 
@@ -303,10 +311,12 @@
                                     private readonly NumValToClass numValToClass;
 
                                     public ElementToPropertyDefinition(
-                                        string @namespace, 
-                                        string innersClassName, 
+                                        string classNamePrefix,
+                                        string @namespace,
+                                        string innersClassName,
                                         AlternationGenerator alternationGenerator)
                                     {
+                                        this.classNamePrefix = classNamePrefix;
                                         this.@namespace = @namespace;
                                         this.innersClassName = innersClassName;
 
