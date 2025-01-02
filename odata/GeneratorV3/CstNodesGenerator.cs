@@ -322,7 +322,7 @@
 
                                         this.alternationGenerator = alternationGenerator;
 
-                                        this.charValToClass = new CharValToClass(innersClassName);
+                                        this.charValToClass = new CharValToClass(classNamePrefix, innersClassName);
                                         this.numValToClass = new NumValToClass(innersClassName);
                                     }
 
@@ -518,9 +518,9 @@
                                     {
                                         private readonly InnerToProperty innerToProperty;
 
-                                        public CharValToClass(string innersClassName)
+                                        public CharValToClass(string classNamePrefix, string innersClassName)
                                         {
-                                            this.innerToProperty = new InnerToProperty(innersClassName);
+                                            this.innerToProperty = new InnerToProperty(classNamePrefix, innersClassName);
                                         }
 
                                         public Class Generate(CharVal charVal, (string ClassName, Dictionary<string, Class> InnerClasses) context)
@@ -557,10 +557,12 @@
 
                                         private sealed class InnerToProperty
                                         {
+                                            private readonly string classNamePrefix;
                                             private readonly string innersClassName;
 
-                                            public InnerToProperty(string innersClassName)
+                                            public InnerToProperty(string classNamePrefix, string innersClassName)
                                             {
+                                                this.classNamePrefix = classNamePrefix;
                                                 this.innersClassName = innersClassName;
                                             }
 
