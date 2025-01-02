@@ -863,15 +863,18 @@
                                                 private readonly string classNamePrefix;
                                                 private readonly string innersClassName;
                                                 private readonly HexDigsToClass hexDigsToClass;
+                                                private readonly ToClassNames toClassNames;
 
                                                 public SegmentsToProperties(
                                                     string classNamePrefix,
                                                     string innersClassName,
-                                                    HexDigsToClass hexDigsToClass)
+                                                    HexDigsToClass hexDigsToClass,
+                                                    ToClassNames toClassNames)
                                                 {
                                                     this.classNamePrefix = classNamePrefix;
                                                     this.innersClassName = innersClassName;
                                                     this.hexDigsToClass = hexDigsToClass;
+                                                    this.toClassNames = toClassNames;
                                                 }
 
                                                 public IEnumerable<PropertyDefinition> Generate(
@@ -880,7 +883,7 @@
                                                 {
                                                     foreach (var segment in segments)
                                                     {
-                                                        var className = this.classNamePrefix + HexDigsToClassName.Instance.Generate(segment, default);
+                                                        var className = this.classNamePrefix + this.toClassNames.HexDigsToClassName.Generate(segment, default);
                                                         if (!context.InnerClasses.ContainsKey(className))
                                                         {
                                                             var @class = this.hexDigsToClass.Generate(segment, (className, null, context.InnerClasses));
