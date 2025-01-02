@@ -764,9 +764,13 @@
                                     {
                                         private readonly HexValToClass hexValToClass;
 
-                                        public NumValToClass(string classNamePrefix, string innersClassName)
+                                        public NumValToClass(
+                                            string classNamePrefix,
+                                            string innersClassName, 
+                                            ToClassNames toClassNames)
                                         {
                                             this.hexValToClass = new HexValToClass(classNamePrefix, innersClassName);
+                                            this.toClassNames = toClassNames;
                                         }
 
                                         protected internal override Class Accept(NumVal.BinVal node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
@@ -787,17 +791,19 @@
                                         private sealed class HexValToClass : HexVal.Visitor<Class, (string ClassName, Dictionary<string, Class> InnerClasses)>
                                         {
                                             private readonly string classNamePrefix;
+                                            private readonly ToClassNames toClassNames;
 
                                             private readonly HexDigsToClass hexDigsToClass;
                                             private readonly SegmentsToProperties segmentsToProperties;
 
-                                            public HexValToClass(string classNamePrefix, string innersClassName)
+                                            public HexValToClass(string classNamePrefix, string innersClassName, ToClassNames toClassNames)
                                             {
                                                 this.classNamePrefix = classNamePrefix;
-
+                                                this.toClassNames = toClassNames;
                                                 this.hexDigsToClass = new HexDigsToClass(
                                                     this.classNamePrefix, 
-                                                    innersClassName);
+                                                    innersClassName,
+                                                    this.toClassNames);
                                                 this.segmentsToProperties = new SegmentsToProperties(
                                                     this.classNamePrefix,
                                                     innersClassName, 
@@ -911,7 +917,7 @@
                                                             .hexDigsToClass
                                                             .Generate(
                                                                 hexDigs,
-                                                                (this.classNamePrefix + HexDigsToClassName.Instance.Generate(hexDigs, default), context.ClassName, context.InnerClasses)))
+                                                                (this.classNamePrefix + this.toClassNames.HexDigsToClassName.Generate(hexDigs, default), context.ClassName, context.InnerClasses)))
                                                         .ToList();
 
                                                 return new Class(
@@ -1264,11 +1270,15 @@
                                             {
                                                 private readonly HexDigsToProperties hexDigsToProperties;
 
-                                                public HexDigsToClass(string classNamePrefix, string innersClassName)
+                                                public HexDigsToClass(
+                                                    string classNamePrefix, 
+                                                    string innersClassName,
+                                                    ToClassNames toClassNames)
                                                 {
                                                     this.hexDigsToProperties = new HexDigsToProperties(
                                                         classNamePrefix, 
-                                                        innersClassName);
+                                                        innersClassName,
+                                                        toClassNames);
                                                 }
 
                                                 public Class Generate(
@@ -1330,11 +1340,16 @@
                                                 {
                                                     private readonly string classNamePrefix;
                                                     private readonly string innersClassName;
+                                                    private readonly ToClassNames toClassNames;
 
-                                                    public HexDigsToProperties(string classNamePrefix, string innersClassName)
+                                                    public HexDigsToProperties(
+                                                        string classNamePrefix, 
+                                                        string innersClassName,
+                                                        ToClassNames toClassNames)
                                                     {
                                                         this.classNamePrefix = classNamePrefix;
                                                         this.innersClassName = innersClassName;
+                                                        this.toClassNames = toClassNames;
                                                     }
 
                                                     public IEnumerable<PropertyDefinition> Generate(
@@ -1343,7 +1358,7 @@
                                                     {
                                                         foreach (var hexDig in hexDigs)
                                                         {
-                                                            var className = this.classNamePrefix + HexDigToClassName.Instance.Visit(hexDig, default);
+                                                            var className = this.classNamePrefix + this.toClassNames.HexDigToClassName.Visit(hexDig, default);
                                                             if (!context.InnerClasses.ContainsKey(className))
                                                             {
                                                                 var @class = new Class(
