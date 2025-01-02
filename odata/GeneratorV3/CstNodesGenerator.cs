@@ -25,28 +25,52 @@
         }
     }
 
+    public sealed class CstNodesGeneratorSettings
+    {
+        private CstNodesGeneratorSettings(string innersClassName, string classNamePrefix)
+        {
+            this.InnersClassName = innersClassName;
+            this.ClassNamePrefix = classNamePrefix;
+        }
+
+        public static CstNodesGeneratorSettings Default = new CstNodesGeneratorSettings("Inners", "_");
+
+        /// <summary>
+        /// Rules often compose several other elements at a time; when this happens, these end up being something akin to
+        /// an "implied" rules, which is being referred to here as "inner" rules. When these are encountered, classes
+        /// still need to be generated, but it is useful to separate them from the classes for the rules themselves. As
+        /// a result, we will nest the "inner" rules in another class. This property species the name of the class that
+        /// the "inner" rules should be nested under. It is critical that the name selected for this class does not
+        /// conflict with the name of any rules in the ABNF.
+        /// </summary>
+        public string InnersClassName { get; }
+
+        /// <summary>
+        /// Because rule names can sometimes conflict with c# reserved words and because literals can sometimes start
+        /// with characters that result in c# identifiers that are not legal, all names of generated class are given
+        /// a prefix. This property speficies what that prefix should be.
+        /// </summary>
+        public string ClassNamePrefix { get; }
+    }
+
     public sealed class CstNodesGenerator
     {
+        private readonly string innersClassName;
         private readonly RuleListInnerGenerator ruleListInnerGenerator;
 
-        private readonly string innersClassName;
+        public CstNodesGenerator(string @namespace)
+            : this(@namespace, CstNodesGeneratorSettings.Default)
+        {
+        }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="namespace">The namespace that all of the generated class should go in</param>
-        /// <param name="innersClassName">
-        /// Rules often compose several other elements at a time; when this happens, these end up being something akin to
-        /// an "implied" rules, which is being referred to here as "inner" rules. When these are encountered, classes
-        /// still need to be generated, but it is useful to separate them from the classes for the rules themselves. As
-        /// a result, we will nest the "inner" rules in another class. This parameter species the name of the class that
-        /// the "inner" rules should be nested under. It is critical that the name selected for this class does not
-        /// conflict with the name of any rules in the ABNF.
-        /// </param>
-        public CstNodesGenerator(string @namespace, string innersClassName)
+        public CstNodesGenerator(string @namespace, CstNodesGeneratorSettings settings)
         {
-            this.ruleListInnerGenerator = new RuleListInnerGenerator(@namespace, innersClassName);
-            this.innersClassName = innersClassName;
+            this.innersClassName = settings.InnersClassName;
+            this.ruleListInnerGenerator = new RuleListInnerGenerator(@namespace, this.innersClassName);
         }
 
         private static string ClassNamePrefix = "_"; //// TODO parameterize this probably?
