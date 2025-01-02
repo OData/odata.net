@@ -27,13 +27,20 @@
 
     public sealed class CstNodesGeneratorSettings
     {
-        private CstNodesGeneratorSettings(string innersClassName, string classNamePrefix)
+        private CstNodesGeneratorSettings(
+            string innersClassName, 
+            string classNamePrefix, 
+            CharacterSubstitutions characterSubstitutions)
         {
             this.InnersClassName = innersClassName;
             this.ClassNamePrefix = classNamePrefix;
+            this.CharacterSubstitutions = characterSubstitutions;
         }
 
-        public static CstNodesGeneratorSettings Default = new CstNodesGeneratorSettings("Inners", "_");
+        public static CstNodesGeneratorSettings Default { get; } = new CstNodesGeneratorSettings(
+            "Inners",
+            "_",
+            CharacterSubstitutions.Default);
 
         /// <summary>
         /// Rules often compose several other elements at a time; when this happens, these end up being something akin to
@@ -51,6 +58,78 @@
         /// a prefix. This property speficies what that prefix should be.
         /// </summary>
         public string ClassNamePrefix { get; }
+
+        /// <summary>
+        /// When generating the "inner" classes, ABNF reserved characters are translated into c# friendly class name
+        /// characters. This property defines what those translations should be.
+        /// </summary>
+        public CharacterSubstitutions CharacterSubstitutions { get; }
+    }
+
+    public sealed class CharacterSubstitutions
+    {
+        private CharacterSubstitutions(
+            char dash, 
+            string openParenthesis, 
+            char closeParenthesis, 
+            char openBracket, 
+            char closeBracket, 
+            string asterisk, 
+            char slash, 
+            char space, 
+            string doubleQuote, 
+            string period,
+            string percent)
+        {
+            this.Dash = dash;
+            this.OpenParenthesis = openParenthesis;
+            this.CloseParenthesis = closeParenthesis;
+            this.OpenBracket = openBracket;
+            this.CloseBracket = closeBracket;
+            this.Asterisk = asterisk;
+            this.Slash = slash;
+            this.Space = space;
+            this.DoubleQuote = doubleQuote;
+            this.Period = period;
+            this.Percent = percent;
+        }
+
+        public static CharacterSubstitutions Default { get; } = new CharacterSubstitutions(
+            'ⲻ',
+            "open",
+            'Ↄ',
+            '꘡',
+            '꘡',
+            "asterisk",
+            'Ⳇ',
+            '_',
+            "doublequote",
+            "period",
+            "percent");
+
+        //// TODO use string for all
+
+        public char Dash { get; } //// TODO parameterize these
+
+        public string OpenParenthesis { get; } //// TODO 'Ⲥ'; 
+
+        public char CloseParenthesis { get; }
+
+        public char OpenBracket { get; }
+
+        public char CloseBracket { get; }
+
+        public string Asterisk { get; } //// TODO 'ж';
+
+        public char Slash { get; }
+
+        public char Space { get; }
+
+        public string DoubleQuote { get; } //// TODO
+
+        public string Period { get; } //// TODO
+
+        public string Percent { get; } //// TODO
     }
 
     public sealed class CstNodesGenerator
@@ -74,31 +153,6 @@
                 settings.ClassNamePrefix, 
                 @namespace, 
                 this.innersClassName);
-        }
-
-        private static class CharacterSubstituions
-        {
-            public static char Dash { get; } = 'ⲻ'; //// TODO parameterize these
-
-            public static string OpenParenthesis { get; } = "open"; //// TODO 'Ⲥ'; 
-
-            public static char CloseParenthesis { get; } = 'Ↄ';
-
-            public static char OpenBracket { get; } = '꘡';
-
-            public static char CloseBracket { get; } = '꘡';
-
-            public static string Asterisk { get; } = "asterisk"; //// TODO 'ж';
-
-            public static char Slash { get; } = 'Ⳇ';
-
-            public static char Space { get; } = '_';
-
-            public static string DoubleQuote { get; } = "doublequote"; //// TODO
-
-            public static string Period { get; } = "period"; //// TODO
-
-            public static string Percent { get; } = "percent"; //// TODO
         }
 
         public IEnumerable<Class> Generate(RuleList ruleList, Root.Void context)
@@ -1444,9 +1498,9 @@
             public string Generate(Group group)
             {
                 var stringBuilder = new StringBuilder();
-                stringBuilder.Append(CharacterSubstituions.OpenParenthesis);
+                stringBuilder.Append(characterSubstitutions.OpenParenthesis);
                 stringBuilder.Append(AlternationToClassName.Instance.Generate(group.Alternation));
-                stringBuilder.Append(CharacterSubstituions.CloseParenthesis);
+                stringBuilder.Append(characterSubstitutions.CloseParenthesis);
 
                 return stringBuilder.ToString();
             }
@@ -1465,7 +1519,7 @@
                 var className = ConcatenationToClassName.Instance.Generate(alternation.Concatenation);
                 foreach (var inner in alternation.Inners)
                 {
-                    className += $"{CharacterSubstituions.Slash}{ConcatenationToClassName.Instance.Generate(inner.Concatenation)}";
+                    className += $"{characterSubstitutions.Slash}{ConcatenationToClassName.Instance.Generate(inner.Concatenation)}";
                 }
 
                 return className;
@@ -1485,7 +1539,7 @@
                 var className = RepetitionToClassName.Instance.Visit(concatenation.Repetition, default);
                 foreach (var inner in concatenation.Inners)
                 {
-                    className += $"{CharacterSubstituions.Space}{RepetitionToClassName.Instance.Visit(inner.Repetition, default)}";
+                    className += $"{characterSubstitutions.Space}{RepetitionToClassName.Instance.Visit(inner.Repetition, default)}";
                 }
 
                 return className;
@@ -1532,7 +1586,7 @@
                     stringBuilder.Append(DigitsToClassName.Instance.Generate(node.PrefixDigits));
                 }
 
-                stringBuilder.Append(CharacterSubstituions.Asterisk);
+                stringBuilder.Append(characterSubstitutions.Asterisk);
 
                 if (node.SuffixDigits.Any())
                 {
@@ -1612,17 +1666,17 @@
 
             protected internal override string Accept(NumVal.BinVal node, Root.Void context)
             {
-                return $"{CharacterSubstituions.Percent}{BinValToClassName.Instance.Visit(node.Value, context)}";
+                return $"{characterSubstitutions.Percent}{BinValToClassName.Instance.Visit(node.Value, context)}";
             }
 
             protected internal override string Accept(NumVal.DecVal node, Root.Void context)
             {
-                return $"{CharacterSubstituions.Percent}{DecValToClassName.Instance.Visit(node.Value, context)}";
+                return $"{characterSubstitutions.Percent}{DecValToClassName.Instance.Visit(node.Value, context)}";
             }
 
             protected internal override string Accept(NumVal.HexVal node, Root.Void context)
             {
-                return $"{CharacterSubstituions.Percent}{HexValToClassName.Instance.Visit(node.Value, context)}";
+                return $"{characterSubstitutions.Percent}{HexValToClassName.Instance.Visit(node.Value, context)}";
             }
         }
 
@@ -1693,7 +1747,7 @@
                 builder.Append($"x{HexDigsToClassName.Instance.Generate(node.HexDigs, context)}");
                 foreach (var inner in node.Inners)
                 {
-                    builder.Append(CharacterSubstituions.Period);
+                    builder.Append(characterSubstitutions.Period);
                     builder.Append(HexDigsToClassName.Instance.Generate(inner.HexDigs, context));
                 }
 
@@ -1702,7 +1756,7 @@
 
             protected internal override string Accept(HexVal.Range node, Root.Void context)
             {
-                return $"x{HexDigsToClassName.Instance.Generate(node.HexDigs, context)}{CharacterSubstituions.Dash}{HexDigsToClassName.Instance.Generate(node.Inners.First().HexDigs, context)}";
+                return $"x{HexDigsToClassName.Instance.Generate(node.HexDigs, context)}{characterSubstitutions.Dash}{HexDigsToClassName.Instance.Generate(node.Inners.First().HexDigs, context)}";
             }
         }
 
@@ -1839,7 +1893,7 @@
 
             public string Generate(CharVal charVal)
             {
-                return $"{CharacterSubstituions.DoubleQuote}{string.Join(string.Empty, charVal.Inners.Select(inner => CharValInnerToClassName.Instance.Visit(inner, default)))}{CharacterSubstituions.DoubleQuote}";
+                return $"{characterSubstitutions.DoubleQuote}{string.Join(string.Empty, charVal.Inners.Select(inner => CharValInnerToClassName.Instance.Visit(inner, default)))}{characterSubstitutions.DoubleQuote}";
             }
 
         }
@@ -2334,7 +2388,7 @@
 
             public string Generate(Option option)
             {
-                return $"{CharacterSubstituions.OpenBracket}{AlternationToClassName.Instance.Generate(option.Alternation)}{CharacterSubstituions.CloseBracket}";
+                return $"{characterSubstitutions.OpenBracket}{AlternationToClassName.Instance.Generate(option.Alternation)}{characterSubstitutions.CloseBracket}";
             }
         }
 
@@ -2382,7 +2436,7 @@
                 protected internal override Root.Void Accept(RuleName.Inner.DashInner node, StringBuilder context)
                 {
                     //// TODO create classes to traverse the individual CST nodes
-                    context.Append(CharacterSubstituions.Dash);
+                    context.Append(characterSubstitutions.Dash);
                     return default;
                 }
             }
