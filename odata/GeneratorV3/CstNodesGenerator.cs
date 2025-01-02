@@ -29,7 +29,7 @@
     {
         private readonly RuleListInnerGenerator ruleListInnerGenerator;
 
-        private readonly string innersClassName; //// TODO parameterize this
+        private readonly string innersClassName; //// TODO parameterize this //// TODO make sure this. is always used
 
         /// <summary>
         /// 
@@ -772,8 +772,8 @@
                                                     node.HexDigs.ToList(),
                                                     node.Inners.First().HexDigs.ToList());
                                                 var duElements = range
-                                                        .Select(hexDigs => HexDigsToClass
-                                                            .Instance
+                                                        .Select(hexDigs => this
+                                                            .hexDigsToClass
                                                             .Generate(
                                                                 hexDigs,
                                                                 (ClassNamePrefix + HexDigsToClassName.Instance.Generate(hexDigs, default), context.ClassName, context.InnerClasses)))
