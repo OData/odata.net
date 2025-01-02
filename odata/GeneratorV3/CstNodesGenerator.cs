@@ -29,12 +29,23 @@
     {
         private readonly RuleListInnerGenerator ruleListInnerGenerator;
 
-        public CstNodesGenerator(string @namespace)
-        {
-            this.ruleListInnerGenerator = new RuleListInnerGenerator(@namespace);
-        }
+        private readonly string innersClassName; //// TODO parameterize this
 
-        private static string InnersClassName = "Inners"; //// TODO parameterize this
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="namespace">The namespace that all of the generated class should go in</param>
+        /// <param name="innersClassName">
+        /// Rules often compose several other elements at a time; when this happens, these end up being something akin to
+        /// an "implied" rules, which is being referred to here as "inner" rules. When these are encountered, classes
+        /// still need to be generated, but it is useful to separate them from the classes for the rules themselves. As
+        /// a result, we will nest the "inner" rules in another class. This parameter species the name of the class that
+        /// the "inner" rules should be nested under.
+        /// </param>
+        public CstNodesGenerator(string @namespace, string innersClassName)
+        {
+            this.ruleListInnerGenerator = new RuleListInnerGenerator(@namespace, innersClassName);
+        }
 
         private static string ClassNamePrefix = "_"; //// TODO parameterize this probably?
 
@@ -98,7 +109,7 @@
                     new Class(
                         AccessModifier.Public,
                         ClassModifier.Static,
-                        InnersClassName, //// TODO how to make sure this doesn't conflict?
+                        innersClassName, //// TODO how to make sure this doesn't conflict?
                         Enumerable.Empty<string>(),
                         null,
                         Enumerable.Empty<ConstructorDefinition>(),
@@ -111,9 +122,9 @@
         {
             private readonly RuleGenerator ruleGenerator;
 
-            public RuleListInnerGenerator(string @namespace)
+            public RuleListInnerGenerator(string @namespace, string innersClassName)
             {
-                this.ruleGenerator = new RuleGenerator(@namespace);
+                this.ruleGenerator = new RuleGenerator(@namespace, innersClassName);
             }
 
             protected internal override Class? Accept(RuleList.Inner.RuleInner node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
@@ -125,9 +136,9 @@
             {
                 private readonly ElementsGenerator elementsGenerator;
 
-                public RuleGenerator(string @namespace)
+                public RuleGenerator(string @namespace, string innersClassName)
                 {
-                    this.elementsGenerator = new ElementsGenerator(@namespace);
+                    this.elementsGenerator = new ElementsGenerator(@namespace, innersClassName);
                 }
 
                 public Class Generate(Rule rule, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
@@ -140,9 +151,9 @@
                 {
                     private readonly AlternationGenerator alternationGenerator;
 
-                    public ElementsGenerator(string @namespace)
+                    public ElementsGenerator(string @namespace, string innersClassName)
                     {
-                        this.alternationGenerator = new AlternationGenerator(@namespace);
+                        this.alternationGenerator = new AlternationGenerator(@namespace, innersClassName);
                     }
 
                     public Class Generate(Elements elements, (string ClassName, Dictionary<string, Class> InnerClasses) context)
@@ -155,9 +166,9 @@
                         private readonly ConcatenationToClass concatenationToClass;
                         private readonly ConcatenationsToDiscriminatedUnion concatenationsToDiscriminatedUnion;
 
-                        public AlternationGenerator(string @namespace)
+                        public AlternationGenerator(string @namespace, string innersClassName)
                         {
-                            this.concatenationToClass = new ConcatenationToClass(@namespace, this);
+                            this.concatenationToClass = new ConcatenationToClass(@namespace, innersClassName, this);
                             this.concatenationsToDiscriminatedUnion = new ConcatenationsToDiscriminatedUnion(this.concatenationToClass);
                         }
 
@@ -185,9 +196,15 @@
                         {
                             private readonly RepetitonToPropertyDefinition repetitonToPropertyDefinition;
 
-                            public ConcatenationToClass(string @namespace, AlternationGenerator alternationGenerator)
+                            public ConcatenationToClass(
+                                string @namespace, 
+                                string innersClassName,
+                                AlternationGenerator alternationGenerator)
                             {
-                                this.repetitonToPropertyDefinition = new RepetitonToPropertyDefinition(@namespace, alternationGenerator);
+                                this.repetitonToPropertyDefinition = new RepetitonToPropertyDefinition(
+                                    @namespace, 
+                                    innersClassName,
+                                    alternationGenerator);
                             }
 
                             public Class Generate(
@@ -233,9 +250,15 @@
                             {
                                 private readonly ElementToPropertyDefinition elementToPropertyDefinition;
 
-                                public RepetitonToPropertyDefinition(string @namespace, AlternationGenerator alternationGenerator)
+                                public RepetitonToPropertyDefinition(
+                                    string @namespace,
+                                    string innersClassName, 
+                                    AlternationGenerator alternationGenerator)
                                 {
-                                    this.elementToPropertyDefinition = new ElementToPropertyDefinition(@namespace, alternationGenerator);
+                                    this.elementToPropertyDefinition = new ElementToPropertyDefinition(
+                                        @namespace, 
+                                        innersClassName,
+                                        alternationGenerator);
                                 }
 
                                 protected internal override PropertyDefinition Accept(
@@ -264,11 +287,17 @@
                                 {
                                     private readonly string @namespace;
 
+                                    private readonly string innersClassName;
+
                                     private readonly AlternationGenerator alternationGenerator;
 
-                                    public ElementToPropertyDefinition(string @namespace, AlternationGenerator alternationGenerator)
+                                    public ElementToPropertyDefinition(
+                                        string @namespace, 
+                                        string innersClassName, 
+                                        AlternationGenerator alternationGenerator)
                                     {
                                         this.@namespace = @namespace;
+                                        this.innersClassName = innersClassName;
                                         this.alternationGenerator = alternationGenerator;
                                     }
 
@@ -341,7 +370,7 @@
                                                         AccessModifier.Public,
                                                         new[]
                                                         {
-                                                            new MethodParameter($"{(isOnlyRuleName ? this.@namespace : InnersClassName)}.{groupInnerClassName}", $"{groupInnerClassName}_1"),
+                                                            new MethodParameter($"{(isOnlyRuleName ? this.@namespace : innersClassName)}.{groupInnerClassName}", $"{groupInnerClassName}_1"),
                                                         },
                                                         new[]
                                                         {
@@ -354,7 +383,7 @@
                                                 {
                                                     new PropertyDefinition(
                                                         AccessModifier.Public,
-                                                        $"{(isOnlyRuleName ? this.@namespace : InnersClassName)}.{groupInnerClassName}",
+                                                        $"{(isOnlyRuleName ? this.@namespace : innersClassName)}.{groupInnerClassName}",
                                                         $"{groupInnerClassName}_1",
                                                         true,
                                                         false),
@@ -363,7 +392,7 @@
                                             context.InnerClasses[groupClassName] = groupClass;
                                         }
 
-                                        var propertyType = $"{InnersClassName}.{groupClassName}";
+                                        var propertyType = $"{innersClassName}.{groupClassName}";
                                         if (context.IsCollection)
                                         {
                                             propertyType = $"IEnumerable<{propertyType}>";
@@ -401,7 +430,7 @@
                                                     (innerClassName, context.InnerClasses));
                                         }
 
-                                        var propertyType = $"{(isOnlyRuleName ? this.@namespace : InnersClassName)}.{innerClassName}?";
+                                        var propertyType = $"{(isOnlyRuleName ? this.@namespace : innersClassName)}.{innerClassName}?";
                                         if (context.IsCollection)
                                         {
                                             propertyType = $"IEnumerable<{propertyType}>";
@@ -436,7 +465,7 @@
                                             context.InnerClasses[innerClassName] = innerClass;
                                         }
 
-                                        var propertyType = $"{InnersClassName}.{innerClassName}";
+                                        var propertyType = $"{innersClassName}.{innerClassName}";
                                         if (context.IsCollection)
                                         {
                                             propertyType = $"IEnumerable<{propertyType}>";
@@ -503,11 +532,12 @@
 
                                         private sealed class InnerToProperty
                                         {
-                                            private InnerToProperty()
-                                            {
-                                            }
+                                            private readonly string innersClassName;
 
-                                            public static InnerToProperty Instance { get; } = new InnerToProperty();
+                                            public InnerToProperty(string innersClassName)
+                                            {
+                                                this.innersClassName = innersClassName;
+                                            }
 
                                             public PropertyDefinition Generate(
                                                 CharVal.Inner inner, 
@@ -556,7 +586,7 @@
 
                                                 return new PropertyDefinition(
                                                     AccessModifier.Public,
-                                                    $"{InnersClassName}.{className}",
+                                                    $"{innersClassName}.{className}",
                                                     $"{className}_{count}",
                                                     true,
                                                     false);
@@ -575,7 +605,7 @@
                                             context.InnerClasses[innerClassName] = innerClass;
                                         }
 
-                                        var propertyType = $"{InnersClassName}.{innerClassName}";
+                                        var propertyType = $"{innersClassName}.{innerClassName}";
                                         if (context.IsCollection)
                                         {
                                             propertyType = $"IEnumerable<{propertyType}>";
@@ -624,17 +654,20 @@
 
                                         private sealed class HexValToClass : HexVal.Visitor<Class, (string ClassName, Dictionary<string, Class> InnerClasses)>
                                         {
-                                            private HexValToClass()
-                                            {
-                                            }
+                                            private readonly HexDigsToClass hexDigsToClass;
+                                            private readonly SegmentsToProperties segmentsToProperties;
 
-                                            public static HexValToClass Instance { get; } = new HexValToClass();
+                                            public HexValToClass(string innersClassName)
+                                            {
+                                                this.hexDigsToClass = new HexDigsToClass(innersClassName);
+                                                this.segmentsToProperties = new SegmentsToProperties(innersClassName);
+                                            }
 
                                             protected internal override Class Accept(
                                                 HexVal.HexOnly node, 
                                                 (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                             {
-                                                return HexDigsToClass.Instance.Generate(node.HexDigs, (context.ClassName, null, context.InnerClasses));
+                                                return this.hexDigsToClass.Generate(node.HexDigs, (context.ClassName, null, context.InnerClasses));
                                             }
 
                                             protected internal override Class Accept(
@@ -647,8 +680,8 @@
                                                     .Prepend(node.HexDigs);
 
                                                 var propertyTypeToCount = new Dictionary<string, int>();
-                                                var properties = SegmentsToProperties
-                                                    .Instance
+                                                var properties = this
+                                                    .segmentsToProperties
                                                     .Generate(
                                                         segments,
                                                         (propertyTypeToCount, context.InnerClasses))
@@ -680,11 +713,12 @@
 
                                             private sealed class SegmentsToProperties
                                             {
-                                                private SegmentsToProperties()
-                                                {
-                                                }
+                                                private readonly string innersClassName;
 
-                                                public static SegmentsToProperties Instance { get; } = new SegmentsToProperties();
+                                                public SegmentsToProperties(string innersClassName)
+                                                {
+                                                    this.innersClassName = innersClassName;
+                                                }
 
                                                 public IEnumerable<PropertyDefinition> Generate(
                                                     IEnumerable<IEnumerable<HexDig>> segments, 
@@ -709,7 +743,7 @@
 
                                                         yield return new PropertyDefinition(
                                                             AccessModifier.Public,
-                                                            $"{InnersClassName}.{className}",
+                                                            $"{innersClassName}.{className}",
                                                             $"{className}_{count}",
                                                             true,
                                                             false);
@@ -1080,19 +1114,20 @@
 
                                             private sealed class HexDigsToClass
                                             {
-                                                private HexDigsToClass()
-                                                {
-                                                }
+                                                private readonly HexDigsToProperties hexDigsToProperties;
 
-                                                public static HexDigsToClass Instance { get; } = new HexDigsToClass();
+                                                public HexDigsToClass(string innersClassName)
+                                                {
+                                                    this.hexDigsToProperties = new HexDigsToProperties(innersClassName);
+                                                }
 
                                                 public Class Generate(
                                                     IEnumerable<HexDig> hexDigs, 
                                                     (string ClassName, string? BaseClass, Dictionary<string, Class> InnerClasses) context)
                                                 {
                                                     var propertyTypeToCount = new Dictionary<string, int>();
-                                                    var properties = HexDigsToProperties
-                                                        .Instance
+                                                    var properties = this
+                                                        .hexDigsToProperties
                                                         .Generate(
                                                             hexDigs,
                                                             (propertyTypeToCount, context.InnerClasses))
@@ -1143,11 +1178,12 @@
 
                                                 private sealed class HexDigsToProperties
                                                 {
-                                                    private HexDigsToProperties()
-                                                    {
-                                                    }
+                                                    private readonly string innersClassName;
 
-                                                    public static HexDigsToProperties Instance { get; } = new HexDigsToProperties();
+                                                    public HexDigsToProperties(string innersClassName)
+                                                    {
+                                                        this.innersClassName = innersClassName;
+                                                    }
 
                                                     public IEnumerable<PropertyDefinition> Generate(
                                                         IEnumerable<HexDig> hexDigs,
@@ -1198,7 +1234,7 @@
 
                                                             yield return new PropertyDefinition(
                                                                 AccessModifier.Public,
-                                                                $"{InnersClassName}.{className}",
+                                                                $"{innersClassName}.{className}",
                                                                 $"{className}_{count}",
                                                                 true,
                                                                 false);

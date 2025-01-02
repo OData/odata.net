@@ -297,6 +297,7 @@
             Assert.AreEqual(expected, csharp);
 
             //// TODO address todos in the cst generator
+            //// TODO if you let the "innersclassname" actually be a namespace, then the caller could decide if they want all the cases together, or if they want them separate, or whatever
             //// TODO make "optionals" not be nullable
             //// TODO implement parser generation
             //// TODO implement transcriber generation
