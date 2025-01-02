@@ -356,12 +356,12 @@ namespace GeneratorV3.Core
     
     public sealed class _LWSP
     {
-        public _LWSP(IEnumerable<Inners._openWSPⳆCRLF_WSPↃ> _openWSPⳆCRLF_WSPↃ_1)
+        public _LWSP(IEnumerable<Inners._ⲤWSPⳆCRLF_WSPↃ> _ⲤWSPⳆCRLF_WSPↃ_1)
         {
-            this._openWSPⳆCRLF_WSPↃ_1 = _openWSPⳆCRLF_WSPↃ_1;
+            this._ⲤWSPⳆCRLF_WSPↃ_1 = _ⲤWSPⳆCRLF_WSPↃ_1;
         }
         
-        public IEnumerable<Inners._openWSPⳆCRLF_WSPↃ> _openWSPⳆCRLF_WSPↃ_1 { get; }
+        public IEnumerable<Inners._ⲤWSPⳆCRLF_WSPↃ> _ⲤWSPⳆCRLF_WSPↃ_1 { get; }
     }
     
     public sealed class _OCTET
@@ -4922,9 +4922,9 @@ namespace GeneratorV3.Core
             }
         }
         
-        public sealed class _openWSPⳆCRLF_WSPↃ
+        public sealed class _ⲤWSPⳆCRLF_WSPↃ
         {
-            public _openWSPⳆCRLF_WSPↃ(Inners._WSPⳆCRLF_WSP _WSPⳆCRLF_WSP_1)
+            public _ⲤWSPⳆCRLF_WSPↃ(Inners._WSPⳆCRLF_WSP _WSPⳆCRLF_WSP_1)
             {
                 this._WSPⳆCRLF_WSP_1 = _WSPⳆCRLF_WSP_1;
             }
