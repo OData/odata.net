@@ -303,14 +303,16 @@
                                 string @namespace, 
                                 string innersClassName,
                                 CharacterSubstitutions characterSubstitutions,
-                                AlternationGenerator alternationGenerator)
+                                AlternationGenerator alternationGenerator,
+                                ToClassNames toClassNames)
                             {
                                 this.repetitonToPropertyDefinition = new RepetitonToPropertyDefinition(
                                     classNamePrefix,
                                     @namespace, 
                                     innersClassName,
                                     characterSubstitutions,
-                                    alternationGenerator);
+                                    alternationGenerator,
+                                    toClassNames);
                             }
 
                             public Class Generate(
@@ -361,14 +363,16 @@
                                     string @namespace,
                                     string innersClassName,
                                     CharacterSubstitutions characterSubstitutions,
-                                    AlternationGenerator alternationGenerator)
+                                    AlternationGenerator alternationGenerator,
+                                    ToClassNames toClassNames)
                                 {
                                     this.elementToPropertyDefinition = new ElementToPropertyDefinition(
                                         classNamePrefix,
                                         @namespace,
                                         innersClassName,
                                         characterSubstitutions,
-                                        alternationGenerator);
+                                        alternationGenerator,
+                                        toClassNames);
                                 }
 
                                 protected internal override PropertyDefinition Accept(
