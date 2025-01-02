@@ -1409,17 +1409,16 @@
                         {
                             private readonly string classNamePrefix;
                             private readonly ConcatenationToClass concatenationToClass;
-                            private readonly ConcatenationToClassName concatenationToClassName;
+                            private readonly ToClassNames toClassNames;
 
                             public ConcatenationsToDiscriminatedUnion(
                                 string classNamePrefix,
                                 ConcatenationToClass concatenationToClass,
-                                CharacterSubstitutions characterSubstitutions)
+                                ToClassNames toClassNames)
                             {
                                 this.classNamePrefix = classNamePrefix;
                                 this.concatenationToClass = concatenationToClass;
-
-                                this.concatenationToClassName = new ConcatenationToClassName(characterSubstitutions);
+                                this.toClassNames = toClassNames;
                             }
 
                             public Class Generate(IEnumerable<Concatenation> concatenations, (string ClassName, Dictionary<string, Class> InnerClasses) context)
@@ -1446,7 +1445,7 @@
                                         concatenationToClass
                                         .Generate(
                                             concatenation,
-                                            (this.classNamePrefix + this.concatenationToClassName.Generate(concatenation), context.ClassName, new[] { dispatchMethod }, context.InnerClasses)))
+                                            (this.classNamePrefix + this.toClassNames.ConcatenationToClassName.Generate(concatenation), context.ClassName, new[] { dispatchMethod }, context.InnerClasses)))
                                     .ToList();
 
                                 var visitor = new Class(AccessModifier.Public,
