@@ -181,8 +181,14 @@
                             string @namespace, 
                             string innersClassName)
                         {
-                            this.concatenationToClass = new ConcatenationToClass(classNamePrefix, @namespace, innersClassName, this);
-                            this.concatenationsToDiscriminatedUnion = new ConcatenationsToDiscriminatedUnion(this.concatenationToClass);
+                            this.concatenationToClass = new ConcatenationToClass(
+                                classNamePrefix, 
+                                @namespace, 
+                                innersClassName,
+                                this);
+                            this.concatenationsToDiscriminatedUnion = new ConcatenationsToDiscriminatedUnion(
+                                classNamePrefix,
+                                this.concatenationToClass);
                         }
 
                         public Class Generate(Alternation alternation, (string ClassName, Dictionary<string, Class> InnerClasses) context)
@@ -1303,10 +1309,12 @@
 
                         private sealed class ConcatenationsToDiscriminatedUnion
                         {
+                            private readonly string classNamePrefix;
                             private readonly ConcatenationToClass concatenationToClass;
 
-                            public ConcatenationsToDiscriminatedUnion(ConcatenationToClass concatenationToClass)
+                            public ConcatenationsToDiscriminatedUnion(string classNamePrefix, ConcatenationToClass concatenationToClass)
                             {
+                                this.classNamePrefix = classNamePrefix;
                                 this.concatenationToClass = concatenationToClass;
                             }
 
