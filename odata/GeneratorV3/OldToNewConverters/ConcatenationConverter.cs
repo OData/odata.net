@@ -28,10 +28,10 @@
 
             public static InnerConverter Instance { get; } = new InnerConverter();
 
-            public GeneratorV3.Abnf.Inners._openONEasteriskcⲻwsp_repetitionↃ Convert(Concatenation.Inner inner)
+            public GeneratorV3.Abnf.Inners._open1asteriskcⲻwsp_repetitionↃ Convert(Concatenation.Inner inner)
             {
-                return new Abnf.Inners._openONEasteriskcⲻwsp_repetitionↃ(
-                    new Abnf.Inners._ONEasteriskcⲻwsp_repetition(
+                return new Abnf.Inners._open1asteriskcⲻwsp_repetitionↃ(
+                    new Abnf.Inners._1asteriskcⲻwsp_repetition(
                         inner.Cwsps.Select(cwsp =>
                             CwspConverter.Instance.Visit(cwsp, default)),
                         RepetitionConverter.Instance.Visit(inner.Repetition, default)));
