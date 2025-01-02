@@ -1551,6 +1551,9 @@
             }
         }
 
+        /// <summary>
+        ///  TODO i'm using this class because i don't remember the "right" way to do mutual recursion
+        /// </summary>
         private sealed class ToClassNames
         {
             public ToClassNames(CharacterSubstitutions characterSubstitutions)
