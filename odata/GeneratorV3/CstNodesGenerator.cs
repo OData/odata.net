@@ -400,34 +400,27 @@
                                     private readonly string innersClassName;
 
                                     private readonly AlternationGenerator alternationGenerator;
+                                    private readonly ToClassNames toClassNames;
                                     private readonly CharValToClass charValToClass;
                                     private readonly NumValToClass numValToClass;
-                                    private readonly AlternationToClassName alternationToClassName;
-                                    private readonly RuleNameToClassName ruleNameToClassName;
-                                    private readonly GroupToClassName groupToClassName;
-                                    private readonly CharValToClassName charValToClassName;
-                                    private readonly NumValToClassName numValToClassName;
 
                                     public ElementToPropertyDefinition(
                                         string classNamePrefix,
                                         string @namespace,
                                         string innersClassName,
                                         CharacterSubstitutions characterSubstitutions,
-                                        AlternationGenerator alternationGenerator)
+                                        AlternationGenerator alternationGenerator,
+                                        ToClassNames toClassNames)
                                     {
                                         this.classNamePrefix = classNamePrefix;
                                         this.@namespace = @namespace;
                                         this.innersClassName = innersClassName;
 
                                         this.alternationGenerator = alternationGenerator;
+                                        this.toClassNames = toClassNames;
 
-                                        this.charValToClass = new CharValToClass(classNamePrefix, innersClassName);
-                                        this.numValToClass = new NumValToClass(classNamePrefix, innersClassName);
-                                        this.alternationToClassName = new AlternationToClassName(characterSubstitutions);
-                                        this.ruleNameToClassName = new RuleNameToClassName(characterSubstitutions);
-                                        this.groupToClassName = new GroupToClassName(characterSubstitutions);
-                                        this.charValToClassName = new CharValToClassName(characterSubstitutions);
-                                        this.numValToClassName = new NumValToClassName(characterSubstitutions);
+                                        this.charValToClass = new CharValToClass(classNamePrefix, innersClassName, this.toClassNames);
+                                        this.numValToClass = new NumValToClass(classNamePrefix, innersClassName, this.toClassNames);
                                     }
 
                                     protected internal override PropertyDefinition Accept(
@@ -435,7 +428,8 @@
                                         (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
                                         var ruleName = this.classNamePrefix + this
-                                            .ruleNameToClassName
+                                            .toClassNames
+                                            .RuleNameToClassName
                                             .Generate(
                                                 node.Value,
                                                 default);
@@ -477,13 +471,13 @@
                                     {
                                         var isOnlyRuleName = IsOnlyRuleName(node.Value.Alternation);
                                         
-                                        var groupInnerClassName = this.classNamePrefix + this.alternationToClassName.Generate(node.Value.Alternation);
+                                        var groupInnerClassName = this.classNamePrefix + this.toClassNames.AlternationToClassName.Generate(node.Value.Alternation);
                                         if (!isOnlyRuleName && !context.InnerClasses.ContainsKey(groupInnerClassName))
                                         {
                                             context.InnerClasses[groupInnerClassName] = this.alternationGenerator.Generate(node.Value.Alternation, (groupInnerClassName, context.InnerClasses));
                                         }
 
-                                        var groupClassName = this.classNamePrefix + this.groupToClassName.Generate(node.Value);
+                                        var groupClassName = this.classNamePrefix + this.toClassNames.GroupToClassName.Generate(node.Value);
 
                                         if (!context.InnerClasses.ContainsKey(groupClassName))
                                         {
@@ -548,7 +542,7 @@
                                     protected internal override PropertyDefinition Accept(Element.Option node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
                                         var isOnlyRuleName = IsOnlyRuleName(node.Value.Alternation);
-                                        var innerClassName = this.classNamePrefix + this.alternationToClassName.Generate(node.Value.Alternation);
+                                        var innerClassName = this.classNamePrefix + this.toClassNames.AlternationToClassName.Generate(node.Value.Alternation);
 
                                         if (!isOnlyRuleName && !context.InnerClasses.ContainsKey(innerClassName))
                                         {
@@ -585,7 +579,7 @@
 
                                     protected internal override PropertyDefinition Accept(Element.CharVal node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
-                                        var innerClassName = this.classNamePrefix + this.charValToClassName.Generate(node.Value);
+                                        var innerClassName = this.classNamePrefix + this.toClassNames.CharValToClassName.Generate(node.Value);
 
                                         if (!context.InnerClasses.ContainsKey(innerClassName))
                                         {
@@ -622,9 +616,9 @@
                                     {
                                         private readonly InnerToProperty innerToProperty;
 
-                                        public CharValToClass(string classNamePrefix, string innersClassName)
+                                        public CharValToClass(string classNamePrefix, string innersClassName, ToClassNames toClassNames)
                                         {
-                                            this.innerToProperty = new InnerToProperty(classNamePrefix, innersClassName);
+                                            this.innerToProperty = new InnerToProperty(classNamePrefix, innersClassName, toClassNames);
                                         }
 
                                         public Class Generate(CharVal charVal, (string ClassName, Dictionary<string, Class> InnerClasses) context)
@@ -729,7 +723,7 @@
 
                                     protected internal override PropertyDefinition Accept(Element.NumVal node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
-                                        var innerClassName = this.classNamePrefix + this.numValToClassName.Visit(node.Value, default);
+                                        var innerClassName = this.classNamePrefix + this.toClassNames.NumValToClassName.Visit(node.Value, default);
 
                                         if (!context.InnerClasses.ContainsKey(innerClassName))
                                         {
