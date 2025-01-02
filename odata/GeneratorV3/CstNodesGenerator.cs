@@ -57,7 +57,6 @@
     {
         private readonly string innersClassName;
         private readonly RuleListInnerGenerator ruleListInnerGenerator;
-        private readonly string classNamePrefix = "_"; //// TODO parameterize this probably?
 
         public CstNodesGenerator(string @namespace)
             : this(@namespace, CstNodesGeneratorSettings.Default)
