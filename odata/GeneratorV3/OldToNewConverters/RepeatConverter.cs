@@ -17,16 +17,16 @@
 
         protected internal override _repeat Accept(Repeat.Count node, Void context)
         {
-            return new _repeat._1asteriskDIGIT(
+            return new _repeat._1ЖDIGIT(
                 node.Digits.Select(digit =>
                     DigitConverter.Instance.Visit(digit, context)));
         }
 
         protected internal override _repeat Accept(Repeat.Range node, Void context)
         {
-            return new _repeat._ⲤasteriskDIGIT_doublequotex2Adoublequote_asteriskDIGITↃ(
-                new Inners._ⲤasteriskDIGIT_doublequotex2Adoublequote_asteriskDIGITↃ(
-                    new Inners._asteriskDIGIT_doublequotex2Adoublequote_asteriskDIGIT(
+            return new _repeat._ⲤЖDIGIT_doublequotex2Adoublequote_ЖDIGITↃ(
+                new Inners._ⲤЖDIGIT_doublequotex2Adoublequote_ЖDIGITↃ(
+                    new Inners._ЖDIGIT_doublequotex2Adoublequote_ЖDIGIT(
                         node.PrefixDigits.Select(digit =>
                             DigitConverter.Instance.Visit(digit, context)),
                         new Inners._doublequotex2Adoublequote(

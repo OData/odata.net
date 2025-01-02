@@ -22,7 +22,7 @@
                     InnerConverter.Instance.Visit(inner, default)));
         }
 
-        public sealed class InnerConverter : AbnfParser.CstNodes.RuleList.Inner.Visitor<Abnf.Inners._ⲤruleⳆⲤasteriskcⲻwsp_cⲻnlↃↃ, Root.Void>
+        public sealed class InnerConverter : AbnfParser.CstNodes.RuleList.Inner.Visitor<Abnf.Inners._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ, Root.Void>
         {
             private InnerConverter()
             {
@@ -30,19 +30,19 @@
 
             public static InnerConverter Instance { get; } = new InnerConverter();
 
-            protected internal override Inners._ⲤruleⳆⲤasteriskcⲻwsp_cⲻnlↃↃ Accept(RuleList.Inner.RuleInner node, Void context)
+            protected internal override Inners._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ Accept(RuleList.Inner.RuleInner node, Void context)
             {
-                return new Inners._ⲤruleⳆⲤasteriskcⲻwsp_cⲻnlↃↃ(
-                    new Inners._ruleⳆⲤasteriskcⲻwsp_cⲻnlↃ._rule(
+                return new Inners._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ(
+                    new Inners._ruleⳆⲤЖcⲻwsp_cⲻnlↃ._rule(
                         RuleConverter.Instance.Convert(node.Rule)));
             }
 
-            protected internal override Inners._ⲤruleⳆⲤasteriskcⲻwsp_cⲻnlↃↃ Accept(RuleList.Inner.CommentInner node, Void context)
+            protected internal override Inners._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ Accept(RuleList.Inner.CommentInner node, Void context)
             {
-                return new Inners._ⲤruleⳆⲤasteriskcⲻwsp_cⲻnlↃↃ(
-                    new Inners._ruleⳆⲤasteriskcⲻwsp_cⲻnlↃ._Ⲥasteriskcⲻwsp_cⲻnlↃ(
-                        new Inners._Ⲥasteriskcⲻwsp_cⲻnlↃ(
-                            new Inners._asteriskcⲻwsp_cⲻnl(
+                return new Inners._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ(
+                    new Inners._ruleⳆⲤЖcⲻwsp_cⲻnlↃ._ⲤЖcⲻwsp_cⲻnlↃ(
+                        new Inners._ⲤЖcⲻwsp_cⲻnlↃ(
+                            new Inners._Жcⲻwsp_cⲻnl(
                                 node.Cwsps.Select(cwsp => CwspConverter.Instance.Visit(cwsp, default)),
                                 CnlConverter.Instance.Visit(node.Cnl, default)))));
             }

@@ -100,7 +100,7 @@
             "Ↄ",
             "꘡",
             "꘡",
-            "asterisk",
+            "Ж",
             "Ⳇ",
             "_",
             "doublequote",
@@ -117,7 +117,7 @@
 
         public string CloseBracket { get; }
 
-        public string Asterisk { get; } //// TODO 'ж';
+        public string Asterisk { get; } //// TODO 'ж';Ж
 
         public string Slash { get; }
 

@@ -32,10 +32,10 @@
                     x78Converter.Instance.Convert(node.X)),
                 node.HexDigs.Select(hexDig =>
                     HexDigConverter.Instance.Visit(hexDig, context)),
-                new Inners._1asteriskⲤdoublequotex2Edoublequote_1asteriskHEXDIGↃⳆⲤdoublequotex2Ddoublequote_1asteriskHEXDIGↃ._1asteriskⲤdoublequotex2Edoublequote_1asteriskHEXDIGↃ(
+                new Inners._1ЖⲤdoublequotex2Edoublequote_1ЖHEXDIGↃⳆⲤdoublequotex2Ddoublequote_1ЖHEXDIGↃ._1ЖⲤdoublequotex2Edoublequote_1ЖHEXDIGↃ(
                     node.Inners.Select(inner =>
-                        new Inners._Ⲥdoublequotex2Edoublequote_1asteriskHEXDIGↃ(
-                            new Inners._doublequotex2Edoublequote_1asteriskHEXDIG(
+                        new Inners._Ⲥdoublequotex2Edoublequote_1ЖHEXDIGↃ(
+                            new Inners._doublequotex2Edoublequote_1ЖHEXDIG(
                                 new Inners._doublequotex2Edoublequote(
                                     x2EConverter.Instance.Convert(inner.Dot)),
                                 inner.HexDigs.Select(hexDig =>
@@ -49,9 +49,9 @@
                     x78Converter.Instance.Convert(node.X)),
                 node.HexDigs.Select(hexDig =>
                     HexDigConverter.Instance.Visit(hexDig, context)),
-                new Inners._1asteriskⲤdoublequotex2Edoublequote_1asteriskHEXDIGↃⳆⲤdoublequotex2Ddoublequote_1asteriskHEXDIGↃ._Ⲥdoublequotex2Ddoublequote_1asteriskHEXDIGↃ(
-                    new Inners._Ⲥdoublequotex2Ddoublequote_1asteriskHEXDIGↃ(
-                        new Inners._doublequotex2Ddoublequote_1asteriskHEXDIG(
+                new Inners._1ЖⲤdoublequotex2Edoublequote_1ЖHEXDIGↃⳆⲤdoublequotex2Ddoublequote_1ЖHEXDIGↃ._Ⲥdoublequotex2Ddoublequote_1ЖHEXDIGↃ(
+                    new Inners._Ⲥdoublequotex2Ddoublequote_1ЖHEXDIGↃ(
+                        new Inners._doublequotex2Ddoublequote_1ЖHEXDIG(
                             new Inners._doublequotex2Ddoublequote(
                                 x2DConverter.Instance.Convert(node.Inners.First().Dash)),
                             node.Inners.First().HexDigs.Select(hexDig =>

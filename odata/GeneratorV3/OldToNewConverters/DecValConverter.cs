@@ -32,10 +32,10 @@
                     x64Converter.Instance.Convert(node.D)),
                 node.Digits.Select(digit =>
                     DigitConverter.Instance.Visit(digit, context)),
-                new Inners._1asteriskⲤdoublequotex2Edoublequote_1asteriskDIGITↃⳆⲤdoublequotex2Ddoublequote_1asteriskDIGITↃ._1asteriskⲤdoublequotex2Edoublequote_1asteriskDIGITↃ(
+                new Inners._1ЖⲤdoublequotex2Edoublequote_1ЖDIGITↃⳆⲤdoublequotex2Ddoublequote_1ЖDIGITↃ._1ЖⲤdoublequotex2Edoublequote_1ЖDIGITↃ(
                     node.Inners.Select(inner => 
-                        new Inners._Ⲥdoublequotex2Edoublequote_1asteriskDIGITↃ(
-                            new Inners._doublequotex2Edoublequote_1asteriskDIGIT(
+                        new Inners._Ⲥdoublequotex2Edoublequote_1ЖDIGITↃ(
+                            new Inners._doublequotex2Edoublequote_1ЖDIGIT(
                                 new Inners._doublequotex2Edoublequote(
                                     x2EConverter.Instance.Convert(inner.Dot)),
                                 inner.Digits.Select(digit =>
@@ -49,9 +49,9 @@
                     x64Converter.Instance.Convert(node.D)),
                 node.Digits.Select(digit =>
                     DigitConverter.Instance.Visit(digit, context)),
-                new Inners._1asteriskⲤdoublequotex2Edoublequote_1asteriskDIGITↃⳆⲤdoublequotex2Ddoublequote_1asteriskDIGITↃ._Ⲥdoublequotex2Ddoublequote_1asteriskDIGITↃ(
-                    new Inners._Ⲥdoublequotex2Ddoublequote_1asteriskDIGITↃ(
-                        new Inners._doublequotex2Ddoublequote_1asteriskDIGIT(
+                new Inners._1ЖⲤdoublequotex2Edoublequote_1ЖDIGITↃⳆⲤdoublequotex2Ddoublequote_1ЖDIGITↃ._Ⲥdoublequotex2Ddoublequote_1ЖDIGITↃ(
+                    new Inners._Ⲥdoublequotex2Ddoublequote_1ЖDIGITↃ(
+                        new Inners._doublequotex2Ddoublequote_1ЖDIGIT(
                             new Inners._doublequotex2Ddoublequote(
                                 x2DConverter.Instance.Convert(node.Inners.First().Dash)),
                             node.Inners.First().Digits.Select(digit =>

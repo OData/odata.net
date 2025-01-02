@@ -32,10 +32,10 @@
                     x62Converter.Instance.Convert(node.B)),
                 node.Bits.Select(bit =>
                     BitConverter.Instance.Visit(bit, context)),
-                new Inners._1asteriskⲤdoublequotex2Edoublequote_1asteriskBITↃⳆⲤdoublequotex2Ddoublequote_1asteriskBITↃ._1asteriskⲤdoublequotex2Edoublequote_1asteriskBITↃ(
+                new Inners._1ЖⲤdoublequotex2Edoublequote_1ЖBITↃⳆⲤdoublequotex2Ddoublequote_1ЖBITↃ._1ЖⲤdoublequotex2Edoublequote_1ЖBITↃ(
                     node.Inners.Select(inner =>
-                        new Inners._Ⲥdoublequotex2Edoublequote_1asteriskBITↃ(
-                            new Inners._doublequotex2Edoublequote_1asteriskBIT(
+                        new Inners._Ⲥdoublequotex2Edoublequote_1ЖBITↃ(
+                            new Inners._doublequotex2Edoublequote_1ЖBIT(
                                 new Inners._doublequotex2Edoublequote(
                                     x2EConverter.Instance.Convert(inner.Dot)),
                                 inner.Bits.Select(bit =>
@@ -49,9 +49,9 @@
                     x62Converter.Instance.Convert(node.B)),
                 node.Bits.Select(bit =>
                     BitConverter.Instance.Visit(bit, context)),
-                new Inners._1asteriskⲤdoublequotex2Edoublequote_1asteriskBITↃⳆⲤdoublequotex2Ddoublequote_1asteriskBITↃ._Ⲥdoublequotex2Ddoublequote_1asteriskBITↃ(
-                    new Inners._Ⲥdoublequotex2Ddoublequote_1asteriskBITↃ(
-                        new Inners._doublequotex2Ddoublequote_1asteriskBIT(
+                new Inners._1ЖⲤdoublequotex2Edoublequote_1ЖBITↃⳆⲤdoublequotex2Ddoublequote_1ЖBITↃ._Ⲥdoublequotex2Ddoublequote_1ЖBITↃ(
+                    new Inners._Ⲥdoublequotex2Ddoublequote_1ЖBITↃ(
+                        new Inners._doublequotex2Ddoublequote_1ЖBIT(
                             new Inners._doublequotex2Ddoublequote(
                                 x2DConverter.Instance.Convert(node.Inners.First().Dash)),
                             node.Inners.First().Bits.Select(bit =>
