@@ -321,7 +321,7 @@
 
             var stringBuilder = new StringBuilder();
             var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine($"namespace {@namespace}"); //// TODO
+            builder.AppendLine($"namespace {@namespace}");
             builder.AppendLine("{");
             builder.Indent();
             builder.AppendLine("using System.Collections.Generic;");
