@@ -691,7 +691,9 @@
                                             {
                                                 this.classNamePrefix = classNamePrefix;
 
-                                                this.hexDigsToClass = new HexDigsToClass(innersClassName);
+                                                this.hexDigsToClass = new HexDigsToClass(
+                                                    classNamePrefix, 
+                                                    innersClassName);
                                                 this.segmentsToProperties = new SegmentsToProperties(
                                                     this.classNamePrefix,
                                                     innersClassName, 
@@ -1158,9 +1160,11 @@
                                             {
                                                 private readonly HexDigsToProperties hexDigsToProperties;
 
-                                                public HexDigsToClass(string innersClassName)
+                                                public HexDigsToClass(string classNamePrefix, string innersClassName)
                                                 {
-                                                    this.hexDigsToProperties = new HexDigsToProperties(innersClassName);
+                                                    this.hexDigsToProperties = new HexDigsToProperties(
+                                                        classNamePrefix, 
+                                                        innersClassName);
                                                 }
 
                                                 public Class Generate(
@@ -1220,10 +1224,12 @@
 
                                                 private sealed class HexDigsToProperties
                                                 {
+                                                    private readonly string classNamePrefix;
                                                     private readonly string innersClassName;
 
-                                                    public HexDigsToProperties(string innersClassName)
+                                                    public HexDigsToProperties(string classNamePrefix, string innersClassName)
                                                     {
+                                                        this.classNamePrefix = classNamePrefix;
                                                         this.innersClassName = innersClassName;
                                                     }
 
