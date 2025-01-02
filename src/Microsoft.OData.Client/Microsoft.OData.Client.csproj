@@ -4,7 +4,6 @@
     <AssemblyName>Microsoft.OData.Client</AssemblyName>
     <RootNamespace>Microsoft.OData.Client</RootNamespace>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <DefineConstants>$(DefineConstants);ODATA_CLIENT;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
@@ -104,10 +103,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\"/>
-  </ItemGroup>
-
-  <ItemGroup>
     <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Shipped.txt" />
     <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Unshipped.txt" />
   </ItemGroup>
@@ -147,6 +142,12 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>SRResources.resx</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Docs\README.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   
 </Project>
