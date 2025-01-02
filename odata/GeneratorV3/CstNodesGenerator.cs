@@ -149,11 +149,12 @@
         public CstNodesGenerator(string @namespace, CstNodesGeneratorSettings settings)
         {
             this.innersClassName = settings.InnersClassName;
+            var toClassNames = new ToClassNames(settings.CharacterSubstitutions);
             this.ruleListInnerGenerator = new RuleListInnerGenerator(
                 settings.ClassNamePrefix, 
                 @namespace, 
                 this.innersClassName,
-                settings.CharacterSubstitutions);
+                toClassNames);
         }
 
         public IEnumerable<Class> Generate(RuleList ruleList, Root.Void context)
@@ -188,13 +189,13 @@
                 string classNamePrefix, 
                 string @namespace, 
                 string innersClassName,
-                CharacterSubstitutions characterSubstitutions)
+                ToClassNames toClassNames)
             {
                 this.ruleGenerator = new RuleGenerator(
                     classNamePrefix, 
                     @namespace, 
                     innersClassName, 
-                    characterSubstitutions);
+                    toClassNames);
             }
 
             protected internal override Class? Accept(RuleList.Inner.RuleInner node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
@@ -205,27 +206,27 @@
             private sealed class RuleGenerator
             {
                 private readonly string classNamePrefix;
+                private readonly ToClassNames toClassNames;
                 private readonly ElementsGenerator elementsGenerator;
-                private readonly RuleNameToClassName ruleNameToClassName;
 
                 public RuleGenerator(
                     string classNamePrefix, 
                     string @namespace, 
                     string innersClassName,
-                    CharacterSubstitutions characterSubstitutions)
+                    ToClassNames toClassNames)
                 {
                     this.classNamePrefix = classNamePrefix;
+                    this.toClassNames = toClassNames;
                     this.elementsGenerator = new ElementsGenerator(
                         this.classNamePrefix, 
                         @namespace, 
                         innersClassName,
-                        characterSubstitutions);
-                    this.ruleNameToClassName = new RuleNameToClassName(characterSubstitutions);
+                        toClassNames);
                 }
 
                 public Class Generate(Rule rule, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
                 {
-                    var className = this.classNamePrefix + this.ruleNameToClassName.Generate(rule.RuleName, context.@void);
+                    var className = this.classNamePrefix + this.toClassNames.RuleNameToClassName.Generate(rule.RuleName, context.@void);
                     return this.elementsGenerator.Generate(rule.Elements, (className, context.InnerClasses));
                 }
 
@@ -237,13 +238,13 @@
                         string classNamePrefix,
                         string @namespace, 
                         string innersClassName,
-                        CharacterSubstitutions characterSubstitutions)
+                        ToClassNames toClassNames)
                     {
                         this.alternationGenerator = new AlternationGenerator(
                             classNamePrefix, 
                             @namespace, 
                             innersClassName,
-                            characterSubstitutions);
+                            toClassNames);
                     }
 
                     public Class Generate(Elements elements, (string ClassName, Dictionary<string, Class> InnerClasses) context)
@@ -260,7 +261,6 @@
                             string classNamePrefix,
                             string @namespace, 
                             string innersClassName,
-                            CharacterSubstitutions characterSubstitutions,
                             ToClassNames toClassNames)
                         {
                             this.concatenationToClass = new ConcatenationToClass(
