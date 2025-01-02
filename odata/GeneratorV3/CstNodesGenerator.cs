@@ -24,13 +24,13 @@
         }
     }
 
-    public sealed class Generator
+    public sealed class CstNodesGenerator
     {
-        private Generator()
+        private CstNodesGenerator()
         {
         }
 
-        public static Generator Intance { get; } = new Generator();
+        public static CstNodesGenerator Intance { get; } = new CstNodesGenerator();
 
         private static string Namespace = "GeneratorV3.Abnf"; //// TODO parameterize this
 

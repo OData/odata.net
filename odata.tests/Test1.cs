@@ -311,7 +311,7 @@
             var abnf = File.ReadAllText(@"C:\msgithub\odata.net\odata\GeneratorV3\test.abnf");
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(abnf);
 
-            var classes = GeneratorV3.Generator.Intance.Generate(cst, default);
+            var classes = GeneratorV3.CstNodesGenerator.Intance.Generate(cst, default);
 
             var classTranscriber = new ClassTranscriber();
 
@@ -351,7 +351,7 @@
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
 
-            var classes = GeneratorV3.Generator.Intance.Generate(cst, default);
+            var classes = GeneratorV3.CstNodesGenerator.Intance.Generate(cst, default);
 
             var classTranscriber = new ClassTranscriber();
 
@@ -388,7 +388,7 @@
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
 
-            var classes = GeneratorV3.Generator.Intance.Generate(cst, default);
+            var classes = GeneratorV3.CstNodesGenerator.Intance.Generate(cst, default);
 
             var classTranscriber = new ClassTranscriber();
 
@@ -422,7 +422,7 @@
             var abnfRulesText = File.ReadAllText(abnfRulesPath);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(abnfRulesText);
 
-            var classes = GeneratorV3.Generator.Intance.Generate(cst, default);
+            var classes = GeneratorV3.CstNodesGenerator.Intance.Generate(cst, default);
 
             var classTranscriber = new ClassTranscriber();
 
