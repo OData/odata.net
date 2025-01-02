@@ -109,7 +109,7 @@
 
         //// TODO use string for all
 
-        public char Dash { get; } //// TODO parameterize these
+        public char Dash { get; }
 
         public string OpenParenthesis { get; } //// TODO 'Ⲥ'; 
 
