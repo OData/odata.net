@@ -1489,11 +1489,12 @@
 
         private sealed class GroupToClassName
         {
-            private GroupToClassName()
-            {
-            }
+            private readonly CharacterSubstitutions characterSubstitutions;
 
-            public static GroupToClassName Instance { get; } = new GroupToClassName();
+            public GroupToClassName(CharacterSubstitutions characterSubstitutions)
+            {
+                this.characterSubstitutions = characterSubstitutions;
+            }
 
             public string Generate(Group group)
             {
@@ -1508,11 +1509,12 @@
 
         private sealed class AlternationToClassName
         {
-            private AlternationToClassName()
-            {
-            }
+            private readonly CharacterSubstitutions characterSubstitutions;
 
-            public static AlternationToClassName Instance { get; } = new AlternationToClassName();
+            private AlternationToClassName(CharacterSubstitutions characterSubstitutions)
+            {
+                this.characterSubstitutions = characterSubstitutions;
+            }
 
             public string Generate(Alternation alternation)
             {
@@ -1528,11 +1530,12 @@
 
         private sealed class ConcatenationToClassName
         {
-            private ConcatenationToClassName()
-            {
-            }
+            private readonly CharacterSubstitutions characterSubstitutions;
 
-            public static ConcatenationToClassName Instance { get; } = new ConcatenationToClassName();
+            public ConcatenationToClassName(CharacterSubstitutions characterSubstitutions)
+            {
+                this.characterSubstitutions = characterSubstitutions;
+            }
 
             public string Generate(Concatenation concatenation)
             {
@@ -1567,11 +1570,12 @@
 
         private sealed class RepeatToClassName : Repeat.Visitor<string, Root.Void>
         {
-            private RepeatToClassName()
-            {
-            }
+            private readonly CharacterSubstitutions characterSubstitutions;
 
-            public static RepeatToClassName Instance { get; } = new RepeatToClassName();
+            public RepeatToClassName(CharacterSubstitutions characterSubstitutions)
+            {
+                this.characterSubstitutions = characterSubstitutions;
+            }
 
             protected internal override string Accept(Repeat.Count node, Root.Void context)
             {
@@ -1658,11 +1662,12 @@
 
         private sealed class NumValToClassName : NumVal.Visitor<string, Root.Void>
         {
-            private NumValToClassName()
-            {
-            }
+            private readonly CharacterSubstitutions characterSubstitutions;
 
-            public static NumValToClassName Instance { get; } = new NumValToClassName();
+            public NumValToClassName(CharacterSubstitutions characterSubstitutions)
+            {
+                this.characterSubstitutions = characterSubstitutions;
+            }
 
             protected internal override string Accept(NumVal.BinVal node, Root.Void context)
             {
@@ -1730,11 +1735,12 @@
 
         private sealed class HexValToClassName : HexVal.Visitor<string, Root.Void>
         {
-            private HexValToClassName()
-            {
-            }
+            private readonly CharacterSubstitutions characterSubstitutions;
 
-            public static HexValToClassName Instance { get; } = new HexValToClassName();
+            public HexValToClassName(CharacterSubstitutions characterSubstitutions)
+            {
+                this.characterSubstitutions = characterSubstitutions;
+            }
 
             protected internal override string Accept(HexVal.HexOnly node, Root.Void context)
             {
@@ -1885,11 +1891,12 @@
 
         private sealed class CharValToClassName
         {
-            private CharValToClassName()
-            {
-            }
+            private readonly CharacterSubstitutions characterSubstitutions;
 
-            public static CharValToClassName Instance { get; } = new CharValToClassName();
+            public CharValToClassName(CharacterSubstitutions characterSubstitutions)
+            {
+                this.characterSubstitutions = characterSubstitutions;
+            }
 
             public string Generate(CharVal charVal)
             {
@@ -2380,11 +2387,12 @@
 
         private sealed class OptionToClassName
         {
-            private OptionToClassName()
-            {
-            }
+            private readonly CharacterSubstitutions characterSubstitutions;
 
-            public static OptionToClassName Instance { get; } = new OptionToClassName();
+            public OptionToClassName(CharacterSubstitutions characterSubstitutions)
+            {
+                this.characterSubstitutions = characterSubstitutions;
+            }
 
             public string Generate(Option option)
             {
@@ -2394,11 +2402,12 @@
 
         private sealed class RuleNameToClassName
         {
-            private RuleNameToClassName()
-            {
-            }
+            private readonly InnerToString innerToString;
 
-            public static RuleNameToClassName Instance { get; } = new RuleNameToClassName();
+            public RuleNameToClassName(CharacterSubstitutions characterSubstitutions)
+            {
+                this.innerToString = new InnerToString(characterSubstitutions);
+            }
 
             public string Generate(RuleName ruleName, Root.Void context)
             {
@@ -2407,7 +2416,7 @@
                 stringBuilder.Append(AlphaToChar.Instance.Visit(ruleName.Alpha, default));
                 foreach (var inner in ruleName.Inners)
                 {
-                    InnerToString.Instance.Visit(inner, stringBuilder);
+                    this.innerToString.Visit(inner, stringBuilder);
                 }
 
                 return stringBuilder.ToString();
@@ -2415,11 +2424,12 @@
 
             private sealed class InnerToString : RuleName.Inner.Visitor<Root.Void, StringBuilder>
             {
-                private InnerToString()
-                {
-                }
+                private readonly CharacterSubstitutions characterSubstitutions;
 
-                public static InnerToString Instance { get; } = new InnerToString();
+                public InnerToString(CharacterSubstitutions characterSubstitutions)
+                {
+                    this.characterSubstitutions = characterSubstitutions;
+                }
 
                 protected internal override Root.Void Accept(RuleName.Inner.AlphaInner node, StringBuilder context)
                 {
