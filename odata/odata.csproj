@@ -7,11 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="GeneratorV3\TestNodes.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="GeneratorV3\TestNodes.cs" />
     <None Include="GeneratorV3\TestNodes2.result" />
   </ItemGroup>
 
