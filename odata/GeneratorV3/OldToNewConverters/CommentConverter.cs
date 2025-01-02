@@ -16,7 +16,7 @@
         public GeneratorV3.Abnf._comment Convert(AbnfParser.CstNodes.Comment comment)
         {
             return new Abnf._comment(
-                new Abnf.Inners._doublequotex3Bdoublequote(
+                new Abnf.Inners._ʺx3Bʺ(
                     x3BConverter.Instance.Convert(comment.Semicolon)),
                 comment.Inners.Select(inner =>
                     InnerConverter.Instance.Visit(inner, default)),

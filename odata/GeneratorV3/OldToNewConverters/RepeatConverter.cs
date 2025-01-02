@@ -24,12 +24,12 @@
 
         protected internal override _repeat Accept(Repeat.Range node, Void context)
         {
-            return new _repeat._ⲤЖDIGIT_doublequotex2Adoublequote_ЖDIGITↃ(
-                new Inners._ⲤЖDIGIT_doublequotex2Adoublequote_ЖDIGITↃ(
-                    new Inners._ЖDIGIT_doublequotex2Adoublequote_ЖDIGIT(
+            return new _repeat._ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ(
+                new Inners._ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ(
+                    new Inners._ЖDIGIT_ʺx2Aʺ_ЖDIGIT(
                         node.PrefixDigits.Select(digit =>
                             DigitConverter.Instance.Visit(digit, context)),
-                        new Inners._doublequotex2Adoublequote(
+                        new Inners._ʺx2Aʺ(
                             x2AConverter.Instance.Convert(node.Asterisk)),
                         node.SuffixDigits.Select(digit =>
                             DigitConverter.Instance.Visit(digit, context)))));

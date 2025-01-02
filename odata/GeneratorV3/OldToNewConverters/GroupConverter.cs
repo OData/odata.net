@@ -15,14 +15,14 @@
         public GeneratorV3.Abnf._group Convert(AbnfParser.CstNodes.Group group)
         {
             return new Abnf._group(
-                new Abnf.Inners._doublequotex28doublequote(
+                new Abnf.Inners._ʺx28ʺ(
                     x28Converter.Instance.Convert(group.OpenParenthesis)),
                 group.PrefixCwsps.Select(cwsp =>
                     CwspConverter.Instance.Visit(cwsp, default)),
                 AlternationConverter.Instance.Convert(group.Alternation),
                 group.SuffixCwsps.Select(cwsp =>
                     CwspConverter.Instance.Visit(cwsp, default)),
-                new Abnf.Inners._doublequotex29doublequote(
+                new Abnf.Inners._ʺx29ʺ(
                     x29Converter.Instance.Convert(group.CloseParenthesis)));
         }
     }

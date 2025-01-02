@@ -18,7 +18,7 @@
             return new Abnf._alternation(
                 ConcatenationConverter.Instance.Convert(alternation.Concatenation),
                 alternation.Inners.Select(inner =>
-                    new Abnf.Inners._ⲤЖcⲻwsp_doublequotex2Fdoublequote_Жcⲻwsp_concatenationↃ(
+                    new Abnf.Inners._ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ(
                         InnerConverter.Instance.Convert(inner))));
         }
 
@@ -30,12 +30,12 @@
 
             public static InnerConverter Instance { get; } = new InnerConverter();
 
-            public GeneratorV3.Abnf.Inners._Жcⲻwsp_doublequotex2Fdoublequote_Жcⲻwsp_concatenation Convert(Alternation.Inner inner)
+            public GeneratorV3.Abnf.Inners._Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation Convert(Alternation.Inner inner)
             {
-                return new Abnf.Inners._Жcⲻwsp_doublequotex2Fdoublequote_Жcⲻwsp_concatenation(
+                return new Abnf.Inners._Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation(
                     inner.PrefixCwsps.Select(cwsp =>
                         CwspConverter.Instance.Visit(cwsp, default)),
-                    new Abnf.Inners._doublequotex2Fdoublequote(
+                    new Abnf.Inners._ʺx2Fʺ(
                         x2FConverter.Instance.Convert(inner.Slash)),
                     inner.SuffixCwsps.Select(cwsp =>
                         CwspConverter.Instance.Visit(cwsp, default)),

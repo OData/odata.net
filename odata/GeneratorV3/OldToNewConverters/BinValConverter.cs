@@ -18,7 +18,7 @@
         protected internal override _binⲻval Accept(BinVal.BitsOnly node, Void context)
         {
             return new _binⲻval(
-                new Inners._doublequotex62doublequote(
+                new Inners._ʺx62ʺ(
                     x62Converter.Instance.Convert(node.B)),
                 node.Bits.Select(bit =>
                     BitConverter.Instance.Visit(bit, context)),
@@ -28,15 +28,15 @@
         protected internal override _binⲻval Accept(BinVal.ConcatenatedBits node, Void context)
         {
             return new _binⲻval(
-                new Inners._doublequotex62doublequote(
+                new Inners._ʺx62ʺ(
                     x62Converter.Instance.Convert(node.B)),
                 node.Bits.Select(bit =>
                     BitConverter.Instance.Visit(bit, context)),
-                new Inners._1ЖⲤdoublequotex2Edoublequote_1ЖBITↃⳆⲤdoublequotex2Ddoublequote_1ЖBITↃ._1ЖⲤdoublequotex2Edoublequote_1ЖBITↃ(
+                new Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ._1ЖⲤʺx2Eʺ_1ЖBITↃ(
                     node.Inners.Select(inner =>
-                        new Inners._Ⲥdoublequotex2Edoublequote_1ЖBITↃ(
-                            new Inners._doublequotex2Edoublequote_1ЖBIT(
-                                new Inners._doublequotex2Edoublequote(
+                        new Inners._Ⲥʺx2Eʺ_1ЖBITↃ(
+                            new Inners._ʺx2Eʺ_1ЖBIT(
+                                new Inners._ʺx2Eʺ(
                                     x2EConverter.Instance.Convert(inner.Dot)),
                                 inner.Bits.Select(bit =>
                                     BitConverter.Instance.Visit(bit, context)))))));
@@ -45,14 +45,14 @@
         protected internal override _binⲻval Accept(BinVal.Range node, Void context)
         {
             return new _binⲻval(
-                new Inners._doublequotex62doublequote(
+                new Inners._ʺx62ʺ(
                     x62Converter.Instance.Convert(node.B)),
                 node.Bits.Select(bit =>
                     BitConverter.Instance.Visit(bit, context)),
-                new Inners._1ЖⲤdoublequotex2Edoublequote_1ЖBITↃⳆⲤdoublequotex2Ddoublequote_1ЖBITↃ._Ⲥdoublequotex2Ddoublequote_1ЖBITↃ(
-                    new Inners._Ⲥdoublequotex2Ddoublequote_1ЖBITↃ(
-                        new Inners._doublequotex2Ddoublequote_1ЖBIT(
-                            new Inners._doublequotex2Ddoublequote(
+                new Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ._Ⲥʺx2Dʺ_1ЖBITↃ(
+                    new Inners._Ⲥʺx2Dʺ_1ЖBITↃ(
+                        new Inners._ʺx2Dʺ_1ЖBIT(
+                            new Inners._ʺx2Dʺ(
                                 x2DConverter.Instance.Convert(node.Inners.First().Dash)),
                             node.Inners.First().Bits.Select(bit =>
                                 BitConverter.Instance.Visit(bit, context))))));

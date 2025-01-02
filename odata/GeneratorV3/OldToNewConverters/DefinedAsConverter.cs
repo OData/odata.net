@@ -19,9 +19,9 @@
             return new _definedⲻas(
                 node.PrefixCwsps.Select(cwsp =>
                     CwspConverter.Instance.Visit(cwsp, context)),
-                new Inners._Ⲥdoublequotex3DdoublequoteⳆdoublequotex3Dx2FdoublequoteↃ(
-                    new Inners._doublequotex3DdoublequoteⳆdoublequotex3Dx2Fdoublequote._doublequotex3Ddoublequote(
-                        new Inners._doublequotex3Ddoublequote(
+                new Inners._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ(
+                    new Inners._ʺx3DʺⳆʺx3Dx2Fʺ._ʺx3Dʺ(
+                        new Inners._ʺx3Dʺ(
                             x3DConverter.Instance.Convert(node.Equals)))),
                 node.SuffixCwsps.Select(cwsp =>
                     CwspConverter.Instance.Visit(cwsp, context)));
@@ -32,9 +32,9 @@
             return new _definedⲻas(
                 node.PrefixCwsps.Select(cwsp =>
                     CwspConverter.Instance.Visit(cwsp, context)),
-                new Inners._Ⲥdoublequotex3DdoublequoteⳆdoublequotex3Dx2FdoublequoteↃ(
-                    new Inners._doublequotex3DdoublequoteⳆdoublequotex3Dx2Fdoublequote._doublequotex3Dx2Fdoublequote(
-                        new Inners._doublequotex3Dx2Fdoublequote(
+                new Inners._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ(
+                    new Inners._ʺx3DʺⳆʺx3Dx2Fʺ._ʺx3Dx2Fʺ(
+                        new Inners._ʺx3Dx2Fʺ(
                             x3DConverter.Instance.Convert(node.Equals),
                             x2FConverter.Instance.Convert(node.Slash)))),
                 node.SuffixCwsps.Select(cwsp =>

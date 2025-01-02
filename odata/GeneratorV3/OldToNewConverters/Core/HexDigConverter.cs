@@ -20,43 +20,43 @@
 
         protected internal override _HEXDIG Accept(HexDig.A node, Void context)
         {
-            return new _HEXDIG._doublequotex41doublequote(
-                new Inners._doublequotex41doublequote(
+            return new _HEXDIG._ʺx41ʺ(
+                new Inners._ʺx41ʺ(
                     Inners._x41.Instance));
         }
 
         protected internal override _HEXDIG Accept(HexDig.B node, Void context)
         {
-            return new _HEXDIG._doublequotex42doublequote(
-                new Inners._doublequotex42doublequote(
+            return new _HEXDIG._ʺx42ʺ(
+                new Inners._ʺx42ʺ(
                     Inners._x42.Instance));
         }
 
         protected internal override _HEXDIG Accept(HexDig.C node, Void context)
         {
-            return new _HEXDIG._doublequotex43doublequote(
-                new Inners._doublequotex43doublequote(
+            return new _HEXDIG._ʺx43ʺ(
+                new Inners._ʺx43ʺ(
                     Inners._x43.Instance));
         }
 
         protected internal override _HEXDIG Accept(HexDig.D node, Void context)
         {
-            return new _HEXDIG._doublequotex44doublequote(
-                new Inners._doublequotex44doublequote(
+            return new _HEXDIG._ʺx44ʺ(
+                new Inners._ʺx44ʺ(
                     Inners._x44.Instance));
         }
 
         protected internal override _HEXDIG Accept(HexDig.E node, Void context)
         {
-            return new _HEXDIG._doublequotex45doublequote(
-                new Inners._doublequotex45doublequote(
+            return new _HEXDIG._ʺx45ʺ(
+                new Inners._ʺx45ʺ(
                     Inners._x45.Instance));
         }
 
         protected internal override _HEXDIG Accept(HexDig.F node, Void context)
         {
-            return new _HEXDIG._doublequotex46doublequote(
-                new Inners._doublequotex46doublequote(
+            return new _HEXDIG._ʺx46ʺ(
+                new Inners._ʺx46ʺ(
                     Inners._x46.Instance));
         }
     }

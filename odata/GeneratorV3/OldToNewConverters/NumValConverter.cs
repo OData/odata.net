@@ -16,7 +16,7 @@
         protected internal override _numⲻval Accept(NumVal.BinVal node, Void context)
         {
             return new _numⲻval(
-                new Inners._doublequotex25doublequote(
+                new Inners._ʺx25ʺ(
                     x25Converter.Instance.Convert(node.Percent)),
                 new Inners._ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃ(
                     new Inners._binⲻvalⳆdecⲻvalⳆhexⲻval._binⲻval(
@@ -26,7 +26,7 @@
         protected internal override _numⲻval Accept(NumVal.DecVal node, Void context)
         {
             return new _numⲻval(
-                new Inners._doublequotex25doublequote(
+                new Inners._ʺx25ʺ(
                     x25Converter.Instance.Convert(node.Percent)),
                 new Inners._ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃ(
                     new Inners._binⲻvalⳆdecⲻvalⳆhexⲻval._decⲻval(
@@ -36,7 +36,7 @@
         protected internal override _numⲻval Accept(NumVal.HexVal node, Void context)
         {
             return new _numⲻval(
-                new Inners._doublequotex25doublequote(
+                new Inners._ʺx25ʺ(
                     x25Converter.Instance.Convert(node.Percent)),
                 new Inners._ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃ(
                     new Inners._binⲻvalⳆdecⲻvalⳆhexⲻval._hexⲻval(

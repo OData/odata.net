@@ -103,9 +103,9 @@
             "Ж",
             "Ⳇ",
             "_",
-            "doublequote",
-            "period",
-            "percent");
+            "ʺ",
+            "٠", //// "ꓸ", //// "ᱹ", 
+            "Ⰳ");
 
         public string Dash { get; }
 
