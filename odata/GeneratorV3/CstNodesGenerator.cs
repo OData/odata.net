@@ -1491,16 +1491,20 @@
         {
             private readonly CharacterSubstitutions characterSubstitutions;
 
+            private readonly AlternationToClassName alternationToClassName;
+
             public GroupToClassName(CharacterSubstitutions characterSubstitutions)
             {
                 this.characterSubstitutions = characterSubstitutions;
+
+                this.alternationToClassName = new AlternationToClassName(this.characterSubstitutions);
             }
 
             public string Generate(Group group)
             {
                 var stringBuilder = new StringBuilder();
                 stringBuilder.Append(characterSubstitutions.OpenParenthesis);
-                stringBuilder.Append(AlternationToClassName.Instance.Generate(group.Alternation));
+                stringBuilder.Append(this.alternationToClassName.Generate(group.Alternation));
                 stringBuilder.Append(characterSubstitutions.CloseParenthesis);
 
                 return stringBuilder.ToString();
@@ -1511,17 +1515,21 @@
         {
             private readonly CharacterSubstitutions characterSubstitutions;
 
-            private AlternationToClassName(CharacterSubstitutions characterSubstitutions)
+            private readonly ConcatenationToClassName concatenationToClassName;
+
+            public AlternationToClassName(CharacterSubstitutions characterSubstitutions)
             {
                 this.characterSubstitutions = characterSubstitutions;
+
+                this.concatenationToClassName = new ConcatenationToClassName(this.characterSubstitutions);
             }
 
             public string Generate(Alternation alternation)
             {
-                var className = ConcatenationToClassName.Instance.Generate(alternation.Concatenation);
+                var className = this.concatenationToClassName.Generate(alternation.Concatenation);
                 foreach (var inner in alternation.Inners)
                 {
-                    className += $"{characterSubstitutions.Slash}{ConcatenationToClassName.Instance.Generate(inner.Concatenation)}";
+                    className += $"{characterSubstitutions.Slash}{this.concatenationToClassName.Generate(inner.Concatenation)}";
                 }
 
                 return className;
@@ -1532,17 +1540,21 @@
         {
             private readonly CharacterSubstitutions characterSubstitutions;
 
+            private readonly RepetitionToClassName repetitionToClassName;
+
             public ConcatenationToClassName(CharacterSubstitutions characterSubstitutions)
             {
                 this.characterSubstitutions = characterSubstitutions;
+
+                this.repetitionToClassName = new RepetitionToClassName(this.characterSubstitutions);
             }
 
             public string Generate(Concatenation concatenation)
             {
-                var className = RepetitionToClassName.Instance.Visit(concatenation.Repetition, default);
+                var className = this.repetitionToClassName.Visit(concatenation.Repetition, default);
                 foreach (var inner in concatenation.Inners)
                 {
-                    className += $"{characterSubstitutions.Space}{RepetitionToClassName.Instance.Visit(inner.Repetition, default)}";
+                    className += $"{characterSubstitutions.Space}{this.repetitionToClassName.Visit(inner.Repetition, default)}";
                 }
 
                 return className;
@@ -1551,20 +1563,23 @@
 
         private sealed class RepetitionToClassName : Repetition.Visitor<string, Root.Void>
         {
-            private RepetitionToClassName()
-            {
-            }
+            private readonly ElementToClassName elementToClassName;
+            private readonly RepeatToClassName repeatToClassName;
 
-            public static RepetitionToClassName Instance { get; } = new RepetitionToClassName();
+            public RepetitionToClassName(CharacterSubstitutions characterSubstitutions)
+            {
+                this.elementToClassName = new ElementToClassName(characterSubstitutions);
+                this.repeatToClassName = new RepeatToClassName(characterSubstitutions);
+            }
 
             protected internal override string Accept(Repetition.ElementOnly node, Root.Void context)
             {
-                return ElementToClassName.Instance.Visit(node.Element, context);
+                return this.elementToClassName.Visit(node.Element, context);
             }
 
             protected internal override string Accept(Repetition.RepeatAndElement node, Root.Void context)
             {
-                return $"{RepeatToClassName.Instance.Visit(node.Repeat, context)}{ElementToClassName.Instance.Visit(node.Element, context)}";
+                return $"{this.repeatToClassName.Visit(node.Repeat, context)}{this.elementToClassName.Visit(node.Element, context)}";
             }
         }
 
@@ -1623,35 +1638,44 @@
 
         private sealed class ElementToClassName : Element.Visitor<string, Root.Void>
         {
-            private ElementToClassName()
-            {
-            }
+            private readonly RuleNameToClassName ruleNameToClassName;
+            private readonly GroupToClassName groupToClassName;
+            private readonly OptionToClassName optionToClassName;
+            private readonly CharValToClassName charValToClassName;
+            private readonly NumValToClassName numValToClassName;
 
-            public static ElementToClassName Instance { get; } = new ElementToClassName();
+            public ElementToClassName(CharacterSubstitutions characterSubstitutions)
+            {
+                this.ruleNameToClassName = new RuleNameToClassName(characterSubstitutions);
+                this.groupToClassName = new GroupToClassName(characterSubstitutions);
+                this.optionToClassName = new OptionToClassName(characterSubstitutions);
+                this.charValToClassName = new CharValToClassName(characterSubstitutions);
+                this.numValToClassName = new NumValToClassName(characterSubstitutions);
+            }
 
             protected internal override string Accept(Element.RuleName node, Root.Void context)
             {
-                return RuleNameToClassName.Instance.Generate(node.Value, context);
+                return this.ruleNameToClassName.Generate(node.Value, context);
             }
 
             protected internal override string Accept(Element.Group node, Root.Void context)
             {
-                return GroupToClassName.Instance.Generate(node.Value);
+                return this.groupToClassName.Generate(node.Value);
             }
 
             protected internal override string Accept(Element.Option node, Root.Void context)
             {
-                return OptionToClassName.Instance.Generate(node.Value);
+                return this.optionToClassName.Generate(node.Value);
             }
 
             protected internal override string Accept(Element.CharVal node, Root.Void context)
             {
-                return CharValToClassName.Instance.Generate(node.Value);
+                return this.charValToClassName.Generate(node.Value);
             }
 
             protected internal override string Accept(Element.NumVal node, Root.Void context)
             {
-                return NumValToClassName.Instance.Visit(node.Value, context);
+                return this.numValToClassName.Visit(node.Value, context);
             }
 
             protected internal override string Accept(Element.ProseVal node, Root.Void context)
@@ -1664,9 +1688,13 @@
         {
             private readonly CharacterSubstitutions characterSubstitutions;
 
+            private readonly HexValToClassName hexValToClassName;
+
             public NumValToClassName(CharacterSubstitutions characterSubstitutions)
             {
                 this.characterSubstitutions = characterSubstitutions;
+
+                this.hexValToClassName = new HexValToClassName(this.characterSubstitutions);
             }
 
             protected internal override string Accept(NumVal.BinVal node, Root.Void context)
@@ -1681,7 +1709,7 @@
 
             protected internal override string Accept(NumVal.HexVal node, Root.Void context)
             {
-                return $"{characterSubstitutions.Percent}{HexValToClassName.Instance.Visit(node.Value, context)}";
+                return $"{characterSubstitutions.Percent}{this.hexValToClassName.Visit(node.Value, context)}";
             }
         }
 
@@ -2389,14 +2417,18 @@
         {
             private readonly CharacterSubstitutions characterSubstitutions;
 
+            private readonly AlternationToClassName alternationToClassName;
+
             public OptionToClassName(CharacterSubstitutions characterSubstitutions)
             {
                 this.characterSubstitutions = characterSubstitutions;
+
+                this.alternationToClassName = new AlternationToClassName(this.characterSubstitutions);
             }
 
             public string Generate(Option option)
             {
-                return $"{characterSubstitutions.OpenBracket}{AlternationToClassName.Instance.Generate(option.Alternation)}{characterSubstitutions.CloseBracket}";
+                return $"{characterSubstitutions.OpenBracket}{this.alternationToClassName.Generate(option.Alternation)}{characterSubstitutions.CloseBracket}";
             }
         }
 
