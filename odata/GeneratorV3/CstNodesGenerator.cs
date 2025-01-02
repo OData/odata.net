@@ -123,11 +123,11 @@
 
         public string Space { get; }
 
-        public string DoubleQuote { get; } //// TODO
+        public string DoubleQuote { get; }
 
-        public string Period { get; } //// TODO
+        public string Period { get; }
 
-        public string Percent { get; } //// TODO
+        public string Percent { get; }
     }
 
     public sealed class CstNodesGenerator
