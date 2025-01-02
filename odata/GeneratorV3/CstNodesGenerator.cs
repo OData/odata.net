@@ -663,18 +663,20 @@
                                         {
                                             private readonly string classNamePrefix;
                                             private readonly string innersClassName;
+                                            private readonly ToClassNames toClassNames;
 
-                                            public InnerToProperty(string classNamePrefix, string innersClassName)
+                                            public InnerToProperty(string classNamePrefix, string innersClassName, ToClassNames toClassNames)
                                             {
                                                 this.classNamePrefix = classNamePrefix;
                                                 this.innersClassName = innersClassName;
+                                                this.toClassNames = toClassNames;
                                             }
 
                                             public PropertyDefinition Generate(
                                                 CharVal.Inner inner, 
                                                 (Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                             {
-                                                var className = this.classNamePrefix + CharValInnerToClassName.Instance.Visit(inner, default);
+                                                var className = this.classNamePrefix + this.toClassNames.CharValInnerToClassName.Visit(inner, default);
 
                                                 if (!context.InnerClasses.ContainsKey(className))
                                                 {
