@@ -69,14 +69,14 @@
     public sealed class CharacterSubstitutions
     {
         private CharacterSubstitutions(
-            char dash, 
-            string openParenthesis, 
-            char closeParenthesis, 
-            char openBracket, 
-            char closeBracket, 
-            string asterisk, 
-            char slash, 
-            char space, 
+            string dash, 
+            string openParenthesis,
+            string closeParenthesis,
+            string openBracket,
+            string closeBracket, 
+            string asterisk,
+            string slash,
+            string space, 
             string doubleQuote, 
             string period,
             string percent)
@@ -95,35 +95,33 @@
         }
 
         public static CharacterSubstitutions Default { get; } = new CharacterSubstitutions(
-            'ⲻ',
+            "ⲻ",
             "open",
-            'Ↄ',
-            '꘡',
-            '꘡',
+            "Ↄ",
+            "꘡",
+            "꘡",
             "asterisk",
-            'Ⳇ',
-            '_',
+            "Ⳇ",
+            "_",
             "doublequote",
             "period",
             "percent");
 
-        //// TODO use string for all
-
-        public char Dash { get; }
+        public string Dash { get; }
 
         public string OpenParenthesis { get; } //// TODO 'Ⲥ'; 
 
-        public char CloseParenthesis { get; }
+        public string CloseParenthesis { get; }
 
-        public char OpenBracket { get; }
+        public string OpenBracket { get; }
 
-        public char CloseBracket { get; }
+        public string CloseBracket { get; }
 
         public string Asterisk { get; } //// TODO 'ж';
 
-        public char Slash { get; }
+        public string Slash { get; }
 
-        public char Space { get; }
+        public string Space { get; }
 
         public string DoubleQuote { get; } //// TODO
 
