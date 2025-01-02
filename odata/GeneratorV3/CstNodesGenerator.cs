@@ -682,14 +682,18 @@
 
                                         private sealed class HexValToClass : HexVal.Visitor<Class, (string ClassName, Dictionary<string, Class> InnerClasses)>
                                         {
+                                            private readonly string classNamePrefix;
+
                                             private readonly HexDigsToClass hexDigsToClass;
                                             private readonly SegmentsToProperties segmentsToProperties;
 
                                             public HexValToClass(string classNamePrefix, string innersClassName)
                                             {
+                                                this.classNamePrefix = classNamePrefix;
+
                                                 this.hexDigsToClass = new HexDigsToClass(innersClassName);
                                                 this.segmentsToProperties = new SegmentsToProperties(
-                                                    classNamePrefix,
+                                                    this.classNamePrefix,
                                                     innersClassName, 
                                                     this.hexDigsToClass);
                                             }
