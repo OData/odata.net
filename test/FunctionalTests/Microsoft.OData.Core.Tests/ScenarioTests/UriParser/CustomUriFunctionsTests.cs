@@ -18,7 +18,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
     /// <summary>
     /// Tests the CustomUriFunctions class.
     /// </summary>
-    public class CustomUriFunctionsTests
+    public partial class CustomUriFunctionsTests
     {
         #region Constants
 
@@ -698,10 +698,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         #region Private Methods
 
-        private FunctionSignatureWithReturnType[] GetCustomFunctionSignaturesOrNull(string customFunctionName)
+        private FunctionSignatureWithReturnType[] GetCustomFunctionSignaturesOrNull(IEdmModel model, string customFunctionName)
         {
             IList<KeyValuePair<string, FunctionSignatureWithReturnType>> resultFunctionSignaturesWithReturnType = null;
-            CustomUriFunctions.TryGetCustomFunction(customFunctionName, out resultFunctionSignaturesWithReturnType);
+            model.TryGetCustomFunction(customFunctionName, out resultFunctionSignaturesWithReturnType);
 
             return resultFunctionSignaturesWithReturnType?.Select( _ => _.Value).ToArray();
         }
