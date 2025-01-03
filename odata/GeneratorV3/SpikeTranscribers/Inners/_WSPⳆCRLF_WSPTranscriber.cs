@@ -1,6 +1,7 @@
 ﻿namespace GeneratorV3.SpikeTranscribers.Inners
 {
     using GeneratorV3.Abnf;
+    using GeneratorV3.SpikeTranscribers.Rules;
     using Root;
     using System.Text;
 
@@ -27,12 +28,17 @@
 
             protected internal override Void Accept(Inners._WSPⳆCRLF_WSP._WSP node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                WspTranscriber.Instance.Transcribe(node._WSP_1, context);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._WSPⳆCRLF_WSP._CRLF_WSP node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                CrLfTranscriber.Instance.Transcribe(node._CRLF_1, context);
+                WspTranscriber.Instance.Transcribe(node._WSP_1, context);
+
+                return default;
             }
         }
     }
