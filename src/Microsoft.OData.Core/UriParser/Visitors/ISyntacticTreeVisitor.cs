@@ -192,5 +192,12 @@ namespace Microsoft.OData.UriParser
         /// <param name="tokenIn">The GroupByToken to bind</param>
         /// <returns>A T node bound to this GroupByToken</returns>
         T Visit(GroupByToken tokenIn);
+
+        /// <summary>
+        /// Visits a RootPathToken
+        /// </summary>
+        /// <param name="tokenIn">The RootPathToken to bind</param>
+        /// <returns>A user defined value</returns>
+        T Visit(RootPathToken tokenIn);
     }
 }

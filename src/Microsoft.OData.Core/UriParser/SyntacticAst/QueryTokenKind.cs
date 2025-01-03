@@ -159,6 +159,11 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// $count segment
         /// </summary>
-        CountSegment = 32
+        CountSegment = 32,
+
+        /// <summary>
+        /// $root path
+        /// </summary>
+        RootPath = 33
     }
 }
