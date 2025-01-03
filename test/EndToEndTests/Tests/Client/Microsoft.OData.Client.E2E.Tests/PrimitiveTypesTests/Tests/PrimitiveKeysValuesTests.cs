@@ -45,7 +45,7 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         }
 
         public PrimitiveKeysValuesTests(TestWebApplicationFactory<PrimitiveKeysValuesTests.TestsStartup> fixture)
-       : base(fixture)
+            : base(fixture)
         {
             if (Client.BaseAddress == null)
             {
@@ -104,6 +104,26 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
 
                 // Assert
                 //Expected a single result for key value {0}, entry.Id.ToString()
+                Assert.Single(queryResult);
+            }
+        }
+
+        [Fact]
+        public void DecimalTest()
+        {
+            foreach (var entry in _context.EdmDecimalSet)
+            {
+                if(entry.Id == Decimal.MaxValue || entry.Id == Decimal.MinValue)
+                {
+                    continue;
+                }
+
+                // Arrange & Act
+                var query = _context.CreateQuery<EdmDecimal>("EdmDecimalSet").Where(e => e.Id == entry.Id);
+                var queryResult = query.ToArray();
+
+                // Assert
+                //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
                 Assert.Single(queryResult);
             }
         }
@@ -225,14 +245,18 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
 
         #region Private
 
-        private static bool IsNotSupportedKey(float key)
+        private static bool IsNotSupportedKey(object key)
         {
-            return float.IsNaN(key);
-        }
+            if (key is float keyInFloat)
+            {
+                return float.IsNaN(keyInFloat);
+            }
+            if (key is double keyInDouble)
+            {
+                return double.IsNaN(keyInDouble);
+            }
 
-        private static bool IsNotSupportedKey(double key)
-        {
-            return double.IsNaN(key);
+            return false;
         }
 
         private void ResetDefaultDataSource()
