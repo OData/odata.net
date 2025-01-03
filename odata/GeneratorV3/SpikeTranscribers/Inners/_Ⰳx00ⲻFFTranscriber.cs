@@ -29,452 +29,632 @@
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._00 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._01 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._02 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._03 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._04 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._05 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._06 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._07 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._08 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._09 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._0A node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._0B node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._0C node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._0D node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._0E node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._0F node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._10 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._11 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._12 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._13 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._14 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._15 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._16 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._17 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._18 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._19 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._1A node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._1B node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._1C node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._1D node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._1E node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._1F node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._20 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._21 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._22 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._23 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._24 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._25 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._26 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._27 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._28 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._29 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._2A node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._2B node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._2C node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._2D node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._2E node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._2F node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._30 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._31 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._32 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._33 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._34 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._35 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._36 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._37 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._38 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._39 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._3A node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._3B node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._3C node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._3D node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._3E node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._3F node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._40 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._41 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._42 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._43 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._44 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._45 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._46 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._47 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._48 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._49 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._4A node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._4B node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._4C node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._4D node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._4E node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._4F node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._50 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._51 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._52 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._53 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._54 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._55 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._56 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._57 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._58 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._59 node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                context.Append((char)0x00);
+
+                return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx00ⲻFF._5A node, StringBuilder context)
