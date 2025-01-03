@@ -15,6 +15,8 @@
 
         public void Transcribe(Inners._Ⰳx41ⲻ5A value, StringBuilder builder)
         {
+            builder.Append("%");
+            builder.Append("x");
             Visitor.Instance.Visit(value, builder);
         }
 
@@ -28,234 +30,182 @@
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._41 node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _1Transcriber.Instance.Transcribe(node._1_1, context);
+                context.Append((char)0x41);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._42 node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _2Transcriber.Instance.Transcribe(node._2_1, context);
+                context.Append((char)0x42);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._43 node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _3Transcriber.Instance.Transcribe(node._3_1, context);
+                context.Append((char)0x43);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._44 node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
+                context.Append((char)0x44);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._45 node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _5Transcriber.Instance.Transcribe(node._5_1, context);
+                context.Append((char)0x45);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._46 node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _6Transcriber.Instance.Transcribe(node._6_1, context);
+                context.Append((char)0x46);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._47 node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _7Transcriber.Instance.Transcribe(node._7_1, context);
+                context.Append((char)0x47);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._48 node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _8Transcriber.Instance.Transcribe(node._8_1, context);
+                context.Append((char)0x48);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._49 node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _9Transcriber.Instance.Transcribe(node._9_1, context);
+                context.Append((char)0x49);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._4A node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _ATranscriber.Instance.Transcribe(node._A_1, context);
+                context.Append((char)0x4A);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._4B node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _BTranscriber.Instance.Transcribe(node._B_1, context);
+                context.Append((char)0x4B);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._4C node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _CTranscriber.Instance.Transcribe(node._C_1, context);
+                context.Append((char)0x4C);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._4D node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _DTranscriber.Instance.Transcribe(node._D_1, context);
+                context.Append((char)0x4D);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._4E node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _ETranscriber.Instance.Transcribe(node._E_1, context);
+                context.Append((char)0x4E);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._4F node, StringBuilder context)
             {
-                context.Append("%");
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
-                _FTranscriber.Instance.Transcribe(node._F_1, context);
+                context.Append((char)0x4F);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._50 node, StringBuilder context)
             {
-                context.Append("%");
-                _5Transcriber.Instance.Transcribe(node._5_1, context);
-                _0Transcriber.Instance.Transcribe(node._0_1, context);
+                context.Append((char)0x50);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._51 node, StringBuilder context)
             {
-                context.Append("%");
-                _5Transcriber.Instance.Transcribe(node._5_1, context);
-                _1Transcriber.Instance.Transcribe(node._1_1, context);
+                context.Append((char)0x51);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._52 node, StringBuilder context)
             {
-                context.Append("%");
-                _5Transcriber.Instance.Transcribe(node._5_1, context);
-                _2Transcriber.Instance.Transcribe(node._2_1, context);
+                context.Append((char)0x52);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._53 node, StringBuilder context)
             {
-                context.Append("%");
-                _5Transcriber.Instance.Transcribe(node._5_1, context);
-                _3Transcriber.Instance.Transcribe(node._3_1, context);
+                context.Append((char)0x53);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._54 node, StringBuilder context)
             {
-                context.Append("%");
-                _5Transcriber.Instance.Transcribe(node._5_1, context);
-                _4Transcriber.Instance.Transcribe(node._4_1, context);
+                context.Append((char)0x54);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._55 node, StringBuilder context)
             {
-                context.Append("%");
-                _5Transcriber.Instance.Transcribe(node._5_1, context);
-                _5Transcriber.Instance.Transcribe(node._5_1, context);
+                context.Append((char)0x55);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._56 node, StringBuilder context)
             {
-                context.Append("%");
-                _5Transcriber.Instance.Transcribe(node._5_1, context);
-                _6Transcriber.Instance.Transcribe(node._6_1, context);
+                context.Append((char)0x56);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._57 node, StringBuilder context)
             {
-                context.Append("%");
-                _5Transcriber.Instance.Transcribe(node._5_1, context);
-                _7Transcriber.Instance.Transcribe(node._7_1, context);
+                context.Append((char)0x57);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._58 node, StringBuilder context)
             {
-                context.Append("%");
-                _5Transcriber.Instance.Transcribe(node._5_1, context);
-                _8Transcriber.Instance.Transcribe(node._8_1, context);
+                context.Append((char)0x58);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._59 node, StringBuilder context)
             {
-                context.Append("%");
-                _5Transcriber.Instance.Transcribe(node._5_1, context);
-                _9Transcriber.Instance.Transcribe(node._9_1, context);
+                context.Append((char)0x59);
 
                 return default;
             }
 
             protected internal override Void Accept(Inners._Ⰳx41ⲻ5A._5A node, StringBuilder context)
             {
-                context.Append("%");
-                _5Transcriber.Instance.Transcribe(node._5_1, context);
-                _ATranscriber.Instance.Transcribe(node._A_1, context);
+                context.Append((char)0x5A);
 
                 return default;
             }
