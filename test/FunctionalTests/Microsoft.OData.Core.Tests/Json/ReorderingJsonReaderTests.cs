@@ -307,6 +307,7 @@ namespace Microsoft.OData.Tests.Json
                         await reorderingReader.ReadPrimitiveValueAsync());
                 });
         }
+
         [Fact]
         public async Task ReadReorderedPayloadContainingSimplifiedODataAnnotationsAsync()
         {
@@ -342,6 +343,86 @@ namespace Microsoft.OData.Tests.Json
                     Assert.Equal(
                         "Sue",
                         await reorderingReader.ReadPrimitiveValueAsync());
+                });
+        }
+
+        [Fact]
+        public async Task ReadReorderedPayload_OrderingContextRemovedTypeIdAsync()
+        {
+            var payload = "{" +
+                "\"Id\":1," +
+                "\"@odata.id\":\"http://tempuri.org/Customers(1)\"," +
+                "\"Name\":\"Sue\"," +
+                "\"@odata.removed\":{\"reason\":\"deleted\"}," +
+                "\"@odata.type\":\"SomeEntityType\"," +
+                "\"@odata.context\":\"any\"" +
+              "}";
+
+            await SetupReorderingJsonReaderAndRunTestAsync(
+                payload,
+                async (reorderingReader) =>
+                {
+                    // 1. should be '@odata.context'
+                    Assert.Equal("@odata.context", await reorderingReader.ReadPropertyNameAsync());
+                    await reorderingReader.SkipValueAsync(); // Skip context value
+
+                    // 2. should be '@odata.removed'
+                    Assert.Equal("@odata.removed", await reorderingReader.ReadPropertyNameAsync());
+                    await reorderingReader.SkipValueAsync(); // Skip object value
+
+                    // 3. should be '@odata.type'
+                    Assert.Equal("@odata.type", await reorderingReader.ReadPropertyNameAsync());
+                    await reorderingReader.SkipValueAsync(); // Skip object value
+
+                    // 4. should be '@odata.id'
+                    Assert.Equal("@odata.id", await reorderingReader.ReadPropertyNameAsync());
+                    Assert.Equal("http://tempuri.org/Customers(1)", await reorderingReader.ReadPrimitiveValueAsync());
+
+                    Assert.Equal("Id", await reorderingReader.ReadPropertyNameAsync());
+                    await reorderingReader.SkipValueAsync(); // Skip object value
+
+                    Assert.Equal("Name", await reorderingReader.ReadPropertyNameAsync());
+                    await reorderingReader.SkipValueAsync(); // Skip object value
+                });
+        }
+
+        [Fact]
+        public async Task ReadReorderedPayload_OrderingContextRemovedTypeId_ContainingSimplifiedAnnotationAsync()
+        {
+            var payload = "{" +
+                "\"Id\":1," +
+                "\"@id\":\"http://tempuri.org/Customers(1)\"," +
+                "\"Name\":\"Sue\"," +
+                "\"@removed\":{\"reason\":\"deleted\"}," +
+                "\"@context\":\"any\"," +
+                "\"@type\":\"SomeEntityType\""+
+              "}";
+
+            await SetupReorderingJsonReaderAndRunTestAsync(
+                payload,
+                async (reorderingReader) =>
+                {
+                    // 1. should be '@context'
+                    Assert.Equal("@context", await reorderingReader.ReadPropertyNameAsync());
+                    await reorderingReader.SkipValueAsync(); // Skip context value
+
+                    // 2. should be '@removed'
+                    Assert.Equal("@removed", await reorderingReader.ReadPropertyNameAsync());
+                    await reorderingReader.SkipValueAsync(); // Skip object value
+
+                    // 3. should be '@type'
+                    Assert.Equal("@type", await reorderingReader.ReadPropertyNameAsync());
+                    await reorderingReader.SkipValueAsync(); // Skip object value
+
+                    // 4. should be '@id'
+                    Assert.Equal("@id", await reorderingReader.ReadPropertyNameAsync());
+                    Assert.Equal("http://tempuri.org/Customers(1)", await reorderingReader.ReadPrimitiveValueAsync());
+
+                    Assert.Equal("Id", await reorderingReader.ReadPropertyNameAsync());
+                    await reorderingReader.SkipValueAsync(); // Skip object value
+
+                    Assert.Equal("Name", await reorderingReader.ReadPropertyNameAsync());
+                    await reorderingReader.SkipValueAsync(); // Skip object value
                 });
         }
 

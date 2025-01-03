@@ -1359,6 +1359,159 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             return model;
         }
 
+        [Fact]
+        public void ReadingResourceWithInstanceAnnotationAndODataTypeWorks1()
+        {
+            const string payload =
+ "{\"@odata.context\":\"http://svc/$metadata#EntitySet/$entity\"," +
+  "\"@odata.type\":\"#Namespace.EntityType\"," +
+  "\"Name\":\"SampleName\"," +
+  "\"@removed\":false," +
+  "\"ID\":89}";
+
+            EdmEntitySet entitySet = EntitySet;
+            IEdmModel model = Model;
+            IEdmEntityType entityType = EntitySet.EntityType;
+
+            InMemoryMessage message = new InMemoryMessage();
+            message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
+            message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+
+            ODataResource topLevelResource = null;
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings(ODataVersion.V401)
+            {
+            };
+
+            using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, settings, model))
+            {
+                var reader = messageReader.CreateODataResourceReader(entitySet, entityType);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceEnd:
+                            topLevelResource = (ODataResource)reader.Item;
+                            break;
+                    }
+                }
+            }
+
+            Assert.NotNull(topLevelResource);
+            Assert.Equal(new Uri("http://svc/EntitySet(89)"), topLevelResource.Id);
+
+            Assert.Equal("Namespace.EntityType", topLevelResource.TypeName);
+            Assert.Equal("SampleName", Assert.IsType<ODataProperty>(topLevelResource.Properties.First(p => p.Name == "Name")).Value);
+            Assert.Equal(89, Assert.IsType<ODataProperty>(topLevelResource.Properties.First(p => p.Name == "ID")).Value);
+        }
+
+        [Fact]
+        public void ReadingResourceWithInstanceAnnotationAndODataTypeWorks()
+        {
+            const string payload =
+ "{\"@odata.context\":\"http://svc/$metadata#EntitySet/$entity\"," +
+  "\"@odata.type\":\"#Namespace.EntityType\"," +
+  "\"Name\":\"SampleName\"," +
+  "\"@NS.removed\":false," +
+  "\"ID\":89}";
+
+            EdmEntitySet entitySet = EntitySet;
+            IEdmModel model = Model;
+            IEdmEntityType entityType = EntitySet.EntityType;
+
+            InMemoryMessage message = new InMemoryMessage();
+            message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
+            message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+
+            ODataResource topLevelResource = null;
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings(ODataVersion.V401)
+            {
+                ShouldIncludeAnnotation = (annotation) => true
+            };
+
+            using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, settings, model))
+            {
+                var reader = messageReader.CreateODataResourceReader(entitySet, entityType);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceEnd:
+                            topLevelResource = (ODataResource)reader.Item;
+                            break;
+                    }
+                }
+            }
+
+            Assert.NotNull(topLevelResource);
+            Assert.Equal(new Uri("http://svc/EntitySet(89)"), topLevelResource.Id);
+
+            Assert.Equal("Namespace.EntityType", topLevelResource.TypeName);
+            Assert.Equal("SampleName", Assert.IsType<ODataProperty>(topLevelResource.Properties.First(p => p.Name == "Name")).Value);
+            Assert.Equal(89, Assert.IsType<ODataProperty>(topLevelResource.Properties.First(p => p.Name == "ID")).Value);
+
+            ODataInstanceAnnotation annotation = Assert.Single(topLevelResource.InstanceAnnotations);
+            Assert.Equal("NS.removed", annotation.Name);
+            Assert.Equal(false, annotation.Value.FromODataValue());
+        }
+
+        [Fact]
+        public void ReadingDeletedResourceContainsODataTypeWorks()
+        {
+            const string payload =
+"{\"@odata.context\":\"http://svc/$metadata#EntitySet/$delta\"," +
+  "\"value\":[" +
+    "{" +
+      "\"@odata.type\":\"#Namespace.EntityType\"," +
+      "\"Name\":\"SampleName\"," +
+      "\"@removed\":{\"reason\":\"deleted\"}," +
+      "\"ID\":89" +
+    "}" +
+  "]" +
+"}";
+
+            EdmEntitySet entitySet = EntitySet;
+            IEdmModel model = Model;
+            IEdmEntityType entityType = EntitySet.EntityType;
+
+            InMemoryMessage message = new InMemoryMessage();
+            message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
+            message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
+
+            ODataMessageReaderSettings settings = new ODataMessageReaderSettings(ODataVersion.V401);
+
+            ODataDeletedResource deletedResource = null;
+            using (var messageReader = new ODataMessageReader((IODataResponseMessage)message, settings, model))
+            {
+                var reader = messageReader.CreateODataDeltaResourceSetReader(entitySet, entityType);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.DeltaResourceSetStart:
+                            break;
+
+                        case ODataReaderState.DeltaResourceSetEnd:
+                            break;
+
+                        case ODataReaderState.DeletedResourceStart:
+                            deletedResource = (ODataDeletedResource)reader.Item;
+                            break;
+                        case ODataReaderState.DeletedResourceEnd:
+                            break;
+                    }
+                }
+            }
+
+            Assert.NotNull(deletedResource);
+            Assert.Equal(new Uri("http://svc/EntitySet(89)"), deletedResource.Id);
+
+            Assert.Equal("Namespace.EntityType", deletedResource.TypeName);
+
+            Assert.Equal(2, deletedResource.Properties.Count());
+            Assert.Equal("SampleName", Assert.IsType<ODataProperty>(deletedResource.Properties.First(p => p.Name == "Name")).Value);
+            Assert.Equal(89, Assert.IsType<ODataProperty>(deletedResource.Properties.First(p => p.Name == "ID")).Value);
+        }
+
         [Theory]
         [InlineData("minimal")]
         [InlineData("full")]

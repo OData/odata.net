@@ -100,6 +100,14 @@ namespace Microsoft.OData.Json
             Debug.Assert(resourceState != null, "resourceState != null");
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
+            object value;
+            if (this.JsonReader.TryGetValueFromBuffered(ODataJsonConstants.PrefixedODataTypePropertyName, removeIfExist: true, out value) ||
+                this.JsonReader.TryGetValueFromBuffered(ODataJsonConstants.SimplifiedODataTypePropertyName, removeIfExist: true, out value))
+            {
+                resourceState.Resource.TypeName = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName(value as string));
+                return;
+            }
+
             // If the current node is the odata.type property - read it.
             if (this.JsonReader.NodeType == JsonNodeType.Property)
             {
@@ -821,9 +829,15 @@ namespace Microsoft.OData.Json
                     return this.ReadAndValidateAnnotationStringValue(annotationName);
 
                 case ODataAnnotationNames.ODataRemoved: // 'odata.removed'
+                    // If the value of 'odata.removed' is an object, let's throw exception since it should be not read here.
+                    if (this.JsonReader.NodeType == JsonNodeType.StartObject)
                     {
                         throw new ODataException(SRResources.ODataJsonResourceDeserializer_UnexpectedDeletedEntryInResponsePayload);
                     }
+
+                    // for others, let's skip it
+                    this.JsonReader.SkipValue();
+                    return null;
 
                 default:
                     ODataAnnotationNames.ValidateIsCustomAnnotationName(annotationName);
@@ -903,6 +917,9 @@ namespace Microsoft.OData.Json
                 case ODataAnnotationNames.ODataMediaETag:  // 'odata.mediaEtag'
                     ODataJsonReaderUtils.EnsureInstance(ref mediaResource);
                     mediaResource.ETag = (string)annotationValue;
+                    break;
+
+                case ODataAnnotationNames.ODataRemoved: // 'odata.removed'
                     break;
 
                 default:
