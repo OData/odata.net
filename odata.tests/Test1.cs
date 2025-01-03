@@ -298,8 +298,8 @@
 
             //// TODO if you let the "innersclassname" actually be a namespace, then the caller could decide if they want all the cases together, or if they want them separate, or whatever
             //// TODO make "optionals" not be nullable
-            //// TODO implement parser generation
             //// TODO implement transcriber generation
+            //// TODO implement parser generation
             //// TODO implement generators using the generated cst
             //// TODO i don't really like using _ for spaces *and* for the property name conflict resolution
             //// TODO you are entirely skipping out on incremental definitions, by the way
