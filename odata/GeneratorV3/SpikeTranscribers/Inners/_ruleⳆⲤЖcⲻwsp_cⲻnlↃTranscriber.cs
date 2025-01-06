@@ -19,7 +19,7 @@
 
         }
 
-        private sealed class Visitor : _ruleⳆⲤЖcⲻwsp_cⲻnlↃTranscriber.Visitor<Void, StringBuilder>
+        private sealed class Visitor : _ruleⳆⲤЖcⲻwsp_cⲻnlↃ.Visitor<Void, StringBuilder>
         {
             private Visitor()
             {
