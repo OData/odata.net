@@ -15,7 +15,7 @@
 
         public void Transcribe(Inners._Ⰳx30ⲻ39 value, StringBuilder builder)
         {
-            return Visitor.Instance.Visit(value, builder);
+            Visitor.Instance.Visit(value, builder);
         }
 
         private sealed class Visitor : Inners._Ⰳx30ⲻ39.Visitor<Root.Void, StringBuilder>
