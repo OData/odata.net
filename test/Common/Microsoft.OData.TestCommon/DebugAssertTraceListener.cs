@@ -61,6 +61,7 @@
             {
             }
 
+#if false  // Exception.Exception is obsolete. So, let's templately scope this constrct out and delete it in the next major.
             /// <summary>
             /// Initializes a new instance of the <see cref="DebugAssertException"/> class.
             /// </summary>
@@ -77,6 +78,7 @@
             public DebugAssertException(SerializationInfo info, StreamingContext context) : base(info, context)
             {
             }
+#endif
         }
     }
 }
