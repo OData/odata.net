@@ -124,14 +124,14 @@ namespace _GeneratorV4.Abnf.CstNodes
 
     public sealed class _CRLF
     {
-        public _CRLF(GeneratorV3.Abnf._CR _CR_1, GeneratorV3.Abnf._LF _LF_1)
+        public _CRLF(_GeneratorV4.Abnf.CstNodes._CR _CR_1, _GeneratorV4.Abnf.CstNodes._LF _LF_1)
         {
             this._CR_1 = _CR_1;
             this._LF_1 = _LF_1;
         }
 
-        public GeneratorV3.Abnf._CR _CR_1 { get; }
-        public GeneratorV3.Abnf._LF _LF_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._CR _CR_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._LF _LF_1 { get; }
     }
 
     public abstract class _CTL
@@ -230,12 +230,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _DIGIT : _HEXDIG
         {
-            public _DIGIT(GeneratorV3.Abnf._DIGIT _DIGIT_1)
+            public _DIGIT(_GeneratorV4.Abnf.CstNodes._DIGIT _DIGIT_1)
             {
                 this._DIGIT_1 = _DIGIT_1;
             }
 
-            public GeneratorV3.Abnf._DIGIT _DIGIT_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._DIGIT _DIGIT_1 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -415,12 +415,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _SP : _WSP
         {
-            public _SP(GeneratorV3.Abnf._SP _SP_1)
+            public _SP(_GeneratorV4.Abnf.CstNodes._SP _SP_1)
             {
                 this._SP_1 = _SP_1;
             }
 
-            public GeneratorV3.Abnf._SP _SP_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._SP _SP_1 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -430,12 +430,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _HTAB : _WSP
         {
-            public _HTAB(GeneratorV3.Abnf._HTAB _HTAB_1)
+            public _HTAB(_GeneratorV4.Abnf.CstNodes._HTAB _HTAB_1)
             {
                 this._HTAB_1 = _HTAB_1;
             }
 
-            public GeneratorV3.Abnf._HTAB _HTAB_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._HTAB _HTAB_1 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -456,7 +456,7 @@ namespace _GeneratorV4.Abnf.CstNodes
 
     public sealed class _rule
     {
-        public _rule(GeneratorV3.Abnf._rulename _rulename_1, GeneratorV3.Abnf._definedⲻas _definedⲻas_1, GeneratorV3.Abnf._elements _elements_1, GeneratorV3.Abnf._cⲻnl _cⲻnl_1)
+        public _rule(_GeneratorV4.Abnf.CstNodes._rulename _rulename_1, _GeneratorV4.Abnf.CstNodes._definedⲻas _definedⲻas_1, _GeneratorV4.Abnf.CstNodes._elements _elements_1, _GeneratorV4.Abnf.CstNodes._cⲻnl _cⲻnl_1)
         {
             this._rulename_1 = _rulename_1;
             this._definedⲻas_1 = _definedⲻas_1;
@@ -464,48 +464,48 @@ namespace _GeneratorV4.Abnf.CstNodes
             this._cⲻnl_1 = _cⲻnl_1;
         }
 
-        public GeneratorV3.Abnf._rulename _rulename_1 { get; }
-        public GeneratorV3.Abnf._definedⲻas _definedⲻas_1 { get; }
-        public GeneratorV3.Abnf._elements _elements_1 { get; }
-        public GeneratorV3.Abnf._cⲻnl _cⲻnl_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._rulename _rulename_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._definedⲻas _definedⲻas_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._elements _elements_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._cⲻnl _cⲻnl_1 { get; }
     }
 
     public sealed class _rulename
     {
-        public _rulename(GeneratorV3.Abnf._ALPHA _ALPHA_1, IEnumerable<Inners._ⲤALPHAⳆDIGITⳆʺx2DʺↃ> _ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1)
+        public _rulename(_GeneratorV4.Abnf.CstNodes._ALPHA _ALPHA_1, IEnumerable<Inners._ⲤALPHAⳆDIGITⳆʺx2DʺↃ> _ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1)
         {
             this._ALPHA_1 = _ALPHA_1;
             this._ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1 = _ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1;
         }
 
-        public GeneratorV3.Abnf._ALPHA _ALPHA_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._ALPHA _ALPHA_1 { get; }
         public IEnumerable<Inners._ⲤALPHAⳆDIGITⳆʺx2DʺↃ> _ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1 { get; }
     }
 
     public sealed class _definedⲻas
     {
-        public _definedⲻas(IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_1, Inners._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ _Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1, IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_2)
+        public _definedⲻas(IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_1, Inners._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ _Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_2)
         {
             this._cⲻwsp_1 = _cⲻwsp_1;
             this._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1 = _Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1;
             this._cⲻwsp_2 = _cⲻwsp_2;
         }
 
-        public IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_1 { get; }
+        public IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_1 { get; }
         public Inners._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ _Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1 { get; }
-        public IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_2 { get; }
+        public IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_2 { get; }
     }
 
     public sealed class _elements
     {
-        public _elements(GeneratorV3.Abnf._alternation _alternation_1, IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_1)
+        public _elements(_GeneratorV4.Abnf.CstNodes._alternation _alternation_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_1)
         {
             this._alternation_1 = _alternation_1;
             this._cⲻwsp_1 = _cⲻwsp_1;
         }
 
-        public GeneratorV3.Abnf._alternation _alternation_1 { get; }
-        public IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._alternation _alternation_1 { get; }
+        public IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_1 { get; }
     }
 
     public abstract class _cⲻwsp
@@ -529,12 +529,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _WSP : _cⲻwsp
         {
-            public _WSP(GeneratorV3.Abnf._WSP _WSP_1)
+            public _WSP(_GeneratorV4.Abnf.CstNodes._WSP _WSP_1)
             {
                 this._WSP_1 = _WSP_1;
             }
 
-            public GeneratorV3.Abnf._WSP _WSP_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._WSP _WSP_1 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -579,12 +579,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _comment : _cⲻnl
         {
-            public _comment(GeneratorV3.Abnf._comment _comment_1)
+            public _comment(_GeneratorV4.Abnf.CstNodes._comment _comment_1)
             {
                 this._comment_1 = _comment_1;
             }
 
-            public GeneratorV3.Abnf._comment _comment_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._comment _comment_1 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -594,12 +594,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _CRLF : _cⲻnl
         {
-            public _CRLF(GeneratorV3.Abnf._CRLF _CRLF_1)
+            public _CRLF(_GeneratorV4.Abnf.CstNodes._CRLF _CRLF_1)
             {
                 this._CRLF_1 = _CRLF_1;
             }
 
-            public GeneratorV3.Abnf._CRLF _CRLF_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._CRLF _CRLF_1 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -610,7 +610,7 @@ namespace _GeneratorV4.Abnf.CstNodes
 
     public sealed class _comment
     {
-        public _comment(Inners._ʺx3Bʺ _ʺx3Bʺ_1, IEnumerable<Inners._ⲤWSPⳆVCHARↃ> _ⲤWSPⳆVCHARↃ_1, GeneratorV3.Abnf._CRLF _CRLF_1)
+        public _comment(Inners._ʺx3Bʺ _ʺx3Bʺ_1, IEnumerable<Inners._ⲤWSPⳆVCHARↃ> _ⲤWSPⳆVCHARↃ_1, _GeneratorV4.Abnf.CstNodes._CRLF _CRLF_1)
         {
             this._ʺx3Bʺ_1 = _ʺx3Bʺ_1;
             this._ⲤWSPⳆVCHARↃ_1 = _ⲤWSPⳆVCHARↃ_1;
@@ -619,43 +619,43 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public Inners._ʺx3Bʺ _ʺx3Bʺ_1 { get; }
         public IEnumerable<Inners._ⲤWSPⳆVCHARↃ> _ⲤWSPⳆVCHARↃ_1 { get; }
-        public GeneratorV3.Abnf._CRLF _CRLF_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._CRLF _CRLF_1 { get; }
     }
 
     public sealed class _alternation
     {
-        public _alternation(GeneratorV3.Abnf._concatenation _concatenation_1, IEnumerable<Inners._ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ> _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1)
+        public _alternation(_GeneratorV4.Abnf.CstNodes._concatenation _concatenation_1, IEnumerable<Inners._ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ> _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1)
         {
             this._concatenation_1 = _concatenation_1;
             this._ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1 = _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1;
         }
 
-        public GeneratorV3.Abnf._concatenation _concatenation_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._concatenation _concatenation_1 { get; }
         public IEnumerable<Inners._ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ> _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1 { get; }
     }
 
     public sealed class _concatenation
     {
-        public _concatenation(GeneratorV3.Abnf._repetition _repetition_1, IEnumerable<Inners._Ⲥ1Жcⲻwsp_repetitionↃ> _Ⲥ1Жcⲻwsp_repetitionↃ_1)
+        public _concatenation(_GeneratorV4.Abnf.CstNodes._repetition _repetition_1, IEnumerable<Inners._Ⲥ1Жcⲻwsp_repetitionↃ> _Ⲥ1Жcⲻwsp_repetitionↃ_1)
         {
             this._repetition_1 = _repetition_1;
             this._Ⲥ1Жcⲻwsp_repetitionↃ_1 = _Ⲥ1Жcⲻwsp_repetitionↃ_1;
         }
 
-        public GeneratorV3.Abnf._repetition _repetition_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._repetition _repetition_1 { get; }
         public IEnumerable<Inners._Ⲥ1Жcⲻwsp_repetitionↃ> _Ⲥ1Жcⲻwsp_repetitionↃ_1 { get; }
     }
 
     public sealed class _repetition
     {
-        public _repetition(GeneratorV3.Abnf._repeat? _repeat_1, GeneratorV3.Abnf._element _element_1)
+        public _repetition(_GeneratorV4.Abnf.CstNodes._repeat? _repeat_1, _GeneratorV4.Abnf.CstNodes._element _element_1)
         {
             this._repeat_1 = _repeat_1;
             this._element_1 = _element_1;
         }
 
-        public GeneratorV3.Abnf._repeat? _repeat_1 { get; }
-        public GeneratorV3.Abnf._element _element_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._repeat? _repeat_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._element _element_1 { get; }
     }
 
     public abstract class _repeat
@@ -679,12 +679,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _1ЖDIGIT : _repeat
         {
-            public _1ЖDIGIT(IEnumerable<GeneratorV3.Abnf._DIGIT> _DIGIT_1)
+            public _1ЖDIGIT(IEnumerable<_GeneratorV4.Abnf.CstNodes._DIGIT> _DIGIT_1)
             {
                 this._DIGIT_1 = _DIGIT_1;
             }
 
-            public IEnumerable<GeneratorV3.Abnf._DIGIT> _DIGIT_1 { get; }
+            public IEnumerable<_GeneratorV4.Abnf.CstNodes._DIGIT> _DIGIT_1 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -733,12 +733,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _rulename : _element
         {
-            public _rulename(GeneratorV3.Abnf._rulename _rulename_1)
+            public _rulename(_GeneratorV4.Abnf.CstNodes._rulename _rulename_1)
             {
                 this._rulename_1 = _rulename_1;
             }
 
-            public GeneratorV3.Abnf._rulename _rulename_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._rulename _rulename_1 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -748,12 +748,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _group : _element
         {
-            public _group(GeneratorV3.Abnf._group _group_1)
+            public _group(_GeneratorV4.Abnf.CstNodes._group _group_1)
             {
                 this._group_1 = _group_1;
             }
 
-            public GeneratorV3.Abnf._group _group_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._group _group_1 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -763,12 +763,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _option : _element
         {
-            public _option(GeneratorV3.Abnf._option _option_1)
+            public _option(_GeneratorV4.Abnf.CstNodes._option _option_1)
             {
                 this._option_1 = _option_1;
             }
 
-            public GeneratorV3.Abnf._option _option_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._option _option_1 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -778,12 +778,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _charⲻval : _element
         {
-            public _charⲻval(GeneratorV3.Abnf._charⲻval _charⲻval_1)
+            public _charⲻval(_GeneratorV4.Abnf.CstNodes._charⲻval _charⲻval_1)
             {
                 this._charⲻval_1 = _charⲻval_1;
             }
 
-            public GeneratorV3.Abnf._charⲻval _charⲻval_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._charⲻval _charⲻval_1 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -793,12 +793,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _numⲻval : _element
         {
-            public _numⲻval(GeneratorV3.Abnf._numⲻval _numⲻval_1)
+            public _numⲻval(_GeneratorV4.Abnf.CstNodes._numⲻval _numⲻval_1)
             {
                 this._numⲻval_1 = _numⲻval_1;
             }
 
-            public GeneratorV3.Abnf._numⲻval _numⲻval_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._numⲻval _numⲻval_1 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -808,12 +808,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _proseⲻval : _element
         {
-            public _proseⲻval(GeneratorV3.Abnf._proseⲻval _proseⲻval_1)
+            public _proseⲻval(_GeneratorV4.Abnf.CstNodes._proseⲻval _proseⲻval_1)
             {
                 this._proseⲻval_1 = _proseⲻval_1;
             }
 
-            public GeneratorV3.Abnf._proseⲻval _proseⲻval_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._proseⲻval _proseⲻval_1 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -824,7 +824,7 @@ namespace _GeneratorV4.Abnf.CstNodes
 
     public sealed class _group
     {
-        public _group(Inners._ʺx28ʺ _ʺx28ʺ_1, IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_1, GeneratorV3.Abnf._alternation _alternation_1, IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_2, Inners._ʺx29ʺ _ʺx29ʺ_1)
+        public _group(Inners._ʺx28ʺ _ʺx28ʺ_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_1, _GeneratorV4.Abnf.CstNodes._alternation _alternation_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_2, Inners._ʺx29ʺ _ʺx29ʺ_1)
         {
             this._ʺx28ʺ_1 = _ʺx28ʺ_1;
             this._cⲻwsp_1 = _cⲻwsp_1;
@@ -834,15 +834,15 @@ namespace _GeneratorV4.Abnf.CstNodes
         }
 
         public Inners._ʺx28ʺ _ʺx28ʺ_1 { get; }
-        public IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_1 { get; }
-        public GeneratorV3.Abnf._alternation _alternation_1 { get; }
-        public IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_2 { get; }
+        public IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._alternation _alternation_1 { get; }
+        public IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_2 { get; }
         public Inners._ʺx29ʺ _ʺx29ʺ_1 { get; }
     }
 
     public sealed class _option
     {
-        public _option(Inners._ʺx5Bʺ _ʺx5Bʺ_1, IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_1, GeneratorV3.Abnf._alternation _alternation_1, IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_2, Inners._ʺx5Dʺ _ʺx5Dʺ_1)
+        public _option(Inners._ʺx5Bʺ _ʺx5Bʺ_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_1, _GeneratorV4.Abnf.CstNodes._alternation _alternation_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_2, Inners._ʺx5Dʺ _ʺx5Dʺ_1)
         {
             this._ʺx5Bʺ_1 = _ʺx5Bʺ_1;
             this._cⲻwsp_1 = _cⲻwsp_1;
@@ -852,24 +852,24 @@ namespace _GeneratorV4.Abnf.CstNodes
         }
 
         public Inners._ʺx5Bʺ _ʺx5Bʺ_1 { get; }
-        public IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_1 { get; }
-        public GeneratorV3.Abnf._alternation _alternation_1 { get; }
-        public IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_2 { get; }
+        public IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._alternation _alternation_1 { get; }
+        public IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_2 { get; }
         public Inners._ʺx5Dʺ _ʺx5Dʺ_1 { get; }
     }
 
     public sealed class _charⲻval
     {
-        public _charⲻval(GeneratorV3.Abnf._DQUOTE _DQUOTE_1, IEnumerable<Inners._ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ> _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ_1, GeneratorV3.Abnf._DQUOTE _DQUOTE_2)
+        public _charⲻval(_GeneratorV4.Abnf.CstNodes._DQUOTE _DQUOTE_1, IEnumerable<Inners._ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ> _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ_1, _GeneratorV4.Abnf.CstNodes._DQUOTE _DQUOTE_2)
         {
             this._DQUOTE_1 = _DQUOTE_1;
             this._ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ_1 = _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ_1;
             this._DQUOTE_2 = _DQUOTE_2;
         }
 
-        public GeneratorV3.Abnf._DQUOTE _DQUOTE_1 { get; }
+        public _GeneratorV4.Abnf.CstNodes._DQUOTE _DQUOTE_1 { get; }
         public IEnumerable<Inners._ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ> _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ_1 { get; }
-        public GeneratorV3.Abnf._DQUOTE _DQUOTE_2 { get; }
+        public _GeneratorV4.Abnf.CstNodes._DQUOTE _DQUOTE_2 { get; }
     }
 
     public sealed class _numⲻval
@@ -886,7 +886,7 @@ namespace _GeneratorV4.Abnf.CstNodes
 
     public sealed class _binⲻval
     {
-        public _binⲻval(Inners._ʺx62ʺ _ʺx62ʺ_1, IEnumerable<GeneratorV3.Abnf._BIT> _BIT_1, Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ? _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ_1)
+        public _binⲻval(Inners._ʺx62ʺ _ʺx62ʺ_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._BIT> _BIT_1, Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ? _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ_1)
         {
             this._ʺx62ʺ_1 = _ʺx62ʺ_1;
             this._BIT_1 = _BIT_1;
@@ -894,13 +894,13 @@ namespace _GeneratorV4.Abnf.CstNodes
         }
 
         public Inners._ʺx62ʺ _ʺx62ʺ_1 { get; }
-        public IEnumerable<GeneratorV3.Abnf._BIT> _BIT_1 { get; }
+        public IEnumerable<_GeneratorV4.Abnf.CstNodes._BIT> _BIT_1 { get; }
         public Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ? _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ_1 { get; }
     }
 
     public sealed class _decⲻval
     {
-        public _decⲻval(Inners._ʺx64ʺ _ʺx64ʺ_1, IEnumerable<GeneratorV3.Abnf._DIGIT> _DIGIT_1, Inners._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ? _1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ_1)
+        public _decⲻval(Inners._ʺx64ʺ _ʺx64ʺ_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._DIGIT> _DIGIT_1, Inners._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ? _1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ_1)
         {
             this._ʺx64ʺ_1 = _ʺx64ʺ_1;
             this._DIGIT_1 = _DIGIT_1;
@@ -908,13 +908,13 @@ namespace _GeneratorV4.Abnf.CstNodes
         }
 
         public Inners._ʺx64ʺ _ʺx64ʺ_1 { get; }
-        public IEnumerable<GeneratorV3.Abnf._DIGIT> _DIGIT_1 { get; }
+        public IEnumerable<_GeneratorV4.Abnf.CstNodes._DIGIT> _DIGIT_1 { get; }
         public Inners._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ? _1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ_1 { get; }
     }
 
     public sealed class _hexⲻval
     {
-        public _hexⲻval(Inners._ʺx78ʺ _ʺx78ʺ_1, IEnumerable<GeneratorV3.Abnf._HEXDIG> _HEXDIG_1, Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ? _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ_1)
+        public _hexⲻval(Inners._ʺx78ʺ _ʺx78ʺ_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._HEXDIG> _HEXDIG_1, Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ? _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ_1)
         {
             this._ʺx78ʺ_1 = _ʺx78ʺ_1;
             this._HEXDIG_1 = _HEXDIG_1;
@@ -922,7 +922,7 @@ namespace _GeneratorV4.Abnf.CstNodes
         }
 
         public Inners._ʺx78ʺ _ʺx78ʺ_1 { get; }
-        public IEnumerable<GeneratorV3.Abnf._HEXDIG> _HEXDIG_1 { get; }
+        public IEnumerable<_GeneratorV4.Abnf.CstNodes._HEXDIG> _HEXDIG_1 { get; }
         public Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ? _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ_1 { get; }
     }
 
@@ -5387,12 +5387,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
             public sealed class _WSP : _WSPⳆCRLF_WSP
             {
-                public _WSP(GeneratorV3.Abnf._WSP _WSP_1)
+                public _WSP(_GeneratorV4.Abnf.CstNodes._WSP _WSP_1)
                 {
                     this._WSP_1 = _WSP_1;
                 }
 
-                public GeneratorV3.Abnf._WSP _WSP_1 { get; }
+                public _GeneratorV4.Abnf.CstNodes._WSP _WSP_1 { get; }
 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -5402,14 +5402,14 @@ namespace _GeneratorV4.Abnf.CstNodes
 
             public sealed class _CRLF_WSP : _WSPⳆCRLF_WSP
             {
-                public _CRLF_WSP(GeneratorV3.Abnf._CRLF _CRLF_1, GeneratorV3.Abnf._WSP _WSP_1)
+                public _CRLF_WSP(_GeneratorV4.Abnf.CstNodes._CRLF _CRLF_1, _GeneratorV4.Abnf.CstNodes._WSP _WSP_1)
                 {
                     this._CRLF_1 = _CRLF_1;
                     this._WSP_1 = _WSP_1;
                 }
 
-                public GeneratorV3.Abnf._CRLF _CRLF_1 { get; }
-                public GeneratorV3.Abnf._WSP _WSP_1 { get; }
+                public _GeneratorV4.Abnf.CstNodes._CRLF _CRLF_1 { get; }
+                public _GeneratorV4.Abnf.CstNodes._WSP _WSP_1 { get; }
 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11778,14 +11778,14 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _Жcⲻwsp_cⲻnl
         {
-            public _Жcⲻwsp_cⲻnl(IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_1, GeneratorV3.Abnf._cⲻnl _cⲻnl_1)
+            public _Жcⲻwsp_cⲻnl(IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_1, _GeneratorV4.Abnf.CstNodes._cⲻnl _cⲻnl_1)
             {
                 this._cⲻwsp_1 = _cⲻwsp_1;
                 this._cⲻnl_1 = _cⲻnl_1;
             }
 
-            public IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_1 { get; }
-            public GeneratorV3.Abnf._cⲻnl _cⲻnl_1 { get; }
+            public IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._cⲻnl _cⲻnl_1 { get; }
         }
 
         public sealed class _ⲤЖcⲻwsp_cⲻnlↃ
@@ -11819,12 +11819,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
             public sealed class _rule : _ruleⳆⲤЖcⲻwsp_cⲻnlↃ
             {
-                public _rule(GeneratorV3.Abnf._rule _rule_1)
+                public _rule(_GeneratorV4.Abnf.CstNodes._rule _rule_1)
                 {
                     this._rule_1 = _rule_1;
                 }
 
-                public GeneratorV3.Abnf._rule _rule_1 { get; }
+                public _GeneratorV4.Abnf.CstNodes._rule _rule_1 { get; }
 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11899,12 +11899,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
             public sealed class _ALPHA : _ALPHAⳆDIGITⳆʺx2Dʺ
             {
-                public _ALPHA(GeneratorV3.Abnf._ALPHA _ALPHA_1)
+                public _ALPHA(_GeneratorV4.Abnf.CstNodes._ALPHA _ALPHA_1)
                 {
                     this._ALPHA_1 = _ALPHA_1;
                 }
 
-                public GeneratorV3.Abnf._ALPHA _ALPHA_1 { get; }
+                public _GeneratorV4.Abnf.CstNodes._ALPHA _ALPHA_1 { get; }
 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -11914,12 +11914,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
             public sealed class _DIGIT : _ALPHAⳆDIGITⳆʺx2Dʺ
             {
-                public _DIGIT(GeneratorV3.Abnf._DIGIT _DIGIT_1)
+                public _DIGIT(_GeneratorV4.Abnf.CstNodes._DIGIT _DIGIT_1)
                 {
                     this._DIGIT_1 = _DIGIT_1;
                 }
 
-                public GeneratorV3.Abnf._DIGIT _DIGIT_1 { get; }
+                public _GeneratorV4.Abnf.CstNodes._DIGIT _DIGIT_1 { get; }
 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -12055,14 +12055,14 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _cⲻnl_WSP
         {
-            public _cⲻnl_WSP(GeneratorV3.Abnf._cⲻnl _cⲻnl_1, GeneratorV3.Abnf._WSP _WSP_1)
+            public _cⲻnl_WSP(_GeneratorV4.Abnf.CstNodes._cⲻnl _cⲻnl_1, _GeneratorV4.Abnf.CstNodes._WSP _WSP_1)
             {
                 this._cⲻnl_1 = _cⲻnl_1;
                 this._WSP_1 = _WSP_1;
             }
 
-            public GeneratorV3.Abnf._cⲻnl _cⲻnl_1 { get; }
-            public GeneratorV3.Abnf._WSP _WSP_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._cⲻnl _cⲻnl_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._WSP _WSP_1 { get; }
         }
 
         public sealed class _Ⲥcⲻnl_WSPↃ
@@ -12115,12 +12115,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
             public sealed class _WSP : _WSPⳆVCHAR
             {
-                public _WSP(GeneratorV3.Abnf._WSP _WSP_1)
+                public _WSP(_GeneratorV4.Abnf.CstNodes._WSP _WSP_1)
                 {
                     this._WSP_1 = _WSP_1;
                 }
 
-                public GeneratorV3.Abnf._WSP _WSP_1 { get; }
+                public _GeneratorV4.Abnf.CstNodes._WSP _WSP_1 { get; }
 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -12130,12 +12130,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
             public sealed class _VCHAR : _WSPⳆVCHAR
             {
-                public _VCHAR(GeneratorV3.Abnf._VCHAR _VCHAR_1)
+                public _VCHAR(_GeneratorV4.Abnf.CstNodes._VCHAR _VCHAR_1)
                 {
                     this._VCHAR_1 = _VCHAR_1;
                 }
 
-                public GeneratorV3.Abnf._VCHAR _VCHAR_1 { get; }
+                public _GeneratorV4.Abnf.CstNodes._VCHAR _VCHAR_1 { get; }
 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -12166,7 +12166,7 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation
         {
-            public _Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation(IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_1, _ʺx2Fʺ _ʺx2Fʺ_1, IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_2, GeneratorV3.Abnf._concatenation _concatenation_1)
+            public _Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation(IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_1, _ʺx2Fʺ _ʺx2Fʺ_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_2, _GeneratorV4.Abnf.CstNodes._concatenation _concatenation_1)
             {
                 this._cⲻwsp_1 = _cⲻwsp_1;
                 this._ʺx2Fʺ_1 = _ʺx2Fʺ_1;
@@ -12174,10 +12174,10 @@ namespace _GeneratorV4.Abnf.CstNodes
                 this._concatenation_1 = _concatenation_1;
             }
 
-            public IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_1 { get; }
+            public IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_1 { get; }
             public _ʺx2Fʺ _ʺx2Fʺ_1 { get; }
-            public IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_2 { get; }
-            public GeneratorV3.Abnf._concatenation _concatenation_1 { get; }
+            public IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_2 { get; }
+            public _GeneratorV4.Abnf.CstNodes._concatenation _concatenation_1 { get; }
         }
 
         public sealed class _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ
@@ -12192,14 +12192,14 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _1Жcⲻwsp_repetition
         {
-            public _1Жcⲻwsp_repetition(IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_1, GeneratorV3.Abnf._repetition _repetition_1)
+            public _1Жcⲻwsp_repetition(IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_1, _GeneratorV4.Abnf.CstNodes._repetition _repetition_1)
             {
                 this._cⲻwsp_1 = _cⲻwsp_1;
                 this._repetition_1 = _repetition_1;
             }
 
-            public IEnumerable<GeneratorV3.Abnf._cⲻwsp> _cⲻwsp_1 { get; }
-            public GeneratorV3.Abnf._repetition _repetition_1 { get; }
+            public IEnumerable<_GeneratorV4.Abnf.CstNodes._cⲻwsp> _cⲻwsp_1 { get; }
+            public _GeneratorV4.Abnf.CstNodes._repetition _repetition_1 { get; }
         }
 
         public sealed class _Ⲥ1Жcⲻwsp_repetitionↃ
@@ -12233,16 +12233,16 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _ЖDIGIT_ʺx2Aʺ_ЖDIGIT
         {
-            public _ЖDIGIT_ʺx2Aʺ_ЖDIGIT(IEnumerable<GeneratorV3.Abnf._DIGIT> _DIGIT_1, _ʺx2Aʺ _ʺx2Aʺ_1, IEnumerable<GeneratorV3.Abnf._DIGIT> _DIGIT_2)
+            public _ЖDIGIT_ʺx2Aʺ_ЖDIGIT(IEnumerable<_GeneratorV4.Abnf.CstNodes._DIGIT> _DIGIT_1, _ʺx2Aʺ _ʺx2Aʺ_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._DIGIT> _DIGIT_2)
             {
                 this._DIGIT_1 = _DIGIT_1;
                 this._ʺx2Aʺ_1 = _ʺx2Aʺ_1;
                 this._DIGIT_2 = _DIGIT_2;
             }
 
-            public IEnumerable<GeneratorV3.Abnf._DIGIT> _DIGIT_1 { get; }
+            public IEnumerable<_GeneratorV4.Abnf.CstNodes._DIGIT> _DIGIT_1 { get; }
             public _ʺx2Aʺ _ʺx2Aʺ_1 { get; }
-            public IEnumerable<GeneratorV3.Abnf._DIGIT> _DIGIT_2 { get; }
+            public IEnumerable<_GeneratorV4.Abnf.CstNodes._DIGIT> _DIGIT_2 { get; }
         }
 
         public sealed class _ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ
@@ -14160,12 +14160,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
             public sealed class _binⲻval : _binⲻvalⳆdecⲻvalⳆhexⲻval
             {
-                public _binⲻval(GeneratorV3.Abnf._binⲻval _binⲻval_1)
+                public _binⲻval(_GeneratorV4.Abnf.CstNodes._binⲻval _binⲻval_1)
                 {
                     this._binⲻval_1 = _binⲻval_1;
                 }
 
-                public GeneratorV3.Abnf._binⲻval _binⲻval_1 { get; }
+                public _GeneratorV4.Abnf.CstNodes._binⲻval _binⲻval_1 { get; }
 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -14175,12 +14175,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
             public sealed class _decⲻval : _binⲻvalⳆdecⲻvalⳆhexⲻval
             {
-                public _decⲻval(GeneratorV3.Abnf._decⲻval _decⲻval_1)
+                public _decⲻval(_GeneratorV4.Abnf.CstNodes._decⲻval _decⲻval_1)
                 {
                     this._decⲻval_1 = _decⲻval_1;
                 }
 
-                public GeneratorV3.Abnf._decⲻval _decⲻval_1 { get; }
+                public _GeneratorV4.Abnf.CstNodes._decⲻval _decⲻval_1 { get; }
 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -14190,12 +14190,12 @@ namespace _GeneratorV4.Abnf.CstNodes
 
             public sealed class _hexⲻval : _binⲻvalⳆdecⲻvalⳆhexⲻval
             {
-                public _hexⲻval(GeneratorV3.Abnf._hexⲻval _hexⲻval_1)
+                public _hexⲻval(_GeneratorV4.Abnf.CstNodes._hexⲻval _hexⲻval_1)
                 {
                     this._hexⲻval_1 = _hexⲻval_1;
                 }
 
-                public GeneratorV3.Abnf._hexⲻval _hexⲻval_1 { get; }
+                public _GeneratorV4.Abnf.CstNodes._hexⲻval _hexⲻval_1 { get; }
 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -14254,14 +14254,14 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _ʺx2Eʺ_1ЖBIT
         {
-            public _ʺx2Eʺ_1ЖBIT(_ʺx2Eʺ _ʺx2Eʺ_1, IEnumerable<GeneratorV3.Abnf._BIT> _BIT_1)
+            public _ʺx2Eʺ_1ЖBIT(_ʺx2Eʺ _ʺx2Eʺ_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._BIT> _BIT_1)
             {
                 this._ʺx2Eʺ_1 = _ʺx2Eʺ_1;
                 this._BIT_1 = _BIT_1;
             }
 
             public _ʺx2Eʺ _ʺx2Eʺ_1 { get; }
-            public IEnumerable<GeneratorV3.Abnf._BIT> _BIT_1 { get; }
+            public IEnumerable<_GeneratorV4.Abnf.CstNodes._BIT> _BIT_1 { get; }
         }
 
         public sealed class _Ⲥʺx2Eʺ_1ЖBITↃ
@@ -14276,14 +14276,14 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _ʺx2Dʺ_1ЖBIT
         {
-            public _ʺx2Dʺ_1ЖBIT(_ʺx2Dʺ _ʺx2Dʺ_1, IEnumerable<GeneratorV3.Abnf._BIT> _BIT_1)
+            public _ʺx2Dʺ_1ЖBIT(_ʺx2Dʺ _ʺx2Dʺ_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._BIT> _BIT_1)
             {
                 this._ʺx2Dʺ_1 = _ʺx2Dʺ_1;
                 this._BIT_1 = _BIT_1;
             }
 
             public _ʺx2Dʺ _ʺx2Dʺ_1 { get; }
-            public IEnumerable<GeneratorV3.Abnf._BIT> _BIT_1 { get; }
+            public IEnumerable<_GeneratorV4.Abnf.CstNodes._BIT> _BIT_1 { get; }
         }
 
         public sealed class _Ⲥʺx2Dʺ_1ЖBITↃ
@@ -14367,14 +14367,14 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _ʺx2Eʺ_1ЖDIGIT
         {
-            public _ʺx2Eʺ_1ЖDIGIT(_ʺx2Eʺ _ʺx2Eʺ_1, IEnumerable<GeneratorV3.Abnf._DIGIT> _DIGIT_1)
+            public _ʺx2Eʺ_1ЖDIGIT(_ʺx2Eʺ _ʺx2Eʺ_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._DIGIT> _DIGIT_1)
             {
                 this._ʺx2Eʺ_1 = _ʺx2Eʺ_1;
                 this._DIGIT_1 = _DIGIT_1;
             }
 
             public _ʺx2Eʺ _ʺx2Eʺ_1 { get; }
-            public IEnumerable<GeneratorV3.Abnf._DIGIT> _DIGIT_1 { get; }
+            public IEnumerable<_GeneratorV4.Abnf.CstNodes._DIGIT> _DIGIT_1 { get; }
         }
 
         public sealed class _Ⲥʺx2Eʺ_1ЖDIGITↃ
@@ -14389,14 +14389,14 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _ʺx2Dʺ_1ЖDIGIT
         {
-            public _ʺx2Dʺ_1ЖDIGIT(_ʺx2Dʺ _ʺx2Dʺ_1, IEnumerable<GeneratorV3.Abnf._DIGIT> _DIGIT_1)
+            public _ʺx2Dʺ_1ЖDIGIT(_ʺx2Dʺ _ʺx2Dʺ_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._DIGIT> _DIGIT_1)
             {
                 this._ʺx2Dʺ_1 = _ʺx2Dʺ_1;
                 this._DIGIT_1 = _DIGIT_1;
             }
 
             public _ʺx2Dʺ _ʺx2Dʺ_1 { get; }
-            public IEnumerable<GeneratorV3.Abnf._DIGIT> _DIGIT_1 { get; }
+            public IEnumerable<_GeneratorV4.Abnf.CstNodes._DIGIT> _DIGIT_1 { get; }
         }
 
         public sealed class _Ⲥʺx2Dʺ_1ЖDIGITↃ
@@ -14480,14 +14480,14 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _ʺx2Eʺ_1ЖHEXDIG
         {
-            public _ʺx2Eʺ_1ЖHEXDIG(_ʺx2Eʺ _ʺx2Eʺ_1, IEnumerable<GeneratorV3.Abnf._HEXDIG> _HEXDIG_1)
+            public _ʺx2Eʺ_1ЖHEXDIG(_ʺx2Eʺ _ʺx2Eʺ_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._HEXDIG> _HEXDIG_1)
             {
                 this._ʺx2Eʺ_1 = _ʺx2Eʺ_1;
                 this._HEXDIG_1 = _HEXDIG_1;
             }
 
             public _ʺx2Eʺ _ʺx2Eʺ_1 { get; }
-            public IEnumerable<GeneratorV3.Abnf._HEXDIG> _HEXDIG_1 { get; }
+            public IEnumerable<_GeneratorV4.Abnf.CstNodes._HEXDIG> _HEXDIG_1 { get; }
         }
 
         public sealed class _Ⲥʺx2Eʺ_1ЖHEXDIGↃ
@@ -14502,14 +14502,14 @@ namespace _GeneratorV4.Abnf.CstNodes
 
         public sealed class _ʺx2Dʺ_1ЖHEXDIG
         {
-            public _ʺx2Dʺ_1ЖHEXDIG(_ʺx2Dʺ _ʺx2Dʺ_1, IEnumerable<GeneratorV3.Abnf._HEXDIG> _HEXDIG_1)
+            public _ʺx2Dʺ_1ЖHEXDIG(_ʺx2Dʺ _ʺx2Dʺ_1, IEnumerable<_GeneratorV4.Abnf.CstNodes._HEXDIG> _HEXDIG_1)
             {
                 this._ʺx2Dʺ_1 = _ʺx2Dʺ_1;
                 this._HEXDIG_1 = _HEXDIG_1;
             }
 
             public _ʺx2Dʺ _ʺx2Dʺ_1 { get; }
-            public IEnumerable<GeneratorV3.Abnf._HEXDIG> _HEXDIG_1 { get; }
+            public IEnumerable<_GeneratorV4.Abnf.CstNodes._HEXDIG> _HEXDIG_1 { get; }
         }
 
         public sealed class _Ⲥʺx2Dʺ_1ЖHEXDIGↃ
