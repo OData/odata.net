@@ -15,6 +15,7 @@
 
         public void Transcribe(Inners._ʺx3DʺⳆʺx3Dx2Fʺ value, StringBuilder builder)
         {
+            Visitor.Instance.Visit(value, builder);
         }
 
         private sealed class Visitor : Inners._ʺx3DʺⳆʺx3Dx2Fʺ.Visitor<Root.Void, StringBuilder>

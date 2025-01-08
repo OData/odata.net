@@ -15,8 +15,8 @@
 
         public void Transcribe(Inners._Ⰳx41ⲻ5A value, StringBuilder builder)
         {
-            builder.Append("%");
-            builder.Append("x");
+            /*builder.Append("%");
+            builder.Append("x");*/
             Visitor.Instance.Visit(value, builder);
         }
 
