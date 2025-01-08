@@ -35,7 +35,9 @@
 
             protected internal override Void Accept(_element._group node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                _groupTranscriber.Instance.Transcribe(node._group_1, context);
+
+                return default;
             }
 
             protected internal override Void Accept(_element._option node, StringBuilder context)
