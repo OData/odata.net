@@ -255,41 +255,6 @@
         }
 
         [TestMethod]
-        public void TestCodeGenerator()
-        {
-            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(TestAbnf);
-
-            var classes = AbnfParserGenerator.Generator.Instance.Generate(cst, default);
-
-            var classTranscriber = new ClassTranscriber();
-            var builder = new StringBuilder();
-            foreach (var @class in classes)
-            {
-                classTranscriber.Transcribe(@class, builder, "    ");
-                builder.AppendLine();
-            }
-
-            var csharp = builder.ToString();
-
-            var filePath = @"C:\msgithub\odata.net\odata.tests\testclasses.txt";
-            var expected = File.ReadAllText(filePath);
-
-            File.WriteAllText(filePath, csharp);
-
-            Assert.AreEqual(expected, csharp);
-
-            //// TODO if you let the "innersclassname" actually be a namespace, then the caller could decide if they want all the cases together, or if they want them separate, or whatever
-            //// TODO make "optionals" not be nullable
-            //// TODO implement transcriber generation
-            //// TODO implement parser generation
-            //// TODO implement generators using the generated cst
-            //// TODO i don't really like using _ for spaces *and* for the property name conflict resolution
-            //// TODO you are entirely skipping out on incremental definitions, by the way
-            //// TODO make sure to flesh out the code quality checks for the generated code
-            //// TODO it could happen that someojne has first-rule = first-rule / second-rule in which case the du name first-rule with conflict with one of its elements
-        }
-
-        [TestMethod]
         public void TestGeneratorV3()
         {
             var abnf = File.ReadAllText(@"C:\msgithub\odata.net\odata\GeneratorV3\test.abnf");

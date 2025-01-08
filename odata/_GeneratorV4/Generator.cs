@@ -138,7 +138,6 @@
         public IEnumerable<Class> Generate(RuleList ruleList)
         {
             //// !!!!!IMPORTANT WHENEVER YOU REMOVE OLD CODE, CHECK FOR TODOS!!!!!
-            //// TODO remove v2 generator
             //// TODO remove the old transcribers
             //// TODO implement this generator that uses the new cst nodes
             //// TODO remove v3 generator
@@ -150,6 +149,12 @@
             
             //// TODO preserve ABNF comments as xmldoc?
             //// TODO it would be nice if collection properties on cst nodes were plural
+            //// TODO if you let the "innersclassname" actually be a namespace, then the caller could decide if they want all the cases together, or if they want them separate, or whatever
+            //// TODO make "optionals" not be nullable
+            //// TODO i don't really like using _ for spaces *and* for the property name conflict resolution
+            //// TODO you are entirely skipping out on incremental definitions, by the way
+            //// TODO make sure to flesh out the code quality checks for the generated code
+            //// TODO it could happen that someojne has first-rule = first-rule / second-rule in which case the du name first-rule with conflict with one of its elements
         }
     }*/
 }
