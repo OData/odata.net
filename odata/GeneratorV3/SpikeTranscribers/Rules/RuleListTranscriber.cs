@@ -14,7 +14,10 @@
 
         public void Transcribe(_rulelist value, StringBuilder builder)
         {
-
+            foreach (var _ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ in value._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ_1)
+            {
+                _ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃTranscriber.Instance.Transcribe(_ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ, builder);
+            }
         }
     }
 }

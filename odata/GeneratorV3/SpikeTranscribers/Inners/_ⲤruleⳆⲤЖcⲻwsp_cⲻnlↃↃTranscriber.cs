@@ -15,7 +15,7 @@
 
         public void Transcribe(_ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ value, StringBuilder builder)
         {
-
+            _ruleⳆⲤЖcⲻwsp_cⲻnlↃTranscriber.Instance.Transcribe(value._ruleⳆⲤЖcⲻwsp_cⲻnlↃ_1, builder);
         }
     }
 }
