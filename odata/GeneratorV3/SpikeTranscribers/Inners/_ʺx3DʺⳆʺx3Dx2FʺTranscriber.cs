@@ -34,7 +34,9 @@
 
             protected internal override Void Accept(Inners._ʺx3DʺⳆʺx3Dx2Fʺ._ʺx3Dx2Fʺ node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                _ʺx3Dx2FʺTranscriber.Instance.Transcribe(node._ʺx3Dx2Fʺ_1, context);
+
+                return default;
             }
         }
     }

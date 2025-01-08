@@ -14,7 +14,7 @@
 
         public void Transcribe(Inners._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ value, StringBuilder builder)
         {
-            throw new System.NotImplementedException();
+            _ʺx3DʺⳆʺx3Dx2FʺTranscriber.Instance.Transcribe(value._ʺx3DʺⳆʺx3Dx2Fʺ_1, builder);
         }
     }
 }
