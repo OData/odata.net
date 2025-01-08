@@ -14,7 +14,7 @@
 
         public void Transcribe(_alternation value, StringBuilder builder)
         {
-
+            _concatenationTranscriber.Instance.Transcribe(value._concatenation_1, builder);
         }
     }
 }

@@ -15,7 +15,7 @@
 
         public void Transcribe(_element value, StringBuilder builder)
         {
-
+            Visitor.Instance.Visit(value, builder);
         }
 
         private sealed class Visitor : _element.Visitor<Root.Void, StringBuilder>
@@ -42,17 +42,23 @@
 
             protected internal override Void Accept(_element._option node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                _optionTranscriber.Instance.Transcribe(node._option_1, context);
+
+                return default;
             }
 
             protected internal override Void Accept(_element._charⲻval node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                _charⲻvalTranscriber.Instance.Transcribe(node._charⲻval_1, context);
+
+                return default;
             }
 
             protected internal override Void Accept(_element._numⲻval node, StringBuilder context)
             {
-                throw new System.NotImplementedException();
+                _numⲻvalTranscriber.Instance.Transcribe(node._numⲻval_1, context);
+
+                return default;
             }
 
             protected internal override Void Accept(_element._proseⲻval node, StringBuilder context)

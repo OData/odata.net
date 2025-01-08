@@ -19,7 +19,7 @@
                 _repeatTranscriber.Instance.Transcribe(value._repeat_1, builder);
             }
 
-
+            _elementTranscriber.Instance.Transcribe(value._element_1, builder);
         }
     }
 }
