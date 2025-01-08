@@ -16,6 +16,7 @@
 
         public void Transcribe(_repeat value, StringBuilder builder)
         {
+            Visitor.Instance.Visit(value, builder);
         }
 
         private sealed class Visitor : _repeat.Visitor<Root.Void, StringBuilder>
