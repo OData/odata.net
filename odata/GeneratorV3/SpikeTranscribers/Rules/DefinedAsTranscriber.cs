@@ -14,6 +14,12 @@
 
         public void Transcribe(_definedⲻas value, StringBuilder builder)
         {
+            foreach (var cⲻwsp in value._cⲻwsp_1)
+            {
+                _cⲻwspTranscriber.Instance.Transcribe(cⲻwsp)
+            }
+
+
         }
     }
 }
