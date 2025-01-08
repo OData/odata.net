@@ -36,7 +36,9 @@
 
             protected internal override Void Accept(_cⲻwsp._Ⲥcⲻnl_WSPↃ node, StringBuilder context)
             {
-                _Ⲥcⲻnl_WSPↃTranscriber.Instance.Transcribe(node._Ⲥcⲻnl_WSPↃ_1, builder);
+                _Ⲥcⲻnl_WSPↃTranscriber.Instance.Transcribe(node._Ⲥcⲻnl_WSPↃ_1, context);
+
+                return default;
             }
         }
     }
