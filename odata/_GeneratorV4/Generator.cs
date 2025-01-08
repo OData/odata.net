@@ -110,7 +110,7 @@
         public string Percent { get; }
     }
 
-    public sealed class Generator
+    /*public sealed class Generator
     {
         private readonly string innersClassName;
         private readonly RuleListInnerGenerator ruleListInnerGenerator;
@@ -138,13 +138,18 @@
         public IEnumerable<Class> Generate(RuleList ruleList)
         {
             //// !!!!!IMPORTANT WHENEVER YOU REMOVE OLD CODE, CHECK FOR TODOS!!!!!
+            //// TODO remove v2 generator
             //// TODO remove the old transcribers
             //// TODO implement this generator that uses the new cst nodes
+            //// TODO remove v3 generator
             //// TODO automatically generate the transcribers
             //// TODO manually write the new parsers
             //// TODO remove the old parsers
             //// TODO remove the old cst nodes
             //// TODO automatically generate parsers
+            
+            //// TODO preserve ABNF comments as xmldoc?
+            //// TODO it would be nice if collection properties on cst nodes were plural
         }
-    }
+    }*/
 }

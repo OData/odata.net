@@ -2,7 +2,6 @@
 {
     using AbnfParser.CstNodes.Core;
     using AbnfParserGenerator;
-    using AbnfParserGenerator.CstNodesGenerator;
     using Root;
     using Root.OdataResourcePath.CombinatorParsers;
     using Root.OdataResourcePath.Transcribers;
@@ -253,23 +252,6 @@
             }
 
             File.WriteAllText(@"C:\Users\gdebruin\code.txt", builder.ToString());
-        }
-
-        [TestMethod]
-        public void CodeGenerator()
-        {
-            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
-            var coreRulesText = File.ReadAllText(coreRulesPath);
-            var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
-            var abnfRulesText = File.ReadAllText(abnfRulesPath);
-            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
-            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
-
-            var classes = RuleListGenerator.Instance.Generate(cst, default);
-
-            var builder = new StringBuilder();
-            ////new ClassTranscriber().Transcribe(classes.Value.ElementAt(26), builder, "  ");
-            var csharp = builder.ToString();
         }
 
         [TestMethod]
