@@ -43,8 +43,12 @@
 
             //// TODO if the ABNF is missing a trailing newline, the last rule will be dropped
 
+            var newCst = GeneratorV3.OldToNewConverters.RuleListConverter.Instance.Convert(cst);
+
             var stringBuilder = new StringBuilder();
-            AbnfParser.Transcribers.RuleListTranscriber.Instance.Transcribe(cst, stringBuilder);
+
+            GeneratorV3.SpikeTranscribers.Rules.RuleListTranscriber.Instance.Transcribe(newCst, stringBuilder);
+
             var transcribedText = stringBuilder.ToString();
             Assert.AreEqual(coreRulesText, transcribedText);
         }
@@ -59,8 +63,12 @@
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
 
+            var newCst = GeneratorV3.OldToNewConverters.RuleListConverter.Instance.Convert(cst);
+
             var stringBuilder = new StringBuilder();
-            AbnfParser.Transcribers.RuleListTranscriber.Instance.Transcribe(cst, stringBuilder);
+
+            GeneratorV3.SpikeTranscribers.Rules.RuleListTranscriber.Instance.Transcribe(newCst, stringBuilder);
+
             var transcribedText = stringBuilder.ToString();
             Assert.AreEqual(fullRulesText, transcribedText);
         }
@@ -72,10 +80,13 @@
             var odataRulesText = File.ReadAllText(odataRulesPath);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(odataRulesText);
 
-            var stringBuilder = new StringBuilder();
-            AbnfParser.Transcribers.RuleListTranscriber.Instance.Transcribe(cst, stringBuilder);
-            var transcribedText = stringBuilder.ToString();
+            var newCst = GeneratorV3.OldToNewConverters.RuleListConverter.Instance.Convert(cst);
 
+            var stringBuilder = new StringBuilder();
+
+            GeneratorV3.SpikeTranscribers.Rules.RuleListTranscriber.Instance.Transcribe(newCst, stringBuilder);
+
+            var transcribedText = stringBuilder.ToString();
             File.WriteAllText(odataRulesPath, transcribedText);
             Assert.AreEqual(odataRulesText, transcribedText);
         }
@@ -115,6 +126,32 @@
 
             var expectedFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\TestNodes.cs";
             var expected = File.ReadAllText(expectedFilePath);
+
+            Assert.AreEqual(expected, csharp);
+        }
+
+        [TestMethod]
+        public void TestCodeGenerator()
+        {
+            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(TestAbnf);
+
+            var @namespace = "TestRules";
+            var classes = new GeneratorV3.CstNodesGenerator(@namespace).Generate(cst, default);
+
+            var classTranscriber = new ClassTranscriber();
+            var builder = new StringBuilder();
+            foreach (var @class in classes)
+            {
+                classTranscriber.Transcribe(@class, builder, "    ");
+                builder.AppendLine();
+            }
+
+            var csharp = builder.ToString();
+
+            var filePath = @"C:\msgithub\odata.net\odata.tests\testclasses.txt";
+            var expected = File.ReadAllText(filePath);
+
+            File.WriteAllText(filePath, csharp);
 
             Assert.AreEqual(expected, csharp);
         }

@@ -138,7 +138,6 @@
         public IEnumerable<Class> Generate(RuleList ruleList)
         {
             //// !!!!!IMPORTANT WHENEVER YOU REMOVE OLD CODE, CHECK FOR TODOS!!!!!
-            //// TODO remove the old transcribers
             //// TODO implement this generator that uses the new cst nodes
             //// TODO remove v3 generator
             //// TODO automatically generate the transcribers
@@ -147,6 +146,7 @@
             //// TODO remove the old cst nodes
             //// TODO automatically generate parsers
             
+            //// TODO should you compose transcribers like you do parsers and this would be InnerTranscriber.Instance.Many().Transcribe()?
             //// TODO preserve ABNF comments as xmldoc?
             //// TODO it would be nice if collection properties on cst nodes were plural
             //// TODO if you let the "innersclassname" actually be a namespace, then the caller could decide if they want all the cases together, or if they want them separate, or whatever

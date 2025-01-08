@@ -23,7 +23,7 @@
 
             _alternationTranscriber.Instance.Transcribe(value._alternation_1, builder);
 
-            foreach (var _cⲻwsp in value._cⲻwsp_1)
+            foreach (var _cⲻwsp in value._cⲻwsp_2)
             {
                 _cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp, builder);
             }
