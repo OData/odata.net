@@ -14,6 +14,7 @@
 
         public void Transcribe(_cⲻnl value, StringBuilder builder)
         {
+            Visitor.Instance.Visit(value, builder);
         }
 
         private sealed class Visitor : _cⲻnl.Visitor<Root.Void, StringBuilder>
