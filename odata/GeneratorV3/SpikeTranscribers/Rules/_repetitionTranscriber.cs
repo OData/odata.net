@@ -14,6 +14,12 @@
 
         public void Transcribe(_repetition value, StringBuilder builder)
         {
+            if (value._repeat_1 != null)
+            {
+                _repeatTranscriber.Instance.Transcribe(value._repeat_1, builder);
+            }
+
+
         }
     }
 }
