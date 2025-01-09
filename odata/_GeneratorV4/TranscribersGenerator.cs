@@ -109,7 +109,13 @@
                             "Visitor",
                             Enumerable.Empty<string>(),
                             null, //// TODO
-                            Enumerable.Empty<ConstructorDefinition>(), //// TODO
+                            new[]
+                            {
+                                new ConstructorDefinition(
+                                    AccessModifier.Private,
+                                    Enumerable.Empty<MethodParameter>(),
+                                    Enumerable.Empty<string>()),
+                            },
                             Enumerable.Empty<MethodDefinition>(), //// TODO
                             Enumerable.Empty<Class>(),
                             new[]
