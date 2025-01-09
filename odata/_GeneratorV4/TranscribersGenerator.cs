@@ -95,9 +95,8 @@
                     nestedClasses = Enumerable.Empty<Class>();
                     if (cstNode.Name.StartsWith("_x"))
                     {
-                        ////methodBody = $"builder.Append((char)0{cstNode.Name.TrimStart('_')});";
+                        methodBody = $"builder.Append((char)0{cstNode.Name.TrimStart('_')});";
                         //// TODO
-                        methodBody = string.Empty;
                     }
                     else
                     {
@@ -214,9 +213,8 @@
                     nestedClasses = Enumerable.Empty<Class>();
                     if (cstNode.Name.StartsWith("_x"))
                     {
-                        ////methodBody = $"builder.Append((char)0{cstNode.Name.TrimStart('_')});";
+                        methodBody = $"builder.Append((char)0{cstNode.Name.TrimStart('_')});";
                         //// TODO
-                        methodBody = string.Empty;
                     }
                     else
                     {
