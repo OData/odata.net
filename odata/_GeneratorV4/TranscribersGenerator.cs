@@ -100,8 +100,7 @@
                     else
                     {
                         //// TODO are there other terminal node cases?
-                        methodBody = string.Empty;
-                        ////methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
+                        methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
                     }
                 }
 
@@ -217,8 +216,7 @@
                     else
                     {
                         //// TODO are there other terminal node cases?
-                        methodBody = string.Empty;
-                        ////methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
+                        methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
                     }
                 }
 
