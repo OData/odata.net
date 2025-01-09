@@ -50,6 +50,10 @@
                         //// TODO
                         methodBody = string.Empty;
                     }
+                    else if (cstNode.Name.StartsWith("_Ⰳx"))
+                    {
+                        methodBody = $"builder.Append((char)0{cstNode.Name.Substring(2)});";
+                    }
                     else
                     {
                         methodBody = TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic), "value", "builder");
@@ -170,6 +174,10 @@
                         ////methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
                         //// TODO
                         methodBody = string.Empty;
+                    }
+                    else if (cstNode.Name.StartsWith("_Ⰳx"))
+                    {
+                        methodBody = $"builder.Append((char)0{cstNode.Name.Substring(2)});";
                     }
                     else
                     {

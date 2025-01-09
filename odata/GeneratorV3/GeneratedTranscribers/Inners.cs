@@ -1440,9 +1440,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._Ⰳx0D value, StringBuilder builder)
         {
-            Test.Transcribers.Inners._0Transcriber.Instance.Transcribe(value._0_1, builder);
-Test.Transcribers.Inners._DTranscriber.Instance.Transcribe(value._D_1, builder);
-
+            builder.Append((char)0x0D);
         }
     }
     
@@ -1671,9 +1669,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._Ⰳx7F value, StringBuilder builder)
         {
-            Test.Transcribers.Inners._7Transcriber.Instance.Transcribe(value._7_1, builder);
-Test.Transcribers.Inners._FTranscriber.Instance.Transcribe(value._F_1, builder);
-
+            builder.Append((char)0x7F);
         }
     }
     
@@ -1770,9 +1766,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._Ⰳx22 value, StringBuilder builder)
         {
-            Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_1, builder);
-Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_2, builder);
-
+            builder.Append((char)0x22);
         }
     }
     
@@ -1960,9 +1954,7 @@ Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_2, builder);
         
         public void Transcribe(GeneratorV3.Abnf.Inners._Ⰳx09 value, StringBuilder builder)
         {
-            Test.Transcribers.Inners._0Transcriber.Instance.Transcribe(value._0_1, builder);
-Test.Transcribers.Inners._9Transcriber.Instance.Transcribe(value._9_1, builder);
-
+            builder.Append((char)0x09);
         }
     }
     
@@ -1976,9 +1968,7 @@ Test.Transcribers.Inners._9Transcriber.Instance.Transcribe(value._9_1, builder);
         
         public void Transcribe(GeneratorV3.Abnf.Inners._Ⰳx0A value, StringBuilder builder)
         {
-            Test.Transcribers.Inners._0Transcriber.Instance.Transcribe(value._0_1, builder);
-Test.Transcribers.Inners._ATranscriber.Instance.Transcribe(value._A_1, builder);
-
+            builder.Append((char)0x0A);
         }
     }
     
@@ -3604,9 +3594,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._Ⰳx20 value, StringBuilder builder)
         {
-            Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_1, builder);
-Test.Transcribers.Inners._0Transcriber.Instance.Transcribe(value._0_1, builder);
-
+            builder.Append((char)0x20);
         }
     }
     
