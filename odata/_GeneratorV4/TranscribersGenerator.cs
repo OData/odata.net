@@ -102,7 +102,8 @@
                     else
                     {
                         //// TODO are there other terminal node cases?
-                        methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
+                        methodBody = string.Empty;
+                        ////methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
                     }
                 }
 
@@ -220,9 +221,8 @@
                     else
                     {
                         //// TODO are there other terminal node cases?
-                        //// methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
-                        //// TODO
                         methodBody = string.Empty;
+                        ////methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
                     }
                 }
 
@@ -276,13 +276,12 @@
             foreach (var duMember in cstNode.NestedClasses.Where(member => member.BaseType?.EndsWith(cstNode.Name) ?? false))
             {
                 string methodBody;
-                /*if (duMember.Name.Length == 3 && duMember.Name[0] == '_' && char.IsDigit(duMember.Name[1]) && char.IsDigit(duMember.Name[2]))
+                if (duMember.Name.Length == 3 && duMember.Name[0] == '_' && char.IsDigit(duMember.Name[1]) && char.IsDigit(duMember.Name[2]))
                 {
-                    ////methodBody = $"context.Append((char)0x{duMember.Name.TrimStart('_')});";
                     //// TODO
-                    methodBody = string.Empty;
+                    methodBody = $"context.Append((char)0x{duMember.Name.TrimStart('_')});";
                 }
-                else*/
+                else
                 {
                     methodBody = TranscribeProperties(duMember.Properties, "node", "context");
                 }
