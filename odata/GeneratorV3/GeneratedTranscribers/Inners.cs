@@ -15,7 +15,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._4 value, StringBuilder builder)
         {
-            builder.Append("4");
+            builder.Append((char)0x4);
         }
     }
     
@@ -29,7 +29,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._1 value, StringBuilder builder)
         {
-            builder.Append("1");
+            builder.Append((char)0x1);
         }
     }
     
@@ -43,7 +43,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._2 value, StringBuilder builder)
         {
-            builder.Append("2");
+            builder.Append((char)0x2);
         }
     }
     
@@ -57,7 +57,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._3 value, StringBuilder builder)
         {
-            builder.Append("3");
+            builder.Append((char)0x3);
         }
     }
     
@@ -71,7 +71,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._5 value, StringBuilder builder)
         {
-            builder.Append("5");
+            builder.Append((char)0x5);
         }
     }
     
@@ -85,7 +85,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._6 value, StringBuilder builder)
         {
-            builder.Append("6");
+            builder.Append((char)0x6);
         }
     }
     
@@ -99,7 +99,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._7 value, StringBuilder builder)
         {
-            builder.Append("7");
+            builder.Append((char)0x7);
         }
     }
     
@@ -113,7 +113,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._8 value, StringBuilder builder)
         {
-            builder.Append("8");
+            builder.Append((char)0x8);
         }
     }
     
@@ -127,7 +127,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._9 value, StringBuilder builder)
         {
-            builder.Append("9");
+            builder.Append((char)0x9);
         }
     }
     
@@ -141,7 +141,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._A value, StringBuilder builder)
         {
-            builder.Append("A");
+            builder.Append((char)0xA);
         }
     }
     
@@ -155,7 +155,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._B value, StringBuilder builder)
         {
-            builder.Append("B");
+            builder.Append((char)0xB);
         }
     }
     
@@ -169,7 +169,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._C value, StringBuilder builder)
         {
-            builder.Append("C");
+            builder.Append((char)0xC);
         }
     }
     
@@ -183,7 +183,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._D value, StringBuilder builder)
         {
-            builder.Append("D");
+            builder.Append((char)0xD);
         }
     }
     
@@ -197,7 +197,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._E value, StringBuilder builder)
         {
-            builder.Append("E");
+            builder.Append((char)0xE);
         }
     }
     
@@ -211,7 +211,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._F value, StringBuilder builder)
         {
-            builder.Append("F");
+            builder.Append((char)0xF);
         }
     }
     
@@ -225,7 +225,7 @@ namespace Test.Transcribers.Inners
         
         public void Transcribe(GeneratorV3.Abnf.Inners._0 value, StringBuilder builder)
         {
-            builder.Append("0");
+            builder.Append((char)0x0);
         }
     }
     
