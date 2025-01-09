@@ -155,6 +155,8 @@
 
             //// !!!!!IMPORTANT WHENEVER YOU REMOVE OLD CODE, CHECK FOR TODOS!!!!!
             //// TODO automatically generate the transcribers
+            //// TODO remove the v3 converters
+            //// TODO remove the manually written transcribers
             //// TODO manually write the new parsers
             //// TODO remove the old parsers
             //// TODO remove the old cst nodes
