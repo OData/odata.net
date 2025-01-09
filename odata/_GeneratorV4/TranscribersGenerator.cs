@@ -88,7 +88,7 @@
                     ClassModifier.Sealed,
                     transcriberName,
                     Enumerable.Empty<string>(),
-                    $"ITranscriber<Inners.{cstNode.Name}>", //// TODO parameterize this
+                    $"ITranscriber<GeneratorV3.Abnf.Inners.{cstNode.Name}>", //// TODO don't hardcode the inners namespace
                     new[]
                     {
                         new ConstructorDefinition(
