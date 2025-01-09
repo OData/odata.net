@@ -108,7 +108,7 @@
                             new[]
                             {
                                 //// TODO you should be using a fully qualified name here, but `class` doesn't include the namespace
-                                new MethodParameter(cstNode.Name, "value"),
+                                new MethodParameter($"GeneratorV3.Abnf.Inners.{cstNode.Name}", "value"),
                                 new MethodParameter("StringBuilder", "builder"),
                             },
                             string.Empty), ////TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic))),
