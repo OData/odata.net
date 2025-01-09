@@ -401,7 +401,11 @@ Test.Transcribers.Rules._CRLFTranscriber.Instance.Transcribe(value._CRLF_1, buil
         
         public void Transcribe(_repetition value, StringBuilder builder)
         {
-            Test.Transcribers.Rules._elementTranscriber.Instance.Transcribe(value._element_1, builder);
+            if (value._repeat_1 != null)
+{
+Test.Transcribers.Rules._repeatTranscriber.Instance.Transcribe(value._repeat_1, builder);
+}
+Test.Transcribers.Rules._elementTranscriber.Instance.Transcribe(value._element_1, builder);
 
         }
     }
@@ -511,6 +515,10 @@ Test.Transcribers.Inners._ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃTranscriber.Ins
         public void Transcribe(_binⲻval value, StringBuilder builder)
         {
             Test.Transcribers.Inners._ʺx62ʺTranscriber.Instance.Transcribe(value._ʺx62ʺ_1, builder);
+if (value._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ_1 != null)
+{
+Test.Transcribers.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃTranscriber.Instance.Transcribe(value._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ_1, builder);
+}
 
         }
     }
@@ -526,6 +534,10 @@ Test.Transcribers.Inners._ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃTranscriber.Ins
         public void Transcribe(_decⲻval value, StringBuilder builder)
         {
             Test.Transcribers.Inners._ʺx64ʺTranscriber.Instance.Transcribe(value._ʺx64ʺ_1, builder);
+if (value._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ_1 != null)
+{
+Test.Transcribers.Inners._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃTranscriber.Instance.Transcribe(value._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ_1, builder);
+}
 
         }
     }
@@ -541,6 +553,10 @@ Test.Transcribers.Inners._ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃTranscriber.Ins
         public void Transcribe(_hexⲻval value, StringBuilder builder)
         {
             Test.Transcribers.Inners._ʺx78ʺTranscriber.Instance.Transcribe(value._ʺx78ʺ_1, builder);
+if (value._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ_1 != null)
+{
+Test.Transcribers.Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃTranscriber.Instance.Transcribe(value._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ_1, builder);
+}
 
         }
     }

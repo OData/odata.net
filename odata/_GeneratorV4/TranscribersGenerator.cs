@@ -114,7 +114,7 @@
                                 new MethodParameter($"GeneratorV3.Abnf.Inners.{cstNode.Name}", "value"),
                                 new MethodParameter("StringBuilder", "builder"),
                             },
-                            TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic))),
+                            TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic))), //// TODO bodies should be lines for whitespace purposes
                     },
                     Enumerable.Empty<Class>(), //// TODO sometimes you need a nested visitor
                     new[]
@@ -161,6 +161,31 @@
                 }
                 else if (propertyDefinition.Type.EndsWith("?"))
                 {
+                    builder.AppendLine($"if (value.{propertyDefinition.Name} != null)");
+                    builder.AppendLine("{");
+
+                    var propertyType = propertyDefinition.Type;
+
+                    if (propertyType.StartsWith(this.innersCstNodesNamespace))
+                    {
+                        builder.Append(this.innersTranscribersNamespace);
+                        builder.Append(".");
+
+                        propertyType = propertyType.Substring(this.innersCstNodesNamespace.Length + 1);
+                    }
+                    else if (propertyType.StartsWith(this.rulesCstNodesNamespace))
+                    {
+                        builder.Append(this.rulesTranscribersNamespace);
+                        builder.Append(".");
+
+                        propertyType = propertyType.Substring(this.rulesCstNodesNamespace.Length + 1);
+                    }
+
+                    propertyType = propertyType.Substring(0, propertyType.Length - 1);
+
+                    builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe(value.{propertyDefinition.Name}, builder);");
+
+                    builder.AppendLine("}");
                 }
                 else
                 {
