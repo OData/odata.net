@@ -1,6 +1,5 @@
 ﻿namespace _GeneratorV5
 {
-    using System.Data;
     using System.Linq;
 
     using __Generated.CstNodes.Rules;
