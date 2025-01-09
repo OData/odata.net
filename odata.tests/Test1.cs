@@ -38,6 +38,8 @@
 
         private static void TranscribeClasses2(string @namespace, string filePath, IEnumerable<Class> classes)
         {
+            //// TODO split files
+
             var classTranscriber = new ClassTranscriber();
 
             var stringBuilder = new StringBuilder();
@@ -45,7 +47,7 @@
             builder.AppendLine($"namespace {@namespace}");
             builder.AppendLine("{");
             builder.Indent();
-            builder.AppendLine("using System.Collections.Generic;");
+            builder.AppendLine("using System.Collections.Generic;"); //// TODO shouldn't need these, or they should be in a type somewhere
             builder.AppendLine("using System.Text;");
             builder.AppendLine();
             builder.AppendLine("using GeneratorV3;");
