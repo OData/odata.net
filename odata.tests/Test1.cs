@@ -28,10 +28,12 @@
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
             var newCst = _GeneratorV4.OldToV4Converters.RuleListConverter.Instance.Convert(cst);
 
-            var cstNodesRulesNamespace = "__Generated.CstNodes.Rules";
-            var generatedCstNodes = new _GeneratorV5.Generator(cstNodesRulesNamespace).Generate(newCst);
+            var ruleCstNodesNamespace = "__Generated.CstNodes.Rules";
+            var innerCstNodesNamespace = "__Generated.CstNodes.Inners";
+            var generatedCstNodes = new _GeneratorV5.Generator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(newCst);
 
             TranscribeNamespace(generatedCstNodes.RuleCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules\rules.cs");
+            TranscribeNamespace(generatedCstNodes.InnerCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules\inners.cs");
 
             //// TODO finish this
         }
@@ -47,9 +49,6 @@
             builder.AppendLine($"namespace {@namespace.Name}");
             builder.AppendLine("{");
             builder.Indent();
-            //// TODO shouldn't need these, or they should be in a type somewhere
-            builder.AppendLine();
-            builder.AppendLine();
 
             foreach (var @class in @namespace.Classes)
             {

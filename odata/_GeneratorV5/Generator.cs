@@ -9,32 +9,41 @@
     public sealed class Generator
     {
         private readonly string ruleCstNodesNamespace;
+        private readonly string innerCstNodesNamespace;
 
         private readonly _GeneratorV4.Generator generator;
 
-        public Generator(string ruleCstNodesNamespace)
+        public Generator(string ruleCstNodesNamespace, string innerCstNodesNamespace)
         {
 
             this.ruleCstNodesNamespace = ruleCstNodesNamespace;
-
+            this.innerCstNodesNamespace = innerCstNodesNamespace;
             this.generator = new _GeneratorV4.Generator(ruleCstNodesNamespace);
         }
 
         public (Namespace RuleCstNodes, Namespace InnerCstNodes) Generate(_rulelist rulelist)
         {
+            var cstNodes = this
+                .generator
+                .Generate(rulelist).ToList();
+            var ruleNodes = cstNodes.Where(node => node.Name != "Inners");
+            var innerNode = cstNodes.Where(node => node.Name == "Inners").Single();
+
             return 
                 (
                     new Namespace(
                         this.ruleCstNodesNamespace, 
-                        this
-                            .generator
-                            .Generate(rulelist)
+                        ruleNodes
                             .Select(
                                 @class =>
                                     FullyQualify(@class))),
                     new Namespace(
-                        "TODO",
-                        Enumerable.Empty<Class>())
+                        this.innerCstNodesNamespace,
+                        innerNode
+                            .NestedClasses
+                            .Select(
+                                @class =>
+                                    FullyQualify(@class)))
                 );
         }
 
