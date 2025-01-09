@@ -91,7 +91,7 @@
                     builder.AppendLine("{");
                     var genericsStartIndex = propertyDefinition.Type.IndexOf("<");
                     var genericsEndIndex = propertyDefinition.Type.IndexOf(">");
-                    var collectionType = propertyDefinition.Type.Substring(genericsStartIndex + 1, genericsEndIndex - genericsStartIndex);
+                    var collectionType = propertyDefinition.Type.Substring(genericsStartIndex + 1, genericsEndIndex - genericsStartIndex - 1);
                     if (collectionType.StartsWith("Inners."))
                     {
                         collectionType = this.innersNamespace + collectionType.Substring("Inners.".Length);
@@ -102,7 +102,7 @@
                 }
                 else
                 {
-                    builder.AppendLine($"{propertyDefinition.Type}Transcriber.Instance.Transcribe(value.{propertyDefinition}, builder);");
+                    builder.AppendLine($"{propertyDefinition.Type}Transcriber.Instance.Transcribe(value.{propertyDefinition.Name}, builder);");
                 }
             }
         }
