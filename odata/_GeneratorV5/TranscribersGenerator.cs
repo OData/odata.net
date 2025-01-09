@@ -74,7 +74,7 @@
 
                     nestedClasses = Enumerable.Empty<Class>();
                 }
-                /*else if (cstNode.NestedClasses.Any())
+                else if (cstNode.NestedClasses.Any())
                 {
                     methodBody = "Visitor.Instance.Visit(value, builder);";
                     nestedClasses = new[]
@@ -84,7 +84,7 @@
                             ClassModifier.Sealed,
                             "Visitor",
                             Enumerable.Empty<string>(),
-                            $"GeneratorV3.Abnf.{cstNode.Name}.Visitor<Root.Void, StringBuilder>", //// TODO namespace should be computed
+                            $"{@namespace.Name}.{cstNode.Name}.Visitor<Root.Void, System.Text.StringBuilder>", //// TODO namespace should be computed
                             new[]
                             {
                                 new ConstructorDefinition(
@@ -92,7 +92,7 @@
                                     Enumerable.Empty<MethodParameter>(),
                                     Enumerable.Empty<string>()),
                             },
-                            GenerateVisitorMethods(cstNode, false),
+                            Enumerable.Empty<MethodDefinition>(), //// TODO GenerateVisitorMethods(cstNode, false),
                             Enumerable.Empty<Class>(),
                             new[]
                             {
@@ -107,7 +107,7 @@
                             }),
                     };
                 }
-                else
+                /*else
                 {
                     nestedClasses = Enumerable.Empty<Class>();
                     if (cstNode.Name.StartsWith("_x"))
