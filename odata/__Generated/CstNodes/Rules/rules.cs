@@ -360,12 +360,12 @@ namespace __Generated.CstNodes.Rules
     
     public sealed class _LWSP
     {
-        public _LWSP(IEnumerable<Inners._ⲤWSPⳆCRLF_WSPↃ> _ⲤWSPⳆCRLF_WSPↃ_1)
+        public _LWSP(System.Collections.Generic.IEnumerable<Inners._ⲤWSPⳆCRLF_WSPↃ> _ⲤWSPⳆCRLF_WSPↃ_1)
         {
             this._ⲤWSPⳆCRLF_WSPↃ_1 = _ⲤWSPⳆCRLF_WSPↃ_1;
         }
         
-        public IEnumerable<Inners._ⲤWSPⳆCRLF_WSPↃ> _ⲤWSPⳆCRLF_WSPↃ_1 { get; }
+        public System.Collections.Generic.IEnumerable<Inners._ⲤWSPⳆCRLF_WSPↃ> _ⲤWSPⳆCRLF_WSPↃ_1 { get; }
     }
     
     public sealed class _OCTET
@@ -450,12 +450,12 @@ namespace __Generated.CstNodes.Rules
     
     public sealed class _rulelist
     {
-        public _rulelist(IEnumerable<Inners._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ> _ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ_1)
+        public _rulelist(System.Collections.Generic.IEnumerable<Inners._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ> _ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ_1)
         {
             this._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ_1 = _ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ_1;
         }
         
-        public IEnumerable<Inners._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ> _ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ_1 { get; }
+        public System.Collections.Generic.IEnumerable<Inners._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ> _ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ_1 { get; }
     }
     
     public sealed class _rule
@@ -476,40 +476,40 @@ namespace __Generated.CstNodes.Rules
     
     public sealed class _rulename
     {
-        public _rulename(__Generated.CstNodes.Rules._ALPHA _ALPHA_1, IEnumerable<Inners._ⲤALPHAⳆDIGITⳆʺx2DʺↃ> _ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1)
+        public _rulename(__Generated.CstNodes.Rules._ALPHA _ALPHA_1, System.Collections.Generic.IEnumerable<Inners._ⲤALPHAⳆDIGITⳆʺx2DʺↃ> _ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1)
         {
             this._ALPHA_1 = _ALPHA_1;
             this._ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1 = _ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1;
         }
         
         public __Generated.CstNodes.Rules._ALPHA _ALPHA_1 { get; }
-        public IEnumerable<Inners._ⲤALPHAⳆDIGITⳆʺx2DʺↃ> _ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1 { get; }
+        public System.Collections.Generic.IEnumerable<Inners._ⲤALPHAⳆDIGITⳆʺx2DʺↃ> _ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1 { get; }
     }
     
     public sealed class _definedⲻas
     {
-        public _definedⲻas(IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1, Inners._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ _Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1, IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2)
+        public _definedⲻas(System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1, Inners._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ _Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2)
         {
             this._cⲻwsp_1 = _cⲻwsp_1;
             this._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1 = _Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1;
             this._cⲻwsp_2 = _cⲻwsp_2;
         }
         
-        public IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
+        public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
         public Inners._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ _Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1 { get; }
-        public IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2 { get; }
+        public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2 { get; }
     }
     
     public sealed class _elements
     {
-        public _elements(__Generated.CstNodes.Rules._alternation _alternation_1, IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1)
+        public _elements(__Generated.CstNodes.Rules._alternation _alternation_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1)
         {
             this._alternation_1 = _alternation_1;
             this._cⲻwsp_1 = _cⲻwsp_1;
         }
         
         public __Generated.CstNodes.Rules._alternation _alternation_1 { get; }
-        public IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
+        public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
     }
     
     public abstract class _cⲻwsp
@@ -614,7 +614,7 @@ namespace __Generated.CstNodes.Rules
     
     public sealed class _comment
     {
-        public _comment(Inners._ʺx3Bʺ _ʺx3Bʺ_1, IEnumerable<Inners._ⲤWSPⳆVCHARↃ> _ⲤWSPⳆVCHARↃ_1, __Generated.CstNodes.Rules._CRLF _CRLF_1)
+        public _comment(Inners._ʺx3Bʺ _ʺx3Bʺ_1, System.Collections.Generic.IEnumerable<Inners._ⲤWSPⳆVCHARↃ> _ⲤWSPⳆVCHARↃ_1, __Generated.CstNodes.Rules._CRLF _CRLF_1)
         {
             this._ʺx3Bʺ_1 = _ʺx3Bʺ_1;
             this._ⲤWSPⳆVCHARↃ_1 = _ⲤWSPⳆVCHARↃ_1;
@@ -622,32 +622,32 @@ namespace __Generated.CstNodes.Rules
         }
         
         public Inners._ʺx3Bʺ _ʺx3Bʺ_1 { get; }
-        public IEnumerable<Inners._ⲤWSPⳆVCHARↃ> _ⲤWSPⳆVCHARↃ_1 { get; }
+        public System.Collections.Generic.IEnumerable<Inners._ⲤWSPⳆVCHARↃ> _ⲤWSPⳆVCHARↃ_1 { get; }
         public __Generated.CstNodes.Rules._CRLF _CRLF_1 { get; }
     }
     
     public sealed class _alternation
     {
-        public _alternation(__Generated.CstNodes.Rules._concatenation _concatenation_1, IEnumerable<Inners._ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ> _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1)
+        public _alternation(__Generated.CstNodes.Rules._concatenation _concatenation_1, System.Collections.Generic.IEnumerable<Inners._ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ> _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1)
         {
             this._concatenation_1 = _concatenation_1;
             this._ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1 = _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1;
         }
         
         public __Generated.CstNodes.Rules._concatenation _concatenation_1 { get; }
-        public IEnumerable<Inners._ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ> _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1 { get; }
+        public System.Collections.Generic.IEnumerable<Inners._ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ> _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1 { get; }
     }
     
     public sealed class _concatenation
     {
-        public _concatenation(__Generated.CstNodes.Rules._repetition _repetition_1, IEnumerable<Inners._Ⲥ1Жcⲻwsp_repetitionↃ> _Ⲥ1Жcⲻwsp_repetitionↃ_1)
+        public _concatenation(__Generated.CstNodes.Rules._repetition _repetition_1, System.Collections.Generic.IEnumerable<Inners._Ⲥ1Жcⲻwsp_repetitionↃ> _Ⲥ1Жcⲻwsp_repetitionↃ_1)
         {
             this._repetition_1 = _repetition_1;
             this._Ⲥ1Жcⲻwsp_repetitionↃ_1 = _Ⲥ1Жcⲻwsp_repetitionↃ_1;
         }
         
         public __Generated.CstNodes.Rules._repetition _repetition_1 { get; }
-        public IEnumerable<Inners._Ⲥ1Жcⲻwsp_repetitionↃ> _Ⲥ1Жcⲻwsp_repetitionↃ_1 { get; }
+        public System.Collections.Generic.IEnumerable<Inners._Ⲥ1Жcⲻwsp_repetitionↃ> _Ⲥ1Жcⲻwsp_repetitionↃ_1 { get; }
     }
     
     public sealed class _repetition
@@ -683,12 +683,12 @@ namespace __Generated.CstNodes.Rules
         
         public sealed class _1ЖDIGIT : _repeat
         {
-            public _1ЖDIGIT(IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1)
+            public _1ЖDIGIT(System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1)
             {
                 this._DIGIT_1 = _DIGIT_1;
             }
             
-            public IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
+            public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -828,7 +828,7 @@ namespace __Generated.CstNodes.Rules
     
     public sealed class _group
     {
-        public _group(Inners._ʺx28ʺ _ʺx28ʺ_1, IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1, __Generated.CstNodes.Rules._alternation _alternation_1, IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2, Inners._ʺx29ʺ _ʺx29ʺ_1)
+        public _group(Inners._ʺx28ʺ _ʺx28ʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1, __Generated.CstNodes.Rules._alternation _alternation_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2, Inners._ʺx29ʺ _ʺx29ʺ_1)
         {
             this._ʺx28ʺ_1 = _ʺx28ʺ_1;
             this._cⲻwsp_1 = _cⲻwsp_1;
@@ -838,15 +838,15 @@ namespace __Generated.CstNodes.Rules
         }
         
         public Inners._ʺx28ʺ _ʺx28ʺ_1 { get; }
-        public IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
+        public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
         public __Generated.CstNodes.Rules._alternation _alternation_1 { get; }
-        public IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2 { get; }
+        public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2 { get; }
         public Inners._ʺx29ʺ _ʺx29ʺ_1 { get; }
     }
     
     public sealed class _option
     {
-        public _option(Inners._ʺx5Bʺ _ʺx5Bʺ_1, IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1, __Generated.CstNodes.Rules._alternation _alternation_1, IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2, Inners._ʺx5Dʺ _ʺx5Dʺ_1)
+        public _option(Inners._ʺx5Bʺ _ʺx5Bʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1, __Generated.CstNodes.Rules._alternation _alternation_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2, Inners._ʺx5Dʺ _ʺx5Dʺ_1)
         {
             this._ʺx5Bʺ_1 = _ʺx5Bʺ_1;
             this._cⲻwsp_1 = _cⲻwsp_1;
@@ -856,15 +856,15 @@ namespace __Generated.CstNodes.Rules
         }
         
         public Inners._ʺx5Bʺ _ʺx5Bʺ_1 { get; }
-        public IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
+        public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
         public __Generated.CstNodes.Rules._alternation _alternation_1 { get; }
-        public IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2 { get; }
+        public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2 { get; }
         public Inners._ʺx5Dʺ _ʺx5Dʺ_1 { get; }
     }
     
     public sealed class _charⲻval
     {
-        public _charⲻval(__Generated.CstNodes.Rules._DQUOTE _DQUOTE_1, IEnumerable<Inners._ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ> _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ_1, __Generated.CstNodes.Rules._DQUOTE _DQUOTE_2)
+        public _charⲻval(__Generated.CstNodes.Rules._DQUOTE _DQUOTE_1, System.Collections.Generic.IEnumerable<Inners._ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ> _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ_1, __Generated.CstNodes.Rules._DQUOTE _DQUOTE_2)
         {
             this._DQUOTE_1 = _DQUOTE_1;
             this._ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ_1 = _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ_1;
@@ -872,7 +872,7 @@ namespace __Generated.CstNodes.Rules
         }
         
         public __Generated.CstNodes.Rules._DQUOTE _DQUOTE_1 { get; }
-        public IEnumerable<Inners._ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ> _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ_1 { get; }
+        public System.Collections.Generic.IEnumerable<Inners._ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ> _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ_1 { get; }
         public __Generated.CstNodes.Rules._DQUOTE _DQUOTE_2 { get; }
     }
     
@@ -890,7 +890,7 @@ namespace __Generated.CstNodes.Rules
     
     public sealed class _binⲻval
     {
-        public _binⲻval(Inners._ʺx62ʺ _ʺx62ʺ_1, IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1, Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ? _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ_1)
+        public _binⲻval(Inners._ʺx62ʺ _ʺx62ʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1, Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ? _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ_1)
         {
             this._ʺx62ʺ_1 = _ʺx62ʺ_1;
             this._BIT_1 = _BIT_1;
@@ -898,13 +898,13 @@ namespace __Generated.CstNodes.Rules
         }
         
         public Inners._ʺx62ʺ _ʺx62ʺ_1 { get; }
-        public IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1 { get; }
+        public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1 { get; }
         public Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ? _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ_1 { get; }
     }
     
     public sealed class _decⲻval
     {
-        public _decⲻval(Inners._ʺx64ʺ _ʺx64ʺ_1, IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1, Inners._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ? _1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ_1)
+        public _decⲻval(Inners._ʺx64ʺ _ʺx64ʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1, Inners._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ? _1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ_1)
         {
             this._ʺx64ʺ_1 = _ʺx64ʺ_1;
             this._DIGIT_1 = _DIGIT_1;
@@ -912,13 +912,13 @@ namespace __Generated.CstNodes.Rules
         }
         
         public Inners._ʺx64ʺ _ʺx64ʺ_1 { get; }
-        public IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
+        public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
         public Inners._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ? _1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ_1 { get; }
     }
     
     public sealed class _hexⲻval
     {
-        public _hexⲻval(Inners._ʺx78ʺ _ʺx78ʺ_1, IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1, Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ? _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ_1)
+        public _hexⲻval(Inners._ʺx78ʺ _ʺx78ʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1, Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ? _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ_1)
         {
             this._ʺx78ʺ_1 = _ʺx78ʺ_1;
             this._HEXDIG_1 = _HEXDIG_1;
@@ -926,13 +926,13 @@ namespace __Generated.CstNodes.Rules
         }
         
         public Inners._ʺx78ʺ _ʺx78ʺ_1 { get; }
-        public IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1 { get; }
+        public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1 { get; }
         public Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ? _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ_1 { get; }
     }
     
     public sealed class _proseⲻval
     {
-        public _proseⲻval(Inners._ʺx3Cʺ _ʺx3Cʺ_1, IEnumerable<Inners._ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ> _ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ_1, Inners._ʺx3Eʺ _ʺx3Eʺ_1)
+        public _proseⲻval(Inners._ʺx3Cʺ _ʺx3Cʺ_1, System.Collections.Generic.IEnumerable<Inners._ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ> _ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ_1, Inners._ʺx3Eʺ _ʺx3Eʺ_1)
         {
             this._ʺx3Cʺ_1 = _ʺx3Cʺ_1;
             this._ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ_1 = _ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ_1;
@@ -940,7 +940,7 @@ namespace __Generated.CstNodes.Rules
         }
         
         public Inners._ʺx3Cʺ _ʺx3Cʺ_1 { get; }
-        public IEnumerable<Inners._ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ> _ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ_1 { get; }
+        public System.Collections.Generic.IEnumerable<Inners._ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ> _ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ_1 { get; }
         public Inners._ʺx3Eʺ _ʺx3Eʺ_1 { get; }
     }
     
@@ -11782,13 +11782,13 @@ namespace __Generated.CstNodes.Rules
         
         public sealed class _Жcⲻwsp_cⲻnl
         {
-            public _Жcⲻwsp_cⲻnl(IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1, __Generated.CstNodes.Rules._cⲻnl _cⲻnl_1)
+            public _Жcⲻwsp_cⲻnl(System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1, __Generated.CstNodes.Rules._cⲻnl _cⲻnl_1)
             {
                 this._cⲻwsp_1 = _cⲻwsp_1;
                 this._cⲻnl_1 = _cⲻnl_1;
             }
             
-            public IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
+            public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
             public __Generated.CstNodes.Rules._cⲻnl _cⲻnl_1 { get; }
         }
         
@@ -12170,7 +12170,7 @@ namespace __Generated.CstNodes.Rules
         
         public sealed class _Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation
         {
-            public _Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation(IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1, Inners._ʺx2Fʺ _ʺx2Fʺ_1, IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2, __Generated.CstNodes.Rules._concatenation _concatenation_1)
+            public _Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation(System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1, Inners._ʺx2Fʺ _ʺx2Fʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2, __Generated.CstNodes.Rules._concatenation _concatenation_1)
             {
                 this._cⲻwsp_1 = _cⲻwsp_1;
                 this._ʺx2Fʺ_1 = _ʺx2Fʺ_1;
@@ -12178,9 +12178,9 @@ namespace __Generated.CstNodes.Rules
                 this._concatenation_1 = _concatenation_1;
             }
             
-            public IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
+            public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
             public Inners._ʺx2Fʺ _ʺx2Fʺ_1 { get; }
-            public IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2 { get; }
+            public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2 { get; }
             public __Generated.CstNodes.Rules._concatenation _concatenation_1 { get; }
         }
         
@@ -12196,13 +12196,13 @@ namespace __Generated.CstNodes.Rules
         
         public sealed class _1Жcⲻwsp_repetition
         {
-            public _1Жcⲻwsp_repetition(IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1, __Generated.CstNodes.Rules._repetition _repetition_1)
+            public _1Жcⲻwsp_repetition(System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1, __Generated.CstNodes.Rules._repetition _repetition_1)
             {
                 this._cⲻwsp_1 = _cⲻwsp_1;
                 this._repetition_1 = _repetition_1;
             }
             
-            public IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
+            public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
             public __Generated.CstNodes.Rules._repetition _repetition_1 { get; }
         }
         
@@ -12237,16 +12237,16 @@ namespace __Generated.CstNodes.Rules
         
         public sealed class _ЖDIGIT_ʺx2Aʺ_ЖDIGIT
         {
-            public _ЖDIGIT_ʺx2Aʺ_ЖDIGIT(IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1, Inners._ʺx2Aʺ _ʺx2Aʺ_1, IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_2)
+            public _ЖDIGIT_ʺx2Aʺ_ЖDIGIT(System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1, Inners._ʺx2Aʺ _ʺx2Aʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_2)
             {
                 this._DIGIT_1 = _DIGIT_1;
                 this._ʺx2Aʺ_1 = _ʺx2Aʺ_1;
                 this._DIGIT_2 = _DIGIT_2;
             }
             
-            public IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
+            public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
             public Inners._ʺx2Aʺ _ʺx2Aʺ_1 { get; }
-            public IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_2 { get; }
+            public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_2 { get; }
         }
         
         public sealed class _ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ
@@ -14258,14 +14258,14 @@ namespace __Generated.CstNodes.Rules
         
         public sealed class _ʺx2Eʺ_1ЖBIT
         {
-            public _ʺx2Eʺ_1ЖBIT(Inners._ʺx2Eʺ _ʺx2Eʺ_1, IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1)
+            public _ʺx2Eʺ_1ЖBIT(Inners._ʺx2Eʺ _ʺx2Eʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1)
             {
                 this._ʺx2Eʺ_1 = _ʺx2Eʺ_1;
                 this._BIT_1 = _BIT_1;
             }
             
             public Inners._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
-            public IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1 { get; }
+            public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1 { get; }
         }
         
         public sealed class _Ⲥʺx2Eʺ_1ЖBITↃ
@@ -14280,14 +14280,14 @@ namespace __Generated.CstNodes.Rules
         
         public sealed class _ʺx2Dʺ_1ЖBIT
         {
-            public _ʺx2Dʺ_1ЖBIT(Inners._ʺx2Dʺ _ʺx2Dʺ_1, IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1)
+            public _ʺx2Dʺ_1ЖBIT(Inners._ʺx2Dʺ _ʺx2Dʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1)
             {
                 this._ʺx2Dʺ_1 = _ʺx2Dʺ_1;
                 this._BIT_1 = _BIT_1;
             }
             
             public Inners._ʺx2Dʺ _ʺx2Dʺ_1 { get; }
-            public IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1 { get; }
+            public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1 { get; }
         }
         
         public sealed class _Ⲥʺx2Dʺ_1ЖBITↃ
@@ -14321,12 +14321,12 @@ namespace __Generated.CstNodes.Rules
             
             public sealed class _1ЖⲤʺx2Eʺ_1ЖBITↃ : _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ
             {
-                public _1ЖⲤʺx2Eʺ_1ЖBITↃ(IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖBITↃ> _Ⲥʺx2Eʺ_1ЖBITↃ_1)
+                public _1ЖⲤʺx2Eʺ_1ЖBITↃ(System.Collections.Generic.IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖBITↃ> _Ⲥʺx2Eʺ_1ЖBITↃ_1)
                 {
                     this._Ⲥʺx2Eʺ_1ЖBITↃ_1 = _Ⲥʺx2Eʺ_1ЖBITↃ_1;
                 }
                 
-                public IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖBITↃ> _Ⲥʺx2Eʺ_1ЖBITↃ_1 { get; }
+                public System.Collections.Generic.IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖBITↃ> _Ⲥʺx2Eʺ_1ЖBITↃ_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -14371,14 +14371,14 @@ namespace __Generated.CstNodes.Rules
         
         public sealed class _ʺx2Eʺ_1ЖDIGIT
         {
-            public _ʺx2Eʺ_1ЖDIGIT(Inners._ʺx2Eʺ _ʺx2Eʺ_1, IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1)
+            public _ʺx2Eʺ_1ЖDIGIT(Inners._ʺx2Eʺ _ʺx2Eʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1)
             {
                 this._ʺx2Eʺ_1 = _ʺx2Eʺ_1;
                 this._DIGIT_1 = _DIGIT_1;
             }
             
             public Inners._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
-            public IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
+            public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
         }
         
         public sealed class _Ⲥʺx2Eʺ_1ЖDIGITↃ
@@ -14393,14 +14393,14 @@ namespace __Generated.CstNodes.Rules
         
         public sealed class _ʺx2Dʺ_1ЖDIGIT
         {
-            public _ʺx2Dʺ_1ЖDIGIT(Inners._ʺx2Dʺ _ʺx2Dʺ_1, IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1)
+            public _ʺx2Dʺ_1ЖDIGIT(Inners._ʺx2Dʺ _ʺx2Dʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1)
             {
                 this._ʺx2Dʺ_1 = _ʺx2Dʺ_1;
                 this._DIGIT_1 = _DIGIT_1;
             }
             
             public Inners._ʺx2Dʺ _ʺx2Dʺ_1 { get; }
-            public IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
+            public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
         }
         
         public sealed class _Ⲥʺx2Dʺ_1ЖDIGITↃ
@@ -14434,12 +14434,12 @@ namespace __Generated.CstNodes.Rules
             
             public sealed class _1ЖⲤʺx2Eʺ_1ЖDIGITↃ : _1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ
             {
-                public _1ЖⲤʺx2Eʺ_1ЖDIGITↃ(IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖDIGITↃ> _Ⲥʺx2Eʺ_1ЖDIGITↃ_1)
+                public _1ЖⲤʺx2Eʺ_1ЖDIGITↃ(System.Collections.Generic.IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖDIGITↃ> _Ⲥʺx2Eʺ_1ЖDIGITↃ_1)
                 {
                     this._Ⲥʺx2Eʺ_1ЖDIGITↃ_1 = _Ⲥʺx2Eʺ_1ЖDIGITↃ_1;
                 }
                 
-                public IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖDIGITↃ> _Ⲥʺx2Eʺ_1ЖDIGITↃ_1 { get; }
+                public System.Collections.Generic.IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖDIGITↃ> _Ⲥʺx2Eʺ_1ЖDIGITↃ_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
@@ -14484,14 +14484,14 @@ namespace __Generated.CstNodes.Rules
         
         public sealed class _ʺx2Eʺ_1ЖHEXDIG
         {
-            public _ʺx2Eʺ_1ЖHEXDIG(Inners._ʺx2Eʺ _ʺx2Eʺ_1, IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1)
+            public _ʺx2Eʺ_1ЖHEXDIG(Inners._ʺx2Eʺ _ʺx2Eʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1)
             {
                 this._ʺx2Eʺ_1 = _ʺx2Eʺ_1;
                 this._HEXDIG_1 = _HEXDIG_1;
             }
             
             public Inners._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
-            public IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1 { get; }
+            public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1 { get; }
         }
         
         public sealed class _Ⲥʺx2Eʺ_1ЖHEXDIGↃ
@@ -14506,14 +14506,14 @@ namespace __Generated.CstNodes.Rules
         
         public sealed class _ʺx2Dʺ_1ЖHEXDIG
         {
-            public _ʺx2Dʺ_1ЖHEXDIG(Inners._ʺx2Dʺ _ʺx2Dʺ_1, IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1)
+            public _ʺx2Dʺ_1ЖHEXDIG(Inners._ʺx2Dʺ _ʺx2Dʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1)
             {
                 this._ʺx2Dʺ_1 = _ʺx2Dʺ_1;
                 this._HEXDIG_1 = _HEXDIG_1;
             }
             
             public Inners._ʺx2Dʺ _ʺx2Dʺ_1 { get; }
-            public IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1 { get; }
+            public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1 { get; }
         }
         
         public sealed class _Ⲥʺx2Dʺ_1ЖHEXDIGↃ
@@ -14547,12 +14547,12 @@ namespace __Generated.CstNodes.Rules
             
             public sealed class _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ : _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ
             {
-                public _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ(IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖHEXDIGↃ> _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1)
+                public _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ(System.Collections.Generic.IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖHEXDIGↃ> _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1)
                 {
                     this._Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1 = _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1;
                 }
                 
-                public IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖHEXDIGↃ> _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1 { get; }
+                public System.Collections.Generic.IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖHEXDIGↃ> _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1 { get; }
                 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
