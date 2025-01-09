@@ -20,6 +20,12 @@
         {
             foreach (var cstNode in cstNodes)
             {
+                if (string.Equals(cstNode.Name, "Inners", System.StringComparison.OrdinalIgnoreCase))
+                {
+                    //// TODO handle the inners
+                    continue;
+                }
+
                 var transcriberName = $"{cstNode.Name}Transcriber";
                 yield return new Class(
                     AccessModifier.Public,
