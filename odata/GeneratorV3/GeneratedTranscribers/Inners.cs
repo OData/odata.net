@@ -701,7 +701,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x30 value, StringBuilder builder)
         {
-            builder.Append("x30");
+            builder.Append((char)0x30);
         }
     }
     
@@ -730,7 +730,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x31 value, StringBuilder builder)
         {
-            builder.Append("x31");
+            builder.Append((char)0x31);
         }
     }
     
@@ -2228,7 +2228,7 @@ Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_2, builder);
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x41 value, StringBuilder builder)
         {
-            builder.Append("x41");
+            builder.Append((char)0x41);
         }
     }
     
@@ -2257,7 +2257,7 @@ Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_2, builder);
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x42 value, StringBuilder builder)
         {
-            builder.Append("x42");
+            builder.Append((char)0x42);
         }
     }
     
@@ -2286,7 +2286,7 @@ Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_2, builder);
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x43 value, StringBuilder builder)
         {
-            builder.Append("x43");
+            builder.Append((char)0x43);
         }
     }
     
@@ -2315,7 +2315,7 @@ Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_2, builder);
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x44 value, StringBuilder builder)
         {
-            builder.Append("x44");
+            builder.Append((char)0x44);
         }
     }
     
@@ -2344,7 +2344,7 @@ Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_2, builder);
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x45 value, StringBuilder builder)
         {
-            builder.Append("x45");
+            builder.Append((char)0x45);
         }
     }
     
@@ -2373,7 +2373,7 @@ Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_2, builder);
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x46 value, StringBuilder builder)
         {
-            builder.Append("x46");
+            builder.Append((char)0x46);
         }
     }
     
@@ -5435,7 +5435,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x2D value, StringBuilder builder)
         {
-            builder.Append("x2D");
+            builder.Append((char)0x2D);
         }
     }
     
@@ -5523,7 +5523,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x3D value, StringBuilder builder)
         {
-            builder.Append("x3D");
+            builder.Append((char)0x3D);
         }
     }
     
@@ -5552,7 +5552,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x2F value, StringBuilder builder)
         {
-            builder.Append("x2F");
+            builder.Append((char)0x2F);
         }
     }
     
@@ -5665,7 +5665,7 @@ Test.Transcribers.Rules._WSPTranscriber.Instance.Transcribe(value._WSP_1, builde
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x3B value, StringBuilder builder)
         {
-            builder.Append("x3B");
+            builder.Append((char)0x3B);
         }
     }
     
@@ -5834,7 +5834,7 @@ Test.Transcribers.Rules._repetitionTranscriber.Instance.Transcribe(value._repeti
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x2A value, StringBuilder builder)
         {
-            builder.Append("x2A");
+            builder.Append((char)0x2A);
         }
     }
     
@@ -5901,7 +5901,7 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x28 value, StringBuilder builder)
         {
-            builder.Append("x28");
+            builder.Append((char)0x28);
         }
     }
     
@@ -5930,7 +5930,7 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x29 value, StringBuilder builder)
         {
-            builder.Append("x29");
+            builder.Append((char)0x29);
         }
     }
     
@@ -5959,7 +5959,7 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x5B value, StringBuilder builder)
         {
-            builder.Append("x5B");
+            builder.Append((char)0x5B);
         }
     }
     
@@ -5988,7 +5988,7 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x5D value, StringBuilder builder)
         {
-            builder.Append("x5D");
+            builder.Append((char)0x5D);
         }
     }
     
@@ -6867,7 +6867,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x25 value, StringBuilder builder)
         {
-            builder.Append("x25");
+            builder.Append((char)0x25);
         }
     }
     
@@ -6955,7 +6955,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x62 value, StringBuilder builder)
         {
-            builder.Append("x62");
+            builder.Append((char)0x62);
         }
     }
     
@@ -6984,7 +6984,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x2E value, StringBuilder builder)
         {
-            builder.Append("x2E");
+            builder.Append((char)0x2E);
         }
     }
     
@@ -7121,7 +7121,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x64 value, StringBuilder builder)
         {
-            builder.Append("x64");
+            builder.Append((char)0x64);
         }
     }
     
@@ -7258,7 +7258,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x78 value, StringBuilder builder)
         {
-            builder.Append("x78");
+            builder.Append((char)0x78);
         }
     }
     
@@ -7395,7 +7395,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x3C value, StringBuilder builder)
         {
-            builder.Append("x3C");
+            builder.Append((char)0x3C);
         }
     }
     
@@ -8274,7 +8274,7 @@ return default;
         
         public void Transcribe(GeneratorV3.Abnf.Inners._x3E value, StringBuilder builder)
         {
-            builder.Append("x3E");
+            builder.Append((char)0x3E);
         }
     }
     

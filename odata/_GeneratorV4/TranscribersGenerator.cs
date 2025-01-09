@@ -131,10 +131,16 @@
                 }
                 else
                 {
-                    methodBody = string.Empty;
                     nestedClasses = Enumerable.Empty<Class>();
-                    //// TODO terminal nodes
-                    methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
+                    if (cstNode.Name.StartsWith("_x"))
+                    {
+                        methodBody = $"builder.Append((char)0{cstNode.Name.TrimStart('_')});";
+                    }
+                    else
+                    {
+                        //// TODO are there other terminal node cases?
+                        methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
+                    }
                 }
 
                 yield return new Class(
