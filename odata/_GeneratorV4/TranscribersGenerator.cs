@@ -114,7 +114,7 @@
                                 new MethodParameter($"GeneratorV3.Abnf.Inners.{cstNode.Name}", "value"),
                                 new MethodParameter("StringBuilder", "builder"),
                             },
-                            string.Empty), ////TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic))),
+                            TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic))),
                     },
                     Enumerable.Empty<Class>(), //// TODO sometimes you need a nested visitor
                     new[]
@@ -175,6 +175,9 @@
                     }
                     else if (propertyType.StartsWith(this.rulesCstNodesNamespace))
                     {
+                        builder.Append(this.rulesTranscribersNamespace);
+                        builder.Append(".");
+
                         propertyType = propertyType.Substring(this.rulesCstNodesNamespace.Length + 1);
                     }
 
