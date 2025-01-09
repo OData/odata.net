@@ -49,7 +49,6 @@
             builder.Indent();
             //// TODO shouldn't need these, or they should be in a type somewhere
             builder.AppendLine();
-            builder.AppendLine("using GeneratorV3.Abnf;");
             builder.AppendLine();
 
             foreach (var @class in @namespace.Classes)
