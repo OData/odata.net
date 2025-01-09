@@ -91,7 +91,7 @@
                 var nonStaticProperties = cstNode.Properties.Where(property => !property.IsStatic);
                 string methodBody; //// TODO bodies should be lines for whitespace purposes
                 IEnumerable<Class> nestedClasses;
-                if (nonStaticProperties.Any())
+                if (nonStaticProperties.Any()) //// TODO add these branches to the `generaterules` method?
                 {
                     methodBody = TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic), "value", "builder");
                     nestedClasses = Enumerable.Empty<Class>();
