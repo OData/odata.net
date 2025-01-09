@@ -95,7 +95,11 @@
                     nestedClasses = Enumerable.Empty<Class>();
                     if (cstNode.Name.StartsWith("_x"))
                     {
-                        methodBody = $"builder.Append((char)0{cstNode.Name.TrimStart('_')});";
+                        methodBody = $"builder.Append((char)0{cstNode.Name.Substring(1)});";
+                    }
+                    else if (cstNode.Name.StartsWith("_Ⰳx"))
+                    {
+                        methodBody = $"builder.Append((char)0{cstNode.Name.Substring(2)});";
                     }
                     else
                     {
@@ -212,7 +216,11 @@
                     nestedClasses = Enumerable.Empty<Class>();
                     if (cstNode.Name.StartsWith("_x"))
                     {
-                        methodBody = $"builder.Append((char)0{cstNode.Name.TrimStart('_')});";
+                        methodBody = $"builder.Append((char)0{cstNode.Name.Substring(1)});";
+                    }
+                    else if (cstNode.Name.StartsWith("_Ⰳx"))
+                    {
+                        methodBody = $"builder.Append((char)0{cstNode.Name.Substring(2)});";
                     }
                     else
                     {
