@@ -28,7 +28,7 @@
                 .Where(node => string.Equals(node.Name, "Inners", System.StringComparison.OrdinalIgnoreCase))
                 .Single()
                 .NestedClasses;
-            
+
             return (GenerateRules(rulesNodes), GenerateInners(innersNodes));
         }
 
@@ -93,7 +93,15 @@
                 IEnumerable<Class> nestedClasses;
                 if (nonStaticProperties.Any()) //// TODO add these branches to the `generaterules` method?
                 {
-                    methodBody = TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic), "value", "builder");
+                    if (cstNode.Name.Length == 3 && cstNode.Name[0] == '_' && char.IsDigit(cstNode.Name[1]) && char.IsDigit(cstNode.Name[2]))
+                    {
+                        methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
+                    }
+                    else
+                    {
+                        methodBody = TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic), "value", "builder");
+                    }
+
                     nestedClasses = Enumerable.Empty<Class>();
                 }
                 else if (cstNode.NestedClasses.Any())
@@ -139,7 +147,7 @@
                     else
                     {
                         //// TODO are there other terminal node cases?
-                        methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
+                        methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
                     }
                 }
 
@@ -171,7 +179,7 @@
                                 new MethodParameter($"GeneratorV3.Abnf.Inners.{cstNode.Name}", "value"),
                                 new MethodParameter("StringBuilder", "builder"),
                             },
-                            methodBody), 
+                            methodBody),
                     },
                     nestedClasses,
                     new[]
@@ -192,6 +200,16 @@
         {
             foreach (var duMember in cstNode.NestedClasses.Where(member => member.BaseType?.EndsWith(cstNode.Name) ?? false))
             {
+                string methodBody;
+                if (duMember.Name.Length == 3 && duMember.Name[0] == '_' && char.IsDigit(duMember.Name[1]) && char.IsDigit(duMember.Name[2]))
+                {
+                    methodBody = $"context.Append((char)0x{duMember.Name.TrimStart('_')});";
+                }
+                else
+                {
+                    methodBody = TranscribeProperties(duMember.Properties, "node", "context");
+                }
+
                 yield return new MethodDefinition(
                     AccessModifier.Protected | AccessModifier.Internal,
                     ClassModifier.None,
@@ -204,7 +222,7 @@
                         new MethodParameter($"GeneratorV3.Abnf.Inners.{cstNode.Name}.{duMember.Name}", "node"), //// TODO don't hardcode namespace
                         new MethodParameter("StringBuilder", "context"),
                     },
-                    TranscribeProperties(duMember.Properties, "node", "context") + Environment.NewLine + "return default;");
+                    methodBody + Environment.NewLine + "return default;");
             }
         }
 
