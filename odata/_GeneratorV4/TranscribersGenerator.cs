@@ -134,6 +134,7 @@
                     methodBody = string.Empty;
                     nestedClasses = Enumerable.Empty<Class>();
                     //// TODO terminal nodes
+                    methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
                 }
 
                 yield return new Class(
