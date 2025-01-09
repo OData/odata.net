@@ -260,13 +260,15 @@
             var @namespace = "Test.CstNodes";
             var cstNodes = new _GeneratorV4.Generator(@namespace).Generate(newCst);
 
-            var transcribers = new TranscribersGenerator("Test.Transcribers.Rules", "Test.Transcribers.Inners").Generate(cstNodes);
+            var rulesNamespace = "Test.Transcribers.Rules";
+            var innersNamespace = "Test.Transcribers.Inners";
+            var transcribers = new TranscribersGenerator(rulesNamespace, innersNamespace).Generate(cstNodes);
 
             var classTranscriber = new ClassTranscriber();
 
             var stringBuilder = new StringBuilder();
             var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine($"namespace {@namespace}");
+            builder.AppendLine($"namespace {rulesNamespace}");
             builder.AppendLine("{");
             builder.Indent();
             builder.AppendLine("using System.Text;");
@@ -275,7 +277,7 @@
             builder.AppendLine("using GeneratorV3.Abnf;");
             builder.AppendLine();
 
-            foreach (var @class in transcribers)
+            foreach (var @class in transcribers.Rules)
             {
                 classTranscriber.Transcribe(@class, builder);
                 builder.AppendLine();

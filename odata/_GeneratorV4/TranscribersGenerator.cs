@@ -16,7 +16,12 @@
             this.innersNamespace = innersNamespace;
         }
 
-        public IEnumerable<Class> Generate(IEnumerable<Class> cstNodes)
+        public (IEnumerable<Class> Rules, IEnumerable<Class> Inners) Generate(IEnumerable<Class> cstNodes)
+        {
+            return (GenerateRules(cstNodes), Enumerable.Empty<Class>());
+        }
+
+        private IEnumerable<Class> GenerateRules(IEnumerable<Class> cstNodes)
         {
             foreach (var cstNode in cstNodes)
             {
@@ -87,7 +92,7 @@
             {
                 if (propertyDefinition.Type.StartsWith("IEnumerable<"))
                 {
-                    builder.AppendLine($"foreach (var {propertyDefinition.Name} in value.{propertyDefinition.Name})");
+                    /*builder.AppendLine($"foreach (var {propertyDefinition.Name} in value.{propertyDefinition.Name})");
                     builder.AppendLine("{");
                     var genericsStartIndex = propertyDefinition.Type.IndexOf("<");
                     var genericsEndIndex = propertyDefinition.Type.IndexOf(">");
@@ -98,10 +103,16 @@
                     }
 
                     builder.AppendLine($"{collectionType}Transcriber.Instance.Transcribe({propertyDefinition.Name}, builder);");
-                    builder.AppendLine("}");
+                    builder.AppendLine("}");*/
                 }
                 else
                 {
+                    if (propertyDefinition.Type.StartsWith("Inners."))
+                    {
+                        builder.Append(this.innersNamespace);
+                        builder.Append(".");
+                    }
+
                     builder.AppendLine($"{propertyDefinition.Type}Transcriber.Instance.Transcribe(value.{propertyDefinition.Name}, builder);");
                 }
             }
