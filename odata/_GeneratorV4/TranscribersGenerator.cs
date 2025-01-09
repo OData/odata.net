@@ -197,7 +197,7 @@
                         new MethodParameter($"GeneratorV3.Abnf.Inners.{cstNode.Name}.{duMember.Name}", "node"), //// TODO don't hardcode namespace
                         new MethodParameter("StringBuilder", "context"),
                     },
-                    TranscribeProperties(duMember.Properties, "node", "context") + Environment.NewLine + "return default;"); //// TODO
+                    TranscribeProperties(duMember.Properties, "node", "context") + Environment.NewLine + "return default;");
             }
         }
 
