@@ -273,14 +273,21 @@
                         .Where(method => string.IsNullOrEmpty(method.Body))
                         .Any())
                 .ToList();
-            if (danglingRules.Any())
-            {
-            }
+            Assert.IsFalse(danglingRules.Any());
 
-            TranscribeClasses(rulesNamespace, @"C:\msgithub\odata.net\odata\GeneratorV3\GeneratedTranscribers\Rules.cs", transcribers.Rules);
-            TranscribeClasses(innersNamespace, @"C:\msgithub\odata.net\odata\GeneratorV3\GeneratedTranscribers\Inners.cs", transcribers.Inners);
-            
-            //// TODO do an assertion here
+            var rulesFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\GeneratedTranscribers\Rules.cs";
+            var expectedRulesText = File.ReadAllText(rulesFilePath);
+            var innersFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\GeneratedTranscribers\Inners.cs";
+            var expectedInnersText = File.ReadAllText(innersFilePath);
+
+            TranscribeClasses(rulesNamespace, rulesFilePath, transcribers.Rules);
+            TranscribeClasses(innersNamespace, innersFilePath, transcribers.Inners);
+
+            var actualRulesText = File.ReadAllText(rulesFilePath);
+            Assert.AreEqual(expectedRulesText, actualRulesText);
+
+            var actualInnersText = File.ReadAllText(innersFilePath);
+            Assert.AreEqual(expectedInnersText, actualInnersText);
         }
 
         private static void TranscribeClasses(string @namespace, string filePath, IEnumerable<Class> classes)
