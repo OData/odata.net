@@ -279,7 +279,9 @@
                 string methodBody;
                 if (duMember.Name.Length == 3 && duMember.Name[0] == '_' && char.IsDigit(duMember.Name[1]) && char.IsDigit(duMember.Name[2]))
                 {
-                    methodBody = $"context.Append((char)0x{duMember.Name.TrimStart('_')});";
+                    ////methodBody = $"context.Append((char)0x{duMember.Name.TrimStart('_')});";
+                    //// TODO
+                    methodBody = string.Empty;
                 }
                 else
                 {
