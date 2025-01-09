@@ -179,6 +179,7 @@ Test.Transcribers.Rules._LFTranscriber.Instance.Transcribe(value._LF_1, builder)
         {
             foreach (var _ⲤWSPⳆCRLF_WSPↃ_1 in value._ⲤWSPⳆCRLF_WSPↃ_1)
 {
+Test.Transcribers.Inners._ⲤWSPⳆCRLF_WSPↃTranscriber.Instance.Transcribe(_ⲤWSPⳆCRLF_WSPↃ_1, builder);
 }
 
         }
@@ -255,6 +256,7 @@ Test.Transcribers.Rules._LFTranscriber.Instance.Transcribe(value._LF_1, builder)
         {
             foreach (var _ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ_1 in value._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ_1)
 {
+Test.Transcribers.Inners._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃTranscriber.Instance.Transcribe(_ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ_1, builder);
 }
 
         }
@@ -291,6 +293,7 @@ Test.Transcribers.Rules._cⲻnlTranscriber.Instance.Transcribe(value._cⲻnl_1, 
             Test.Transcribers.Rules._ALPHATranscriber.Instance.Transcribe(value._ALPHA_1, builder);
 foreach (var _ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1 in value._ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1)
 {
+Test.Transcribers.Inners._ⲤALPHAⳆDIGITⳆʺx2DʺↃTranscriber.Instance.Transcribe(_ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1, builder);
 }
 
         }
@@ -308,10 +311,12 @@ foreach (var _ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1 in value._ⲤALPHAⳆDIGITⳆʺx2D
         {
             foreach (var _cⲻwsp_1 in value._cⲻwsp_1)
 {
+Test.Transcribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_1, builder);
 }
 Test.Transcribers.Inners._Ⲥʺx3DʺⳆʺx3Dx2FʺↃTranscriber.Instance.Transcribe(value._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1, builder);
 foreach (var _cⲻwsp_2 in value._cⲻwsp_2)
 {
+Test.Transcribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_2, builder);
 }
 
         }
@@ -330,6 +335,7 @@ foreach (var _cⲻwsp_2 in value._cⲻwsp_2)
             Test.Transcribers.Rules._alternationTranscriber.Instance.Transcribe(value._alternation_1, builder);
 foreach (var _cⲻwsp_1 in value._cⲻwsp_1)
 {
+Test.Transcribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_1, builder);
 }
 
         }
@@ -376,6 +382,7 @@ foreach (var _cⲻwsp_1 in value._cⲻwsp_1)
             Test.Transcribers.Inners._ʺx3BʺTranscriber.Instance.Transcribe(value._ʺx3Bʺ_1, builder);
 foreach (var _ⲤWSPⳆVCHARↃ_1 in value._ⲤWSPⳆVCHARↃ_1)
 {
+Test.Transcribers.Inners._ⲤWSPⳆVCHARↃTranscriber.Instance.Transcribe(_ⲤWSPⳆVCHARↃ_1, builder);
 }
 Test.Transcribers.Rules._CRLFTranscriber.Instance.Transcribe(value._CRLF_1, builder);
 
@@ -395,6 +402,7 @@ Test.Transcribers.Rules._CRLFTranscriber.Instance.Transcribe(value._CRLF_1, buil
             Test.Transcribers.Rules._concatenationTranscriber.Instance.Transcribe(value._concatenation_1, builder);
 foreach (var _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1 in value._ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1)
 {
+Test.Transcribers.Inners._ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃTranscriber.Instance.Transcribe(_ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1, builder);
 }
 
         }
@@ -413,6 +421,7 @@ foreach (var _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ_1 in value._ⲤЖc
             Test.Transcribers.Rules._repetitionTranscriber.Instance.Transcribe(value._repetition_1, builder);
 foreach (var _Ⲥ1Жcⲻwsp_repetitionↃ_1 in value._Ⲥ1Жcⲻwsp_repetitionↃ_1)
 {
+Test.Transcribers.Inners._Ⲥ1Жcⲻwsp_repetitionↃTranscriber.Instance.Transcribe(_Ⲥ1Жcⲻwsp_repetitionↃ_1, builder);
 }
 
         }
@@ -478,10 +487,12 @@ Test.Transcribers.Rules._elementTranscriber.Instance.Transcribe(value._element_1
             Test.Transcribers.Inners._ʺx28ʺTranscriber.Instance.Transcribe(value._ʺx28ʺ_1, builder);
 foreach (var _cⲻwsp_1 in value._cⲻwsp_1)
 {
+Test.Transcribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_1, builder);
 }
 Test.Transcribers.Rules._alternationTranscriber.Instance.Transcribe(value._alternation_1, builder);
 foreach (var _cⲻwsp_2 in value._cⲻwsp_2)
 {
+Test.Transcribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_2, builder);
 }
 Test.Transcribers.Inners._ʺx29ʺTranscriber.Instance.Transcribe(value._ʺx29ʺ_1, builder);
 
@@ -501,10 +512,12 @@ Test.Transcribers.Inners._ʺx29ʺTranscriber.Instance.Transcribe(value._ʺx29ʺ_
             Test.Transcribers.Inners._ʺx5BʺTranscriber.Instance.Transcribe(value._ʺx5Bʺ_1, builder);
 foreach (var _cⲻwsp_1 in value._cⲻwsp_1)
 {
+Test.Transcribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_1, builder);
 }
 Test.Transcribers.Rules._alternationTranscriber.Instance.Transcribe(value._alternation_1, builder);
 foreach (var _cⲻwsp_2 in value._cⲻwsp_2)
 {
+Test.Transcribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_2, builder);
 }
 Test.Transcribers.Inners._ʺx5DʺTranscriber.Instance.Transcribe(value._ʺx5Dʺ_1, builder);
 
@@ -524,6 +537,7 @@ Test.Transcribers.Inners._ʺx5DʺTranscriber.Instance.Transcribe(value._ʺx5Dʺ_
             Test.Transcribers.Rules._DQUOTETranscriber.Instance.Transcribe(value._DQUOTE_1, builder);
 foreach (var _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ_1 in value._ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ_1)
 {
+Test.Transcribers.Inners._ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃTranscriber.Instance.Transcribe(_ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ_1, builder);
 }
 Test.Transcribers.Rules._DQUOTETranscriber.Instance.Transcribe(value._DQUOTE_2, builder);
 
@@ -559,6 +573,7 @@ Test.Transcribers.Inners._ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃTranscriber.Ins
             Test.Transcribers.Inners._ʺx62ʺTranscriber.Instance.Transcribe(value._ʺx62ʺ_1, builder);
 foreach (var _BIT_1 in value._BIT_1)
 {
+Test.Transcribers.Rules._BITTranscriber.Instance.Transcribe(_BIT_1, builder);
 }
 if (value._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ_1 != null)
 {
@@ -581,6 +596,7 @@ Test.Transcribers.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃTranscri
             Test.Transcribers.Inners._ʺx64ʺTranscriber.Instance.Transcribe(value._ʺx64ʺ_1, builder);
 foreach (var _DIGIT_1 in value._DIGIT_1)
 {
+Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_1, builder);
 }
 if (value._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ_1 != null)
 {
@@ -603,6 +619,7 @@ Test.Transcribers.Inners._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃTran
             Test.Transcribers.Inners._ʺx78ʺTranscriber.Instance.Transcribe(value._ʺx78ʺ_1, builder);
 foreach (var _HEXDIG_1 in value._HEXDIG_1)
 {
+Test.Transcribers.Rules._HEXDIGTranscriber.Instance.Transcribe(_HEXDIG_1, builder);
 }
 if (value._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ_1 != null)
 {
@@ -625,6 +642,7 @@ Test.Transcribers.Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃTr
             Test.Transcribers.Inners._ʺx3CʺTranscriber.Instance.Transcribe(value._ʺx3Cʺ_1, builder);
 foreach (var _ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ_1 in value._ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ_1)
 {
+Test.Transcribers.Inners._ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃTranscriber.Instance.Transcribe(_ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ_1, builder);
 }
 Test.Transcribers.Inners._ʺx3EʺTranscriber.Instance.Transcribe(value._ʺx3Eʺ_1, builder);
 

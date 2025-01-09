@@ -696,6 +696,7 @@ Test.Transcribers.Inners._0Transcriber.Instance.Transcribe(value._0_1, builder);
         {
             foreach (var _cⲻwsp_1 in value._cⲻwsp_1)
 {
+Test.Transcribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_1, builder);
 }
 Test.Transcribers.Rules._cⲻnlTranscriber.Instance.Transcribe(value._cⲻnl_1, builder);
 
@@ -1008,10 +1009,12 @@ Test.Transcribers.Rules._WSPTranscriber.Instance.Transcribe(value._WSP_1, builde
         {
             foreach (var _cⲻwsp_1 in value._cⲻwsp_1)
 {
+Test.Transcribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_1, builder);
 }
 Test.Transcribers.Inners._ʺx2FʺTranscriber.Instance.Transcribe(value._ʺx2Fʺ_1, builder);
 foreach (var _cⲻwsp_2 in value._cⲻwsp_2)
 {
+Test.Transcribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_2, builder);
 }
 Test.Transcribers.Rules._concatenationTranscriber.Instance.Transcribe(value._concatenation_1, builder);
 
@@ -1045,6 +1048,7 @@ Test.Transcribers.Rules._concatenationTranscriber.Instance.Transcribe(value._con
         {
             foreach (var _cⲻwsp_1 in value._cⲻwsp_1)
 {
+Test.Transcribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_1, builder);
 }
 Test.Transcribers.Rules._repetitionTranscriber.Instance.Transcribe(value._repetition_1, builder);
 
@@ -1107,10 +1111,12 @@ Test.Transcribers.Rules._repetitionTranscriber.Instance.Transcribe(value._repeti
         {
             foreach (var _DIGIT_1 in value._DIGIT_1)
 {
+Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_1, builder);
 }
 Test.Transcribers.Inners._ʺx2AʺTranscriber.Instance.Transcribe(value._ʺx2Aʺ_1, builder);
 foreach (var _DIGIT_2 in value._DIGIT_2)
 {
+Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder);
 }
 
         }
@@ -1433,6 +1439,7 @@ foreach (var _DIGIT_2 in value._DIGIT_2)
             Test.Transcribers.Inners._ʺx2EʺTranscriber.Instance.Transcribe(value._ʺx2Eʺ_1, builder);
 foreach (var _BIT_1 in value._BIT_1)
 {
+Test.Transcribers.Rules._BITTranscriber.Instance.Transcribe(_BIT_1, builder);
 }
 
         }
@@ -1466,6 +1473,7 @@ foreach (var _BIT_1 in value._BIT_1)
             Test.Transcribers.Inners._ʺx2DʺTranscriber.Instance.Transcribe(value._ʺx2Dʺ_1, builder);
 foreach (var _BIT_1 in value._BIT_1)
 {
+Test.Transcribers.Rules._BITTranscriber.Instance.Transcribe(_BIT_1, builder);
 }
 
         }
@@ -1542,6 +1550,7 @@ foreach (var _BIT_1 in value._BIT_1)
             Test.Transcribers.Inners._ʺx2EʺTranscriber.Instance.Transcribe(value._ʺx2Eʺ_1, builder);
 foreach (var _DIGIT_1 in value._DIGIT_1)
 {
+Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_1, builder);
 }
 
         }
@@ -1575,6 +1584,7 @@ foreach (var _DIGIT_1 in value._DIGIT_1)
             Test.Transcribers.Inners._ʺx2DʺTranscriber.Instance.Transcribe(value._ʺx2Dʺ_1, builder);
 foreach (var _DIGIT_1 in value._DIGIT_1)
 {
+Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_1, builder);
 }
 
         }
@@ -1651,6 +1661,7 @@ foreach (var _DIGIT_1 in value._DIGIT_1)
             Test.Transcribers.Inners._ʺx2EʺTranscriber.Instance.Transcribe(value._ʺx2Eʺ_1, builder);
 foreach (var _HEXDIG_1 in value._HEXDIG_1)
 {
+Test.Transcribers.Rules._HEXDIGTranscriber.Instance.Transcribe(_HEXDIG_1, builder);
 }
 
         }
@@ -1684,6 +1695,7 @@ foreach (var _HEXDIG_1 in value._HEXDIG_1)
             Test.Transcribers.Inners._ʺx2DʺTranscriber.Instance.Transcribe(value._ʺx2Dʺ_1, builder);
 foreach (var _HEXDIG_1 in value._HEXDIG_1)
 {
+Test.Transcribers.Rules._HEXDIGTranscriber.Instance.Transcribe(_HEXDIG_1, builder);
 }
 
         }

@@ -148,15 +148,25 @@
                 {
                     builder.AppendLine($"foreach (var {propertyDefinition.Name} in value.{propertyDefinition.Name})");
                     builder.AppendLine("{");
-                    /*var genericsStartIndex = propertyDefinition.Type.IndexOf("<");
+                    var genericsStartIndex = propertyDefinition.Type.IndexOf("<");
                     var genericsEndIndex = propertyDefinition.Type.IndexOf(">");
                     var collectionType = propertyDefinition.Type.Substring(genericsStartIndex + 1, genericsEndIndex - genericsStartIndex - 1);
-                    if (collectionType.StartsWith("Inners."))
+                    if (collectionType.StartsWith(this.innersCstNodesNamespace))
                     {
-                        collectionType = this.innersNamespace + "." + collectionType.Substring("Inners.".Length);
+                        builder.Append(this.innersTranscribersNamespace);
+                        builder.Append(".");
+
+                        collectionType = collectionType.Substring(this.innersCstNodesNamespace.Length + 1);
+                    }
+                    else if (collectionType.StartsWith(this.rulesCstNodesNamespace))
+                    {
+                        builder.Append(this.rulesTranscribersNamespace);
+                        builder.Append(".");
+
+                        collectionType = collectionType.Substring(this.rulesCstNodesNamespace.Length + 1);
                     }
 
-                    builder.AppendLine($"{collectionType}Transcriber.Instance.Transcribe({propertyDefinition.Name}, builder);");*/
+                    builder.AppendLine($"{collectionType}Transcriber.Instance.Transcribe({propertyDefinition.Name}, builder);");
                     builder.AppendLine("}");
                 }
                 else if (propertyDefinition.Type.EndsWith("?"))
