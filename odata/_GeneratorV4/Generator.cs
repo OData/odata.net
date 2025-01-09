@@ -154,7 +154,6 @@
                 toClassNames);
 
             //// !!!!!IMPORTANT WHENEVER YOU REMOVE OLD CODE, CHECK FOR TODOS!!!!!
-            //// TODO remove v3 generator
             //// TODO automatically generate the transcribers
             //// TODO manually write the new parsers
             //// TODO remove the old parsers
