@@ -189,7 +189,7 @@
             {
                 yield return new MethodDefinition(
                     AccessModifier.Protected | AccessModifier.Internal,
-                    ClassModifier.None, //// TODO
+                    ClassModifier.None,
                     true,
                     "Root.Void",
                     Enumerable.Empty<string>(),
