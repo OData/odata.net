@@ -30,7 +30,7 @@
 
             var ruleCstNodesNamespace = "__Generated.CstNodes.Rules";
             var innerCstNodesNamespace = "__Generated.CstNodes.Inners";
-            var generatedCstNodes = new _GeneratorV5.Generator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(newCst);
+            var generatedCstNodes = new _GeneratorV5.CstNodesGenerator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(newCst);
 
             TranscribeNamespace(generatedCstNodes.RuleCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules\rules.cs");
             TranscribeNamespace(generatedCstNodes.InnerCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Inners\inners.cs");

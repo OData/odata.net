@@ -7,14 +7,14 @@
     using _GeneratorV4.Abnf.CstNodes;
     using AbnfParserGenerator;
 
-    public sealed class Generator
+    public sealed class CstNodesGenerator
     {
         private readonly string ruleCstNodesNamespace;
         private readonly string innerCstNodesNamespace;
 
         private readonly _GeneratorV4.Generator generator;
 
-        public Generator(string ruleCstNodesNamespace, string innerCstNodesNamespace)
+        public CstNodesGenerator(string ruleCstNodesNamespace, string innerCstNodesNamespace)
         {
 
             this.ruleCstNodesNamespace = ruleCstNodesNamespace;
