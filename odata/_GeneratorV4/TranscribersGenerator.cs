@@ -146,9 +146,9 @@
             {
                 if (propertyDefinition.Type.StartsWith("IEnumerable<"))
                 {
-                    /*builder.AppendLine($"foreach (var {propertyDefinition.Name} in value.{propertyDefinition.Name})");
+                    builder.AppendLine($"foreach (var {propertyDefinition.Name} in value.{propertyDefinition.Name})");
                     builder.AppendLine("{");
-                    var genericsStartIndex = propertyDefinition.Type.IndexOf("<");
+                    /*var genericsStartIndex = propertyDefinition.Type.IndexOf("<");
                     var genericsEndIndex = propertyDefinition.Type.IndexOf(">");
                     var collectionType = propertyDefinition.Type.Substring(genericsStartIndex + 1, genericsEndIndex - genericsStartIndex - 1);
                     if (collectionType.StartsWith("Inners."))
@@ -156,8 +156,8 @@
                         collectionType = this.innersNamespace + "." + collectionType.Substring("Inners.".Length);
                     }
 
-                    builder.AppendLine($"{collectionType}Transcriber.Instance.Transcribe({propertyDefinition.Name}, builder);");
-                    builder.AppendLine("}");*/
+                    builder.AppendLine($"{collectionType}Transcriber.Instance.Transcribe({propertyDefinition.Name}, builder);");*/
+                    builder.AppendLine("}");
                 }
                 else if (propertyDefinition.Type.EndsWith("?"))
                 {
