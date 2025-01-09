@@ -18,7 +18,14 @@
 
         public (IEnumerable<Class> Rules, IEnumerable<Class> Inners) Generate(IEnumerable<Class> cstNodes)
         {
-            return (GenerateRules(cstNodes), Enumerable.Empty<Class>());
+            var rulesNodes = cstNodes
+                .Where(node => !string.Equals(node.Name, "Inners", System.StringComparison.OrdinalIgnoreCase));
+            var innersNodes = cstNodes
+                .Where(node => string.Equals(node.Name, "Inners", System.StringComparison.OrdinalIgnoreCase))
+                .Single()
+                .NestedClasses;
+            
+            return (GenerateRules(cstNodes), GenerateInners(innersNodes));
         }
 
         private IEnumerable<Class> GenerateRules(IEnumerable<Class> cstNodes)
@@ -75,6 +82,11 @@
                             $"new {transcriberName}();"),
                     });
             }
+        }
+
+        private IEnumerable<Class> GenerateInners(IEnumerable<Class> cstNodes)
+        {
+            yield break;
         }
 
         private string TranscribeProperties(IEnumerable<PropertyDefinition> propertyDefinitions)
