@@ -97,7 +97,6 @@
                 }
                 else if (cstNode.NestedClasses.Any())
                 {
-                    //// TODO create visitor
                     //// methodBody = "Visitor.Instance.Visit(value, builder);";
                     //// TODO method body
                     methodBody = string.Empty;
