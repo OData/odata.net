@@ -17,6 +17,11 @@ namespace Test.Transcribers.Inners
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _1Transcriber : ITranscriber<GeneratorV3.Abnf.Inners._1>
@@ -30,6 +35,11 @@ namespace Test.Transcribers.Inners
         public void Transcribe(GeneratorV3.Abnf.Inners._1 value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -45,6 +55,11 @@ namespace Test.Transcribers.Inners
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _3Transcriber : ITranscriber<GeneratorV3.Abnf.Inners._3>
@@ -58,6 +73,11 @@ namespace Test.Transcribers.Inners
         public void Transcribe(GeneratorV3.Abnf.Inners._3 value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -73,6 +93,11 @@ namespace Test.Transcribers.Inners
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _6Transcriber : ITranscriber<GeneratorV3.Abnf.Inners._6>
@@ -86,6 +111,11 @@ namespace Test.Transcribers.Inners
         public void Transcribe(GeneratorV3.Abnf.Inners._6 value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -101,6 +131,11 @@ namespace Test.Transcribers.Inners
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _8Transcriber : ITranscriber<GeneratorV3.Abnf.Inners._8>
@@ -114,6 +149,11 @@ namespace Test.Transcribers.Inners
         public void Transcribe(GeneratorV3.Abnf.Inners._8 value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -129,6 +169,11 @@ namespace Test.Transcribers.Inners
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ATranscriber : ITranscriber<GeneratorV3.Abnf.Inners._A>
@@ -142,6 +187,11 @@ namespace Test.Transcribers.Inners
         public void Transcribe(GeneratorV3.Abnf.Inners._A value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -157,6 +207,11 @@ namespace Test.Transcribers.Inners
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _CTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._C>
@@ -170,6 +225,11 @@ namespace Test.Transcribers.Inners
         public void Transcribe(GeneratorV3.Abnf.Inners._C value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -185,6 +245,11 @@ namespace Test.Transcribers.Inners
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ETranscriber : ITranscriber<GeneratorV3.Abnf.Inners._E>
@@ -198,6 +263,11 @@ namespace Test.Transcribers.Inners
         public void Transcribe(GeneratorV3.Abnf.Inners._E value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -213,6 +283,11 @@ namespace Test.Transcribers.Inners
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _0Transcriber : ITranscriber<GeneratorV3.Abnf.Inners._0>
@@ -226,6 +301,11 @@ namespace Test.Transcribers.Inners
         public void Transcribe(GeneratorV3.Abnf.Inners._0 value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -241,6 +321,11 @@ namespace Test.Transcribers.Inners
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _Ⰳx61ⲻ7ATranscriber : ITranscriber<GeneratorV3.Abnf.Inners._Ⰳx61ⲻ7A>
@@ -255,6 +340,11 @@ namespace Test.Transcribers.Inners
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _x30Transcriber : ITranscriber<GeneratorV3.Abnf.Inners._x30>
@@ -268,6 +358,11 @@ namespace Test.Transcribers.Inners
         public void Transcribe(GeneratorV3.Abnf.Inners._x30 value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -298,6 +393,11 @@ namespace Test.Transcribers.Inners
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ʺx31ʺTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._ʺx31ʺ>
@@ -326,6 +426,11 @@ namespace Test.Transcribers.Inners
         public void Transcribe(GeneratorV3.Abnf.Inners._Ⰳx01ⲻ7F value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -357,6 +462,11 @@ Test.Transcribers.Inners._DTranscriber.Instance.Transcribe(value._D_1, builder);
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _Ⰳx7FTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._Ⰳx7F>
@@ -386,6 +496,11 @@ Test.Transcribers.Inners._FTranscriber.Instance.Transcribe(value._F_1, builder);
         public void Transcribe(GeneratorV3.Abnf.Inners._Ⰳx30ⲻ39 value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -417,6 +532,11 @@ Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_2, builder);
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ʺx41ʺTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._ʺx41ʺ>
@@ -445,6 +565,11 @@ Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_2, builder);
         public void Transcribe(GeneratorV3.Abnf.Inners._x42 value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -475,6 +600,11 @@ Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_2, builder);
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ʺx43ʺTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._ʺx43ʺ>
@@ -503,6 +633,11 @@ Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_2, builder);
         public void Transcribe(GeneratorV3.Abnf.Inners._x44 value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -533,6 +668,11 @@ Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_2, builder);
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ʺx45ʺTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._ʺx45ʺ>
@@ -561,6 +701,11 @@ Test.Transcribers.Inners._2Transcriber.Instance.Transcribe(value._2_2, builder);
         public void Transcribe(GeneratorV3.Abnf.Inners._x46 value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -623,6 +768,11 @@ Test.Transcribers.Inners._ATranscriber.Instance.Transcribe(value._A_1, builder);
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ⲤWSPⳆCRLF_WSPↃTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._ⲤWSPⳆCRLF_WSPↃ>
@@ -651,6 +801,11 @@ Test.Transcribers.Inners._ATranscriber.Instance.Transcribe(value._A_1, builder);
         public void Transcribe(GeneratorV3.Abnf.Inners._Ⰳx00ⲻFF value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -681,6 +836,11 @@ Test.Transcribers.Inners._0Transcriber.Instance.Transcribe(value._0_1, builder);
         public void Transcribe(GeneratorV3.Abnf.Inners._Ⰳx21ⲻ7E value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -730,6 +890,11 @@ Test.Transcribers.Rules._cⲻnlTranscriber.Instance.Transcribe(value._cⲻnl_1, 
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ>
@@ -758,6 +923,11 @@ Test.Transcribers.Rules._cⲻnlTranscriber.Instance.Transcribe(value._cⲻnl_1, 
         public void Transcribe(GeneratorV3.Abnf.Inners._x2D value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -788,6 +958,11 @@ Test.Transcribers.Rules._cⲻnlTranscriber.Instance.Transcribe(value._cⲻnl_1, 
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ⲤALPHAⳆDIGITⳆʺx2DʺↃTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._ⲤALPHAⳆDIGITⳆʺx2DʺↃ>
@@ -816,6 +991,11 @@ Test.Transcribers.Rules._cⲻnlTranscriber.Instance.Transcribe(value._cⲻnl_1, 
         public void Transcribe(GeneratorV3.Abnf.Inners._x3D value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -846,6 +1026,11 @@ Test.Transcribers.Rules._cⲻnlTranscriber.Instance.Transcribe(value._cⲻnl_1, 
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ʺx3Dx2FʺTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._ʺx3Dx2Fʺ>
@@ -875,6 +1060,11 @@ Test.Transcribers.Inners._x2FTranscriber.Instance.Transcribe(value._x2F_1, build
         public void Transcribe(GeneratorV3.Abnf.Inners._ʺx3DʺⳆʺx3Dx2Fʺ value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -936,6 +1126,11 @@ Test.Transcribers.Rules._WSPTranscriber.Instance.Transcribe(value._WSP_1, builde
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ʺx3BʺTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._ʺx3Bʺ>
@@ -964,6 +1159,11 @@ Test.Transcribers.Rules._WSPTranscriber.Instance.Transcribe(value._WSP_1, builde
         public void Transcribe(GeneratorV3.Abnf.Inners._WSPⳆVCHAR value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -1082,6 +1282,11 @@ Test.Transcribers.Rules._repetitionTranscriber.Instance.Transcribe(value._repeti
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ʺx2AʺTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._ʺx2Aʺ>
@@ -1149,6 +1354,11 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ʺx28ʺTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._ʺx28ʺ>
@@ -1177,6 +1387,11 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         public void Transcribe(GeneratorV3.Abnf.Inners._x29 value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -1207,6 +1422,11 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ʺx5BʺTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._ʺx5Bʺ>
@@ -1235,6 +1455,11 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         public void Transcribe(GeneratorV3.Abnf.Inners._x5D value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -1265,6 +1490,11 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _Ⰳx23ⲻ7ETranscriber : ITranscriber<GeneratorV3.Abnf.Inners._Ⰳx23ⲻ7E>
@@ -1279,6 +1509,11 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _Ⰳx20ⲻ21ⳆⰃx23ⲻ7ETranscriber : ITranscriber<GeneratorV3.Abnf.Inners._Ⰳx20ⲻ21ⳆⰃx23ⲻ7E>
@@ -1292,6 +1527,11 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         public void Transcribe(GeneratorV3.Abnf.Inners._Ⰳx20ⲻ21ⳆⰃx23ⲻ7E value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -1322,6 +1562,11 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ʺx25ʺTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._ʺx25ʺ>
@@ -1350,6 +1595,11 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         public void Transcribe(GeneratorV3.Abnf.Inners._binⲻvalⳆdecⲻvalⳆhexⲻval value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -1380,6 +1630,11 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _ʺx62ʺTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._ʺx62ʺ>
@@ -1408,6 +1663,11 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder)
         public void Transcribe(GeneratorV3.Abnf.Inners._x2E value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -1506,6 +1766,11 @@ Test.Transcribers.Rules._BITTranscriber.Instance.Transcribe(_BIT_1, builder);
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _x64Transcriber : ITranscriber<GeneratorV3.Abnf.Inners._x64>
@@ -1519,6 +1784,11 @@ Test.Transcribers.Rules._BITTranscriber.Instance.Transcribe(_BIT_1, builder);
         public void Transcribe(GeneratorV3.Abnf.Inners._x64 value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -1617,6 +1887,11 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_1, builder)
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _x78Transcriber : ITranscriber<GeneratorV3.Abnf.Inners._x78>
@@ -1630,6 +1905,11 @@ Test.Transcribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_1, builder)
         public void Transcribe(GeneratorV3.Abnf.Inners._x78 value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -1728,6 +2008,11 @@ Test.Transcribers.Rules._HEXDIGTranscriber.Instance.Transcribe(_HEXDIG_1, builde
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _x3CTranscriber : ITranscriber<GeneratorV3.Abnf.Inners._x3C>
@@ -1741,6 +2026,11 @@ Test.Transcribers.Rules._HEXDIGTranscriber.Instance.Transcribe(_HEXDIG_1, builde
         public void Transcribe(GeneratorV3.Abnf.Inners._x3C value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -1771,6 +2061,11 @@ Test.Transcribers.Rules._HEXDIGTranscriber.Instance.Transcribe(_HEXDIG_1, builde
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _Ⰳx3Fⲻ7ETranscriber : ITranscriber<GeneratorV3.Abnf.Inners._Ⰳx3Fⲻ7E>
@@ -1785,6 +2080,11 @@ Test.Transcribers.Rules._HEXDIGTranscriber.Instance.Transcribe(_HEXDIG_1, builde
         {
             
         }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
+        }
     }
     
     public sealed class _Ⰳx20ⲻ3DⳆⰃx3Fⲻ7ETranscriber : ITranscriber<GeneratorV3.Abnf.Inners._Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E>
@@ -1798,6 +2098,11 @@ Test.Transcribers.Rules._HEXDIGTranscriber.Instance.Transcribe(_HEXDIG_1, builde
         public void Transcribe(GeneratorV3.Abnf.Inners._Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     
@@ -1827,6 +2132,11 @@ Test.Transcribers.Rules._HEXDIGTranscriber.Instance.Transcribe(_HEXDIG_1, builde
         public void Transcribe(GeneratorV3.Abnf.Inners._x3E value, StringBuilder builder)
         {
             
+        }
+        
+        private sealed class Visitor
+        {
+            public static Visitor Instance { get; } = new Visitor();
         }
     }
     

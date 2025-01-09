@@ -86,6 +86,46 @@
             foreach (var cstNode in cstNodes)
             {
                 var transcriberName = $"{cstNode.Name}Transcriber";
+
+                var nonStaticProperties = cstNode.Properties.Where(property => !property.IsStatic);
+                string methodBody; //// TODO bodies should be lines for whitespace purposes
+                IEnumerable<Class> nestedClasses;
+                if (nonStaticProperties.Any())
+                {
+                    methodBody = TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic));
+                    nestedClasses = Enumerable.Empty<Class>();
+                }
+                else
+                {
+                    //// TODO create visitor
+                    //// methodBody = "Visitor.Instance.Visit(value, builder);";
+                    //// TODO method body
+                    methodBody = string.Empty;
+                    nestedClasses = new[]
+                    {
+                        new Class(
+                            AccessModifier.Private,
+                            ClassModifier.Sealed,
+                            "Visitor",
+                            Enumerable.Empty<string>(),
+                            null, //// TODO
+                            Enumerable.Empty<ConstructorDefinition>(), //// TODO
+                            Enumerable.Empty<MethodDefinition>(), //// TODO
+                            Enumerable.Empty<Class>(),
+                            new[]
+                            {
+                                new PropertyDefinition(
+                                    AccessModifier.Public,
+                                    true,
+                                    "Visitor",
+                                    "Instance",
+                                    true,
+                                    false,
+                                    "new Visitor();"),
+                            }),
+                    };
+                }
+
                 yield return new Class(
                     AccessModifier.Public,
                     ClassModifier.Sealed,
@@ -114,9 +154,9 @@
                                 new MethodParameter($"GeneratorV3.Abnf.Inners.{cstNode.Name}", "value"),
                                 new MethodParameter("StringBuilder", "builder"),
                             },
-                            TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic))), //// TODO bodies should be lines for whitespace purposes
+                            methodBody), 
                     },
-                    Enumerable.Empty<Class>(), //// TODO sometimes you need a nested visitor
+                    nestedClasses,
                     new[]
                     {
                         new PropertyDefinition(

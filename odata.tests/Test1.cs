@@ -360,6 +360,26 @@
             Assert.AreEqual(fullRulesText, transcribedText);
         }
 
+        [TestMethod]
+        public void AbnfRulesWithGeneratedTranscribers()
+        {
+            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
+            var coreRulesText = File.ReadAllText(coreRulesPath);
+            var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
+            var abnfRulesText = File.ReadAllText(abnfRulesPath);
+            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
+            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
+
+            var newCst = GeneratorV3.OldToNewConverters.RuleListConverter.Instance.Convert(cst);
+
+            var stringBuilder = new StringBuilder();
+
+            Test.Transcribers.Rules._rulelistTranscriber.Instance.Transcribe(newCst, stringBuilder);
+
+            var transcribedText = stringBuilder.ToString();
+            Assert.AreEqual(fullRulesText, transcribedText);
+        }
+
         private static string TestAbnf =
 """
 first-rule = second-rule
