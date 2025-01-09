@@ -33,7 +33,7 @@
             var generatedCstNodes = new _GeneratorV5.Generator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(newCst);
 
             TranscribeNamespace(generatedCstNodes.RuleCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules\rules.cs");
-            TranscribeNamespace(generatedCstNodes.InnerCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules\inners.cs");
+            TranscribeNamespace(generatedCstNodes.InnerCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Inners\inners.cs");
 
             //// TODO finish this
         }
