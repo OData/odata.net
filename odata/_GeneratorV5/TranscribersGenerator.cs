@@ -360,9 +360,10 @@
                     builder.AppendLine($"if (value.{propertyDefinition.Name} != null)");
                     builder.AppendLine("{");
 
-                    /*var propertyType = propertyDefinition.Type;
+                    var propertyType = propertyDefinition.Type.Substring(0, propertyDefinition.Type.Length - 1);
 
-                    if (propertyType.StartsWith(this.innersCstNodesNamespace))
+                    //// TODO i think you can delete this commetn block
+                    /*if (propertyType.StartsWith(this.innersCstNodesNamespace))
                     {
                         builder.Append(this.innersTranscribersNamespace);
                         builder.Append(".");
@@ -377,9 +378,10 @@
                         propertyType = propertyType.Substring(this.rulesCstNodesNamespace.Length + 1);
                     }
 
-                    propertyType = propertyType.Substring(0, propertyType.Length - 1);
+                    propertyType = propertyType.Substring(0, propertyType.Length - 1);*/
 
-                    builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");*/
+                    //// TODO this line should work
+                    builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");
 
                     builder.AppendLine("}");
                 }
