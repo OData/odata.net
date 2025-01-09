@@ -181,7 +181,19 @@
         {
             foreach (var duMember in cstNode.NestedClasses.Where(member => member.BaseType?.EndsWith(cstNode.Name) ?? false))
             {
-                yield break;
+                yield return new MethodDefinition(
+                    AccessModifier.Protected | AccessModifier.Internal,
+                    ClassModifier.None, //// TODO
+                    false, //// TODO
+                    "Root.Void",
+                    Enumerable.Empty<string>(),
+                    "Accept",
+                    new[]
+                    {
+                        new MethodParameter($"GeneratorV3.Abnf.Inners.{cstNode.Name}.{duMember.Name}", "node"), //// TODO don't hardcode namespace
+                        new MethodParameter("StringBuilder", "context"),
+                    },
+                    "return default;"); //// TODO
             }
         }
 
