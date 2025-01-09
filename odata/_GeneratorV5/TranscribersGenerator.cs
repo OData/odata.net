@@ -46,7 +46,7 @@
 
                 methodBody = string.Empty;
                 nestedClasses = Enumerable.Empty<Class>();
-                /*if (nonStaticProperties.Any()) //// TODO you are adding these cases to the rules (you already added to inners)
+                if (nonStaticProperties.Any()) //// TODO you are adding these cases to the rules (you already added to inners)
                 {
                     if (cstNode.Name.Length == 3 && cstNode.Name[0] == '_' && char.IsDigit(cstNode.Name[1]) && char.IsDigit(cstNode.Name[2]))
                     {
@@ -60,12 +60,12 @@
                     }
                     else
                     {
-                        methodBody = TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic), "value", "builder");
+                        methodBody = TranscribeProperties(nonStaticProperties, "value", "builder");
                     }
 
                     nestedClasses = Enumerable.Empty<Class>();
                 }
-                else if (cstNode.NestedClasses.Any())
+                /*else if (cstNode.NestedClasses.Any())
                 {
                     methodBody = "Visitor.Instance.Visit(value, builder);";
                     nestedClasses = new[]
@@ -330,7 +330,7 @@
         {
             foreach (var propertyDefinition in propertyDefinitions)
             {
-                if (propertyDefinition.Type.StartsWith("IEnumerable<"))
+                /*if (propertyDefinition.Type.StartsWith("IEnumerable<"))
                 {
                     builder.AppendLine($"foreach (var {propertyDefinition.Name} in {nodeName}.{propertyDefinition.Name})");
                     builder.AppendLine("{");
@@ -403,7 +403,7 @@
                     }
 
                     builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");
-                }
+                }*/
             }
         }
     }
