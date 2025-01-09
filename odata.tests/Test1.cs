@@ -47,7 +47,7 @@
             TranscribeNamespace(
                 new Namespace(
                     innerTranscribersNamespace,
-                    generatedTranscribers.Rules),
+                    generatedTranscribers.Inners),
                 @"C:\msgithub\odata.net\odata\__Generated\Transcribers\Inners");
 
             //// TODO finish this

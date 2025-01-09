@@ -23,26 +23,30 @@
 
         public (IEnumerable<Class> Rules, IEnumerable<Class> Inners) Generate((Namespace RuleCstNodes, Namespace InnerCstNodes) cstNodes)
         {
-            var rulesNodes = cstNodes
-                .RuleCstNodes
-                .Classes;
             var innersNodes = cstNodes
                 .InnerCstNodes
                 .Classes;
 
-            return (GenerateRules(rulesNodes), GenerateInners(innersNodes));
+            return 
+                (
+                    GenerateRules(cstNodes.RuleCstNodes), 
+                    Enumerable.Empty<Class>() //// GenerateInners(innersNodes)
+                );
         }
 
-        private IEnumerable<Class> GenerateRules(IEnumerable<Class> cstNodes)
+        private IEnumerable<Class> GenerateRules(Namespace @namespace)
         {
-            foreach (var cstNode in cstNodes)
+            foreach (var cstNode in @namespace.Classes)
             {
                 var transcriberName = $"{cstNode.Name}Transcriber";
 
                 var nonStaticProperties = cstNode.Properties.Where(property => !property.IsStatic);
                 string methodBody; //// TODO bodies should be lines for whitespace purposes
                 IEnumerable<Class> nestedClasses;
-                if (nonStaticProperties.Any()) //// TODO you are adding these cases to the rules (you already added to inners)
+
+                methodBody = string.Empty;
+                nestedClasses = Enumerable.Empty<Class>();
+                /*if (nonStaticProperties.Any()) //// TODO you are adding these cases to the rules (you already added to inners)
                 {
                     if (cstNode.Name.Length == 3 && cstNode.Name[0] == '_' && char.IsDigit(cstNode.Name[1]) && char.IsDigit(cstNode.Name[2]))
                     {
@@ -111,14 +115,14 @@
                         //// methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
                         methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
                     }
-                }
+                }*/
 
                 yield return new Class(
                     AccessModifier.Public,
                     ClassModifier.Sealed,
                     transcriberName,
                     Enumerable.Empty<string>(),
-                    $"ITranscriber<{cstNode.Name}>",
+                    $"GeneratorV3.ITranscriber<{@namespace.Name}.{cstNode.Name}>",
                     new[]
                     {
                         new ConstructorDefinition(
@@ -138,8 +142,8 @@
                             new[]
                             {
                                 //// TODO you should be using a fully qualified name here, but `class` doesn't include the namespace
-                                new MethodParameter(cstNode.Name, "value"),
-                                new MethodParameter("StringBuilder", "builder"),
+                                new MethodParameter($"{@namespace.Name}.{cstNode.Name}", "value"),
+                                new MethodParameter("System.Text.StringBuilder", "builder"),
                             },
                             methodBody),
                     },
