@@ -17,6 +17,22 @@
     public sealed class Test1
     {
         [TestMethod]
+        public void GeneratorV4()
+        {
+            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
+            var coreRulesText = File.ReadAllText(coreRulesPath);
+            var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
+            var abnfRulesText = File.ReadAllText(abnfRulesPath);
+            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
+
+            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
+            var newCst = _GeneratorV4.OldToV4Converters.RuleListConverter.Instance.Convert(cst);
+
+            var generatedCstNodes = new _GeneratorV4.Generator("__Generated.CstNodes.Rules").Generate(newCst);
+            //// TODO finish this
+        }
+
+        [TestMethod]
         public void TestMethod1()
         {
             var url = "$metadata";
