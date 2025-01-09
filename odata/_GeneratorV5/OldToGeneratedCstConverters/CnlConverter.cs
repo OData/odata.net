@@ -14,7 +14,7 @@
                 CommentConverter.Instance.Convert(node.Value));
         }
 
-        protected internal override _cⲻnl Accept(AbnfParser.CstNodes.Cnl.Newline node, Root.Void context)
+        protected internal override __Generated.CstNodes.Rules._cⲻnl Accept(AbnfParser.CstNodes.Cnl.Newline node, Root.Void context)
         {
             return new __Generated.CstNodes.Rules._cⲻnl._CRLF(
                 CrLfConverter.Instance.Convert(node.Crlf));
