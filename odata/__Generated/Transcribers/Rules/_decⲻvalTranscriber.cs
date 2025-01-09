@@ -10,7 +10,10 @@ namespace __Generated.Trancsribers.Rules
         
         public void Transcribe(__Generated.CstNodes.Rules._decⲻval value, System.Text.StringBuilder builder)
         {
-            
+            if (value._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ_1 != null)
+{
+}
+
         }
     }
     

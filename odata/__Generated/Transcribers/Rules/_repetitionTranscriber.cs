@@ -10,7 +10,10 @@ namespace __Generated.Trancsribers.Rules
         
         public void Transcribe(__Generated.CstNodes.Rules._repetition value, System.Text.StringBuilder builder)
         {
-            
+            if (value._repeat_1 != null)
+{
+}
+
         }
     }
     

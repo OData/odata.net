@@ -355,12 +355,12 @@
                     builder.AppendLine($"{collectionType}Transcriber.Instance.Transcribe({propertyDefinition.Name}, {builderName});");
                     builder.AppendLine("}");
                 }
-                else if (propertyDefinition.Type.EndsWith("?"))
+                else */if (propertyDefinition.Type.EndsWith("?"))
                 {
                     builder.AppendLine($"if (value.{propertyDefinition.Name} != null)");
                     builder.AppendLine("{");
 
-                    var propertyType = propertyDefinition.Type;
+                    /*var propertyType = propertyDefinition.Type;
 
                     if (propertyType.StartsWith(this.innersCstNodesNamespace))
                     {
@@ -379,11 +379,11 @@
 
                     propertyType = propertyType.Substring(0, propertyType.Length - 1);
 
-                    builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");
+                    builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");*/
 
                     builder.AppendLine("}");
                 }
-                else
+                /*else
                 {
                     var propertyType = propertyDefinition.Type;
 
