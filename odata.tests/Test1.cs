@@ -40,7 +40,6 @@
 
         private static void TranscribeNamespace(Namespace @namespace, string folderPath)
         {
-            //// TODO split files
             foreach (var @class in @namespace.Classes)
             {
                 var filePath = Path.Combine(folderPath, $"{@class.Name}.cs");
