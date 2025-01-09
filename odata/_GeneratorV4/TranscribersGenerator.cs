@@ -277,13 +277,13 @@
             foreach (var duMember in cstNode.NestedClasses.Where(member => member.BaseType?.EndsWith(cstNode.Name) ?? false))
             {
                 string methodBody;
-                if (duMember.Name.Length == 3 && duMember.Name[0] == '_' && char.IsDigit(duMember.Name[1]) && char.IsDigit(duMember.Name[2]))
+                /*if (duMember.Name.Length == 3 && duMember.Name[0] == '_' && char.IsDigit(duMember.Name[1]) && char.IsDigit(duMember.Name[2]))
                 {
                     ////methodBody = $"context.Append((char)0x{duMember.Name.TrimStart('_')});";
                     //// TODO
                     methodBody = string.Empty;
                 }
-                else
+                else*/
                 {
                     methodBody = TranscribeProperties(duMember.Properties, "node", "context");
                 }
