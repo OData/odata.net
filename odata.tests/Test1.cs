@@ -3,6 +3,7 @@
     using _GeneratorV4;
     using AbnfParser.CstNodes.Core;
     using AbnfParserGenerator;
+    using GeneratorV3;
     using Root;
     using Root.OdataResourcePath.CombinatorParsers;
     using Root.OdataResourcePath.Transcribers;
@@ -264,11 +265,19 @@
             var innersNamespace = "Test.Transcribers.Inners";
             var transcribers = new TranscribersGenerator(rulesNamespace, innersNamespace).Generate(cstNodes);
 
+            TranscribeClasses(rulesNamespace, @"C:\msgithub\odata.net\odata\GeneratorV3\GeneratedTranscribers\Rules.cs", transcribers.Rules);
+            TranscribeClasses(innersNamespace, @"C:\msgithub\odata.net\odata\GeneratorV3\GeneratedTranscribers\Inners.cs", transcribers.Inners);
+            
+            //// TODO do an assertion here
+        }
+
+        private static void TranscribeClasses(string @namespace, string filePath, IEnumerable<Class> classes)
+        {
             var classTranscriber = new ClassTranscriber();
 
             var stringBuilder = new StringBuilder();
             var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine($"namespace {rulesNamespace}");
+            builder.AppendLine($"namespace {@namespace}");
             builder.AppendLine("{");
             builder.Indent();
             builder.AppendLine("using System.Text;");
@@ -277,7 +286,7 @@
             builder.AppendLine("using GeneratorV3.Abnf;");
             builder.AppendLine();
 
-            foreach (var @class in transcribers.Rules)
+            foreach (var @class in classes)
             {
                 classTranscriber.Transcribe(@class, builder);
                 builder.AppendLine();
@@ -288,11 +297,7 @@
 
             var csharp = stringBuilder.ToString();
 
-            var expectedFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\transcribers.cs";
-            /*var expected = File.ReadAllText(expectedFilePath);
-            Assert.AreEqual(expected, csharp);*/
-
-            File.WriteAllText(expectedFilePath, csharp);
+            File.WriteAllText(filePath, csharp);
         }
 
         [TestMethod]

@@ -60,7 +60,7 @@
                                 new MethodParameter(cstNode.Name, "value"),
                                 new MethodParameter("StringBuilder", "builder"),
                             },
-                            TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic))),
+                            string.Empty), ////TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic))),
                     },
                     Enumerable.Empty<Class>(), //// TODO sometimes you need a nested visitor
                     new[]
