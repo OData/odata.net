@@ -10,7 +10,7 @@
 
         public __Generated.CstNodes.Inners._x62 Convert(AbnfParser.CstNodes.Core.x62 x62)
         {
-            return I__Generated.CstNodes.Innersnners._x62.Instance;
+            return __Generated.CstNodes.Inners._x62.Instance;
         }
     }
 }
