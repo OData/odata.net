@@ -29,7 +29,7 @@
             var newCst = _GeneratorV4.OldToV4Converters.RuleListConverter.Instance.Convert(cst);
 
             var ruleCstNodesNamespace = "__Generated.CstNodes.Rules";
-            var innerCstNodesNamespace = "__Generated.CstNodes.Inners";
+            var innerCstNodesNamespace = "Foo";
             var generatedCstNodes = new _GeneratorV5.Generator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(newCst);
 
             TranscribeNamespace(generatedCstNodes.RuleCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules\rules.cs");

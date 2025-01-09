@@ -1,8 +1,9 @@
 ﻿namespace _GeneratorV5
 {
     using System.Collections.Generic;
+    using System.Data;
     using System.Linq;
-
+    using System.Runtime.CompilerServices;
     using _GeneratorV4.Abnf.CstNodes;
     using AbnfParserGenerator;
 
@@ -36,18 +37,18 @@
                         ruleNodes
                             .Select(
                                 @class =>
-                                    FullyQualify(@class))),
+                                    this.FullyQualify(@class))),
                     new Namespace(
                         this.innerCstNodesNamespace,
                         innerNode
                             .NestedClasses
                             .Select(
                                 @class =>
-                                    FullyQualify(@class)))
+                                    this.FullyQualify(@class)))
                 );
         }
 
-        private static Class FullyQualify(Class @class)
+        private Class FullyQualify(Class @class)
         {
             return new Class(
                 @class.AccessModifier,
@@ -66,7 +67,7 @@
                                     .Select(
                                         parameter =>
                                             new MethodParameter(
-                                                QualifyType(parameter.Type),
+                                                this.QualifyType(parameter.Type),
                                                 parameter.Name)),
                                 constructor.Body)),
                 @class
@@ -85,7 +86,7 @@
                                     .Select(
                                         parameter =>
                                             new MethodParameter(
-                                                QualifyType(parameter.Type),
+                                                this.QualifyType(parameter.Type),
                                                 parameter.Name)),
                                 method.Body)),
                 @class
@@ -100,18 +101,25 @@
                             new PropertyDefinition(
                                 property.AccessModifier,
                                 property.IsStatic,
-                                QualifyType(property.Type),
+                                this.QualifyType(property.Type),
                                 property.Name,
                                 property.HasGet,
                                 property.HasSet,
                                 property.Initializer)));
         }
 
-        private static string QualifyType(string type)
+        private string QualifyType(string type)
         {
-            if (type.StartsWith("IEnumerable<"))
+            var enumerableDelimiter = "IEnumerable<";
+            if (type.StartsWith(enumerableDelimiter))
             {
-                return $"System.Collections.Generic.{type}";
+                return $"System.Collections.Generic.IEnumerable<{QualifyType(type.Substring(enumerableDelimiter.Length))}";
+            }
+
+            var innersDelimiter = "Inners.";
+            if (type.StartsWith(innersDelimiter))
+            {
+                return $"{this.innerCstNodesNamespace}.{type.Substring(innersDelimiter.Length)}";
             }
 
             return type;

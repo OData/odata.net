@@ -1,4 +1,4 @@
-namespace __Generated.CstNodes.Inners
+namespace Foo
 {
     public sealed class _4
     {
@@ -189,14 +189,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _41 : _Ⰳx41ⲻ5A
         {
-            public _41(Inners._4 _4_1, Inners._1 _1_1)
+            public _41(Foo._4 _4_1, Foo._1 _1_1)
             {
                 this._4_1 = _4_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -206,14 +206,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _42 : _Ⰳx41ⲻ5A
         {
-            public _42(Inners._4 _4_1, Inners._2 _2_1)
+            public _42(Foo._4 _4_1, Foo._2 _2_1)
             {
                 this._4_1 = _4_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -223,14 +223,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _43 : _Ⰳx41ⲻ5A
         {
-            public _43(Inners._4 _4_1, Inners._3 _3_1)
+            public _43(Foo._4 _4_1, Foo._3 _3_1)
             {
                 this._4_1 = _4_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -240,14 +240,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _44 : _Ⰳx41ⲻ5A
         {
-            public _44(Inners._4 _4_1, Inners._4 _4_2)
+            public _44(Foo._4 _4_1, Foo._4 _4_2)
             {
                 this._4_1 = _4_1;
                 this._4_2 = _4_2;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._4 _4_2 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._4 _4_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -257,14 +257,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _45 : _Ⰳx41ⲻ5A
         {
-            public _45(Inners._4 _4_1, Inners._5 _5_1)
+            public _45(Foo._4 _4_1, Foo._5 _5_1)
             {
                 this._4_1 = _4_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -274,14 +274,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _46 : _Ⰳx41ⲻ5A
         {
-            public _46(Inners._4 _4_1, Inners._6 _6_1)
+            public _46(Foo._4 _4_1, Foo._6 _6_1)
             {
                 this._4_1 = _4_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -291,14 +291,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _47 : _Ⰳx41ⲻ5A
         {
-            public _47(Inners._4 _4_1, Inners._7 _7_1)
+            public _47(Foo._4 _4_1, Foo._7 _7_1)
             {
                 this._4_1 = _4_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -308,14 +308,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _48 : _Ⰳx41ⲻ5A
         {
-            public _48(Inners._4 _4_1, Inners._8 _8_1)
+            public _48(Foo._4 _4_1, Foo._8 _8_1)
             {
                 this._4_1 = _4_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -325,14 +325,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _49 : _Ⰳx41ⲻ5A
         {
-            public _49(Inners._4 _4_1, Inners._9 _9_1)
+            public _49(Foo._4 _4_1, Foo._9 _9_1)
             {
                 this._4_1 = _4_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -342,14 +342,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4A : _Ⰳx41ⲻ5A
         {
-            public _4A(Inners._4 _4_1, Inners._A _A_1)
+            public _4A(Foo._4 _4_1, Foo._A _A_1)
             {
                 this._4_1 = _4_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -359,14 +359,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4B : _Ⰳx41ⲻ5A
         {
-            public _4B(Inners._4 _4_1, Inners._B _B_1)
+            public _4B(Foo._4 _4_1, Foo._B _B_1)
             {
                 this._4_1 = _4_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -376,14 +376,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4C : _Ⰳx41ⲻ5A
         {
-            public _4C(Inners._4 _4_1, Inners._C _C_1)
+            public _4C(Foo._4 _4_1, Foo._C _C_1)
             {
                 this._4_1 = _4_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -393,14 +393,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4D : _Ⰳx41ⲻ5A
         {
-            public _4D(Inners._4 _4_1, Inners._D _D_1)
+            public _4D(Foo._4 _4_1, Foo._D _D_1)
             {
                 this._4_1 = _4_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -410,14 +410,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4E : _Ⰳx41ⲻ5A
         {
-            public _4E(Inners._4 _4_1, Inners._E _E_1)
+            public _4E(Foo._4 _4_1, Foo._E _E_1)
             {
                 this._4_1 = _4_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -427,14 +427,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4F : _Ⰳx41ⲻ5A
         {
-            public _4F(Inners._4 _4_1, Inners._F _F_1)
+            public _4F(Foo._4 _4_1, Foo._F _F_1)
             {
                 this._4_1 = _4_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -444,14 +444,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _50 : _Ⰳx41ⲻ5A
         {
-            public _50(Inners._5 _5_1, Inners._0 _0_1)
+            public _50(Foo._5 _5_1, Foo._0 _0_1)
             {
                 this._5_1 = _5_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -461,14 +461,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _51 : _Ⰳx41ⲻ5A
         {
-            public _51(Inners._5 _5_1, Inners._1 _1_1)
+            public _51(Foo._5 _5_1, Foo._1 _1_1)
             {
                 this._5_1 = _5_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -478,14 +478,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _52 : _Ⰳx41ⲻ5A
         {
-            public _52(Inners._5 _5_1, Inners._2 _2_1)
+            public _52(Foo._5 _5_1, Foo._2 _2_1)
             {
                 this._5_1 = _5_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -495,14 +495,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _53 : _Ⰳx41ⲻ5A
         {
-            public _53(Inners._5 _5_1, Inners._3 _3_1)
+            public _53(Foo._5 _5_1, Foo._3 _3_1)
             {
                 this._5_1 = _5_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -512,14 +512,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _54 : _Ⰳx41ⲻ5A
         {
-            public _54(Inners._5 _5_1, Inners._4 _4_1)
+            public _54(Foo._5 _5_1, Foo._4 _4_1)
             {
                 this._5_1 = _5_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -529,14 +529,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _55 : _Ⰳx41ⲻ5A
         {
-            public _55(Inners._5 _5_1, Inners._5 _5_2)
+            public _55(Foo._5 _5_1, Foo._5 _5_2)
             {
                 this._5_1 = _5_1;
                 this._5_2 = _5_2;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._5 _5_2 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._5 _5_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -546,14 +546,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _56 : _Ⰳx41ⲻ5A
         {
-            public _56(Inners._5 _5_1, Inners._6 _6_1)
+            public _56(Foo._5 _5_1, Foo._6 _6_1)
             {
                 this._5_1 = _5_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -563,14 +563,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _57 : _Ⰳx41ⲻ5A
         {
-            public _57(Inners._5 _5_1, Inners._7 _7_1)
+            public _57(Foo._5 _5_1, Foo._7 _7_1)
             {
                 this._5_1 = _5_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -580,14 +580,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _58 : _Ⰳx41ⲻ5A
         {
-            public _58(Inners._5 _5_1, Inners._8 _8_1)
+            public _58(Foo._5 _5_1, Foo._8 _8_1)
             {
                 this._5_1 = _5_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -597,14 +597,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _59 : _Ⰳx41ⲻ5A
         {
-            public _59(Inners._5 _5_1, Inners._9 _9_1)
+            public _59(Foo._5 _5_1, Foo._9 _9_1)
             {
                 this._5_1 = _5_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -614,14 +614,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5A : _Ⰳx41ⲻ5A
         {
-            public _5A(Inners._5 _5_1, Inners._A _A_1)
+            public _5A(Foo._5 _5_1, Foo._A _A_1)
             {
                 this._5_1 = _5_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -675,14 +675,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _61 : _Ⰳx61ⲻ7A
         {
-            public _61(Inners._6 _6_1, Inners._1 _1_1)
+            public _61(Foo._6 _6_1, Foo._1 _1_1)
             {
                 this._6_1 = _6_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -692,14 +692,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _62 : _Ⰳx61ⲻ7A
         {
-            public _62(Inners._6 _6_1, Inners._2 _2_1)
+            public _62(Foo._6 _6_1, Foo._2 _2_1)
             {
                 this._6_1 = _6_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -709,14 +709,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _63 : _Ⰳx61ⲻ7A
         {
-            public _63(Inners._6 _6_1, Inners._3 _3_1)
+            public _63(Foo._6 _6_1, Foo._3 _3_1)
             {
                 this._6_1 = _6_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -726,14 +726,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _64 : _Ⰳx61ⲻ7A
         {
-            public _64(Inners._6 _6_1, Inners._4 _4_1)
+            public _64(Foo._6 _6_1, Foo._4 _4_1)
             {
                 this._6_1 = _6_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -743,14 +743,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _65 : _Ⰳx61ⲻ7A
         {
-            public _65(Inners._6 _6_1, Inners._5 _5_1)
+            public _65(Foo._6 _6_1, Foo._5 _5_1)
             {
                 this._6_1 = _6_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -760,14 +760,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _66 : _Ⰳx61ⲻ7A
         {
-            public _66(Inners._6 _6_1, Inners._6 _6_2)
+            public _66(Foo._6 _6_1, Foo._6 _6_2)
             {
                 this._6_1 = _6_1;
                 this._6_2 = _6_2;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._6 _6_2 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._6 _6_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -777,14 +777,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _67 : _Ⰳx61ⲻ7A
         {
-            public _67(Inners._6 _6_1, Inners._7 _7_1)
+            public _67(Foo._6 _6_1, Foo._7 _7_1)
             {
                 this._6_1 = _6_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -794,14 +794,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _68 : _Ⰳx61ⲻ7A
         {
-            public _68(Inners._6 _6_1, Inners._8 _8_1)
+            public _68(Foo._6 _6_1, Foo._8 _8_1)
             {
                 this._6_1 = _6_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -811,14 +811,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _69 : _Ⰳx61ⲻ7A
         {
-            public _69(Inners._6 _6_1, Inners._9 _9_1)
+            public _69(Foo._6 _6_1, Foo._9 _9_1)
             {
                 this._6_1 = _6_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -828,14 +828,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6A : _Ⰳx61ⲻ7A
         {
-            public _6A(Inners._6 _6_1, Inners._A _A_1)
+            public _6A(Foo._6 _6_1, Foo._A _A_1)
             {
                 this._6_1 = _6_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -845,14 +845,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6B : _Ⰳx61ⲻ7A
         {
-            public _6B(Inners._6 _6_1, Inners._B _B_1)
+            public _6B(Foo._6 _6_1, Foo._B _B_1)
             {
                 this._6_1 = _6_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -862,14 +862,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6C : _Ⰳx61ⲻ7A
         {
-            public _6C(Inners._6 _6_1, Inners._C _C_1)
+            public _6C(Foo._6 _6_1, Foo._C _C_1)
             {
                 this._6_1 = _6_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -879,14 +879,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6D : _Ⰳx61ⲻ7A
         {
-            public _6D(Inners._6 _6_1, Inners._D _D_1)
+            public _6D(Foo._6 _6_1, Foo._D _D_1)
             {
                 this._6_1 = _6_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -896,14 +896,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6E : _Ⰳx61ⲻ7A
         {
-            public _6E(Inners._6 _6_1, Inners._E _E_1)
+            public _6E(Foo._6 _6_1, Foo._E _E_1)
             {
                 this._6_1 = _6_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -913,14 +913,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6F : _Ⰳx61ⲻ7A
         {
-            public _6F(Inners._6 _6_1, Inners._F _F_1)
+            public _6F(Foo._6 _6_1, Foo._F _F_1)
             {
                 this._6_1 = _6_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -930,14 +930,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _70 : _Ⰳx61ⲻ7A
         {
-            public _70(Inners._7 _7_1, Inners._0 _0_1)
+            public _70(Foo._7 _7_1, Foo._0 _0_1)
             {
                 this._7_1 = _7_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -947,14 +947,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _71 : _Ⰳx61ⲻ7A
         {
-            public _71(Inners._7 _7_1, Inners._1 _1_1)
+            public _71(Foo._7 _7_1, Foo._1 _1_1)
             {
                 this._7_1 = _7_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -964,14 +964,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _72 : _Ⰳx61ⲻ7A
         {
-            public _72(Inners._7 _7_1, Inners._2 _2_1)
+            public _72(Foo._7 _7_1, Foo._2 _2_1)
             {
                 this._7_1 = _7_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -981,14 +981,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _73 : _Ⰳx61ⲻ7A
         {
-            public _73(Inners._7 _7_1, Inners._3 _3_1)
+            public _73(Foo._7 _7_1, Foo._3 _3_1)
             {
                 this._7_1 = _7_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -998,14 +998,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _74 : _Ⰳx61ⲻ7A
         {
-            public _74(Inners._7 _7_1, Inners._4 _4_1)
+            public _74(Foo._7 _7_1, Foo._4 _4_1)
             {
                 this._7_1 = _7_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1015,14 +1015,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _75 : _Ⰳx61ⲻ7A
         {
-            public _75(Inners._7 _7_1, Inners._5 _5_1)
+            public _75(Foo._7 _7_1, Foo._5 _5_1)
             {
                 this._7_1 = _7_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1032,14 +1032,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _76 : _Ⰳx61ⲻ7A
         {
-            public _76(Inners._7 _7_1, Inners._6 _6_1)
+            public _76(Foo._7 _7_1, Foo._6 _6_1)
             {
                 this._7_1 = _7_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1049,14 +1049,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _77 : _Ⰳx61ⲻ7A
         {
-            public _77(Inners._7 _7_1, Inners._7 _7_2)
+            public _77(Foo._7 _7_1, Foo._7 _7_2)
             {
                 this._7_1 = _7_1;
                 this._7_2 = _7_2;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._7 _7_2 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._7 _7_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1066,14 +1066,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _78 : _Ⰳx61ⲻ7A
         {
-            public _78(Inners._7 _7_1, Inners._8 _8_1)
+            public _78(Foo._7 _7_1, Foo._8 _8_1)
             {
                 this._7_1 = _7_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1083,14 +1083,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _79 : _Ⰳx61ⲻ7A
         {
-            public _79(Inners._7 _7_1, Inners._9 _9_1)
+            public _79(Foo._7 _7_1, Foo._9 _9_1)
             {
                 this._7_1 = _7_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1100,14 +1100,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7A : _Ⰳx61ⲻ7A
         {
-            public _7A(Inners._7 _7_1, Inners._A _A_1)
+            public _7A(Foo._7 _7_1, Foo._A _A_1)
             {
                 this._7_1 = _7_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1127,12 +1127,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx30ʺ
     {
-        public _ʺx30ʺ(Inners._x30 _x30_1)
+        public _ʺx30ʺ(Foo._x30 _x30_1)
         {
             this._x30_1 = _x30_1;
         }
         
-        public Inners._x30 _x30_1 { get; }
+        public Foo._x30 _x30_1 { get; }
     }
     
     public sealed class _x31
@@ -1146,12 +1146,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx31ʺ
     {
-        public _ʺx31ʺ(Inners._x31 _x31_1)
+        public _ʺx31ʺ(Foo._x31 _x31_1)
         {
             this._x31_1 = _x31_1;
         }
         
-        public Inners._x31 _x31_1 { get; }
+        public Foo._x31 _x31_1 { get; }
     }
     
     public abstract class _Ⰳx01ⲻ7F
@@ -1300,14 +1300,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _01 : _Ⰳx01ⲻ7F
         {
-            public _01(Inners._0 _0_1, Inners._1 _1_1)
+            public _01(Foo._0 _0_1, Foo._1 _1_1)
             {
                 this._0_1 = _0_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1317,14 +1317,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _02 : _Ⰳx01ⲻ7F
         {
-            public _02(Inners._0 _0_1, Inners._2 _2_1)
+            public _02(Foo._0 _0_1, Foo._2 _2_1)
             {
                 this._0_1 = _0_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1334,14 +1334,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _03 : _Ⰳx01ⲻ7F
         {
-            public _03(Inners._0 _0_1, Inners._3 _3_1)
+            public _03(Foo._0 _0_1, Foo._3 _3_1)
             {
                 this._0_1 = _0_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1351,14 +1351,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _04 : _Ⰳx01ⲻ7F
         {
-            public _04(Inners._0 _0_1, Inners._4 _4_1)
+            public _04(Foo._0 _0_1, Foo._4 _4_1)
             {
                 this._0_1 = _0_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1368,14 +1368,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _05 : _Ⰳx01ⲻ7F
         {
-            public _05(Inners._0 _0_1, Inners._5 _5_1)
+            public _05(Foo._0 _0_1, Foo._5 _5_1)
             {
                 this._0_1 = _0_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1385,14 +1385,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _06 : _Ⰳx01ⲻ7F
         {
-            public _06(Inners._0 _0_1, Inners._6 _6_1)
+            public _06(Foo._0 _0_1, Foo._6 _6_1)
             {
                 this._0_1 = _0_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1402,14 +1402,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _07 : _Ⰳx01ⲻ7F
         {
-            public _07(Inners._0 _0_1, Inners._7 _7_1)
+            public _07(Foo._0 _0_1, Foo._7 _7_1)
             {
                 this._0_1 = _0_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1419,14 +1419,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _08 : _Ⰳx01ⲻ7F
         {
-            public _08(Inners._0 _0_1, Inners._8 _8_1)
+            public _08(Foo._0 _0_1, Foo._8 _8_1)
             {
                 this._0_1 = _0_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1436,14 +1436,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _09 : _Ⰳx01ⲻ7F
         {
-            public _09(Inners._0 _0_1, Inners._9 _9_1)
+            public _09(Foo._0 _0_1, Foo._9 _9_1)
             {
                 this._0_1 = _0_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1453,14 +1453,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0A : _Ⰳx01ⲻ7F
         {
-            public _0A(Inners._0 _0_1, Inners._A _A_1)
+            public _0A(Foo._0 _0_1, Foo._A _A_1)
             {
                 this._0_1 = _0_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1470,14 +1470,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0B : _Ⰳx01ⲻ7F
         {
-            public _0B(Inners._0 _0_1, Inners._B _B_1)
+            public _0B(Foo._0 _0_1, Foo._B _B_1)
             {
                 this._0_1 = _0_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1487,14 +1487,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0C : _Ⰳx01ⲻ7F
         {
-            public _0C(Inners._0 _0_1, Inners._C _C_1)
+            public _0C(Foo._0 _0_1, Foo._C _C_1)
             {
                 this._0_1 = _0_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1504,14 +1504,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0D : _Ⰳx01ⲻ7F
         {
-            public _0D(Inners._0 _0_1, Inners._D _D_1)
+            public _0D(Foo._0 _0_1, Foo._D _D_1)
             {
                 this._0_1 = _0_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1521,14 +1521,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0E : _Ⰳx01ⲻ7F
         {
-            public _0E(Inners._0 _0_1, Inners._E _E_1)
+            public _0E(Foo._0 _0_1, Foo._E _E_1)
             {
                 this._0_1 = _0_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1538,14 +1538,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0F : _Ⰳx01ⲻ7F
         {
-            public _0F(Inners._0 _0_1, Inners._F _F_1)
+            public _0F(Foo._0 _0_1, Foo._F _F_1)
             {
                 this._0_1 = _0_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1555,14 +1555,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _10 : _Ⰳx01ⲻ7F
         {
-            public _10(Inners._1 _1_1, Inners._0 _0_1)
+            public _10(Foo._1 _1_1, Foo._0 _0_1)
             {
                 this._1_1 = _1_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1572,14 +1572,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _11 : _Ⰳx01ⲻ7F
         {
-            public _11(Inners._1 _1_1, Inners._1 _1_2)
+            public _11(Foo._1 _1_1, Foo._1 _1_2)
             {
                 this._1_1 = _1_1;
                 this._1_2 = _1_2;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._1 _1_2 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._1 _1_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1589,14 +1589,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _12 : _Ⰳx01ⲻ7F
         {
-            public _12(Inners._1 _1_1, Inners._2 _2_1)
+            public _12(Foo._1 _1_1, Foo._2 _2_1)
             {
                 this._1_1 = _1_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1606,14 +1606,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _13 : _Ⰳx01ⲻ7F
         {
-            public _13(Inners._1 _1_1, Inners._3 _3_1)
+            public _13(Foo._1 _1_1, Foo._3 _3_1)
             {
                 this._1_1 = _1_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1623,14 +1623,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _14 : _Ⰳx01ⲻ7F
         {
-            public _14(Inners._1 _1_1, Inners._4 _4_1)
+            public _14(Foo._1 _1_1, Foo._4 _4_1)
             {
                 this._1_1 = _1_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1640,14 +1640,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _15 : _Ⰳx01ⲻ7F
         {
-            public _15(Inners._1 _1_1, Inners._5 _5_1)
+            public _15(Foo._1 _1_1, Foo._5 _5_1)
             {
                 this._1_1 = _1_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1657,14 +1657,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _16 : _Ⰳx01ⲻ7F
         {
-            public _16(Inners._1 _1_1, Inners._6 _6_1)
+            public _16(Foo._1 _1_1, Foo._6 _6_1)
             {
                 this._1_1 = _1_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1674,14 +1674,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _17 : _Ⰳx01ⲻ7F
         {
-            public _17(Inners._1 _1_1, Inners._7 _7_1)
+            public _17(Foo._1 _1_1, Foo._7 _7_1)
             {
                 this._1_1 = _1_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1691,14 +1691,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _18 : _Ⰳx01ⲻ7F
         {
-            public _18(Inners._1 _1_1, Inners._8 _8_1)
+            public _18(Foo._1 _1_1, Foo._8 _8_1)
             {
                 this._1_1 = _1_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1708,14 +1708,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _19 : _Ⰳx01ⲻ7F
         {
-            public _19(Inners._1 _1_1, Inners._9 _9_1)
+            public _19(Foo._1 _1_1, Foo._9 _9_1)
             {
                 this._1_1 = _1_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1725,14 +1725,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1A : _Ⰳx01ⲻ7F
         {
-            public _1A(Inners._1 _1_1, Inners._A _A_1)
+            public _1A(Foo._1 _1_1, Foo._A _A_1)
             {
                 this._1_1 = _1_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1742,14 +1742,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1B : _Ⰳx01ⲻ7F
         {
-            public _1B(Inners._1 _1_1, Inners._B _B_1)
+            public _1B(Foo._1 _1_1, Foo._B _B_1)
             {
                 this._1_1 = _1_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1759,14 +1759,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1C : _Ⰳx01ⲻ7F
         {
-            public _1C(Inners._1 _1_1, Inners._C _C_1)
+            public _1C(Foo._1 _1_1, Foo._C _C_1)
             {
                 this._1_1 = _1_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1776,14 +1776,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1D : _Ⰳx01ⲻ7F
         {
-            public _1D(Inners._1 _1_1, Inners._D _D_1)
+            public _1D(Foo._1 _1_1, Foo._D _D_1)
             {
                 this._1_1 = _1_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1793,14 +1793,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1E : _Ⰳx01ⲻ7F
         {
-            public _1E(Inners._1 _1_1, Inners._E _E_1)
+            public _1E(Foo._1 _1_1, Foo._E _E_1)
             {
                 this._1_1 = _1_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1810,14 +1810,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1F : _Ⰳx01ⲻ7F
         {
-            public _1F(Inners._1 _1_1, Inners._F _F_1)
+            public _1F(Foo._1 _1_1, Foo._F _F_1)
             {
                 this._1_1 = _1_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1827,14 +1827,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _20 : _Ⰳx01ⲻ7F
         {
-            public _20(Inners._2 _2_1, Inners._0 _0_1)
+            public _20(Foo._2 _2_1, Foo._0 _0_1)
             {
                 this._2_1 = _2_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1844,14 +1844,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _21 : _Ⰳx01ⲻ7F
         {
-            public _21(Inners._2 _2_1, Inners._1 _1_1)
+            public _21(Foo._2 _2_1, Foo._1 _1_1)
             {
                 this._2_1 = _2_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1861,14 +1861,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _22 : _Ⰳx01ⲻ7F
         {
-            public _22(Inners._2 _2_1, Inners._2 _2_2)
+            public _22(Foo._2 _2_1, Foo._2 _2_2)
             {
                 this._2_1 = _2_1;
                 this._2_2 = _2_2;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._2 _2_2 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._2 _2_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1878,14 +1878,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _23 : _Ⰳx01ⲻ7F
         {
-            public _23(Inners._2 _2_1, Inners._3 _3_1)
+            public _23(Foo._2 _2_1, Foo._3 _3_1)
             {
                 this._2_1 = _2_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1895,14 +1895,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _24 : _Ⰳx01ⲻ7F
         {
-            public _24(Inners._2 _2_1, Inners._4 _4_1)
+            public _24(Foo._2 _2_1, Foo._4 _4_1)
             {
                 this._2_1 = _2_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1912,14 +1912,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _25 : _Ⰳx01ⲻ7F
         {
-            public _25(Inners._2 _2_1, Inners._5 _5_1)
+            public _25(Foo._2 _2_1, Foo._5 _5_1)
             {
                 this._2_1 = _2_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1929,14 +1929,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _26 : _Ⰳx01ⲻ7F
         {
-            public _26(Inners._2 _2_1, Inners._6 _6_1)
+            public _26(Foo._2 _2_1, Foo._6 _6_1)
             {
                 this._2_1 = _2_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1946,14 +1946,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _27 : _Ⰳx01ⲻ7F
         {
-            public _27(Inners._2 _2_1, Inners._7 _7_1)
+            public _27(Foo._2 _2_1, Foo._7 _7_1)
             {
                 this._2_1 = _2_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1963,14 +1963,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _28 : _Ⰳx01ⲻ7F
         {
-            public _28(Inners._2 _2_1, Inners._8 _8_1)
+            public _28(Foo._2 _2_1, Foo._8 _8_1)
             {
                 this._2_1 = _2_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1980,14 +1980,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _29 : _Ⰳx01ⲻ7F
         {
-            public _29(Inners._2 _2_1, Inners._9 _9_1)
+            public _29(Foo._2 _2_1, Foo._9 _9_1)
             {
                 this._2_1 = _2_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -1997,14 +1997,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2A : _Ⰳx01ⲻ7F
         {
-            public _2A(Inners._2 _2_1, Inners._A _A_1)
+            public _2A(Foo._2 _2_1, Foo._A _A_1)
             {
                 this._2_1 = _2_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2014,14 +2014,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2B : _Ⰳx01ⲻ7F
         {
-            public _2B(Inners._2 _2_1, Inners._B _B_1)
+            public _2B(Foo._2 _2_1, Foo._B _B_1)
             {
                 this._2_1 = _2_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2031,14 +2031,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2C : _Ⰳx01ⲻ7F
         {
-            public _2C(Inners._2 _2_1, Inners._C _C_1)
+            public _2C(Foo._2 _2_1, Foo._C _C_1)
             {
                 this._2_1 = _2_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2048,14 +2048,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2D : _Ⰳx01ⲻ7F
         {
-            public _2D(Inners._2 _2_1, Inners._D _D_1)
+            public _2D(Foo._2 _2_1, Foo._D _D_1)
             {
                 this._2_1 = _2_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2065,14 +2065,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2E : _Ⰳx01ⲻ7F
         {
-            public _2E(Inners._2 _2_1, Inners._E _E_1)
+            public _2E(Foo._2 _2_1, Foo._E _E_1)
             {
                 this._2_1 = _2_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2082,14 +2082,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2F : _Ⰳx01ⲻ7F
         {
-            public _2F(Inners._2 _2_1, Inners._F _F_1)
+            public _2F(Foo._2 _2_1, Foo._F _F_1)
             {
                 this._2_1 = _2_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2099,14 +2099,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _30 : _Ⰳx01ⲻ7F
         {
-            public _30(Inners._3 _3_1, Inners._0 _0_1)
+            public _30(Foo._3 _3_1, Foo._0 _0_1)
             {
                 this._3_1 = _3_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2116,14 +2116,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _31 : _Ⰳx01ⲻ7F
         {
-            public _31(Inners._3 _3_1, Inners._1 _1_1)
+            public _31(Foo._3 _3_1, Foo._1 _1_1)
             {
                 this._3_1 = _3_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2133,14 +2133,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _32 : _Ⰳx01ⲻ7F
         {
-            public _32(Inners._3 _3_1, Inners._2 _2_1)
+            public _32(Foo._3 _3_1, Foo._2 _2_1)
             {
                 this._3_1 = _3_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2150,14 +2150,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _33 : _Ⰳx01ⲻ7F
         {
-            public _33(Inners._3 _3_1, Inners._3 _3_2)
+            public _33(Foo._3 _3_1, Foo._3 _3_2)
             {
                 this._3_1 = _3_1;
                 this._3_2 = _3_2;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._3 _3_2 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._3 _3_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2167,14 +2167,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _34 : _Ⰳx01ⲻ7F
         {
-            public _34(Inners._3 _3_1, Inners._4 _4_1)
+            public _34(Foo._3 _3_1, Foo._4 _4_1)
             {
                 this._3_1 = _3_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2184,14 +2184,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _35 : _Ⰳx01ⲻ7F
         {
-            public _35(Inners._3 _3_1, Inners._5 _5_1)
+            public _35(Foo._3 _3_1, Foo._5 _5_1)
             {
                 this._3_1 = _3_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2201,14 +2201,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _36 : _Ⰳx01ⲻ7F
         {
-            public _36(Inners._3 _3_1, Inners._6 _6_1)
+            public _36(Foo._3 _3_1, Foo._6 _6_1)
             {
                 this._3_1 = _3_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2218,14 +2218,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _37 : _Ⰳx01ⲻ7F
         {
-            public _37(Inners._3 _3_1, Inners._7 _7_1)
+            public _37(Foo._3 _3_1, Foo._7 _7_1)
             {
                 this._3_1 = _3_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2235,14 +2235,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _38 : _Ⰳx01ⲻ7F
         {
-            public _38(Inners._3 _3_1, Inners._8 _8_1)
+            public _38(Foo._3 _3_1, Foo._8 _8_1)
             {
                 this._3_1 = _3_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2252,14 +2252,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _39 : _Ⰳx01ⲻ7F
         {
-            public _39(Inners._3 _3_1, Inners._9 _9_1)
+            public _39(Foo._3 _3_1, Foo._9 _9_1)
             {
                 this._3_1 = _3_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2269,14 +2269,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3A : _Ⰳx01ⲻ7F
         {
-            public _3A(Inners._3 _3_1, Inners._A _A_1)
+            public _3A(Foo._3 _3_1, Foo._A _A_1)
             {
                 this._3_1 = _3_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2286,14 +2286,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3B : _Ⰳx01ⲻ7F
         {
-            public _3B(Inners._3 _3_1, Inners._B _B_1)
+            public _3B(Foo._3 _3_1, Foo._B _B_1)
             {
                 this._3_1 = _3_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2303,14 +2303,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3C : _Ⰳx01ⲻ7F
         {
-            public _3C(Inners._3 _3_1, Inners._C _C_1)
+            public _3C(Foo._3 _3_1, Foo._C _C_1)
             {
                 this._3_1 = _3_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2320,14 +2320,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3D : _Ⰳx01ⲻ7F
         {
-            public _3D(Inners._3 _3_1, Inners._D _D_1)
+            public _3D(Foo._3 _3_1, Foo._D _D_1)
             {
                 this._3_1 = _3_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2337,14 +2337,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3E : _Ⰳx01ⲻ7F
         {
-            public _3E(Inners._3 _3_1, Inners._E _E_1)
+            public _3E(Foo._3 _3_1, Foo._E _E_1)
             {
                 this._3_1 = _3_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2354,14 +2354,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3F : _Ⰳx01ⲻ7F
         {
-            public _3F(Inners._3 _3_1, Inners._F _F_1)
+            public _3F(Foo._3 _3_1, Foo._F _F_1)
             {
                 this._3_1 = _3_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2371,14 +2371,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _40 : _Ⰳx01ⲻ7F
         {
-            public _40(Inners._4 _4_1, Inners._0 _0_1)
+            public _40(Foo._4 _4_1, Foo._0 _0_1)
             {
                 this._4_1 = _4_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2388,14 +2388,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _41 : _Ⰳx01ⲻ7F
         {
-            public _41(Inners._4 _4_1, Inners._1 _1_1)
+            public _41(Foo._4 _4_1, Foo._1 _1_1)
             {
                 this._4_1 = _4_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2405,14 +2405,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _42 : _Ⰳx01ⲻ7F
         {
-            public _42(Inners._4 _4_1, Inners._2 _2_1)
+            public _42(Foo._4 _4_1, Foo._2 _2_1)
             {
                 this._4_1 = _4_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2422,14 +2422,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _43 : _Ⰳx01ⲻ7F
         {
-            public _43(Inners._4 _4_1, Inners._3 _3_1)
+            public _43(Foo._4 _4_1, Foo._3 _3_1)
             {
                 this._4_1 = _4_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2439,14 +2439,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _44 : _Ⰳx01ⲻ7F
         {
-            public _44(Inners._4 _4_1, Inners._4 _4_2)
+            public _44(Foo._4 _4_1, Foo._4 _4_2)
             {
                 this._4_1 = _4_1;
                 this._4_2 = _4_2;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._4 _4_2 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._4 _4_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2456,14 +2456,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _45 : _Ⰳx01ⲻ7F
         {
-            public _45(Inners._4 _4_1, Inners._5 _5_1)
+            public _45(Foo._4 _4_1, Foo._5 _5_1)
             {
                 this._4_1 = _4_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2473,14 +2473,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _46 : _Ⰳx01ⲻ7F
         {
-            public _46(Inners._4 _4_1, Inners._6 _6_1)
+            public _46(Foo._4 _4_1, Foo._6 _6_1)
             {
                 this._4_1 = _4_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2490,14 +2490,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _47 : _Ⰳx01ⲻ7F
         {
-            public _47(Inners._4 _4_1, Inners._7 _7_1)
+            public _47(Foo._4 _4_1, Foo._7 _7_1)
             {
                 this._4_1 = _4_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2507,14 +2507,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _48 : _Ⰳx01ⲻ7F
         {
-            public _48(Inners._4 _4_1, Inners._8 _8_1)
+            public _48(Foo._4 _4_1, Foo._8 _8_1)
             {
                 this._4_1 = _4_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2524,14 +2524,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _49 : _Ⰳx01ⲻ7F
         {
-            public _49(Inners._4 _4_1, Inners._9 _9_1)
+            public _49(Foo._4 _4_1, Foo._9 _9_1)
             {
                 this._4_1 = _4_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2541,14 +2541,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4A : _Ⰳx01ⲻ7F
         {
-            public _4A(Inners._4 _4_1, Inners._A _A_1)
+            public _4A(Foo._4 _4_1, Foo._A _A_1)
             {
                 this._4_1 = _4_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2558,14 +2558,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4B : _Ⰳx01ⲻ7F
         {
-            public _4B(Inners._4 _4_1, Inners._B _B_1)
+            public _4B(Foo._4 _4_1, Foo._B _B_1)
             {
                 this._4_1 = _4_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2575,14 +2575,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4C : _Ⰳx01ⲻ7F
         {
-            public _4C(Inners._4 _4_1, Inners._C _C_1)
+            public _4C(Foo._4 _4_1, Foo._C _C_1)
             {
                 this._4_1 = _4_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2592,14 +2592,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4D : _Ⰳx01ⲻ7F
         {
-            public _4D(Inners._4 _4_1, Inners._D _D_1)
+            public _4D(Foo._4 _4_1, Foo._D _D_1)
             {
                 this._4_1 = _4_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2609,14 +2609,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4E : _Ⰳx01ⲻ7F
         {
-            public _4E(Inners._4 _4_1, Inners._E _E_1)
+            public _4E(Foo._4 _4_1, Foo._E _E_1)
             {
                 this._4_1 = _4_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2626,14 +2626,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4F : _Ⰳx01ⲻ7F
         {
-            public _4F(Inners._4 _4_1, Inners._F _F_1)
+            public _4F(Foo._4 _4_1, Foo._F _F_1)
             {
                 this._4_1 = _4_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2643,14 +2643,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _50 : _Ⰳx01ⲻ7F
         {
-            public _50(Inners._5 _5_1, Inners._0 _0_1)
+            public _50(Foo._5 _5_1, Foo._0 _0_1)
             {
                 this._5_1 = _5_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2660,14 +2660,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _51 : _Ⰳx01ⲻ7F
         {
-            public _51(Inners._5 _5_1, Inners._1 _1_1)
+            public _51(Foo._5 _5_1, Foo._1 _1_1)
             {
                 this._5_1 = _5_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2677,14 +2677,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _52 : _Ⰳx01ⲻ7F
         {
-            public _52(Inners._5 _5_1, Inners._2 _2_1)
+            public _52(Foo._5 _5_1, Foo._2 _2_1)
             {
                 this._5_1 = _5_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2694,14 +2694,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _53 : _Ⰳx01ⲻ7F
         {
-            public _53(Inners._5 _5_1, Inners._3 _3_1)
+            public _53(Foo._5 _5_1, Foo._3 _3_1)
             {
                 this._5_1 = _5_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2711,14 +2711,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _54 : _Ⰳx01ⲻ7F
         {
-            public _54(Inners._5 _5_1, Inners._4 _4_1)
+            public _54(Foo._5 _5_1, Foo._4 _4_1)
             {
                 this._5_1 = _5_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2728,14 +2728,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _55 : _Ⰳx01ⲻ7F
         {
-            public _55(Inners._5 _5_1, Inners._5 _5_2)
+            public _55(Foo._5 _5_1, Foo._5 _5_2)
             {
                 this._5_1 = _5_1;
                 this._5_2 = _5_2;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._5 _5_2 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._5 _5_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2745,14 +2745,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _56 : _Ⰳx01ⲻ7F
         {
-            public _56(Inners._5 _5_1, Inners._6 _6_1)
+            public _56(Foo._5 _5_1, Foo._6 _6_1)
             {
                 this._5_1 = _5_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2762,14 +2762,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _57 : _Ⰳx01ⲻ7F
         {
-            public _57(Inners._5 _5_1, Inners._7 _7_1)
+            public _57(Foo._5 _5_1, Foo._7 _7_1)
             {
                 this._5_1 = _5_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2779,14 +2779,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _58 : _Ⰳx01ⲻ7F
         {
-            public _58(Inners._5 _5_1, Inners._8 _8_1)
+            public _58(Foo._5 _5_1, Foo._8 _8_1)
             {
                 this._5_1 = _5_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2796,14 +2796,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _59 : _Ⰳx01ⲻ7F
         {
-            public _59(Inners._5 _5_1, Inners._9 _9_1)
+            public _59(Foo._5 _5_1, Foo._9 _9_1)
             {
                 this._5_1 = _5_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2813,14 +2813,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5A : _Ⰳx01ⲻ7F
         {
-            public _5A(Inners._5 _5_1, Inners._A _A_1)
+            public _5A(Foo._5 _5_1, Foo._A _A_1)
             {
                 this._5_1 = _5_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2830,14 +2830,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5B : _Ⰳx01ⲻ7F
         {
-            public _5B(Inners._5 _5_1, Inners._B _B_1)
+            public _5B(Foo._5 _5_1, Foo._B _B_1)
             {
                 this._5_1 = _5_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2847,14 +2847,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5C : _Ⰳx01ⲻ7F
         {
-            public _5C(Inners._5 _5_1, Inners._C _C_1)
+            public _5C(Foo._5 _5_1, Foo._C _C_1)
             {
                 this._5_1 = _5_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2864,14 +2864,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5D : _Ⰳx01ⲻ7F
         {
-            public _5D(Inners._5 _5_1, Inners._D _D_1)
+            public _5D(Foo._5 _5_1, Foo._D _D_1)
             {
                 this._5_1 = _5_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2881,14 +2881,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5E : _Ⰳx01ⲻ7F
         {
-            public _5E(Inners._5 _5_1, Inners._E _E_1)
+            public _5E(Foo._5 _5_1, Foo._E _E_1)
             {
                 this._5_1 = _5_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2898,14 +2898,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5F : _Ⰳx01ⲻ7F
         {
-            public _5F(Inners._5 _5_1, Inners._F _F_1)
+            public _5F(Foo._5 _5_1, Foo._F _F_1)
             {
                 this._5_1 = _5_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2915,14 +2915,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _60 : _Ⰳx01ⲻ7F
         {
-            public _60(Inners._6 _6_1, Inners._0 _0_1)
+            public _60(Foo._6 _6_1, Foo._0 _0_1)
             {
                 this._6_1 = _6_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2932,14 +2932,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _61 : _Ⰳx01ⲻ7F
         {
-            public _61(Inners._6 _6_1, Inners._1 _1_1)
+            public _61(Foo._6 _6_1, Foo._1 _1_1)
             {
                 this._6_1 = _6_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2949,14 +2949,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _62 : _Ⰳx01ⲻ7F
         {
-            public _62(Inners._6 _6_1, Inners._2 _2_1)
+            public _62(Foo._6 _6_1, Foo._2 _2_1)
             {
                 this._6_1 = _6_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2966,14 +2966,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _63 : _Ⰳx01ⲻ7F
         {
-            public _63(Inners._6 _6_1, Inners._3 _3_1)
+            public _63(Foo._6 _6_1, Foo._3 _3_1)
             {
                 this._6_1 = _6_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -2983,14 +2983,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _64 : _Ⰳx01ⲻ7F
         {
-            public _64(Inners._6 _6_1, Inners._4 _4_1)
+            public _64(Foo._6 _6_1, Foo._4 _4_1)
             {
                 this._6_1 = _6_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3000,14 +3000,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _65 : _Ⰳx01ⲻ7F
         {
-            public _65(Inners._6 _6_1, Inners._5 _5_1)
+            public _65(Foo._6 _6_1, Foo._5 _5_1)
             {
                 this._6_1 = _6_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3017,14 +3017,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _66 : _Ⰳx01ⲻ7F
         {
-            public _66(Inners._6 _6_1, Inners._6 _6_2)
+            public _66(Foo._6 _6_1, Foo._6 _6_2)
             {
                 this._6_1 = _6_1;
                 this._6_2 = _6_2;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._6 _6_2 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._6 _6_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3034,14 +3034,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _67 : _Ⰳx01ⲻ7F
         {
-            public _67(Inners._6 _6_1, Inners._7 _7_1)
+            public _67(Foo._6 _6_1, Foo._7 _7_1)
             {
                 this._6_1 = _6_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3051,14 +3051,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _68 : _Ⰳx01ⲻ7F
         {
-            public _68(Inners._6 _6_1, Inners._8 _8_1)
+            public _68(Foo._6 _6_1, Foo._8 _8_1)
             {
                 this._6_1 = _6_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3068,14 +3068,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _69 : _Ⰳx01ⲻ7F
         {
-            public _69(Inners._6 _6_1, Inners._9 _9_1)
+            public _69(Foo._6 _6_1, Foo._9 _9_1)
             {
                 this._6_1 = _6_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3085,14 +3085,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6A : _Ⰳx01ⲻ7F
         {
-            public _6A(Inners._6 _6_1, Inners._A _A_1)
+            public _6A(Foo._6 _6_1, Foo._A _A_1)
             {
                 this._6_1 = _6_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3102,14 +3102,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6B : _Ⰳx01ⲻ7F
         {
-            public _6B(Inners._6 _6_1, Inners._B _B_1)
+            public _6B(Foo._6 _6_1, Foo._B _B_1)
             {
                 this._6_1 = _6_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3119,14 +3119,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6C : _Ⰳx01ⲻ7F
         {
-            public _6C(Inners._6 _6_1, Inners._C _C_1)
+            public _6C(Foo._6 _6_1, Foo._C _C_1)
             {
                 this._6_1 = _6_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3136,14 +3136,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6D : _Ⰳx01ⲻ7F
         {
-            public _6D(Inners._6 _6_1, Inners._D _D_1)
+            public _6D(Foo._6 _6_1, Foo._D _D_1)
             {
                 this._6_1 = _6_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3153,14 +3153,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6E : _Ⰳx01ⲻ7F
         {
-            public _6E(Inners._6 _6_1, Inners._E _E_1)
+            public _6E(Foo._6 _6_1, Foo._E _E_1)
             {
                 this._6_1 = _6_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3170,14 +3170,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6F : _Ⰳx01ⲻ7F
         {
-            public _6F(Inners._6 _6_1, Inners._F _F_1)
+            public _6F(Foo._6 _6_1, Foo._F _F_1)
             {
                 this._6_1 = _6_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3187,14 +3187,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _70 : _Ⰳx01ⲻ7F
         {
-            public _70(Inners._7 _7_1, Inners._0 _0_1)
+            public _70(Foo._7 _7_1, Foo._0 _0_1)
             {
                 this._7_1 = _7_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3204,14 +3204,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _71 : _Ⰳx01ⲻ7F
         {
-            public _71(Inners._7 _7_1, Inners._1 _1_1)
+            public _71(Foo._7 _7_1, Foo._1 _1_1)
             {
                 this._7_1 = _7_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3221,14 +3221,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _72 : _Ⰳx01ⲻ7F
         {
-            public _72(Inners._7 _7_1, Inners._2 _2_1)
+            public _72(Foo._7 _7_1, Foo._2 _2_1)
             {
                 this._7_1 = _7_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3238,14 +3238,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _73 : _Ⰳx01ⲻ7F
         {
-            public _73(Inners._7 _7_1, Inners._3 _3_1)
+            public _73(Foo._7 _7_1, Foo._3 _3_1)
             {
                 this._7_1 = _7_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3255,14 +3255,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _74 : _Ⰳx01ⲻ7F
         {
-            public _74(Inners._7 _7_1, Inners._4 _4_1)
+            public _74(Foo._7 _7_1, Foo._4 _4_1)
             {
                 this._7_1 = _7_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3272,14 +3272,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _75 : _Ⰳx01ⲻ7F
         {
-            public _75(Inners._7 _7_1, Inners._5 _5_1)
+            public _75(Foo._7 _7_1, Foo._5 _5_1)
             {
                 this._7_1 = _7_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3289,14 +3289,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _76 : _Ⰳx01ⲻ7F
         {
-            public _76(Inners._7 _7_1, Inners._6 _6_1)
+            public _76(Foo._7 _7_1, Foo._6 _6_1)
             {
                 this._7_1 = _7_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3306,14 +3306,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _77 : _Ⰳx01ⲻ7F
         {
-            public _77(Inners._7 _7_1, Inners._7 _7_2)
+            public _77(Foo._7 _7_1, Foo._7 _7_2)
             {
                 this._7_1 = _7_1;
                 this._7_2 = _7_2;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._7 _7_2 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._7 _7_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3323,14 +3323,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _78 : _Ⰳx01ⲻ7F
         {
-            public _78(Inners._7 _7_1, Inners._8 _8_1)
+            public _78(Foo._7 _7_1, Foo._8 _8_1)
             {
                 this._7_1 = _7_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3340,14 +3340,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _79 : _Ⰳx01ⲻ7F
         {
-            public _79(Inners._7 _7_1, Inners._9 _9_1)
+            public _79(Foo._7 _7_1, Foo._9 _9_1)
             {
                 this._7_1 = _7_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3357,14 +3357,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7A : _Ⰳx01ⲻ7F
         {
-            public _7A(Inners._7 _7_1, Inners._A _A_1)
+            public _7A(Foo._7 _7_1, Foo._A _A_1)
             {
                 this._7_1 = _7_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3374,14 +3374,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7B : _Ⰳx01ⲻ7F
         {
-            public _7B(Inners._7 _7_1, Inners._B _B_1)
+            public _7B(Foo._7 _7_1, Foo._B _B_1)
             {
                 this._7_1 = _7_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3391,14 +3391,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7C : _Ⰳx01ⲻ7F
         {
-            public _7C(Inners._7 _7_1, Inners._C _C_1)
+            public _7C(Foo._7 _7_1, Foo._C _C_1)
             {
                 this._7_1 = _7_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3408,14 +3408,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7D : _Ⰳx01ⲻ7F
         {
-            public _7D(Inners._7 _7_1, Inners._D _D_1)
+            public _7D(Foo._7 _7_1, Foo._D _D_1)
             {
                 this._7_1 = _7_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3425,14 +3425,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7E : _Ⰳx01ⲻ7F
         {
-            public _7E(Inners._7 _7_1, Inners._E _E_1)
+            public _7E(Foo._7 _7_1, Foo._E _E_1)
             {
                 this._7_1 = _7_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3442,14 +3442,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7F : _Ⰳx01ⲻ7F
         {
-            public _7F(Inners._7 _7_1, Inners._F _F_1)
+            public _7F(Foo._7 _7_1, Foo._F _F_1)
             {
                 this._7_1 = _7_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3460,14 +3460,14 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _Ⰳx0D
     {
-        public _Ⰳx0D(Inners._0 _0_1, Inners._D _D_1)
+        public _Ⰳx0D(Foo._0 _0_1, Foo._D _D_1)
         {
             this._0_1 = _0_1;
             this._D_1 = _D_1;
         }
         
-        public Inners._0 _0_1 { get; }
-        public Inners._D _D_1 { get; }
+        public Foo._0 _0_1 { get; }
+        public Foo._D _D_1 { get; }
     }
     
     public abstract class _Ⰳx00ⲻ1F
@@ -3521,14 +3521,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _00 : _Ⰳx00ⲻ1F
         {
-            public _00(Inners._0 _0_1, Inners._0 _0_2)
+            public _00(Foo._0 _0_1, Foo._0 _0_2)
             {
                 this._0_1 = _0_1;
                 this._0_2 = _0_2;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._0 _0_2 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._0 _0_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3538,14 +3538,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _01 : _Ⰳx00ⲻ1F
         {
-            public _01(Inners._0 _0_1, Inners._1 _1_1)
+            public _01(Foo._0 _0_1, Foo._1 _1_1)
             {
                 this._0_1 = _0_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3555,14 +3555,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _02 : _Ⰳx00ⲻ1F
         {
-            public _02(Inners._0 _0_1, Inners._2 _2_1)
+            public _02(Foo._0 _0_1, Foo._2 _2_1)
             {
                 this._0_1 = _0_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3572,14 +3572,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _03 : _Ⰳx00ⲻ1F
         {
-            public _03(Inners._0 _0_1, Inners._3 _3_1)
+            public _03(Foo._0 _0_1, Foo._3 _3_1)
             {
                 this._0_1 = _0_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3589,14 +3589,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _04 : _Ⰳx00ⲻ1F
         {
-            public _04(Inners._0 _0_1, Inners._4 _4_1)
+            public _04(Foo._0 _0_1, Foo._4 _4_1)
             {
                 this._0_1 = _0_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3606,14 +3606,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _05 : _Ⰳx00ⲻ1F
         {
-            public _05(Inners._0 _0_1, Inners._5 _5_1)
+            public _05(Foo._0 _0_1, Foo._5 _5_1)
             {
                 this._0_1 = _0_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3623,14 +3623,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _06 : _Ⰳx00ⲻ1F
         {
-            public _06(Inners._0 _0_1, Inners._6 _6_1)
+            public _06(Foo._0 _0_1, Foo._6 _6_1)
             {
                 this._0_1 = _0_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3640,14 +3640,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _07 : _Ⰳx00ⲻ1F
         {
-            public _07(Inners._0 _0_1, Inners._7 _7_1)
+            public _07(Foo._0 _0_1, Foo._7 _7_1)
             {
                 this._0_1 = _0_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3657,14 +3657,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _08 : _Ⰳx00ⲻ1F
         {
-            public _08(Inners._0 _0_1, Inners._8 _8_1)
+            public _08(Foo._0 _0_1, Foo._8 _8_1)
             {
                 this._0_1 = _0_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3674,14 +3674,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _09 : _Ⰳx00ⲻ1F
         {
-            public _09(Inners._0 _0_1, Inners._9 _9_1)
+            public _09(Foo._0 _0_1, Foo._9 _9_1)
             {
                 this._0_1 = _0_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3691,14 +3691,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0A : _Ⰳx00ⲻ1F
         {
-            public _0A(Inners._0 _0_1, Inners._A _A_1)
+            public _0A(Foo._0 _0_1, Foo._A _A_1)
             {
                 this._0_1 = _0_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3708,14 +3708,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0B : _Ⰳx00ⲻ1F
         {
-            public _0B(Inners._0 _0_1, Inners._B _B_1)
+            public _0B(Foo._0 _0_1, Foo._B _B_1)
             {
                 this._0_1 = _0_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3725,14 +3725,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0C : _Ⰳx00ⲻ1F
         {
-            public _0C(Inners._0 _0_1, Inners._C _C_1)
+            public _0C(Foo._0 _0_1, Foo._C _C_1)
             {
                 this._0_1 = _0_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3742,14 +3742,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0D : _Ⰳx00ⲻ1F
         {
-            public _0D(Inners._0 _0_1, Inners._D _D_1)
+            public _0D(Foo._0 _0_1, Foo._D _D_1)
             {
                 this._0_1 = _0_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3759,14 +3759,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0E : _Ⰳx00ⲻ1F
         {
-            public _0E(Inners._0 _0_1, Inners._E _E_1)
+            public _0E(Foo._0 _0_1, Foo._E _E_1)
             {
                 this._0_1 = _0_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3776,14 +3776,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0F : _Ⰳx00ⲻ1F
         {
-            public _0F(Inners._0 _0_1, Inners._F _F_1)
+            public _0F(Foo._0 _0_1, Foo._F _F_1)
             {
                 this._0_1 = _0_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3793,14 +3793,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _10 : _Ⰳx00ⲻ1F
         {
-            public _10(Inners._1 _1_1, Inners._0 _0_1)
+            public _10(Foo._1 _1_1, Foo._0 _0_1)
             {
                 this._1_1 = _1_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3810,14 +3810,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _11 : _Ⰳx00ⲻ1F
         {
-            public _11(Inners._1 _1_1, Inners._1 _1_2)
+            public _11(Foo._1 _1_1, Foo._1 _1_2)
             {
                 this._1_1 = _1_1;
                 this._1_2 = _1_2;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._1 _1_2 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._1 _1_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3827,14 +3827,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _12 : _Ⰳx00ⲻ1F
         {
-            public _12(Inners._1 _1_1, Inners._2 _2_1)
+            public _12(Foo._1 _1_1, Foo._2 _2_1)
             {
                 this._1_1 = _1_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3844,14 +3844,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _13 : _Ⰳx00ⲻ1F
         {
-            public _13(Inners._1 _1_1, Inners._3 _3_1)
+            public _13(Foo._1 _1_1, Foo._3 _3_1)
             {
                 this._1_1 = _1_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3861,14 +3861,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _14 : _Ⰳx00ⲻ1F
         {
-            public _14(Inners._1 _1_1, Inners._4 _4_1)
+            public _14(Foo._1 _1_1, Foo._4 _4_1)
             {
                 this._1_1 = _1_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3878,14 +3878,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _15 : _Ⰳx00ⲻ1F
         {
-            public _15(Inners._1 _1_1, Inners._5 _5_1)
+            public _15(Foo._1 _1_1, Foo._5 _5_1)
             {
                 this._1_1 = _1_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3895,14 +3895,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _16 : _Ⰳx00ⲻ1F
         {
-            public _16(Inners._1 _1_1, Inners._6 _6_1)
+            public _16(Foo._1 _1_1, Foo._6 _6_1)
             {
                 this._1_1 = _1_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3912,14 +3912,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _17 : _Ⰳx00ⲻ1F
         {
-            public _17(Inners._1 _1_1, Inners._7 _7_1)
+            public _17(Foo._1 _1_1, Foo._7 _7_1)
             {
                 this._1_1 = _1_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3929,14 +3929,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _18 : _Ⰳx00ⲻ1F
         {
-            public _18(Inners._1 _1_1, Inners._8 _8_1)
+            public _18(Foo._1 _1_1, Foo._8 _8_1)
             {
                 this._1_1 = _1_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3946,14 +3946,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _19 : _Ⰳx00ⲻ1F
         {
-            public _19(Inners._1 _1_1, Inners._9 _9_1)
+            public _19(Foo._1 _1_1, Foo._9 _9_1)
             {
                 this._1_1 = _1_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3963,14 +3963,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1A : _Ⰳx00ⲻ1F
         {
-            public _1A(Inners._1 _1_1, Inners._A _A_1)
+            public _1A(Foo._1 _1_1, Foo._A _A_1)
             {
                 this._1_1 = _1_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3980,14 +3980,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1B : _Ⰳx00ⲻ1F
         {
-            public _1B(Inners._1 _1_1, Inners._B _B_1)
+            public _1B(Foo._1 _1_1, Foo._B _B_1)
             {
                 this._1_1 = _1_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -3997,14 +3997,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1C : _Ⰳx00ⲻ1F
         {
-            public _1C(Inners._1 _1_1, Inners._C _C_1)
+            public _1C(Foo._1 _1_1, Foo._C _C_1)
             {
                 this._1_1 = _1_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4014,14 +4014,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1D : _Ⰳx00ⲻ1F
         {
-            public _1D(Inners._1 _1_1, Inners._D _D_1)
+            public _1D(Foo._1 _1_1, Foo._D _D_1)
             {
                 this._1_1 = _1_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4031,14 +4031,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1E : _Ⰳx00ⲻ1F
         {
-            public _1E(Inners._1 _1_1, Inners._E _E_1)
+            public _1E(Foo._1 _1_1, Foo._E _E_1)
             {
                 this._1_1 = _1_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4048,14 +4048,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1F : _Ⰳx00ⲻ1F
         {
-            public _1F(Inners._1 _1_1, Inners._F _F_1)
+            public _1F(Foo._1 _1_1, Foo._F _F_1)
             {
                 this._1_1 = _1_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4066,14 +4066,14 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _Ⰳx7F
     {
-        public _Ⰳx7F(Inners._7 _7_1, Inners._F _F_1)
+        public _Ⰳx7F(Foo._7 _7_1, Foo._F _F_1)
         {
             this._7_1 = _7_1;
             this._F_1 = _F_1;
         }
         
-        public Inners._7 _7_1 { get; }
-        public Inners._F _F_1 { get; }
+        public Foo._7 _7_1 { get; }
+        public Foo._F _F_1 { get; }
     }
     
     public abstract class _Ⰳx30ⲻ39
@@ -4105,14 +4105,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _30 : _Ⰳx30ⲻ39
         {
-            public _30(Inners._3 _3_1, Inners._0 _0_1)
+            public _30(Foo._3 _3_1, Foo._0 _0_1)
             {
                 this._3_1 = _3_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4122,14 +4122,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _31 : _Ⰳx30ⲻ39
         {
-            public _31(Inners._3 _3_1, Inners._1 _1_1)
+            public _31(Foo._3 _3_1, Foo._1 _1_1)
             {
                 this._3_1 = _3_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4139,14 +4139,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _32 : _Ⰳx30ⲻ39
         {
-            public _32(Inners._3 _3_1, Inners._2 _2_1)
+            public _32(Foo._3 _3_1, Foo._2 _2_1)
             {
                 this._3_1 = _3_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4156,14 +4156,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _33 : _Ⰳx30ⲻ39
         {
-            public _33(Inners._3 _3_1, Inners._3 _3_2)
+            public _33(Foo._3 _3_1, Foo._3 _3_2)
             {
                 this._3_1 = _3_1;
                 this._3_2 = _3_2;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._3 _3_2 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._3 _3_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4173,14 +4173,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _34 : _Ⰳx30ⲻ39
         {
-            public _34(Inners._3 _3_1, Inners._4 _4_1)
+            public _34(Foo._3 _3_1, Foo._4 _4_1)
             {
                 this._3_1 = _3_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4190,14 +4190,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _35 : _Ⰳx30ⲻ39
         {
-            public _35(Inners._3 _3_1, Inners._5 _5_1)
+            public _35(Foo._3 _3_1, Foo._5 _5_1)
             {
                 this._3_1 = _3_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4207,14 +4207,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _36 : _Ⰳx30ⲻ39
         {
-            public _36(Inners._3 _3_1, Inners._6 _6_1)
+            public _36(Foo._3 _3_1, Foo._6 _6_1)
             {
                 this._3_1 = _3_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4224,14 +4224,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _37 : _Ⰳx30ⲻ39
         {
-            public _37(Inners._3 _3_1, Inners._7 _7_1)
+            public _37(Foo._3 _3_1, Foo._7 _7_1)
             {
                 this._3_1 = _3_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4241,14 +4241,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _38 : _Ⰳx30ⲻ39
         {
-            public _38(Inners._3 _3_1, Inners._8 _8_1)
+            public _38(Foo._3 _3_1, Foo._8 _8_1)
             {
                 this._3_1 = _3_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4258,14 +4258,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _39 : _Ⰳx30ⲻ39
         {
-            public _39(Inners._3 _3_1, Inners._9 _9_1)
+            public _39(Foo._3 _3_1, Foo._9 _9_1)
             {
                 this._3_1 = _3_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4276,14 +4276,14 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _Ⰳx22
     {
-        public _Ⰳx22(Inners._2 _2_1, Inners._2 _2_2)
+        public _Ⰳx22(Foo._2 _2_1, Foo._2 _2_2)
         {
             this._2_1 = _2_1;
             this._2_2 = _2_2;
         }
         
-        public Inners._2 _2_1 { get; }
-        public Inners._2 _2_2 { get; }
+        public Foo._2 _2_1 { get; }
+        public Foo._2 _2_2 { get; }
     }
     
     public sealed class _x41
@@ -4297,12 +4297,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx41ʺ
     {
-        public _ʺx41ʺ(Inners._x41 _x41_1)
+        public _ʺx41ʺ(Foo._x41 _x41_1)
         {
             this._x41_1 = _x41_1;
         }
         
-        public Inners._x41 _x41_1 { get; }
+        public Foo._x41 _x41_1 { get; }
     }
     
     public sealed class _x42
@@ -4316,12 +4316,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx42ʺ
     {
-        public _ʺx42ʺ(Inners._x42 _x42_1)
+        public _ʺx42ʺ(Foo._x42 _x42_1)
         {
             this._x42_1 = _x42_1;
         }
         
-        public Inners._x42 _x42_1 { get; }
+        public Foo._x42 _x42_1 { get; }
     }
     
     public sealed class _x43
@@ -4335,12 +4335,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx43ʺ
     {
-        public _ʺx43ʺ(Inners._x43 _x43_1)
+        public _ʺx43ʺ(Foo._x43 _x43_1)
         {
             this._x43_1 = _x43_1;
         }
         
-        public Inners._x43 _x43_1 { get; }
+        public Foo._x43 _x43_1 { get; }
     }
     
     public sealed class _x44
@@ -4354,12 +4354,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx44ʺ
     {
-        public _ʺx44ʺ(Inners._x44 _x44_1)
+        public _ʺx44ʺ(Foo._x44 _x44_1)
         {
             this._x44_1 = _x44_1;
         }
         
-        public Inners._x44 _x44_1 { get; }
+        public Foo._x44 _x44_1 { get; }
     }
     
     public sealed class _x45
@@ -4373,12 +4373,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx45ʺ
     {
-        public _ʺx45ʺ(Inners._x45 _x45_1)
+        public _ʺx45ʺ(Foo._x45 _x45_1)
         {
             this._x45_1 = _x45_1;
         }
         
-        public Inners._x45 _x45_1 { get; }
+        public Foo._x45 _x45_1 { get; }
     }
     
     public sealed class _x46
@@ -4392,36 +4392,36 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx46ʺ
     {
-        public _ʺx46ʺ(Inners._x46 _x46_1)
+        public _ʺx46ʺ(Foo._x46 _x46_1)
         {
             this._x46_1 = _x46_1;
         }
         
-        public Inners._x46 _x46_1 { get; }
+        public Foo._x46 _x46_1 { get; }
     }
     
     public sealed class _Ⰳx09
     {
-        public _Ⰳx09(Inners._0 _0_1, Inners._9 _9_1)
+        public _Ⰳx09(Foo._0 _0_1, Foo._9 _9_1)
         {
             this._0_1 = _0_1;
             this._9_1 = _9_1;
         }
         
-        public Inners._0 _0_1 { get; }
-        public Inners._9 _9_1 { get; }
+        public Foo._0 _0_1 { get; }
+        public Foo._9 _9_1 { get; }
     }
     
     public sealed class _Ⰳx0A
     {
-        public _Ⰳx0A(Inners._0 _0_1, Inners._A _A_1)
+        public _Ⰳx0A(Foo._0 _0_1, Foo._A _A_1)
         {
             this._0_1 = _0_1;
             this._A_1 = _A_1;
         }
         
-        public Inners._0 _0_1 { get; }
-        public Inners._A _A_1 { get; }
+        public Foo._0 _0_1 { get; }
+        public Foo._A _A_1 { get; }
     }
     
     public abstract class _WSPⳆCRLF_WSP
@@ -4478,12 +4478,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ⲤWSPⳆCRLF_WSPↃ
     {
-        public _ⲤWSPⳆCRLF_WSPↃ(Inners._WSPⳆCRLF_WSP _WSPⳆCRLF_WSP_1)
+        public _ⲤWSPⳆCRLF_WSPↃ(Foo._WSPⳆCRLF_WSP _WSPⳆCRLF_WSP_1)
         {
             this._WSPⳆCRLF_WSP_1 = _WSPⳆCRLF_WSP_1;
         }
         
-        public Inners._WSPⳆCRLF_WSP _WSPⳆCRLF_WSP_1 { get; }
+        public Foo._WSPⳆCRLF_WSP _WSPⳆCRLF_WSP_1 { get; }
     }
     
     public abstract class _Ⰳx00ⲻFF
@@ -4761,14 +4761,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _00 : _Ⰳx00ⲻFF
         {
-            public _00(Inners._0 _0_1, Inners._0 _0_2)
+            public _00(Foo._0 _0_1, Foo._0 _0_2)
             {
                 this._0_1 = _0_1;
                 this._0_2 = _0_2;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._0 _0_2 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._0 _0_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4778,14 +4778,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _01 : _Ⰳx00ⲻFF
         {
-            public _01(Inners._0 _0_1, Inners._1 _1_1)
+            public _01(Foo._0 _0_1, Foo._1 _1_1)
             {
                 this._0_1 = _0_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4795,14 +4795,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _02 : _Ⰳx00ⲻFF
         {
-            public _02(Inners._0 _0_1, Inners._2 _2_1)
+            public _02(Foo._0 _0_1, Foo._2 _2_1)
             {
                 this._0_1 = _0_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4812,14 +4812,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _03 : _Ⰳx00ⲻFF
         {
-            public _03(Inners._0 _0_1, Inners._3 _3_1)
+            public _03(Foo._0 _0_1, Foo._3 _3_1)
             {
                 this._0_1 = _0_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4829,14 +4829,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _04 : _Ⰳx00ⲻFF
         {
-            public _04(Inners._0 _0_1, Inners._4 _4_1)
+            public _04(Foo._0 _0_1, Foo._4 _4_1)
             {
                 this._0_1 = _0_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4846,14 +4846,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _05 : _Ⰳx00ⲻFF
         {
-            public _05(Inners._0 _0_1, Inners._5 _5_1)
+            public _05(Foo._0 _0_1, Foo._5 _5_1)
             {
                 this._0_1 = _0_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4863,14 +4863,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _06 : _Ⰳx00ⲻFF
         {
-            public _06(Inners._0 _0_1, Inners._6 _6_1)
+            public _06(Foo._0 _0_1, Foo._6 _6_1)
             {
                 this._0_1 = _0_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4880,14 +4880,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _07 : _Ⰳx00ⲻFF
         {
-            public _07(Inners._0 _0_1, Inners._7 _7_1)
+            public _07(Foo._0 _0_1, Foo._7 _7_1)
             {
                 this._0_1 = _0_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4897,14 +4897,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _08 : _Ⰳx00ⲻFF
         {
-            public _08(Inners._0 _0_1, Inners._8 _8_1)
+            public _08(Foo._0 _0_1, Foo._8 _8_1)
             {
                 this._0_1 = _0_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4914,14 +4914,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _09 : _Ⰳx00ⲻFF
         {
-            public _09(Inners._0 _0_1, Inners._9 _9_1)
+            public _09(Foo._0 _0_1, Foo._9 _9_1)
             {
                 this._0_1 = _0_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4931,14 +4931,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0A : _Ⰳx00ⲻFF
         {
-            public _0A(Inners._0 _0_1, Inners._A _A_1)
+            public _0A(Foo._0 _0_1, Foo._A _A_1)
             {
                 this._0_1 = _0_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4948,14 +4948,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0B : _Ⰳx00ⲻFF
         {
-            public _0B(Inners._0 _0_1, Inners._B _B_1)
+            public _0B(Foo._0 _0_1, Foo._B _B_1)
             {
                 this._0_1 = _0_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4965,14 +4965,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0C : _Ⰳx00ⲻFF
         {
-            public _0C(Inners._0 _0_1, Inners._C _C_1)
+            public _0C(Foo._0 _0_1, Foo._C _C_1)
             {
                 this._0_1 = _0_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4982,14 +4982,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0D : _Ⰳx00ⲻFF
         {
-            public _0D(Inners._0 _0_1, Inners._D _D_1)
+            public _0D(Foo._0 _0_1, Foo._D _D_1)
             {
                 this._0_1 = _0_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -4999,14 +4999,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0E : _Ⰳx00ⲻFF
         {
-            public _0E(Inners._0 _0_1, Inners._E _E_1)
+            public _0E(Foo._0 _0_1, Foo._E _E_1)
             {
                 this._0_1 = _0_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5016,14 +5016,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _0F : _Ⰳx00ⲻFF
         {
-            public _0F(Inners._0 _0_1, Inners._F _F_1)
+            public _0F(Foo._0 _0_1, Foo._F _F_1)
             {
                 this._0_1 = _0_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._0 _0_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._0 _0_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5033,14 +5033,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _10 : _Ⰳx00ⲻFF
         {
-            public _10(Inners._1 _1_1, Inners._0 _0_1)
+            public _10(Foo._1 _1_1, Foo._0 _0_1)
             {
                 this._1_1 = _1_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5050,14 +5050,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _11 : _Ⰳx00ⲻFF
         {
-            public _11(Inners._1 _1_1, Inners._1 _1_2)
+            public _11(Foo._1 _1_1, Foo._1 _1_2)
             {
                 this._1_1 = _1_1;
                 this._1_2 = _1_2;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._1 _1_2 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._1 _1_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5067,14 +5067,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _12 : _Ⰳx00ⲻFF
         {
-            public _12(Inners._1 _1_1, Inners._2 _2_1)
+            public _12(Foo._1 _1_1, Foo._2 _2_1)
             {
                 this._1_1 = _1_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5084,14 +5084,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _13 : _Ⰳx00ⲻFF
         {
-            public _13(Inners._1 _1_1, Inners._3 _3_1)
+            public _13(Foo._1 _1_1, Foo._3 _3_1)
             {
                 this._1_1 = _1_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5101,14 +5101,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _14 : _Ⰳx00ⲻFF
         {
-            public _14(Inners._1 _1_1, Inners._4 _4_1)
+            public _14(Foo._1 _1_1, Foo._4 _4_1)
             {
                 this._1_1 = _1_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5118,14 +5118,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _15 : _Ⰳx00ⲻFF
         {
-            public _15(Inners._1 _1_1, Inners._5 _5_1)
+            public _15(Foo._1 _1_1, Foo._5 _5_1)
             {
                 this._1_1 = _1_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5135,14 +5135,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _16 : _Ⰳx00ⲻFF
         {
-            public _16(Inners._1 _1_1, Inners._6 _6_1)
+            public _16(Foo._1 _1_1, Foo._6 _6_1)
             {
                 this._1_1 = _1_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5152,14 +5152,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _17 : _Ⰳx00ⲻFF
         {
-            public _17(Inners._1 _1_1, Inners._7 _7_1)
+            public _17(Foo._1 _1_1, Foo._7 _7_1)
             {
                 this._1_1 = _1_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5169,14 +5169,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _18 : _Ⰳx00ⲻFF
         {
-            public _18(Inners._1 _1_1, Inners._8 _8_1)
+            public _18(Foo._1 _1_1, Foo._8 _8_1)
             {
                 this._1_1 = _1_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5186,14 +5186,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _19 : _Ⰳx00ⲻFF
         {
-            public _19(Inners._1 _1_1, Inners._9 _9_1)
+            public _19(Foo._1 _1_1, Foo._9 _9_1)
             {
                 this._1_1 = _1_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5203,14 +5203,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1A : _Ⰳx00ⲻFF
         {
-            public _1A(Inners._1 _1_1, Inners._A _A_1)
+            public _1A(Foo._1 _1_1, Foo._A _A_1)
             {
                 this._1_1 = _1_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5220,14 +5220,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1B : _Ⰳx00ⲻFF
         {
-            public _1B(Inners._1 _1_1, Inners._B _B_1)
+            public _1B(Foo._1 _1_1, Foo._B _B_1)
             {
                 this._1_1 = _1_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5237,14 +5237,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1C : _Ⰳx00ⲻFF
         {
-            public _1C(Inners._1 _1_1, Inners._C _C_1)
+            public _1C(Foo._1 _1_1, Foo._C _C_1)
             {
                 this._1_1 = _1_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5254,14 +5254,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1D : _Ⰳx00ⲻFF
         {
-            public _1D(Inners._1 _1_1, Inners._D _D_1)
+            public _1D(Foo._1 _1_1, Foo._D _D_1)
             {
                 this._1_1 = _1_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5271,14 +5271,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1E : _Ⰳx00ⲻFF
         {
-            public _1E(Inners._1 _1_1, Inners._E _E_1)
+            public _1E(Foo._1 _1_1, Foo._E _E_1)
             {
                 this._1_1 = _1_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5288,14 +5288,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1F : _Ⰳx00ⲻFF
         {
-            public _1F(Inners._1 _1_1, Inners._F _F_1)
+            public _1F(Foo._1 _1_1, Foo._F _F_1)
             {
                 this._1_1 = _1_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._1 _1_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._1 _1_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5305,14 +5305,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _20 : _Ⰳx00ⲻFF
         {
-            public _20(Inners._2 _2_1, Inners._0 _0_1)
+            public _20(Foo._2 _2_1, Foo._0 _0_1)
             {
                 this._2_1 = _2_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5322,14 +5322,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _21 : _Ⰳx00ⲻFF
         {
-            public _21(Inners._2 _2_1, Inners._1 _1_1)
+            public _21(Foo._2 _2_1, Foo._1 _1_1)
             {
                 this._2_1 = _2_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5339,14 +5339,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _22 : _Ⰳx00ⲻFF
         {
-            public _22(Inners._2 _2_1, Inners._2 _2_2)
+            public _22(Foo._2 _2_1, Foo._2 _2_2)
             {
                 this._2_1 = _2_1;
                 this._2_2 = _2_2;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._2 _2_2 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._2 _2_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5356,14 +5356,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _23 : _Ⰳx00ⲻFF
         {
-            public _23(Inners._2 _2_1, Inners._3 _3_1)
+            public _23(Foo._2 _2_1, Foo._3 _3_1)
             {
                 this._2_1 = _2_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5373,14 +5373,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _24 : _Ⰳx00ⲻFF
         {
-            public _24(Inners._2 _2_1, Inners._4 _4_1)
+            public _24(Foo._2 _2_1, Foo._4 _4_1)
             {
                 this._2_1 = _2_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5390,14 +5390,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _25 : _Ⰳx00ⲻFF
         {
-            public _25(Inners._2 _2_1, Inners._5 _5_1)
+            public _25(Foo._2 _2_1, Foo._5 _5_1)
             {
                 this._2_1 = _2_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5407,14 +5407,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _26 : _Ⰳx00ⲻFF
         {
-            public _26(Inners._2 _2_1, Inners._6 _6_1)
+            public _26(Foo._2 _2_1, Foo._6 _6_1)
             {
                 this._2_1 = _2_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5424,14 +5424,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _27 : _Ⰳx00ⲻFF
         {
-            public _27(Inners._2 _2_1, Inners._7 _7_1)
+            public _27(Foo._2 _2_1, Foo._7 _7_1)
             {
                 this._2_1 = _2_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5441,14 +5441,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _28 : _Ⰳx00ⲻFF
         {
-            public _28(Inners._2 _2_1, Inners._8 _8_1)
+            public _28(Foo._2 _2_1, Foo._8 _8_1)
             {
                 this._2_1 = _2_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5458,14 +5458,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _29 : _Ⰳx00ⲻFF
         {
-            public _29(Inners._2 _2_1, Inners._9 _9_1)
+            public _29(Foo._2 _2_1, Foo._9 _9_1)
             {
                 this._2_1 = _2_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5475,14 +5475,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2A : _Ⰳx00ⲻFF
         {
-            public _2A(Inners._2 _2_1, Inners._A _A_1)
+            public _2A(Foo._2 _2_1, Foo._A _A_1)
             {
                 this._2_1 = _2_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5492,14 +5492,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2B : _Ⰳx00ⲻFF
         {
-            public _2B(Inners._2 _2_1, Inners._B _B_1)
+            public _2B(Foo._2 _2_1, Foo._B _B_1)
             {
                 this._2_1 = _2_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5509,14 +5509,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2C : _Ⰳx00ⲻFF
         {
-            public _2C(Inners._2 _2_1, Inners._C _C_1)
+            public _2C(Foo._2 _2_1, Foo._C _C_1)
             {
                 this._2_1 = _2_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5526,14 +5526,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2D : _Ⰳx00ⲻFF
         {
-            public _2D(Inners._2 _2_1, Inners._D _D_1)
+            public _2D(Foo._2 _2_1, Foo._D _D_1)
             {
                 this._2_1 = _2_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5543,14 +5543,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2E : _Ⰳx00ⲻFF
         {
-            public _2E(Inners._2 _2_1, Inners._E _E_1)
+            public _2E(Foo._2 _2_1, Foo._E _E_1)
             {
                 this._2_1 = _2_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5560,14 +5560,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2F : _Ⰳx00ⲻFF
         {
-            public _2F(Inners._2 _2_1, Inners._F _F_1)
+            public _2F(Foo._2 _2_1, Foo._F _F_1)
             {
                 this._2_1 = _2_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5577,14 +5577,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _30 : _Ⰳx00ⲻFF
         {
-            public _30(Inners._3 _3_1, Inners._0 _0_1)
+            public _30(Foo._3 _3_1, Foo._0 _0_1)
             {
                 this._3_1 = _3_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5594,14 +5594,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _31 : _Ⰳx00ⲻFF
         {
-            public _31(Inners._3 _3_1, Inners._1 _1_1)
+            public _31(Foo._3 _3_1, Foo._1 _1_1)
             {
                 this._3_1 = _3_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5611,14 +5611,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _32 : _Ⰳx00ⲻFF
         {
-            public _32(Inners._3 _3_1, Inners._2 _2_1)
+            public _32(Foo._3 _3_1, Foo._2 _2_1)
             {
                 this._3_1 = _3_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5628,14 +5628,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _33 : _Ⰳx00ⲻFF
         {
-            public _33(Inners._3 _3_1, Inners._3 _3_2)
+            public _33(Foo._3 _3_1, Foo._3 _3_2)
             {
                 this._3_1 = _3_1;
                 this._3_2 = _3_2;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._3 _3_2 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._3 _3_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5645,14 +5645,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _34 : _Ⰳx00ⲻFF
         {
-            public _34(Inners._3 _3_1, Inners._4 _4_1)
+            public _34(Foo._3 _3_1, Foo._4 _4_1)
             {
                 this._3_1 = _3_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5662,14 +5662,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _35 : _Ⰳx00ⲻFF
         {
-            public _35(Inners._3 _3_1, Inners._5 _5_1)
+            public _35(Foo._3 _3_1, Foo._5 _5_1)
             {
                 this._3_1 = _3_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5679,14 +5679,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _36 : _Ⰳx00ⲻFF
         {
-            public _36(Inners._3 _3_1, Inners._6 _6_1)
+            public _36(Foo._3 _3_1, Foo._6 _6_1)
             {
                 this._3_1 = _3_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5696,14 +5696,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _37 : _Ⰳx00ⲻFF
         {
-            public _37(Inners._3 _3_1, Inners._7 _7_1)
+            public _37(Foo._3 _3_1, Foo._7 _7_1)
             {
                 this._3_1 = _3_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5713,14 +5713,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _38 : _Ⰳx00ⲻFF
         {
-            public _38(Inners._3 _3_1, Inners._8 _8_1)
+            public _38(Foo._3 _3_1, Foo._8 _8_1)
             {
                 this._3_1 = _3_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5730,14 +5730,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _39 : _Ⰳx00ⲻFF
         {
-            public _39(Inners._3 _3_1, Inners._9 _9_1)
+            public _39(Foo._3 _3_1, Foo._9 _9_1)
             {
                 this._3_1 = _3_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5747,14 +5747,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3A : _Ⰳx00ⲻFF
         {
-            public _3A(Inners._3 _3_1, Inners._A _A_1)
+            public _3A(Foo._3 _3_1, Foo._A _A_1)
             {
                 this._3_1 = _3_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5764,14 +5764,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3B : _Ⰳx00ⲻFF
         {
-            public _3B(Inners._3 _3_1, Inners._B _B_1)
+            public _3B(Foo._3 _3_1, Foo._B _B_1)
             {
                 this._3_1 = _3_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5781,14 +5781,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3C : _Ⰳx00ⲻFF
         {
-            public _3C(Inners._3 _3_1, Inners._C _C_1)
+            public _3C(Foo._3 _3_1, Foo._C _C_1)
             {
                 this._3_1 = _3_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5798,14 +5798,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3D : _Ⰳx00ⲻFF
         {
-            public _3D(Inners._3 _3_1, Inners._D _D_1)
+            public _3D(Foo._3 _3_1, Foo._D _D_1)
             {
                 this._3_1 = _3_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5815,14 +5815,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3E : _Ⰳx00ⲻFF
         {
-            public _3E(Inners._3 _3_1, Inners._E _E_1)
+            public _3E(Foo._3 _3_1, Foo._E _E_1)
             {
                 this._3_1 = _3_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5832,14 +5832,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3F : _Ⰳx00ⲻFF
         {
-            public _3F(Inners._3 _3_1, Inners._F _F_1)
+            public _3F(Foo._3 _3_1, Foo._F _F_1)
             {
                 this._3_1 = _3_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5849,14 +5849,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _40 : _Ⰳx00ⲻFF
         {
-            public _40(Inners._4 _4_1, Inners._0 _0_1)
+            public _40(Foo._4 _4_1, Foo._0 _0_1)
             {
                 this._4_1 = _4_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5866,14 +5866,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _41 : _Ⰳx00ⲻFF
         {
-            public _41(Inners._4 _4_1, Inners._1 _1_1)
+            public _41(Foo._4 _4_1, Foo._1 _1_1)
             {
                 this._4_1 = _4_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5883,14 +5883,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _42 : _Ⰳx00ⲻFF
         {
-            public _42(Inners._4 _4_1, Inners._2 _2_1)
+            public _42(Foo._4 _4_1, Foo._2 _2_1)
             {
                 this._4_1 = _4_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5900,14 +5900,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _43 : _Ⰳx00ⲻFF
         {
-            public _43(Inners._4 _4_1, Inners._3 _3_1)
+            public _43(Foo._4 _4_1, Foo._3 _3_1)
             {
                 this._4_1 = _4_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5917,14 +5917,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _44 : _Ⰳx00ⲻFF
         {
-            public _44(Inners._4 _4_1, Inners._4 _4_2)
+            public _44(Foo._4 _4_1, Foo._4 _4_2)
             {
                 this._4_1 = _4_1;
                 this._4_2 = _4_2;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._4 _4_2 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._4 _4_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5934,14 +5934,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _45 : _Ⰳx00ⲻFF
         {
-            public _45(Inners._4 _4_1, Inners._5 _5_1)
+            public _45(Foo._4 _4_1, Foo._5 _5_1)
             {
                 this._4_1 = _4_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5951,14 +5951,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _46 : _Ⰳx00ⲻFF
         {
-            public _46(Inners._4 _4_1, Inners._6 _6_1)
+            public _46(Foo._4 _4_1, Foo._6 _6_1)
             {
                 this._4_1 = _4_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5968,14 +5968,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _47 : _Ⰳx00ⲻFF
         {
-            public _47(Inners._4 _4_1, Inners._7 _7_1)
+            public _47(Foo._4 _4_1, Foo._7 _7_1)
             {
                 this._4_1 = _4_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -5985,14 +5985,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _48 : _Ⰳx00ⲻFF
         {
-            public _48(Inners._4 _4_1, Inners._8 _8_1)
+            public _48(Foo._4 _4_1, Foo._8 _8_1)
             {
                 this._4_1 = _4_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6002,14 +6002,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _49 : _Ⰳx00ⲻFF
         {
-            public _49(Inners._4 _4_1, Inners._9 _9_1)
+            public _49(Foo._4 _4_1, Foo._9 _9_1)
             {
                 this._4_1 = _4_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6019,14 +6019,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4A : _Ⰳx00ⲻFF
         {
-            public _4A(Inners._4 _4_1, Inners._A _A_1)
+            public _4A(Foo._4 _4_1, Foo._A _A_1)
             {
                 this._4_1 = _4_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6036,14 +6036,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4B : _Ⰳx00ⲻFF
         {
-            public _4B(Inners._4 _4_1, Inners._B _B_1)
+            public _4B(Foo._4 _4_1, Foo._B _B_1)
             {
                 this._4_1 = _4_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6053,14 +6053,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4C : _Ⰳx00ⲻFF
         {
-            public _4C(Inners._4 _4_1, Inners._C _C_1)
+            public _4C(Foo._4 _4_1, Foo._C _C_1)
             {
                 this._4_1 = _4_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6070,14 +6070,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4D : _Ⰳx00ⲻFF
         {
-            public _4D(Inners._4 _4_1, Inners._D _D_1)
+            public _4D(Foo._4 _4_1, Foo._D _D_1)
             {
                 this._4_1 = _4_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6087,14 +6087,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4E : _Ⰳx00ⲻFF
         {
-            public _4E(Inners._4 _4_1, Inners._E _E_1)
+            public _4E(Foo._4 _4_1, Foo._E _E_1)
             {
                 this._4_1 = _4_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6104,14 +6104,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4F : _Ⰳx00ⲻFF
         {
-            public _4F(Inners._4 _4_1, Inners._F _F_1)
+            public _4F(Foo._4 _4_1, Foo._F _F_1)
             {
                 this._4_1 = _4_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6121,14 +6121,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _50 : _Ⰳx00ⲻFF
         {
-            public _50(Inners._5 _5_1, Inners._0 _0_1)
+            public _50(Foo._5 _5_1, Foo._0 _0_1)
             {
                 this._5_1 = _5_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6138,14 +6138,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _51 : _Ⰳx00ⲻFF
         {
-            public _51(Inners._5 _5_1, Inners._1 _1_1)
+            public _51(Foo._5 _5_1, Foo._1 _1_1)
             {
                 this._5_1 = _5_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6155,14 +6155,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _52 : _Ⰳx00ⲻFF
         {
-            public _52(Inners._5 _5_1, Inners._2 _2_1)
+            public _52(Foo._5 _5_1, Foo._2 _2_1)
             {
                 this._5_1 = _5_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6172,14 +6172,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _53 : _Ⰳx00ⲻFF
         {
-            public _53(Inners._5 _5_1, Inners._3 _3_1)
+            public _53(Foo._5 _5_1, Foo._3 _3_1)
             {
                 this._5_1 = _5_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6189,14 +6189,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _54 : _Ⰳx00ⲻFF
         {
-            public _54(Inners._5 _5_1, Inners._4 _4_1)
+            public _54(Foo._5 _5_1, Foo._4 _4_1)
             {
                 this._5_1 = _5_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6206,14 +6206,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _55 : _Ⰳx00ⲻFF
         {
-            public _55(Inners._5 _5_1, Inners._5 _5_2)
+            public _55(Foo._5 _5_1, Foo._5 _5_2)
             {
                 this._5_1 = _5_1;
                 this._5_2 = _5_2;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._5 _5_2 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._5 _5_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6223,14 +6223,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _56 : _Ⰳx00ⲻFF
         {
-            public _56(Inners._5 _5_1, Inners._6 _6_1)
+            public _56(Foo._5 _5_1, Foo._6 _6_1)
             {
                 this._5_1 = _5_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6240,14 +6240,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _57 : _Ⰳx00ⲻFF
         {
-            public _57(Inners._5 _5_1, Inners._7 _7_1)
+            public _57(Foo._5 _5_1, Foo._7 _7_1)
             {
                 this._5_1 = _5_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6257,14 +6257,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _58 : _Ⰳx00ⲻFF
         {
-            public _58(Inners._5 _5_1, Inners._8 _8_1)
+            public _58(Foo._5 _5_1, Foo._8 _8_1)
             {
                 this._5_1 = _5_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6274,14 +6274,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _59 : _Ⰳx00ⲻFF
         {
-            public _59(Inners._5 _5_1, Inners._9 _9_1)
+            public _59(Foo._5 _5_1, Foo._9 _9_1)
             {
                 this._5_1 = _5_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6291,14 +6291,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5A : _Ⰳx00ⲻFF
         {
-            public _5A(Inners._5 _5_1, Inners._A _A_1)
+            public _5A(Foo._5 _5_1, Foo._A _A_1)
             {
                 this._5_1 = _5_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6308,14 +6308,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5B : _Ⰳx00ⲻFF
         {
-            public _5B(Inners._5 _5_1, Inners._B _B_1)
+            public _5B(Foo._5 _5_1, Foo._B _B_1)
             {
                 this._5_1 = _5_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6325,14 +6325,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5C : _Ⰳx00ⲻFF
         {
-            public _5C(Inners._5 _5_1, Inners._C _C_1)
+            public _5C(Foo._5 _5_1, Foo._C _C_1)
             {
                 this._5_1 = _5_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6342,14 +6342,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5D : _Ⰳx00ⲻFF
         {
-            public _5D(Inners._5 _5_1, Inners._D _D_1)
+            public _5D(Foo._5 _5_1, Foo._D _D_1)
             {
                 this._5_1 = _5_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6359,14 +6359,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5E : _Ⰳx00ⲻFF
         {
-            public _5E(Inners._5 _5_1, Inners._E _E_1)
+            public _5E(Foo._5 _5_1, Foo._E _E_1)
             {
                 this._5_1 = _5_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6376,14 +6376,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5F : _Ⰳx00ⲻFF
         {
-            public _5F(Inners._5 _5_1, Inners._F _F_1)
+            public _5F(Foo._5 _5_1, Foo._F _F_1)
             {
                 this._5_1 = _5_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6393,14 +6393,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _60 : _Ⰳx00ⲻFF
         {
-            public _60(Inners._6 _6_1, Inners._0 _0_1)
+            public _60(Foo._6 _6_1, Foo._0 _0_1)
             {
                 this._6_1 = _6_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6410,14 +6410,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _61 : _Ⰳx00ⲻFF
         {
-            public _61(Inners._6 _6_1, Inners._1 _1_1)
+            public _61(Foo._6 _6_1, Foo._1 _1_1)
             {
                 this._6_1 = _6_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6427,14 +6427,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _62 : _Ⰳx00ⲻFF
         {
-            public _62(Inners._6 _6_1, Inners._2 _2_1)
+            public _62(Foo._6 _6_1, Foo._2 _2_1)
             {
                 this._6_1 = _6_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6444,14 +6444,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _63 : _Ⰳx00ⲻFF
         {
-            public _63(Inners._6 _6_1, Inners._3 _3_1)
+            public _63(Foo._6 _6_1, Foo._3 _3_1)
             {
                 this._6_1 = _6_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6461,14 +6461,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _64 : _Ⰳx00ⲻFF
         {
-            public _64(Inners._6 _6_1, Inners._4 _4_1)
+            public _64(Foo._6 _6_1, Foo._4 _4_1)
             {
                 this._6_1 = _6_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6478,14 +6478,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _65 : _Ⰳx00ⲻFF
         {
-            public _65(Inners._6 _6_1, Inners._5 _5_1)
+            public _65(Foo._6 _6_1, Foo._5 _5_1)
             {
                 this._6_1 = _6_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6495,14 +6495,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _66 : _Ⰳx00ⲻFF
         {
-            public _66(Inners._6 _6_1, Inners._6 _6_2)
+            public _66(Foo._6 _6_1, Foo._6 _6_2)
             {
                 this._6_1 = _6_1;
                 this._6_2 = _6_2;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._6 _6_2 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._6 _6_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6512,14 +6512,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _67 : _Ⰳx00ⲻFF
         {
-            public _67(Inners._6 _6_1, Inners._7 _7_1)
+            public _67(Foo._6 _6_1, Foo._7 _7_1)
             {
                 this._6_1 = _6_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6529,14 +6529,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _68 : _Ⰳx00ⲻFF
         {
-            public _68(Inners._6 _6_1, Inners._8 _8_1)
+            public _68(Foo._6 _6_1, Foo._8 _8_1)
             {
                 this._6_1 = _6_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6546,14 +6546,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _69 : _Ⰳx00ⲻFF
         {
-            public _69(Inners._6 _6_1, Inners._9 _9_1)
+            public _69(Foo._6 _6_1, Foo._9 _9_1)
             {
                 this._6_1 = _6_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6563,14 +6563,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6A : _Ⰳx00ⲻFF
         {
-            public _6A(Inners._6 _6_1, Inners._A _A_1)
+            public _6A(Foo._6 _6_1, Foo._A _A_1)
             {
                 this._6_1 = _6_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6580,14 +6580,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6B : _Ⰳx00ⲻFF
         {
-            public _6B(Inners._6 _6_1, Inners._B _B_1)
+            public _6B(Foo._6 _6_1, Foo._B _B_1)
             {
                 this._6_1 = _6_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6597,14 +6597,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6C : _Ⰳx00ⲻFF
         {
-            public _6C(Inners._6 _6_1, Inners._C _C_1)
+            public _6C(Foo._6 _6_1, Foo._C _C_1)
             {
                 this._6_1 = _6_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6614,14 +6614,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6D : _Ⰳx00ⲻFF
         {
-            public _6D(Inners._6 _6_1, Inners._D _D_1)
+            public _6D(Foo._6 _6_1, Foo._D _D_1)
             {
                 this._6_1 = _6_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6631,14 +6631,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6E : _Ⰳx00ⲻFF
         {
-            public _6E(Inners._6 _6_1, Inners._E _E_1)
+            public _6E(Foo._6 _6_1, Foo._E _E_1)
             {
                 this._6_1 = _6_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6648,14 +6648,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6F : _Ⰳx00ⲻFF
         {
-            public _6F(Inners._6 _6_1, Inners._F _F_1)
+            public _6F(Foo._6 _6_1, Foo._F _F_1)
             {
                 this._6_1 = _6_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6665,14 +6665,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _70 : _Ⰳx00ⲻFF
         {
-            public _70(Inners._7 _7_1, Inners._0 _0_1)
+            public _70(Foo._7 _7_1, Foo._0 _0_1)
             {
                 this._7_1 = _7_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6682,14 +6682,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _71 : _Ⰳx00ⲻFF
         {
-            public _71(Inners._7 _7_1, Inners._1 _1_1)
+            public _71(Foo._7 _7_1, Foo._1 _1_1)
             {
                 this._7_1 = _7_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6699,14 +6699,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _72 : _Ⰳx00ⲻFF
         {
-            public _72(Inners._7 _7_1, Inners._2 _2_1)
+            public _72(Foo._7 _7_1, Foo._2 _2_1)
             {
                 this._7_1 = _7_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6716,14 +6716,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _73 : _Ⰳx00ⲻFF
         {
-            public _73(Inners._7 _7_1, Inners._3 _3_1)
+            public _73(Foo._7 _7_1, Foo._3 _3_1)
             {
                 this._7_1 = _7_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6733,14 +6733,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _74 : _Ⰳx00ⲻFF
         {
-            public _74(Inners._7 _7_1, Inners._4 _4_1)
+            public _74(Foo._7 _7_1, Foo._4 _4_1)
             {
                 this._7_1 = _7_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6750,14 +6750,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _75 : _Ⰳx00ⲻFF
         {
-            public _75(Inners._7 _7_1, Inners._5 _5_1)
+            public _75(Foo._7 _7_1, Foo._5 _5_1)
             {
                 this._7_1 = _7_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6767,14 +6767,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _76 : _Ⰳx00ⲻFF
         {
-            public _76(Inners._7 _7_1, Inners._6 _6_1)
+            public _76(Foo._7 _7_1, Foo._6 _6_1)
             {
                 this._7_1 = _7_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6784,14 +6784,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _77 : _Ⰳx00ⲻFF
         {
-            public _77(Inners._7 _7_1, Inners._7 _7_2)
+            public _77(Foo._7 _7_1, Foo._7 _7_2)
             {
                 this._7_1 = _7_1;
                 this._7_2 = _7_2;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._7 _7_2 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._7 _7_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6801,14 +6801,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _78 : _Ⰳx00ⲻFF
         {
-            public _78(Inners._7 _7_1, Inners._8 _8_1)
+            public _78(Foo._7 _7_1, Foo._8 _8_1)
             {
                 this._7_1 = _7_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6818,14 +6818,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _79 : _Ⰳx00ⲻFF
         {
-            public _79(Inners._7 _7_1, Inners._9 _9_1)
+            public _79(Foo._7 _7_1, Foo._9 _9_1)
             {
                 this._7_1 = _7_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6835,14 +6835,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7A : _Ⰳx00ⲻFF
         {
-            public _7A(Inners._7 _7_1, Inners._A _A_1)
+            public _7A(Foo._7 _7_1, Foo._A _A_1)
             {
                 this._7_1 = _7_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6852,14 +6852,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7B : _Ⰳx00ⲻFF
         {
-            public _7B(Inners._7 _7_1, Inners._B _B_1)
+            public _7B(Foo._7 _7_1, Foo._B _B_1)
             {
                 this._7_1 = _7_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6869,14 +6869,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7C : _Ⰳx00ⲻFF
         {
-            public _7C(Inners._7 _7_1, Inners._C _C_1)
+            public _7C(Foo._7 _7_1, Foo._C _C_1)
             {
                 this._7_1 = _7_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6886,14 +6886,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7D : _Ⰳx00ⲻFF
         {
-            public _7D(Inners._7 _7_1, Inners._D _D_1)
+            public _7D(Foo._7 _7_1, Foo._D _D_1)
             {
                 this._7_1 = _7_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6903,14 +6903,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7E : _Ⰳx00ⲻFF
         {
-            public _7E(Inners._7 _7_1, Inners._E _E_1)
+            public _7E(Foo._7 _7_1, Foo._E _E_1)
             {
                 this._7_1 = _7_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6920,14 +6920,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7F : _Ⰳx00ⲻFF
         {
-            public _7F(Inners._7 _7_1, Inners._F _F_1)
+            public _7F(Foo._7 _7_1, Foo._F _F_1)
             {
                 this._7_1 = _7_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6937,14 +6937,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _80 : _Ⰳx00ⲻFF
         {
-            public _80(Inners._8 _8_1, Inners._0 _0_1)
+            public _80(Foo._8 _8_1, Foo._0 _0_1)
             {
                 this._8_1 = _8_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6954,14 +6954,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _81 : _Ⰳx00ⲻFF
         {
-            public _81(Inners._8 _8_1, Inners._1 _1_1)
+            public _81(Foo._8 _8_1, Foo._1 _1_1)
             {
                 this._8_1 = _8_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6971,14 +6971,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _82 : _Ⰳx00ⲻFF
         {
-            public _82(Inners._8 _8_1, Inners._2 _2_1)
+            public _82(Foo._8 _8_1, Foo._2 _2_1)
             {
                 this._8_1 = _8_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -6988,14 +6988,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _83 : _Ⰳx00ⲻFF
         {
-            public _83(Inners._8 _8_1, Inners._3 _3_1)
+            public _83(Foo._8 _8_1, Foo._3 _3_1)
             {
                 this._8_1 = _8_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7005,14 +7005,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _84 : _Ⰳx00ⲻFF
         {
-            public _84(Inners._8 _8_1, Inners._4 _4_1)
+            public _84(Foo._8 _8_1, Foo._4 _4_1)
             {
                 this._8_1 = _8_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7022,14 +7022,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _85 : _Ⰳx00ⲻFF
         {
-            public _85(Inners._8 _8_1, Inners._5 _5_1)
+            public _85(Foo._8 _8_1, Foo._5 _5_1)
             {
                 this._8_1 = _8_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7039,14 +7039,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _86 : _Ⰳx00ⲻFF
         {
-            public _86(Inners._8 _8_1, Inners._6 _6_1)
+            public _86(Foo._8 _8_1, Foo._6 _6_1)
             {
                 this._8_1 = _8_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7056,14 +7056,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _87 : _Ⰳx00ⲻFF
         {
-            public _87(Inners._8 _8_1, Inners._7 _7_1)
+            public _87(Foo._8 _8_1, Foo._7 _7_1)
             {
                 this._8_1 = _8_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7073,14 +7073,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _88 : _Ⰳx00ⲻFF
         {
-            public _88(Inners._8 _8_1, Inners._8 _8_2)
+            public _88(Foo._8 _8_1, Foo._8 _8_2)
             {
                 this._8_1 = _8_1;
                 this._8_2 = _8_2;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._8 _8_2 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._8 _8_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7090,14 +7090,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _89 : _Ⰳx00ⲻFF
         {
-            public _89(Inners._8 _8_1, Inners._9 _9_1)
+            public _89(Foo._8 _8_1, Foo._9 _9_1)
             {
                 this._8_1 = _8_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7107,14 +7107,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _8A : _Ⰳx00ⲻFF
         {
-            public _8A(Inners._8 _8_1, Inners._A _A_1)
+            public _8A(Foo._8 _8_1, Foo._A _A_1)
             {
                 this._8_1 = _8_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7124,14 +7124,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _8B : _Ⰳx00ⲻFF
         {
-            public _8B(Inners._8 _8_1, Inners._B _B_1)
+            public _8B(Foo._8 _8_1, Foo._B _B_1)
             {
                 this._8_1 = _8_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7141,14 +7141,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _8C : _Ⰳx00ⲻFF
         {
-            public _8C(Inners._8 _8_1, Inners._C _C_1)
+            public _8C(Foo._8 _8_1, Foo._C _C_1)
             {
                 this._8_1 = _8_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7158,14 +7158,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _8D : _Ⰳx00ⲻFF
         {
-            public _8D(Inners._8 _8_1, Inners._D _D_1)
+            public _8D(Foo._8 _8_1, Foo._D _D_1)
             {
                 this._8_1 = _8_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7175,14 +7175,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _8E : _Ⰳx00ⲻFF
         {
-            public _8E(Inners._8 _8_1, Inners._E _E_1)
+            public _8E(Foo._8 _8_1, Foo._E _E_1)
             {
                 this._8_1 = _8_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7192,14 +7192,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _8F : _Ⰳx00ⲻFF
         {
-            public _8F(Inners._8 _8_1, Inners._F _F_1)
+            public _8F(Foo._8 _8_1, Foo._F _F_1)
             {
                 this._8_1 = _8_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._8 _8_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._8 _8_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7209,14 +7209,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _90 : _Ⰳx00ⲻFF
         {
-            public _90(Inners._9 _9_1, Inners._0 _0_1)
+            public _90(Foo._9 _9_1, Foo._0 _0_1)
             {
                 this._9_1 = _9_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7226,14 +7226,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _91 : _Ⰳx00ⲻFF
         {
-            public _91(Inners._9 _9_1, Inners._1 _1_1)
+            public _91(Foo._9 _9_1, Foo._1 _1_1)
             {
                 this._9_1 = _9_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7243,14 +7243,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _92 : _Ⰳx00ⲻFF
         {
-            public _92(Inners._9 _9_1, Inners._2 _2_1)
+            public _92(Foo._9 _9_1, Foo._2 _2_1)
             {
                 this._9_1 = _9_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7260,14 +7260,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _93 : _Ⰳx00ⲻFF
         {
-            public _93(Inners._9 _9_1, Inners._3 _3_1)
+            public _93(Foo._9 _9_1, Foo._3 _3_1)
             {
                 this._9_1 = _9_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7277,14 +7277,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _94 : _Ⰳx00ⲻFF
         {
-            public _94(Inners._9 _9_1, Inners._4 _4_1)
+            public _94(Foo._9 _9_1, Foo._4 _4_1)
             {
                 this._9_1 = _9_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7294,14 +7294,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _95 : _Ⰳx00ⲻFF
         {
-            public _95(Inners._9 _9_1, Inners._5 _5_1)
+            public _95(Foo._9 _9_1, Foo._5 _5_1)
             {
                 this._9_1 = _9_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7311,14 +7311,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _96 : _Ⰳx00ⲻFF
         {
-            public _96(Inners._9 _9_1, Inners._6 _6_1)
+            public _96(Foo._9 _9_1, Foo._6 _6_1)
             {
                 this._9_1 = _9_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7328,14 +7328,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _97 : _Ⰳx00ⲻFF
         {
-            public _97(Inners._9 _9_1, Inners._7 _7_1)
+            public _97(Foo._9 _9_1, Foo._7 _7_1)
             {
                 this._9_1 = _9_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7345,14 +7345,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _98 : _Ⰳx00ⲻFF
         {
-            public _98(Inners._9 _9_1, Inners._8 _8_1)
+            public _98(Foo._9 _9_1, Foo._8 _8_1)
             {
                 this._9_1 = _9_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7362,14 +7362,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _99 : _Ⰳx00ⲻFF
         {
-            public _99(Inners._9 _9_1, Inners._9 _9_2)
+            public _99(Foo._9 _9_1, Foo._9 _9_2)
             {
                 this._9_1 = _9_1;
                 this._9_2 = _9_2;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._9 _9_2 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._9 _9_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7379,14 +7379,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _9A : _Ⰳx00ⲻFF
         {
-            public _9A(Inners._9 _9_1, Inners._A _A_1)
+            public _9A(Foo._9 _9_1, Foo._A _A_1)
             {
                 this._9_1 = _9_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7396,14 +7396,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _9B : _Ⰳx00ⲻFF
         {
-            public _9B(Inners._9 _9_1, Inners._B _B_1)
+            public _9B(Foo._9 _9_1, Foo._B _B_1)
             {
                 this._9_1 = _9_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7413,14 +7413,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _9C : _Ⰳx00ⲻFF
         {
-            public _9C(Inners._9 _9_1, Inners._C _C_1)
+            public _9C(Foo._9 _9_1, Foo._C _C_1)
             {
                 this._9_1 = _9_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7430,14 +7430,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _9D : _Ⰳx00ⲻFF
         {
-            public _9D(Inners._9 _9_1, Inners._D _D_1)
+            public _9D(Foo._9 _9_1, Foo._D _D_1)
             {
                 this._9_1 = _9_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7447,14 +7447,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _9E : _Ⰳx00ⲻFF
         {
-            public _9E(Inners._9 _9_1, Inners._E _E_1)
+            public _9E(Foo._9 _9_1, Foo._E _E_1)
             {
                 this._9_1 = _9_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7464,14 +7464,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _9F : _Ⰳx00ⲻFF
         {
-            public _9F(Inners._9 _9_1, Inners._F _F_1)
+            public _9F(Foo._9 _9_1, Foo._F _F_1)
             {
                 this._9_1 = _9_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._9 _9_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._9 _9_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7481,14 +7481,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _A0 : _Ⰳx00ⲻFF
         {
-            public _A0(Inners._A _A_1, Inners._0 _0_1)
+            public _A0(Foo._A _A_1, Foo._0 _0_1)
             {
                 this._A_1 = _A_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7498,14 +7498,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _A1 : _Ⰳx00ⲻFF
         {
-            public _A1(Inners._A _A_1, Inners._1 _1_1)
+            public _A1(Foo._A _A_1, Foo._1 _1_1)
             {
                 this._A_1 = _A_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7515,14 +7515,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _A2 : _Ⰳx00ⲻFF
         {
-            public _A2(Inners._A _A_1, Inners._2 _2_1)
+            public _A2(Foo._A _A_1, Foo._2 _2_1)
             {
                 this._A_1 = _A_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7532,14 +7532,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _A3 : _Ⰳx00ⲻFF
         {
-            public _A3(Inners._A _A_1, Inners._3 _3_1)
+            public _A3(Foo._A _A_1, Foo._3 _3_1)
             {
                 this._A_1 = _A_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7549,14 +7549,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _A4 : _Ⰳx00ⲻFF
         {
-            public _A4(Inners._A _A_1, Inners._4 _4_1)
+            public _A4(Foo._A _A_1, Foo._4 _4_1)
             {
                 this._A_1 = _A_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7566,14 +7566,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _A5 : _Ⰳx00ⲻFF
         {
-            public _A5(Inners._A _A_1, Inners._5 _5_1)
+            public _A5(Foo._A _A_1, Foo._5 _5_1)
             {
                 this._A_1 = _A_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7583,14 +7583,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _A6 : _Ⰳx00ⲻFF
         {
-            public _A6(Inners._A _A_1, Inners._6 _6_1)
+            public _A6(Foo._A _A_1, Foo._6 _6_1)
             {
                 this._A_1 = _A_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7600,14 +7600,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _A7 : _Ⰳx00ⲻFF
         {
-            public _A7(Inners._A _A_1, Inners._7 _7_1)
+            public _A7(Foo._A _A_1, Foo._7 _7_1)
             {
                 this._A_1 = _A_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7617,14 +7617,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _A8 : _Ⰳx00ⲻFF
         {
-            public _A8(Inners._A _A_1, Inners._8 _8_1)
+            public _A8(Foo._A _A_1, Foo._8 _8_1)
             {
                 this._A_1 = _A_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7634,14 +7634,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _A9 : _Ⰳx00ⲻFF
         {
-            public _A9(Inners._A _A_1, Inners._9 _9_1)
+            public _A9(Foo._A _A_1, Foo._9 _9_1)
             {
                 this._A_1 = _A_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7651,14 +7651,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _AA : _Ⰳx00ⲻFF
         {
-            public _AA(Inners._A _A_1, Inners._A _A_2)
+            public _AA(Foo._A _A_1, Foo._A _A_2)
             {
                 this._A_1 = _A_1;
                 this._A_2 = _A_2;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._A _A_2 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._A _A_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7668,14 +7668,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _AB : _Ⰳx00ⲻFF
         {
-            public _AB(Inners._A _A_1, Inners._B _B_1)
+            public _AB(Foo._A _A_1, Foo._B _B_1)
             {
                 this._A_1 = _A_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7685,14 +7685,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _AC : _Ⰳx00ⲻFF
         {
-            public _AC(Inners._A _A_1, Inners._C _C_1)
+            public _AC(Foo._A _A_1, Foo._C _C_1)
             {
                 this._A_1 = _A_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7702,14 +7702,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _AD : _Ⰳx00ⲻFF
         {
-            public _AD(Inners._A _A_1, Inners._D _D_1)
+            public _AD(Foo._A _A_1, Foo._D _D_1)
             {
                 this._A_1 = _A_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7719,14 +7719,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _AE : _Ⰳx00ⲻFF
         {
-            public _AE(Inners._A _A_1, Inners._E _E_1)
+            public _AE(Foo._A _A_1, Foo._E _E_1)
             {
                 this._A_1 = _A_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7736,14 +7736,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _AF : _Ⰳx00ⲻFF
         {
-            public _AF(Inners._A _A_1, Inners._F _F_1)
+            public _AF(Foo._A _A_1, Foo._F _F_1)
             {
                 this._A_1 = _A_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._A _A_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._A _A_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7753,14 +7753,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _B0 : _Ⰳx00ⲻFF
         {
-            public _B0(Inners._B _B_1, Inners._0 _0_1)
+            public _B0(Foo._B _B_1, Foo._0 _0_1)
             {
                 this._B_1 = _B_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7770,14 +7770,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _B1 : _Ⰳx00ⲻFF
         {
-            public _B1(Inners._B _B_1, Inners._1 _1_1)
+            public _B1(Foo._B _B_1, Foo._1 _1_1)
             {
                 this._B_1 = _B_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7787,14 +7787,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _B2 : _Ⰳx00ⲻFF
         {
-            public _B2(Inners._B _B_1, Inners._2 _2_1)
+            public _B2(Foo._B _B_1, Foo._2 _2_1)
             {
                 this._B_1 = _B_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7804,14 +7804,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _B3 : _Ⰳx00ⲻFF
         {
-            public _B3(Inners._B _B_1, Inners._3 _3_1)
+            public _B3(Foo._B _B_1, Foo._3 _3_1)
             {
                 this._B_1 = _B_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7821,14 +7821,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _B4 : _Ⰳx00ⲻFF
         {
-            public _B4(Inners._B _B_1, Inners._4 _4_1)
+            public _B4(Foo._B _B_1, Foo._4 _4_1)
             {
                 this._B_1 = _B_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7838,14 +7838,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _B5 : _Ⰳx00ⲻFF
         {
-            public _B5(Inners._B _B_1, Inners._5 _5_1)
+            public _B5(Foo._B _B_1, Foo._5 _5_1)
             {
                 this._B_1 = _B_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7855,14 +7855,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _B6 : _Ⰳx00ⲻFF
         {
-            public _B6(Inners._B _B_1, Inners._6 _6_1)
+            public _B6(Foo._B _B_1, Foo._6 _6_1)
             {
                 this._B_1 = _B_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7872,14 +7872,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _B7 : _Ⰳx00ⲻFF
         {
-            public _B7(Inners._B _B_1, Inners._7 _7_1)
+            public _B7(Foo._B _B_1, Foo._7 _7_1)
             {
                 this._B_1 = _B_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7889,14 +7889,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _B8 : _Ⰳx00ⲻFF
         {
-            public _B8(Inners._B _B_1, Inners._8 _8_1)
+            public _B8(Foo._B _B_1, Foo._8 _8_1)
             {
                 this._B_1 = _B_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7906,14 +7906,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _B9 : _Ⰳx00ⲻFF
         {
-            public _B9(Inners._B _B_1, Inners._9 _9_1)
+            public _B9(Foo._B _B_1, Foo._9 _9_1)
             {
                 this._B_1 = _B_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7923,14 +7923,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _BA : _Ⰳx00ⲻFF
         {
-            public _BA(Inners._B _B_1, Inners._A _A_1)
+            public _BA(Foo._B _B_1, Foo._A _A_1)
             {
                 this._B_1 = _B_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7940,14 +7940,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _BB : _Ⰳx00ⲻFF
         {
-            public _BB(Inners._B _B_1, Inners._B _B_2)
+            public _BB(Foo._B _B_1, Foo._B _B_2)
             {
                 this._B_1 = _B_1;
                 this._B_2 = _B_2;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._B _B_2 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._B _B_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7957,14 +7957,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _BC : _Ⰳx00ⲻFF
         {
-            public _BC(Inners._B _B_1, Inners._C _C_1)
+            public _BC(Foo._B _B_1, Foo._C _C_1)
             {
                 this._B_1 = _B_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7974,14 +7974,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _BD : _Ⰳx00ⲻFF
         {
-            public _BD(Inners._B _B_1, Inners._D _D_1)
+            public _BD(Foo._B _B_1, Foo._D _D_1)
             {
                 this._B_1 = _B_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -7991,14 +7991,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _BE : _Ⰳx00ⲻFF
         {
-            public _BE(Inners._B _B_1, Inners._E _E_1)
+            public _BE(Foo._B _B_1, Foo._E _E_1)
             {
                 this._B_1 = _B_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8008,14 +8008,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _BF : _Ⰳx00ⲻFF
         {
-            public _BF(Inners._B _B_1, Inners._F _F_1)
+            public _BF(Foo._B _B_1, Foo._F _F_1)
             {
                 this._B_1 = _B_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._B _B_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._B _B_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8025,14 +8025,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _C0 : _Ⰳx00ⲻFF
         {
-            public _C0(Inners._C _C_1, Inners._0 _0_1)
+            public _C0(Foo._C _C_1, Foo._0 _0_1)
             {
                 this._C_1 = _C_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8042,14 +8042,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _C1 : _Ⰳx00ⲻFF
         {
-            public _C1(Inners._C _C_1, Inners._1 _1_1)
+            public _C1(Foo._C _C_1, Foo._1 _1_1)
             {
                 this._C_1 = _C_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8059,14 +8059,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _C2 : _Ⰳx00ⲻFF
         {
-            public _C2(Inners._C _C_1, Inners._2 _2_1)
+            public _C2(Foo._C _C_1, Foo._2 _2_1)
             {
                 this._C_1 = _C_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8076,14 +8076,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _C3 : _Ⰳx00ⲻFF
         {
-            public _C3(Inners._C _C_1, Inners._3 _3_1)
+            public _C3(Foo._C _C_1, Foo._3 _3_1)
             {
                 this._C_1 = _C_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8093,14 +8093,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _C4 : _Ⰳx00ⲻFF
         {
-            public _C4(Inners._C _C_1, Inners._4 _4_1)
+            public _C4(Foo._C _C_1, Foo._4 _4_1)
             {
                 this._C_1 = _C_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8110,14 +8110,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _C5 : _Ⰳx00ⲻFF
         {
-            public _C5(Inners._C _C_1, Inners._5 _5_1)
+            public _C5(Foo._C _C_1, Foo._5 _5_1)
             {
                 this._C_1 = _C_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8127,14 +8127,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _C6 : _Ⰳx00ⲻFF
         {
-            public _C6(Inners._C _C_1, Inners._6 _6_1)
+            public _C6(Foo._C _C_1, Foo._6 _6_1)
             {
                 this._C_1 = _C_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8144,14 +8144,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _C7 : _Ⰳx00ⲻFF
         {
-            public _C7(Inners._C _C_1, Inners._7 _7_1)
+            public _C7(Foo._C _C_1, Foo._7 _7_1)
             {
                 this._C_1 = _C_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8161,14 +8161,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _C8 : _Ⰳx00ⲻFF
         {
-            public _C8(Inners._C _C_1, Inners._8 _8_1)
+            public _C8(Foo._C _C_1, Foo._8 _8_1)
             {
                 this._C_1 = _C_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8178,14 +8178,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _C9 : _Ⰳx00ⲻFF
         {
-            public _C9(Inners._C _C_1, Inners._9 _9_1)
+            public _C9(Foo._C _C_1, Foo._9 _9_1)
             {
                 this._C_1 = _C_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8195,14 +8195,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _CA : _Ⰳx00ⲻFF
         {
-            public _CA(Inners._C _C_1, Inners._A _A_1)
+            public _CA(Foo._C _C_1, Foo._A _A_1)
             {
                 this._C_1 = _C_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8212,14 +8212,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _CB : _Ⰳx00ⲻFF
         {
-            public _CB(Inners._C _C_1, Inners._B _B_1)
+            public _CB(Foo._C _C_1, Foo._B _B_1)
             {
                 this._C_1 = _C_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8229,14 +8229,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _CC : _Ⰳx00ⲻFF
         {
-            public _CC(Inners._C _C_1, Inners._C _C_2)
+            public _CC(Foo._C _C_1, Foo._C _C_2)
             {
                 this._C_1 = _C_1;
                 this._C_2 = _C_2;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._C _C_2 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._C _C_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8246,14 +8246,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _CD : _Ⰳx00ⲻFF
         {
-            public _CD(Inners._C _C_1, Inners._D _D_1)
+            public _CD(Foo._C _C_1, Foo._D _D_1)
             {
                 this._C_1 = _C_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8263,14 +8263,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _CE : _Ⰳx00ⲻFF
         {
-            public _CE(Inners._C _C_1, Inners._E _E_1)
+            public _CE(Foo._C _C_1, Foo._E _E_1)
             {
                 this._C_1 = _C_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8280,14 +8280,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _CF : _Ⰳx00ⲻFF
         {
-            public _CF(Inners._C _C_1, Inners._F _F_1)
+            public _CF(Foo._C _C_1, Foo._F _F_1)
             {
                 this._C_1 = _C_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._C _C_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._C _C_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8297,14 +8297,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _D0 : _Ⰳx00ⲻFF
         {
-            public _D0(Inners._D _D_1, Inners._0 _0_1)
+            public _D0(Foo._D _D_1, Foo._0 _0_1)
             {
                 this._D_1 = _D_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8314,14 +8314,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _D1 : _Ⰳx00ⲻFF
         {
-            public _D1(Inners._D _D_1, Inners._1 _1_1)
+            public _D1(Foo._D _D_1, Foo._1 _1_1)
             {
                 this._D_1 = _D_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8331,14 +8331,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _D2 : _Ⰳx00ⲻFF
         {
-            public _D2(Inners._D _D_1, Inners._2 _2_1)
+            public _D2(Foo._D _D_1, Foo._2 _2_1)
             {
                 this._D_1 = _D_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8348,14 +8348,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _D3 : _Ⰳx00ⲻFF
         {
-            public _D3(Inners._D _D_1, Inners._3 _3_1)
+            public _D3(Foo._D _D_1, Foo._3 _3_1)
             {
                 this._D_1 = _D_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8365,14 +8365,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _D4 : _Ⰳx00ⲻFF
         {
-            public _D4(Inners._D _D_1, Inners._4 _4_1)
+            public _D4(Foo._D _D_1, Foo._4 _4_1)
             {
                 this._D_1 = _D_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8382,14 +8382,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _D5 : _Ⰳx00ⲻFF
         {
-            public _D5(Inners._D _D_1, Inners._5 _5_1)
+            public _D5(Foo._D _D_1, Foo._5 _5_1)
             {
                 this._D_1 = _D_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8399,14 +8399,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _D6 : _Ⰳx00ⲻFF
         {
-            public _D6(Inners._D _D_1, Inners._6 _6_1)
+            public _D6(Foo._D _D_1, Foo._6 _6_1)
             {
                 this._D_1 = _D_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8416,14 +8416,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _D7 : _Ⰳx00ⲻFF
         {
-            public _D7(Inners._D _D_1, Inners._7 _7_1)
+            public _D7(Foo._D _D_1, Foo._7 _7_1)
             {
                 this._D_1 = _D_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8433,14 +8433,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _D8 : _Ⰳx00ⲻFF
         {
-            public _D8(Inners._D _D_1, Inners._8 _8_1)
+            public _D8(Foo._D _D_1, Foo._8 _8_1)
             {
                 this._D_1 = _D_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8450,14 +8450,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _D9 : _Ⰳx00ⲻFF
         {
-            public _D9(Inners._D _D_1, Inners._9 _9_1)
+            public _D9(Foo._D _D_1, Foo._9 _9_1)
             {
                 this._D_1 = _D_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8467,14 +8467,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _DA : _Ⰳx00ⲻFF
         {
-            public _DA(Inners._D _D_1, Inners._A _A_1)
+            public _DA(Foo._D _D_1, Foo._A _A_1)
             {
                 this._D_1 = _D_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8484,14 +8484,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _DB : _Ⰳx00ⲻFF
         {
-            public _DB(Inners._D _D_1, Inners._B _B_1)
+            public _DB(Foo._D _D_1, Foo._B _B_1)
             {
                 this._D_1 = _D_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8501,14 +8501,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _DC : _Ⰳx00ⲻFF
         {
-            public _DC(Inners._D _D_1, Inners._C _C_1)
+            public _DC(Foo._D _D_1, Foo._C _C_1)
             {
                 this._D_1 = _D_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8518,14 +8518,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _DD : _Ⰳx00ⲻFF
         {
-            public _DD(Inners._D _D_1, Inners._D _D_2)
+            public _DD(Foo._D _D_1, Foo._D _D_2)
             {
                 this._D_1 = _D_1;
                 this._D_2 = _D_2;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._D _D_2 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._D _D_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8535,14 +8535,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _DE : _Ⰳx00ⲻFF
         {
-            public _DE(Inners._D _D_1, Inners._E _E_1)
+            public _DE(Foo._D _D_1, Foo._E _E_1)
             {
                 this._D_1 = _D_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8552,14 +8552,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _DF : _Ⰳx00ⲻFF
         {
-            public _DF(Inners._D _D_1, Inners._F _F_1)
+            public _DF(Foo._D _D_1, Foo._F _F_1)
             {
                 this._D_1 = _D_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._D _D_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._D _D_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8569,14 +8569,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _E0 : _Ⰳx00ⲻFF
         {
-            public _E0(Inners._E _E_1, Inners._0 _0_1)
+            public _E0(Foo._E _E_1, Foo._0 _0_1)
             {
                 this._E_1 = _E_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8586,14 +8586,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _E1 : _Ⰳx00ⲻFF
         {
-            public _E1(Inners._E _E_1, Inners._1 _1_1)
+            public _E1(Foo._E _E_1, Foo._1 _1_1)
             {
                 this._E_1 = _E_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8603,14 +8603,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _E2 : _Ⰳx00ⲻFF
         {
-            public _E2(Inners._E _E_1, Inners._2 _2_1)
+            public _E2(Foo._E _E_1, Foo._2 _2_1)
             {
                 this._E_1 = _E_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8620,14 +8620,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _E3 : _Ⰳx00ⲻFF
         {
-            public _E3(Inners._E _E_1, Inners._3 _3_1)
+            public _E3(Foo._E _E_1, Foo._3 _3_1)
             {
                 this._E_1 = _E_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8637,14 +8637,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _E4 : _Ⰳx00ⲻFF
         {
-            public _E4(Inners._E _E_1, Inners._4 _4_1)
+            public _E4(Foo._E _E_1, Foo._4 _4_1)
             {
                 this._E_1 = _E_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8654,14 +8654,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _E5 : _Ⰳx00ⲻFF
         {
-            public _E5(Inners._E _E_1, Inners._5 _5_1)
+            public _E5(Foo._E _E_1, Foo._5 _5_1)
             {
                 this._E_1 = _E_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8671,14 +8671,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _E6 : _Ⰳx00ⲻFF
         {
-            public _E6(Inners._E _E_1, Inners._6 _6_1)
+            public _E6(Foo._E _E_1, Foo._6 _6_1)
             {
                 this._E_1 = _E_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8688,14 +8688,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _E7 : _Ⰳx00ⲻFF
         {
-            public _E7(Inners._E _E_1, Inners._7 _7_1)
+            public _E7(Foo._E _E_1, Foo._7 _7_1)
             {
                 this._E_1 = _E_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8705,14 +8705,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _E8 : _Ⰳx00ⲻFF
         {
-            public _E8(Inners._E _E_1, Inners._8 _8_1)
+            public _E8(Foo._E _E_1, Foo._8 _8_1)
             {
                 this._E_1 = _E_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8722,14 +8722,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _E9 : _Ⰳx00ⲻFF
         {
-            public _E9(Inners._E _E_1, Inners._9 _9_1)
+            public _E9(Foo._E _E_1, Foo._9 _9_1)
             {
                 this._E_1 = _E_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8739,14 +8739,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _EA : _Ⰳx00ⲻFF
         {
-            public _EA(Inners._E _E_1, Inners._A _A_1)
+            public _EA(Foo._E _E_1, Foo._A _A_1)
             {
                 this._E_1 = _E_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8756,14 +8756,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _EB : _Ⰳx00ⲻFF
         {
-            public _EB(Inners._E _E_1, Inners._B _B_1)
+            public _EB(Foo._E _E_1, Foo._B _B_1)
             {
                 this._E_1 = _E_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8773,14 +8773,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _EC : _Ⰳx00ⲻFF
         {
-            public _EC(Inners._E _E_1, Inners._C _C_1)
+            public _EC(Foo._E _E_1, Foo._C _C_1)
             {
                 this._E_1 = _E_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8790,14 +8790,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _ED : _Ⰳx00ⲻFF
         {
-            public _ED(Inners._E _E_1, Inners._D _D_1)
+            public _ED(Foo._E _E_1, Foo._D _D_1)
             {
                 this._E_1 = _E_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8807,14 +8807,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _EE : _Ⰳx00ⲻFF
         {
-            public _EE(Inners._E _E_1, Inners._E _E_2)
+            public _EE(Foo._E _E_1, Foo._E _E_2)
             {
                 this._E_1 = _E_1;
                 this._E_2 = _E_2;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._E _E_2 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._E _E_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8824,14 +8824,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _EF : _Ⰳx00ⲻFF
         {
-            public _EF(Inners._E _E_1, Inners._F _F_1)
+            public _EF(Foo._E _E_1, Foo._F _F_1)
             {
                 this._E_1 = _E_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._E _E_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._E _E_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8841,14 +8841,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _F0 : _Ⰳx00ⲻFF
         {
-            public _F0(Inners._F _F_1, Inners._0 _0_1)
+            public _F0(Foo._F _F_1, Foo._0 _0_1)
             {
                 this._F_1 = _F_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8858,14 +8858,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _F1 : _Ⰳx00ⲻFF
         {
-            public _F1(Inners._F _F_1, Inners._1 _1_1)
+            public _F1(Foo._F _F_1, Foo._1 _1_1)
             {
                 this._F_1 = _F_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8875,14 +8875,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _F2 : _Ⰳx00ⲻFF
         {
-            public _F2(Inners._F _F_1, Inners._2 _2_1)
+            public _F2(Foo._F _F_1, Foo._2 _2_1)
             {
                 this._F_1 = _F_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8892,14 +8892,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _F3 : _Ⰳx00ⲻFF
         {
-            public _F3(Inners._F _F_1, Inners._3 _3_1)
+            public _F3(Foo._F _F_1, Foo._3 _3_1)
             {
                 this._F_1 = _F_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8909,14 +8909,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _F4 : _Ⰳx00ⲻFF
         {
-            public _F4(Inners._F _F_1, Inners._4 _4_1)
+            public _F4(Foo._F _F_1, Foo._4 _4_1)
             {
                 this._F_1 = _F_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8926,14 +8926,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _F5 : _Ⰳx00ⲻFF
         {
-            public _F5(Inners._F _F_1, Inners._5 _5_1)
+            public _F5(Foo._F _F_1, Foo._5 _5_1)
             {
                 this._F_1 = _F_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8943,14 +8943,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _F6 : _Ⰳx00ⲻFF
         {
-            public _F6(Inners._F _F_1, Inners._6 _6_1)
+            public _F6(Foo._F _F_1, Foo._6 _6_1)
             {
                 this._F_1 = _F_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8960,14 +8960,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _F7 : _Ⰳx00ⲻFF
         {
-            public _F7(Inners._F _F_1, Inners._7 _7_1)
+            public _F7(Foo._F _F_1, Foo._7 _7_1)
             {
                 this._F_1 = _F_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8977,14 +8977,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _F8 : _Ⰳx00ⲻFF
         {
-            public _F8(Inners._F _F_1, Inners._8 _8_1)
+            public _F8(Foo._F _F_1, Foo._8 _8_1)
             {
                 this._F_1 = _F_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -8994,14 +8994,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _F9 : _Ⰳx00ⲻFF
         {
-            public _F9(Inners._F _F_1, Inners._9 _9_1)
+            public _F9(Foo._F _F_1, Foo._9 _9_1)
             {
                 this._F_1 = _F_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9011,14 +9011,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _FA : _Ⰳx00ⲻFF
         {
-            public _FA(Inners._F _F_1, Inners._A _A_1)
+            public _FA(Foo._F _F_1, Foo._A _A_1)
             {
                 this._F_1 = _F_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9028,14 +9028,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _FB : _Ⰳx00ⲻFF
         {
-            public _FB(Inners._F _F_1, Inners._B _B_1)
+            public _FB(Foo._F _F_1, Foo._B _B_1)
             {
                 this._F_1 = _F_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9045,14 +9045,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _FC : _Ⰳx00ⲻFF
         {
-            public _FC(Inners._F _F_1, Inners._C _C_1)
+            public _FC(Foo._F _F_1, Foo._C _C_1)
             {
                 this._F_1 = _F_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9062,14 +9062,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _FD : _Ⰳx00ⲻFF
         {
-            public _FD(Inners._F _F_1, Inners._D _D_1)
+            public _FD(Foo._F _F_1, Foo._D _D_1)
             {
                 this._F_1 = _F_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9079,14 +9079,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _FE : _Ⰳx00ⲻFF
         {
-            public _FE(Inners._F _F_1, Inners._E _E_1)
+            public _FE(Foo._F _F_1, Foo._E _E_1)
             {
                 this._F_1 = _F_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9096,14 +9096,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _FF : _Ⰳx00ⲻFF
         {
-            public _FF(Inners._F _F_1, Inners._F _F_2)
+            public _FF(Foo._F _F_1, Foo._F _F_2)
             {
                 this._F_1 = _F_1;
                 this._F_2 = _F_2;
             }
             
-            public Inners._F _F_1 { get; }
-            public Inners._F _F_2 { get; }
+            public Foo._F _F_1 { get; }
+            public Foo._F _F_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9114,14 +9114,14 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _Ⰳx20
     {
-        public _Ⰳx20(Inners._2 _2_1, Inners._0 _0_1)
+        public _Ⰳx20(Foo._2 _2_1, Foo._0 _0_1)
         {
             this._2_1 = _2_1;
             this._0_1 = _0_1;
         }
         
-        public Inners._2 _2_1 { get; }
-        public Inners._0 _0_1 { get; }
+        public Foo._2 _2_1 { get; }
+        public Foo._0 _0_1 { get; }
     }
     
     public abstract class _Ⰳx21ⲻ7E
@@ -9237,14 +9237,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _21 : _Ⰳx21ⲻ7E
         {
-            public _21(Inners._2 _2_1, Inners._1 _1_1)
+            public _21(Foo._2 _2_1, Foo._1 _1_1)
             {
                 this._2_1 = _2_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9254,14 +9254,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _22 : _Ⰳx21ⲻ7E
         {
-            public _22(Inners._2 _2_1, Inners._2 _2_2)
+            public _22(Foo._2 _2_1, Foo._2 _2_2)
             {
                 this._2_1 = _2_1;
                 this._2_2 = _2_2;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._2 _2_2 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._2 _2_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9271,14 +9271,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _23 : _Ⰳx21ⲻ7E
         {
-            public _23(Inners._2 _2_1, Inners._3 _3_1)
+            public _23(Foo._2 _2_1, Foo._3 _3_1)
             {
                 this._2_1 = _2_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9288,14 +9288,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _24 : _Ⰳx21ⲻ7E
         {
-            public _24(Inners._2 _2_1, Inners._4 _4_1)
+            public _24(Foo._2 _2_1, Foo._4 _4_1)
             {
                 this._2_1 = _2_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9305,14 +9305,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _25 : _Ⰳx21ⲻ7E
         {
-            public _25(Inners._2 _2_1, Inners._5 _5_1)
+            public _25(Foo._2 _2_1, Foo._5 _5_1)
             {
                 this._2_1 = _2_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9322,14 +9322,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _26 : _Ⰳx21ⲻ7E
         {
-            public _26(Inners._2 _2_1, Inners._6 _6_1)
+            public _26(Foo._2 _2_1, Foo._6 _6_1)
             {
                 this._2_1 = _2_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9339,14 +9339,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _27 : _Ⰳx21ⲻ7E
         {
-            public _27(Inners._2 _2_1, Inners._7 _7_1)
+            public _27(Foo._2 _2_1, Foo._7 _7_1)
             {
                 this._2_1 = _2_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9356,14 +9356,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _28 : _Ⰳx21ⲻ7E
         {
-            public _28(Inners._2 _2_1, Inners._8 _8_1)
+            public _28(Foo._2 _2_1, Foo._8 _8_1)
             {
                 this._2_1 = _2_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9373,14 +9373,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _29 : _Ⰳx21ⲻ7E
         {
-            public _29(Inners._2 _2_1, Inners._9 _9_1)
+            public _29(Foo._2 _2_1, Foo._9 _9_1)
             {
                 this._2_1 = _2_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9390,14 +9390,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2A : _Ⰳx21ⲻ7E
         {
-            public _2A(Inners._2 _2_1, Inners._A _A_1)
+            public _2A(Foo._2 _2_1, Foo._A _A_1)
             {
                 this._2_1 = _2_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9407,14 +9407,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2B : _Ⰳx21ⲻ7E
         {
-            public _2B(Inners._2 _2_1, Inners._B _B_1)
+            public _2B(Foo._2 _2_1, Foo._B _B_1)
             {
                 this._2_1 = _2_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9424,14 +9424,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2C : _Ⰳx21ⲻ7E
         {
-            public _2C(Inners._2 _2_1, Inners._C _C_1)
+            public _2C(Foo._2 _2_1, Foo._C _C_1)
             {
                 this._2_1 = _2_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9441,14 +9441,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2D : _Ⰳx21ⲻ7E
         {
-            public _2D(Inners._2 _2_1, Inners._D _D_1)
+            public _2D(Foo._2 _2_1, Foo._D _D_1)
             {
                 this._2_1 = _2_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9458,14 +9458,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2E : _Ⰳx21ⲻ7E
         {
-            public _2E(Inners._2 _2_1, Inners._E _E_1)
+            public _2E(Foo._2 _2_1, Foo._E _E_1)
             {
                 this._2_1 = _2_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9475,14 +9475,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2F : _Ⰳx21ⲻ7E
         {
-            public _2F(Inners._2 _2_1, Inners._F _F_1)
+            public _2F(Foo._2 _2_1, Foo._F _F_1)
             {
                 this._2_1 = _2_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9492,14 +9492,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _30 : _Ⰳx21ⲻ7E
         {
-            public _30(Inners._3 _3_1, Inners._0 _0_1)
+            public _30(Foo._3 _3_1, Foo._0 _0_1)
             {
                 this._3_1 = _3_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9509,14 +9509,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _31 : _Ⰳx21ⲻ7E
         {
-            public _31(Inners._3 _3_1, Inners._1 _1_1)
+            public _31(Foo._3 _3_1, Foo._1 _1_1)
             {
                 this._3_1 = _3_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9526,14 +9526,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _32 : _Ⰳx21ⲻ7E
         {
-            public _32(Inners._3 _3_1, Inners._2 _2_1)
+            public _32(Foo._3 _3_1, Foo._2 _2_1)
             {
                 this._3_1 = _3_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9543,14 +9543,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _33 : _Ⰳx21ⲻ7E
         {
-            public _33(Inners._3 _3_1, Inners._3 _3_2)
+            public _33(Foo._3 _3_1, Foo._3 _3_2)
             {
                 this._3_1 = _3_1;
                 this._3_2 = _3_2;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._3 _3_2 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._3 _3_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9560,14 +9560,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _34 : _Ⰳx21ⲻ7E
         {
-            public _34(Inners._3 _3_1, Inners._4 _4_1)
+            public _34(Foo._3 _3_1, Foo._4 _4_1)
             {
                 this._3_1 = _3_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9577,14 +9577,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _35 : _Ⰳx21ⲻ7E
         {
-            public _35(Inners._3 _3_1, Inners._5 _5_1)
+            public _35(Foo._3 _3_1, Foo._5 _5_1)
             {
                 this._3_1 = _3_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9594,14 +9594,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _36 : _Ⰳx21ⲻ7E
         {
-            public _36(Inners._3 _3_1, Inners._6 _6_1)
+            public _36(Foo._3 _3_1, Foo._6 _6_1)
             {
                 this._3_1 = _3_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9611,14 +9611,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _37 : _Ⰳx21ⲻ7E
         {
-            public _37(Inners._3 _3_1, Inners._7 _7_1)
+            public _37(Foo._3 _3_1, Foo._7 _7_1)
             {
                 this._3_1 = _3_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9628,14 +9628,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _38 : _Ⰳx21ⲻ7E
         {
-            public _38(Inners._3 _3_1, Inners._8 _8_1)
+            public _38(Foo._3 _3_1, Foo._8 _8_1)
             {
                 this._3_1 = _3_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9645,14 +9645,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _39 : _Ⰳx21ⲻ7E
         {
-            public _39(Inners._3 _3_1, Inners._9 _9_1)
+            public _39(Foo._3 _3_1, Foo._9 _9_1)
             {
                 this._3_1 = _3_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9662,14 +9662,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3A : _Ⰳx21ⲻ7E
         {
-            public _3A(Inners._3 _3_1, Inners._A _A_1)
+            public _3A(Foo._3 _3_1, Foo._A _A_1)
             {
                 this._3_1 = _3_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9679,14 +9679,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3B : _Ⰳx21ⲻ7E
         {
-            public _3B(Inners._3 _3_1, Inners._B _B_1)
+            public _3B(Foo._3 _3_1, Foo._B _B_1)
             {
                 this._3_1 = _3_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9696,14 +9696,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3C : _Ⰳx21ⲻ7E
         {
-            public _3C(Inners._3 _3_1, Inners._C _C_1)
+            public _3C(Foo._3 _3_1, Foo._C _C_1)
             {
                 this._3_1 = _3_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9713,14 +9713,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3D : _Ⰳx21ⲻ7E
         {
-            public _3D(Inners._3 _3_1, Inners._D _D_1)
+            public _3D(Foo._3 _3_1, Foo._D _D_1)
             {
                 this._3_1 = _3_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9730,14 +9730,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3E : _Ⰳx21ⲻ7E
         {
-            public _3E(Inners._3 _3_1, Inners._E _E_1)
+            public _3E(Foo._3 _3_1, Foo._E _E_1)
             {
                 this._3_1 = _3_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9747,14 +9747,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3F : _Ⰳx21ⲻ7E
         {
-            public _3F(Inners._3 _3_1, Inners._F _F_1)
+            public _3F(Foo._3 _3_1, Foo._F _F_1)
             {
                 this._3_1 = _3_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9764,14 +9764,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _40 : _Ⰳx21ⲻ7E
         {
-            public _40(Inners._4 _4_1, Inners._0 _0_1)
+            public _40(Foo._4 _4_1, Foo._0 _0_1)
             {
                 this._4_1 = _4_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9781,14 +9781,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _41 : _Ⰳx21ⲻ7E
         {
-            public _41(Inners._4 _4_1, Inners._1 _1_1)
+            public _41(Foo._4 _4_1, Foo._1 _1_1)
             {
                 this._4_1 = _4_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9798,14 +9798,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _42 : _Ⰳx21ⲻ7E
         {
-            public _42(Inners._4 _4_1, Inners._2 _2_1)
+            public _42(Foo._4 _4_1, Foo._2 _2_1)
             {
                 this._4_1 = _4_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9815,14 +9815,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _43 : _Ⰳx21ⲻ7E
         {
-            public _43(Inners._4 _4_1, Inners._3 _3_1)
+            public _43(Foo._4 _4_1, Foo._3 _3_1)
             {
                 this._4_1 = _4_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9832,14 +9832,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _44 : _Ⰳx21ⲻ7E
         {
-            public _44(Inners._4 _4_1, Inners._4 _4_2)
+            public _44(Foo._4 _4_1, Foo._4 _4_2)
             {
                 this._4_1 = _4_1;
                 this._4_2 = _4_2;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._4 _4_2 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._4 _4_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9849,14 +9849,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _45 : _Ⰳx21ⲻ7E
         {
-            public _45(Inners._4 _4_1, Inners._5 _5_1)
+            public _45(Foo._4 _4_1, Foo._5 _5_1)
             {
                 this._4_1 = _4_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9866,14 +9866,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _46 : _Ⰳx21ⲻ7E
         {
-            public _46(Inners._4 _4_1, Inners._6 _6_1)
+            public _46(Foo._4 _4_1, Foo._6 _6_1)
             {
                 this._4_1 = _4_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9883,14 +9883,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _47 : _Ⰳx21ⲻ7E
         {
-            public _47(Inners._4 _4_1, Inners._7 _7_1)
+            public _47(Foo._4 _4_1, Foo._7 _7_1)
             {
                 this._4_1 = _4_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9900,14 +9900,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _48 : _Ⰳx21ⲻ7E
         {
-            public _48(Inners._4 _4_1, Inners._8 _8_1)
+            public _48(Foo._4 _4_1, Foo._8 _8_1)
             {
                 this._4_1 = _4_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9917,14 +9917,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _49 : _Ⰳx21ⲻ7E
         {
-            public _49(Inners._4 _4_1, Inners._9 _9_1)
+            public _49(Foo._4 _4_1, Foo._9 _9_1)
             {
                 this._4_1 = _4_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9934,14 +9934,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4A : _Ⰳx21ⲻ7E
         {
-            public _4A(Inners._4 _4_1, Inners._A _A_1)
+            public _4A(Foo._4 _4_1, Foo._A _A_1)
             {
                 this._4_1 = _4_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9951,14 +9951,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4B : _Ⰳx21ⲻ7E
         {
-            public _4B(Inners._4 _4_1, Inners._B _B_1)
+            public _4B(Foo._4 _4_1, Foo._B _B_1)
             {
                 this._4_1 = _4_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9968,14 +9968,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4C : _Ⰳx21ⲻ7E
         {
-            public _4C(Inners._4 _4_1, Inners._C _C_1)
+            public _4C(Foo._4 _4_1, Foo._C _C_1)
             {
                 this._4_1 = _4_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -9985,14 +9985,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4D : _Ⰳx21ⲻ7E
         {
-            public _4D(Inners._4 _4_1, Inners._D _D_1)
+            public _4D(Foo._4 _4_1, Foo._D _D_1)
             {
                 this._4_1 = _4_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10002,14 +10002,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4E : _Ⰳx21ⲻ7E
         {
-            public _4E(Inners._4 _4_1, Inners._E _E_1)
+            public _4E(Foo._4 _4_1, Foo._E _E_1)
             {
                 this._4_1 = _4_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10019,14 +10019,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4F : _Ⰳx21ⲻ7E
         {
-            public _4F(Inners._4 _4_1, Inners._F _F_1)
+            public _4F(Foo._4 _4_1, Foo._F _F_1)
             {
                 this._4_1 = _4_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10036,14 +10036,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _50 : _Ⰳx21ⲻ7E
         {
-            public _50(Inners._5 _5_1, Inners._0 _0_1)
+            public _50(Foo._5 _5_1, Foo._0 _0_1)
             {
                 this._5_1 = _5_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10053,14 +10053,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _51 : _Ⰳx21ⲻ7E
         {
-            public _51(Inners._5 _5_1, Inners._1 _1_1)
+            public _51(Foo._5 _5_1, Foo._1 _1_1)
             {
                 this._5_1 = _5_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10070,14 +10070,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _52 : _Ⰳx21ⲻ7E
         {
-            public _52(Inners._5 _5_1, Inners._2 _2_1)
+            public _52(Foo._5 _5_1, Foo._2 _2_1)
             {
                 this._5_1 = _5_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10087,14 +10087,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _53 : _Ⰳx21ⲻ7E
         {
-            public _53(Inners._5 _5_1, Inners._3 _3_1)
+            public _53(Foo._5 _5_1, Foo._3 _3_1)
             {
                 this._5_1 = _5_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10104,14 +10104,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _54 : _Ⰳx21ⲻ7E
         {
-            public _54(Inners._5 _5_1, Inners._4 _4_1)
+            public _54(Foo._5 _5_1, Foo._4 _4_1)
             {
                 this._5_1 = _5_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10121,14 +10121,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _55 : _Ⰳx21ⲻ7E
         {
-            public _55(Inners._5 _5_1, Inners._5 _5_2)
+            public _55(Foo._5 _5_1, Foo._5 _5_2)
             {
                 this._5_1 = _5_1;
                 this._5_2 = _5_2;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._5 _5_2 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._5 _5_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10138,14 +10138,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _56 : _Ⰳx21ⲻ7E
         {
-            public _56(Inners._5 _5_1, Inners._6 _6_1)
+            public _56(Foo._5 _5_1, Foo._6 _6_1)
             {
                 this._5_1 = _5_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10155,14 +10155,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _57 : _Ⰳx21ⲻ7E
         {
-            public _57(Inners._5 _5_1, Inners._7 _7_1)
+            public _57(Foo._5 _5_1, Foo._7 _7_1)
             {
                 this._5_1 = _5_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10172,14 +10172,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _58 : _Ⰳx21ⲻ7E
         {
-            public _58(Inners._5 _5_1, Inners._8 _8_1)
+            public _58(Foo._5 _5_1, Foo._8 _8_1)
             {
                 this._5_1 = _5_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10189,14 +10189,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _59 : _Ⰳx21ⲻ7E
         {
-            public _59(Inners._5 _5_1, Inners._9 _9_1)
+            public _59(Foo._5 _5_1, Foo._9 _9_1)
             {
                 this._5_1 = _5_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10206,14 +10206,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5A : _Ⰳx21ⲻ7E
         {
-            public _5A(Inners._5 _5_1, Inners._A _A_1)
+            public _5A(Foo._5 _5_1, Foo._A _A_1)
             {
                 this._5_1 = _5_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10223,14 +10223,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5B : _Ⰳx21ⲻ7E
         {
-            public _5B(Inners._5 _5_1, Inners._B _B_1)
+            public _5B(Foo._5 _5_1, Foo._B _B_1)
             {
                 this._5_1 = _5_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10240,14 +10240,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5C : _Ⰳx21ⲻ7E
         {
-            public _5C(Inners._5 _5_1, Inners._C _C_1)
+            public _5C(Foo._5 _5_1, Foo._C _C_1)
             {
                 this._5_1 = _5_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10257,14 +10257,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5D : _Ⰳx21ⲻ7E
         {
-            public _5D(Inners._5 _5_1, Inners._D _D_1)
+            public _5D(Foo._5 _5_1, Foo._D _D_1)
             {
                 this._5_1 = _5_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10274,14 +10274,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5E : _Ⰳx21ⲻ7E
         {
-            public _5E(Inners._5 _5_1, Inners._E _E_1)
+            public _5E(Foo._5 _5_1, Foo._E _E_1)
             {
                 this._5_1 = _5_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10291,14 +10291,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5F : _Ⰳx21ⲻ7E
         {
-            public _5F(Inners._5 _5_1, Inners._F _F_1)
+            public _5F(Foo._5 _5_1, Foo._F _F_1)
             {
                 this._5_1 = _5_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10308,14 +10308,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _60 : _Ⰳx21ⲻ7E
         {
-            public _60(Inners._6 _6_1, Inners._0 _0_1)
+            public _60(Foo._6 _6_1, Foo._0 _0_1)
             {
                 this._6_1 = _6_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10325,14 +10325,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _61 : _Ⰳx21ⲻ7E
         {
-            public _61(Inners._6 _6_1, Inners._1 _1_1)
+            public _61(Foo._6 _6_1, Foo._1 _1_1)
             {
                 this._6_1 = _6_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10342,14 +10342,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _62 : _Ⰳx21ⲻ7E
         {
-            public _62(Inners._6 _6_1, Inners._2 _2_1)
+            public _62(Foo._6 _6_1, Foo._2 _2_1)
             {
                 this._6_1 = _6_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10359,14 +10359,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _63 : _Ⰳx21ⲻ7E
         {
-            public _63(Inners._6 _6_1, Inners._3 _3_1)
+            public _63(Foo._6 _6_1, Foo._3 _3_1)
             {
                 this._6_1 = _6_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10376,14 +10376,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _64 : _Ⰳx21ⲻ7E
         {
-            public _64(Inners._6 _6_1, Inners._4 _4_1)
+            public _64(Foo._6 _6_1, Foo._4 _4_1)
             {
                 this._6_1 = _6_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10393,14 +10393,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _65 : _Ⰳx21ⲻ7E
         {
-            public _65(Inners._6 _6_1, Inners._5 _5_1)
+            public _65(Foo._6 _6_1, Foo._5 _5_1)
             {
                 this._6_1 = _6_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10410,14 +10410,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _66 : _Ⰳx21ⲻ7E
         {
-            public _66(Inners._6 _6_1, Inners._6 _6_2)
+            public _66(Foo._6 _6_1, Foo._6 _6_2)
             {
                 this._6_1 = _6_1;
                 this._6_2 = _6_2;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._6 _6_2 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._6 _6_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10427,14 +10427,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _67 : _Ⰳx21ⲻ7E
         {
-            public _67(Inners._6 _6_1, Inners._7 _7_1)
+            public _67(Foo._6 _6_1, Foo._7 _7_1)
             {
                 this._6_1 = _6_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10444,14 +10444,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _68 : _Ⰳx21ⲻ7E
         {
-            public _68(Inners._6 _6_1, Inners._8 _8_1)
+            public _68(Foo._6 _6_1, Foo._8 _8_1)
             {
                 this._6_1 = _6_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10461,14 +10461,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _69 : _Ⰳx21ⲻ7E
         {
-            public _69(Inners._6 _6_1, Inners._9 _9_1)
+            public _69(Foo._6 _6_1, Foo._9 _9_1)
             {
                 this._6_1 = _6_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10478,14 +10478,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6A : _Ⰳx21ⲻ7E
         {
-            public _6A(Inners._6 _6_1, Inners._A _A_1)
+            public _6A(Foo._6 _6_1, Foo._A _A_1)
             {
                 this._6_1 = _6_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10495,14 +10495,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6B : _Ⰳx21ⲻ7E
         {
-            public _6B(Inners._6 _6_1, Inners._B _B_1)
+            public _6B(Foo._6 _6_1, Foo._B _B_1)
             {
                 this._6_1 = _6_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10512,14 +10512,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6C : _Ⰳx21ⲻ7E
         {
-            public _6C(Inners._6 _6_1, Inners._C _C_1)
+            public _6C(Foo._6 _6_1, Foo._C _C_1)
             {
                 this._6_1 = _6_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10529,14 +10529,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6D : _Ⰳx21ⲻ7E
         {
-            public _6D(Inners._6 _6_1, Inners._D _D_1)
+            public _6D(Foo._6 _6_1, Foo._D _D_1)
             {
                 this._6_1 = _6_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10546,14 +10546,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6E : _Ⰳx21ⲻ7E
         {
-            public _6E(Inners._6 _6_1, Inners._E _E_1)
+            public _6E(Foo._6 _6_1, Foo._E _E_1)
             {
                 this._6_1 = _6_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10563,14 +10563,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6F : _Ⰳx21ⲻ7E
         {
-            public _6F(Inners._6 _6_1, Inners._F _F_1)
+            public _6F(Foo._6 _6_1, Foo._F _F_1)
             {
                 this._6_1 = _6_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10580,14 +10580,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _70 : _Ⰳx21ⲻ7E
         {
-            public _70(Inners._7 _7_1, Inners._0 _0_1)
+            public _70(Foo._7 _7_1, Foo._0 _0_1)
             {
                 this._7_1 = _7_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10597,14 +10597,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _71 : _Ⰳx21ⲻ7E
         {
-            public _71(Inners._7 _7_1, Inners._1 _1_1)
+            public _71(Foo._7 _7_1, Foo._1 _1_1)
             {
                 this._7_1 = _7_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10614,14 +10614,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _72 : _Ⰳx21ⲻ7E
         {
-            public _72(Inners._7 _7_1, Inners._2 _2_1)
+            public _72(Foo._7 _7_1, Foo._2 _2_1)
             {
                 this._7_1 = _7_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10631,14 +10631,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _73 : _Ⰳx21ⲻ7E
         {
-            public _73(Inners._7 _7_1, Inners._3 _3_1)
+            public _73(Foo._7 _7_1, Foo._3 _3_1)
             {
                 this._7_1 = _7_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10648,14 +10648,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _74 : _Ⰳx21ⲻ7E
         {
-            public _74(Inners._7 _7_1, Inners._4 _4_1)
+            public _74(Foo._7 _7_1, Foo._4 _4_1)
             {
                 this._7_1 = _7_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10665,14 +10665,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _75 : _Ⰳx21ⲻ7E
         {
-            public _75(Inners._7 _7_1, Inners._5 _5_1)
+            public _75(Foo._7 _7_1, Foo._5 _5_1)
             {
                 this._7_1 = _7_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10682,14 +10682,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _76 : _Ⰳx21ⲻ7E
         {
-            public _76(Inners._7 _7_1, Inners._6 _6_1)
+            public _76(Foo._7 _7_1, Foo._6 _6_1)
             {
                 this._7_1 = _7_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10699,14 +10699,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _77 : _Ⰳx21ⲻ7E
         {
-            public _77(Inners._7 _7_1, Inners._7 _7_2)
+            public _77(Foo._7 _7_1, Foo._7 _7_2)
             {
                 this._7_1 = _7_1;
                 this._7_2 = _7_2;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._7 _7_2 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._7 _7_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10716,14 +10716,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _78 : _Ⰳx21ⲻ7E
         {
-            public _78(Inners._7 _7_1, Inners._8 _8_1)
+            public _78(Foo._7 _7_1, Foo._8 _8_1)
             {
                 this._7_1 = _7_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10733,14 +10733,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _79 : _Ⰳx21ⲻ7E
         {
-            public _79(Inners._7 _7_1, Inners._9 _9_1)
+            public _79(Foo._7 _7_1, Foo._9 _9_1)
             {
                 this._7_1 = _7_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10750,14 +10750,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7A : _Ⰳx21ⲻ7E
         {
-            public _7A(Inners._7 _7_1, Inners._A _A_1)
+            public _7A(Foo._7 _7_1, Foo._A _A_1)
             {
                 this._7_1 = _7_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10767,14 +10767,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7B : _Ⰳx21ⲻ7E
         {
-            public _7B(Inners._7 _7_1, Inners._B _B_1)
+            public _7B(Foo._7 _7_1, Foo._B _B_1)
             {
                 this._7_1 = _7_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10784,14 +10784,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7C : _Ⰳx21ⲻ7E
         {
-            public _7C(Inners._7 _7_1, Inners._C _C_1)
+            public _7C(Foo._7 _7_1, Foo._C _C_1)
             {
                 this._7_1 = _7_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10801,14 +10801,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7D : _Ⰳx21ⲻ7E
         {
-            public _7D(Inners._7 _7_1, Inners._D _D_1)
+            public _7D(Foo._7 _7_1, Foo._D _D_1)
             {
                 this._7_1 = _7_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10818,14 +10818,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7E : _Ⰳx21ⲻ7E
         {
-            public _7E(Inners._7 _7_1, Inners._E _E_1)
+            public _7E(Foo._7 _7_1, Foo._E _E_1)
             {
                 this._7_1 = _7_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10848,12 +10848,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ⲤЖcⲻwsp_cⲻnlↃ
     {
-        public _ⲤЖcⲻwsp_cⲻnlↃ(Inners._Жcⲻwsp_cⲻnl _Жcⲻwsp_cⲻnl_1)
+        public _ⲤЖcⲻwsp_cⲻnlↃ(Foo._Жcⲻwsp_cⲻnl _Жcⲻwsp_cⲻnl_1)
         {
             this._Жcⲻwsp_cⲻnl_1 = _Жcⲻwsp_cⲻnl_1;
         }
         
-        public Inners._Жcⲻwsp_cⲻnl _Жcⲻwsp_cⲻnl_1 { get; }
+        public Foo._Жcⲻwsp_cⲻnl _Жcⲻwsp_cⲻnl_1 { get; }
     }
     
     public abstract class _ruleⳆⲤЖcⲻwsp_cⲻnlↃ
@@ -10892,12 +10892,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _ⲤЖcⲻwsp_cⲻnlↃ : _ruleⳆⲤЖcⲻwsp_cⲻnlↃ
         {
-            public _ⲤЖcⲻwsp_cⲻnlↃ(Inners._ⲤЖcⲻwsp_cⲻnlↃ _ⲤЖcⲻwsp_cⲻnlↃ_1)
+            public _ⲤЖcⲻwsp_cⲻnlↃ(Foo._ⲤЖcⲻwsp_cⲻnlↃ _ⲤЖcⲻwsp_cⲻnlↃ_1)
             {
                 this._ⲤЖcⲻwsp_cⲻnlↃ_1 = _ⲤЖcⲻwsp_cⲻnlↃ_1;
             }
             
-            public Inners._ⲤЖcⲻwsp_cⲻnlↃ _ⲤЖcⲻwsp_cⲻnlↃ_1 { get; }
+            public Foo._ⲤЖcⲻwsp_cⲻnlↃ _ⲤЖcⲻwsp_cⲻnlↃ_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -10908,12 +10908,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ
     {
-        public _ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ(Inners._ruleⳆⲤЖcⲻwsp_cⲻnlↃ _ruleⳆⲤЖcⲻwsp_cⲻnlↃ_1)
+        public _ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ(Foo._ruleⳆⲤЖcⲻwsp_cⲻnlↃ _ruleⳆⲤЖcⲻwsp_cⲻnlↃ_1)
         {
             this._ruleⳆⲤЖcⲻwsp_cⲻnlↃ_1 = _ruleⳆⲤЖcⲻwsp_cⲻnlↃ_1;
         }
         
-        public Inners._ruleⳆⲤЖcⲻwsp_cⲻnlↃ _ruleⳆⲤЖcⲻwsp_cⲻnlↃ_1 { get; }
+        public Foo._ruleⳆⲤЖcⲻwsp_cⲻnlↃ _ruleⳆⲤЖcⲻwsp_cⲻnlↃ_1 { get; }
     }
     
     public sealed class _x2D
@@ -10927,12 +10927,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx2Dʺ
     {
-        public _ʺx2Dʺ(Inners._x2D _x2D_1)
+        public _ʺx2Dʺ(Foo._x2D _x2D_1)
         {
             this._x2D_1 = _x2D_1;
         }
         
-        public Inners._x2D _x2D_1 { get; }
+        public Foo._x2D _x2D_1 { get; }
     }
     
     public abstract class _ALPHAⳆDIGITⳆʺx2Dʺ
@@ -10987,12 +10987,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _ʺx2Dʺ : _ALPHAⳆDIGITⳆʺx2Dʺ
         {
-            public _ʺx2Dʺ(Inners._ʺx2Dʺ _ʺx2Dʺ_1)
+            public _ʺx2Dʺ(Foo._ʺx2Dʺ _ʺx2Dʺ_1)
             {
                 this._ʺx2Dʺ_1 = _ʺx2Dʺ_1;
             }
             
-            public Inners._ʺx2Dʺ _ʺx2Dʺ_1 { get; }
+            public Foo._ʺx2Dʺ _ʺx2Dʺ_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11003,12 +11003,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ⲤALPHAⳆDIGITⳆʺx2DʺↃ
     {
-        public _ⲤALPHAⳆDIGITⳆʺx2DʺↃ(Inners._ALPHAⳆDIGITⳆʺx2Dʺ _ALPHAⳆDIGITⳆʺx2Dʺ_1)
+        public _ⲤALPHAⳆDIGITⳆʺx2DʺↃ(Foo._ALPHAⳆDIGITⳆʺx2Dʺ _ALPHAⳆDIGITⳆʺx2Dʺ_1)
         {
             this._ALPHAⳆDIGITⳆʺx2Dʺ_1 = _ALPHAⳆDIGITⳆʺx2Dʺ_1;
         }
         
-        public Inners._ALPHAⳆDIGITⳆʺx2Dʺ _ALPHAⳆDIGITⳆʺx2Dʺ_1 { get; }
+        public Foo._ALPHAⳆDIGITⳆʺx2Dʺ _ALPHAⳆDIGITⳆʺx2Dʺ_1 { get; }
     }
     
     public sealed class _x3D
@@ -11022,12 +11022,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx3Dʺ
     {
-        public _ʺx3Dʺ(Inners._x3D _x3D_1)
+        public _ʺx3Dʺ(Foo._x3D _x3D_1)
         {
             this._x3D_1 = _x3D_1;
         }
         
-        public Inners._x3D _x3D_1 { get; }
+        public Foo._x3D _x3D_1 { get; }
     }
     
     public sealed class _x2F
@@ -11041,14 +11041,14 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx3Dx2Fʺ
     {
-        public _ʺx3Dx2Fʺ(Inners._x3D _x3D_1, Inners._x2F _x2F_1)
+        public _ʺx3Dx2Fʺ(Foo._x3D _x3D_1, Foo._x2F _x2F_1)
         {
             this._x3D_1 = _x3D_1;
             this._x2F_1 = _x2F_1;
         }
         
-        public Inners._x3D _x3D_1 { get; }
-        public Inners._x2F _x2F_1 { get; }
+        public Foo._x3D _x3D_1 { get; }
+        public Foo._x2F _x2F_1 { get; }
     }
     
     public abstract class _ʺx3DʺⳆʺx3Dx2Fʺ
@@ -11072,12 +11072,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _ʺx3Dʺ : _ʺx3DʺⳆʺx3Dx2Fʺ
         {
-            public _ʺx3Dʺ(Inners._ʺx3Dʺ _ʺx3Dʺ_1)
+            public _ʺx3Dʺ(Foo._ʺx3Dʺ _ʺx3Dʺ_1)
             {
                 this._ʺx3Dʺ_1 = _ʺx3Dʺ_1;
             }
             
-            public Inners._ʺx3Dʺ _ʺx3Dʺ_1 { get; }
+            public Foo._ʺx3Dʺ _ʺx3Dʺ_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11087,12 +11087,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _ʺx3Dx2Fʺ : _ʺx3DʺⳆʺx3Dx2Fʺ
         {
-            public _ʺx3Dx2Fʺ(Inners._ʺx3Dx2Fʺ _ʺx3Dx2Fʺ_1)
+            public _ʺx3Dx2Fʺ(Foo._ʺx3Dx2Fʺ _ʺx3Dx2Fʺ_1)
             {
                 this._ʺx3Dx2Fʺ_1 = _ʺx3Dx2Fʺ_1;
             }
             
-            public Inners._ʺx3Dx2Fʺ _ʺx3Dx2Fʺ_1 { get; }
+            public Foo._ʺx3Dx2Fʺ _ʺx3Dx2Fʺ_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11103,12 +11103,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _Ⲥʺx3DʺⳆʺx3Dx2FʺↃ
     {
-        public _Ⲥʺx3DʺⳆʺx3Dx2FʺↃ(Inners._ʺx3DʺⳆʺx3Dx2Fʺ _ʺx3DʺⳆʺx3Dx2Fʺ_1)
+        public _Ⲥʺx3DʺⳆʺx3Dx2FʺↃ(Foo._ʺx3DʺⳆʺx3Dx2Fʺ _ʺx3DʺⳆʺx3Dx2Fʺ_1)
         {
             this._ʺx3DʺⳆʺx3Dx2Fʺ_1 = _ʺx3DʺⳆʺx3Dx2Fʺ_1;
         }
         
-        public Inners._ʺx3DʺⳆʺx3Dx2Fʺ _ʺx3DʺⳆʺx3Dx2Fʺ_1 { get; }
+        public Foo._ʺx3DʺⳆʺx3Dx2Fʺ _ʺx3DʺⳆʺx3Dx2Fʺ_1 { get; }
     }
     
     public sealed class _cⲻnl_WSP
@@ -11125,12 +11125,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _Ⲥcⲻnl_WSPↃ
     {
-        public _Ⲥcⲻnl_WSPↃ(Inners._cⲻnl_WSP _cⲻnl_WSP_1)
+        public _Ⲥcⲻnl_WSPↃ(Foo._cⲻnl_WSP _cⲻnl_WSP_1)
         {
             this._cⲻnl_WSP_1 = _cⲻnl_WSP_1;
         }
         
-        public Inners._cⲻnl_WSP _cⲻnl_WSP_1 { get; }
+        public Foo._cⲻnl_WSP _cⲻnl_WSP_1 { get; }
     }
     
     public sealed class _x3B
@@ -11144,12 +11144,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx3Bʺ
     {
-        public _ʺx3Bʺ(Inners._x3B _x3B_1)
+        public _ʺx3Bʺ(Foo._x3B _x3B_1)
         {
             this._x3B_1 = _x3B_1;
         }
         
-        public Inners._x3B _x3B_1 { get; }
+        public Foo._x3B _x3B_1 { get; }
     }
     
     public abstract class _WSPⳆVCHAR
@@ -11204,27 +11204,27 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ⲤWSPⳆVCHARↃ
     {
-        public _ⲤWSPⳆVCHARↃ(Inners._WSPⳆVCHAR _WSPⳆVCHAR_1)
+        public _ⲤWSPⳆVCHARↃ(Foo._WSPⳆVCHAR _WSPⳆVCHAR_1)
         {
             this._WSPⳆVCHAR_1 = _WSPⳆVCHAR_1;
         }
         
-        public Inners._WSPⳆVCHAR _WSPⳆVCHAR_1 { get; }
+        public Foo._WSPⳆVCHAR _WSPⳆVCHAR_1 { get; }
     }
     
     public sealed class _ʺx2Fʺ
     {
-        public _ʺx2Fʺ(Inners._x2F _x2F_1)
+        public _ʺx2Fʺ(Foo._x2F _x2F_1)
         {
             this._x2F_1 = _x2F_1;
         }
         
-        public Inners._x2F _x2F_1 { get; }
+        public Foo._x2F _x2F_1 { get; }
     }
     
     public sealed class _Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation
     {
-        public _Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation(System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1, Inners._ʺx2Fʺ _ʺx2Fʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2, __Generated.CstNodes.Rules._concatenation _concatenation_1)
+        public _Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation(System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1, Foo._ʺx2Fʺ _ʺx2Fʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2, __Generated.CstNodes.Rules._concatenation _concatenation_1)
         {
             this._cⲻwsp_1 = _cⲻwsp_1;
             this._ʺx2Fʺ_1 = _ʺx2Fʺ_1;
@@ -11233,19 +11233,19 @@ namespace __Generated.CstNodes.Inners
         }
         
         public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_1 { get; }
-        public Inners._ʺx2Fʺ _ʺx2Fʺ_1 { get; }
+        public Foo._ʺx2Fʺ _ʺx2Fʺ_1 { get; }
         public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._cⲻwsp> _cⲻwsp_2 { get; }
         public __Generated.CstNodes.Rules._concatenation _concatenation_1 { get; }
     }
     
     public sealed class _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ
     {
-        public _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ(Inners._Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation _Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation_1)
+        public _ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ(Foo._Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation _Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation_1)
         {
             this._Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation_1 = _Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation_1;
         }
         
-        public Inners._Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation _Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation_1 { get; }
+        public Foo._Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation _Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation_1 { get; }
     }
     
     public sealed class _1Жcⲻwsp_repetition
@@ -11262,12 +11262,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _Ⲥ1Жcⲻwsp_repetitionↃ
     {
-        public _Ⲥ1Жcⲻwsp_repetitionↃ(Inners._1Жcⲻwsp_repetition _1Жcⲻwsp_repetition_1)
+        public _Ⲥ1Жcⲻwsp_repetitionↃ(Foo._1Жcⲻwsp_repetition _1Жcⲻwsp_repetition_1)
         {
             this._1Жcⲻwsp_repetition_1 = _1Жcⲻwsp_repetition_1;
         }
         
-        public Inners._1Жcⲻwsp_repetition _1Жcⲻwsp_repetition_1 { get; }
+        public Foo._1Жcⲻwsp_repetition _1Жcⲻwsp_repetition_1 { get; }
     }
     
     public sealed class _x2A
@@ -11281,17 +11281,17 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx2Aʺ
     {
-        public _ʺx2Aʺ(Inners._x2A _x2A_1)
+        public _ʺx2Aʺ(Foo._x2A _x2A_1)
         {
             this._x2A_1 = _x2A_1;
         }
         
-        public Inners._x2A _x2A_1 { get; }
+        public Foo._x2A _x2A_1 { get; }
     }
     
     public sealed class _ЖDIGIT_ʺx2Aʺ_ЖDIGIT
     {
-        public _ЖDIGIT_ʺx2Aʺ_ЖDIGIT(System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1, Inners._ʺx2Aʺ _ʺx2Aʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_2)
+        public _ЖDIGIT_ʺx2Aʺ_ЖDIGIT(System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1, Foo._ʺx2Aʺ _ʺx2Aʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_2)
         {
             this._DIGIT_1 = _DIGIT_1;
             this._ʺx2Aʺ_1 = _ʺx2Aʺ_1;
@@ -11299,18 +11299,18 @@ namespace __Generated.CstNodes.Inners
         }
         
         public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
-        public Inners._ʺx2Aʺ _ʺx2Aʺ_1 { get; }
+        public Foo._ʺx2Aʺ _ʺx2Aʺ_1 { get; }
         public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_2 { get; }
     }
     
     public sealed class _ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ
     {
-        public _ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ(Inners._ЖDIGIT_ʺx2Aʺ_ЖDIGIT _ЖDIGIT_ʺx2Aʺ_ЖDIGIT_1)
+        public _ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ(Foo._ЖDIGIT_ʺx2Aʺ_ЖDIGIT _ЖDIGIT_ʺx2Aʺ_ЖDIGIT_1)
         {
             this._ЖDIGIT_ʺx2Aʺ_ЖDIGIT_1 = _ЖDIGIT_ʺx2Aʺ_ЖDIGIT_1;
         }
         
-        public Inners._ЖDIGIT_ʺx2Aʺ_ЖDIGIT _ЖDIGIT_ʺx2Aʺ_ЖDIGIT_1 { get; }
+        public Foo._ЖDIGIT_ʺx2Aʺ_ЖDIGIT _ЖDIGIT_ʺx2Aʺ_ЖDIGIT_1 { get; }
     }
     
     public sealed class _x28
@@ -11324,12 +11324,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx28ʺ
     {
-        public _ʺx28ʺ(Inners._x28 _x28_1)
+        public _ʺx28ʺ(Foo._x28 _x28_1)
         {
             this._x28_1 = _x28_1;
         }
         
-        public Inners._x28 _x28_1 { get; }
+        public Foo._x28 _x28_1 { get; }
     }
     
     public sealed class _x29
@@ -11343,12 +11343,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx29ʺ
     {
-        public _ʺx29ʺ(Inners._x29 _x29_1)
+        public _ʺx29ʺ(Foo._x29 _x29_1)
         {
             this._x29_1 = _x29_1;
         }
         
-        public Inners._x29 _x29_1 { get; }
+        public Foo._x29 _x29_1 { get; }
     }
     
     public sealed class _x5B
@@ -11362,12 +11362,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx5Bʺ
     {
-        public _ʺx5Bʺ(Inners._x5B _x5B_1)
+        public _ʺx5Bʺ(Foo._x5B _x5B_1)
         {
             this._x5B_1 = _x5B_1;
         }
         
-        public Inners._x5B _x5B_1 { get; }
+        public Foo._x5B _x5B_1 { get; }
     }
     
     public sealed class _x5D
@@ -11381,12 +11381,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx5Dʺ
     {
-        public _ʺx5Dʺ(Inners._x5D _x5D_1)
+        public _ʺx5Dʺ(Foo._x5D _x5D_1)
         {
             this._x5D_1 = _x5D_1;
         }
         
-        public Inners._x5D _x5D_1 { get; }
+        public Foo._x5D _x5D_1 { get; }
     }
     
     public abstract class _Ⰳx20ⲻ21
@@ -11410,14 +11410,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _20 : _Ⰳx20ⲻ21
         {
-            public _20(Inners._2 _2_1, Inners._0 _0_1)
+            public _20(Foo._2 _2_1, Foo._0 _0_1)
             {
                 this._2_1 = _2_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11427,14 +11427,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _21 : _Ⰳx20ⲻ21
         {
-            public _21(Inners._2 _2_1, Inners._1 _1_1)
+            public _21(Foo._2 _2_1, Foo._1 _1_1)
             {
                 this._2_1 = _2_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11554,14 +11554,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _23 : _Ⰳx23ⲻ7E
         {
-            public _23(Inners._2 _2_1, Inners._3 _3_1)
+            public _23(Foo._2 _2_1, Foo._3 _3_1)
             {
                 this._2_1 = _2_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11571,14 +11571,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _24 : _Ⰳx23ⲻ7E
         {
-            public _24(Inners._2 _2_1, Inners._4 _4_1)
+            public _24(Foo._2 _2_1, Foo._4 _4_1)
             {
                 this._2_1 = _2_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11588,14 +11588,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _25 : _Ⰳx23ⲻ7E
         {
-            public _25(Inners._2 _2_1, Inners._5 _5_1)
+            public _25(Foo._2 _2_1, Foo._5 _5_1)
             {
                 this._2_1 = _2_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11605,14 +11605,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _26 : _Ⰳx23ⲻ7E
         {
-            public _26(Inners._2 _2_1, Inners._6 _6_1)
+            public _26(Foo._2 _2_1, Foo._6 _6_1)
             {
                 this._2_1 = _2_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11622,14 +11622,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _27 : _Ⰳx23ⲻ7E
         {
-            public _27(Inners._2 _2_1, Inners._7 _7_1)
+            public _27(Foo._2 _2_1, Foo._7 _7_1)
             {
                 this._2_1 = _2_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11639,14 +11639,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _28 : _Ⰳx23ⲻ7E
         {
-            public _28(Inners._2 _2_1, Inners._8 _8_1)
+            public _28(Foo._2 _2_1, Foo._8 _8_1)
             {
                 this._2_1 = _2_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11656,14 +11656,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _29 : _Ⰳx23ⲻ7E
         {
-            public _29(Inners._2 _2_1, Inners._9 _9_1)
+            public _29(Foo._2 _2_1, Foo._9 _9_1)
             {
                 this._2_1 = _2_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11673,14 +11673,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2A : _Ⰳx23ⲻ7E
         {
-            public _2A(Inners._2 _2_1, Inners._A _A_1)
+            public _2A(Foo._2 _2_1, Foo._A _A_1)
             {
                 this._2_1 = _2_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11690,14 +11690,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2B : _Ⰳx23ⲻ7E
         {
-            public _2B(Inners._2 _2_1, Inners._B _B_1)
+            public _2B(Foo._2 _2_1, Foo._B _B_1)
             {
                 this._2_1 = _2_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11707,14 +11707,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2C : _Ⰳx23ⲻ7E
         {
-            public _2C(Inners._2 _2_1, Inners._C _C_1)
+            public _2C(Foo._2 _2_1, Foo._C _C_1)
             {
                 this._2_1 = _2_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11724,14 +11724,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2D : _Ⰳx23ⲻ7E
         {
-            public _2D(Inners._2 _2_1, Inners._D _D_1)
+            public _2D(Foo._2 _2_1, Foo._D _D_1)
             {
                 this._2_1 = _2_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11741,14 +11741,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2E : _Ⰳx23ⲻ7E
         {
-            public _2E(Inners._2 _2_1, Inners._E _E_1)
+            public _2E(Foo._2 _2_1, Foo._E _E_1)
             {
                 this._2_1 = _2_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11758,14 +11758,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2F : _Ⰳx23ⲻ7E
         {
-            public _2F(Inners._2 _2_1, Inners._F _F_1)
+            public _2F(Foo._2 _2_1, Foo._F _F_1)
             {
                 this._2_1 = _2_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11775,14 +11775,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _30 : _Ⰳx23ⲻ7E
         {
-            public _30(Inners._3 _3_1, Inners._0 _0_1)
+            public _30(Foo._3 _3_1, Foo._0 _0_1)
             {
                 this._3_1 = _3_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11792,14 +11792,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _31 : _Ⰳx23ⲻ7E
         {
-            public _31(Inners._3 _3_1, Inners._1 _1_1)
+            public _31(Foo._3 _3_1, Foo._1 _1_1)
             {
                 this._3_1 = _3_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11809,14 +11809,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _32 : _Ⰳx23ⲻ7E
         {
-            public _32(Inners._3 _3_1, Inners._2 _2_1)
+            public _32(Foo._3 _3_1, Foo._2 _2_1)
             {
                 this._3_1 = _3_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11826,14 +11826,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _33 : _Ⰳx23ⲻ7E
         {
-            public _33(Inners._3 _3_1, Inners._3 _3_2)
+            public _33(Foo._3 _3_1, Foo._3 _3_2)
             {
                 this._3_1 = _3_1;
                 this._3_2 = _3_2;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._3 _3_2 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._3 _3_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11843,14 +11843,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _34 : _Ⰳx23ⲻ7E
         {
-            public _34(Inners._3 _3_1, Inners._4 _4_1)
+            public _34(Foo._3 _3_1, Foo._4 _4_1)
             {
                 this._3_1 = _3_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11860,14 +11860,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _35 : _Ⰳx23ⲻ7E
         {
-            public _35(Inners._3 _3_1, Inners._5 _5_1)
+            public _35(Foo._3 _3_1, Foo._5 _5_1)
             {
                 this._3_1 = _3_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11877,14 +11877,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _36 : _Ⰳx23ⲻ7E
         {
-            public _36(Inners._3 _3_1, Inners._6 _6_1)
+            public _36(Foo._3 _3_1, Foo._6 _6_1)
             {
                 this._3_1 = _3_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11894,14 +11894,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _37 : _Ⰳx23ⲻ7E
         {
-            public _37(Inners._3 _3_1, Inners._7 _7_1)
+            public _37(Foo._3 _3_1, Foo._7 _7_1)
             {
                 this._3_1 = _3_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11911,14 +11911,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _38 : _Ⰳx23ⲻ7E
         {
-            public _38(Inners._3 _3_1, Inners._8 _8_1)
+            public _38(Foo._3 _3_1, Foo._8 _8_1)
             {
                 this._3_1 = _3_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11928,14 +11928,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _39 : _Ⰳx23ⲻ7E
         {
-            public _39(Inners._3 _3_1, Inners._9 _9_1)
+            public _39(Foo._3 _3_1, Foo._9 _9_1)
             {
                 this._3_1 = _3_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11945,14 +11945,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3A : _Ⰳx23ⲻ7E
         {
-            public _3A(Inners._3 _3_1, Inners._A _A_1)
+            public _3A(Foo._3 _3_1, Foo._A _A_1)
             {
                 this._3_1 = _3_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11962,14 +11962,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3B : _Ⰳx23ⲻ7E
         {
-            public _3B(Inners._3 _3_1, Inners._B _B_1)
+            public _3B(Foo._3 _3_1, Foo._B _B_1)
             {
                 this._3_1 = _3_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11979,14 +11979,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3C : _Ⰳx23ⲻ7E
         {
-            public _3C(Inners._3 _3_1, Inners._C _C_1)
+            public _3C(Foo._3 _3_1, Foo._C _C_1)
             {
                 this._3_1 = _3_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -11996,14 +11996,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3D : _Ⰳx23ⲻ7E
         {
-            public _3D(Inners._3 _3_1, Inners._D _D_1)
+            public _3D(Foo._3 _3_1, Foo._D _D_1)
             {
                 this._3_1 = _3_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12013,14 +12013,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3E : _Ⰳx23ⲻ7E
         {
-            public _3E(Inners._3 _3_1, Inners._E _E_1)
+            public _3E(Foo._3 _3_1, Foo._E _E_1)
             {
                 this._3_1 = _3_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12030,14 +12030,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3F : _Ⰳx23ⲻ7E
         {
-            public _3F(Inners._3 _3_1, Inners._F _F_1)
+            public _3F(Foo._3 _3_1, Foo._F _F_1)
             {
                 this._3_1 = _3_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12047,14 +12047,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _40 : _Ⰳx23ⲻ7E
         {
-            public _40(Inners._4 _4_1, Inners._0 _0_1)
+            public _40(Foo._4 _4_1, Foo._0 _0_1)
             {
                 this._4_1 = _4_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12064,14 +12064,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _41 : _Ⰳx23ⲻ7E
         {
-            public _41(Inners._4 _4_1, Inners._1 _1_1)
+            public _41(Foo._4 _4_1, Foo._1 _1_1)
             {
                 this._4_1 = _4_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12081,14 +12081,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _42 : _Ⰳx23ⲻ7E
         {
-            public _42(Inners._4 _4_1, Inners._2 _2_1)
+            public _42(Foo._4 _4_1, Foo._2 _2_1)
             {
                 this._4_1 = _4_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12098,14 +12098,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _43 : _Ⰳx23ⲻ7E
         {
-            public _43(Inners._4 _4_1, Inners._3 _3_1)
+            public _43(Foo._4 _4_1, Foo._3 _3_1)
             {
                 this._4_1 = _4_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12115,14 +12115,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _44 : _Ⰳx23ⲻ7E
         {
-            public _44(Inners._4 _4_1, Inners._4 _4_2)
+            public _44(Foo._4 _4_1, Foo._4 _4_2)
             {
                 this._4_1 = _4_1;
                 this._4_2 = _4_2;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._4 _4_2 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._4 _4_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12132,14 +12132,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _45 : _Ⰳx23ⲻ7E
         {
-            public _45(Inners._4 _4_1, Inners._5 _5_1)
+            public _45(Foo._4 _4_1, Foo._5 _5_1)
             {
                 this._4_1 = _4_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12149,14 +12149,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _46 : _Ⰳx23ⲻ7E
         {
-            public _46(Inners._4 _4_1, Inners._6 _6_1)
+            public _46(Foo._4 _4_1, Foo._6 _6_1)
             {
                 this._4_1 = _4_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12166,14 +12166,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _47 : _Ⰳx23ⲻ7E
         {
-            public _47(Inners._4 _4_1, Inners._7 _7_1)
+            public _47(Foo._4 _4_1, Foo._7 _7_1)
             {
                 this._4_1 = _4_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12183,14 +12183,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _48 : _Ⰳx23ⲻ7E
         {
-            public _48(Inners._4 _4_1, Inners._8 _8_1)
+            public _48(Foo._4 _4_1, Foo._8 _8_1)
             {
                 this._4_1 = _4_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12200,14 +12200,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _49 : _Ⰳx23ⲻ7E
         {
-            public _49(Inners._4 _4_1, Inners._9 _9_1)
+            public _49(Foo._4 _4_1, Foo._9 _9_1)
             {
                 this._4_1 = _4_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12217,14 +12217,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4A : _Ⰳx23ⲻ7E
         {
-            public _4A(Inners._4 _4_1, Inners._A _A_1)
+            public _4A(Foo._4 _4_1, Foo._A _A_1)
             {
                 this._4_1 = _4_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12234,14 +12234,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4B : _Ⰳx23ⲻ7E
         {
-            public _4B(Inners._4 _4_1, Inners._B _B_1)
+            public _4B(Foo._4 _4_1, Foo._B _B_1)
             {
                 this._4_1 = _4_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12251,14 +12251,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4C : _Ⰳx23ⲻ7E
         {
-            public _4C(Inners._4 _4_1, Inners._C _C_1)
+            public _4C(Foo._4 _4_1, Foo._C _C_1)
             {
                 this._4_1 = _4_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12268,14 +12268,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4D : _Ⰳx23ⲻ7E
         {
-            public _4D(Inners._4 _4_1, Inners._D _D_1)
+            public _4D(Foo._4 _4_1, Foo._D _D_1)
             {
                 this._4_1 = _4_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12285,14 +12285,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4E : _Ⰳx23ⲻ7E
         {
-            public _4E(Inners._4 _4_1, Inners._E _E_1)
+            public _4E(Foo._4 _4_1, Foo._E _E_1)
             {
                 this._4_1 = _4_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12302,14 +12302,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4F : _Ⰳx23ⲻ7E
         {
-            public _4F(Inners._4 _4_1, Inners._F _F_1)
+            public _4F(Foo._4 _4_1, Foo._F _F_1)
             {
                 this._4_1 = _4_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12319,14 +12319,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _50 : _Ⰳx23ⲻ7E
         {
-            public _50(Inners._5 _5_1, Inners._0 _0_1)
+            public _50(Foo._5 _5_1, Foo._0 _0_1)
             {
                 this._5_1 = _5_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12336,14 +12336,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _51 : _Ⰳx23ⲻ7E
         {
-            public _51(Inners._5 _5_1, Inners._1 _1_1)
+            public _51(Foo._5 _5_1, Foo._1 _1_1)
             {
                 this._5_1 = _5_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12353,14 +12353,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _52 : _Ⰳx23ⲻ7E
         {
-            public _52(Inners._5 _5_1, Inners._2 _2_1)
+            public _52(Foo._5 _5_1, Foo._2 _2_1)
             {
                 this._5_1 = _5_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12370,14 +12370,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _53 : _Ⰳx23ⲻ7E
         {
-            public _53(Inners._5 _5_1, Inners._3 _3_1)
+            public _53(Foo._5 _5_1, Foo._3 _3_1)
             {
                 this._5_1 = _5_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12387,14 +12387,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _54 : _Ⰳx23ⲻ7E
         {
-            public _54(Inners._5 _5_1, Inners._4 _4_1)
+            public _54(Foo._5 _5_1, Foo._4 _4_1)
             {
                 this._5_1 = _5_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12404,14 +12404,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _55 : _Ⰳx23ⲻ7E
         {
-            public _55(Inners._5 _5_1, Inners._5 _5_2)
+            public _55(Foo._5 _5_1, Foo._5 _5_2)
             {
                 this._5_1 = _5_1;
                 this._5_2 = _5_2;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._5 _5_2 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._5 _5_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12421,14 +12421,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _56 : _Ⰳx23ⲻ7E
         {
-            public _56(Inners._5 _5_1, Inners._6 _6_1)
+            public _56(Foo._5 _5_1, Foo._6 _6_1)
             {
                 this._5_1 = _5_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12438,14 +12438,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _57 : _Ⰳx23ⲻ7E
         {
-            public _57(Inners._5 _5_1, Inners._7 _7_1)
+            public _57(Foo._5 _5_1, Foo._7 _7_1)
             {
                 this._5_1 = _5_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12455,14 +12455,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _58 : _Ⰳx23ⲻ7E
         {
-            public _58(Inners._5 _5_1, Inners._8 _8_1)
+            public _58(Foo._5 _5_1, Foo._8 _8_1)
             {
                 this._5_1 = _5_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12472,14 +12472,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _59 : _Ⰳx23ⲻ7E
         {
-            public _59(Inners._5 _5_1, Inners._9 _9_1)
+            public _59(Foo._5 _5_1, Foo._9 _9_1)
             {
                 this._5_1 = _5_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12489,14 +12489,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5A : _Ⰳx23ⲻ7E
         {
-            public _5A(Inners._5 _5_1, Inners._A _A_1)
+            public _5A(Foo._5 _5_1, Foo._A _A_1)
             {
                 this._5_1 = _5_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12506,14 +12506,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5B : _Ⰳx23ⲻ7E
         {
-            public _5B(Inners._5 _5_1, Inners._B _B_1)
+            public _5B(Foo._5 _5_1, Foo._B _B_1)
             {
                 this._5_1 = _5_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12523,14 +12523,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5C : _Ⰳx23ⲻ7E
         {
-            public _5C(Inners._5 _5_1, Inners._C _C_1)
+            public _5C(Foo._5 _5_1, Foo._C _C_1)
             {
                 this._5_1 = _5_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12540,14 +12540,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5D : _Ⰳx23ⲻ7E
         {
-            public _5D(Inners._5 _5_1, Inners._D _D_1)
+            public _5D(Foo._5 _5_1, Foo._D _D_1)
             {
                 this._5_1 = _5_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12557,14 +12557,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5E : _Ⰳx23ⲻ7E
         {
-            public _5E(Inners._5 _5_1, Inners._E _E_1)
+            public _5E(Foo._5 _5_1, Foo._E _E_1)
             {
                 this._5_1 = _5_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12574,14 +12574,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5F : _Ⰳx23ⲻ7E
         {
-            public _5F(Inners._5 _5_1, Inners._F _F_1)
+            public _5F(Foo._5 _5_1, Foo._F _F_1)
             {
                 this._5_1 = _5_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12591,14 +12591,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _60 : _Ⰳx23ⲻ7E
         {
-            public _60(Inners._6 _6_1, Inners._0 _0_1)
+            public _60(Foo._6 _6_1, Foo._0 _0_1)
             {
                 this._6_1 = _6_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12608,14 +12608,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _61 : _Ⰳx23ⲻ7E
         {
-            public _61(Inners._6 _6_1, Inners._1 _1_1)
+            public _61(Foo._6 _6_1, Foo._1 _1_1)
             {
                 this._6_1 = _6_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12625,14 +12625,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _62 : _Ⰳx23ⲻ7E
         {
-            public _62(Inners._6 _6_1, Inners._2 _2_1)
+            public _62(Foo._6 _6_1, Foo._2 _2_1)
             {
                 this._6_1 = _6_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12642,14 +12642,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _63 : _Ⰳx23ⲻ7E
         {
-            public _63(Inners._6 _6_1, Inners._3 _3_1)
+            public _63(Foo._6 _6_1, Foo._3 _3_1)
             {
                 this._6_1 = _6_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12659,14 +12659,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _64 : _Ⰳx23ⲻ7E
         {
-            public _64(Inners._6 _6_1, Inners._4 _4_1)
+            public _64(Foo._6 _6_1, Foo._4 _4_1)
             {
                 this._6_1 = _6_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12676,14 +12676,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _65 : _Ⰳx23ⲻ7E
         {
-            public _65(Inners._6 _6_1, Inners._5 _5_1)
+            public _65(Foo._6 _6_1, Foo._5 _5_1)
             {
                 this._6_1 = _6_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12693,14 +12693,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _66 : _Ⰳx23ⲻ7E
         {
-            public _66(Inners._6 _6_1, Inners._6 _6_2)
+            public _66(Foo._6 _6_1, Foo._6 _6_2)
             {
                 this._6_1 = _6_1;
                 this._6_2 = _6_2;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._6 _6_2 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._6 _6_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12710,14 +12710,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _67 : _Ⰳx23ⲻ7E
         {
-            public _67(Inners._6 _6_1, Inners._7 _7_1)
+            public _67(Foo._6 _6_1, Foo._7 _7_1)
             {
                 this._6_1 = _6_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12727,14 +12727,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _68 : _Ⰳx23ⲻ7E
         {
-            public _68(Inners._6 _6_1, Inners._8 _8_1)
+            public _68(Foo._6 _6_1, Foo._8 _8_1)
             {
                 this._6_1 = _6_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12744,14 +12744,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _69 : _Ⰳx23ⲻ7E
         {
-            public _69(Inners._6 _6_1, Inners._9 _9_1)
+            public _69(Foo._6 _6_1, Foo._9 _9_1)
             {
                 this._6_1 = _6_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12761,14 +12761,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6A : _Ⰳx23ⲻ7E
         {
-            public _6A(Inners._6 _6_1, Inners._A _A_1)
+            public _6A(Foo._6 _6_1, Foo._A _A_1)
             {
                 this._6_1 = _6_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12778,14 +12778,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6B : _Ⰳx23ⲻ7E
         {
-            public _6B(Inners._6 _6_1, Inners._B _B_1)
+            public _6B(Foo._6 _6_1, Foo._B _B_1)
             {
                 this._6_1 = _6_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12795,14 +12795,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6C : _Ⰳx23ⲻ7E
         {
-            public _6C(Inners._6 _6_1, Inners._C _C_1)
+            public _6C(Foo._6 _6_1, Foo._C _C_1)
             {
                 this._6_1 = _6_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12812,14 +12812,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6D : _Ⰳx23ⲻ7E
         {
-            public _6D(Inners._6 _6_1, Inners._D _D_1)
+            public _6D(Foo._6 _6_1, Foo._D _D_1)
             {
                 this._6_1 = _6_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12829,14 +12829,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6E : _Ⰳx23ⲻ7E
         {
-            public _6E(Inners._6 _6_1, Inners._E _E_1)
+            public _6E(Foo._6 _6_1, Foo._E _E_1)
             {
                 this._6_1 = _6_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12846,14 +12846,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6F : _Ⰳx23ⲻ7E
         {
-            public _6F(Inners._6 _6_1, Inners._F _F_1)
+            public _6F(Foo._6 _6_1, Foo._F _F_1)
             {
                 this._6_1 = _6_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12863,14 +12863,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _70 : _Ⰳx23ⲻ7E
         {
-            public _70(Inners._7 _7_1, Inners._0 _0_1)
+            public _70(Foo._7 _7_1, Foo._0 _0_1)
             {
                 this._7_1 = _7_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12880,14 +12880,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _71 : _Ⰳx23ⲻ7E
         {
-            public _71(Inners._7 _7_1, Inners._1 _1_1)
+            public _71(Foo._7 _7_1, Foo._1 _1_1)
             {
                 this._7_1 = _7_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12897,14 +12897,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _72 : _Ⰳx23ⲻ7E
         {
-            public _72(Inners._7 _7_1, Inners._2 _2_1)
+            public _72(Foo._7 _7_1, Foo._2 _2_1)
             {
                 this._7_1 = _7_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12914,14 +12914,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _73 : _Ⰳx23ⲻ7E
         {
-            public _73(Inners._7 _7_1, Inners._3 _3_1)
+            public _73(Foo._7 _7_1, Foo._3 _3_1)
             {
                 this._7_1 = _7_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12931,14 +12931,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _74 : _Ⰳx23ⲻ7E
         {
-            public _74(Inners._7 _7_1, Inners._4 _4_1)
+            public _74(Foo._7 _7_1, Foo._4 _4_1)
             {
                 this._7_1 = _7_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12948,14 +12948,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _75 : _Ⰳx23ⲻ7E
         {
-            public _75(Inners._7 _7_1, Inners._5 _5_1)
+            public _75(Foo._7 _7_1, Foo._5 _5_1)
             {
                 this._7_1 = _7_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12965,14 +12965,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _76 : _Ⰳx23ⲻ7E
         {
-            public _76(Inners._7 _7_1, Inners._6 _6_1)
+            public _76(Foo._7 _7_1, Foo._6 _6_1)
             {
                 this._7_1 = _7_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12982,14 +12982,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _77 : _Ⰳx23ⲻ7E
         {
-            public _77(Inners._7 _7_1, Inners._7 _7_2)
+            public _77(Foo._7 _7_1, Foo._7 _7_2)
             {
                 this._7_1 = _7_1;
                 this._7_2 = _7_2;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._7 _7_2 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._7 _7_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -12999,14 +12999,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _78 : _Ⰳx23ⲻ7E
         {
-            public _78(Inners._7 _7_1, Inners._8 _8_1)
+            public _78(Foo._7 _7_1, Foo._8 _8_1)
             {
                 this._7_1 = _7_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13016,14 +13016,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _79 : _Ⰳx23ⲻ7E
         {
-            public _79(Inners._7 _7_1, Inners._9 _9_1)
+            public _79(Foo._7 _7_1, Foo._9 _9_1)
             {
                 this._7_1 = _7_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13033,14 +13033,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7A : _Ⰳx23ⲻ7E
         {
-            public _7A(Inners._7 _7_1, Inners._A _A_1)
+            public _7A(Foo._7 _7_1, Foo._A _A_1)
             {
                 this._7_1 = _7_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13050,14 +13050,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7B : _Ⰳx23ⲻ7E
         {
-            public _7B(Inners._7 _7_1, Inners._B _B_1)
+            public _7B(Foo._7 _7_1, Foo._B _B_1)
             {
                 this._7_1 = _7_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13067,14 +13067,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7C : _Ⰳx23ⲻ7E
         {
-            public _7C(Inners._7 _7_1, Inners._C _C_1)
+            public _7C(Foo._7 _7_1, Foo._C _C_1)
             {
                 this._7_1 = _7_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13084,14 +13084,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7D : _Ⰳx23ⲻ7E
         {
-            public _7D(Inners._7 _7_1, Inners._D _D_1)
+            public _7D(Foo._7 _7_1, Foo._D _D_1)
             {
                 this._7_1 = _7_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13101,14 +13101,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7E : _Ⰳx23ⲻ7E
         {
-            public _7E(Inners._7 _7_1, Inners._E _E_1)
+            public _7E(Foo._7 _7_1, Foo._E _E_1)
             {
                 this._7_1 = _7_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13138,12 +13138,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _Ⰳx20ⲻ21 : _Ⰳx20ⲻ21ⳆⰃx23ⲻ7E
         {
-            public _Ⰳx20ⲻ21(Inners._Ⰳx20ⲻ21 _Ⰳx20ⲻ21_1)
+            public _Ⰳx20ⲻ21(Foo._Ⰳx20ⲻ21 _Ⰳx20ⲻ21_1)
             {
                 this._Ⰳx20ⲻ21_1 = _Ⰳx20ⲻ21_1;
             }
             
-            public Inners._Ⰳx20ⲻ21 _Ⰳx20ⲻ21_1 { get; }
+            public Foo._Ⰳx20ⲻ21 _Ⰳx20ⲻ21_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13153,12 +13153,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _Ⰳx23ⲻ7E : _Ⰳx20ⲻ21ⳆⰃx23ⲻ7E
         {
-            public _Ⰳx23ⲻ7E(Inners._Ⰳx23ⲻ7E _Ⰳx23ⲻ7E_1)
+            public _Ⰳx23ⲻ7E(Foo._Ⰳx23ⲻ7E _Ⰳx23ⲻ7E_1)
             {
                 this._Ⰳx23ⲻ7E_1 = _Ⰳx23ⲻ7E_1;
             }
             
-            public Inners._Ⰳx23ⲻ7E _Ⰳx23ⲻ7E_1 { get; }
+            public Foo._Ⰳx23ⲻ7E _Ⰳx23ⲻ7E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13169,12 +13169,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ
     {
-        public _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ(Inners._Ⰳx20ⲻ21ⳆⰃx23ⲻ7E _Ⰳx20ⲻ21ⳆⰃx23ⲻ7E_1)
+        public _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ(Foo._Ⰳx20ⲻ21ⳆⰃx23ⲻ7E _Ⰳx20ⲻ21ⳆⰃx23ⲻ7E_1)
         {
             this._Ⰳx20ⲻ21ⳆⰃx23ⲻ7E_1 = _Ⰳx20ⲻ21ⳆⰃx23ⲻ7E_1;
         }
         
-        public Inners._Ⰳx20ⲻ21ⳆⰃx23ⲻ7E _Ⰳx20ⲻ21ⳆⰃx23ⲻ7E_1 { get; }
+        public Foo._Ⰳx20ⲻ21ⳆⰃx23ⲻ7E _Ⰳx20ⲻ21ⳆⰃx23ⲻ7E_1 { get; }
     }
     
     public sealed class _x25
@@ -13188,12 +13188,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx25ʺ
     {
-        public _ʺx25ʺ(Inners._x25 _x25_1)
+        public _ʺx25ʺ(Foo._x25 _x25_1)
         {
             this._x25_1 = _x25_1;
         }
         
-        public Inners._x25 _x25_1 { get; }
+        public Foo._x25 _x25_1 { get; }
     }
     
     public abstract class _binⲻvalⳆdecⲻvalⳆhexⲻval
@@ -13264,12 +13264,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃ
     {
-        public _ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃ(Inners._binⲻvalⳆdecⲻvalⳆhexⲻval _binⲻvalⳆdecⲻvalⳆhexⲻval_1)
+        public _ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃ(Foo._binⲻvalⳆdecⲻvalⳆhexⲻval _binⲻvalⳆdecⲻvalⳆhexⲻval_1)
         {
             this._binⲻvalⳆdecⲻvalⳆhexⲻval_1 = _binⲻvalⳆdecⲻvalⳆhexⲻval_1;
         }
         
-        public Inners._binⲻvalⳆdecⲻvalⳆhexⲻval _binⲻvalⳆdecⲻvalⳆhexⲻval_1 { get; }
+        public Foo._binⲻvalⳆdecⲻvalⳆhexⲻval _binⲻvalⳆdecⲻvalⳆhexⲻval_1 { get; }
     }
     
     public sealed class _x62
@@ -13283,12 +13283,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx62ʺ
     {
-        public _ʺx62ʺ(Inners._x62 _x62_1)
+        public _ʺx62ʺ(Foo._x62 _x62_1)
         {
             this._x62_1 = _x62_1;
         }
         
-        public Inners._x62 _x62_1 { get; }
+        public Foo._x62 _x62_1 { get; }
     }
     
     public sealed class _x2E
@@ -13302,56 +13302,56 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx2Eʺ
     {
-        public _ʺx2Eʺ(Inners._x2E _x2E_1)
+        public _ʺx2Eʺ(Foo._x2E _x2E_1)
         {
             this._x2E_1 = _x2E_1;
         }
         
-        public Inners._x2E _x2E_1 { get; }
+        public Foo._x2E _x2E_1 { get; }
     }
     
     public sealed class _ʺx2Eʺ_1ЖBIT
     {
-        public _ʺx2Eʺ_1ЖBIT(Inners._ʺx2Eʺ _ʺx2Eʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1)
+        public _ʺx2Eʺ_1ЖBIT(Foo._ʺx2Eʺ _ʺx2Eʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1)
         {
             this._ʺx2Eʺ_1 = _ʺx2Eʺ_1;
             this._BIT_1 = _BIT_1;
         }
         
-        public Inners._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
+        public Foo._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
         public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1 { get; }
     }
     
     public sealed class _Ⲥʺx2Eʺ_1ЖBITↃ
     {
-        public _Ⲥʺx2Eʺ_1ЖBITↃ(Inners._ʺx2Eʺ_1ЖBIT _ʺx2Eʺ_1ЖBIT_1)
+        public _Ⲥʺx2Eʺ_1ЖBITↃ(Foo._ʺx2Eʺ_1ЖBIT _ʺx2Eʺ_1ЖBIT_1)
         {
             this._ʺx2Eʺ_1ЖBIT_1 = _ʺx2Eʺ_1ЖBIT_1;
         }
         
-        public Inners._ʺx2Eʺ_1ЖBIT _ʺx2Eʺ_1ЖBIT_1 { get; }
+        public Foo._ʺx2Eʺ_1ЖBIT _ʺx2Eʺ_1ЖBIT_1 { get; }
     }
     
     public sealed class _ʺx2Dʺ_1ЖBIT
     {
-        public _ʺx2Dʺ_1ЖBIT(Inners._ʺx2Dʺ _ʺx2Dʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1)
+        public _ʺx2Dʺ_1ЖBIT(Foo._ʺx2Dʺ _ʺx2Dʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1)
         {
             this._ʺx2Dʺ_1 = _ʺx2Dʺ_1;
             this._BIT_1 = _BIT_1;
         }
         
-        public Inners._ʺx2Dʺ _ʺx2Dʺ_1 { get; }
+        public Foo._ʺx2Dʺ _ʺx2Dʺ_1 { get; }
         public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._BIT> _BIT_1 { get; }
     }
     
     public sealed class _Ⲥʺx2Dʺ_1ЖBITↃ
     {
-        public _Ⲥʺx2Dʺ_1ЖBITↃ(Inners._ʺx2Dʺ_1ЖBIT _ʺx2Dʺ_1ЖBIT_1)
+        public _Ⲥʺx2Dʺ_1ЖBITↃ(Foo._ʺx2Dʺ_1ЖBIT _ʺx2Dʺ_1ЖBIT_1)
         {
             this._ʺx2Dʺ_1ЖBIT_1 = _ʺx2Dʺ_1ЖBIT_1;
         }
         
-        public Inners._ʺx2Dʺ_1ЖBIT _ʺx2Dʺ_1ЖBIT_1 { get; }
+        public Foo._ʺx2Dʺ_1ЖBIT _ʺx2Dʺ_1ЖBIT_1 { get; }
     }
     
     public abstract class _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ
@@ -13375,12 +13375,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1ЖⲤʺx2Eʺ_1ЖBITↃ : _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ
         {
-            public _1ЖⲤʺx2Eʺ_1ЖBITↃ(System.Collections.Generic.IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖBITↃ> _Ⲥʺx2Eʺ_1ЖBITↃ_1)
+            public _1ЖⲤʺx2Eʺ_1ЖBITↃ(System.Collections.Generic.IEnumerable<Foo._Ⲥʺx2Eʺ_1ЖBITↃ> _Ⲥʺx2Eʺ_1ЖBITↃ_1)
             {
                 this._Ⲥʺx2Eʺ_1ЖBITↃ_1 = _Ⲥʺx2Eʺ_1ЖBITↃ_1;
             }
             
-            public System.Collections.Generic.IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖBITↃ> _Ⲥʺx2Eʺ_1ЖBITↃ_1 { get; }
+            public System.Collections.Generic.IEnumerable<Foo._Ⲥʺx2Eʺ_1ЖBITↃ> _Ⲥʺx2Eʺ_1ЖBITↃ_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13390,12 +13390,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _Ⲥʺx2Dʺ_1ЖBITↃ : _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ
         {
-            public _Ⲥʺx2Dʺ_1ЖBITↃ(Inners._Ⲥʺx2Dʺ_1ЖBITↃ _Ⲥʺx2Dʺ_1ЖBITↃ_1)
+            public _Ⲥʺx2Dʺ_1ЖBITↃ(Foo._Ⲥʺx2Dʺ_1ЖBITↃ _Ⲥʺx2Dʺ_1ЖBITↃ_1)
             {
                 this._Ⲥʺx2Dʺ_1ЖBITↃ_1 = _Ⲥʺx2Dʺ_1ЖBITↃ_1;
             }
             
-            public Inners._Ⲥʺx2Dʺ_1ЖBITↃ _Ⲥʺx2Dʺ_1ЖBITↃ_1 { get; }
+            public Foo._Ⲥʺx2Dʺ_1ЖBITↃ _Ⲥʺx2Dʺ_1ЖBITↃ_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13415,56 +13415,56 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx64ʺ
     {
-        public _ʺx64ʺ(Inners._x64 _x64_1)
+        public _ʺx64ʺ(Foo._x64 _x64_1)
         {
             this._x64_1 = _x64_1;
         }
         
-        public Inners._x64 _x64_1 { get; }
+        public Foo._x64 _x64_1 { get; }
     }
     
     public sealed class _ʺx2Eʺ_1ЖDIGIT
     {
-        public _ʺx2Eʺ_1ЖDIGIT(Inners._ʺx2Eʺ _ʺx2Eʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1)
+        public _ʺx2Eʺ_1ЖDIGIT(Foo._ʺx2Eʺ _ʺx2Eʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1)
         {
             this._ʺx2Eʺ_1 = _ʺx2Eʺ_1;
             this._DIGIT_1 = _DIGIT_1;
         }
         
-        public Inners._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
+        public Foo._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
         public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
     }
     
     public sealed class _Ⲥʺx2Eʺ_1ЖDIGITↃ
     {
-        public _Ⲥʺx2Eʺ_1ЖDIGITↃ(Inners._ʺx2Eʺ_1ЖDIGIT _ʺx2Eʺ_1ЖDIGIT_1)
+        public _Ⲥʺx2Eʺ_1ЖDIGITↃ(Foo._ʺx2Eʺ_1ЖDIGIT _ʺx2Eʺ_1ЖDIGIT_1)
         {
             this._ʺx2Eʺ_1ЖDIGIT_1 = _ʺx2Eʺ_1ЖDIGIT_1;
         }
         
-        public Inners._ʺx2Eʺ_1ЖDIGIT _ʺx2Eʺ_1ЖDIGIT_1 { get; }
+        public Foo._ʺx2Eʺ_1ЖDIGIT _ʺx2Eʺ_1ЖDIGIT_1 { get; }
     }
     
     public sealed class _ʺx2Dʺ_1ЖDIGIT
     {
-        public _ʺx2Dʺ_1ЖDIGIT(Inners._ʺx2Dʺ _ʺx2Dʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1)
+        public _ʺx2Dʺ_1ЖDIGIT(Foo._ʺx2Dʺ _ʺx2Dʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1)
         {
             this._ʺx2Dʺ_1 = _ʺx2Dʺ_1;
             this._DIGIT_1 = _DIGIT_1;
         }
         
-        public Inners._ʺx2Dʺ _ʺx2Dʺ_1 { get; }
+        public Foo._ʺx2Dʺ _ʺx2Dʺ_1 { get; }
         public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
     }
     
     public sealed class _Ⲥʺx2Dʺ_1ЖDIGITↃ
     {
-        public _Ⲥʺx2Dʺ_1ЖDIGITↃ(Inners._ʺx2Dʺ_1ЖDIGIT _ʺx2Dʺ_1ЖDIGIT_1)
+        public _Ⲥʺx2Dʺ_1ЖDIGITↃ(Foo._ʺx2Dʺ_1ЖDIGIT _ʺx2Dʺ_1ЖDIGIT_1)
         {
             this._ʺx2Dʺ_1ЖDIGIT_1 = _ʺx2Dʺ_1ЖDIGIT_1;
         }
         
-        public Inners._ʺx2Dʺ_1ЖDIGIT _ʺx2Dʺ_1ЖDIGIT_1 { get; }
+        public Foo._ʺx2Dʺ_1ЖDIGIT _ʺx2Dʺ_1ЖDIGIT_1 { get; }
     }
     
     public abstract class _1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ
@@ -13488,12 +13488,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1ЖⲤʺx2Eʺ_1ЖDIGITↃ : _1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ
         {
-            public _1ЖⲤʺx2Eʺ_1ЖDIGITↃ(System.Collections.Generic.IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖDIGITↃ> _Ⲥʺx2Eʺ_1ЖDIGITↃ_1)
+            public _1ЖⲤʺx2Eʺ_1ЖDIGITↃ(System.Collections.Generic.IEnumerable<Foo._Ⲥʺx2Eʺ_1ЖDIGITↃ> _Ⲥʺx2Eʺ_1ЖDIGITↃ_1)
             {
                 this._Ⲥʺx2Eʺ_1ЖDIGITↃ_1 = _Ⲥʺx2Eʺ_1ЖDIGITↃ_1;
             }
             
-            public System.Collections.Generic.IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖDIGITↃ> _Ⲥʺx2Eʺ_1ЖDIGITↃ_1 { get; }
+            public System.Collections.Generic.IEnumerable<Foo._Ⲥʺx2Eʺ_1ЖDIGITↃ> _Ⲥʺx2Eʺ_1ЖDIGITↃ_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13503,12 +13503,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _Ⲥʺx2Dʺ_1ЖDIGITↃ : _1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ
         {
-            public _Ⲥʺx2Dʺ_1ЖDIGITↃ(Inners._Ⲥʺx2Dʺ_1ЖDIGITↃ _Ⲥʺx2Dʺ_1ЖDIGITↃ_1)
+            public _Ⲥʺx2Dʺ_1ЖDIGITↃ(Foo._Ⲥʺx2Dʺ_1ЖDIGITↃ _Ⲥʺx2Dʺ_1ЖDIGITↃ_1)
             {
                 this._Ⲥʺx2Dʺ_1ЖDIGITↃ_1 = _Ⲥʺx2Dʺ_1ЖDIGITↃ_1;
             }
             
-            public Inners._Ⲥʺx2Dʺ_1ЖDIGITↃ _Ⲥʺx2Dʺ_1ЖDIGITↃ_1 { get; }
+            public Foo._Ⲥʺx2Dʺ_1ЖDIGITↃ _Ⲥʺx2Dʺ_1ЖDIGITↃ_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13528,56 +13528,56 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx78ʺ
     {
-        public _ʺx78ʺ(Inners._x78 _x78_1)
+        public _ʺx78ʺ(Foo._x78 _x78_1)
         {
             this._x78_1 = _x78_1;
         }
         
-        public Inners._x78 _x78_1 { get; }
+        public Foo._x78 _x78_1 { get; }
     }
     
     public sealed class _ʺx2Eʺ_1ЖHEXDIG
     {
-        public _ʺx2Eʺ_1ЖHEXDIG(Inners._ʺx2Eʺ _ʺx2Eʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1)
+        public _ʺx2Eʺ_1ЖHEXDIG(Foo._ʺx2Eʺ _ʺx2Eʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1)
         {
             this._ʺx2Eʺ_1 = _ʺx2Eʺ_1;
             this._HEXDIG_1 = _HEXDIG_1;
         }
         
-        public Inners._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
+        public Foo._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
         public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1 { get; }
     }
     
     public sealed class _Ⲥʺx2Eʺ_1ЖHEXDIGↃ
     {
-        public _Ⲥʺx2Eʺ_1ЖHEXDIGↃ(Inners._ʺx2Eʺ_1ЖHEXDIG _ʺx2Eʺ_1ЖHEXDIG_1)
+        public _Ⲥʺx2Eʺ_1ЖHEXDIGↃ(Foo._ʺx2Eʺ_1ЖHEXDIG _ʺx2Eʺ_1ЖHEXDIG_1)
         {
             this._ʺx2Eʺ_1ЖHEXDIG_1 = _ʺx2Eʺ_1ЖHEXDIG_1;
         }
         
-        public Inners._ʺx2Eʺ_1ЖHEXDIG _ʺx2Eʺ_1ЖHEXDIG_1 { get; }
+        public Foo._ʺx2Eʺ_1ЖHEXDIG _ʺx2Eʺ_1ЖHEXDIG_1 { get; }
     }
     
     public sealed class _ʺx2Dʺ_1ЖHEXDIG
     {
-        public _ʺx2Dʺ_1ЖHEXDIG(Inners._ʺx2Dʺ _ʺx2Dʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1)
+        public _ʺx2Dʺ_1ЖHEXDIG(Foo._ʺx2Dʺ _ʺx2Dʺ_1, System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1)
         {
             this._ʺx2Dʺ_1 = _ʺx2Dʺ_1;
             this._HEXDIG_1 = _HEXDIG_1;
         }
         
-        public Inners._ʺx2Dʺ _ʺx2Dʺ_1 { get; }
+        public Foo._ʺx2Dʺ _ʺx2Dʺ_1 { get; }
         public System.Collections.Generic.IEnumerable<__Generated.CstNodes.Rules._HEXDIG> _HEXDIG_1 { get; }
     }
     
     public sealed class _Ⲥʺx2Dʺ_1ЖHEXDIGↃ
     {
-        public _Ⲥʺx2Dʺ_1ЖHEXDIGↃ(Inners._ʺx2Dʺ_1ЖHEXDIG _ʺx2Dʺ_1ЖHEXDIG_1)
+        public _Ⲥʺx2Dʺ_1ЖHEXDIGↃ(Foo._ʺx2Dʺ_1ЖHEXDIG _ʺx2Dʺ_1ЖHEXDIG_1)
         {
             this._ʺx2Dʺ_1ЖHEXDIG_1 = _ʺx2Dʺ_1ЖHEXDIG_1;
         }
         
-        public Inners._ʺx2Dʺ_1ЖHEXDIG _ʺx2Dʺ_1ЖHEXDIG_1 { get; }
+        public Foo._ʺx2Dʺ_1ЖHEXDIG _ʺx2Dʺ_1ЖHEXDIG_1 { get; }
     }
     
     public abstract class _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ
@@ -13601,12 +13601,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ : _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ
         {
-            public _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ(System.Collections.Generic.IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖHEXDIGↃ> _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1)
+            public _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ(System.Collections.Generic.IEnumerable<Foo._Ⲥʺx2Eʺ_1ЖHEXDIGↃ> _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1)
             {
                 this._Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1 = _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1;
             }
             
-            public System.Collections.Generic.IEnumerable<Inners._Ⲥʺx2Eʺ_1ЖHEXDIGↃ> _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1 { get; }
+            public System.Collections.Generic.IEnumerable<Foo._Ⲥʺx2Eʺ_1ЖHEXDIGↃ> _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13616,12 +13616,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _Ⲥʺx2Dʺ_1ЖHEXDIGↃ : _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ
         {
-            public _Ⲥʺx2Dʺ_1ЖHEXDIGↃ(Inners._Ⲥʺx2Dʺ_1ЖHEXDIGↃ _Ⲥʺx2Dʺ_1ЖHEXDIGↃ_1)
+            public _Ⲥʺx2Dʺ_1ЖHEXDIGↃ(Foo._Ⲥʺx2Dʺ_1ЖHEXDIGↃ _Ⲥʺx2Dʺ_1ЖHEXDIGↃ_1)
             {
                 this._Ⲥʺx2Dʺ_1ЖHEXDIGↃ_1 = _Ⲥʺx2Dʺ_1ЖHEXDIGↃ_1;
             }
             
-            public Inners._Ⲥʺx2Dʺ_1ЖHEXDIGↃ _Ⲥʺx2Dʺ_1ЖHEXDIGↃ_1 { get; }
+            public Foo._Ⲥʺx2Dʺ_1ЖHEXDIGↃ _Ⲥʺx2Dʺ_1ЖHEXDIGↃ_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13641,12 +13641,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx3Cʺ
     {
-        public _ʺx3Cʺ(Inners._x3C _x3C_1)
+        public _ʺx3Cʺ(Foo._x3C _x3C_1)
         {
             this._x3C_1 = _x3C_1;
         }
         
-        public Inners._x3C _x3C_1 { get; }
+        public Foo._x3C _x3C_1 { get; }
     }
     
     public abstract class _Ⰳx20ⲻ3D
@@ -13698,14 +13698,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _20 : _Ⰳx20ⲻ3D
         {
-            public _20(Inners._2 _2_1, Inners._0 _0_1)
+            public _20(Foo._2 _2_1, Foo._0 _0_1)
             {
                 this._2_1 = _2_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13715,14 +13715,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _21 : _Ⰳx20ⲻ3D
         {
-            public _21(Inners._2 _2_1, Inners._1 _1_1)
+            public _21(Foo._2 _2_1, Foo._1 _1_1)
             {
                 this._2_1 = _2_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13732,14 +13732,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _22 : _Ⰳx20ⲻ3D
         {
-            public _22(Inners._2 _2_1, Inners._2 _2_2)
+            public _22(Foo._2 _2_1, Foo._2 _2_2)
             {
                 this._2_1 = _2_1;
                 this._2_2 = _2_2;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._2 _2_2 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._2 _2_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13749,14 +13749,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _23 : _Ⰳx20ⲻ3D
         {
-            public _23(Inners._2 _2_1, Inners._3 _3_1)
+            public _23(Foo._2 _2_1, Foo._3 _3_1)
             {
                 this._2_1 = _2_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13766,14 +13766,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _24 : _Ⰳx20ⲻ3D
         {
-            public _24(Inners._2 _2_1, Inners._4 _4_1)
+            public _24(Foo._2 _2_1, Foo._4 _4_1)
             {
                 this._2_1 = _2_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13783,14 +13783,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _25 : _Ⰳx20ⲻ3D
         {
-            public _25(Inners._2 _2_1, Inners._5 _5_1)
+            public _25(Foo._2 _2_1, Foo._5 _5_1)
             {
                 this._2_1 = _2_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13800,14 +13800,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _26 : _Ⰳx20ⲻ3D
         {
-            public _26(Inners._2 _2_1, Inners._6 _6_1)
+            public _26(Foo._2 _2_1, Foo._6 _6_1)
             {
                 this._2_1 = _2_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13817,14 +13817,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _27 : _Ⰳx20ⲻ3D
         {
-            public _27(Inners._2 _2_1, Inners._7 _7_1)
+            public _27(Foo._2 _2_1, Foo._7 _7_1)
             {
                 this._2_1 = _2_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13834,14 +13834,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _28 : _Ⰳx20ⲻ3D
         {
-            public _28(Inners._2 _2_1, Inners._8 _8_1)
+            public _28(Foo._2 _2_1, Foo._8 _8_1)
             {
                 this._2_1 = _2_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13851,14 +13851,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _29 : _Ⰳx20ⲻ3D
         {
-            public _29(Inners._2 _2_1, Inners._9 _9_1)
+            public _29(Foo._2 _2_1, Foo._9 _9_1)
             {
                 this._2_1 = _2_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13868,14 +13868,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2A : _Ⰳx20ⲻ3D
         {
-            public _2A(Inners._2 _2_1, Inners._A _A_1)
+            public _2A(Foo._2 _2_1, Foo._A _A_1)
             {
                 this._2_1 = _2_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13885,14 +13885,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2B : _Ⰳx20ⲻ3D
         {
-            public _2B(Inners._2 _2_1, Inners._B _B_1)
+            public _2B(Foo._2 _2_1, Foo._B _B_1)
             {
                 this._2_1 = _2_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13902,14 +13902,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2C : _Ⰳx20ⲻ3D
         {
-            public _2C(Inners._2 _2_1, Inners._C _C_1)
+            public _2C(Foo._2 _2_1, Foo._C _C_1)
             {
                 this._2_1 = _2_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13919,14 +13919,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2D : _Ⰳx20ⲻ3D
         {
-            public _2D(Inners._2 _2_1, Inners._D _D_1)
+            public _2D(Foo._2 _2_1, Foo._D _D_1)
             {
                 this._2_1 = _2_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13936,14 +13936,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2E : _Ⰳx20ⲻ3D
         {
-            public _2E(Inners._2 _2_1, Inners._E _E_1)
+            public _2E(Foo._2 _2_1, Foo._E _E_1)
             {
                 this._2_1 = _2_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13953,14 +13953,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _2F : _Ⰳx20ⲻ3D
         {
-            public _2F(Inners._2 _2_1, Inners._F _F_1)
+            public _2F(Foo._2 _2_1, Foo._F _F_1)
             {
                 this._2_1 = _2_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._2 _2_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._2 _2_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13970,14 +13970,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _30 : _Ⰳx20ⲻ3D
         {
-            public _30(Inners._3 _3_1, Inners._0 _0_1)
+            public _30(Foo._3 _3_1, Foo._0 _0_1)
             {
                 this._3_1 = _3_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -13987,14 +13987,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _31 : _Ⰳx20ⲻ3D
         {
-            public _31(Inners._3 _3_1, Inners._1 _1_1)
+            public _31(Foo._3 _3_1, Foo._1 _1_1)
             {
                 this._3_1 = _3_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14004,14 +14004,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _32 : _Ⰳx20ⲻ3D
         {
-            public _32(Inners._3 _3_1, Inners._2 _2_1)
+            public _32(Foo._3 _3_1, Foo._2 _2_1)
             {
                 this._3_1 = _3_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14021,14 +14021,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _33 : _Ⰳx20ⲻ3D
         {
-            public _33(Inners._3 _3_1, Inners._3 _3_2)
+            public _33(Foo._3 _3_1, Foo._3 _3_2)
             {
                 this._3_1 = _3_1;
                 this._3_2 = _3_2;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._3 _3_2 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._3 _3_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14038,14 +14038,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _34 : _Ⰳx20ⲻ3D
         {
-            public _34(Inners._3 _3_1, Inners._4 _4_1)
+            public _34(Foo._3 _3_1, Foo._4 _4_1)
             {
                 this._3_1 = _3_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14055,14 +14055,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _35 : _Ⰳx20ⲻ3D
         {
-            public _35(Inners._3 _3_1, Inners._5 _5_1)
+            public _35(Foo._3 _3_1, Foo._5 _5_1)
             {
                 this._3_1 = _3_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14072,14 +14072,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _36 : _Ⰳx20ⲻ3D
         {
-            public _36(Inners._3 _3_1, Inners._6 _6_1)
+            public _36(Foo._3 _3_1, Foo._6 _6_1)
             {
                 this._3_1 = _3_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14089,14 +14089,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _37 : _Ⰳx20ⲻ3D
         {
-            public _37(Inners._3 _3_1, Inners._7 _7_1)
+            public _37(Foo._3 _3_1, Foo._7 _7_1)
             {
                 this._3_1 = _3_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14106,14 +14106,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _38 : _Ⰳx20ⲻ3D
         {
-            public _38(Inners._3 _3_1, Inners._8 _8_1)
+            public _38(Foo._3 _3_1, Foo._8 _8_1)
             {
                 this._3_1 = _3_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14123,14 +14123,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _39 : _Ⰳx20ⲻ3D
         {
-            public _39(Inners._3 _3_1, Inners._9 _9_1)
+            public _39(Foo._3 _3_1, Foo._9 _9_1)
             {
                 this._3_1 = _3_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14140,14 +14140,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3A : _Ⰳx20ⲻ3D
         {
-            public _3A(Inners._3 _3_1, Inners._A _A_1)
+            public _3A(Foo._3 _3_1, Foo._A _A_1)
             {
                 this._3_1 = _3_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14157,14 +14157,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3B : _Ⰳx20ⲻ3D
         {
-            public _3B(Inners._3 _3_1, Inners._B _B_1)
+            public _3B(Foo._3 _3_1, Foo._B _B_1)
             {
                 this._3_1 = _3_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14174,14 +14174,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3C : _Ⰳx20ⲻ3D
         {
-            public _3C(Inners._3 _3_1, Inners._C _C_1)
+            public _3C(Foo._3 _3_1, Foo._C _C_1)
             {
                 this._3_1 = _3_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14191,14 +14191,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3D : _Ⰳx20ⲻ3D
         {
-            public _3D(Inners._3 _3_1, Inners._D _D_1)
+            public _3D(Foo._3 _3_1, Foo._D _D_1)
             {
                 this._3_1 = _3_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14290,14 +14290,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _3F : _Ⰳx3Fⲻ7E
         {
-            public _3F(Inners._3 _3_1, Inners._F _F_1)
+            public _3F(Foo._3 _3_1, Foo._F _F_1)
             {
                 this._3_1 = _3_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._3 _3_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._3 _3_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14307,14 +14307,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _40 : _Ⰳx3Fⲻ7E
         {
-            public _40(Inners._4 _4_1, Inners._0 _0_1)
+            public _40(Foo._4 _4_1, Foo._0 _0_1)
             {
                 this._4_1 = _4_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14324,14 +14324,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _41 : _Ⰳx3Fⲻ7E
         {
-            public _41(Inners._4 _4_1, Inners._1 _1_1)
+            public _41(Foo._4 _4_1, Foo._1 _1_1)
             {
                 this._4_1 = _4_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14341,14 +14341,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _42 : _Ⰳx3Fⲻ7E
         {
-            public _42(Inners._4 _4_1, Inners._2 _2_1)
+            public _42(Foo._4 _4_1, Foo._2 _2_1)
             {
                 this._4_1 = _4_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14358,14 +14358,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _43 : _Ⰳx3Fⲻ7E
         {
-            public _43(Inners._4 _4_1, Inners._3 _3_1)
+            public _43(Foo._4 _4_1, Foo._3 _3_1)
             {
                 this._4_1 = _4_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14375,14 +14375,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _44 : _Ⰳx3Fⲻ7E
         {
-            public _44(Inners._4 _4_1, Inners._4 _4_2)
+            public _44(Foo._4 _4_1, Foo._4 _4_2)
             {
                 this._4_1 = _4_1;
                 this._4_2 = _4_2;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._4 _4_2 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._4 _4_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14392,14 +14392,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _45 : _Ⰳx3Fⲻ7E
         {
-            public _45(Inners._4 _4_1, Inners._5 _5_1)
+            public _45(Foo._4 _4_1, Foo._5 _5_1)
             {
                 this._4_1 = _4_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14409,14 +14409,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _46 : _Ⰳx3Fⲻ7E
         {
-            public _46(Inners._4 _4_1, Inners._6 _6_1)
+            public _46(Foo._4 _4_1, Foo._6 _6_1)
             {
                 this._4_1 = _4_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14426,14 +14426,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _47 : _Ⰳx3Fⲻ7E
         {
-            public _47(Inners._4 _4_1, Inners._7 _7_1)
+            public _47(Foo._4 _4_1, Foo._7 _7_1)
             {
                 this._4_1 = _4_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14443,14 +14443,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _48 : _Ⰳx3Fⲻ7E
         {
-            public _48(Inners._4 _4_1, Inners._8 _8_1)
+            public _48(Foo._4 _4_1, Foo._8 _8_1)
             {
                 this._4_1 = _4_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14460,14 +14460,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _49 : _Ⰳx3Fⲻ7E
         {
-            public _49(Inners._4 _4_1, Inners._9 _9_1)
+            public _49(Foo._4 _4_1, Foo._9 _9_1)
             {
                 this._4_1 = _4_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14477,14 +14477,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4A : _Ⰳx3Fⲻ7E
         {
-            public _4A(Inners._4 _4_1, Inners._A _A_1)
+            public _4A(Foo._4 _4_1, Foo._A _A_1)
             {
                 this._4_1 = _4_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14494,14 +14494,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4B : _Ⰳx3Fⲻ7E
         {
-            public _4B(Inners._4 _4_1, Inners._B _B_1)
+            public _4B(Foo._4 _4_1, Foo._B _B_1)
             {
                 this._4_1 = _4_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14511,14 +14511,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4C : _Ⰳx3Fⲻ7E
         {
-            public _4C(Inners._4 _4_1, Inners._C _C_1)
+            public _4C(Foo._4 _4_1, Foo._C _C_1)
             {
                 this._4_1 = _4_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14528,14 +14528,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4D : _Ⰳx3Fⲻ7E
         {
-            public _4D(Inners._4 _4_1, Inners._D _D_1)
+            public _4D(Foo._4 _4_1, Foo._D _D_1)
             {
                 this._4_1 = _4_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14545,14 +14545,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4E : _Ⰳx3Fⲻ7E
         {
-            public _4E(Inners._4 _4_1, Inners._E _E_1)
+            public _4E(Foo._4 _4_1, Foo._E _E_1)
             {
                 this._4_1 = _4_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14562,14 +14562,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _4F : _Ⰳx3Fⲻ7E
         {
-            public _4F(Inners._4 _4_1, Inners._F _F_1)
+            public _4F(Foo._4 _4_1, Foo._F _F_1)
             {
                 this._4_1 = _4_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._4 _4_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._4 _4_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14579,14 +14579,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _50 : _Ⰳx3Fⲻ7E
         {
-            public _50(Inners._5 _5_1, Inners._0 _0_1)
+            public _50(Foo._5 _5_1, Foo._0 _0_1)
             {
                 this._5_1 = _5_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14596,14 +14596,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _51 : _Ⰳx3Fⲻ7E
         {
-            public _51(Inners._5 _5_1, Inners._1 _1_1)
+            public _51(Foo._5 _5_1, Foo._1 _1_1)
             {
                 this._5_1 = _5_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14613,14 +14613,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _52 : _Ⰳx3Fⲻ7E
         {
-            public _52(Inners._5 _5_1, Inners._2 _2_1)
+            public _52(Foo._5 _5_1, Foo._2 _2_1)
             {
                 this._5_1 = _5_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14630,14 +14630,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _53 : _Ⰳx3Fⲻ7E
         {
-            public _53(Inners._5 _5_1, Inners._3 _3_1)
+            public _53(Foo._5 _5_1, Foo._3 _3_1)
             {
                 this._5_1 = _5_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14647,14 +14647,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _54 : _Ⰳx3Fⲻ7E
         {
-            public _54(Inners._5 _5_1, Inners._4 _4_1)
+            public _54(Foo._5 _5_1, Foo._4 _4_1)
             {
                 this._5_1 = _5_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14664,14 +14664,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _55 : _Ⰳx3Fⲻ7E
         {
-            public _55(Inners._5 _5_1, Inners._5 _5_2)
+            public _55(Foo._5 _5_1, Foo._5 _5_2)
             {
                 this._5_1 = _5_1;
                 this._5_2 = _5_2;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._5 _5_2 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._5 _5_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14681,14 +14681,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _56 : _Ⰳx3Fⲻ7E
         {
-            public _56(Inners._5 _5_1, Inners._6 _6_1)
+            public _56(Foo._5 _5_1, Foo._6 _6_1)
             {
                 this._5_1 = _5_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14698,14 +14698,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _57 : _Ⰳx3Fⲻ7E
         {
-            public _57(Inners._5 _5_1, Inners._7 _7_1)
+            public _57(Foo._5 _5_1, Foo._7 _7_1)
             {
                 this._5_1 = _5_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14715,14 +14715,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _58 : _Ⰳx3Fⲻ7E
         {
-            public _58(Inners._5 _5_1, Inners._8 _8_1)
+            public _58(Foo._5 _5_1, Foo._8 _8_1)
             {
                 this._5_1 = _5_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14732,14 +14732,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _59 : _Ⰳx3Fⲻ7E
         {
-            public _59(Inners._5 _5_1, Inners._9 _9_1)
+            public _59(Foo._5 _5_1, Foo._9 _9_1)
             {
                 this._5_1 = _5_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14749,14 +14749,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5A : _Ⰳx3Fⲻ7E
         {
-            public _5A(Inners._5 _5_1, Inners._A _A_1)
+            public _5A(Foo._5 _5_1, Foo._A _A_1)
             {
                 this._5_1 = _5_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14766,14 +14766,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5B : _Ⰳx3Fⲻ7E
         {
-            public _5B(Inners._5 _5_1, Inners._B _B_1)
+            public _5B(Foo._5 _5_1, Foo._B _B_1)
             {
                 this._5_1 = _5_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14783,14 +14783,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5C : _Ⰳx3Fⲻ7E
         {
-            public _5C(Inners._5 _5_1, Inners._C _C_1)
+            public _5C(Foo._5 _5_1, Foo._C _C_1)
             {
                 this._5_1 = _5_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14800,14 +14800,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5D : _Ⰳx3Fⲻ7E
         {
-            public _5D(Inners._5 _5_1, Inners._D _D_1)
+            public _5D(Foo._5 _5_1, Foo._D _D_1)
             {
                 this._5_1 = _5_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14817,14 +14817,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5E : _Ⰳx3Fⲻ7E
         {
-            public _5E(Inners._5 _5_1, Inners._E _E_1)
+            public _5E(Foo._5 _5_1, Foo._E _E_1)
             {
                 this._5_1 = _5_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14834,14 +14834,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _5F : _Ⰳx3Fⲻ7E
         {
-            public _5F(Inners._5 _5_1, Inners._F _F_1)
+            public _5F(Foo._5 _5_1, Foo._F _F_1)
             {
                 this._5_1 = _5_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._5 _5_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._5 _5_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14851,14 +14851,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _60 : _Ⰳx3Fⲻ7E
         {
-            public _60(Inners._6 _6_1, Inners._0 _0_1)
+            public _60(Foo._6 _6_1, Foo._0 _0_1)
             {
                 this._6_1 = _6_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14868,14 +14868,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _61 : _Ⰳx3Fⲻ7E
         {
-            public _61(Inners._6 _6_1, Inners._1 _1_1)
+            public _61(Foo._6 _6_1, Foo._1 _1_1)
             {
                 this._6_1 = _6_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14885,14 +14885,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _62 : _Ⰳx3Fⲻ7E
         {
-            public _62(Inners._6 _6_1, Inners._2 _2_1)
+            public _62(Foo._6 _6_1, Foo._2 _2_1)
             {
                 this._6_1 = _6_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14902,14 +14902,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _63 : _Ⰳx3Fⲻ7E
         {
-            public _63(Inners._6 _6_1, Inners._3 _3_1)
+            public _63(Foo._6 _6_1, Foo._3 _3_1)
             {
                 this._6_1 = _6_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14919,14 +14919,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _64 : _Ⰳx3Fⲻ7E
         {
-            public _64(Inners._6 _6_1, Inners._4 _4_1)
+            public _64(Foo._6 _6_1, Foo._4 _4_1)
             {
                 this._6_1 = _6_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14936,14 +14936,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _65 : _Ⰳx3Fⲻ7E
         {
-            public _65(Inners._6 _6_1, Inners._5 _5_1)
+            public _65(Foo._6 _6_1, Foo._5 _5_1)
             {
                 this._6_1 = _6_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14953,14 +14953,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _66 : _Ⰳx3Fⲻ7E
         {
-            public _66(Inners._6 _6_1, Inners._6 _6_2)
+            public _66(Foo._6 _6_1, Foo._6 _6_2)
             {
                 this._6_1 = _6_1;
                 this._6_2 = _6_2;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._6 _6_2 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._6 _6_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14970,14 +14970,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _67 : _Ⰳx3Fⲻ7E
         {
-            public _67(Inners._6 _6_1, Inners._7 _7_1)
+            public _67(Foo._6 _6_1, Foo._7 _7_1)
             {
                 this._6_1 = _6_1;
                 this._7_1 = _7_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._7 _7_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._7 _7_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -14987,14 +14987,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _68 : _Ⰳx3Fⲻ7E
         {
-            public _68(Inners._6 _6_1, Inners._8 _8_1)
+            public _68(Foo._6 _6_1, Foo._8 _8_1)
             {
                 this._6_1 = _6_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15004,14 +15004,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _69 : _Ⰳx3Fⲻ7E
         {
-            public _69(Inners._6 _6_1, Inners._9 _9_1)
+            public _69(Foo._6 _6_1, Foo._9 _9_1)
             {
                 this._6_1 = _6_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15021,14 +15021,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6A : _Ⰳx3Fⲻ7E
         {
-            public _6A(Inners._6 _6_1, Inners._A _A_1)
+            public _6A(Foo._6 _6_1, Foo._A _A_1)
             {
                 this._6_1 = _6_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15038,14 +15038,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6B : _Ⰳx3Fⲻ7E
         {
-            public _6B(Inners._6 _6_1, Inners._B _B_1)
+            public _6B(Foo._6 _6_1, Foo._B _B_1)
             {
                 this._6_1 = _6_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15055,14 +15055,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6C : _Ⰳx3Fⲻ7E
         {
-            public _6C(Inners._6 _6_1, Inners._C _C_1)
+            public _6C(Foo._6 _6_1, Foo._C _C_1)
             {
                 this._6_1 = _6_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15072,14 +15072,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6D : _Ⰳx3Fⲻ7E
         {
-            public _6D(Inners._6 _6_1, Inners._D _D_1)
+            public _6D(Foo._6 _6_1, Foo._D _D_1)
             {
                 this._6_1 = _6_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15089,14 +15089,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6E : _Ⰳx3Fⲻ7E
         {
-            public _6E(Inners._6 _6_1, Inners._E _E_1)
+            public _6E(Foo._6 _6_1, Foo._E _E_1)
             {
                 this._6_1 = _6_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15106,14 +15106,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _6F : _Ⰳx3Fⲻ7E
         {
-            public _6F(Inners._6 _6_1, Inners._F _F_1)
+            public _6F(Foo._6 _6_1, Foo._F _F_1)
             {
                 this._6_1 = _6_1;
                 this._F_1 = _F_1;
             }
             
-            public Inners._6 _6_1 { get; }
-            public Inners._F _F_1 { get; }
+            public Foo._6 _6_1 { get; }
+            public Foo._F _F_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15123,14 +15123,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _70 : _Ⰳx3Fⲻ7E
         {
-            public _70(Inners._7 _7_1, Inners._0 _0_1)
+            public _70(Foo._7 _7_1, Foo._0 _0_1)
             {
                 this._7_1 = _7_1;
                 this._0_1 = _0_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._0 _0_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._0 _0_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15140,14 +15140,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _71 : _Ⰳx3Fⲻ7E
         {
-            public _71(Inners._7 _7_1, Inners._1 _1_1)
+            public _71(Foo._7 _7_1, Foo._1 _1_1)
             {
                 this._7_1 = _7_1;
                 this._1_1 = _1_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._1 _1_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._1 _1_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15157,14 +15157,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _72 : _Ⰳx3Fⲻ7E
         {
-            public _72(Inners._7 _7_1, Inners._2 _2_1)
+            public _72(Foo._7 _7_1, Foo._2 _2_1)
             {
                 this._7_1 = _7_1;
                 this._2_1 = _2_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._2 _2_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._2 _2_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15174,14 +15174,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _73 : _Ⰳx3Fⲻ7E
         {
-            public _73(Inners._7 _7_1, Inners._3 _3_1)
+            public _73(Foo._7 _7_1, Foo._3 _3_1)
             {
                 this._7_1 = _7_1;
                 this._3_1 = _3_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._3 _3_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._3 _3_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15191,14 +15191,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _74 : _Ⰳx3Fⲻ7E
         {
-            public _74(Inners._7 _7_1, Inners._4 _4_1)
+            public _74(Foo._7 _7_1, Foo._4 _4_1)
             {
                 this._7_1 = _7_1;
                 this._4_1 = _4_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._4 _4_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._4 _4_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15208,14 +15208,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _75 : _Ⰳx3Fⲻ7E
         {
-            public _75(Inners._7 _7_1, Inners._5 _5_1)
+            public _75(Foo._7 _7_1, Foo._5 _5_1)
             {
                 this._7_1 = _7_1;
                 this._5_1 = _5_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._5 _5_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._5 _5_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15225,14 +15225,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _76 : _Ⰳx3Fⲻ7E
         {
-            public _76(Inners._7 _7_1, Inners._6 _6_1)
+            public _76(Foo._7 _7_1, Foo._6 _6_1)
             {
                 this._7_1 = _7_1;
                 this._6_1 = _6_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._6 _6_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._6 _6_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15242,14 +15242,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _77 : _Ⰳx3Fⲻ7E
         {
-            public _77(Inners._7 _7_1, Inners._7 _7_2)
+            public _77(Foo._7 _7_1, Foo._7 _7_2)
             {
                 this._7_1 = _7_1;
                 this._7_2 = _7_2;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._7 _7_2 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._7 _7_2 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15259,14 +15259,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _78 : _Ⰳx3Fⲻ7E
         {
-            public _78(Inners._7 _7_1, Inners._8 _8_1)
+            public _78(Foo._7 _7_1, Foo._8 _8_1)
             {
                 this._7_1 = _7_1;
                 this._8_1 = _8_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._8 _8_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._8 _8_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15276,14 +15276,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _79 : _Ⰳx3Fⲻ7E
         {
-            public _79(Inners._7 _7_1, Inners._9 _9_1)
+            public _79(Foo._7 _7_1, Foo._9 _9_1)
             {
                 this._7_1 = _7_1;
                 this._9_1 = _9_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._9 _9_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._9 _9_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15293,14 +15293,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7A : _Ⰳx3Fⲻ7E
         {
-            public _7A(Inners._7 _7_1, Inners._A _A_1)
+            public _7A(Foo._7 _7_1, Foo._A _A_1)
             {
                 this._7_1 = _7_1;
                 this._A_1 = _A_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._A _A_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._A _A_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15310,14 +15310,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7B : _Ⰳx3Fⲻ7E
         {
-            public _7B(Inners._7 _7_1, Inners._B _B_1)
+            public _7B(Foo._7 _7_1, Foo._B _B_1)
             {
                 this._7_1 = _7_1;
                 this._B_1 = _B_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._B _B_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._B _B_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15327,14 +15327,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7C : _Ⰳx3Fⲻ7E
         {
-            public _7C(Inners._7 _7_1, Inners._C _C_1)
+            public _7C(Foo._7 _7_1, Foo._C _C_1)
             {
                 this._7_1 = _7_1;
                 this._C_1 = _C_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._C _C_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._C _C_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15344,14 +15344,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7D : _Ⰳx3Fⲻ7E
         {
-            public _7D(Inners._7 _7_1, Inners._D _D_1)
+            public _7D(Foo._7 _7_1, Foo._D _D_1)
             {
                 this._7_1 = _7_1;
                 this._D_1 = _D_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._D _D_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._D _D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15361,14 +15361,14 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _7E : _Ⰳx3Fⲻ7E
         {
-            public _7E(Inners._7 _7_1, Inners._E _E_1)
+            public _7E(Foo._7 _7_1, Foo._E _E_1)
             {
                 this._7_1 = _7_1;
                 this._E_1 = _E_1;
             }
             
-            public Inners._7 _7_1 { get; }
-            public Inners._E _E_1 { get; }
+            public Foo._7 _7_1 { get; }
+            public Foo._E _E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15398,12 +15398,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _Ⰳx20ⲻ3D : _Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E
         {
-            public _Ⰳx20ⲻ3D(Inners._Ⰳx20ⲻ3D _Ⰳx20ⲻ3D_1)
+            public _Ⰳx20ⲻ3D(Foo._Ⰳx20ⲻ3D _Ⰳx20ⲻ3D_1)
             {
                 this._Ⰳx20ⲻ3D_1 = _Ⰳx20ⲻ3D_1;
             }
             
-            public Inners._Ⰳx20ⲻ3D _Ⰳx20ⲻ3D_1 { get; }
+            public Foo._Ⰳx20ⲻ3D _Ⰳx20ⲻ3D_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15413,12 +15413,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _Ⰳx3Fⲻ7E : _Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E
         {
-            public _Ⰳx3Fⲻ7E(Inners._Ⰳx3Fⲻ7E _Ⰳx3Fⲻ7E_1)
+            public _Ⰳx3Fⲻ7E(Foo._Ⰳx3Fⲻ7E _Ⰳx3Fⲻ7E_1)
             {
                 this._Ⰳx3Fⲻ7E_1 = _Ⰳx3Fⲻ7E_1;
             }
             
-            public Inners._Ⰳx3Fⲻ7E _Ⰳx3Fⲻ7E_1 { get; }
+            public Foo._Ⰳx3Fⲻ7E _Ⰳx3Fⲻ7E_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -15429,12 +15429,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ
     {
-        public _ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ(Inners._Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E _Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E_1)
+        public _ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ(Foo._Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E _Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E_1)
         {
             this._Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E_1 = _Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E_1;
         }
         
-        public Inners._Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E _Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E_1 { get; }
+        public Foo._Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E _Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E_1 { get; }
     }
     
     public sealed class _x3E
@@ -15448,12 +15448,12 @@ namespace __Generated.CstNodes.Inners
     
     public sealed class _ʺx3Eʺ
     {
-        public _ʺx3Eʺ(Inners._x3E _x3E_1)
+        public _ʺx3Eʺ(Foo._x3E _x3E_1)
         {
             this._x3E_1 = _x3E_1;
         }
         
-        public Inners._x3E _x3E_1 { get; }
+        public Foo._x3E _x3E_1 { get; }
     }
     
 }
