@@ -47,8 +47,7 @@
             builder.AppendLine($"namespace {@namespace.Name}");
             builder.AppendLine("{");
             builder.Indent();
-            ////builder.AppendLine("using System.Collections.Generic;"); //// TODO shouldn't need these, or they should be in a type somewhere
-            builder.AppendLine("using System.Text;");
+            //// TODO shouldn't need these, or they should be in a type somewhere
             builder.AppendLine();
             builder.AppendLine("using GeneratorV3;");
             builder.AppendLine("using GeneratorV3.Abnf;");
