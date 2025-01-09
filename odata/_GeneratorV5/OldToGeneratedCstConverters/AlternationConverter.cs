@@ -2,8 +2,6 @@
 {
     using System.Linq;
 
-    using _GeneratorV4.Abnf.CstNodes;
-
     public sealed class AlternationConverter
     {
         private AlternationConverter()
@@ -31,7 +29,7 @@
 
             public __Generated.CstNodes.Inners._Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation Convert(AbnfParser.CstNodes.Alternation.Inner inner)
             {
-                return new Inners._Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation(
+                return new __Generated.CstNodes.Inners._Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation(
                     inner.PrefixCwsps.Select(cwsp =>
                         CwspConverter.Instance.Visit(cwsp, default)),
                     new __Generated.CstNodes.Inners._ʺx2Fʺ(
