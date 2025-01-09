@@ -28,8 +28,42 @@
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
             var newCst = _GeneratorV4.OldToV4Converters.RuleListConverter.Instance.Convert(cst);
 
-            var generatedCstNodes = new _GeneratorV4.Generator("__Generated.CstNodes.Rules").Generate(newCst);
+            var cstNodesRulesNamespace = "__Generated.CstNodes.Rules";
+            var generatedCstNodes = new _GeneratorV4.Generator(cstNodesRulesNamespace).Generate(newCst);
+
+            TranscribeClasses2(cstNodesRulesNamespace, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules\rules.cs", generatedCstNodes);
+
             //// TODO finish this
+        }
+
+        private static void TranscribeClasses2(string @namespace, string filePath, IEnumerable<Class> classes)
+        {
+            var classTranscriber = new ClassTranscriber();
+
+            var stringBuilder = new StringBuilder();
+            var builder = new Builder(stringBuilder, "    ");
+            builder.AppendLine($"namespace {@namespace}");
+            builder.AppendLine("{");
+            builder.Indent();
+            builder.AppendLine("using System.Collections.Generic;");
+            builder.AppendLine("using System.Text;");
+            builder.AppendLine();
+            builder.AppendLine("using GeneratorV3;");
+            builder.AppendLine("using GeneratorV3.Abnf;");
+            builder.AppendLine();
+
+            foreach (var @class in classes)
+            {
+                classTranscriber.Transcribe(@class, builder);
+                builder.AppendLine();
+            }
+
+            builder.Unindent();
+            builder.AppendLine("}");
+
+            var csharp = stringBuilder.ToString();
+
+            File.WriteAllText(filePath, csharp);
         }
 
         [TestMethod]
