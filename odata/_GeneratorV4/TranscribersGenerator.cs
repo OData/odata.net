@@ -95,7 +95,7 @@
                     methodBody = TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic));
                     nestedClasses = Enumerable.Empty<Class>();
                 }
-                else
+                else if (cstNode.NestedClasses.Any())
                 {
                     //// TODO create visitor
                     //// methodBody = "Visitor.Instance.Visit(value, builder);";
@@ -108,7 +108,7 @@
                             ClassModifier.Sealed,
                             "Visitor",
                             Enumerable.Empty<string>(),
-                            null, //// TODO $"GeneratorV3.Abnf.Inners.{cstNode.Name}.Visitor<Root.Void, StringBuilder>", //// TODO namespace should be computed
+                            $"GeneratorV3.Abnf.Inners.{cstNode.Name}.Visitor<Root.Void, StringBuilder>", //// TODO namespace should be computed
                             new[]
                             {
                                 new ConstructorDefinition(
@@ -130,6 +130,12 @@
                                     "new Visitor();"),
                             }),
                     };
+                }
+                else
+                {
+                    methodBody = string.Empty;
+                    nestedClasses = Enumerable.Empty<Class>();
+                    //// TODO terminal nodes
                 }
 
                 yield return new Class(
@@ -184,7 +190,7 @@
                 yield return new MethodDefinition(
                     AccessModifier.Protected | AccessModifier.Internal,
                     ClassModifier.None, //// TODO
-                    false, //// TODO
+                    true,
                     "Root.Void",
                     Enumerable.Empty<string>(),
                     "Accept",
