@@ -7,13 +7,16 @@
 
     public sealed class TranscribersGenerator
     {
-        private readonly string rulesNamespace;
-        private readonly string innersNamespace;
+        private readonly string rulesTranscribersNamespace;
+        private readonly string innersTranscribersNamespace;
+
+        private readonly string rulesCstNodesNamespace = "Test.CstNodes"; //// TODO figure out how to do namespaces correctly
+        private readonly string innersCstNodesNamespace = "Inners"; //// TODO figure out how to do namespaces correctly
 
         public TranscribersGenerator(string rulesNamespace, string innersNamespace)
         {
-            this.rulesNamespace = rulesNamespace;
-            this.innersNamespace = innersNamespace;
+            this.rulesTranscribersNamespace = rulesNamespace;
+            this.innersTranscribersNamespace = innersNamespace;
         }
 
         public (IEnumerable<Class> Rules, IEnumerable<Class> Inners) Generate(IEnumerable<Class> cstNodes)
@@ -61,7 +64,7 @@
                                 new MethodParameter(cstNode.Name, "value"),
                                 new MethodParameter("StringBuilder", "builder"),
                             },
-                            string.Empty), ////TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic))),
+                            TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic))),
                     },
                     Enumerable.Empty<Class>(), //// TODO sometimes you need a nested visitor
                     new[]
@@ -156,15 +159,26 @@
                     builder.AppendLine($"{collectionType}Transcriber.Instance.Transcribe({propertyDefinition.Name}, builder);");
                     builder.AppendLine("}");*/
                 }
+                else if (propertyDefinition.Type.EndsWith("?"))
+                {
+                }
                 else
                 {
-                    if (propertyDefinition.Type.StartsWith("Inners."))
+                    var propertyType = propertyDefinition.Type;
+
+                    if (propertyType.StartsWith(this.innersCstNodesNamespace))
                     {
-                        builder.Append(this.innersNamespace);
+                        builder.Append(this.innersTranscribersNamespace);
                         builder.Append(".");
+
+                        propertyType = propertyType.Substring(this.innersCstNodesNamespace.Length + 1);
+                    }
+                    else if (propertyType.StartsWith(this.rulesCstNodesNamespace))
+                    {
+                        propertyType = propertyType.Substring(this.rulesCstNodesNamespace.Length + 1);
                     }
 
-                    builder.AppendLine($"{propertyDefinition.Type}Transcriber.Instance.Transcribe(value.{propertyDefinition.Name}, builder);");
+                    builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe(value.{propertyDefinition.Name}, builder);");
                 }
             }
         }
