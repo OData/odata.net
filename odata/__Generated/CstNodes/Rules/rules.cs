@@ -1,6 +1,5 @@
 namespace __Generated.CstNodes.Rules
 {
-    using System.Collections.Generic;
     using System.Text;
     
     using GeneratorV3;
