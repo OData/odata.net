@@ -12,6 +12,7 @@ namespace __Generated.Trancsribers.Rules
         {
             if (value._repeat_1 != null)
 {
+__Generated.Trancsribers.Rules._repeatTranscriber.Instance.Transcribe(value._repeat_1, builder);
 }
 
         }

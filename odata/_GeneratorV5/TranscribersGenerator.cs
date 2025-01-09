@@ -9,16 +9,16 @@
 
     public sealed class TranscribersGenerator
     {
-        private readonly string rulesTranscribersNamespace;
-        private readonly string innersTranscribersNamespace;
+        private readonly string ruleTranscribersNamespace;
+        private readonly string innerTranscribersNamespace;
 
         private readonly string rulesCstNodesNamespace = "Test.CstNodes"; //// TODO figure out how to do namespaces correctly
         private readonly string innersCstNodesNamespace = "Inners"; //// TODO figure out how to do namespaces correctly
 
-        public TranscribersGenerator(string rulesNamespace, string innersNamespace)
+        public TranscribersGenerator(string ruleTranscribersNamespace, string innerTranscribersNamespace)
         {
-            this.rulesTranscribersNamespace = rulesNamespace;
-            this.innersTranscribersNamespace = innersNamespace;
+            this.ruleTranscribersNamespace = ruleTranscribersNamespace;
+            this.innerTranscribersNamespace = innerTranscribersNamespace;
         }
 
         public (IEnumerable<Class> Rules, IEnumerable<Class> Inners) Generate((Namespace RuleCstNodes, Namespace InnerCstNodes) cstNodes)
@@ -29,12 +29,15 @@
 
             return 
                 (
-                    GenerateTranscribers(cstNodes.RuleCstNodes), 
-                    GenerateTranscribers(cstNodes.InnerCstNodes)
+                    GenerateTranscribers(cstNodes.RuleCstNodes, cstNodes.RuleCstNodes.Name, cstNodes.InnerCstNodes.Name), 
+                    GenerateTranscribers(cstNodes.InnerCstNodes, cstNodes.RuleCstNodes.Name, cstNodes.InnerCstNodes.Name)
                 );
         }
 
-        private IEnumerable<Class> GenerateTranscribers(Namespace @namespace)
+        private IEnumerable<Class> GenerateTranscribers(
+            Namespace @namespace,
+            string ruleCstNodesNamespace,
+            string innerCstNodesNamespace)
         {
             foreach (var cstNode in @namespace.Classes)
             {
@@ -61,7 +64,12 @@
                     }
                     else
                     {
-                        methodBody = TranscribeProperties(nonStaticProperties, "value", "builder");
+                        methodBody = TranscribeProperties(
+                            nonStaticProperties, 
+                            ruleCstNodesNamespace, 
+                            innerCstNodesNamespace, 
+                            "value",
+                            "builder");
                     }
 
                     nestedClasses = Enumerable.Empty<Class>();
@@ -162,7 +170,7 @@
             }
         }
 
-        private IEnumerable<Class> GenerateInners(IEnumerable<Class> cstNodes)
+        /*private IEnumerable<Class> GenerateInners(IEnumerable<Class> cstNodes)
         {
             foreach (var cstNode in cstNodes)
             {
@@ -316,18 +324,29 @@
                     },
                     methodBody + Environment.NewLine + "return default;");
             }
-        }
+        }*/
 
-        private string TranscribeProperties(IEnumerable<PropertyDefinition> propertyDefinitions, string nodeName, string builderName)
+        private string TranscribeProperties(
+            IEnumerable<PropertyDefinition> propertyDefinitions,
+            string ruleCstNodesNamespace,
+            string innerCstNodesNamespace,
+            string nodeName,
+            string builderName)
         {
             var builder = new StringBuilder();
 
-            TranscribeProperties(propertyDefinitions, nodeName, builderName, builder);
+            TranscribeProperties(propertyDefinitions, ruleCstNodesNamespace, innerCstNodesNamespace, nodeName, builderName, builder);
 
             return builder.ToString();
         }
 
-        private void TranscribeProperties(IEnumerable<PropertyDefinition> propertyDefinitions, string nodeName, string builderName, StringBuilder builder)
+        private void TranscribeProperties(
+            IEnumerable<PropertyDefinition> propertyDefinitions, 
+            string ruleCstNodesNamespace,
+            string innerCstNodesNamespace,
+            string nodeName, 
+            string builderName, 
+            StringBuilder builder)
         {
             foreach (var propertyDefinition in propertyDefinitions)
             {
@@ -382,7 +401,7 @@
                     propertyType = propertyType.Substring(0, propertyType.Length - 1);*/
 
                     //// TODO this line should work
-                    ////builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");
+                    builder.AppendLine($"{GetTranscriberType(propertyType, ruleCstNodesNamespace, innerCstNodesNamespace)}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");
 
                     builder.AppendLine("}");
                 }
@@ -408,6 +427,21 @@
                     builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");
                 }*/
             }
+        }
+
+        private string GetTranscriberType(string propertyType, string ruleCstNodesNamespace, string innerCstNodesNamespace)
+        {
+            if (propertyType.StartsWith(ruleCstNodesNamespace))
+            {
+                return $"{this.ruleTranscribersNamespace}{propertyType.Substring(ruleCstNodesNamespace.Length)}";
+            }
+
+            if (propertyType.StartsWith(innerCstNodesNamespace))
+            {
+                return $"{this.innerTranscribersNamespace}{propertyType.Substring(innerCstNodesNamespace.Length)}";
+            }
+
+            return propertyType;
         }
     }
 }

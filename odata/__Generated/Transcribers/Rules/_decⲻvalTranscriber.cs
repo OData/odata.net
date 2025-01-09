@@ -12,6 +12,7 @@ namespace __Generated.Trancsribers.Rules
         {
             if (value._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ_1 != null)
 {
+__Generated.Trancsribers.Inners._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃTranscriber.Instance.Transcribe(value._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ_1, builder);
 }
 
         }
