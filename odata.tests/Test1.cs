@@ -264,6 +264,18 @@
             var rulesNamespace = "Test.Transcribers.Rules";
             var innersNamespace = "Test.Transcribers.Inners";
             var transcribers = new TranscribersGenerator(rulesNamespace, innersNamespace).Generate(cstNodes);
+            var danglingRules = transcribers
+                .Rules
+                .Where(
+                    rule => rule
+                        .Methods
+                        .Where(method => method.Name == "Transcribe")
+                        .Where(method => string.IsNullOrEmpty(method.Body))
+                        .Any())
+                .ToList();
+            if (danglingRules.Any())
+            {
+            }
 
             TranscribeClasses(rulesNamespace, @"C:\msgithub\odata.net\odata\GeneratorV3\GeneratedTranscribers\Rules.cs", transcribers.Rules);
             TranscribeClasses(innersNamespace, @"C:\msgithub\odata.net\odata\GeneratorV3\GeneratedTranscribers\Inners.cs", transcribers.Inners);

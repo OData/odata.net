@@ -37,6 +37,70 @@
             foreach (var cstNode in cstNodes)
             {
                 var transcriberName = $"{cstNode.Name}Transcriber";
+
+                var nonStaticProperties = cstNode.Properties.Where(property => !property.IsStatic);
+                string methodBody; //// TODO bodies should be lines for whitespace purposes
+                IEnumerable<Class> nestedClasses;
+                if (nonStaticProperties.Any()) //// TODO you are adding these cases to the rules (you already added to inners)
+                {
+                    if (cstNode.Name.Length == 3 && cstNode.Name[0] == '_' && char.IsDigit(cstNode.Name[1]) && char.IsDigit(cstNode.Name[2]))
+                    {
+                        methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
+                    }
+                    else
+                    {
+                        methodBody = TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic), "value", "builder");
+                    }
+
+                    nestedClasses = Enumerable.Empty<Class>();
+                }
+                else if (cstNode.NestedClasses.Any())
+                {
+                    methodBody = "Visitor.Instance.Visit(value, builder);";
+                    nestedClasses = new[]
+                    {
+                        new Class(
+                            AccessModifier.Private,
+                            ClassModifier.Sealed,
+                            "Visitor",
+                            Enumerable.Empty<string>(),
+                            $"GeneratorV3.Abnf.Inners.{cstNode.Name}.Visitor<Root.Void, StringBuilder>", //// TODO namespace should be computed
+                            new[]
+                            {
+                                new ConstructorDefinition(
+                                    AccessModifier.Private,
+                                    Enumerable.Empty<MethodParameter>(),
+                                    Enumerable.Empty<string>()),
+                            },
+                            GenerateVisitorMethods(cstNode),
+                            Enumerable.Empty<Class>(),
+                            new[]
+                            {
+                                new PropertyDefinition(
+                                    AccessModifier.Public,
+                                    true,
+                                    "Visitor",
+                                    "Instance",
+                                    true,
+                                    false,
+                                    "new Visitor();"),
+                            }),
+                    };
+                }
+                else
+                {
+                    nestedClasses = Enumerable.Empty<Class>();
+                    if (cstNode.Name.StartsWith("_x"))
+                    {
+                        methodBody = $"builder.Append((char)0{cstNode.Name.TrimStart('_')});";
+                    }
+                    else
+                    {
+                        //// TODO are there other terminal node cases?
+                        methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
+                    }
+                }
+
                 yield return new Class(
                     AccessModifier.Public,
                     ClassModifier.Sealed,
@@ -65,9 +129,9 @@
                                 new MethodParameter(cstNode.Name, "value"),
                                 new MethodParameter("StringBuilder", "builder"),
                             },
-                            TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic), "value", "builder")),
+                            methodBody),
                     },
-                    Enumerable.Empty<Class>(), //// TODO sometimes you need a nested visitor
+                    nestedClasses,
                     new[]
                     {
                         new PropertyDefinition(
