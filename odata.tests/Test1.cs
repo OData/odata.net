@@ -32,36 +32,35 @@
             var innerCstNodesNamespace = "__Generated.CstNodes.Inners";
             var generatedCstNodes = new _GeneratorV5.CstNodesGenerator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(newCst);
 
-            TranscribeNamespace(generatedCstNodes.RuleCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules\rules.cs");
-            TranscribeNamespace(generatedCstNodes.InnerCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Inners\inners.cs");
+            TranscribeNamespace(generatedCstNodes.RuleCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules");
+            TranscribeNamespace(generatedCstNodes.InnerCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Inners");
 
             //// TODO finish this
         }
 
-        private static void TranscribeNamespace(Namespace @namespace, string filePath)
+        private static void TranscribeNamespace(Namespace @namespace, string folderPath)
         {
             //// TODO split files
-
-            var classTranscriber = new ClassTranscriber();
-
-            var stringBuilder = new StringBuilder();
-            var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine($"namespace {@namespace.Name}");
-            builder.AppendLine("{");
-            builder.Indent();
-
             foreach (var @class in @namespace.Classes)
             {
+                var filePath = Path.Combine(folderPath, $"{@class.Name}.cs");
+                var classTranscriber = new ClassTranscriber();
+
+                var stringBuilder = new StringBuilder();
+                var builder = new Builder(stringBuilder, "    ");
+                builder.AppendLine($"namespace {@namespace.Name}");
+                builder.AppendLine("{");
+                builder.Indent();
                 classTranscriber.Transcribe(@class, builder);
                 builder.AppendLine();
+
+                builder.Unindent();
+                builder.AppendLine("}");
+
+                var csharp = stringBuilder.ToString();
+
+                File.WriteAllText(filePath, csharp);
             }
-
-            builder.Unindent();
-            builder.AppendLine("}");
-
-            var csharp = stringBuilder.ToString();
-
-            File.WriteAllText(filePath, csharp);
         }
 
         [TestMethod]
