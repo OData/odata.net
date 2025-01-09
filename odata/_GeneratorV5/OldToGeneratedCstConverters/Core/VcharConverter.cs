@@ -1,4 +1,4 @@
-﻿namespace _GeneratorV4.OldToGeneratedCstConverters
+﻿namespace _GeneratorV5.OldToGeneratedCstConverters
 {
     public sealed class VcharConverter : AbnfParser.CstNodes.Core.Vchar.Visitor<__Generated.CstNodes.Rules._VCHAR, Root.Void>
     {

@@ -1,4 +1,4 @@
-﻿namespace _GeneratorV4.OldToGeneratedCstConverters
+﻿namespace _GeneratorV5.OldToGeneratedCstConverters
 {
     public sealed class RepetitionConverter : AbnfParser.CstNodes.Repetition.Visitor<__Generated.CstNodes.Rules._repetition, Root.Void>
     {

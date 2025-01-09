@@ -1,4 +1,4 @@
-﻿namespace _GeneratorV4.OldToGeneratedCstConverters
+﻿namespace _GeneratorV5.OldToGeneratedCstConverters
 {
     public sealed class BitConverter : AbnfParser.CstNodes.Core.Bit.Visitor<__Generated.CstNodes.Rules._BIT, Root.Void>
     {

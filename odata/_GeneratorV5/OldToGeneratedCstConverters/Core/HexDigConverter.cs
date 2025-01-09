@@ -1,4 +1,4 @@
-﻿namespace _GeneratorV4.OldToGeneratedCstConverters
+﻿namespace _GeneratorV5.OldToGeneratedCstConverters
 {
     public sealed class HexDigConverter : AbnfParser.CstNodes.Core.HexDig.Visitor<__Generated.CstNodes.Rules._HEXDIG, Root.Void>
     {

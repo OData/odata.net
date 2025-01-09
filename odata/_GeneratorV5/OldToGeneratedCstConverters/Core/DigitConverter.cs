@@ -1,4 +1,4 @@
-﻿namespace _GeneratorV4.OldToGeneratedCstConverters
+﻿namespace _GeneratorV5.OldToGeneratedCstConverters
 {
     public sealed class DigitConverter : AbnfParser.CstNodes.Core.Digit.Visitor<__Generated.CstNodes.Rules._DIGIT, Root.Void>
     {

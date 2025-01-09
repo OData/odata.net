@@ -5,7 +5,8 @@
     using System.Linq;
     using System.Text;
 
-    using _GeneratorV4.Abnf.CstNodes;
+    using __Generated.CstNodes.Inners;
+    using __Generated.CstNodes.Rules;
     using AbnfParser.CstNodes;
     using AbnfParser.CstNodes.Core;
     using AbnfParserGenerator;
@@ -197,7 +198,7 @@
                         Enumerable.Empty<PropertyDefinition>()));
         }
 
-        private sealed class _ruleⳆⲤЖcⲻwsp_cⲻnlↃToClassGenerator : Inners._ruleⳆⲤЖcⲻwsp_cⲻnlↃ.Visitor<Class?, (Dictionary<string, Class> InnerClasses, Root.Void @void)>
+        private sealed class _ruleⳆⲤЖcⲻwsp_cⲻnlↃToClassGenerator : _ruleⳆⲤЖcⲻwsp_cⲻnlↃ.Visitor<Class?, (Dictionary<string, Class> InnerClasses, Root.Void @void)>
         {
             private readonly _ruleToClassGenerator ruleToClass;
 
@@ -214,7 +215,7 @@
                     toClassNames);
             }
 
-            protected internal override Class? Accept(Inners._ruleⳆⲤЖcⲻwsp_cⲻnlↃ._rule node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
+            protected internal override Class? Accept(_ruleⳆⲤЖcⲻwsp_cⲻnlↃ._rule node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
             {
                 return this.ruleToClass.Generate(node._rule_1, context);
             }
@@ -707,7 +708,7 @@
                                             }
 
                                             public PropertyDefinition Generate(
-                                                Inners._ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ,
+                                                _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ,
                                                 (Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                             {
                                                 var stringBuilder = new StringBuilder();
@@ -763,7 +764,7 @@
                                         }
                                     }
 
-                                    private sealed class _numⲻvalToClassGenerator : Inners._binⲻvalⳆdecⲻvalⳆhexⲻval.Visitor<Class, (string ClassName, Dictionary<string, Class> InnerClasses)>
+                                    private sealed class _numⲻvalToClassGenerator : _binⲻvalⳆdecⲻvalⳆhexⲻval.Visitor<Class, (string ClassName, Dictionary<string, Class> InnerClasses)>
                                     {
                                         private readonly _hexⲻvalToClassGenerator _hexⲻvalToClass;
 
@@ -775,17 +776,17 @@
                                             this._hexⲻvalToClass = new _hexⲻvalToClassGenerator(classNamePrefix, innersClassName, toClassNames);
                                         }
 
-                                        protected internal override Class Accept(Inners._binⲻvalⳆdecⲻvalⳆhexⲻval._binⲻval node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                        protected internal override Class Accept(_binⲻvalⳆdecⲻvalⳆhexⲻval._binⲻval node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                         {
                                             throw new NotImplementedException();
                                         }
 
-                                        protected internal override Class Accept(Inners._binⲻvalⳆdecⲻvalⳆhexⲻval._decⲻval node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                        protected internal override Class Accept(_binⲻvalⳆdecⲻvalⳆhexⲻval._decⲻval node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                         {
                                             throw new NotImplementedException();
                                         }
 
-                                        protected internal override Class Accept(Inners._binⲻvalⳆdecⲻvalⳆhexⲻval._hexⲻval node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
+                                        protected internal override Class Accept(_binⲻvalⳆdecⲻvalⳆhexⲻval._hexⲻval node, (string ClassName, Dictionary<string, Class> InnerClasses) context)
                                         {
                                             return this._hexⲻvalToClass.Generate(node._hexⲻval_1, context);
                                         }
@@ -825,7 +826,7 @@
                                                 }
                                             }
 
-                                            private sealed class _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃToClassGenerator : Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ.Visitor<Class, (string ClassName, Dictionary<string, Class> InnerClasses, _hexⲻval hexⲻval)>
+                                            private sealed class _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃToClassGenerator : _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ.Visitor<Class, (string ClassName, Dictionary<string, Class> InnerClasses, _hexⲻval hexⲻval)>
                                             {
                                                 private readonly string classNamePrefix;
                                                 private readonly ToClassNames toClassNames;
@@ -850,7 +851,7 @@
                                                         this.toClassNames);
                                                 }
 
-                                                protected internal override Class Accept(Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ node, (string ClassName, Dictionary<string, Class> InnerClasses, _hexⲻval hexⲻval) context)
+                                                protected internal override Class Accept(_1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ node, (string ClassName, Dictionary<string, Class> InnerClasses, _hexⲻval hexⲻval) context)
                                                 {
                                                     var segments = node
                                                         ._Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1
@@ -889,7 +890,7 @@
                                                         properties);
                                                 }
 
-                                                protected internal override Class Accept(Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ._Ⲥʺx2Dʺ_1ЖHEXDIGↃ node, (string ClassName, Dictionary<string, Class> InnerClasses, _hexⲻval hexⲻval) context)
+                                                protected internal override Class Accept(_1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ._Ⲥʺx2Dʺ_1ЖHEXDIGↃ node, (string ClassName, Dictionary<string, Class> InnerClasses, _hexⲻval hexⲻval) context)
                                                 {
                                                     var range = HexDigsRange(
                                                         context.hexⲻval._HEXDIG_1.ToList(),
@@ -1049,7 +1050,7 @@
                                                         return (DigitPlusOne.Instance.Visit(node._DIGIT_1._Ⰳx30ⲻ39_1, default), false);
                                                     }
 
-                                                    private sealed class DigitPlusOne : Inners._Ⰳx30ⲻ39.Visitor<_HEXDIG, Root.Void>
+                                                    private sealed class DigitPlusOne : _Ⰳx30ⲻ39.Visitor<_HEXDIG, Root.Void>
                                                     {
                                                         private DigitPlusOne()
                                                         {
@@ -1057,123 +1058,123 @@
 
                                                         public static DigitPlusOne Instance { get; } = new DigitPlusOne();
 
-                                                        protected internal override _HEXDIG Accept(Inners._Ⰳx30ⲻ39._30 node, Root.Void context)
+                                                        protected internal override _HEXDIG Accept(_Ⰳx30ⲻ39._30 node, Root.Void context)
                                                         {
                                                             return new _HEXDIG._DIGIT(
                                                                 new _DIGIT(
-                                                                    new Inners._Ⰳx30ⲻ39._31(
-                                                                        Inners._3.Instance,
-                                                                        Inners._1.Instance)));
+                                                                    new _Ⰳx30ⲻ39._31(
+                                                                        _3.Instance,
+                                                                        _1.Instance)));
                                                         }
 
-                                                        protected internal override _HEXDIG Accept(Inners._Ⰳx30ⲻ39._31 node, Root.Void context)
+                                                        protected internal override _HEXDIG Accept(_Ⰳx30ⲻ39._31 node, Root.Void context)
                                                         {
                                                             return new _HEXDIG._DIGIT(
                                                                 new _DIGIT(
-                                                                    new Inners._Ⰳx30ⲻ39._32(
-                                                                        Inners._3.Instance,
-                                                                        Inners._2.Instance)));
+                                                                    new _Ⰳx30ⲻ39._32(
+                                                                        _3.Instance,
+                                                                        _2.Instance)));
                                                         }
 
-                                                        protected internal override _HEXDIG Accept(Inners._Ⰳx30ⲻ39._32 node, Root.Void context)
+                                                        protected internal override _HEXDIG Accept(_Ⰳx30ⲻ39._32 node, Root.Void context)
                                                         {
                                                             return new _HEXDIG._DIGIT(
                                                                 new _DIGIT(
-                                                                    new Inners._Ⰳx30ⲻ39._33(
-                                                                        Inners._3.Instance,
-                                                                        Inners._3.Instance)));
+                                                                    new _Ⰳx30ⲻ39._33(
+                                                                        _3.Instance,
+                                                                        _3.Instance)));
                                                         }
 
-                                                        protected internal override _HEXDIG Accept(Inners._Ⰳx30ⲻ39._33 node, Root.Void context)
+                                                        protected internal override _HEXDIG Accept(_Ⰳx30ⲻ39._33 node, Root.Void context)
                                                         {
                                                             return new _HEXDIG._DIGIT(
                                                                 new _DIGIT(
-                                                                    new Inners._Ⰳx30ⲻ39._34(
-                                                                        Inners._3.Instance,
-                                                                        Inners._4.Instance)));
+                                                                    new _Ⰳx30ⲻ39._34(
+                                                                        _3.Instance,
+                                                                        _4.Instance)));
                                                         }
 
-                                                        protected internal override _HEXDIG Accept(Inners._Ⰳx30ⲻ39._34 node, Root.Void context)
+                                                        protected internal override _HEXDIG Accept(_Ⰳx30ⲻ39._34 node, Root.Void context)
                                                         {
                                                             return new _HEXDIG._DIGIT(
                                                                 new _DIGIT(
-                                                                    new Inners._Ⰳx30ⲻ39._35(
-                                                                        Inners._3.Instance,
-                                                                        Inners._5.Instance)));
+                                                                    new _Ⰳx30ⲻ39._35(
+                                                                        _3.Instance,
+                                                                        _5.Instance)));
                                                         }
 
-                                                        protected internal override _HEXDIG Accept(Inners._Ⰳx30ⲻ39._35 node, Root.Void context)
+                                                        protected internal override _HEXDIG Accept(_Ⰳx30ⲻ39._35 node, Root.Void context)
                                                         {
                                                             return new _HEXDIG._DIGIT(
                                                                 new _DIGIT(
-                                                                    new Inners._Ⰳx30ⲻ39._36(
-                                                                        Inners._3.Instance,
-                                                                        Inners._6.Instance)));
+                                                                    new _Ⰳx30ⲻ39._36(
+                                                                        _3.Instance,
+                                                                        _6.Instance)));
                                                         }
 
-                                                        protected internal override _HEXDIG Accept(Inners._Ⰳx30ⲻ39._36 node, Root.Void context)
+                                                        protected internal override _HEXDIG Accept(_Ⰳx30ⲻ39._36 node, Root.Void context)
                                                         {
                                                             return new _HEXDIG._DIGIT(
                                                                 new _DIGIT(
-                                                                    new Inners._Ⰳx30ⲻ39._37(
-                                                                        Inners._3.Instance,
-                                                                        Inners._7.Instance)));
+                                                                    new _Ⰳx30ⲻ39._37(
+                                                                        _3.Instance,
+                                                                        _7.Instance)));
                                                         }
 
-                                                        protected internal override _HEXDIG Accept(Inners._Ⰳx30ⲻ39._37 node, Root.Void context)
+                                                        protected internal override _HEXDIG Accept(_Ⰳx30ⲻ39._37 node, Root.Void context)
                                                         {
                                                             return new _HEXDIG._DIGIT(
                                                                 new _DIGIT(
-                                                                    new Inners._Ⰳx30ⲻ39._38(
-                                                                        Inners._3.Instance,
-                                                                        Inners._8.Instance)));
+                                                                    new _Ⰳx30ⲻ39._38(
+                                                                        _3.Instance,
+                                                                        _8.Instance)));
                                                         }
 
-                                                        protected internal override _HEXDIG Accept(Inners._Ⰳx30ⲻ39._38 node, Root.Void context)
+                                                        protected internal override _HEXDIG Accept(_Ⰳx30ⲻ39._38 node, Root.Void context)
                                                         {
                                                             return new _HEXDIG._DIGIT(
                                                                 new _DIGIT(
-                                                                    new Inners._Ⰳx30ⲻ39._39(
-                                                                        Inners._3.Instance,
-                                                                        Inners._9.Instance)));
+                                                                    new _Ⰳx30ⲻ39._39(
+                                                                        _3.Instance,
+                                                                        _9.Instance)));
                                                         }
 
-                                                        protected internal override _HEXDIG Accept(Inners._Ⰳx30ⲻ39._39 node, Root.Void context)
+                                                        protected internal override _HEXDIG Accept(_Ⰳx30ⲻ39._39 node, Root.Void context)
                                                         {
                                                             return new _HEXDIG._ʺx41ʺ(
-                                                                new Inners._ʺx41ʺ(
-                                                                    Inners._x41.Instance));
+                                                                new _ʺx41ʺ(
+                                                                    _x41.Instance));
                                                         }
                                                     }
 
                                                     protected internal override (_HEXDIG HexDig, bool Overflow) Accept(_HEXDIG._ʺx41ʺ node, Root.Void context)
                                                     {
-                                                        return (new _HEXDIG._ʺx42ʺ(new Inners._ʺx42ʺ(Inners._x42.Instance)), false);
+                                                        return (new _HEXDIG._ʺx42ʺ(new _ʺx42ʺ(_x42.Instance)), false);
                                                     }
 
                                                     protected internal override (_HEXDIG HexDig, bool Overflow) Accept(_HEXDIG._ʺx42ʺ node, Root.Void context)
                                                     {
-                                                        return (new _HEXDIG._ʺx43ʺ(new Inners._ʺx43ʺ(Inners._x43.Instance)), false);
+                                                        return (new _HEXDIG._ʺx43ʺ(new _ʺx43ʺ(_x43.Instance)), false);
                                                     }
 
                                                     protected internal override (_HEXDIG HexDig, bool Overflow) Accept(_HEXDIG._ʺx43ʺ node, Root.Void context)
                                                     {
-                                                        return (new _HEXDIG._ʺx44ʺ(new Inners._ʺx44ʺ(Inners._x44.Instance)), false);
+                                                        return (new _HEXDIG._ʺx44ʺ(new _ʺx44ʺ(_x44.Instance)), false);
                                                     }
 
                                                     protected internal override (_HEXDIG HexDig, bool Overflow) Accept(_HEXDIG._ʺx44ʺ node, Root.Void context)
                                                     {
-                                                        return (new _HEXDIG._ʺx45ʺ(new Inners._ʺx45ʺ(Inners._x45.Instance)), false);
+                                                        return (new _HEXDIG._ʺx45ʺ(new _ʺx45ʺ(_x45.Instance)), false);
                                                     }
 
                                                     protected internal override (_HEXDIG HexDig, bool Overflow) Accept(_HEXDIG._ʺx45ʺ node, Root.Void context)
                                                     {
-                                                        return (new _HEXDIG._ʺx46ʺ(new Inners._ʺx46ʺ(Inners._x46.Instance)), false);
+                                                        return (new _HEXDIG._ʺx46ʺ(new _ʺx46ʺ(_x46.Instance)), false);
                                                     }
 
                                                     protected internal override (_HEXDIG HexDig, bool Overflow) Accept(_HEXDIG._ʺx46ʺ node, Root.Void context)
                                                     {
-                                                        return (new _HEXDIG._DIGIT(new _DIGIT(new Inners._Ⰳx30ⲻ39._30(Inners._3.Instance, Inners._0.Instance))), true);
+                                                        return (new _HEXDIG._DIGIT(new _DIGIT(new _Ⰳx30ⲻ39._30(_3.Instance, _0.Instance))), true);
                                                     }
                                                 }
 
@@ -1195,7 +1196,7 @@
                                                         return DigitEqual.Instance.Visit(node._DIGIT_1._Ⰳx30ⲻ39_1, digit._DIGIT_1._Ⰳx30ⲻ39_1);
                                                     }
 
-                                                    private sealed class DigitEqual : Inners._Ⰳx30ⲻ39.Visitor<bool, Inners._Ⰳx30ⲻ39>
+                                                    private sealed class DigitEqual : _Ⰳx30ⲻ39.Visitor<bool, _Ⰳx30ⲻ39>
                                                     {
                                                         private DigitEqual()
                                                         {
@@ -1203,54 +1204,54 @@
 
                                                         public static DigitEqual Instance { get; } = new DigitEqual();
 
-                                                        protected internal override bool Accept(Inners._Ⰳx30ⲻ39._30 node, Inners._Ⰳx30ⲻ39 context)
+                                                        protected internal override bool Accept(_Ⰳx30ⲻ39._30 node, _Ⰳx30ⲻ39 context)
                                                         {
-                                                            return context is Inners._Ⰳx30ⲻ39._30;
+                                                            return context is _Ⰳx30ⲻ39._30;
                                                         }
 
-                                                        protected internal override bool Accept(Inners._Ⰳx30ⲻ39._31 node, Inners._Ⰳx30ⲻ39 context)
+                                                        protected internal override bool Accept(_Ⰳx30ⲻ39._31 node, _Ⰳx30ⲻ39 context)
                                                         {
-                                                            return context is Inners._Ⰳx30ⲻ39._31;
+                                                            return context is _Ⰳx30ⲻ39._31;
                                                         }
 
-                                                        protected internal override bool Accept(Inners._Ⰳx30ⲻ39._32 node, Inners._Ⰳx30ⲻ39 context)
+                                                        protected internal override bool Accept(_Ⰳx30ⲻ39._32 node, _Ⰳx30ⲻ39 context)
                                                         {
-                                                            return context is Inners._Ⰳx30ⲻ39._32;
+                                                            return context is _Ⰳx30ⲻ39._32;
                                                         }
 
-                                                        protected internal override bool Accept(Inners._Ⰳx30ⲻ39._33 node, Inners._Ⰳx30ⲻ39 context)
+                                                        protected internal override bool Accept(_Ⰳx30ⲻ39._33 node, _Ⰳx30ⲻ39 context)
                                                         {
-                                                            return context is Inners._Ⰳx30ⲻ39._33;
+                                                            return context is _Ⰳx30ⲻ39._33;
                                                         }
 
-                                                        protected internal override bool Accept(Inners._Ⰳx30ⲻ39._34 node, Inners._Ⰳx30ⲻ39 context)
+                                                        protected internal override bool Accept(_Ⰳx30ⲻ39._34 node, _Ⰳx30ⲻ39 context)
                                                         {
-                                                            return context is Inners._Ⰳx30ⲻ39._34;
+                                                            return context is _Ⰳx30ⲻ39._34;
                                                         }
 
-                                                        protected internal override bool Accept(Inners._Ⰳx30ⲻ39._35 node, Inners._Ⰳx30ⲻ39 context)
+                                                        protected internal override bool Accept(_Ⰳx30ⲻ39._35 node, _Ⰳx30ⲻ39 context)
                                                         {
-                                                            return context is Inners._Ⰳx30ⲻ39._35;
+                                                            return context is _Ⰳx30ⲻ39._35;
                                                         }
 
-                                                        protected internal override bool Accept(Inners._Ⰳx30ⲻ39._36 node, Inners._Ⰳx30ⲻ39 context)
+                                                        protected internal override bool Accept(_Ⰳx30ⲻ39._36 node, _Ⰳx30ⲻ39 context)
                                                         {
-                                                            return context is Inners._Ⰳx30ⲻ39._36;
+                                                            return context is _Ⰳx30ⲻ39._36;
                                                         }
 
-                                                        protected internal override bool Accept(Inners._Ⰳx30ⲻ39._37 node, Inners._Ⰳx30ⲻ39 context)
+                                                        protected internal override bool Accept(_Ⰳx30ⲻ39._37 node, _Ⰳx30ⲻ39 context)
                                                         {
-                                                            return context is Inners._Ⰳx30ⲻ39._37;
+                                                            return context is _Ⰳx30ⲻ39._37;
                                                         }
 
-                                                        protected internal override bool Accept(Inners._Ⰳx30ⲻ39._38 node, Inners._Ⰳx30ⲻ39 context)
+                                                        protected internal override bool Accept(_Ⰳx30ⲻ39._38 node, _Ⰳx30ⲻ39 context)
                                                         {
-                                                            return context is Inners._Ⰳx30ⲻ39._38;
+                                                            return context is _Ⰳx30ⲻ39._38;
                                                         }
 
-                                                        protected internal override bool Accept(Inners._Ⰳx30ⲻ39._39 node, Inners._Ⰳx30ⲻ39 context)
+                                                        protected internal override bool Accept(_Ⰳx30ⲻ39._39 node, _Ⰳx30ⲻ39 context)
                                                         {
-                                                            return context is Inners._Ⰳx30ⲻ39._39;
+                                                            return context is _Ⰳx30ⲻ39._39;
                                                         }
                                                     }
 
@@ -1611,7 +1612,7 @@
                 }
             }
 
-            protected internal override Class? Accept(Inners._ruleⳆⲤЖcⲻwsp_cⲻnlↃ._ⲤЖcⲻwsp_cⲻnlↃ node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
+            protected internal override Class? Accept(_ruleⳆⲤЖcⲻwsp_cⲻnlↃ._ⲤЖcⲻwsp_cⲻnlↃ node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
             {
                 return null;
             }
@@ -1881,7 +1882,7 @@
                 return this.visitor.Visit(numⲻval._ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃ_1._binⲻvalⳆdecⲻvalⳆhexⲻval_1, default);
             }
 
-            private sealed class Visitor : Inners._binⲻvalⳆdecⲻvalⳆhexⲻval.Visitor<string, Root.Void>
+            private sealed class Visitor : _binⲻvalⳆdecⲻvalⳆhexⲻval.Visitor<string, Root.Void>
             {
                 private readonly CharacterSubstitutions characterSubstitutions;
                 private readonly ToClassNames toClassNames;
@@ -1892,17 +1893,17 @@
                     this.toClassNames = toClassNames;
                 }
 
-                protected internal override string Accept(Inners._binⲻvalⳆdecⲻvalⳆhexⲻval._binⲻval node, Root.Void context)
+                protected internal override string Accept(_binⲻvalⳆdecⲻvalⳆhexⲻval._binⲻval node, Root.Void context)
                 {
                     return $"{characterSubstitutions.Percent}{this.toClassNames.BinValToClassName.Generate(node._binⲻval_1)}";
                 }
 
-                protected internal override string Accept(Inners._binⲻvalⳆdecⲻvalⳆhexⲻval._decⲻval node, Root.Void context)
+                protected internal override string Accept(_binⲻvalⳆdecⲻvalⳆhexⲻval._decⲻval node, Root.Void context)
                 {
                     return $"{characterSubstitutions.Percent}{this.toClassNames.DecValToClassName.Generate(node._decⲻval_1)}";
                 }
 
-                protected internal override string Accept(Inners._binⲻvalⳆdecⲻvalⳆhexⲻval._hexⲻval node, Root.Void context)
+                protected internal override string Accept(_binⲻvalⳆdecⲻvalⳆhexⲻval._hexⲻval node, Root.Void context)
                 {
                     return $"{characterSubstitutions.Percent}{this.toClassNames.HexValToClassName.Generate(node._hexⲻval_1)}";
                 }
@@ -1968,7 +1969,7 @@
                 return builder.ToString();
             }
 
-            private sealed class Visitor : Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ.Visitor<Root.Void, StringBuilder>
+            private sealed class Visitor : _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ.Visitor<Root.Void, StringBuilder>
             {
                 private readonly CharacterSubstitutions characterSubstitutions;
                 private readonly ToClassNames toClassNames;
@@ -1979,7 +1980,7 @@
                     this.toClassNames = toClassNames;
                 }
 
-                protected internal override Root.Void Accept(Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ node, StringBuilder context)
+                protected internal override Root.Void Accept(_1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ node, StringBuilder context)
                 {
                     foreach (var _Ⲥʺx2Eʺ_1ЖHEXDIGↃ in node._Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1)
                     {
@@ -1990,7 +1991,7 @@
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ._Ⲥʺx2Dʺ_1ЖHEXDIGↃ node, StringBuilder context)
+                protected internal override Root.Void Accept(_1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ._Ⲥʺx2Dʺ_1ЖHEXDIGↃ node, StringBuilder context)
                 {
                     context.Append(this.characterSubstitutions.Dash);
                     context.Append(this.toClassNames.HexDigsToClassName.Generate(node._Ⲥʺx2Dʺ_1ЖHEXDIGↃ_1._ʺx2Dʺ_1ЖHEXDIG_1._HEXDIG_1));
@@ -2080,7 +2081,7 @@
                 return Visitor.Instance.Visit(digit._Ⰳx30ⲻ39_1, default);
             }
 
-            private sealed class Visitor : Inners._Ⰳx30ⲻ39.Visitor<string, Root.Void>
+            private sealed class Visitor : _Ⰳx30ⲻ39.Visitor<string, Root.Void>
             {
                 private Visitor()
                 {
@@ -2088,52 +2089,52 @@
 
                 public static Visitor Instance { get; } = new Visitor();
 
-                protected internal override string Accept(Inners._Ⰳx30ⲻ39._30 node, Root.Void context)
+                protected internal override string Accept(_Ⰳx30ⲻ39._30 node, Root.Void context)
                 {
                     return "0";
                 }
 
-                protected internal override string Accept(Inners._Ⰳx30ⲻ39._31 node, Root.Void context)
+                protected internal override string Accept(_Ⰳx30ⲻ39._31 node, Root.Void context)
                 {
                     return "1";
                 }
 
-                protected internal override string Accept(Inners._Ⰳx30ⲻ39._32 node, Root.Void context)
+                protected internal override string Accept(_Ⰳx30ⲻ39._32 node, Root.Void context)
                 {
                     return "2";
                 }
 
-                protected internal override string Accept(Inners._Ⰳx30ⲻ39._33 node, Root.Void context)
+                protected internal override string Accept(_Ⰳx30ⲻ39._33 node, Root.Void context)
                 {
                     return "3";
                 }
 
-                protected internal override string Accept(Inners._Ⰳx30ⲻ39._34 node, Root.Void context)
+                protected internal override string Accept(_Ⰳx30ⲻ39._34 node, Root.Void context)
                 {
                     return "4";
                 }
 
-                protected internal override string Accept(Inners._Ⰳx30ⲻ39._35 node, Root.Void context)
+                protected internal override string Accept(_Ⰳx30ⲻ39._35 node, Root.Void context)
                 {
                     return "5";
                 }
 
-                protected internal override string Accept(Inners._Ⰳx30ⲻ39._36 node, Root.Void context)
+                protected internal override string Accept(_Ⰳx30ⲻ39._36 node, Root.Void context)
                 {
                     return "6";
                 }
 
-                protected internal override string Accept(Inners._Ⰳx30ⲻ39._37 node, Root.Void context)
+                protected internal override string Accept(_Ⰳx30ⲻ39._37 node, Root.Void context)
                 {
                     return "7";
                 }
 
-                protected internal override string Accept(Inners._Ⰳx30ⲻ39._38 node, Root.Void context)
+                protected internal override string Accept(_Ⰳx30ⲻ39._38 node, Root.Void context)
                 {
                     return "8";
                 }
 
-                protected internal override string Accept(Inners._Ⰳx30ⲻ39._39 node, Root.Void context)
+                protected internal override string Accept(_Ⰳx30ⲻ39._39 node, Root.Void context)
                 {
                     return "9";
                 }
@@ -2166,7 +2167,7 @@
             }
         }
 
-        private sealed class _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃToClassName : Inners._Ⰳx20ⲻ21ⳆⰃx23ⲻ7E.Visitor<Root.Void, StringBuilder>
+        private sealed class _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃToClassName : _Ⰳx20ⲻ21ⳆⰃx23ⲻ7E.Visitor<Root.Void, StringBuilder>
         {
             private _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃToClassName()
             {
@@ -2174,21 +2175,21 @@
 
             public static _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃToClassName Instance { get; } = new _ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃToClassName();
 
-            protected internal override Root.Void Accept(Inners._Ⰳx20ⲻ21ⳆⰃx23ⲻ7E._Ⰳx20ⲻ21 node, StringBuilder context)
+            protected internal override Root.Void Accept(_Ⰳx20ⲻ21ⳆⰃx23ⲻ7E._Ⰳx20ⲻ21 node, StringBuilder context)
             {
                 _Ⰳx20ⲻ21Visitor.Instance.Visit(node._Ⰳx20ⲻ21_1, context);
 
                 return default;
             }
 
-            protected internal override Root.Void Accept(Inners._Ⰳx20ⲻ21ⳆⰃx23ⲻ7E._Ⰳx23ⲻ7E node, StringBuilder context)
+            protected internal override Root.Void Accept(_Ⰳx20ⲻ21ⳆⰃx23ⲻ7E._Ⰳx23ⲻ7E node, StringBuilder context)
             {
                 _Ⰳx23ⲻ7EVisitor.Instance.Visit(node._Ⰳx23ⲻ7E_1, context);
 
                 return default;
             }
 
-            private sealed class _Ⰳx20ⲻ21Visitor : Inners._Ⰳx20ⲻ21.Visitor<Root.Void, StringBuilder>
+            private sealed class _Ⰳx20ⲻ21Visitor : _Ⰳx20ⲻ21.Visitor<Root.Void, StringBuilder>
             {
                 private _Ⰳx20ⲻ21Visitor()
                 {
@@ -2196,7 +2197,7 @@
 
                 public static _Ⰳx20ⲻ21Visitor Instance { get; } = new _Ⰳx20ⲻ21Visitor();
 
-                protected internal override Root.Void Accept(Inners._Ⰳx20ⲻ21._20 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx20ⲻ21._20 node, StringBuilder context)
                 {
                     //// TODO what you could do here is `context.Append((char)0x20)`; you're doing what's here currently because you are being compatbile with something you did previously
                     context.Append("x20");
@@ -2204,7 +2205,7 @@
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx20ⲻ21._21 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx20ⲻ21._21 node, StringBuilder context)
                 {
                     context.Append("x21");
 
@@ -2212,7 +2213,7 @@
                 }
             }
 
-            public sealed class _Ⰳx23ⲻ7EVisitor : Inners._Ⰳx23ⲻ7E.Visitor<Root.Void, StringBuilder>
+            public sealed class _Ⰳx23ⲻ7EVisitor : _Ⰳx23ⲻ7E.Visitor<Root.Void, StringBuilder>
             {
                 private _Ⰳx23ⲻ7EVisitor()
                 {
@@ -2220,7 +2221,7 @@
 
                 public static _Ⰳx23ⲻ7EVisitor Instance { get; } = new _Ⰳx23ⲻ7EVisitor();
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._23 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._23 node, StringBuilder context)
                 {
                     //// TODO what you could do here is `context.Append((char)0x20)`; you're doing what's here currently because you are being compatbile with something you did previously
                     context.Append("x23");
@@ -2228,637 +2229,637 @@
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._24 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._24 node, StringBuilder context)
                 {
                     context.Append("x24");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._25 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._25 node, StringBuilder context)
                 {
                     context.Append("x25");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._26 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._26 node, StringBuilder context)
                 {
                     context.Append("x26");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._27 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._27 node, StringBuilder context)
                 {
                     context.Append("x27");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._28 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._28 node, StringBuilder context)
                 {
                     context.Append("x28");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._29 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._29 node, StringBuilder context)
                 {
                     context.Append("x29");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._2A node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._2A node, StringBuilder context)
                 {
                     context.Append("x2A");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._2B node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._2B node, StringBuilder context)
                 {
                     context.Append("x2B");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._2C node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._2C node, StringBuilder context)
                 {
                     context.Append("x2C");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._2D node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._2D node, StringBuilder context)
                 {
                     context.Append("x2D");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._2E node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._2E node, StringBuilder context)
                 {
                     context.Append("x2E");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._2F node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._2F node, StringBuilder context)
                 {
                     context.Append("x2F");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._30 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._30 node, StringBuilder context)
                 {
                     context.Append("x30");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._31 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._31 node, StringBuilder context)
                 {
                     context.Append("x31");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._32 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._32 node, StringBuilder context)
                 {
                     context.Append("x32");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._33 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._33 node, StringBuilder context)
                 {
                     context.Append("x33");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._34 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._34 node, StringBuilder context)
                 {
                     context.Append("x34");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._35 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._35 node, StringBuilder context)
                 {
                     context.Append("x35");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._36 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._36 node, StringBuilder context)
                 {
                     context.Append("x36");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._37 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._37 node, StringBuilder context)
                 {
                     context.Append("x37");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._38 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._38 node, StringBuilder context)
                 {
                     context.Append("x38");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._39 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._39 node, StringBuilder context)
                 {
                     context.Append("x39");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._3A node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._3A node, StringBuilder context)
                 {
                     context.Append("x3A");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._3B node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._3B node, StringBuilder context)
                 {
                     context.Append("x3B");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._3C node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._3C node, StringBuilder context)
                 {
                     context.Append("x3C");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._3D node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._3D node, StringBuilder context)
                 {
                     context.Append("x3D");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._3E node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._3E node, StringBuilder context)
                 {
                     context.Append("x3E");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._3F node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._3F node, StringBuilder context)
                 {
                     context.Append("x3F");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._40 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._40 node, StringBuilder context)
                 {
                     context.Append("x40");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._41 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._41 node, StringBuilder context)
                 {
                     context.Append("x41");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._42 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._42 node, StringBuilder context)
                 {
                     context.Append("x42");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._43 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._43 node, StringBuilder context)
                 {
                     context.Append("x43");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._44 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._44 node, StringBuilder context)
                 {
                     context.Append("x44");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._45 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._45 node, StringBuilder context)
                 {
                     context.Append("x45");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._46 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._46 node, StringBuilder context)
                 {
                     context.Append("x46");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._47 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._47 node, StringBuilder context)
                 {
                     context.Append("x47");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._48 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._48 node, StringBuilder context)
                 {
                     context.Append("x48");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._49 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._49 node, StringBuilder context)
                 {
                     context.Append("x49");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._4A node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._4A node, StringBuilder context)
                 {
                     context.Append("x4A");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._4B node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._4B node, StringBuilder context)
                 {
                     context.Append("x4B");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._4C node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._4C node, StringBuilder context)
                 {
                     context.Append("x4C");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._4D node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._4D node, StringBuilder context)
                 {
                     context.Append("x4D");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._4E node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._4E node, StringBuilder context)
                 {
                     context.Append("x4E");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._4F node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._4F node, StringBuilder context)
                 {
                     context.Append("x4F");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._50 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._50 node, StringBuilder context)
                 {
                     context.Append("x50");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._51 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._51 node, StringBuilder context)
                 {
                     context.Append("x51");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._52 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._52 node, StringBuilder context)
                 {
                     context.Append("x52");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._53 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._53 node, StringBuilder context)
                 {
                     context.Append("x53");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._54 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._54 node, StringBuilder context)
                 {
                     context.Append("x54");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._55 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._55 node, StringBuilder context)
                 {
                     context.Append("x55");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._56 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._56 node, StringBuilder context)
                 {
                     context.Append("x56");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._57 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._57 node, StringBuilder context)
                 {
                     context.Append("x57");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._58 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._58 node, StringBuilder context)
                 {
                     context.Append("x58");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._59 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._59 node, StringBuilder context)
                 {
                     context.Append("x59");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._5A node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._5A node, StringBuilder context)
                 {
                     context.Append("x5A");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._5B node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._5B node, StringBuilder context)
                 {
                     context.Append("x5B");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._5C node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._5C node, StringBuilder context)
                 {
                     context.Append("x5C");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._5D node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._5D node, StringBuilder context)
                 {
                     context.Append("x5D");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._5E node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._5E node, StringBuilder context)
                 {
                     context.Append("x5E");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._5F node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._5F node, StringBuilder context)
                 {
                     context.Append("x5F");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._60 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._60 node, StringBuilder context)
                 {
                     context.Append("x60");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._61 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._61 node, StringBuilder context)
                 {
                     context.Append("x61");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._62 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._62 node, StringBuilder context)
                 {
                     context.Append("x62");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._63 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._63 node, StringBuilder context)
                 {
                     context.Append("x63");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._64 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._64 node, StringBuilder context)
                 {
                     context.Append("x64");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._65 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._65 node, StringBuilder context)
                 {
                     context.Append("x65");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._66 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._66 node, StringBuilder context)
                 {
                     context.Append("x66");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._67 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._67 node, StringBuilder context)
                 {
                     context.Append("x67");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._68 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._68 node, StringBuilder context)
                 {
                     context.Append("x68");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._69 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._69 node, StringBuilder context)
                 {
                     context.Append("x69");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._6A node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._6A node, StringBuilder context)
                 {
                     context.Append("x6A");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._6B node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._6B node, StringBuilder context)
                 {
                     context.Append("x6B");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._6C node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._6C node, StringBuilder context)
                 {
                     context.Append("x6C");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._6D node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._6D node, StringBuilder context)
                 {
                     context.Append("x6D");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._6E node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._6E node, StringBuilder context)
                 {
                     context.Append("x6E");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._6F node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._6F node, StringBuilder context)
                 {
                     context.Append("x6F");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._70 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._70 node, StringBuilder context)
                 {
                     context.Append("x70");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._71 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._71 node, StringBuilder context)
                 {
                     context.Append("x71");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._72 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._72 node, StringBuilder context)
                 {
                     context.Append("x72");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._73 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._73 node, StringBuilder context)
                 {
                     context.Append("x73");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._74 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._74 node, StringBuilder context)
                 {
                     context.Append("x74");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._75 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._75 node, StringBuilder context)
                 {
                     context.Append("x75");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._76 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._76 node, StringBuilder context)
                 {
                     context.Append("x76");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._77 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._77 node, StringBuilder context)
                 {
                     context.Append("x77");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._78 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._78 node, StringBuilder context)
                 {
                     context.Append("x78");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._79 node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._79 node, StringBuilder context)
                 {
                     context.Append("x79");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._7A node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._7A node, StringBuilder context)
                 {
                     context.Append("x7A");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._7B node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._7B node, StringBuilder context)
                 {
                     context.Append("x7B");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._7C node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._7C node, StringBuilder context)
                 {
                     context.Append("x7C");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._7D node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._7D node, StringBuilder context)
                 {
                     context.Append("x7D");
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._Ⰳx23ⲻ7E._7E node, StringBuilder context)
+                protected internal override Root.Void Accept(_Ⰳx23ⲻ7E._7E node, StringBuilder context)
                 {
                     context.Append("x7E");
 
@@ -2906,7 +2907,7 @@
                 return stringBuilder.ToString();
             }
 
-            private sealed class Visitor : Inners._ALPHAⳆDIGITⳆʺx2Dʺ.Visitor<Root.Void, StringBuilder>
+            private sealed class Visitor : _ALPHAⳆDIGITⳆʺx2Dʺ.Visitor<Root.Void, StringBuilder>
             {
                 private readonly CharacterSubstitutions characterSubstitutions;
 
@@ -2915,21 +2916,21 @@
                     this.characterSubstitutions = characterSubstitutions;
                 }
 
-                protected internal override Root.Void Accept(Inners._ALPHAⳆDIGITⳆʺx2Dʺ._ALPHA node, StringBuilder context)
+                protected internal override Root.Void Accept(_ALPHAⳆDIGITⳆʺx2Dʺ._ALPHA node, StringBuilder context)
                 {
                     context.Append(_ALPHAToChar.Instance.Visit(node._ALPHA_1, default));
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._ALPHAⳆDIGITⳆʺx2Dʺ._DIGIT node, StringBuilder context)
+                protected internal override Root.Void Accept(_ALPHAⳆDIGITⳆʺx2Dʺ._DIGIT node, StringBuilder context)
                 {
                     context.Append(DigitToInt.Instance.Generate(node._DIGIT_1));
 
                     return default;
                 }
 
-                protected internal override Root.Void Accept(Inners._ALPHAⳆDIGITⳆʺx2Dʺ._ʺx2Dʺ node, StringBuilder context)
+                protected internal override Root.Void Accept(_ALPHAⳆDIGITⳆʺx2Dʺ._ʺx2Dʺ node, StringBuilder context)
                 {
                     context.Append(this.characterSubstitutions.Dash);
 
@@ -2957,7 +2958,7 @@
             return _Ⰳx61ⲻ7AVisitor.Instance.Visit(node._Ⰳx61ⲻ7A_1, default);
         }
 
-        private sealed class _Ⰳx41ⲻ5AVisitor : Inners._Ⰳx41ⲻ5A.Visitor<char, Root.Void>
+        private sealed class _Ⰳx41ⲻ5AVisitor : _Ⰳx41ⲻ5A.Visitor<char, Root.Void>
         {
             private _Ⰳx41ⲻ5AVisitor()
             {
@@ -2965,138 +2966,138 @@
 
             public static _Ⰳx41ⲻ5AVisitor Instance { get; } = new _Ⰳx41ⲻ5AVisitor();
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._41 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._41 node, Root.Void context)
             {
                 return (char)0x41;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._42 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._42 node, Root.Void context)
             {
                 return (char)0x42;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._43 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._43 node, Root.Void context)
             {
                 return (char)0x43;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._44 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._44 node, Root.Void context)
             {
                 return (char)0x44;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._45 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._45 node, Root.Void context)
             {
                 return (char)0x45;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._46 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._46 node, Root.Void context)
             {
                 return (char)0x46;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._47 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._47 node, Root.Void context)
             {
                 return (char)0x47;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._48 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._48 node, Root.Void context)
             {
                 return (char)0x48;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._49 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._49 node, Root.Void context)
             {
                 return (char)0x49;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._4A node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._4A node, Root.Void context)
             {
                 return (char)0x4A;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._4B node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._4B node, Root.Void context)
             {
                 return (char)0x4B;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._4C node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._4C node, Root.Void context)
             {
                 return (char)0x4C;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._4D node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._4D node, Root.Void context)
             {
                 return (char)0x4D;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._4E node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._4E node, Root.Void context)
             {
                 return (char)0x4E;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._4F node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._4F node, Root.Void context)
             {
                 return (char)0x4F;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._50 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._50 node, Root.Void context)
             {
                 return (char)0x50;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._51 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._51 node, Root.Void context)
             {
                 return (char)0x51;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._52 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._52 node, Root.Void context)
             {
                 return (char)0x52;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._53 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._53 node, Root.Void context)
             {
                 return (char)0x53;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._54 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._54 node, Root.Void context)
             {
                 return (char)0x54;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._55 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._55 node, Root.Void context)
             {
                 return (char)0x55;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._56 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._56 node, Root.Void context)
             {
                 return (char)0x56;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._57 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._57 node, Root.Void context)
             {
                 return (char)0x57;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._58 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._58 node, Root.Void context)
             {
                 return (char)0x58;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._59 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._59 node, Root.Void context)
             {
                 return (char)0x59;
             }
 
-            protected internal override char Accept(Inners._Ⰳx41ⲻ5A._5A node, Root.Void context)
+            protected internal override char Accept(_Ⰳx41ⲻ5A._5A node, Root.Void context)
             {
                 return (char)0x5A;
             }
         }
 
-        private sealed class _Ⰳx61ⲻ7AVisitor : Inners._Ⰳx61ⲻ7A.Visitor<char, Root.Void>
+        private sealed class _Ⰳx61ⲻ7AVisitor : _Ⰳx61ⲻ7A.Visitor<char, Root.Void>
         {
             private _Ⰳx61ⲻ7AVisitor()
             {
@@ -3104,132 +3105,132 @@
 
             public static _Ⰳx61ⲻ7AVisitor Instance { get; } = new _Ⰳx61ⲻ7AVisitor();
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._61 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._61 node, Root.Void context)
             {
                 return (char)0x61;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._62 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._62 node, Root.Void context)
             {
                 return (char)0x62;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._63 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._63 node, Root.Void context)
             {
                 return (char)0x63;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._64 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._64 node, Root.Void context)
             {
                 return (char)0x64;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._65 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._65 node, Root.Void context)
             {
                 return (char)0x65;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._66 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._66 node, Root.Void context)
             {
                 return (char)0x66;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._67 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._67 node, Root.Void context)
             {
                 return (char)0x67;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._68 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._68 node, Root.Void context)
             {
                 return (char)0x68;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._69 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._69 node, Root.Void context)
             {
                 return (char)0x69;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._6A node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._6A node, Root.Void context)
             {
                 return (char)0x6A;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._6B node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._6B node, Root.Void context)
             {
                 return (char)0x6B;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._6C node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._6C node, Root.Void context)
             {
                 return (char)0x6C;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._6D node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._6D node, Root.Void context)
             {
                 return (char)0x6D;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._6E node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._6E node, Root.Void context)
             {
                 return (char)0x6E;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._6F node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._6F node, Root.Void context)
             {
                 return (char)0x6F;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._70 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._70 node, Root.Void context)
             {
                 return (char)0x70;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._71 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._71 node, Root.Void context)
             {
                 return (char)0x71;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._72 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._72 node, Root.Void context)
             {
                 return (char)0x72;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._73 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._73 node, Root.Void context)
             {
                 return (char)0x73;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._74 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._74 node, Root.Void context)
             {
                 return (char)0x74;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._75 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._75 node, Root.Void context)
             {
                 return (char)0x75;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._76 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._76 node, Root.Void context)
             {
                 return (char)0x76;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._77 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._77 node, Root.Void context)
             {
                 return (char)0x77;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._78 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._78 node, Root.Void context)
             {
                 return (char)0x78;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._79 node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._79 node, Root.Void context)
             {
                 return (char)0x79;
             }
 
-            protected internal override char Accept(Inners._Ⰳx61ⲻ7A._7A node, Root.Void context)
+            protected internal override char Accept(_Ⰳx61ⲻ7A._7A node, Root.Void context)
             {
                 return (char)0x7A;
             }
@@ -3249,7 +3250,7 @@
             return Visitor.Instance.Visit(digit._Ⰳx30ⲻ39_1, default);
         }
 
-        private sealed class Visitor : Inners._Ⰳx30ⲻ39.Visitor<int, Root.Void>
+        private sealed class Visitor : _Ⰳx30ⲻ39.Visitor<int, Root.Void>
         {
             private Visitor()
             {
@@ -3257,52 +3258,52 @@
 
             public static Visitor Instance { get; } = new Visitor();
 
-            protected internal override int Accept(Inners._Ⰳx30ⲻ39._30 node, Root.Void context)
+            protected internal override int Accept(_Ⰳx30ⲻ39._30 node, Root.Void context)
             {
                 return 0;
             }
 
-            protected internal override int Accept(Inners._Ⰳx30ⲻ39._31 node, Root.Void context)
+            protected internal override int Accept(_Ⰳx30ⲻ39._31 node, Root.Void context)
             {
                 return 1;
             }
 
-            protected internal override int Accept(Inners._Ⰳx30ⲻ39._32 node, Root.Void context)
+            protected internal override int Accept(_Ⰳx30ⲻ39._32 node, Root.Void context)
             {
                 return 2;
             }
 
-            protected internal override int Accept(Inners._Ⰳx30ⲻ39._33 node, Root.Void context)
+            protected internal override int Accept(_Ⰳx30ⲻ39._33 node, Root.Void context)
             {
                 return 3;
             }
 
-            protected internal override int Accept(Inners._Ⰳx30ⲻ39._34 node, Root.Void context)
+            protected internal override int Accept(_Ⰳx30ⲻ39._34 node, Root.Void context)
             {
                 return 4;
             }
 
-            protected internal override int Accept(Inners._Ⰳx30ⲻ39._35 node, Root.Void context)
+            protected internal override int Accept(_Ⰳx30ⲻ39._35 node, Root.Void context)
             {
                 return 5;
             }
 
-            protected internal override int Accept(Inners._Ⰳx30ⲻ39._36 node, Root.Void context)
+            protected internal override int Accept(_Ⰳx30ⲻ39._36 node, Root.Void context)
             {
                 return 6;
             }
 
-            protected internal override int Accept(Inners._Ⰳx30ⲻ39._37 node, Root.Void context)
+            protected internal override int Accept(_Ⰳx30ⲻ39._37 node, Root.Void context)
             {
                 return 7;
             }
 
-            protected internal override int Accept(Inners._Ⰳx30ⲻ39._38 node, Root.Void context)
+            protected internal override int Accept(_Ⰳx30ⲻ39._38 node, Root.Void context)
             {
                 return 8;
             }
 
-            protected internal override int Accept(Inners._Ⰳx30ⲻ39._39 node, Root.Void context)
+            protected internal override int Accept(_Ⰳx30ⲻ39._39 node, Root.Void context)
             {
                 return 9;
             }

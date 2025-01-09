@@ -1,4 +1,4 @@
-﻿namespace _GeneratorV4.OldToGeneratedCstConverters
+﻿namespace _GeneratorV5.OldToGeneratedCstConverters
 {
     public sealed class CwspConverter : AbnfParser.CstNodes.Cwsp.Visitor<__Generated.CstNodes.Rules._cⲻwsp, Root.Void>
     {

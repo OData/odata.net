@@ -4,7 +4,7 @@
     using System.Data;
     using System.Linq;
     using System.Runtime.CompilerServices;
-    using _GeneratorV4.Abnf.CstNodes;
+    using __Generated.CstNodes.Rules;
     using AbnfParserGenerator;
 
     public sealed class CstNodesGenerator

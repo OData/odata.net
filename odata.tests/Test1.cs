@@ -26,7 +26,7 @@
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
 
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
-            var newCst = _GeneratorV4.OldToV4Converters.RuleListConverter.Instance.Convert(cst);
+            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
 
             var ruleCstNodesNamespace = "__Generated.CstNodes.Rules";
             var innerCstNodesNamespace = "__Generated.CstNodes.Inners";

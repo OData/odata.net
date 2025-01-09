@@ -1,4 +1,4 @@
-﻿namespace _GeneratorV4.OldToGeneratedCstConverters
+﻿namespace _GeneratorV5.OldToGeneratedCstConverters
 {
     public sealed class AlphaConverter : AbnfParser.CstNodes.Core.Alpha.Visitor<__Generated.CstNodes.Rules._ALPHA, Root.Void>
     {
