@@ -17,7 +17,7 @@
     public sealed class Test1
     {
         [TestMethod]
-        public void GeneratorV4()
+        public void GeneratorV5()
         {
             var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
             var coreRulesText = File.ReadAllText(coreRulesPath);
@@ -29,7 +29,7 @@
             var newCst = _GeneratorV4.OldToV4Converters.RuleListConverter.Instance.Convert(cst);
 
             var cstNodesRulesNamespace = "__Generated.CstNodes.Rules";
-            var generatedCstNodes = new _GeneratorV4.Generator(cstNodesRulesNamespace).Generate(newCst);
+            var generatedCstNodes = new _GeneratorV5.Generator(cstNodesRulesNamespace).Generate(newCst);
 
             TranscribeClasses2(cstNodesRulesNamespace, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules\rules.cs", generatedCstNodes);
 
