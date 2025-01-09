@@ -17,7 +17,7 @@
     public sealed class Test1
     {
         [TestMethod]
-        public void GeneratorV5()
+        public void GeneratorWithLatest()
         {
             var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
             var coreRulesText = File.ReadAllText(coreRulesPath);
