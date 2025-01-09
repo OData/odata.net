@@ -56,7 +56,8 @@
                     }
                     else if (cstNode.Name.StartsWith("_Ⰳx"))
                     {
-                        methodBody = $"builder.Append((char)0{cstNode.Name.Substring(2)});";
+                        //// TODO
+                        ////methodBody = $"builder.Append((char)0{cstNode.Name.Substring(2)});";
                     }
                     else
                     {

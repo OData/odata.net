@@ -10,7 +10,7 @@ namespace __Generated.Trancsribers.Inners
         
         public void Transcribe(__Generated.CstNodes.Inners._Ⰳx20 value, System.Text.StringBuilder builder)
         {
-            builder.Append((char)0x20);
+            
         }
     }
     
