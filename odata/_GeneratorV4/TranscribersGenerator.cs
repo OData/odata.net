@@ -64,7 +64,7 @@
                             ClassModifier.Sealed,
                             "Visitor",
                             Enumerable.Empty<string>(),
-                            $"GeneratorV3.Abnf.Inners.{cstNode.Name}.Visitor<Root.Void, StringBuilder>", //// TODO namespace should be computed
+                            $"GeneratorV3.Abnf.{cstNode.Name}.Visitor<Root.Void, StringBuilder>", //// TODO namespace should be computed
                             new[]
                             {
                                 new ConstructorDefinition(
@@ -72,7 +72,7 @@
                                     Enumerable.Empty<MethodParameter>(),
                                     Enumerable.Empty<string>()),
                             },
-                            GenerateVisitorMethods(cstNode),
+                            GenerateVisitorMethods(cstNode, false),
                             Enumerable.Empty<Class>(),
                             new[]
                             {
@@ -186,7 +186,7 @@
                                     Enumerable.Empty<MethodParameter>(),
                                     Enumerable.Empty<string>()),
                             },
-                            GenerateVisitorMethods(cstNode),
+                            GenerateVisitorMethods(cstNode, true),
                             Enumerable.Empty<Class>(),
                             new[]
                             {
@@ -260,7 +260,7 @@
             }
         }
 
-        private IEnumerable<MethodDefinition> GenerateVisitorMethods(Class cstNode)
+        private IEnumerable<MethodDefinition> GenerateVisitorMethods(Class cstNode, bool inners)
         {
             foreach (var duMember in cstNode.NestedClasses.Where(member => member.BaseType?.EndsWith(cstNode.Name) ?? false))
             {
@@ -283,7 +283,7 @@
                     "Accept",
                     new[]
                     {
-                        new MethodParameter($"GeneratorV3.Abnf.Inners.{cstNode.Name}.{duMember.Name}", "node"), //// TODO don't hardcode namespace
+                        new MethodParameter($"GeneratorV3.Abnf{(inners ? ".Inners" : string.Empty)}.{cstNode.Name}.{duMember.Name}", "node"), //// TODO don't hardcode namespace
                         new MethodParameter("StringBuilder", "context"),
                     },
                     methodBody + Environment.NewLine + "return default;");
