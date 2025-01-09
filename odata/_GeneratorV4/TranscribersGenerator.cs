@@ -97,9 +97,9 @@
                 }
                 else if (cstNode.NestedClasses.Any())
                 {
-                    //// methodBody = "Visitor.Instance.Visit(value, builder);";
+                    methodBody = "Visitor.Instance.Visit(value, builder);";
                     //// TODO method body
-                    methodBody = string.Empty;
+                    ////methodBody = string.Empty;
                     nestedClasses = new[]
                     {
                         new Class(
