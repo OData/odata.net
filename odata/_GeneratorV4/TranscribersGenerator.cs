@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Text;
     using AbnfParserGenerator;
 
     public sealed class TranscribersGenerator
@@ -55,7 +55,7 @@
                                 new MethodParameter(cstNode.Name, "value"),
                                 new MethodParameter("StringBuilder", "builder"),
                             },
-                            string.Empty), //// TODO generate the method body
+                            TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic))),
                     },
                     Enumerable.Empty<Class>(), //// TODO sometimes you need a nested visitor
                     new[]
@@ -70,6 +70,19 @@
                             $"new {transcriberName}();"),
                     });
             }
+        }
+
+        private string TranscribeProperties(IEnumerable<PropertyDefinition> propertyDefinitions)
+        {
+            var builder = new StringBuilder();
+
+            TranscribeProperties(propertyDefinitions, builder);
+
+            return builder.ToString();
+        }
+
+        private void TranscribeProperties(IEnumerable<PropertyDefinition> propertyDefinitions, StringBuilder builder)
+        {
         }
     }
 }
