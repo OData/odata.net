@@ -96,7 +96,6 @@
                     if (cstNode.Name.StartsWith("_x"))
                     {
                         methodBody = $"builder.Append((char)0{cstNode.Name.TrimStart('_')});";
-                        //// TODO
                     }
                     else
                     {
@@ -214,7 +213,6 @@
                     if (cstNode.Name.StartsWith("_x"))
                     {
                         methodBody = $"builder.Append((char)0{cstNode.Name.TrimStart('_')});";
-                        //// TODO
                     }
                     else
                     {
