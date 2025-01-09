@@ -1,5 +1,6 @@
 ﻿namespace odata.tests
 {
+    using _GeneratorV4;
     using AbnfParser.CstNodes.Core;
     using AbnfParserGenerator;
     using Root;
@@ -240,6 +241,54 @@
             var expectedFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\abnf.cs";
             var expected = File.ReadAllText(expectedFilePath);
             Assert.AreEqual(expected, csharp);
+
+            File.WriteAllText(expectedFilePath, csharp);
+        }
+
+        [TestMethod]
+        public void GenerateTranscribersForAbnfV4()
+        {
+            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
+            var coreRulesText = File.ReadAllText(coreRulesPath);
+            var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
+            var abnfRulesText = File.ReadAllText(abnfRulesPath);
+            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
+            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
+
+            var newCst = _GeneratorV4.OldToV4Converters.RuleListConverter.Instance.Convert(cst);
+
+            var @namespace = "Test.CstNodes";
+            var cstNodes = new _GeneratorV4.Generator(@namespace).Generate(newCst);
+
+            var transcribers = new TranscribersGenerator("Test.Transcribers.Rules", "Test.Transcribers.Inners").Generate(cstNodes);
+
+            var classTranscriber = new ClassTranscriber();
+
+            var stringBuilder = new StringBuilder();
+            var builder = new Builder(stringBuilder, "    ");
+            builder.AppendLine($"namespace {@namespace}");
+            builder.AppendLine("{");
+            builder.Indent();
+            builder.AppendLine("using System.Text;");
+            builder.AppendLine();
+            builder.AppendLine("using GeneratorV3;");
+            builder.AppendLine("using GeneratorV3.Abnf;");
+            builder.AppendLine();
+
+            foreach (var @class in transcribers)
+            {
+                classTranscriber.Transcribe(@class, builder);
+                builder.AppendLine();
+            }
+
+            builder.Unindent();
+            builder.AppendLine("}");
+
+            var csharp = stringBuilder.ToString();
+
+            var expectedFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\transcribers.cs";
+            /*var expected = File.ReadAllText(expectedFilePath);
+            Assert.AreEqual(expected, csharp);*/
 
             File.WriteAllText(expectedFilePath, csharp);
         }
