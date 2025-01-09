@@ -94,7 +94,7 @@
                     var collectionType = propertyDefinition.Type.Substring(genericsStartIndex + 1, genericsEndIndex - genericsStartIndex - 1);
                     if (collectionType.StartsWith("Inners."))
                     {
-                        collectionType = this.innersNamespace + collectionType.Substring("Inners.".Length);
+                        collectionType = this.innersNamespace + "." + collectionType.Substring("Inners.".Length);
                     }
 
                     builder.AppendLine($"{collectionType}Transcriber.Instance.Transcribe({propertyDefinition.Name}, builder);");
