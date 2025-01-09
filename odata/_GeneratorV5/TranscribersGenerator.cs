@@ -29,12 +29,12 @@
 
             return 
                 (
-                    GenerateRules(cstNodes.RuleCstNodes), 
-                    Enumerable.Empty<Class>() //// GenerateInners(innersNodes)
+                    GenerateTranscribers(cstNodes.RuleCstNodes), 
+                    GenerateTranscribers(cstNodes.InnerCstNodes)
                 );
         }
 
-        private IEnumerable<Class> GenerateRules(Namespace @namespace)
+        private IEnumerable<Class> GenerateTranscribers(Namespace @namespace)
         {
             foreach (var cstNode in @namespace.Classes)
             {
@@ -381,7 +381,7 @@
                     propertyType = propertyType.Substring(0, propertyType.Length - 1);*/
 
                     //// TODO this line should work
-                    builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");
+                    ////builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");
 
                     builder.AppendLine("}");
                 }

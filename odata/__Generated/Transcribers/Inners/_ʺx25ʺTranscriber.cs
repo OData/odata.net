@@ -1,0 +1,17 @@
+namespace __Generated.Trancsribers.Inners
+{
+    public sealed class _ʺx25ʺTranscriber : GeneratorV3.ITranscriber<__Generated.CstNodes.Inners._ʺx25ʺ>
+    {
+        private _ʺx25ʺTranscriber()
+        {
+        }
+        
+        public static _ʺx25ʺTranscriber Instance { get; } = new _ʺx25ʺTranscriber();
+        
+        public void Transcribe(__Generated.CstNodes.Inners._ʺx25ʺ value, System.Text.StringBuilder builder)
+        {
+            
+        }
+    }
+    
+}
