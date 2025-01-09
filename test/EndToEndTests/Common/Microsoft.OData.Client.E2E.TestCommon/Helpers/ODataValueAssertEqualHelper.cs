@@ -14,16 +14,16 @@ public static class ODataValueAssertEqualHelper
 
     public static void AssertODataValueEqual(ODataValue expected, ODataValue actual)
     {
-        ODataPrimitiveValue expectedPrimitiveValue = expected as ODataPrimitiveValue;
-        ODataPrimitiveValue actualPrimitiveValue = actual as ODataPrimitiveValue;
+        var expectedPrimitiveValue = expected as ODataPrimitiveValue;
+        var actualPrimitiveValue = actual as ODataPrimitiveValue;
         if (expectedPrimitiveValue != null && actualPrimitiveValue != null)
         {
             AssertODataPrimitiveValueEqual(expectedPrimitiveValue, actualPrimitiveValue);
         }
         else
         {
-            ODataEnumValue expectedEnumValue = expected as ODataEnumValue;
-            ODataEnumValue actualEnumValue = actual as ODataEnumValue;
+            var expectedEnumValue = expected as ODataEnumValue;
+            var actualEnumValue = actual as ODataEnumValue;
             if (expectedEnumValue != null && actualEnumValue != null)
             {
                 AssertODataEnumValueEqual(expectedEnumValue, actualEnumValue);
@@ -42,10 +42,12 @@ public static class ODataValueAssertEqualHelper
         Assert.NotNull(expectedCollectionValue);
         Assert.NotNull(actualCollectionValue);
         Assert.Equal(expectedCollectionValue.TypeName, actualCollectionValue.TypeName);
+
         var expectedItemsArray = expectedCollectionValue.Items.OfType<object>().ToArray();
         var actualItemsArray = actualCollectionValue.Items.OfType<object>().ToArray();
 
         Assert.Equal(expectedItemsArray.Length, actualItemsArray.Length);
+
         for (int i = 0; i < expectedItemsArray.Length; i++)
         {
             var expectedOdataValue = expectedItemsArray[i] as ODataValue;
@@ -61,7 +63,7 @@ public static class ODataValueAssertEqualHelper
         }
     }
 
-    public static void AssertODataPropertiesEqual(IEnumerable<ODataProperty> expectedProperties, IEnumerable<ODataProperty> actualProperties)
+    public static void AssertODataPropertiesEqual(IEnumerable<ODataPropertyInfo> expectedProperties, IEnumerable<ODataPropertyInfo> actualProperties)
     {
         if (expectedProperties == null && actualProperties == null)
         {
@@ -70,21 +72,43 @@ public static class ODataValueAssertEqualHelper
 
         Assert.NotNull(expectedProperties);
         Assert.NotNull(actualProperties);
+
         var expectedPropertyArray = expectedProperties.ToArray();
         var actualPropertyArray = actualProperties.ToArray();
         Assert.Equal(expectedPropertyArray.Length, actualPropertyArray.Length);
+
         for (int i = 0; i < expectedPropertyArray.Length; i++)
         {
             AssertODataPropertyEqual(expectedPropertyArray[i], actualPropertyArray[i]);
         }
     }
 
-    public static void AssertODataPropertyEqual(ODataProperty expectedOdataProperty, ODataProperty actualOdataProperty)
+    public static void AssertODataPropertyAndResourceEqual(ODataResource expectedOdataProperty, ODataResource actualOdataProperty)
     {
         Assert.NotNull(expectedOdataProperty);
         Assert.NotNull(actualOdataProperty);
-        Assert.Equal(expectedOdataProperty.Name, actualOdataProperty.Name);
-        AssertODataValueEqual(ToODataValue(expectedOdataProperty.Value), ToODataValue(actualOdataProperty.Value));
+        AssertODataValueAndResourceEqual(expectedOdataProperty, actualOdataProperty);
+    }
+
+    public static void AssertODataValueAndResourceEqual(ODataResource expected, ODataResource actual)
+    {
+        Assert.Equal(expected.TypeName, actual.TypeName);
+        AssertODataPropertiesEqual(expected.Properties, actual.Properties);
+    }
+
+    public static void AssertODataPropertyEqual(ODataPropertyInfo expectedPropertyInfo, ODataPropertyInfo actualPropertyInfo)
+    {
+        Assert.NotNull(expectedPropertyInfo);
+        Assert.NotNull(actualPropertyInfo);
+        Assert.Equal(expectedPropertyInfo.Name, actualPropertyInfo.Name);
+
+        var expectedProperty = expectedPropertyInfo as ODataProperty;
+        var actualProperty = actualPropertyInfo as ODataProperty;
+
+        Assert.NotNull(expectedProperty);
+        Assert.NotNull(actualProperty);
+
+        AssertODataValueEqual(ToODataValue(expectedProperty.Value), ToODataValue(actualProperty.Value));
     }
 
     private static ODataValue ToODataValue(object value)
@@ -119,5 +143,4 @@ public static class ODataValueAssertEqualHelper
     }
 
     #endregion Util methods to AssertEqual ODataValues
-
 }

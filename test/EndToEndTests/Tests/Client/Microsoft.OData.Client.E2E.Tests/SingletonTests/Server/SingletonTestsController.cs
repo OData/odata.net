@@ -4,7 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Deltas;
+using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
@@ -14,6 +17,9 @@ namespace Microsoft.OData.Client.E2E.Tests.SingletonTests.Server;
 public class SingletonTestsController : ODataController
 {
     private static DefaultDataSource _dataSource;
+
+
+    #region odata/VipCustomer
 
     [EnableQuery]
     [HttpGet("odata/VipCustomer")]
@@ -69,6 +75,23 @@ public class SingletonTestsController : ODataController
         return Ok(result?.HomeAddress?.City);
     }
 
+    [HttpPatch("odata/VipCustomer")]
+    public IActionResult UpdateVipCustomer([FromBody] Delta<Customer> delta)
+    {
+        var customer = _dataSource.VipCustomer;
+        if (customer == null)
+        {
+            return NotFound();
+        }
+
+        var updatedResult = delta.Patch(customer);
+        return Updated(updatedResult);
+    }
+
+    #endregion
+
+    #region odata/Company
+
     [EnableQuery]
     [HttpGet("odata/Company")]
     public IActionResult GetCompany()
@@ -79,6 +102,15 @@ public class SingletonTestsController : ODataController
     }
 
     [EnableQuery]
+    [HttpGet("odata/Company/Name")]
+    public IActionResult GetCompanyName()
+    {
+        var result = _dataSource.Company;
+
+        return Ok(result?.Name);
+    }
+
+    [EnableQuery]
     [HttpGet("odata/Company/CompanyCategory")]
     public IActionResult GetCompanyCompanyCategory()
     {
@@ -86,6 +118,55 @@ public class SingletonTestsController : ODataController
 
         return Ok(result?.CompanyCategory);
     }
+
+    [EnableQuery]
+    [HttpGet("odata/Company/VipCustomer")]
+    public IActionResult GetCompanyVipCustomer()
+    {
+        var result = _dataSource.Company;
+
+        return Ok(result?.VipCustomer);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/Company/Departments")]
+    public IActionResult GetCompanyDepartments()
+    {
+        var result = _dataSource.Company;
+
+        return Ok(result?.Departments);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/Company/Revenue")]
+    public IActionResult GetRevenue()
+    {
+        var result = _dataSource.Company;
+
+        return Ok(result?.Revenue);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/Company/CoreDepartment")]
+    public IActionResult GetCompanyCoreDepartment()
+    {
+        var result = _dataSource.Company;
+
+        return Ok(result?.CoreDepartment);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/Company/Address/City")]
+    public IActionResult GetCompanyAddressCity()
+    {
+        var result = _dataSource.Company;
+
+        return Ok(result?.Address?.City);
+    }
+
+    #endregion
+
+    #region odata/Boss
 
     [EnableQuery]
     [HttpGet("odata/Boss")]
@@ -123,6 +204,21 @@ public class SingletonTestsController : ODataController
 
         return Ok(customer.City);
     }
+
+    #endregion
+
+    #region odata/Departments
+
+    [EnableQuery]
+    [HttpGet("odata/Departments")]
+    public IActionResult GetDepartments()
+    {
+        var result = _dataSource.Departments;
+
+        return Ok(result);
+    }
+
+    #endregion
 
     [HttpPost("odata/singletontests/Default.ResetDefaultDataSource")]
     public IActionResult ResetDefaultDataSource()

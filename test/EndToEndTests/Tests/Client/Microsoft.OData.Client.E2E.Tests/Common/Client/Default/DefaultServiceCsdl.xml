@@ -355,6 +355,10 @@
         <ReturnType Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Address" />
       </Action>
       <Action Name="ResetDefaultDataSource" />
+	  <Function Name="GetEmployeesCount" IsBound="true">
+		  <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Company" />
+		  <ReturnType Type="Edm.Int32" Nullable="false" />
+	  </Function>
       <Function Name="GetProductDetails" IsBound="true" EntitySetPath="bindingParameter/Details">
         <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Product" />
         <Parameter Name="count" Type="Edm.Int32" Nullable="false" />
@@ -492,7 +496,8 @@
           <NavigationPropertyBinding Path="Departments" Target="Departments" />
           <NavigationPropertyBinding Path="Employees" Target="Employees" />
           <NavigationPropertyBinding Path="VipCustomer" Target="Customers" />
-        </Singleton>
+		  <NavigationPropertyBinding Path="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.PublicCompany/LabourUnion" Target="LabourUnion" />
+		</Singleton>
         <Singleton Name="LabourUnion" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.LabourUnion" />
         <Singleton Name="DefaultStoredPI" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.StoredPI" />
         <ActionImport Name="Discount" Action="Default.Discount" />

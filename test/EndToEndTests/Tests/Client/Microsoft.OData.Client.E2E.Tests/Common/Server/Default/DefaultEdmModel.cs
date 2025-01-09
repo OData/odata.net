@@ -29,8 +29,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
             builder.EntitySet<OrderDetail>("OrderDetails");
             builder.EntitySet<Department>("Departments");
             builder.Singleton<Company>("Company");
-            builder.Singleton<Company>("PublicCompany");
-            builder.Singleton<LabourUnion>("LabourUnion");
+            builder.Singleton<Company>("PublicCompany").HasSingletonBinding((PublicCompany p) => p.LabourUnion, "LabourUnion");
+            // builder.Singleton<LabourUnion>("LabourUnion");
             builder.EntitySet<Account>("Accounts");
             builder.EntitySet<Order>("Orders");
             builder.EntitySet<PaymentInstrument>("PaymentInstruments");
@@ -94,6 +94,10 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                 .Parameter<Address>("address");
 
             builder.Action("ResetDefaultDataSource");
+
+            builder.EntityType<Company>()
+                .Function("GetEmployeesCount")
+                .Returns<int>();
 
             builder.EntityType<Product>()
                 .Function("GetProductDetails")

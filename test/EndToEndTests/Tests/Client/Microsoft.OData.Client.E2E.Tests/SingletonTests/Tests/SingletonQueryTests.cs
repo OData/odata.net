@@ -335,6 +335,8 @@ public class SingletonQueryTests : EndToEndTestBase<SingletonQueryTests.TestsSta
     [MemberData(nameof(MimeTypesData))]
     public async Task QuerySingletonPropertyUnderComplexProperty(string mimeType)
     {
+        ResetDefaultDataSource();
+
         // Arrange & Act
         var property = await this.TestsHelper.QueryPropertyAsync("VipCustomer/HomeAddress/City", mimeType);
 
