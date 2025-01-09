@@ -35,6 +35,21 @@
             TranscribeNamespace(generatedCstNodes.RuleCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules");
             TranscribeNamespace(generatedCstNodes.InnerCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Inners");
 
+            var ruleTranscribersNamespace = "__Generated.Trancsribers.Rules";
+            var innerTranscribersNamespace = "__Generated.Trancsribers.Inners";
+            var generatedTranscribers = new _GeneratorV5.TranscribersGenerator(ruleTranscribersNamespace, innerTranscribersNamespace).Generate(generatedCstNodes);
+
+            TranscribeNamespace(
+                new Namespace(
+                    ruleTranscribersNamespace,
+                    generatedTranscribers.Rules),
+                @"C:\msgithub\odata.net\odata\__Generated\Transcribers\Rules");
+            TranscribeNamespace(
+                new Namespace(
+                    innerTranscribersNamespace,
+                    generatedTranscribers.Rules),
+                @"C:\msgithub\odata.net\odata\__Generated\Transcribers\Inners");
+
             //// TODO finish this
         }
 
