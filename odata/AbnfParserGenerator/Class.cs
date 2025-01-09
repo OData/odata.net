@@ -3,6 +3,18 @@
     using System;
     using System.Collections.Generic;
 
+    public sealed class Namespace
+    {
+        public Namespace(string name, IEnumerable<Class> classes)
+        {
+            Name = name;
+            Classes = classes;
+        }
+
+        public string Name { get; }
+        public IEnumerable<Class> Classes { get; }
+    }
+
     public sealed class Class
     {
         public Class(

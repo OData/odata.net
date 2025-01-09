@@ -31,12 +31,12 @@
             var cstNodesRulesNamespace = "__Generated.CstNodes.Rules";
             var generatedCstNodes = new _GeneratorV5.Generator(cstNodesRulesNamespace).Generate(newCst);
 
-            TranscribeClasses2(cstNodesRulesNamespace, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules\rules.cs", generatedCstNodes);
+            TranscribeNamespace(generatedCstNodes.RuleCstNodes, @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules\rules.cs");
 
             //// TODO finish this
         }
 
-        private static void TranscribeClasses2(string @namespace, string filePath, IEnumerable<Class> classes)
+        private static void TranscribeNamespace(Namespace @namespace, string filePath)
         {
             //// TODO split files
 
@@ -44,7 +44,7 @@
 
             var stringBuilder = new StringBuilder();
             var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine($"namespace {@namespace}");
+            builder.AppendLine($"namespace {@namespace.Name}");
             builder.AppendLine("{");
             builder.Indent();
             builder.AppendLine("using System.Collections.Generic;"); //// TODO shouldn't need these, or they should be in a type somewhere
@@ -54,7 +54,7 @@
             builder.AppendLine("using GeneratorV3.Abnf;");
             builder.AppendLine();
 
-            foreach (var @class in classes)
+            foreach (var @class in @namespace.Classes)
             {
                 classTranscriber.Transcribe(@class, builder);
                 builder.AppendLine();
