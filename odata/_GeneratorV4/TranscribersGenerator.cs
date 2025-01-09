@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using AbnfParserGenerator;
 
@@ -45,7 +46,9 @@
                 {
                     if (cstNode.Name.Length == 3 && cstNode.Name[0] == '_' && char.IsDigit(cstNode.Name[1]) && char.IsDigit(cstNode.Name[2]))
                     {
-                        methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
+                        ////methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
+                        //// TODO
+                        methodBody = string.Empty;
                     }
                     else
                     {
@@ -92,12 +95,15 @@
                     nestedClasses = Enumerable.Empty<Class>();
                     if (cstNode.Name.StartsWith("_x"))
                     {
-                        methodBody = $"builder.Append((char)0{cstNode.Name.TrimStart('_')});";
+                        ////methodBody = $"builder.Append((char)0{cstNode.Name.TrimStart('_')});";
+                        //// TODO
+                        methodBody = string.Empty;
                     }
                     else
                     {
                         //// TODO are there other terminal node cases?
-                        methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
+                        //// TODO methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
+                        methodBody = string.Empty;
                     }
                 }
 
@@ -159,7 +165,9 @@
                 {
                     if (cstNode.Name.Length == 3 && cstNode.Name[0] == '_' && char.IsDigit(cstNode.Name[1]) && char.IsDigit(cstNode.Name[2]))
                     {
-                        methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
+                        ////methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
+                        //// TODO
+                        methodBody = string.Empty;
                     }
                     else
                     {
@@ -206,12 +214,16 @@
                     nestedClasses = Enumerable.Empty<Class>();
                     if (cstNode.Name.StartsWith("_x"))
                     {
-                        methodBody = $"builder.Append((char)0{cstNode.Name.TrimStart('_')});";
+                        ////methodBody = $"builder.Append((char)0{cstNode.Name.TrimStart('_')});";
+                        //// TODO
+                        methodBody = string.Empty;
                     }
                     else
                     {
                         //// TODO are there other terminal node cases?
-                        methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
+                        //// methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
+                        //// TODO
+                        methodBody = string.Empty;
                     }
                 }
 
