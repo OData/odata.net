@@ -147,7 +147,7 @@
             var abnf = File.ReadAllText(@"C:\msgithub\odata.net\odata\GeneratorV3\test.abnf");
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(abnf);
 
-            var newCst = _GeneratorV4.OldToV4Converters.RuleListConverter.Instance.Convert(cst);
+            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
 
             var @namespace = "GeneratorV3";
             var classes = new _GeneratorV4.Generator(@namespace).Generate(newCst);
@@ -187,7 +187,7 @@
         {
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(TestAbnf);
 
-            var newCst = _GeneratorV4.OldToV4Converters.RuleListConverter.Instance.Convert(cst);
+            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
 
             var @namespace = "TestRules";
             var classes = new _GeneratorV4.Generator(@namespace).Generate(newCst);
@@ -218,7 +218,7 @@
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
 
-            var newCst = _GeneratorV4.OldToV4Converters.RuleListConverter.Instance.Convert(cst);
+            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
 
             var @namespace = "GeneratorV3.Core";
             var classes = new _GeneratorV4.Generator(@namespace).Generate(newCst);
@@ -261,7 +261,7 @@
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
 
-            var newCst = _GeneratorV4.OldToV4Converters.RuleListConverter.Instance.Convert(cst);
+            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
 
             var @namespace = "GeneratorV3.Abnf";
             var classes = new _GeneratorV4.Generator(@namespace).Generate(newCst);
@@ -304,7 +304,7 @@
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
 
-            var newCst = _GeneratorV4.OldToV4Converters.RuleListConverter.Instance.Convert(cst);
+            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
 
             var @namespace = "Test.CstNodes";
             var cstNodes = new _GeneratorV4.Generator(@namespace).Generate(newCst);
@@ -374,7 +374,7 @@
             var abnfRulesText = File.ReadAllText(abnfRulesPath);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(abnfRulesText);
 
-            var newCst = _GeneratorV4.OldToV4Converters.RuleListConverter.Instance.Convert(cst);
+            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
 
             var @namespace = "GeneratorV3.Odata";
             var classes = new _GeneratorV4.Generator(@namespace).Generate(newCst);
