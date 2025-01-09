@@ -108,7 +108,7 @@
                             ClassModifier.Sealed,
                             "Visitor",
                             Enumerable.Empty<string>(),
-                            null, //// TODO
+                            null, //// TODO $"GeneratorV3.Abnf.Inners.{cstNode.Name}.Visitor<Root.Void, StringBuilder>", //// TODO namespace should be computed
                             new[]
                             {
                                 new ConstructorDefinition(
@@ -116,7 +116,7 @@
                                     Enumerable.Empty<MethodParameter>(),
                                     Enumerable.Empty<string>()),
                             },
-                            Enumerable.Empty<MethodDefinition>(), //// TODO
+                            GenerateVisitorMethods(cstNode),
                             Enumerable.Empty<Class>(),
                             new[]
                             {
@@ -174,6 +174,14 @@
                             false,
                             $"new {transcriberName}();"),
                     });
+            }
+        }
+
+        private IEnumerable<MethodDefinition> GenerateVisitorMethods(Class cstNode)
+        {
+            foreach (var duMember in cstNode.NestedClasses.Where(member => member.BaseType?.EndsWith(cstNode.Name) ?? false))
+            {
+                yield break;
             }
         }
 
