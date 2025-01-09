@@ -1,5 +1,6 @@
 ﻿namespace _GeneratorV4
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -64,7 +65,7 @@
                                 new MethodParameter(cstNode.Name, "value"),
                                 new MethodParameter("StringBuilder", "builder"),
                             },
-                            TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic))),
+                            TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic), "value", "builder")),
                     },
                     Enumerable.Empty<Class>(), //// TODO sometimes you need a nested visitor
                     new[]
@@ -92,7 +93,7 @@
                 IEnumerable<Class> nestedClasses;
                 if (nonStaticProperties.Any())
                 {
-                    methodBody = TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic));
+                    methodBody = TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic), "value", "builder");
                     nestedClasses = Enumerable.Empty<Class>();
                 }
                 else if (cstNode.NestedClasses.Any())
@@ -196,26 +197,26 @@
                         new MethodParameter($"GeneratorV3.Abnf.Inners.{cstNode.Name}.{duMember.Name}", "node"), //// TODO don't hardcode namespace
                         new MethodParameter("StringBuilder", "context"),
                     },
-                    "return default;"); //// TODO
+                    TranscribeProperties(duMember.Properties, "node", "context") + Environment.NewLine + "return default;"); //// TODO
             }
         }
 
-        private string TranscribeProperties(IEnumerable<PropertyDefinition> propertyDefinitions)
+        private string TranscribeProperties(IEnumerable<PropertyDefinition> propertyDefinitions, string nodeName, string builderName)
         {
             var builder = new StringBuilder();
 
-            TranscribeProperties(propertyDefinitions, builder);
+            TranscribeProperties(propertyDefinitions, nodeName, builderName, builder);
 
             return builder.ToString();
         }
 
-        private void TranscribeProperties(IEnumerable<PropertyDefinition> propertyDefinitions, StringBuilder builder)
+        private void TranscribeProperties(IEnumerable<PropertyDefinition> propertyDefinitions, string nodeName, string builderName, StringBuilder builder)
         {
             foreach (var propertyDefinition in propertyDefinitions)
             {
                 if (propertyDefinition.Type.StartsWith("IEnumerable<"))
                 {
-                    builder.AppendLine($"foreach (var {propertyDefinition.Name} in value.{propertyDefinition.Name})");
+                    builder.AppendLine($"foreach (var {propertyDefinition.Name} in {nodeName}.{propertyDefinition.Name})");
                     builder.AppendLine("{");
                     var genericsStartIndex = propertyDefinition.Type.IndexOf("<");
                     var genericsEndIndex = propertyDefinition.Type.IndexOf(">");
@@ -235,7 +236,7 @@
                         collectionType = collectionType.Substring(this.rulesCstNodesNamespace.Length + 1);
                     }
 
-                    builder.AppendLine($"{collectionType}Transcriber.Instance.Transcribe({propertyDefinition.Name}, builder);");
+                    builder.AppendLine($"{collectionType}Transcriber.Instance.Transcribe({propertyDefinition.Name}, {builderName});");
                     builder.AppendLine("}");
                 }
                 else if (propertyDefinition.Type.EndsWith("?"))
@@ -262,7 +263,7 @@
 
                     propertyType = propertyType.Substring(0, propertyType.Length - 1);
 
-                    builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe(value.{propertyDefinition.Name}, builder);");
+                    builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");
 
                     builder.AppendLine("}");
                 }
@@ -285,7 +286,7 @@
                         propertyType = propertyType.Substring(this.rulesCstNodesNamespace.Length + 1);
                     }
 
-                    builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe(value.{propertyDefinition.Name}, builder);");
+                    builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");
                 }
             }
         }
