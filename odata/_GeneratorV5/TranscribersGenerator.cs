@@ -141,7 +141,6 @@
                             "Transcribe",
                             new[]
                             {
-                                //// TODO you should be using a fully qualified name here, but `class` doesn't include the namespace
                                 new MethodParameter($"{@namespace.Name}.{cstNode.Name}", "value"),
                                 new MethodParameter("System.Text.StringBuilder", "builder"),
                             },
