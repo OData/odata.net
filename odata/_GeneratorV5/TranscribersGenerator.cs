@@ -382,25 +382,6 @@
 
                     var propertyType = propertyDefinition.Type.Substring(0, propertyDefinition.Type.Length - 1);
 
-                    //// TODO i think you can delete this commetn block
-                    /*if (propertyType.StartsWith(this.innersCstNodesNamespace))
-                    {
-                        builder.Append(this.innersTranscribersNamespace);
-                        builder.Append(".");
-
-                        propertyType = propertyType.Substring(this.innersCstNodesNamespace.Length + 1);
-                    }
-                    else if (propertyType.StartsWith(this.rulesCstNodesNamespace))
-                    {
-                        builder.Append(this.rulesTranscribersNamespace);
-                        builder.Append(".");
-
-                        propertyType = propertyType.Substring(this.rulesCstNodesNamespace.Length + 1);
-                    }
-
-                    propertyType = propertyType.Substring(0, propertyType.Length - 1);*/
-
-                    //// TODO this line should work
                     builder.AppendLine($"{GetTranscriberType(propertyType, ruleCstNodesNamespace, innerCstNodesNamespace)}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");
 
                     builder.AppendLine("}");
