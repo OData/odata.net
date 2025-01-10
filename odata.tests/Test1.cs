@@ -137,7 +137,7 @@
         }
 
         [TestMethod]
-        public void AbnfRules()
+        public void AbnfRulesV5()
         {
             var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
             var coreRulesText = File.ReadAllText(coreRulesPath);
@@ -146,11 +146,11 @@
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
 
-            var newCst = GeneratorV3.OldToNewConverters.RuleListConverter.Instance.Convert(cst);
+            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
 
             var stringBuilder = new StringBuilder();
 
-            GeneratorV3.SpikeTranscribers.Rules.RuleListTranscriber.Instance.Transcribe(newCst, stringBuilder);
+            __Generated.Trancsribers.Rules._rulelistTranscriber.Instance.Transcribe(newCst, stringBuilder);
 
             var transcribedText = stringBuilder.ToString();
             Assert.AreEqual(fullRulesText, transcribedText);
