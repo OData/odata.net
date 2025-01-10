@@ -48,17 +48,6 @@
                 nestedClasses = Enumerable.Empty<Class>();
                 if (nonStaticProperties.Any())
                 {
-                    //// TODO Here's what seems to happen, and i think it's a generator issue. Whenever there's a literal,
-                    //// you turn that into hex (not sure why). These nodes end up with properties that are just the
-                    //// individual hex digits, but that has nothing to do with the literal anymore, so we have to
-                    //// circumvent it here in the transcribers. I think you should probably take those nodes that represent
-                    //// literals and just make them terminal nodes.
-                    //// 
-                    //// The other case is where you have a range of values. In this case, you end up with a discriminated
-                    //// union where the base type has the "%x" portion and the derived types don't. These don't represent
-                    //// a literal in the same way as the first case, they instead represent an option that the ABNF author
-                    //// is allowed to write (rather than a requirement). These probably should be kept more or less as they
-                    //// are, but the derived types shouldn't have properties.
                     if (cstNode.Name.Length == 3 && cstNode.Name[0] == '_' && char.IsDigit(cstNode.Name[1]) && char.IsDigit(cstNode.Name[2]))
                     {
                         ////methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
@@ -100,7 +89,7 @@
                                     Enumerable.Empty<MethodParameter>(),
                                     Enumerable.Empty<string>()),
                             },
-                            GenerateVisitorMethods(cstNode, @namespace.Name),
+                            GenerateVisitorMethods(cstNode, @namespace.Name, ruleCstNodesNamespace, innerCstNodesNamespace),
                             Enumerable.Empty<Class>(),
                             new[]
                             {
@@ -303,19 +292,35 @@
             }
         }*/
 
-        private IEnumerable<MethodDefinition> GenerateVisitorMethods(Class cstNode, string @namespace)
+        private IEnumerable<MethodDefinition> GenerateVisitorMethods(
+            Class cstNode, 
+            string @namespace,
+            string ruleCstNodesNamespace,
+            string innerCstNodesNamespace)
         {
             foreach (var duMember in cstNode.NestedClasses.Where(member => member.BaseType?.EndsWith(cstNode.Name) ?? false))
             {
-                string methodBody = string.Empty;
+                string methodBody;
                 if (duMember.Name.Length == 3 && duMember.Name[0] == '_' && char.IsAsciiHexDigit(duMember.Name[1]) && char.IsAsciiHexDigit(duMember.Name[2]))
                 {
-                    //// TODO it's weird that this decision is made here
-                    ////methodBody = $"context.Append((char)0x{duMember.Name.TrimStart('_')});";
+                    //// TODO Here's what seems to happen, and i think it's a generator issue. Whenever there's a literal,
+                    //// you turn that into hex (not sure why). These nodes end up with properties that are just the
+                    //// individual hex digits, but that has nothing to do with the literal anymore, so we have to
+                    //// circumvent it here in the transcribers. I think you should probably take those nodes that represent
+                    //// literals and just make them terminal nodes.
+                    //// 
+                    //// The other case is where you have a range of values. In this case, you end up with a discriminated
+                    //// union where the base type has the "%x" portion and the derived types don't. These don't represent
+                    //// a literal in the same way as the first case, they instead represent an option that the ABNF author
+                    //// is allowed to write (rather than a requirement). These probably should be kept more or less as they
+                    //// are, but the derived types shouldn't have properties.
+                    
+                    //// this branch is handling the second case
+                    methodBody = $"context.Append((char)0x{duMember.Name.TrimStart('_')});";
                 }
                 else
                 {
-                    ////methodBody = TranscribeProperties(duMember.Properties, "node", "context");
+                    methodBody = TranscribeProperties(duMember.Properties, ruleCstNodesNamespace, innerCstNodesNamespace, "node", "context");
                 }
 
                 yield return new MethodDefinition(

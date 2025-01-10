@@ -23,19 +23,22 @@ namespace __Generated.Trancsribers.Inners
             
             protected internal override Root.Void Accept(__Generated.CstNodes.Inners._ALPHAⳆDIGITⳆʺx2Dʺ._ALPHA node, System.Text.StringBuilder context)
             {
-                
+                __Generated.Trancsribers.Rules._ALPHATranscriber.Instance.Transcribe(node._ALPHA_1, context);
+
 return default;
             }
             
             protected internal override Root.Void Accept(__Generated.CstNodes.Inners._ALPHAⳆDIGITⳆʺx2Dʺ._DIGIT node, System.Text.StringBuilder context)
             {
-                
+                __Generated.Trancsribers.Rules._DIGITTranscriber.Instance.Transcribe(node._DIGIT_1, context);
+
 return default;
             }
             
             protected internal override Root.Void Accept(__Generated.CstNodes.Inners._ALPHAⳆDIGITⳆʺx2Dʺ._ʺx2Dʺ node, System.Text.StringBuilder context)
             {
-                
+                __Generated.Trancsribers.Inners._ʺx2DʺTranscriber.Instance.Transcribe(node._ʺx2Dʺ_1, context);
+
 return default;
             }
         }

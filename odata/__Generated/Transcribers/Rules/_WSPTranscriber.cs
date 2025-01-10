@@ -23,13 +23,15 @@ namespace __Generated.Trancsribers.Rules
             
             protected internal override Root.Void Accept(__Generated.CstNodes.Rules._WSP._SP node, System.Text.StringBuilder context)
             {
-                
+                __Generated.Trancsribers.Rules._SPTranscriber.Instance.Transcribe(node._SP_1, context);
+
 return default;
             }
             
             protected internal override Root.Void Accept(__Generated.CstNodes.Rules._WSP._HTAB node, System.Text.StringBuilder context)
             {
-                
+                __Generated.Trancsribers.Rules._HTABTranscriber.Instance.Transcribe(node._HTAB_1, context);
+
 return default;
             }
         }

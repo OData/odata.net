@@ -23,13 +23,15 @@ namespace __Generated.Trancsribers.Inners
             
             protected internal override Root.Void Accept(__Generated.CstNodes.Inners._ʺx3DʺⳆʺx3Dx2Fʺ._ʺx3Dʺ node, System.Text.StringBuilder context)
             {
-                
+                __Generated.Trancsribers.Inners._ʺx3DʺTranscriber.Instance.Transcribe(node._ʺx3Dʺ_1, context);
+
 return default;
             }
             
             protected internal override Root.Void Accept(__Generated.CstNodes.Inners._ʺx3DʺⳆʺx3Dx2Fʺ._ʺx3Dx2Fʺ node, System.Text.StringBuilder context)
             {
-                
+                __Generated.Trancsribers.Inners._ʺx3Dx2FʺTranscriber.Instance.Transcribe(node._ʺx3Dx2Fʺ_1, context);
+
 return default;
             }
         }

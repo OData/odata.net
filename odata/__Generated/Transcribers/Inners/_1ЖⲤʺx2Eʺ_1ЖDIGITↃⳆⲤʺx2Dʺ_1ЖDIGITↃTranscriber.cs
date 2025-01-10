@@ -23,13 +23,18 @@ namespace __Generated.Trancsribers.Inners
             
             protected internal override Root.Void Accept(__Generated.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ._1ЖⲤʺx2Eʺ_1ЖDIGITↃ node, System.Text.StringBuilder context)
             {
-                
+                foreach (var _Ⲥʺx2Eʺ_1ЖDIGITↃ_1 in node._Ⲥʺx2Eʺ_1ЖDIGITↃ_1)
+{
+__Generated.Trancsribers.Inners._Ⲥʺx2Eʺ_1ЖDIGITↃTranscriber.Instance.Transcribe(_Ⲥʺx2Eʺ_1ЖDIGITↃ_1, context);
+}
+
 return default;
             }
             
             protected internal override Root.Void Accept(__Generated.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ._Ⲥʺx2Dʺ_1ЖDIGITↃ node, System.Text.StringBuilder context)
             {
-                
+                __Generated.Trancsribers.Inners._Ⲥʺx2Dʺ_1ЖDIGITↃTranscriber.Instance.Transcribe(node._Ⲥʺx2Dʺ_1ЖDIGITↃ_1, context);
+
 return default;
             }
         }
