@@ -155,7 +155,6 @@
                 toClassNames);
 
             //// !!!!!IMPORTANT WHENEVER YOU REMOVE OLD CODE, CHECK FOR TODOS!!!!!
-            //// TODO remove the manually written transcribers
             //// TODO manually write the new parsers
             //// TODO remove the old parsers
             //// TODO remove the old cst nodes
