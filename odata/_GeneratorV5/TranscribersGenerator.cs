@@ -3,8 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Cryptography.X509Certificates;
     using System.Text;
+
     using AbnfParserGenerator;
 
     public sealed class TranscribersGenerator
@@ -193,131 +193,6 @@
                     });
             }
         }
-
-        /*private IEnumerable<Class> GenerateInners(IEnumerable<Class> cstNodes)
-        {
-            foreach (var cstNode in cstNodes)
-            {
-                var transcriberName = $"{cstNode.Name}Transcriber";
-
-                var nonStaticProperties = cstNode.Properties.Where(property => !property.IsStatic);
-                string methodBody; //// TODO bodies should be lines for whitespace purposes
-                IEnumerable<Class> nestedClasses;
-                if (nonStaticProperties.Any()) //// TODO add these branches to the `generaterules` method?
-                {
-                    if (cstNode.Name.Length == 3 && cstNode.Name[0] == '_' && char.IsDigit(cstNode.Name[1]) && char.IsDigit(cstNode.Name[2]))
-                    {
-                        ////methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
-                        //// TODO
-                        methodBody = string.Empty;
-                    }
-                    else if (cstNode.Name.StartsWith("_Ⰳx"))
-                    {
-                        methodBody = $"builder.Append((char)0{cstNode.Name.Substring(2)});";
-                    }
-                    else
-                    {
-                        methodBody = TranscribeProperties(cstNode.Properties.Where(property => !property.IsStatic), "value", "builder");
-                    }
-
-                    nestedClasses = Enumerable.Empty<Class>();
-                }
-                else if (cstNode.NestedClasses.Any())
-                {
-                    methodBody = "Visitor.Instance.Visit(value, builder);";
-                    nestedClasses = new[]
-                    {
-                        new Class(
-                            AccessModifier.Private,
-                            ClassModifier.Sealed,
-                            "Visitor",
-                            Enumerable.Empty<string>(),
-                            $"GeneratorV3.Abnf.Inners.{cstNode.Name}.Visitor<Root.Void, StringBuilder>", //// TODO namespace should be computed
-                            new[]
-                            {
-                                new ConstructorDefinition(
-                                    AccessModifier.Private,
-                                    Enumerable.Empty<MethodParameter>(),
-                                    Enumerable.Empty<string>()),
-                            },
-                            GenerateVisitorMethods(cstNode, true),
-                            Enumerable.Empty<Class>(),
-                            new[]
-                            {
-                                new PropertyDefinition(
-                                    AccessModifier.Public,
-                                    true,
-                                    "Visitor",
-                                    "Instance",
-                                    true,
-                                    false,
-                                    "new Visitor();"),
-                            }),
-                    };
-                }
-                else
-                {
-                    nestedClasses = Enumerable.Empty<Class>();
-                    if (cstNode.Name.StartsWith("_x"))
-                    {
-                        methodBody = $"builder.Append((char)0{cstNode.Name.Substring(1)});";
-                    }
-                    else if (cstNode.Name.StartsWith("_Ⰳx"))
-                    {
-                        methodBody = $"builder.Append((char)0{cstNode.Name.Substring(2)});";
-                    }
-                    else
-                    {
-                        //// TODO are there other terminal node cases?
-                        //// methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
-                        methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
-                    }
-                }
-
-                yield return new Class(
-                    AccessModifier.Public,
-                    ClassModifier.Sealed,
-                    transcriberName,
-                    Enumerable.Empty<string>(),
-                    $"ITranscriber<GeneratorV3.Abnf.Inners.{cstNode.Name}>", //// TODO don't hardcode the inners namespace
-                    new[]
-                    {
-                        new ConstructorDefinition(
-                            AccessModifier.Private,
-                            Enumerable.Empty<MethodParameter>(),
-                            Enumerable.Empty<string>()),
-                    },
-                    new[]
-                    {
-                        new MethodDefinition(
-                            AccessModifier.Public,
-                            ClassModifier.None,
-                            false,
-                            "void",
-                            Enumerable.Empty<string>(),
-                            "Transcribe",
-                            new[]
-                            {
-                                //// TODO you should be using a fully qualified name here, but `class` doesn't include the namespace
-                                new MethodParameter($"GeneratorV3.Abnf.Inners.{cstNode.Name}", "value"),
-                                new MethodParameter("StringBuilder", "builder"),
-                            },
-                            methodBody),
-                    },
-                    nestedClasses,
-                    new[]
-                    {
-                        new PropertyDefinition(
-                            AccessModifier.Public,
-                            true,
-                            transcriberName,
-                            "Instance",
-                            true,
-                            false,
-                            $"new {transcriberName}();"),
-                    });
-            }
-        }*/
 
         private IEnumerable<MethodDefinition> GenerateVisitorMethods(
             Class cstNode, 
