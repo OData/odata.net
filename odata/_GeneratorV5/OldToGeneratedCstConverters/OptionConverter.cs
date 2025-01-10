@@ -2,8 +2,6 @@
 {
     using System.Linq;
 
-    using _GeneratorV4.Abnf.CstNodes;
-
     public sealed class OptionConverter
     {
         private OptionConverter()
