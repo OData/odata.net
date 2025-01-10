@@ -4,7 +4,8 @@ namespace __Generated.Parsers.Rules
     
     public static class _LFParser
     {
-        public static Parser<__Generated.CstNodes.Rules._LF> Instance { get; }
+        public static Parser<__Generated.CstNodes.Rules._LF> Instance { get; } = from _Ⰳx0A_1 in __Generated.Parsers.Inners._Ⰳx0AParser.Instance
+select new __Generated.CstNodes.Rules._LF(_Ⰳx0A_1);
     }
     
 }
