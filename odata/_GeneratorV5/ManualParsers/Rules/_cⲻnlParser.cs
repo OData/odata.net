@@ -14,7 +14,9 @@
                 from _comment_1 in _GeneratorV5.ManualParsers.Rules._commentParser.Instance
                 select new __Generated.CstNodes.Rules._cⲻnl._comment(_comment_1);
 
-            public static Parser<__Generated.CstNodes.Rules._cⲻnl._CRLF> _CRLF { get; }
+            public static Parser<__Generated.CstNodes.Rules._cⲻnl._CRLF> _CRLF { get; } =
+                from _CRLF_1 in _GeneratorV5.ManualParsers.Rules._CRLFParser.Instance
+                select new __Generated.CstNodes.Rules._cⲻnl._CRLF(_CRLF_1);
         }
     }
 }
