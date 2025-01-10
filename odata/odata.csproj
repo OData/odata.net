@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="GeneratorV3\TestNodes2.result" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Sprache" Version="2.3.1" />
   </ItemGroup>
 
