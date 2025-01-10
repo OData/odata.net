@@ -62,6 +62,8 @@
                                     nonStaticProperties
                                     .Select(
                                         property =>
+                                        //// TODO this initializer stuff should probably be its own method and use a builder
+                                        //// TODO handle nullables
                                             $"from {property.Name} in {UpdatePropertyType(property.Type, ruleCstNodesNamespace, innerCstNodesNamespace)}Parser.Instance{(property.Type.StartsWith("System.Collections.Generic.IEnumerable<") ? ".Many()" : string.Empty)}")), //// TODO how to handle different ranges of ienumerable (at most two, at least 3, etc.)
                             Environment.NewLine,
                             $"select new {@namespace.Name}.{@class.Name}(",
