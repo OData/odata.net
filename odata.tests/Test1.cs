@@ -39,6 +39,7 @@
             var innerTranscribersNamespace = "__Generated.Trancsribers.Inners";
             var generatedTranscribers = new _GeneratorV5.TranscribersGenerator(ruleTranscribersNamespace, innerTranscribersNamespace).Generate(generatedCstNodes);
 
+            //// TODO transcriber generator should return namespaces
             TranscribeNamespace(
                 new Namespace(
                     ruleTranscribersNamespace,
@@ -50,7 +51,16 @@
                     generatedTranscribers.Inners),
                 @"C:\msgithub\odata.net\odata\__Generated\Transcribers\Inners");
 
-            //// TODO finish this
+            var ruleParsersNamespace = "__Generated.Parsers.Rules";
+            var innerParsersNamespace = "__Generated.Parsers.Inners";
+            var generatedParsers = new _GeneratorV5.ParsersGenerator(ruleParsersNamespace, innerParsersNamespace).Generate(generatedCstNodes);
+
+            TranscribeNamespace(
+                generatedParsers.RuleParsers,
+                @"C:\msgithub\odata.net\odata\__Generated\Parsers\Rules");
+            TranscribeNamespace(
+                generatedParsers.InnerParsers,
+                @"C:\msgithub\odata.net\odata\__Generated\Parsers\Inners");
         }
 
         private static void TranscribeNamespace(Namespace @namespace, string folderPath)
