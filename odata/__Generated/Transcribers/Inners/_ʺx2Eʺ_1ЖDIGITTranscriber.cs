@@ -10,7 +10,11 @@ namespace __Generated.Trancsribers.Inners
         
         public void Transcribe(__Generated.CstNodes.Inners._ʺx2Eʺ_1ЖDIGIT value, System.Text.StringBuilder builder)
         {
-            
+            foreach (var _DIGIT_1 in value._DIGIT_1)
+{
+__Generated.Trancsribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_1, builder);
+}
+
         }
     }
     

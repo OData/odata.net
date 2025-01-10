@@ -10,7 +10,11 @@ namespace __Generated.Trancsribers.Rules
         
         public void Transcribe(__Generated.CstNodes.Rules._concatenation value, System.Text.StringBuilder builder)
         {
-            
+            foreach (var _Ⲥ1Жcⲻwsp_repetitionↃ_1 in value._Ⲥ1Жcⲻwsp_repetitionↃ_1)
+{
+__Generated.Trancsribers.Inners._Ⲥ1Жcⲻwsp_repetitionↃTranscriber.Instance.Transcribe(_Ⲥ1Жcⲻwsp_repetitionↃ_1, builder);
+}
+
         }
     }
     

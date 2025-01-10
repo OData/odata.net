@@ -104,9 +104,9 @@
                             }),
                     };
                 }
-                /*else
+                else
                 {
-                    nestedClasses = Enumerable.Empty<Class>();
+                    /*nestedClasses = Enumerable.Empty<Class>();
                     if (cstNode.Name.StartsWith("_x"))
                     {
                         methodBody = $"builder.Append((char)0{cstNode.Name.Substring(1)});";
@@ -120,8 +120,8 @@
                         //// TODO are there other terminal node cases?
                         //// methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
                         methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
-                    }
-                }*/
+                    }*/
+                }
 
                 yield return new Class(
                     AccessModifier.Public,
@@ -347,14 +347,14 @@
         {
             foreach (var propertyDefinition in propertyDefinitions)
             {
-                /*if (propertyDefinition.Type.StartsWith("IEnumerable<"))
+                if (propertyDefinition.Type.StartsWith("System.Collections.Generic.IEnumerable<"))
                 {
                     builder.AppendLine($"foreach (var {propertyDefinition.Name} in {nodeName}.{propertyDefinition.Name})");
                     builder.AppendLine("{");
                     var genericsStartIndex = propertyDefinition.Type.IndexOf("<");
                     var genericsEndIndex = propertyDefinition.Type.IndexOf(">");
                     var collectionType = propertyDefinition.Type.Substring(genericsStartIndex + 1, genericsEndIndex - genericsStartIndex - 1);
-                    if (collectionType.StartsWith(this.innersCstNodesNamespace))
+                    /*if (collectionType.StartsWith(this.innersCstNodesNamespace))
                     {
                         builder.Append(this.innersTranscribersNamespace);
                         builder.Append(".");
@@ -367,12 +367,12 @@
                         builder.Append(".");
 
                         collectionType = collectionType.Substring(this.rulesCstNodesNamespace.Length + 1);
-                    }
+                    }*/
 
-                    builder.AppendLine($"{collectionType}Transcriber.Instance.Transcribe({propertyDefinition.Name}, {builderName});");
+                    builder.AppendLine($"{GetTranscriberType(collectionType, ruleCstNodesNamespace, innerCstNodesNamespace)}Transcriber.Instance.Transcribe({propertyDefinition.Name}, {builderName});");
                     builder.AppendLine("}");
                 }
-                else */if (propertyDefinition.Type.EndsWith("?"))
+                else if (propertyDefinition.Type.EndsWith("?"))
                 {
                     builder.AppendLine($"if (value.{propertyDefinition.Name} != null)");
                     builder.AppendLine("{");

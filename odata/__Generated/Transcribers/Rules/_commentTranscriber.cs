@@ -10,7 +10,11 @@ namespace __Generated.Trancsribers.Rules
         
         public void Transcribe(__Generated.CstNodes.Rules._comment value, System.Text.StringBuilder builder)
         {
-            
+            foreach (var _ⲤWSPⳆVCHARↃ_1 in value._ⲤWSPⳆVCHARↃ_1)
+{
+__Generated.Trancsribers.Inners._ⲤWSPⳆVCHARↃTranscriber.Instance.Transcribe(_ⲤWSPⳆVCHARↃ_1, builder);
+}
+
         }
     }
     
