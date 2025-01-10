@@ -174,269 +174,34 @@
         }
 
         [TestMethod]
-        public void TestGeneratorV3()
+        public void TestRulesV5()
+        {
+            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(TestAbnf);
+
+            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
+
+            var stringBuilder = new StringBuilder();
+
+            __Generated.Trancsribers.Rules._rulelistTranscriber.Instance.Transcribe(newCst, stringBuilder);
+
+            var transcribedText = stringBuilder.ToString();
+            Assert.AreEqual(TestAbnf, transcribedText);
+        }
+
+        [TestMethod]
+        public void TestRules2V5()
         {
             var abnf = File.ReadAllText(@"C:\msgithub\odata.net\odata\GeneratorV3\test.abnf");
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(abnf);
 
             var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
 
-            var @namespace = "GeneratorV3";
-            var classes = new _GeneratorV4.Generator(@namespace).Generate(newCst);
-
-            var classTranscriber = new ClassTranscriber();
-
             var stringBuilder = new StringBuilder();
-            var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine($"namespace {@namespace}");
-            builder.AppendLine("{");
-            builder.Indent();
-            builder.AppendLine("using System.Collections.Generic;");
-            builder.AppendLine();
 
-            foreach (var @class in classes)
-            {
-                classTranscriber.Transcribe(@class, builder);
-                builder.AppendLine();
-            }
+            __Generated.Trancsribers.Rules._rulelistTranscriber.Instance.Transcribe(newCst, stringBuilder);
 
-            builder.Unindent();
-            builder.AppendLine("}");
-
-            var csharp = stringBuilder.ToString();
-
-            var resultFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\TestNodes2.result";
-            File.WriteAllText(resultFilePath, csharp);
-
-            var expectedFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\TestNodes.cs";
-            var expected = File.ReadAllText(expectedFilePath);
-
-            Assert.AreEqual(expected, csharp);
-        }
-
-        [TestMethod]
-        public void TestCodeGeneratorV4()
-        {
-            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(TestAbnf);
-
-            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
-
-            var @namespace = "TestRules";
-            var classes = new _GeneratorV4.Generator(@namespace).Generate(newCst);
-
-            var classTranscriber = new ClassTranscriber();
-            var builder = new StringBuilder();
-            foreach (var @class in classes)
-            {
-                classTranscriber.Transcribe(@class, builder, "    ");
-                builder.AppendLine();
-            }
-
-            var csharp = builder.ToString();
-
-            var filePath = @"C:\msgithub\odata.net\odata.tests\testclasses.txt";
-            var expected = File.ReadAllText(filePath);
-
-            File.WriteAllText(filePath, csharp);
-
-            Assert.AreEqual(expected, csharp);
-        }
-
-        [TestMethod]
-        public void GenerateForCoreV4()
-        {
-            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
-            var coreRulesText = File.ReadAllText(coreRulesPath);
-            var fullRulesText = string.Join(Environment.NewLine, coreRulesText);
-            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
-
-            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
-
-            var @namespace = "GeneratorV3.Core";
-            var classes = new _GeneratorV4.Generator(@namespace).Generate(newCst);
-
-            var classTranscriber = new ClassTranscriber();
-
-            var stringBuilder = new StringBuilder();
-            var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine($"namespace {@namespace}");
-            builder.AppendLine("{");
-            builder.Indent();
-            builder.AppendLine("using System.Collections.Generic;");
-            builder.AppendLine();
-
-            foreach (var @class in classes)
-            {
-                classTranscriber.Transcribe(@class, builder);
-                builder.AppendLine();
-            }
-
-            builder.Unindent();
-            builder.AppendLine("}");
-
-            var csharp = stringBuilder.ToString();
-
-            var expectedFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\Core.cs";
-            var expected = File.ReadAllText(expectedFilePath);
-            Assert.AreEqual(expected, csharp);
-
-            File.WriteAllText(expectedFilePath, csharp);
-        }
-
-        [TestMethod]
-        public void GenerateForAbnfV4()
-        {
-            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
-            var coreRulesText = File.ReadAllText(coreRulesPath);
-            var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
-            var abnfRulesText = File.ReadAllText(abnfRulesPath);
-            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
-            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
-
-            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
-
-            var @namespace = "GeneratorV3.Abnf";
-            var classes = new _GeneratorV4.Generator(@namespace).Generate(newCst);
-
-            var classTranscriber = new ClassTranscriber();
-
-            var stringBuilder = new StringBuilder();
-            var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine($"namespace {@namespace}");
-            builder.AppendLine("{");
-            builder.Indent();
-            builder.AppendLine("using System.Collections.Generic;");
-            builder.AppendLine();
-
-            foreach (var @class in classes)
-            {
-                classTranscriber.Transcribe(@class, builder);
-                builder.AppendLine();
-            }
-
-            builder.Unindent();
-            builder.AppendLine("}");
-
-            var csharp = stringBuilder.ToString();
-
-            var expectedFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\abnf.cs";
-            var expected = File.ReadAllText(expectedFilePath);
-            Assert.AreEqual(expected, csharp);
-
-            File.WriteAllText(expectedFilePath, csharp);
-        }
-
-        [TestMethod]
-        public void GenerateTranscribersForAbnfV4()
-        {
-            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
-            var coreRulesText = File.ReadAllText(coreRulesPath);
-            var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
-            var abnfRulesText = File.ReadAllText(abnfRulesPath);
-            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
-            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
-
-            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
-
-            var @namespace = "Test.CstNodes";
-            var cstNodes = new _GeneratorV4.Generator(@namespace).Generate(newCst);
-
-            var rulesNamespace = "Test.Transcribers.Rules";
-            var innersNamespace = "Test.Transcribers.Inners";
-            var transcribers = new TranscribersGenerator(rulesNamespace, innersNamespace).Generate(cstNodes);
-            var danglingRules = transcribers
-                .Rules
-                .Where(
-                    rule => rule
-                        .Methods
-                        .Where(method => method.Name == "Transcribe")
-                        .Where(method => string.IsNullOrEmpty(method.Body))
-                        .Any())
-                .ToList();
-            Assert.IsFalse(danglingRules.Any());
-
-            var rulesFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\GeneratedTranscribers\Rules.cs";
-            var expectedRulesText = File.ReadAllText(rulesFilePath);
-            var innersFilePath = @"C:\msgithub\odata.net\odata\GeneratorV3\GeneratedTranscribers\Inners.cs";
-            var expectedInnersText = File.ReadAllText(innersFilePath);
-
-            TranscribeClasses(rulesNamespace, rulesFilePath, transcribers.Rules);
-            TranscribeClasses(innersNamespace, innersFilePath, transcribers.Inners);
-
-            var actualRulesText = File.ReadAllText(rulesFilePath);
-            Assert.AreEqual(expectedRulesText, actualRulesText);
-
-            var actualInnersText = File.ReadAllText(innersFilePath);
-            Assert.AreEqual(expectedInnersText, actualInnersText);
-        }
-
-        private static void TranscribeClasses(string @namespace, string filePath, IEnumerable<Class> classes)
-        {
-            var classTranscriber = new ClassTranscriber();
-
-            var stringBuilder = new StringBuilder();
-            var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine($"namespace {@namespace}");
-            builder.AppendLine("{");
-            builder.Indent();
-            builder.AppendLine("using System.Text;");
-            builder.AppendLine();
-            builder.AppendLine("using GeneratorV3;");
-            builder.AppendLine("using GeneratorV3.Abnf;");
-            builder.AppendLine();
-
-            foreach (var @class in classes)
-            {
-                classTranscriber.Transcribe(@class, builder);
-                builder.AppendLine();
-            }
-
-            builder.Unindent();
-            builder.AppendLine("}");
-
-            var csharp = stringBuilder.ToString();
-
-            File.WriteAllText(filePath, csharp);
-        }
-
-        [TestMethod]
-        public void GenerateForOdataV4()
-        {
-            var abnfRulesPath = @"C:\msgithub\odata.net\odata\odata.abnf";
-            var abnfRulesText = File.ReadAllText(abnfRulesPath);
-            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(abnfRulesText);
-
-            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
-
-            var @namespace = "GeneratorV3.Odata";
-            var classes = new _GeneratorV4.Generator(@namespace).Generate(newCst);
-
-            var classTranscriber = new ClassTranscriber();
-
-            var stringBuilder = new StringBuilder();
-            var builder = new Builder(stringBuilder, "    ");
-            builder.AppendLine($"namespace {@namespace}");
-            builder.AppendLine("{");
-            builder.Indent();
-            builder.AppendLine("using System.Collections.Generic;");
-            builder.AppendLine();
-
-            foreach (var @class in classes)
-            {
-                classTranscriber.Transcribe(@class, builder);
-                builder.AppendLine();
-            }
-
-            builder.Unindent();
-            builder.AppendLine("}");
-
-            var csharp = stringBuilder.ToString();
-
-            var expectedFilePath = @"C:\msgithub\odata.net\odata\odata.cs";
-            var expected = File.ReadAllText(expectedFilePath);
-            Assert.AreEqual(expected, csharp);
-
-            File.WriteAllText(expectedFilePath, csharp);
+            var transcribedText = stringBuilder.ToString();
+            Assert.AreEqual(TestAbnf, transcribedText);
         }
 
         private static string TestAbnf =
