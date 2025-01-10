@@ -47,7 +47,17 @@
                 {
                     //// TODO implement this for dus
                     nestedClasses = Enumerable.Empty<Class>();
-                    property = Enumerable.Empty<PropertyDefinition>();
+                    property = new[]
+                    {
+                        new PropertyDefinition(
+                            AccessModifier.Public,
+                            true,
+                            $"Parser<{@namespace.Name}.{@class.Name}>",
+                            "Instance",
+                            true,
+                            false,
+                            null), //// TODO initializer
+                    };
                 }
                 else
                 {

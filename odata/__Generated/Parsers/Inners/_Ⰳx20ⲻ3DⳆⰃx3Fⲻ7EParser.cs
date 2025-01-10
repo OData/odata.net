@@ -4,6 +4,7 @@ namespace __Generated.Parsers.Inners
     
     public static class _Ⰳx20ⲻ3DⳆⰃx3Fⲻ7EParser
     {
+        public static Parser<__Generated.CstNodes.Inners._Ⰳx20ⲻ3DⳆⰃx3Fⲻ7E> Instance { get; }
     }
     
 }
