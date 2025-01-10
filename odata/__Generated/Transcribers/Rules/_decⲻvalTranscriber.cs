@@ -10,7 +10,8 @@ namespace __Generated.Trancsribers.Rules
         
         public void Transcribe(__Generated.CstNodes.Rules._decⲻval value, System.Text.StringBuilder builder)
         {
-            foreach (var _DIGIT_1 in value._DIGIT_1)
+            __Generated.Trancsribers.Inners._ʺx64ʺTranscriber.Instance.Transcribe(value._ʺx64ʺ_1, builder);
+foreach (var _DIGIT_1 in value._DIGIT_1)
 {
 __Generated.Trancsribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_1, builder);
 }

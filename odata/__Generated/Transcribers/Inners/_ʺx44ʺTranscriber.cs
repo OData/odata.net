@@ -10,7 +10,8 @@ namespace __Generated.Trancsribers.Inners
         
         public void Transcribe(__Generated.CstNodes.Inners._ʺx44ʺ value, System.Text.StringBuilder builder)
         {
-            
+            __Generated.Trancsribers.Inners._x44Transcriber.Instance.Transcribe(value._x44_1, builder);
+
         }
     }
     

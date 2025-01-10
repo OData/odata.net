@@ -10,10 +10,12 @@ namespace __Generated.Trancsribers.Rules
         
         public void Transcribe(__Generated.CstNodes.Rules._proseⲻval value, System.Text.StringBuilder builder)
         {
-            foreach (var _ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ_1 in value._ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ_1)
+            __Generated.Trancsribers.Inners._ʺx3CʺTranscriber.Instance.Transcribe(value._ʺx3Cʺ_1, builder);
+foreach (var _ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ_1 in value._ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ_1)
 {
 __Generated.Trancsribers.Inners._ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃTranscriber.Instance.Transcribe(_ⲤⰃx20ⲻ3DⳆⰃx3Fⲻ7EↃ_1, builder);
 }
+__Generated.Trancsribers.Inners._ʺx3EʺTranscriber.Instance.Transcribe(value._ʺx3Eʺ_1, builder);
 
         }
     }

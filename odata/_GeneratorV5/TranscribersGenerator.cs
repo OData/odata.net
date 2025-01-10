@@ -370,27 +370,12 @@
 
                     builder.AppendLine("}");
                 }
-                /*else
+                else
                 {
                     var propertyType = propertyDefinition.Type;
 
-                    if (propertyType.StartsWith(this.innersCstNodesNamespace))
-                    {
-                        builder.Append(this.innersTranscribersNamespace);
-                        builder.Append(".");
-
-                        propertyType = propertyType.Substring(this.innersCstNodesNamespace.Length + 1);
-                    }
-                    else if (propertyType.StartsWith(this.rulesCstNodesNamespace))
-                    {
-                        builder.Append(this.rulesTranscribersNamespace);
-                        builder.Append(".");
-
-                        propertyType = propertyType.Substring(this.rulesCstNodesNamespace.Length + 1);
-                    }
-
-                    builder.AppendLine($"{propertyType}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");
-                }*/
+                    builder.AppendLine($"{GetTranscriberType(propertyType, ruleCstNodesNamespace, innerCstNodesNamespace)}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");
+                }
             }
         }
 

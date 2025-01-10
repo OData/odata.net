@@ -14,10 +14,12 @@ namespace __Generated.Trancsribers.Inners
 {
 __Generated.Trancsribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_1, builder);
 }
+__Generated.Trancsribers.Inners._ʺx2FʺTranscriber.Instance.Transcribe(value._ʺx2Fʺ_1, builder);
 foreach (var _cⲻwsp_2 in value._cⲻwsp_2)
 {
 __Generated.Trancsribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_2, builder);
 }
+__Generated.Trancsribers.Rules._concatenationTranscriber.Instance.Transcribe(value._concatenation_1, builder);
 
         }
     }

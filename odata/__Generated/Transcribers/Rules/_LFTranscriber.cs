@@ -10,7 +10,8 @@ namespace __Generated.Trancsribers.Rules
         
         public void Transcribe(__Generated.CstNodes.Rules._LF value, System.Text.StringBuilder builder)
         {
-            
+            __Generated.Trancsribers.Inners._Ⰳx0ATranscriber.Instance.Transcribe(value._Ⰳx0A_1, builder);
+
         }
     }
     

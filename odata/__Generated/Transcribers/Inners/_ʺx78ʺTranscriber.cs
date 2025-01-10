@@ -10,7 +10,8 @@ namespace __Generated.Trancsribers.Inners
         
         public void Transcribe(__Generated.CstNodes.Inners._ʺx78ʺ value, System.Text.StringBuilder builder)
         {
-            
+            __Generated.Trancsribers.Inners._x78Transcriber.Instance.Transcribe(value._x78_1, builder);
+
         }
     }
     

@@ -10,7 +10,8 @@ namespace __Generated.Trancsribers.Inners
         
         public void Transcribe(__Generated.CstNodes.Inners._ʺx3Bʺ value, System.Text.StringBuilder builder)
         {
-            
+            __Generated.Trancsribers.Inners._x3BTranscriber.Instance.Transcribe(value._x3B_1, builder);
+
         }
     }
     

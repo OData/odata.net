@@ -14,6 +14,7 @@ namespace __Generated.Trancsribers.Inners
 {
 __Generated.Trancsribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_1, builder);
 }
+__Generated.Trancsribers.Inners._ʺx2AʺTranscriber.Instance.Transcribe(value._ʺx2Aʺ_1, builder);
 foreach (var _DIGIT_2 in value._DIGIT_2)
 {
 __Generated.Trancsribers.Rules._DIGITTranscriber.Instance.Transcribe(_DIGIT_2, builder);

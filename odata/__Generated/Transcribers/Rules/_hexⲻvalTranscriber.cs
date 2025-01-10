@@ -10,7 +10,8 @@ namespace __Generated.Trancsribers.Rules
         
         public void Transcribe(__Generated.CstNodes.Rules._hexⲻval value, System.Text.StringBuilder builder)
         {
-            foreach (var _HEXDIG_1 in value._HEXDIG_1)
+            __Generated.Trancsribers.Inners._ʺx78ʺTranscriber.Instance.Transcribe(value._ʺx78ʺ_1, builder);
+foreach (var _HEXDIG_1 in value._HEXDIG_1)
 {
 __Generated.Trancsribers.Rules._HEXDIGTranscriber.Instance.Transcribe(_HEXDIG_1, builder);
 }

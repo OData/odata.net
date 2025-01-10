@@ -14,6 +14,7 @@ namespace __Generated.Trancsribers.Rules
 {
 __Generated.Trancsribers.Rules._repeatTranscriber.Instance.Transcribe(value._repeat_1, builder);
 }
+__Generated.Trancsribers.Rules._elementTranscriber.Instance.Transcribe(value._element_1, builder);
 
         }
     }

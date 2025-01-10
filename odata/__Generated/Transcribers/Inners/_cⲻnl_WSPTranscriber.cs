@@ -10,7 +10,9 @@ namespace __Generated.Trancsribers.Inners
         
         public void Transcribe(__Generated.CstNodes.Inners._cⲻnl_WSP value, System.Text.StringBuilder builder)
         {
-            
+            __Generated.Trancsribers.Rules._cⲻnlTranscriber.Instance.Transcribe(value._cⲻnl_1, builder);
+__Generated.Trancsribers.Rules._WSPTranscriber.Instance.Transcribe(value._WSP_1, builder);
+
         }
     }
     

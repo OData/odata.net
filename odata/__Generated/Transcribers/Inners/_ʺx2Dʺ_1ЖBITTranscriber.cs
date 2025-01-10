@@ -10,7 +10,8 @@ namespace __Generated.Trancsribers.Inners
         
         public void Transcribe(__Generated.CstNodes.Inners._ʺx2Dʺ_1ЖBIT value, System.Text.StringBuilder builder)
         {
-            foreach (var _BIT_1 in value._BIT_1)
+            __Generated.Trancsribers.Inners._ʺx2DʺTranscriber.Instance.Transcribe(value._ʺx2Dʺ_1, builder);
+foreach (var _BIT_1 in value._BIT_1)
 {
 __Generated.Trancsribers.Rules._BITTranscriber.Instance.Transcribe(_BIT_1, builder);
 }

@@ -10,7 +10,8 @@ namespace __Generated.Trancsribers.Inners
         
         public void Transcribe(__Generated.CstNodes.Inners._ⲤALPHAⳆDIGITⳆʺx2DʺↃ value, System.Text.StringBuilder builder)
         {
-            
+            __Generated.Trancsribers.Inners._ALPHAⳆDIGITⳆʺx2DʺTranscriber.Instance.Transcribe(value._ALPHAⳆDIGITⳆʺx2Dʺ_1, builder);
+
         }
     }
     

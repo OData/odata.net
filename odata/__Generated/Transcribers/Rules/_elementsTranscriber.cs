@@ -10,7 +10,8 @@ namespace __Generated.Trancsribers.Rules
         
         public void Transcribe(__Generated.CstNodes.Rules._elements value, System.Text.StringBuilder builder)
         {
-            foreach (var _cⲻwsp_1 in value._cⲻwsp_1)
+            __Generated.Trancsribers.Rules._alternationTranscriber.Instance.Transcribe(value._alternation_1, builder);
+foreach (var _cⲻwsp_1 in value._cⲻwsp_1)
 {
 __Generated.Trancsribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_1, builder);
 }

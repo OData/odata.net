@@ -14,6 +14,7 @@ namespace __Generated.Trancsribers.Inners
 {
 __Generated.Trancsribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_1, builder);
 }
+__Generated.Trancsribers.Rules._cⲻnlTranscriber.Instance.Transcribe(value._cⲻnl_1, builder);
 
         }
     }

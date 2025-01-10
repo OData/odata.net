@@ -14,6 +14,7 @@ namespace __Generated.Trancsribers.Rules
 {
 __Generated.Trancsribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_1, builder);
 }
+__Generated.Trancsribers.Inners._Ⲥʺx3DʺⳆʺx3Dx2FʺↃTranscriber.Instance.Transcribe(value._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1, builder);
 foreach (var _cⲻwsp_2 in value._cⲻwsp_2)
 {
 __Generated.Trancsribers.Rules._cⲻwspTranscriber.Instance.Transcribe(_cⲻwsp_2, builder);
