@@ -118,25 +118,6 @@
         }
 
         [TestMethod]
-        public void CoreRules()
-        {
-            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
-            var coreRulesText = File.ReadAllText(coreRulesPath);
-            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(coreRulesText);
-
-            //// TODO if the ABNF is missing a trailing newline, the last rule will be dropped
-
-            var newCst = GeneratorV3.OldToNewConverters.RuleListConverter.Instance.Convert(cst);
-
-            var stringBuilder = new StringBuilder();
-
-            GeneratorV3.SpikeTranscribers.Rules.RuleListTranscriber.Instance.Transcribe(newCst, stringBuilder);
-
-            var transcribedText = stringBuilder.ToString();
-            Assert.AreEqual(coreRulesText, transcribedText);
-        }
-
-        [TestMethod]
         public void CoreRulesV5()
         {
             var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
