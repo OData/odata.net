@@ -157,20 +157,19 @@
         }
 
         [TestMethod]
-        public void OdataRules()
+        public void OdataRulesV5()
         {
             var odataRulesPath = @"C:\msgithub\odata.net\odata\odata.abnf";
             var odataRulesText = File.ReadAllText(odataRulesPath);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(odataRulesText);
 
-            var newCst = GeneratorV3.OldToNewConverters.RuleListConverter.Instance.Convert(cst);
+            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
 
             var stringBuilder = new StringBuilder();
 
-            GeneratorV3.SpikeTranscribers.Rules.RuleListTranscriber.Instance.Transcribe(newCst, stringBuilder);
+            __Generated.Trancsribers.Rules._rulelistTranscriber.Instance.Transcribe(newCst, stringBuilder);
 
             var transcribedText = stringBuilder.ToString();
-            File.WriteAllText(odataRulesPath, transcribedText);
             Assert.AreEqual(odataRulesText, transcribedText);
         }
 
