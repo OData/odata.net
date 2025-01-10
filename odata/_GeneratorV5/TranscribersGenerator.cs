@@ -319,7 +319,7 @@
                     "Accept",
                     new[]
                     {
-                        new MethodParameter($"{@namespace}.{cstNode.Name}.{duMember.Name}", "node"), //// TODO don't hardcode namespace
+                        new MethodParameter($"{@namespace}.{cstNode.Name}.{duMember.Name}", "node"),
                         new MethodParameter("System.Text.StringBuilder", "context"),
                     },
                     methodBody + Environment.NewLine + "return default;");
