@@ -46,7 +46,7 @@
 
                 methodBody = string.Empty;
                 nestedClasses = Enumerable.Empty<Class>();
-                if (nonStaticProperties.Any()) //// TODO you are adding these cases to the rules (you already added to inners)
+                if (nonStaticProperties.Any())
                 {
                     if (cstNode.Name.Length == 3 && cstNode.Name[0] == '_' && char.IsDigit(cstNode.Name[1]) && char.IsDigit(cstNode.Name[2]))
                     {
