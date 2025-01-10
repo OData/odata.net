@@ -10,7 +10,76 @@ namespace __Generated.Trancsribers.Inners
         
         public void Transcribe(__Generated.CstNodes.Inners._Ⰳx30ⲻ39 value, System.Text.StringBuilder builder)
         {
+            Visitor.Instance.Visit(value, builder);
+        }
+        
+        private sealed class Visitor : __Generated.CstNodes.Inners._Ⰳx30ⲻ39.Visitor<Root.Void, System.Text.StringBuilder>
+        {
+            private Visitor()
+            {
+            }
             
+            public static Visitor Instance { get; } = new Visitor();
+            
+            protected internal override Root.Void Accept(__Generated.CstNodes.Inners._Ⰳx30ⲻ39._30 node, System.Text.StringBuilder context)
+            {
+                
+return default;
+            }
+            
+            protected internal override Root.Void Accept(__Generated.CstNodes.Inners._Ⰳx30ⲻ39._31 node, System.Text.StringBuilder context)
+            {
+                
+return default;
+            }
+            
+            protected internal override Root.Void Accept(__Generated.CstNodes.Inners._Ⰳx30ⲻ39._32 node, System.Text.StringBuilder context)
+            {
+                
+return default;
+            }
+            
+            protected internal override Root.Void Accept(__Generated.CstNodes.Inners._Ⰳx30ⲻ39._33 node, System.Text.StringBuilder context)
+            {
+                
+return default;
+            }
+            
+            protected internal override Root.Void Accept(__Generated.CstNodes.Inners._Ⰳx30ⲻ39._34 node, System.Text.StringBuilder context)
+            {
+                
+return default;
+            }
+            
+            protected internal override Root.Void Accept(__Generated.CstNodes.Inners._Ⰳx30ⲻ39._35 node, System.Text.StringBuilder context)
+            {
+                
+return default;
+            }
+            
+            protected internal override Root.Void Accept(__Generated.CstNodes.Inners._Ⰳx30ⲻ39._36 node, System.Text.StringBuilder context)
+            {
+                
+return default;
+            }
+            
+            protected internal override Root.Void Accept(__Generated.CstNodes.Inners._Ⰳx30ⲻ39._37 node, System.Text.StringBuilder context)
+            {
+                
+return default;
+            }
+            
+            protected internal override Root.Void Accept(__Generated.CstNodes.Inners._Ⰳx30ⲻ39._38 node, System.Text.StringBuilder context)
+            {
+                
+return default;
+            }
+            
+            protected internal override Root.Void Accept(__Generated.CstNodes.Inners._Ⰳx30ⲻ39._39 node, System.Text.StringBuilder context)
+            {
+                
+return default;
+            }
         }
     }
     

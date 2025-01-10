@@ -10,7 +10,34 @@ namespace __Generated.Trancsribers.Inners
         
         public void Transcribe(__Generated.CstNodes.Inners._ALPHAⳆDIGITⳆʺx2Dʺ value, System.Text.StringBuilder builder)
         {
+            Visitor.Instance.Visit(value, builder);
+        }
+        
+        private sealed class Visitor : __Generated.CstNodes.Inners._ALPHAⳆDIGITⳆʺx2Dʺ.Visitor<Root.Void, System.Text.StringBuilder>
+        {
+            private Visitor()
+            {
+            }
             
+            public static Visitor Instance { get; } = new Visitor();
+            
+            protected internal override Root.Void Accept(__Generated.CstNodes.Inners._ALPHAⳆDIGITⳆʺx2Dʺ._ALPHA node, System.Text.StringBuilder context)
+            {
+                
+return default;
+            }
+            
+            protected internal override Root.Void Accept(__Generated.CstNodes.Inners._ALPHAⳆDIGITⳆʺx2Dʺ._DIGIT node, System.Text.StringBuilder context)
+            {
+                
+return default;
+            }
+            
+            protected internal override Root.Void Accept(__Generated.CstNodes.Inners._ALPHAⳆDIGITⳆʺx2Dʺ._ʺx2Dʺ node, System.Text.StringBuilder context)
+            {
+                
+return default;
+            }
         }
     }
     

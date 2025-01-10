@@ -92,7 +92,7 @@
                                     Enumerable.Empty<MethodParameter>(),
                                     Enumerable.Empty<string>()),
                             },
-                            Enumerable.Empty<MethodDefinition>(), //// TODO GenerateVisitorMethods(cstNode, false),
+                            GenerateVisitorMethods(cstNode, @namespace.Name),
                             Enumerable.Empty<Class>(),
                             new[]
                             {
@@ -293,14 +293,14 @@
                             $"new {transcriberName}();"),
                     });
             }
-        }
+        }*/
 
-        private IEnumerable<MethodDefinition> GenerateVisitorMethods(Class cstNode, bool inners)
+        private IEnumerable<MethodDefinition> GenerateVisitorMethods(Class cstNode, string @namespace)
         {
             foreach (var duMember in cstNode.NestedClasses.Where(member => member.BaseType?.EndsWith(cstNode.Name) ?? false))
             {
-                string methodBody;
-                if (duMember.Name.Length == 3 && duMember.Name[0] == '_' && char.IsAsciiHexDigit(duMember.Name[1]) && char.IsAsciiHexDigit(duMember.Name[2]))
+                string methodBody = string.Empty;
+                /*if (duMember.Name.Length == 3 && duMember.Name[0] == '_' && char.IsAsciiHexDigit(duMember.Name[1]) && char.IsAsciiHexDigit(duMember.Name[2]))
                 {
                     //// TODO it's weird that this decision is made here
                     methodBody = $"context.Append((char)0x{duMember.Name.TrimStart('_')});";
@@ -308,7 +308,7 @@
                 else
                 {
                     methodBody = TranscribeProperties(duMember.Properties, "node", "context");
-                }
+                }*/
 
                 yield return new MethodDefinition(
                     AccessModifier.Protected | AccessModifier.Internal,
@@ -319,12 +319,12 @@
                     "Accept",
                     new[]
                     {
-                        new MethodParameter($"GeneratorV3.Abnf{(inners ? ".Inners" : string.Empty)}.{cstNode.Name}.{duMember.Name}", "node"), //// TODO don't hardcode namespace
-                        new MethodParameter("StringBuilder", "context"),
+                        new MethodParameter($"{@namespace}.{cstNode.Name}.{duMember.Name}", "node"), //// TODO don't hardcode namespace
+                        new MethodParameter("System.Text.StringBuilder", "context"),
                     },
                     methodBody + Environment.NewLine + "return default;");
             }
-        }*/
+        }
 
         private string TranscribeProperties(
             IEnumerable<PropertyDefinition> propertyDefinitions,
