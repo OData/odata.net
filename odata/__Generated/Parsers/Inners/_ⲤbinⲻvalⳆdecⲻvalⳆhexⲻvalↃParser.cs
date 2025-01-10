@@ -4,6 +4,7 @@ namespace __Generated.Parsers.Inners
     
     public static class _ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃParser
     {
+        public static Parser<__Generated.CstNodes.Inners._ⲤbinⲻvalⳆdecⲻvalⳆhexⲻvalↃ> Instance { get; }
     }
     
 }

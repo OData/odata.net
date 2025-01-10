@@ -43,13 +43,13 @@
             {
                 IEnumerable<Class> nestedClasses;
                 IEnumerable<PropertyDefinition> property;
-                ////if (@class.NestedClasses.Any())
+                if (@class.NestedClasses.Any())
                 {
                     //// TODO implement this for dus
                     nestedClasses = Enumerable.Empty<Class>();
                     property = Enumerable.Empty<PropertyDefinition>();
                 }
-                /*else
+                else
                 {
                     nestedClasses = Enumerable.Empty<Class>();
                     property = new[]
@@ -63,7 +63,7 @@
                             false,
                             null), //// TODO initializer
                     };
-                }*/
+                }
 
                 yield return new Class(
                     AccessModifier.Public,

@@ -4,6 +4,7 @@ namespace __Generated.Parsers.Inners
     
     public static class _x2AParser
     {
+        public static Parser<__Generated.CstNodes.Inners._x2A> Instance { get; }
     }
     
 }

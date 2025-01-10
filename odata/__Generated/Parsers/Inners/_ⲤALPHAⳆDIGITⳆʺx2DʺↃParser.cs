@@ -4,6 +4,7 @@ namespace __Generated.Parsers.Inners
     
     public static class _ⲤALPHAⳆDIGITⳆʺx2DʺↃParser
     {
+        public static Parser<__Generated.CstNodes.Inners._ⲤALPHAⳆDIGITⳆʺx2DʺↃ> Instance { get; }
     }
     
 }

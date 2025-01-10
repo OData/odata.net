@@ -4,6 +4,7 @@ namespace __Generated.Parsers.Rules
     
     public static class _OCTETParser
     {
+        public static Parser<__Generated.CstNodes.Rules._OCTET> Instance { get; }
     }
     
 }

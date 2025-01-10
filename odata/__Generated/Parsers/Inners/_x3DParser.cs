@@ -4,6 +4,7 @@ namespace __Generated.Parsers.Inners
     
     public static class _x3DParser
     {
+        public static Parser<__Generated.CstNodes.Inners._x3D> Instance { get; }
     }
     
 }
