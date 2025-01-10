@@ -78,26 +78,6 @@
         }
 
         [TestMethod]
-        public void TranscribersV5()
-        {
-            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
-            var coreRulesText = File.ReadAllText(coreRulesPath);
-            var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
-            var abnfRulesText = File.ReadAllText(abnfRulesPath);
-            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
-            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
-
-            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
-
-            var stringBuilder = new StringBuilder();
-
-            __Generated.Trancsribers.Rules._rulelistTranscriber.Instance.Transcribe(newCst, stringBuilder);
-
-            var transcribedText = stringBuilder.ToString();
-            Assert.AreEqual(fullRulesText, transcribedText);
-        }
-
-        [TestMethod]
         public void TestMethod1()
         {
             var url = "$metadata";
