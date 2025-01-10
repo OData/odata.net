@@ -61,6 +61,7 @@
                     }
                     else
                     {
+                        // this is a non-terminal node, so call the transcribers for this node's properties
                         methodBody = TranscribeProperties(
                             nonStaticProperties, 
                             ruleCstNodesNamespace, 
