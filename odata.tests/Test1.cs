@@ -75,9 +75,16 @@
                 builder.AppendLine($"namespace {@namespace.Name}");
                 builder.AppendLine("{");
                 builder.Indent();
+                var usings = false;
                 foreach (var usingDeclaration in @namespace.UsingDeclarations)
                 {
-                    builder.Append($"using {usingDeclaration};");
+                    builder.AppendLine($"using {usingDeclaration};");
+                    usings = true;
+                }
+
+                if (usings)
+                {
+                    builder.AppendLine();
                 }
 
                 classTranscriber.Transcribe(@class, builder);

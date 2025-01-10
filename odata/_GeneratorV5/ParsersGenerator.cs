@@ -22,10 +22,18 @@
                 (
                     new Namespace(
                         this.ruleParsersNamespace,
-                        GenerateParsers(cstNodes.RuleCstNodes)),
+                        GenerateParsers(cstNodes.RuleCstNodes),
+                        new[]
+                        {
+                            "Sprache",
+                        }),
                     new Namespace(
                         this.innerParsersNamespace,
-                        GenerateParsers(cstNodes.InnerCstNodes))
+                        GenerateParsers(cstNodes.InnerCstNodes),
+                        new[]
+                        {
+                            "Sprache",
+                        })
                 );
         }
 
