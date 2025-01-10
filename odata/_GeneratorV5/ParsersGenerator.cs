@@ -62,7 +62,7 @@
                                     nonStaticProperties
                                     .Select(
                                         property =>
-                                            $"from {property.Name} in {FromNodeNamespaceToParserNamespace(@namespace.Name, ruleCstNodesNamespace, innerCstNodesNamespace)}{StripPropertyType(property.Type)}Parser.Instance{(property.Type.StartsWith("System.Collections.Generic.IEnumerable<") ? ".Many()" : string.Empty)}")), //// TODO how to handle different ranges of ienumerable (at most two, at least 3, etc.)
+                                            $"from {property.Name} in {UpdatePropertyType(property.Type, ruleCstNodesNamespace, innerCstNodesNamespace)}Parser.Instance{(property.Type.StartsWith("System.Collections.Generic.IEnumerable<") ? ".Many()" : string.Empty)}")), //// TODO how to handle different ranges of ienumerable (at most two, at least 3, etc.)
                             Environment.NewLine,
                             $"select new {@namespace.Name}.{@class.Name}(",
                             string.Join(
@@ -128,36 +128,28 @@
             }
         }
 
-        private string StripPropertyType(string propertyType)
+        private string UpdatePropertyType(string propertyType, string ruleCstNodesNamespace, string innerCstNodesNamespace)
         {
-            var collectionDelimiter = "System.Collections.Generic.IEnunerable<";
+            var collectionDelimiter = "System.Collections.Generic.IEnumerable<";
             if (propertyType.StartsWith(collectionDelimiter))
             {
-                return propertyType.Substring(collectionDelimiter.Length, propertyType.Length - collectionDelimiter.Length - 1);
+                return UpdatePropertyType(
+                    propertyType.Substring(collectionDelimiter.Length, propertyType.Length - collectionDelimiter.Length - 1),
+                    ruleCstNodesNamespace, 
+                    innerCstNodesNamespace);
             }
 
-            var delimiterIndex = propertyType.LastIndexOf(".");
-            if (delimiterIndex < 0)
+            if (propertyType.StartsWith(ruleCstNodesNamespace))
             {
-                return propertyType;
+                return $"{this.ruleParsersNamespace}{propertyType.Substring(ruleCstNodesNamespace.Length)}";
             }
 
-            return propertyType.Substring(delimiterIndex + 1);
-        }
-
-        private string FromNodeNamespaceToParserNamespace(string namespaceToUpdate, string ruleCstNodesNamespace, string innerCstNodesNamespace)
-        {
-            if (namespaceToUpdate.StartsWith(ruleCstNodesNamespace))
+            if (propertyType.StartsWith(innerCstNodesNamespace))
             {
-                return $"{this.ruleParsersNamespace}.{namespaceToUpdate.Substring(ruleCstNodesNamespace.Length)}";
+                return $"{this.innerParsersNamespace}{propertyType.Substring(innerCstNodesNamespace.Length)}";
             }
 
-            if (namespaceToUpdate.StartsWith(innerCstNodesNamespace))
-            {
-                return $"{this.innerParsersNamespace}.{namespaceToUpdate.Substring(innerCstNodesNamespace.Length)}";
-            }
-
-            return namespaceToUpdate;
+            return propertyType;
         }
     }
 }
