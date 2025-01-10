@@ -10,7 +10,7 @@ namespace __Generated.Trancsribers.Inners
         
         public void Transcribe(__Generated.CstNodes.Inners._x5D value, System.Text.StringBuilder builder)
         {
-            
+            builder.Append((char)0x5D);
         }
     }
     

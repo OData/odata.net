@@ -59,7 +59,7 @@
                         //// is allowed to write (rather than a requirement). These probably should be kept more or less as they
                         //// are, but the derived types shouldn't have properties.
                         
-                        //// this branch handles the first case
+                        //// this branch handles part of the first case
                         methodBody = $"builder.Append((char)0{cstNode.Name.Substring(2)});";
                     }
                     else
@@ -110,23 +110,44 @@
                 }
                 else
                 {
-                    methodBody = string.Empty;
                     nestedClasses = Enumerable.Empty<Class>();
-                    /*nestedClasses = Enumerable.Empty<Class>();
                     if (cstNode.Name.StartsWith("_x"))
                     {
+                        //// TODO Here's what seems to happen, and i think it's a generator issue. Whenever there's a literal,
+                        //// you turn that into hex (not sure why). These nodes end up with properties that are just the
+                        //// individual hex digits, but that has nothing to do with the literal anymore, so we have to
+                        //// circumvent it here in the transcribers. I think you should probably take those nodes that represent
+                        //// literals and just make them terminal nodes.
+                        //// 
+                        //// The other case is where you have a range of values. In this case, you end up with a discriminated
+                        //// union where the base type has the "%x" portion and the derived types don't. These don't represent
+                        //// a literal in the same way as the first case, they instead represent an option that the ABNF author
+                        //// is allowed to write (rather than a requirement). These probably should be kept more or less as they
+                        //// are, but the derived types shouldn't have properties.
+
+                        //// this branch handles part of the first case
                         methodBody = $"builder.Append((char)0{cstNode.Name.Substring(1)});";
-                    }
-                    else if (cstNode.Name.StartsWith("_Ⰳx"))
-                    {
-                        methodBody = $"builder.Append((char)0{cstNode.Name.Substring(2)});";
                     }
                     else
                     {
-                        //// TODO are there other terminal node cases?
-                        //// methodBody = $"builder.Append(\"{cstNode.Name.TrimStart('_')}\");";
-                        methodBody = $"builder.Append((char)0x{cstNode.Name.TrimStart('_')});";
-                    }*/
+                        //// TODO Here's what seems to happen, and i think it's a generator issue. Whenever there's a literal,
+                        //// you turn that into hex (not sure why). These nodes end up with properties that are just the
+                        //// individual hex digits, but that has nothing to do with the literal anymore, so we have to
+                        //// circumvent it here in the transcribers. I think you should probably take those nodes that represent
+                        //// literals and just make them terminal nodes.
+                        //// 
+                        //// The other case is where you have a range of values. In this case, you end up with a discriminated
+                        //// union where the base type has the "%x" portion and the derived types don't. These don't represent
+                        //// a literal in the same way as the first case, they instead represent an option that the ABNF author
+                        //// is allowed to write (rather than a requirement). These probably should be kept more or less as they
+                        //// are, but the derived types shouldn't have properties.
+
+                        //// this branch handles the single hex digit transcribers that shouldn't exist and are currently
+                        //// going to do no-ops; this branch *should* actually indicate a terminal node if the above TODO were
+                        //// addressed
+
+                        methodBody = string.Empty;
+                    }
                 }
 
                 yield return new Class(
