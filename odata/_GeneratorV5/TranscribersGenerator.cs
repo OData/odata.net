@@ -12,9 +12,6 @@
         private readonly string ruleTranscribersNamespace;
         private readonly string innerTranscribersNamespace;
 
-        private readonly string rulesCstNodesNamespace = "Test.CstNodes"; //// TODO figure out how to do namespaces correctly
-        private readonly string innersCstNodesNamespace = "Inners"; //// TODO figure out how to do namespaces correctly
-
         public TranscribersGenerator(string ruleTranscribersNamespace, string innerTranscribersNamespace)
         {
             this.ruleTranscribersNamespace = ruleTranscribersNamespace;
@@ -84,7 +81,7 @@
                             ClassModifier.Sealed,
                             "Visitor",
                             Enumerable.Empty<string>(),
-                            $"{@namespace.Name}.{cstNode.Name}.Visitor<Root.Void, System.Text.StringBuilder>", //// TODO namespace should be computed
+                            $"{@namespace.Name}.{cstNode.Name}.Visitor<Root.Void, System.Text.StringBuilder>",
                             new[]
                             {
                                 new ConstructorDefinition(
