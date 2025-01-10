@@ -2,17 +2,25 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public sealed class Namespace
     {
         public Namespace(string name, IEnumerable<Class> classes)
+            : this(name, classes, Enumerable.Empty<string>())
+        {
+        }
+
+        public Namespace(string name, IEnumerable<Class> classes, IEnumerable<string> usingDeclarations)
         {
             Name = name;
             Classes = classes;
+            UsingDeclarations = usingDeclarations;
         }
 
         public string Name { get; }
         public IEnumerable<Class> Classes { get; }
+        public IEnumerable<string> UsingDeclarations { get; }
     }
 
     public sealed class Class

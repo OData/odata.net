@@ -33,6 +33,30 @@
         {
             foreach (var @class in @namespace.Classes)
             {
+                IEnumerable<Class> nestedClasses;
+                IEnumerable<PropertyDefinition> property;
+                ////if (@class.NestedClasses.Any())
+                {
+                    //// TODO implement this for dus
+                    nestedClasses = Enumerable.Empty<Class>();
+                    property = Enumerable.Empty<PropertyDefinition>();
+                }
+                /*else
+                {
+                    nestedClasses = Enumerable.Empty<Class>();
+                    property = new[]
+                    {
+                        new PropertyDefinition(
+                            AccessModifier.Public,
+                            true,
+                            $"Parser<{@namespace.Name}.{@class.Name}>",
+                            "Instance",
+                            true,
+                            false,
+                            null), //// TODO initializer
+                    };
+                }*/
+
                 yield return new Class(
                     AccessModifier.Public,
                     ClassModifier.Static,
@@ -41,8 +65,8 @@
                     null,
                     Enumerable.Empty<ConstructorDefinition>(),
                     Enumerable.Empty<MethodDefinition>(),
-                    Enumerable.Empty<Class>(), //// TODO there are nested classes for dus
-                    Enumerable.Empty<PropertyDefinition>()); //// TODO the instance property
+                    nestedClasses,
+                    property);
             }
         }
     }
