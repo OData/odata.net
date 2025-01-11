@@ -46,87 +46,93 @@
 
         private IEnumerable<Class> GenerateParsers(Namespace @namespace, string ruleCstNodesNamespace, string innerCstNodesNamespace)
         {
-            foreach (var @class in @namespace.Classes)
-            {
-                var nonStaticProperties = @class.Properties.Where(property => !property.IsStatic);
+            return @namespace
+                .Classes
+                .Select(
+                    @class =>
+                        GenerateParser(@class, @namespace.Name, ruleCstNodesNamespace, innerCstNodesNamespace));
+        }
 
-                IEnumerable<Class> nestedClasses;
-                IEnumerable<PropertyDefinition> property;
-                if (nonStaticProperties.Any())
-                {
-                    nestedClasses = Enumerable.Empty<Class>();
-                    var initializer = string
-                        .Concat(
-                            string.Join(
-                                Environment.NewLine,
-                                    nonStaticProperties
-                                    .Select(
-                                        property =>
-                                        //// TODO this initializer stuff should probably be its own method and use a builder
-                                            $"from {property.Name} in {UpdatePropertyType(property.Type, ruleCstNodesNamespace, innerCstNodesNamespace)}Parser.Instance{(property.Type.StartsWith("System.Collections.Generic.IEnumerable<") ? ".Many()" : string.Empty)}{(property.Type.EndsWith("?") ? ".Optional()" : string.Empty)}")), //// TODO how to handle different ranges of ienumerable (at most two, at least 3, etc.) //// TODO what are the cases where nullable and enumerable are used together?
+        private Class GenerateParser(Class @class, string parserNamespace, string ruleCstNodesNamespace, string innerCstNodesNamespace)
+        {
+            var nonStaticProperties = @class.Properties.Where(property => !property.IsStatic);
+
+            IEnumerable<Class> nestedClasses;
+            IEnumerable<PropertyDefinition> property;
+            if (nonStaticProperties.Any())
+            {
+                nestedClasses = Enumerable.Empty<Class>();
+                var initializer = string
+                    .Concat(
+                        string.Join(
                             Environment.NewLine,
-                            $"select new {@namespace.Name}.{@class.Name}(",
-                            string.Join(
-                                ", ",
                                 nonStaticProperties
-                                    .Select(property => $"{property.Name}{(property.Type.EndsWith("?") ? ".GetOrElse(null)" : string.Empty)}")),
-                            ");");
-                    property = new[]
-                    {
+                                .Select(
+                                    property =>
+                                        //// TODO this initializer stuff should probably be its own method and use a builder
+                                        $"from {property.Name} in {UpdatePropertyType(property.Type, ruleCstNodesNamespace, innerCstNodesNamespace)}Parser.Instance{(property.Type.StartsWith("System.Collections.Generic.IEnumerable<") ? ".Many()" : string.Empty)}{(property.Type.EndsWith("?") ? ".Optional()" : string.Empty)}")), //// TODO how to handle different ranges of ienumerable (at most two, at least 3, etc.) //// TODO what are the cases where nullable and enumerable are used together?
+                        Environment.NewLine,
+                        $"select new {parserNamespace}.{@class.Name}(",
+                        string.Join(
+                            ", ",
+                            nonStaticProperties
+                                .Select(property => $"{property.Name}{(property.Type.EndsWith("?") ? ".GetOrElse(null)" : string.Empty)}")),
+                        ");");
+                property = new[]
+                {
                         new PropertyDefinition(
                             AccessModifier.Public,
                             true,
-                            $"Parser<{@namespace.Name}.{@class.Name}>",
+                            $"Parser<{parserNamespace}.{@class.Name}>",
                             "Instance",
                             true,
                             false,
                             initializer),
                     };
-                }
-                else if (@class.NestedClasses.Any())
+            }
+            else if (@class.NestedClasses.Any())
+            {
+                //// TODO implement this for dus
+                nestedClasses = Enumerable.Empty<Class>();
+                property = new[]
                 {
-                    //// TODO implement this for dus
-                    nestedClasses = Enumerable.Empty<Class>();
-                    property = new[]
-                    {
                         new PropertyDefinition(
                             AccessModifier.Public,
                             true,
-                            $"Parser<{@namespace.Name}.{@class.Name}>",
+                            $"Parser<{parserNamespace}.{@class.Name}>",
                             "Instance",
                             true,
                             false,
                             null), //// TODO initializer
                     };
-                }
-                else
+            }
+            else
+            {
+                //// TODO implement this for terminal nodes
+                nestedClasses = Enumerable.Empty<Class>();
+                property = new[]
                 {
-                    //// TODO implement this for terminal nodes
-                    nestedClasses = Enumerable.Empty<Class>();
-                    property = new[]
-                    {
                         new PropertyDefinition(
                             AccessModifier.Public,
                             true,
-                            $"Parser<{@namespace.Name}.{@class.Name}>",
+                            $"Parser<{parserNamespace}.{@class.Name}>",
                             "Instance",
                             true,
                             false,
                             null),
                     };
-                }
-
-                yield return new Class(
-                    AccessModifier.Public,
-                    ClassModifier.Static,
-                    $"{@class.Name}Parser",
-                    Enumerable.Empty<string>(),
-                    null,
-                    Enumerable.Empty<ConstructorDefinition>(),
-                    Enumerable.Empty<MethodDefinition>(),
-                    nestedClasses,
-                    property);
             }
+
+            return new Class(
+                AccessModifier.Public,
+                ClassModifier.Static,
+                $"{@class.Name}Parser",
+                Enumerable.Empty<string>(),
+                null,
+                Enumerable.Empty<ConstructorDefinition>(),
+                Enumerable.Empty<MethodDefinition>(),
+                nestedClasses,
+                property);
         }
 
         private string UpdatePropertyType(string propertyType, string ruleCstNodesNamespace, string innerCstNodesNamespace)
