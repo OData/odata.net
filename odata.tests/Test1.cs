@@ -139,6 +139,25 @@
         }
 
         [TestMethod]
+        public void CoreRulesV5_2()
+        {
+            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
+            var coreRulesText = File.ReadAllText(coreRulesPath);
+            var cst = __Generated.Parsers.Rules._rulelistParser.Instance.Parse(coreRulesText);
+
+            //// TODO if the ABNF is missing a trailing newline, the last rule will be dropped
+
+            ////var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
+
+            var stringBuilder = new StringBuilder();
+
+            __Generated.Trancsribers.Rules._rulelistTranscriber.Instance.Transcribe(cst, stringBuilder);
+
+            var transcribedText = stringBuilder.ToString();
+            Assert.AreEqual(coreRulesText, transcribedText);
+        }
+
+        [TestMethod]
         public void AbnfRulesV5()
         {
             var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
