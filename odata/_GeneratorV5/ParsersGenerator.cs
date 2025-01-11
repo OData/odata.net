@@ -58,37 +58,65 @@
             var nonStaticProperties = @class.Properties.Where(property => !property.IsStatic);
 
             IEnumerable<Class> nestedClasses;
-            IEnumerable<PropertyDefinition> property;
+            IEnumerable<PropertyDefinition> propertyDefinition;
             if (nonStaticProperties.Any())
             {
-                nestedClasses = Enumerable.Empty<Class>();
-                var initializer = string
-                    .Concat(
-                        string.Join(
-                            Environment.NewLine,
-                                nonStaticProperties
-                                .Select(
-                                    property =>
-                                        //// TODO this initializer stuff should probably be its own method and use a builder
-                                        $"from {property.Name} in {UpdatePropertyType(property.Type, ruleCstNodesNamespace, innerCstNodesNamespace)}Parser.Instance{(property.Type.StartsWith("System.Collections.Generic.IEnumerable<") ? ".Many()" : string.Empty)}{(property.Type.EndsWith("?") ? ".Optional()" : string.Empty)}")), //// TODO how to handle different ranges of ienumerable (at most two, at least 3, etc.) //// TODO what are the cases where nullable and enumerable are used together?
-                        Environment.NewLine,
-                        $"select new {cstNodeNamespace}.{@class.Name}(",
-                        string.Join(
-                            ", ",
-                            nonStaticProperties
-                                .Select(property => $"{property.Name}{(property.Type.EndsWith("?") ? ".GetOrElse(null)" : string.Empty)}")),
-                        ");");
-                property = new[]
+                if (@class.BaseType == null && @class.Name.Length == 5 && @class.Name.StartsWith("_Ⰳx"))
                 {
-                    new PropertyDefinition(
-                        AccessModifier.Public,
-                        true,
-                        $"Parser<{cstNodeNamespace}.{@class.Name}>",
-                        "Instance",
-                        true,
-                        false,
-                        initializer),
-                };
+                    //// TODO document from transcribers generator
+                    nestedClasses = Enumerable.Empty<Class>();
+                    var initializer = string
+                        .Concat(
+                            $"from {@class.Name} in Parse.Char((char)0{@class.Name.Substring(2)}) select new {cstNodeNamespace}.{@class.Name}(",
+                            string.Join(
+                                ", ",
+                                @class.Properties.Select(
+                                    property =>
+                                        $"{property.Type}.Instance")),
+                            ");");
+                    propertyDefinition = new[]
+                    {
+                        new PropertyDefinition(
+                            AccessModifier.Public,
+                            true,
+                            $"Parser<{cstNodeNamespace}.{@class.Name}>",
+                            "Instance",
+                            true,
+                            false,
+                            initializer),
+                    };
+                }
+                else
+                {
+                    nestedClasses = Enumerable.Empty<Class>();
+                    var initializer = string
+                        .Concat(
+                            string.Join(
+                                Environment.NewLine,
+                                    nonStaticProperties
+                                    .Select(
+                                        property =>
+                                            //// TODO this initializer stuff should probably be its own method and use a builder
+                                            $"from {property.Name} in {UpdatePropertyType(property.Type, ruleCstNodesNamespace, innerCstNodesNamespace)}Parser.Instance{(property.Type.StartsWith("System.Collections.Generic.IEnumerable<") ? ".Many()" : string.Empty)}{(property.Type.EndsWith("?") ? ".Optional()" : string.Empty)}")), //// TODO how to handle different ranges of ienumerable (at most two, at least 3, etc.) //// TODO what are the cases where nullable and enumerable are used together?
+                            Environment.NewLine,
+                            $"select new {cstNodeNamespace}.{@class.Name}(",
+                            string.Join(
+                                ", ",
+                                nonStaticProperties
+                                    .Select(property => $"{property.Name}{(property.Type.EndsWith("?") ? ".GetOrElse(null)" : string.Empty)}")),
+                            ");");
+                    propertyDefinition = new[]
+                    {
+                        new PropertyDefinition(
+                            AccessModifier.Public,
+                            true,
+                            $"Parser<{cstNodeNamespace}.{@class.Name}>",
+                            "Instance",
+                            true,
+                            false,
+                            initializer),
+                    };
+                }
             }
             else if (@class.NestedClasses.Any())
             {
@@ -114,7 +142,7 @@
                                     nestedClass =>
                                         $"{nestedClass.Name}.Instance")),
                         ");");
-                property = new[]
+                propertyDefinition = new[]
                 {
                     new PropertyDefinition(
                         AccessModifier.Public,
@@ -130,9 +158,10 @@
             {
                 if (@class.Name.Length == 4 && @class.Name[0] == '_' && @class.Name[1] == 'x' && char.IsAsciiHexDigit(@class.Name[2]) && char.IsAsciiHexDigit(@class.Name[3]))
                 {
+                    //// TODO document from transcribers generator
                     nestedClasses = Enumerable.Empty<Class>();
                     var initializer = $"from {@class.Name} in Parse.Char((char)0{@class.Name.Substring(1)}) select {cstNodeNamespace}.{@class.Name}.Instance;";
-                    property = new[]
+                    propertyDefinition = new[]
                     {
                         new PropertyDefinition(
                             AccessModifier.Public,
@@ -146,9 +175,9 @@
                 }
                 else
                 {
-                    //// TODO implement this for terminal nodes
+                    //// TODO document from transcribers generator
                     nestedClasses = Enumerable.Empty<Class>();
-                    property = new[]
+                    propertyDefinition = new[]
                     {
                         new PropertyDefinition(
                             AccessModifier.Public,
@@ -171,7 +200,7 @@
                 Enumerable.Empty<ConstructorDefinition>(),
                 Enumerable.Empty<MethodDefinition>(),
                 nestedClasses,
-                property);
+                propertyDefinition);
         }
 
         private string UpdatePropertyType(string propertyType, string ruleCstNodesNamespace, string innerCstNodesNamespace)
