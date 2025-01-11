@@ -128,19 +128,38 @@
             }
             else
             {
-                //// TODO implement this for terminal nodes
-                nestedClasses = Enumerable.Empty<Class>();
-                property = new[]
+                if (@class.Name.Length == 4 && @class.Name[0] == '_' && @class.Name[1] == 'x' && char.IsAsciiHexDigit(@class.Name[2]) && char.IsAsciiHexDigit(@class.Name[3]))
                 {
-                    new PropertyDefinition(
-                        AccessModifier.Public,
-                        true,
-                        $"Parser<{cstNodeNamespace}.{@class.Name}>",
-                        "Instance",
-                        true,
-                        false,
-                        null),
-                };
+                    nestedClasses = Enumerable.Empty<Class>();
+                    var initializer = $"from {@class.Name} in Parse.Char((char)0{@class.Name.Substring(1)}) select {cstNodeNamespace}.{@class.Name}.Instance;";
+                    property = new[]
+                    {
+                        new PropertyDefinition(
+                            AccessModifier.Public,
+                            true,
+                            $"Parser<{cstNodeNamespace}.{@class.Name}>",
+                            "Instance",
+                            true,
+                            false,
+                            initializer),
+                    };
+                }
+                else
+                {
+                    //// TODO implement this for terminal nodes
+                    nestedClasses = Enumerable.Empty<Class>();
+                    property = new[]
+                    {
+                        new PropertyDefinition(
+                            AccessModifier.Public,
+                            true,
+                            $"Parser<{cstNodeNamespace}.{@class.Name}>",
+                            "Instance",
+                            true,
+                            false,
+                            null),
+                    };
+                }
             }
 
             return new Class(

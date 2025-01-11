@@ -4,7 +4,7 @@ namespace __Generated.Parsers.Inners
     
     public static class _x5DParser
     {
-        public static Parser<__Generated.CstNodes.Inners._x5D> Instance { get; }
+        public static Parser<__Generated.CstNodes.Inners._x5D> Instance { get; } = from _x5D in Parse.Char((char)0x5D) select __Generated.CstNodes.Inners._x5D.Instance;
     }
     
 }
