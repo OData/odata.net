@@ -86,6 +86,31 @@
                             initializer),
                     };
                 }
+                else if (@class.Name.Length == 3 && @class.Name[0] == '_' && char.IsAsciiHexDigit(@class.Name[1]) && char.IsAsciiHexDigit(@class.Name[2]))
+                {
+                    //// TODO document from transcribers generator
+                    nestedClasses = Enumerable.Empty<Class>();
+                    var initializer = string
+                        .Concat(
+                            $"from {@class.Name} in Parse.Char((char)0x{@class.Name.Substring(1)}) select new {cstNodeNamespace}.{@class.Name}(",
+                            string.Join(
+                                ", ",
+                                @class.Properties.Select(
+                                    property =>
+                                        $"{property.Type}.Instance")),
+                            ");");
+                    propertyDefinition = new[]
+                    {
+                        new PropertyDefinition(
+                            AccessModifier.Public,
+                            true,
+                            $"Parser<{cstNodeNamespace}.{@class.Name}>",
+                            "Instance",
+                            true,
+                            false,
+                            initializer),
+                    };
+                }
                 else
                 {
                     nestedClasses = Enumerable.Empty<Class>();
