@@ -93,7 +93,19 @@
             else if (@class.NestedClasses.Any())
             {
                 //// TODO implement this for dus
-                nestedClasses = Enumerable.Empty<Class>();
+                //// nestedClasses = Enumerable.Empty<Class>();
+                nestedClasses = @class
+                    .NestedClasses
+                    .Where(
+                        nestedClass => 
+                            nestedClass.BaseType?.EndsWith(@class.Name) ?? false)
+                    .Select(
+                        nestedClass =>
+                            GenerateParser(
+                                nestedClass, 
+                                $"{parserNamespace}.{@class.Name}", 
+                                ruleCstNodesNamespace, 
+                                innerCstNodesNamespace));
                 property = new[]
                 {
                         new PropertyDefinition(
