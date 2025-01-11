@@ -92,8 +92,6 @@
             }
             else if (@class.NestedClasses.Any())
             {
-                //// TODO implement this for dus
-                //// nestedClasses = Enumerable.Empty<Class>();
                 nestedClasses = @class
                     .NestedClasses
                     .Where(
