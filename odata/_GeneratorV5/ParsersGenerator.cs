@@ -80,15 +80,15 @@
                         ");");
                 property = new[]
                 {
-                        new PropertyDefinition(
-                            AccessModifier.Public,
-                            true,
-                            $"Parser<{cstNodeNamespace}.{@class.Name}>",
-                            "Instance",
-                            true,
-                            false,
-                            initializer),
-                    };
+                    new PropertyDefinition(
+                        AccessModifier.Public,
+                        true,
+                        $"Parser<{cstNodeNamespace}.{@class.Name}>",
+                        "Instance",
+                        true,
+                        false,
+                        initializer),
+                };
             }
             else if (@class.NestedClasses.Any())
             {
@@ -134,15 +134,15 @@
                 nestedClasses = Enumerable.Empty<Class>();
                 property = new[]
                 {
-                        new PropertyDefinition(
-                            AccessModifier.Public,
-                            true,
-                            $"Parser<{cstNodeNamespace}.{@class.Name}>",
-                            "Instance",
-                            true,
-                            false,
-                            null),
-                    };
+                    new PropertyDefinition(
+                        AccessModifier.Public,
+                        true,
+                        $"Parser<{cstNodeNamespace}.{@class.Name}>",
+                        "Instance",
+                        true,
+                        false,
+                        null),
+                };
             }
 
             return new Class(
