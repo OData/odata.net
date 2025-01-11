@@ -53,7 +53,7 @@
                         GenerateParser(@class, @namespace.Name, ruleCstNodesNamespace, innerCstNodesNamespace));
         }
 
-        private Class GenerateParser(Class @class, string parserNamespace, string ruleCstNodesNamespace, string innerCstNodesNamespace)
+        private Class GenerateParser(Class @class, string cstNodeNamespace, string ruleCstNodesNamespace, string innerCstNodesNamespace)
         {
             var nonStaticProperties = @class.Properties.Where(property => !property.IsStatic);
 
@@ -72,7 +72,7 @@
                                         //// TODO this initializer stuff should probably be its own method and use a builder
                                         $"from {property.Name} in {UpdatePropertyType(property.Type, ruleCstNodesNamespace, innerCstNodesNamespace)}Parser.Instance{(property.Type.StartsWith("System.Collections.Generic.IEnumerable<") ? ".Many()" : string.Empty)}{(property.Type.EndsWith("?") ? ".Optional()" : string.Empty)}")), //// TODO how to handle different ranges of ienumerable (at most two, at least 3, etc.) //// TODO what are the cases where nullable and enumerable are used together?
                         Environment.NewLine,
-                        $"select new {parserNamespace}.{@class.Name}(",
+                        $"select new {cstNodeNamespace}.{@class.Name}(",
                         string.Join(
                             ", ",
                             nonStaticProperties
@@ -83,7 +83,7 @@
                         new PropertyDefinition(
                             AccessModifier.Public,
                             true,
-                            $"Parser<{parserNamespace}.{@class.Name}>",
+                            $"Parser<{cstNodeNamespace}.{@class.Name}>",
                             "Instance",
                             true,
                             false,
@@ -97,26 +97,36 @@
                 nestedClasses = @class
                     .NestedClasses
                     .Where(
-                        nestedClass => 
+                        nestedClass =>
                             nestedClass.BaseType?.EndsWith(@class.Name) ?? false)
                     .Select(
-                        nestedClass =>
+                        member =>
                             GenerateParser(
-                                nestedClass, 
-                                $"{parserNamespace}.{@class.Name}", 
+                                member, 
+                                $"{cstNodeNamespace}.{@class.Name}", 
                                 ruleCstNodesNamespace, 
                                 innerCstNodesNamespace));
+                var initializer = string
+                    .Concat(
+                        "(",
+                        string.Join(
+                            $").Or<{cstNodeNamespace}.{@class.Name}>(",
+                            nestedClasses
+                                .Select(
+                                    nestedClass =>
+                                        $"{nestedClass.Name}.Instance")),
+                        ");");
                 property = new[]
                 {
-                        new PropertyDefinition(
-                            AccessModifier.Public,
-                            true,
-                            $"Parser<{parserNamespace}.{@class.Name}>",
-                            "Instance",
-                            true,
-                            false,
-                            null), //// TODO initializer
-                    };
+                    new PropertyDefinition(
+                        AccessModifier.Public,
+                        true,
+                        $"Parser<{cstNodeNamespace}.{@class.Name}>",
+                        "Instance",
+                        true,
+                        false,
+                        initializer),
+                };
             }
             else
             {
@@ -127,7 +137,7 @@
                         new PropertyDefinition(
                             AccessModifier.Public,
                             true,
-                            $"Parser<{parserNamespace}.{@class.Name}>",
+                            $"Parser<{cstNodeNamespace}.{@class.Name}>",
                             "Instance",
                             true,
                             false,

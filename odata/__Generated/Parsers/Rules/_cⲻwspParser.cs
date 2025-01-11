@@ -4,7 +4,7 @@ namespace __Generated.Parsers.Rules
     
     public static class _cⲻwspParser
     {
-        public static Parser<__Generated.CstNodes.Rules._cⲻwsp> Instance { get; }
+        public static Parser<__Generated.CstNodes.Rules._cⲻwsp> Instance { get; } = (_WSPParser.Instance).Or<__Generated.CstNodes.Rules._cⲻwsp>(_Ⲥcⲻnl_WSPↃParser.Instance);
         
         public static class _WSPParser
         {

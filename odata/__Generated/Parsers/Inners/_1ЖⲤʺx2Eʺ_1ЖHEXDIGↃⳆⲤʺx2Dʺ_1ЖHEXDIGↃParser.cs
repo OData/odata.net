@@ -4,7 +4,7 @@ namespace __Generated.Parsers.Inners
     
     public static class _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃParser
     {
-        public static Parser<__Generated.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ> Instance { get; }
+        public static Parser<__Generated.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ> Instance { get; } = (_1ЖⲤʺx2Eʺ_1ЖHEXDIGↃParser.Instance).Or<__Generated.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ>(_Ⲥʺx2Dʺ_1ЖHEXDIGↃParser.Instance);
         
         public static class _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃParser
         {

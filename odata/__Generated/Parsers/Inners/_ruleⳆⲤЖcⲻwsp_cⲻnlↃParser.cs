@@ -4,7 +4,7 @@ namespace __Generated.Parsers.Inners
     
     public static class _ruleⳆⲤЖcⲻwsp_cⲻnlↃParser
     {
-        public static Parser<__Generated.CstNodes.Inners._ruleⳆⲤЖcⲻwsp_cⲻnlↃ> Instance { get; }
+        public static Parser<__Generated.CstNodes.Inners._ruleⳆⲤЖcⲻwsp_cⲻnlↃ> Instance { get; } = (_ruleParser.Instance).Or<__Generated.CstNodes.Inners._ruleⳆⲤЖcⲻwsp_cⲻnlↃ>(_ⲤЖcⲻwsp_cⲻnlↃParser.Instance);
         
         public static class _ruleParser
         {

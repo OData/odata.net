@@ -4,7 +4,7 @@ namespace __Generated.Parsers.Rules
     
     public static class _cⲻnlParser
     {
-        public static Parser<__Generated.CstNodes.Rules._cⲻnl> Instance { get; }
+        public static Parser<__Generated.CstNodes.Rules._cⲻnl> Instance { get; } = (_commentParser.Instance).Or<__Generated.CstNodes.Rules._cⲻnl>(_CRLFParser.Instance);
         
         public static class _commentParser
         {

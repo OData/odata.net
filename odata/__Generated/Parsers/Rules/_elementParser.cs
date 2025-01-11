@@ -4,7 +4,7 @@ namespace __Generated.Parsers.Rules
     
     public static class _elementParser
     {
-        public static Parser<__Generated.CstNodes.Rules._element> Instance { get; }
+        public static Parser<__Generated.CstNodes.Rules._element> Instance { get; } = (_rulenameParser.Instance).Or<__Generated.CstNodes.Rules._element>(_groupParser.Instance).Or<__Generated.CstNodes.Rules._element>(_optionParser.Instance).Or<__Generated.CstNodes.Rules._element>(_charⲻvalParser.Instance).Or<__Generated.CstNodes.Rules._element>(_numⲻvalParser.Instance).Or<__Generated.CstNodes.Rules._element>(_proseⲻvalParser.Instance);
         
         public static class _rulenameParser
         {

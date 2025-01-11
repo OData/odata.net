@@ -4,7 +4,7 @@ namespace __Generated.Parsers.Inners
     
     public static class _Ⰳx30ⲻ39Parser
     {
-        public static Parser<__Generated.CstNodes.Inners._Ⰳx30ⲻ39> Instance { get; }
+        public static Parser<__Generated.CstNodes.Inners._Ⰳx30ⲻ39> Instance { get; } = (_30Parser.Instance).Or<__Generated.CstNodes.Inners._Ⰳx30ⲻ39>(_31Parser.Instance).Or<__Generated.CstNodes.Inners._Ⰳx30ⲻ39>(_32Parser.Instance).Or<__Generated.CstNodes.Inners._Ⰳx30ⲻ39>(_33Parser.Instance).Or<__Generated.CstNodes.Inners._Ⰳx30ⲻ39>(_34Parser.Instance).Or<__Generated.CstNodes.Inners._Ⰳx30ⲻ39>(_35Parser.Instance).Or<__Generated.CstNodes.Inners._Ⰳx30ⲻ39>(_36Parser.Instance).Or<__Generated.CstNodes.Inners._Ⰳx30ⲻ39>(_37Parser.Instance).Or<__Generated.CstNodes.Inners._Ⰳx30ⲻ39>(_38Parser.Instance).Or<__Generated.CstNodes.Inners._Ⰳx30ⲻ39>(_39Parser.Instance);
         
         public static class _30Parser
         {

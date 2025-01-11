@@ -4,7 +4,7 @@ namespace __Generated.Parsers.Rules
     
     public static class _BITParser
     {
-        public static Parser<__Generated.CstNodes.Rules._BIT> Instance { get; }
+        public static Parser<__Generated.CstNodes.Rules._BIT> Instance { get; } = (_ʺx30ʺParser.Instance).Or<__Generated.CstNodes.Rules._BIT>(_ʺx31ʺParser.Instance);
         
         public static class _ʺx30ʺParser
         {

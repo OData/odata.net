@@ -4,7 +4,7 @@ namespace __Generated.Parsers.Inners
     
     public static class _WSPⳆVCHARParser
     {
-        public static Parser<__Generated.CstNodes.Inners._WSPⳆVCHAR> Instance { get; }
+        public static Parser<__Generated.CstNodes.Inners._WSPⳆVCHAR> Instance { get; } = (_WSPParser.Instance).Or<__Generated.CstNodes.Inners._WSPⳆVCHAR>(_VCHARParser.Instance);
         
         public static class _WSPParser
         {

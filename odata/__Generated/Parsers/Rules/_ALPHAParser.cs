@@ -4,7 +4,7 @@ namespace __Generated.Parsers.Rules
     
     public static class _ALPHAParser
     {
-        public static Parser<__Generated.CstNodes.Rules._ALPHA> Instance { get; }
+        public static Parser<__Generated.CstNodes.Rules._ALPHA> Instance { get; } = (_Ⰳx41ⲻ5AParser.Instance).Or<__Generated.CstNodes.Rules._ALPHA>(_Ⰳx61ⲻ7AParser.Instance);
         
         public static class _Ⰳx41ⲻ5AParser
         {

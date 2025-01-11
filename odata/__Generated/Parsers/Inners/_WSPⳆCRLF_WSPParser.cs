@@ -4,7 +4,7 @@ namespace __Generated.Parsers.Inners
     
     public static class _WSPⳆCRLF_WSPParser
     {
-        public static Parser<__Generated.CstNodes.Inners._WSPⳆCRLF_WSP> Instance { get; }
+        public static Parser<__Generated.CstNodes.Inners._WSPⳆCRLF_WSP> Instance { get; } = (_WSPParser.Instance).Or<__Generated.CstNodes.Inners._WSPⳆCRLF_WSP>(_CRLF_WSPParser.Instance);
         
         public static class _WSPParser
         {

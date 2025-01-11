@@ -4,7 +4,7 @@ namespace __Generated.Parsers.Rules
     
     public static class _repeatParser
     {
-        public static Parser<__Generated.CstNodes.Rules._repeat> Instance { get; }
+        public static Parser<__Generated.CstNodes.Rules._repeat> Instance { get; } = (_1ЖDIGITParser.Instance).Or<__Generated.CstNodes.Rules._repeat>(_ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃParser.Instance);
         
         public static class _1ЖDIGITParser
         {

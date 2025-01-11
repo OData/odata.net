@@ -4,7 +4,7 @@ namespace __Generated.Parsers.Rules
     
     public static class _HEXDIGParser
     {
-        public static Parser<__Generated.CstNodes.Rules._HEXDIG> Instance { get; }
+        public static Parser<__Generated.CstNodes.Rules._HEXDIG> Instance { get; } = (_DIGITParser.Instance).Or<__Generated.CstNodes.Rules._HEXDIG>(_ʺx41ʺParser.Instance).Or<__Generated.CstNodes.Rules._HEXDIG>(_ʺx42ʺParser.Instance).Or<__Generated.CstNodes.Rules._HEXDIG>(_ʺx43ʺParser.Instance).Or<__Generated.CstNodes.Rules._HEXDIG>(_ʺx44ʺParser.Instance).Or<__Generated.CstNodes.Rules._HEXDIG>(_ʺx45ʺParser.Instance).Or<__Generated.CstNodes.Rules._HEXDIG>(_ʺx46ʺParser.Instance);
         
         public static class _DIGITParser
         {
