@@ -26,6 +26,8 @@ concatenation  =  repetition *(1*c-wsp repetition)
 
 repetition     =  [repeat] element
 
+; this is the rule according to the RFC:
+; repeat         =  1*DIGIT / (*DIGIT "*" *DIGIT)
 repeat         =  ("*" *DIGIT) / (1*DIGIT ["*" *DIGIT])
 
 element        =  rulename / group / option /
