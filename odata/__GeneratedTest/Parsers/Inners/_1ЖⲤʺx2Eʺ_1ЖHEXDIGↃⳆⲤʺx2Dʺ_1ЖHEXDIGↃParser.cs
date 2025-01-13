@@ -8,7 +8,7 @@ namespace __GeneratedTest.Parsers.Inners
         
         public static class _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃParser
         {
-            public static Parser<__Generated.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ> Instance { get; } = from _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1 in __GeneratedTest.Parsers.Inners._Ⲥʺx2Eʺ_1ЖHEXDIGↃParser.Instance.Many()
+            public static Parser<__Generated.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ> Instance { get; } = from _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1 in __GeneratedTest.Parsers.Inners._Ⲥʺx2Eʺ_1ЖHEXDIGↃParser.Instance.AtLeastOnce()
 select new __Generated.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ._1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ(_Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1);
         }
         
