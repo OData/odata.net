@@ -184,7 +184,7 @@
             var coreRulesText = File.ReadAllText(coreRulesPath);
             var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
             var abnfRulesText = File.ReadAllText(abnfRulesPath);
-            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
+            var fullRulesText = coreRulesText + abnfRulesText; //// string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
             var cst = __Generated.Parsers.Rules._rulelistParser.Instance.Parse(fullRulesText);
 
             var stringBuilder = new StringBuilder();
