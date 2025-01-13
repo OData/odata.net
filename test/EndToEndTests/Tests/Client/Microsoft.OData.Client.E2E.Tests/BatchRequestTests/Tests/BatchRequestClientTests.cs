@@ -84,7 +84,7 @@ public class BatchRequestClientTests : EndToEndTestBase<BatchRequestClientTests.
         _context.AddRelatedObject(paymentInstrument, "BillingStatements", billingStatement);
 
         // PATCH Request
-        var accountToUpdate = _context.Accounts.Where(a => a.AccountID == 102).Single();
+        var accountToUpdate = _context.Accounts.Where(a => a.AccountID == 107).Single();
         Assert.NotNull(accountToUpdate);
         var now = DateTimeOffset.Now;
         accountToUpdate.UpdatedTime = now;
@@ -107,20 +107,21 @@ public class BatchRequestClientTests : EndToEndTestBase<BatchRequestClientTests.
             var descriptor = changeResponse.Descriptor as EntityDescriptor;
             Assert.NotNull(descriptor);
 
-            if (descriptor.Entity is Account createdAccount && createdAccount?.AccountID == 110)
+            
+            if (descriptor.Entity is Account modifiedAccount && modifiedAccount?.UpdatedTime != null && modifiedAccount?.AccountID == 107)
+            {
+                Assert.NotNull(modifiedAccount);
+                Assert.Equal(107, modifiedAccount.AccountID);
+                Assert.Equal("FR", modifiedAccount.CountryRegion);
+                Assert.Equal(now, modifiedAccount.UpdatedTime);
+                Assert.Equal("John", modifiedAccount.AccountInfo.FirstName);
+                Assert.Equal("Doe", modifiedAccount.AccountInfo.LastName);
+            }
+            else if (descriptor.Entity is Account createdAccount && createdAccount?.AccountID == 110)
             {
                 Assert.NotNull(createdAccount);
                 Assert.Equal(110, createdAccount.AccountID);
                 Assert.Equal("US", createdAccount.CountryRegion);
-            }
-            else if (descriptor.Entity is Account modifiedAccount && modifiedAccount?.UpdatedTime != null && modifiedAccount?.AccountID == 102)
-            {
-                Assert.NotNull(modifiedAccount);
-                Assert.Equal(102, modifiedAccount.AccountID);
-                Assert.Equal("GB", modifiedAccount.CountryRegion);
-                Assert.Equal(now, modifiedAccount.UpdatedTime);
-                Assert.Equal("John", modifiedAccount.AccountInfo.FirstName);
-                Assert.Equal("Doe", modifiedAccount.AccountInfo.LastName);
             }
             else if (descriptor.Entity is PaymentInstrument createdPaymentInstrument)
             {
