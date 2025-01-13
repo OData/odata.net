@@ -20,6 +20,8 @@
         public (Namespace RuleParsers, Namespace InnerParsers) Generate((Namespace RuleCstNodes, Namespace InnerCstNodes) cstNodes)
         {
             //// TODO create a test that illustrates the innner vs rule name conflicts that can happen
+            //// TODO how to detect ambiguities
+            //// TODO correctly handle "repeats" of values (at least one, at most 5, between 2 and six, etc)
 
             return
                 (
