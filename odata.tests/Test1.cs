@@ -187,6 +187,8 @@
             var fullRulesText = File.ReadAllText(@"C:\msgithub\odata.net\odata\AbnfParser\full.abnf"); //// coreRulesText + abnfRulesText; //// string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
             var cst = __GeneratedTest.Parsers.Rules._rulelistParser.Instance.TryParse(fullRulesText);
 
+            //// TODO "greedy" parsing?
+
             var stringBuilder = new StringBuilder();
 
             __Generated.Trancsribers.Rules._rulelistTranscriber.Instance.Transcribe(cst.Value, stringBuilder);
