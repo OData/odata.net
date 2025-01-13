@@ -279,7 +279,7 @@
                 }
                 else if (propertyDefinition.Type.EndsWith("?"))
                 {
-                    builder.AppendLine($"if (value.{propertyDefinition.Name} != null)");
+                    builder.AppendLine($"if ({nodeName}.{propertyDefinition.Name} != null)");
                     builder.AppendLine("{");
 
                     var propertyType = propertyDefinition.Type.Substring(0, propertyDefinition.Type.Length - 1);
