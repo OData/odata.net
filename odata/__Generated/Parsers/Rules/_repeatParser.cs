@@ -8,7 +8,7 @@ namespace __Generated.Parsers.Rules
         
         public static class _1ЖDIGITParser
         {
-            public static Parser<__Generated.CstNodes.Rules._repeat._1ЖDIGIT> Instance { get; } = from _DIGIT_1 in __Generated.Parsers.Rules._DIGITParser.Instance.AtLeastOnce()
+            public static Parser<__Generated.CstNodes.Rules._repeat._1ЖDIGIT> Instance { get; } = from _DIGIT_1 in __Generated.Parsers.Rules._DIGITParser.Instance.Many()
 select new __Generated.CstNodes.Rules._repeat._1ЖDIGIT(_DIGIT_1);
         }
         

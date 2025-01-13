@@ -51,6 +51,8 @@ VCHAR          =  %x21-7E
 WSP            =  SP / HTAB
                     ; white space
 
+rulelist       =  1*( rule / (*c-wsp c-nl) )
+
 rule           =  rulename defined-as elements c-nl
                     ; continues if next line starts
                     ;  with white space
