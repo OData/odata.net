@@ -28,6 +28,7 @@ repetition     =  [repeat] element
 
 ; this is the rule according to the RFC:
 ; repeat         =  1*DIGIT / (*DIGIT "*" *DIGIT)
+; we had to change it because the rule is "ambiguous" for cases like `1*foo`
 repeat         =  ("*" *DIGIT) / (1*DIGIT ["*" *DIGIT])
 
 element        =  rulename / group / option /
