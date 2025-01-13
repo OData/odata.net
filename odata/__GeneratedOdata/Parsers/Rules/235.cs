@@ -1,0 +1,11 @@
+namespace __GeneratedOdata.Parsers.Rules
+{
+    using Sprache;
+    
+    public static class _typeDefinitionNameParser
+    {
+        public static Parser<__GeneratedOdata.CstNodes.Rules._typeDefinitionName> Instance { get; } = from _odataIdentifier_1 in __GeneratedOdata.Parsers.Rules._odataIdentifierParser.Instance
+select new __GeneratedOdata.CstNodes.Rules._typeDefinitionName(_odataIdentifier_1);
+    }
+    
+}

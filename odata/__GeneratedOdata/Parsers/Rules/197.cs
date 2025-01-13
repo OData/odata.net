@@ -1,0 +1,13 @@
+namespace __GeneratedOdata.Parsers.Rules
+{
+    using Sprache;
+    
+    public static class _complexInUriParser
+    {
+        public static Parser<__GeneratedOdata.CstNodes.Rules._complexInUri> Instance { get; } = from _beginⲻobject_1 in __GeneratedOdata.Parsers.Rules._beginⲻobjectParser.Instance
+from _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1 in __GeneratedOdata.Parsers.Inners._ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃParser.Instance.Optional()
+from _endⲻobject_1 in __GeneratedOdata.Parsers.Rules._endⲻobjectParser.Instance
+select new __GeneratedOdata.CstNodes.Rules._complexInUri(_beginⲻobject_1, _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1.GetOrElse(null), _endⲻobject_1);
+    }
+    
+}

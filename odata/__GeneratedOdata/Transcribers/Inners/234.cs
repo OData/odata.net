@@ -1,0 +1,44 @@
+namespace __GeneratedOdata.Trancsribers.Inners
+{
+    public sealed class _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺTranscriber : GeneratorV3.ITranscriber<__GeneratedOdata.CstNodes.Inners._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ>
+    {
+        private _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺTranscriber()
+        {
+        }
+        
+        public static _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺTranscriber Instance { get; } = new _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺTranscriber();
+        
+        public void Transcribe(__GeneratedOdata.CstNodes.Inners._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ value, System.Text.StringBuilder builder)
+        {
+            __GeneratedOdata.Trancsribers.Inners._x43Transcriber.Instance.Transcribe(value._x43_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x6FTranscriber.Instance.Transcribe(value._x6F_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x6CTranscriber.Instance.Transcribe(value._x6C_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x6CTranscriber.Instance.Transcribe(value._x6C_2, builder);
+__GeneratedOdata.Trancsribers.Inners._x65Transcriber.Instance.Transcribe(value._x65_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x63Transcriber.Instance.Transcribe(value._x63_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x74Transcriber.Instance.Transcribe(value._x74_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x69Transcriber.Instance.Transcribe(value._x69_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x6FTranscriber.Instance.Transcribe(value._x6F_2, builder);
+__GeneratedOdata.Trancsribers.Inners._x6ETranscriber.Instance.Transcribe(value._x6E_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x28Transcriber.Instance.Transcribe(value._x28_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x45Transcriber.Instance.Transcribe(value._x45_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x64Transcriber.Instance.Transcribe(value._x64_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x6DTranscriber.Instance.Transcribe(value._x6D_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x2ETranscriber.Instance.Transcribe(value._x2E_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x43Transcriber.Instance.Transcribe(value._x43_2, builder);
+__GeneratedOdata.Trancsribers.Inners._x6FTranscriber.Instance.Transcribe(value._x6F_3, builder);
+__GeneratedOdata.Trancsribers.Inners._x6DTranscriber.Instance.Transcribe(value._x6D_2, builder);
+__GeneratedOdata.Trancsribers.Inners._x70Transcriber.Instance.Transcribe(value._x70_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x6CTranscriber.Instance.Transcribe(value._x6C_3, builder);
+__GeneratedOdata.Trancsribers.Inners._x65Transcriber.Instance.Transcribe(value._x65_2, builder);
+__GeneratedOdata.Trancsribers.Inners._x78Transcriber.Instance.Transcribe(value._x78_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x54Transcriber.Instance.Transcribe(value._x54_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x79Transcriber.Instance.Transcribe(value._x79_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x70Transcriber.Instance.Transcribe(value._x70_2, builder);
+__GeneratedOdata.Trancsribers.Inners._x65Transcriber.Instance.Transcribe(value._x65_3, builder);
+__GeneratedOdata.Trancsribers.Inners._x29Transcriber.Instance.Transcribe(value._x29_1, builder);
+
+        }
+    }
+    
+}

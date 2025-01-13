@@ -1,0 +1,57 @@
+namespace __GeneratedOdata.CstNodes.Rules
+{
+    public abstract class _month
+    {
+        private _month()
+        {
+        }
+        
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(_month node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+            
+            protected internal abstract TResult Accept(_month._ʺx30ʺ_oneToNine node, TContext context);
+            protected internal abstract TResult Accept(_month._ʺx31ʺ_Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃ node, TContext context);
+        }
+        
+        public sealed class _ʺx30ʺ_oneToNine : _month
+        {
+            public _ʺx30ʺ_oneToNine(__GeneratedOdata.CstNodes.Inners._ʺx30ʺ _ʺx30ʺ_1, __GeneratedOdata.CstNodes.Rules._oneToNine _oneToNine_1)
+            {
+                this._ʺx30ʺ_1 = _ʺx30ʺ_1;
+                this._oneToNine_1 = _oneToNine_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Inners._ʺx30ʺ _ʺx30ʺ_1 { get; }
+            public __GeneratedOdata.CstNodes.Rules._oneToNine _oneToNine_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _ʺx31ʺ_Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃ : _month
+        {
+            public _ʺx31ʺ_Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃ(__GeneratedOdata.CstNodes.Inners._ʺx31ʺ _ʺx31ʺ_1, __GeneratedOdata.CstNodes.Inners._Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃ _Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃ_1)
+            {
+                this._ʺx31ʺ_1 = _ʺx31ʺ_1;
+                this._Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃ_1 = _Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃ_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Inners._ʺx31ʺ _ʺx31ʺ_1 { get; }
+            public __GeneratedOdata.CstNodes.Inners._Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃ _Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃ_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+    }
+    
+}
