@@ -4,8 +4,8 @@ namespace __GeneratedTest.Parsers.Inners
     
     public static class _ⲤWSPⳆCRLF_WSPↃParser
     {
-        public static Parser<__GeneratedTest.CstNodes.Inners._ⲤWSPⳆCRLF_WSPↃ> Instance { get; } = from _WSPⳆCRLF_WSP_1 in __GeneratedTest.Parsers.Inners._WSPⳆCRLF_WSPParser.Instance
-select new __GeneratedTest.CstNodes.Inners._ⲤWSPⳆCRLF_WSPↃ(_WSPⳆCRLF_WSP_1);
+        public static Parser<__Generated.CstNodes.Inners._ⲤWSPⳆCRLF_WSPↃ> Instance { get; } = from _WSPⳆCRLF_WSP_1 in __GeneratedTest.Parsers.Inners._WSPⳆCRLF_WSPParser.Instance
+select new __Generated.CstNodes.Inners._ⲤWSPⳆCRLF_WSPↃ(_WSPⳆCRLF_WSP_1);
     }
     
 }

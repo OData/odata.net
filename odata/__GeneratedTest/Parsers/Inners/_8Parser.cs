@@ -4,7 +4,7 @@ namespace __GeneratedTest.Parsers.Inners
     
     public static class _8Parser
     {
-        public static Parser<__GeneratedTest.CstNodes.Inners._8> Instance { get; }
+        public static Parser<__Generated.CstNodes.Inners._8> Instance { get; }
     }
     
 }

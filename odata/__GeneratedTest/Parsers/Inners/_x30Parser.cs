@@ -4,7 +4,7 @@ namespace __GeneratedTest.Parsers.Inners
     
     public static class _x30Parser
     {
-        public static Parser<__GeneratedTest.CstNodes.Inners._x30> Instance { get; } = from _x30 in Parse.Char((char)0x30) select __GeneratedTest.CstNodes.Inners._x30.Instance;
+        public static Parser<__Generated.CstNodes.Inners._x30> Instance { get; } = from _x30 in Parse.Char((char)0x30) select __Generated.CstNodes.Inners._x30.Instance;
     }
     
 }

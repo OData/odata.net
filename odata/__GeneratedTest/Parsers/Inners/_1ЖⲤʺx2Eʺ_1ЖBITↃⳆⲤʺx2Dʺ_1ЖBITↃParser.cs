@@ -4,18 +4,18 @@ namespace __GeneratedTest.Parsers.Inners
     
     public static class _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃParser
     {
-        public static Parser<__GeneratedTest.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ> Instance { get; } = (_1ЖⲤʺx2Eʺ_1ЖBITↃParser.Instance).Or<__GeneratedTest.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ>(_Ⲥʺx2Dʺ_1ЖBITↃParser.Instance);
+        public static Parser<__Generated.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ> Instance { get; } = (_1ЖⲤʺx2Eʺ_1ЖBITↃParser.Instance).Or<__Generated.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ>(_Ⲥʺx2Dʺ_1ЖBITↃParser.Instance);
         
         public static class _1ЖⲤʺx2Eʺ_1ЖBITↃParser
         {
-            public static Parser<__GeneratedTest.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ._1ЖⲤʺx2Eʺ_1ЖBITↃ> Instance { get; } = from _Ⲥʺx2Eʺ_1ЖBITↃ_1 in __GeneratedTest.Parsers.Inners._Ⲥʺx2Eʺ_1ЖBITↃParser.Instance.Many()
-select new __GeneratedTest.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ._1ЖⲤʺx2Eʺ_1ЖBITↃ(_Ⲥʺx2Eʺ_1ЖBITↃ_1);
+            public static Parser<__Generated.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ._1ЖⲤʺx2Eʺ_1ЖBITↃ> Instance { get; } = from _Ⲥʺx2Eʺ_1ЖBITↃ_1 in __GeneratedTest.Parsers.Inners._Ⲥʺx2Eʺ_1ЖBITↃParser.Instance.Many()
+select new __Generated.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ._1ЖⲤʺx2Eʺ_1ЖBITↃ(_Ⲥʺx2Eʺ_1ЖBITↃ_1);
         }
         
         public static class _Ⲥʺx2Dʺ_1ЖBITↃParser
         {
-            public static Parser<__GeneratedTest.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ._Ⲥʺx2Dʺ_1ЖBITↃ> Instance { get; } = from _Ⲥʺx2Dʺ_1ЖBITↃ_1 in __GeneratedTest.Parsers.Inners._Ⲥʺx2Dʺ_1ЖBITↃParser.Instance
-select new __GeneratedTest.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ._Ⲥʺx2Dʺ_1ЖBITↃ(_Ⲥʺx2Dʺ_1ЖBITↃ_1);
+            public static Parser<__Generated.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ._Ⲥʺx2Dʺ_1ЖBITↃ> Instance { get; } = from _Ⲥʺx2Dʺ_1ЖBITↃ_1 in __GeneratedTest.Parsers.Inners._Ⲥʺx2Dʺ_1ЖBITↃParser.Instance
+select new __Generated.CstNodes.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ._Ⲥʺx2Dʺ_1ЖBITↃ(_Ⲥʺx2Dʺ_1ЖBITↃ_1);
         }
     }
     

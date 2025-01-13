@@ -4,8 +4,8 @@ namespace __GeneratedTest.Parsers.Inners
     
     public static class _ʺx42ʺParser
     {
-        public static Parser<__GeneratedTest.CstNodes.Inners._ʺx42ʺ> Instance { get; } = from _x42_1 in __GeneratedTest.Parsers.Inners._x42Parser.Instance
-select new __GeneratedTest.CstNodes.Inners._ʺx42ʺ(_x42_1);
+        public static Parser<__Generated.CstNodes.Inners._ʺx42ʺ> Instance { get; } = from _x42_1 in __GeneratedTest.Parsers.Inners._x42Parser.Instance
+select new __Generated.CstNodes.Inners._ʺx42ʺ(_x42_1);
     }
     
 }
