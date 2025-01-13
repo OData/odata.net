@@ -4,18 +4,18 @@ namespace __Generated.Parsers.Rules
     
     public static class _repeatParser
     {
-        public static Parser<__Generated.CstNodes.Rules._repeat> Instance { get; } = (_1ЖDIGITParser.Instance).Or<__Generated.CstNodes.Rules._repeat>(_ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃParser.Instance);
+        public static Parser<__Generated.CstNodes.Rules._repeat> Instance { get; } = (_Ⲥʺx2Aʺ_ЖDIGITↃParser.Instance).Or<__Generated.CstNodes.Rules._repeat>(_Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡ↃParser.Instance);
         
-        public static class _1ЖDIGITParser
+        public static class _Ⲥʺx2Aʺ_ЖDIGITↃParser
         {
-            public static Parser<__Generated.CstNodes.Rules._repeat._1ЖDIGIT> Instance { get; } = from _DIGIT_1 in __Generated.Parsers.Rules._DIGITParser.Instance.Many()
-select new __Generated.CstNodes.Rules._repeat._1ЖDIGIT(_DIGIT_1);
+            public static Parser<__Generated.CstNodes.Rules._repeat._Ⲥʺx2Aʺ_ЖDIGITↃ> Instance { get; } = from _Ⲥʺx2Aʺ_ЖDIGITↃ_1 in __Generated.Parsers.Inners._Ⲥʺx2Aʺ_ЖDIGITↃParser.Instance
+select new __Generated.CstNodes.Rules._repeat._Ⲥʺx2Aʺ_ЖDIGITↃ(_Ⲥʺx2Aʺ_ЖDIGITↃ_1);
         }
         
-        public static class _ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃParser
+        public static class _Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡ↃParser
         {
-            public static Parser<__Generated.CstNodes.Rules._repeat._ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ> Instance { get; } = from _ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ_1 in __Generated.Parsers.Inners._ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃParser.Instance
-select new __Generated.CstNodes.Rules._repeat._ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ(_ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ_1);
+            public static Parser<__Generated.CstNodes.Rules._repeat._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ> Instance { get; } = from _Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ_1 in __Generated.Parsers.Inners._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡ↃParser.Instance
+select new __Generated.CstNodes.Rules._repeat._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ(_Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ_1);
         }
     }
     

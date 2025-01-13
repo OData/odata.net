@@ -1780,24 +1780,23 @@
                 this.toClassNames = toClassNames;
             }
 
-            protected internal override string Accept(_repeat._1ЖDIGIT node, Root.Void context)
-            {
-                return this.toClassNames.DigitsToClassName.Generate(node._DIGIT_1);
-            }
-
-            protected internal override string Accept(_repeat._ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ node, Root.Void context)
+            protected internal override string Accept(_repeat._Ⲥʺx2Aʺ_ЖDIGITↃ node, Root.Void context)
             {
                 var stringBuilder = new StringBuilder();
-                if (node._ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ_1._ЖDIGIT_ʺx2Aʺ_ЖDIGIT_1._DIGIT_1.Any()) //// TODO do you need the `any` check?
-                {
-                    stringBuilder.Append(this.toClassNames.DigitsToClassName.Generate(node._ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ_1._ЖDIGIT_ʺx2Aʺ_ЖDIGIT_1._DIGIT_1));
-                }
-
                 stringBuilder.Append(characterSubstitutions.Asterisk);
+                stringBuilder.Append(this.toClassNames.DigitsToClassName.Generate(node._Ⲥʺx2Aʺ_ЖDIGITↃ_1._ʺx2Aʺ_ЖDIGIT_1._DIGIT_1));
 
-                if (node._ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ_1._ЖDIGIT_ʺx2Aʺ_ЖDIGIT_1._DIGIT_2.Any()) //// TODO do you need the `any` check?
+                return stringBuilder.ToString();
+            }
+
+            protected internal override string Accept(_repeat._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ node, Root.Void context)
+            {
+                var stringBuilder = new StringBuilder();
+                stringBuilder.Append(this.toClassNames.DigitsToClassName.Generate(node._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ_1._1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡_1._DIGIT_1));
+                if (node._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ_1._1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡_1._ʺx2Aʺ_ЖDIGIT_1 != null)
                 {
-                    stringBuilder.Append(this.toClassNames.DigitsToClassName.Generate(node._ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ_1._ЖDIGIT_ʺx2Aʺ_ЖDIGIT_1._DIGIT_2));
+                    stringBuilder.Append(characterSubstitutions.Asterisk);
+                    stringBuilder.Append(this.toClassNames.DigitsToClassName.Generate(node._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ_1._1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡_1._ʺx2Aʺ_ЖDIGIT_1._DIGIT_1));
                 }
 
                 return stringBuilder.ToString();

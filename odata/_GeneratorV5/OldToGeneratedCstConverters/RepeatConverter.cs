@@ -12,22 +12,39 @@
 
         protected internal override __Generated.CstNodes.Rules._repeat Accept(AbnfParser.CstNodes.Repeat.Count node, Root.Void context)
         {
-            return new __Generated.CstNodes.Rules._repeat._1ЖDIGIT(
-                node.Digits.Select(digit =>
-                    DigitConverter.Instance.Visit(digit, context)));
+            return new __Generated.CstNodes.Rules._repeat._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ(
+                new __Generated.CstNodes.Inners._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ(
+                    new __Generated.CstNodes.Inners._1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡(
+                        node.Digits.Select(digit =>
+                            DigitConverter.Instance.Visit(digit, context)),
+                        null)));
         }
 
         protected internal override __Generated.CstNodes.Rules._repeat Accept(AbnfParser.CstNodes.Repeat.Range node, Root.Void context)
         {
-            return new __Generated.CstNodes.Rules._repeat._ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ(
-                new __Generated.CstNodes.Inners._ⲤЖDIGIT_ʺx2Aʺ_ЖDIGITↃ(
-                    new __Generated.CstNodes.Inners._ЖDIGIT_ʺx2Aʺ_ЖDIGIT(
-                        node.PrefixDigits.Select(digit =>
-                            DigitConverter.Instance.Visit(digit, context)),
-                        new __Generated.CstNodes.Inners._ʺx2Aʺ(
-                            x2AConverter.Instance.Convert(node.Asterisk)),
-                        node.SuffixDigits.Select(digit =>
-                            DigitConverter.Instance.Visit(digit, context)))));
+            if (node.PrefixDigits.Any())
+            {
+                return new __Generated.CstNodes.Rules._repeat._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ(
+                    new __Generated.CstNodes.Inners._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ(
+                        new __Generated.CstNodes.Inners._1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡(
+                            node.PrefixDigits.Select(
+                                digit => DigitConverter.Instance.Visit(digit, context)),
+                            new __Generated.CstNodes.Inners._ʺx2Aʺ_ЖDIGIT(
+                                new __Generated.CstNodes.Inners._ʺx2Aʺ(
+                                    x2AConverter.Instance.Convert(node.Asterisk)),
+                                node.SuffixDigits.Select(
+                                    digit => DigitConverter.Instance.Visit(digit, context))))));
+            }
+            else
+            {
+                return new __Generated.CstNodes.Rules._repeat._Ⲥʺx2Aʺ_ЖDIGITↃ(
+                    new __Generated.CstNodes.Inners._Ⲥʺx2Aʺ_ЖDIGITↃ(
+                        new __Generated.CstNodes.Inners._ʺx2Aʺ_ЖDIGIT(
+                                new __Generated.CstNodes.Inners._ʺx2Aʺ(
+                                    x2AConverter.Instance.Convert(node.Asterisk)),
+                                node.SuffixDigits.Select(
+                                    digit => DigitConverter.Instance.Visit(digit, context)))));
+            }
         }
     }
 }

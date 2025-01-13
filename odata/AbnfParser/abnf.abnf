@@ -26,7 +26,7 @@ concatenation  =  repetition *(1*c-wsp repetition)
 
 repetition     =  [repeat] element
 
-repeat         =  1*DIGIT / (*DIGIT "*" *DIGIT)
+repeat         =  ("*" *DIGIT) / (1*DIGIT ["*" *DIGIT])
 
 element        =  rulename / group / option /
                 char-val / num-val / prose-val
