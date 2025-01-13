@@ -178,6 +178,24 @@
         }
 
         [TestMethod]
+        public void AbnfRulesV5_2Playground()
+        {
+            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
+            var coreRulesText = File.ReadAllText(coreRulesPath);
+            var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
+            var abnfRulesText = File.ReadAllText(abnfRulesPath);
+            var fullRulesText = File.ReadAllText(@"C:\msgithub\odata.net\odata\AbnfParser\full.abnf"); //// coreRulesText + abnfRulesText; //// string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
+            var cst = __Generated.Parsers.Rules._rulelistParser.Instance.TryParse(fullRulesText);
+
+            var stringBuilder = new StringBuilder();
+
+            __Generated.Trancsribers.Rules._rulelistTranscriber.Instance.Transcribe(cst.Value, stringBuilder);
+
+            var transcribedText = stringBuilder.ToString();
+            Assert.AreEqual(fullRulesText, transcribedText);
+        }
+
+        [TestMethod]
         public void AbnfRulesV5_2()
         {
             var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
