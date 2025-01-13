@@ -63,185 +63,179 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
             ResetDefaultDataSource();
         }
 
-        [Fact]
-        public void BinaryTest()
+        [Theory]
+        [MemberData(nameof(GetEdmBinarySet))]
+        public void BinaryTest(EdmBinary entry)
         {
-            foreach (var entry in _context.EdmBinarySet)
-            {
-                // Arrange & Act
-                var query = _context.CreateQuery<EdmBinary>("EdmBinarySet").Where(e => e.Id.Equals(entry.Id));
-                var queryResult = query.ToArray();
+            // Arrange & Act
+            var query = _context.CreateQuery<EdmBinary>("EdmBinarySet").Where(e => e.Id.Equals(entry.Id));
+            var queryResult = query.ToArray();
 
-                // Assert
-                //Expected a single result for key value {0}, entry.Id.ToString()
-                Assert.Single(queryResult);
-            }
+            // Assert
+            Assert.Single(queryResult);
         }
 
-        [Fact]
-        public void BooleanTest()
+        [Theory]
+        [MemberData(nameof(GetEdmBooleanSet))]
+        public void BooleanTest(EdmBoolean entry)
         {
-            foreach (var entry in _context.EdmBooleanSet)
-            {
-                // Arrange & Act
-                var query = _context.CreateQuery<EdmBoolean>("EdmBooleanSet").Where(e => e.Id.Equals(entry.Id));
-                var queryResult = query.ToArray();
+            // Arrange & Act
+            var query = _context.CreateQuery<EdmBoolean>("EdmBooleanSet").Where(e => e.Id.Equals(entry.Id));
+            var queryResult = query.ToArray();
 
-                // Assert
-                //Expected a single result for key value '{0}', entry.Id.ToString(CultureInfo.InvariantCulture)
-                Assert.Single(queryResult);
-            }
+            // Assert
+            Assert.Single(queryResult);
         }
 
-        [Fact]
-        public void DateTimeOffsetTest()
+        [Theory]
+        [MemberData(nameof(GetEdmDateTimeOffsetSet))]
+        public void DateTimeOffsetTest(EdmDateTimeOffset entry)
         {
-            foreach (var entry in _context.EdmDateTimeOffsetSet)
-            {
-                // Arrange & Act
-                var query = _context.CreateQuery<EdmDateTimeOffset>("EdmDateTimeOffsetSet").Where(e => e.Id.Equals(entry.Id));
-                var queryResult = query.ToArray();
+            // Arrange & Act
+            var query = _context.CreateQuery<EdmDateTimeOffset>("EdmDateTimeOffsetSet").Where(e => e.Id.Equals(entry.Id));
+            var queryResult = query.ToArray();
 
-                // Assert
-                //Expected a single result for key value {0}, entry.Id.ToString()
-                Assert.Single(queryResult);
-            }
+            // Assert
+            Assert.Single(queryResult);
         }
 
-        [Fact]
-        public void DecimalTest()
+        [Theory]
+        [MemberData(nameof(GetEdmDecimalSet))]
+        public void DecimalTest(EdmDecimal entry)
         {
-            foreach (var entry in _context.EdmDecimalSet)
+            // Arrange & Act
+            var query = _context.CreateQuery<EdmDecimal>("EdmDecimalSet").Where(e => e.Id == entry.Id);
+            var queryResult = query.ToArray();
+
+            // Assert
+            Assert.Single(queryResult);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetEdmDoubleSet))]
+        public void DoubleTest(EdmDouble entry)
+        {
+            // Arrange & Act
+            var query = _context.CreateQuery<EdmDouble>("EdmDoubleSet").Where(e => e.Id.Equals(entry.Id));
+            var queryResult = query.ToArray();
+
+            // Assert
+            //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
+            Assert.Single(queryResult);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetEdmInt16Set))]
+        public void Int16Test(EdmInt16 entry)
+        {
+            // Arrange & Act
+            var query = _context.CreateQuery<EdmInt16>("EdmInt16Set").Where(e => e.Id.Equals(entry.Id));
+            var queryResult = query.ToArray();
+
+            // Assert
+            //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
+            Assert.Single(queryResult);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetEdmInt32Set))]
+        public void Int32Test(EdmInt32 entry)
+        {
+            // Arrange & Act
+            var query = _context.CreateQuery<EdmInt32>("EdmInt32Set").Where(e => e.Id.Equals(entry.Id));
+            var queryResult = query.ToArray();
+
+            // Assert
+            //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
+            Assert.Single(queryResult);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetEdmInt64Set))]
+        public void Int64Test(EdmInt64 entry)
+        {
+            // Arrange & Act
+            var query = _context.CreateQuery<EdmInt64>("EdmInt64Set").Where(e => e.Id.Equals(entry.Id));
+            var queryResult = query.ToArray();
+
+            // Assert
+            //Expected a single result for key value {0}", entry.Id.ToString(CultureInfo.InvariantCulture)
+            Assert.Single(queryResult);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetEdmSingleSet))]
+        public void SingleTest(EdmSingle entry)
+        {
+            // Arrange & Act
+            var query = _context.CreateQuery<EdmSingle>("EdmSingleSet").Where(e => e.Id.Equals(entry.Id));
+            var queryResult = query.ToArray();
+
+            // Assert
+            //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
+            Assert.Single(queryResult);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetEdmStringSet))]
+        public void StringTest(EdmString entry)
+        {
+            // Arrange & Act
+            var query = _context.CreateQuery<EdmString>("EdmStringSet").Where(e => e.Id.Equals(entry.Id));
+            var queryResult = query.ToArray();
+
+            // Assert
+            //Expected a single result for key value {0} entry.Id)
+            Assert.Single(queryResult);
+        }
+
+        [Theory]
+        [MemberData(nameof(GetEdmTimeSet))]
+        public void TimeTest(EdmTime entry)
+        {
+            // Arrange & Act
+            var query = _context.CreateQuery<EdmTime>("EdmTimeSet").Where(e => e.Id.Equals(entry.Id));
+            var queryResult = query.ToArray();
+
+            // Assert
+            //Expected a single result for key value {0}, entry.Id.ToString()
+            Assert.Single(queryResult);
+        }
+
+        #region TheoryData
+
+        public static TheoryData<T> GetTheoryData<T>(Func<Container, IEnumerable<T>> dataSelector)
+        {
+            var data = new TheoryData<T>();
+            var instance = CreateInstance();
+            foreach (var entry in dataSelector(instance._context))
             {
-                if(entry.Id == Decimal.MaxValue || entry.Id == Decimal.MinValue)
+                if ((entry is EdmSingle { Id: var idSingle } && IsNotSupportedKey(idSingle)) ||
+                    (entry is EdmDouble { Id: var idDouble } && IsNotSupportedKey(idDouble)) ||
+                    (entry is EdmDecimal { Id: Decimal.MaxValue or Decimal.MinValue }))
                 {
                     continue;
                 }
 
-                // Arrange & Act
-                var query = _context.CreateQuery<EdmDecimal>("EdmDecimalSet").Where(e => e.Id == entry.Id);
-                var queryResult = query.ToArray();
-
-                // Assert
-                //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
-                Assert.Single(queryResult);
+                data.Add(entry);
             }
+
+            return data;
         }
 
-        [Fact]
-        public void DoubleTest()
-        {
-            foreach (var entry in _context.EdmDoubleSet)
-            {
-                if (IsNotSupportedKey(entry.Id))
-                {
-                    continue;
-                }
+        public static TheoryData<EdmBinary> GetEdmBinarySet() => GetTheoryData(ctx => ctx.EdmBinarySet);
+        public static TheoryData<EdmBoolean> GetEdmBooleanSet() => GetTheoryData(ctx => ctx.EdmBooleanSet);
+        public static TheoryData<EdmDateTimeOffset> GetEdmDateTimeOffsetSet() => GetTheoryData(ctx => ctx.EdmDateTimeOffsetSet);
+        public static TheoryData<EdmDecimal> GetEdmDecimalSet() => GetTheoryData(ctx => ctx.EdmDecimalSet);
+        public static TheoryData<EdmDouble> GetEdmDoubleSet() => GetTheoryData(ctx => ctx.EdmDoubleSet);
+        public static TheoryData<EdmInt16> GetEdmInt16Set() => GetTheoryData(ctx => ctx.EdmInt16Set);
+        public static TheoryData<EdmInt32> GetEdmInt32Set() => GetTheoryData(ctx => ctx.EdmInt32Set);
+        public static TheoryData<EdmInt64> GetEdmInt64Set() => GetTheoryData(ctx => ctx.EdmInt64Set);
+        public static TheoryData<EdmSingle> GetEdmSingleSet() => GetTheoryData(ctx => ctx.EdmSingleSet);
+        public static TheoryData<EdmString> GetEdmStringSet() => GetTheoryData(ctx => ctx.EdmStringSet);
+        public static TheoryData<EdmTime> GetEdmTimeSet() => GetTheoryData(ctx => ctx.EdmTimeSet);
 
-                // Arrange & Act
-                var query = _context.CreateQuery<EdmDouble>("EdmDoubleSet").Where(e => e.Id.Equals(entry.Id));
-                var queryResult = query.ToArray();
-
-                // Assert
-                //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
-                Assert.Single(queryResult);
-            }
-        }
-
-        [Fact]
-        public void Int16Test()
-        {
-            foreach (var entry in _context.EdmInt16Set)
-            {
-                // Arrange & Act
-                var query = _context.CreateQuery<EdmInt16>("EdmInt16Set").Where(e => e.Id.Equals(entry.Id));
-                var queryResult = query.ToArray();
-
-                // Assert
-                //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
-                Assert.Single(queryResult);
-            }
-        }
-
-        [Fact]
-        public void Int32Test()
-        {
-            foreach (var entry in _context.EdmInt32Set)
-            {
-                // Arrange & Act
-                var query = _context.CreateQuery<EdmInt32>("EdmInt32Set").Where(e => e.Id.Equals(entry.Id));
-                var queryResult = query.ToArray();
-
-                // Assert
-                //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
-                Assert.Single(queryResult);
-            }
-        }
-
-        [Fact]
-        public void Int64Test()
-        {
-            foreach (var entry in _context.EdmInt64Set)
-            {
-                // Arrange & Act
-                var query = _context.CreateQuery<EdmInt64>("EdmInt64Set").Where(e => e.Id.Equals(entry.Id));
-                var queryResult = query.ToArray();
-
-                // Assert
-                //Expected a single result for key value {0}", entry.Id.ToString(CultureInfo.InvariantCulture)
-                Assert.Single(queryResult);
-            }
-        }
-
-        [Fact]
-        public void SingleTest()
-        {
-            foreach (var entry in _context.EdmSingleSet)
-            {
-                if (IsNotSupportedKey(entry.Id))
-                {
-                    continue;
-                }
-
-                // Arrange & Act
-                var query = _context.CreateQuery<EdmSingle>("EdmSingleSet").Where(e => e.Id.Equals(entry.Id));
-                var queryResult = query.ToArray();
-
-                // Assert
-                //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
-                Assert.Single(queryResult);
-            }
-        }
-
-        [Fact]
-        public void StringTest()
-        {
-            foreach (var entry in _context.EdmStringSet)
-            {
-                // Arrange & Act
-                var query = _context.CreateQuery<EdmString>("EdmStringSet").Where(e => e.Id.Equals(entry.Id));
-                var queryResult = query.ToArray();
-
-                // Assert
-                //Expected a single result for key value {0} entry.Id)
-                Assert.Single(queryResult);
-            }
-        }
-
-        [Fact]
-        public void TimeTest()
-        {
-            foreach (var entry in _context.EdmTimeSet)
-            {
-                // Arrange & Act
-                var query = _context.CreateQuery<EdmTime>("EdmTimeSet").Where(e => e.Id.Equals(entry.Id));
-                var queryResult = query.ToArray();
-
-                // Assert
-                //Expected a single result for key value {0}, entry.Id.ToString()
-                Assert.Single(queryResult);
-            }
-        }
+        #endregion
 
         #region Private
 
@@ -263,6 +257,12 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         {
             var actionUri = new Uri(_baseUri + "primitivekeyvalues/Default.ResetDefaultDataSource", UriKind.Absolute);
             _context.Execute(actionUri, "POST");
+        }
+
+        private static PrimitiveKeysValuesTests CreateInstance()
+        {
+            var fixture = new TestWebApplicationFactory<TestsStartup>();
+            return new PrimitiveKeysValuesTests(fixture);
         }
 
         #endregion
