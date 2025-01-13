@@ -1,1 +1,1 @@
-rulelist       =  *( rule / (*c-wsp c-nl) )
+a = 1*( b / (*c d) )
