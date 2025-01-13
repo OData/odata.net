@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
@@ -67,6 +68,27 @@ public class BatchRequestTestsController : ODataController
         return Ok(billingStatement);
     }
 
+    [HttpPatch("odata/Accounts({key})")]
+    public IActionResult AddAccount([FromRoute] int key, [FromBody] Delta<Account> delta)
+    {
+        var account = _dataSource.Accounts?.SingleOrDefault(a => a.AccountID == key);
+        if (account == null)
+        {
+            return NotFound();
+        }
+
+        var updated = delta.Patch(account);
+        return Ok(updated);
+    }
+
+    [HttpPost("odata/Accounts")]
+    public IActionResult AddAccount([FromBody] Account account)
+    {
+        _dataSource.Accounts?.Add(account);
+
+        return Created(account);
+    }
+
     [HttpPost("odata/Accounts({key})/MyPaymentInstruments")]
     public IActionResult GetAccountBillingStatement([FromRoute] int key, [FromBody] PaymentInstrument paymentInstrument)
     {
@@ -80,6 +102,27 @@ public class BatchRequestTestsController : ODataController
         account.MyPaymentInstruments.Add(paymentInstrument);
 
         return Created(paymentInstrument);
+    }
+
+    [HttpPost("odata/Accounts({accountKey})/MyPaymentInstruments({myPaymentInstrumentKey})/BillingStatements")]
+    public IActionResult GetAccountBillingStatement([FromRoute] int accountKey, [FromRoute] int myPaymentInstrumentKey, [FromBody] Statement statement)
+    {
+        var account = _dataSource.Accounts?.SingleOrDefault(a => a.AccountID == accountKey);
+        if (account == null)
+        {
+            return NotFound();
+        }
+
+        var paymentInstrument = account.MyPaymentInstruments?.SingleOrDefault(a => a.PaymentInstrumentID == myPaymentInstrumentKey);
+        if (paymentInstrument == null)
+        {
+            return NotFound();
+        }
+
+        paymentInstrument.BillingStatements ??= [];
+        paymentInstrument.BillingStatements.Add(statement);
+
+        return Created(statement);
     }
 
     [HttpPost("odata/batchrequests/Default.ResetDefaultDataSource")]
