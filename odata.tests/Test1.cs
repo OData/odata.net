@@ -17,6 +17,62 @@
     public sealed class Test1
     {
         [TestMethod]
+        public void GenerateOdataWithLatest()
+        {
+            var fullRulesPath = @"C:\msgithub\odata.net\odata\odata.abnf";
+            var fullRulesText = File.ReadAllText(fullRulesPath);
+
+            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
+            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
+
+            var ruleCstNodesNamespace = "__GeneratedOdata.CstNodes.Rules";
+            var innerCstNodesNamespace = "__Gen__GeneratedOdataerated.CstNodes.Inners";
+            var generatedCstNodes = new _GeneratorV5.CstNodesGenerator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(newCst);
+
+            var ruleCstNodesPath = @"C:\msgithub\odata.net\odata\__GeneratedOdata\CstNodes\Rules";
+            Directory.CreateDirectory(ruleCstNodesPath);
+            TranscribeNamespace(generatedCstNodes.RuleCstNodes, ruleCstNodesPath);
+            var innerCstNodesPath = @"C:\msgithub\odata.net\odata\__GeneratedOdata\CstNodes\Inners";
+            Directory.CreateDirectory(innerCstNodesPath);
+            TranscribeNamespace(generatedCstNodes.InnerCstNodes, innerCstNodesPath);
+
+            var ruleTranscribersNamespace = "__Generated.Trancsribers.Rules";
+            var innerTranscribersNamespace = "__Generated.Trancsribers.Inners";
+            var generatedTranscribers = new _GeneratorV5.TranscribersGenerator(ruleTranscribersNamespace, innerTranscribersNamespace).Generate(generatedCstNodes);
+
+            //// TODO transcriber generator should return namespaces
+            var ruleTranscribersPath = @"C:\msgithub\odata.net\odata\__GeneratedOdata\Transcribers\Rules";
+            Directory.CreateDirectory(ruleTranscribersPath);
+            TranscribeNamespace(
+                new Namespace(
+                    ruleTranscribersNamespace,
+                    generatedTranscribers.Rules),
+                ruleTranscribersPath);
+            var innerTranscibersPath = @"C:\msgithub\odata.net\odata\__GeneratedOdata\Transcribers\Inners";
+            Directory.CreateDirectory(innerTranscibersPath);
+            TranscribeNamespace(
+                new Namespace(
+                    innerTranscribersNamespace,
+                    generatedTranscribers.Inners),
+                innerTranscibersPath);
+
+            var ruleParsersNamespace = "__GeneratedOdata.Parsers.Rules";
+            var innerParsersNamespace = "__GeneratedOdata.Parsers.Inners";
+            var generatedParsers = new _GeneratorV5.ParsersGenerator(ruleParsersNamespace, innerParsersNamespace).Generate(generatedCstNodes);
+
+            var ruleParsersPath = @"C:\msgithub\odata.net\odata\__GeneratedOdata\Parsers\Rules";
+            Directory.CreateDirectory(ruleParsersPath);
+            TranscribeNamespace(
+                generatedParsers.RuleParsers,
+                ruleParsersPath);
+            var innerParsersPath = @"C:\msgithub\odata.net\odata\__GeneratedOdata\Parsers\Inners";
+            Directory.CreateDirectory(innerParsersPath);
+            TranscribeNamespace(
+                generatedParsers.InnerParsers,
+                innerParsersPath);
+        }
+
+        [TestMethod]
         public void GenerateAbnfWithLatest()
         {
             var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
