@@ -1,0 +1,13 @@
+namespace __GeneratedTest.Parsers.Rules
+{
+    using Sprache;
+    
+    public static class _decⲻvalParser
+    {
+        public static Parser<__GeneratedTest.CstNodes.Rules._decⲻval> Instance { get; } = from _ʺx64ʺ_1 in __GeneratedTest.Parsers.Inners._ʺx64ʺParser.Instance
+from _DIGIT_1 in __GeneratedTest.Parsers.Rules._DIGITParser.Instance.Many()
+from _1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ_1 in __GeneratedTest.Parsers.Inners._1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃParser.Instance.Optional()
+select new __GeneratedTest.CstNodes.Rules._decⲻval(_ʺx64ʺ_1, _DIGIT_1, _1ЖⲤʺx2Eʺ_1ЖDIGITↃⳆⲤʺx2Dʺ_1ЖDIGITↃ_1.GetOrElse(null));
+    }
+    
+}

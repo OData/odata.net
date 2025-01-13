@@ -1,0 +1,12 @@
+namespace __GeneratedTest.Parsers.Inners
+{
+    using Sprache;
+    
+    public static class _1Жcⲻwsp_repetitionParser
+    {
+        public static Parser<__GeneratedTest.CstNodes.Inners._1Жcⲻwsp_repetition> Instance { get; } = from _cⲻwsp_1 in __GeneratedTest.Parsers.Rules._cⲻwspParser.Instance.Many()
+from _repetition_1 in __GeneratedTest.Parsers.Rules._repetitionParser.Instance
+select new __GeneratedTest.CstNodes.Inners._1Жcⲻwsp_repetition(_cⲻwsp_1, _repetition_1);
+    }
+    
+}
