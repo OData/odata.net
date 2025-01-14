@@ -540,13 +540,24 @@
                                         var isOnlyRuleName = IsOnlyRuleName(node._option_1._alternation_1);
                                         var innerClassName = this.classNamePrefix + this.toClassNames.AlternationToClassName.Generate(node._option_1._alternation_1);
 
+                                        if (innerClassName == "_ʺx3Dʺ")
+                                        {
+
+                                        }
+
                                         if (!isOnlyRuleName && !context.InnerClasses.ContainsKey(innerClassName))
                                         {
-                                            context.InnerClasses[innerClassName] = this.
+                                            var innerClass = this.
                                                 alternationToClass
                                                 .Generate(
                                                     node._option_1._alternation_1,
                                                     (innerClassName, context.InnerClasses));
+
+                                            if (!context.InnerClasses.ContainsKey(innerClassName))
+                                            {
+                                                // literal only inside of optional TODO YOU REALLY HAVE TO MAKE SURE YOU TO GET THIS RIGHT IN THE FINAL VERSION
+                                                context.InnerClasses[innerClassName] = innerClass;
+                                            }
                                         }
 
                                         var propertyType = $"{(isOnlyRuleName ? this.@namespace : this.innersClassName)}.{innerClassName}?";

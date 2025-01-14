@@ -10,7 +10,7 @@ namespace __GeneratedOdata.Trancsribers.Inners
         
         public void Transcribe(__GeneratedOdata.CstNodes.Inners._ʺx2Bʺ value, System.Text.StringBuilder builder)
         {
-            __GeneratedOdata.Trancsribers.Inners._ʺx2BʺTranscriber.Instance.Transcribe(value._ʺx2Bʺ_1, builder);
+            __GeneratedOdata.Trancsribers.Inners._x2BTranscriber.Instance.Transcribe(value._x2B_1, builder);
 
         }
     }

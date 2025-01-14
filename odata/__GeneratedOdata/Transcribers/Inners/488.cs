@@ -10,7 +10,8 @@ namespace __GeneratedOdata.Trancsribers.Inners
         
         public void Transcribe(__GeneratedOdata.CstNodes.Inners._ʺx3Dx3Dʺ value, System.Text.StringBuilder builder)
         {
-            __GeneratedOdata.Trancsribers.Inners._ʺx3Dx3DʺTranscriber.Instance.Transcribe(value._ʺx3Dx3Dʺ_1, builder);
+            __GeneratedOdata.Trancsribers.Inners._x3DTranscriber.Instance.Transcribe(value._x3D_1, builder);
+__GeneratedOdata.Trancsribers.Inners._x3DTranscriber.Instance.Transcribe(value._x3D_2, builder);
 
         }
     }
