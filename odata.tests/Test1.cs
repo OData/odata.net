@@ -106,20 +106,6 @@
             var innerCstNodesNamespace = "__GeneratedOdata.CstNodes.Inners";
             var generatedCstNodes = new _GeneratorV5.CstNodesGenerator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(newCst);
 
-            generatedCstNodes.RuleCstNodes.Classes.ToDictionary(@class => @class.Name);
-
-            generatedCstNodes =
-                (
-                    new Namespace(
-                        generatedCstNodes.RuleCstNodes.Name,
-                        generatedCstNodes.RuleCstNodes.Classes.DistinctBy(@class => @class.Name),
-                        generatedCstNodes.RuleCstNodes.UsingDeclarations),
-                    new Namespace(
-                        generatedCstNodes.InnerCstNodes.Name,
-                        generatedCstNodes.InnerCstNodes.Classes.DistinctBy(@class => @class.Name),
-                        generatedCstNodes.InnerCstNodes.UsingDeclarations)
-                );
-
             var ruleCstNodesPath = @"C:\msgithub\odata.net\odata\__GeneratedOdata\CstNodes\Rules";
             Directory.CreateDirectory(ruleCstNodesPath);
             TranscribeNamespace(generatedCstNodes.RuleCstNodes, ruleCstNodesPath, true);
