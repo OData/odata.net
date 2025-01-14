@@ -169,6 +169,12 @@
             //// TODO you are entirely skipping out on incremental definitions, by the way
             //// TODO make sure to flesh out the code quality checks for the generated code
             //// TODO it could happen that someojne has first-rule = first-rule / second-rule in which case the du name first-rule with conflict with one of its elements
+            
+            //// TODO create context-free odata ABNF
+            //// TODO gnerate parsers for the new odata ABNF
+            //// TODO rewrite odatauri parser to use the generated nodes
+            //// TODO write a net-new semantic parsing that leverages the model (so, have the context-free nodes, and the contextual nodes, and then have converters that use the edm model to adapt from the context-free to contextual)
+            //// TODO give a sample of what some AGS code might look like if they used the new semantic nodes instead of the existing uri parser
         }
 
         public IEnumerable<Class> Generate(_rulelist ruleList)
