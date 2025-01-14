@@ -155,6 +155,7 @@
                 toClassNames);
 
             //// !!!!!IMPORTANT WHENEVER YOU REMOVE OLD CODE, CHECK FOR TODOS!!!!!
+            //// TODO you have to get the collection thing nailed down before you can remove the old parsers
             //// TODO manually write the new parsers
             //// TODO remove the old parsers
             //// TODO remove the old cst nodes
