@@ -4,6 +4,8 @@
     using AbnfParser.CstNodes.Core;
     using AbnfParserGenerator;
     using GeneratorV3;
+    using Microsoft.OData;
+    using Microsoft.OData.Edm.Csdl;
     using Root;
     using Root.OdataResourcePath.CombinatorParsers;
     using Root.OdataResourcePath.Transcribers;
@@ -11,6 +13,7 @@
     using System;
     using System.Linq;
     using System.Text;
+    using System.Xml;
     using static AbnfParser.CstNodes.RuleList.Inner;
 
     [TestClass]
@@ -30,13 +33,67 @@
         [TestMethod]
         public void OdataTest2()
         {
-            var url = "https://graph.microsoft.com/v1.0/users/myid/calendar/events?$filter=id eq 'thisisatest'";
-            var urlCst = __GeneratedOdata.Parsers.Rules._odataUriParser.Instance.Parse(url);
+            var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
+            var urlCst = __GeneratedOdata.Parsers.Rules._odataRelativeUriParser.Instance.Parse(url);
             var stringBuilder = new StringBuilder();
-            __GeneratedOdata.Trancsribers.Rules._odataUriTranscriber.Instance.Transcribe(urlCst, stringBuilder);
+            __GeneratedOdata.Trancsribers.Rules._odataRelativeUriTranscriber.Instance.Transcribe(urlCst, stringBuilder);
             var transcribed = stringBuilder.ToString();
             Assert.AreEqual(url, transcribed);
         }
+
+        /*[TestMethod]
+        public void OdataTest3()
+        {
+            var csdl =
+"""
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="microsoft.graph" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <EntityType Name="user" OpenType="true">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Edm.String" Nullable="false" />
+          <NavigationProperty Name="calendar" Type="microsoft.graph.calendar" ContainsTarget="true" />
+        </EntityType>
+        <EntityType Name="calendar">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Edm.String" Nullable="false" />
+          <NavigationProperty Name="events" Type="Collection(microsoft.graph.event)" ContainsTarget="true" />
+        </EntityType>
+        <EntityType Name="event">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Edm.String" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="GraphService">
+          <EntitySet Name="users" EntityType="microsoft.graph.user" />
+        </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+""";
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(csdl)))
+            {
+                using (var xmlReader = XmlReader.Create(stream))
+                {
+                    var model = CsdlReader.Parse(xmlReader);
+
+                    var original = "users/myid/calendar/events?$filter=id%20eq%20%27thisisatest%27";
+                    var odataUri = new Microsoft.OData.UriParser.ODataUriParser(
+                        model, 
+                        new Uri(original, UriKind.Relative))
+                        .ParseUri();
+                    var uri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash).ToString();
+
+                    Assert.AreEqual(original, uri);
+                }
+            }
+        }*/
 
         [TestMethod]
         public void GenerateOdataWithLatest()
