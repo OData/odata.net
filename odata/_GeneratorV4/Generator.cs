@@ -409,6 +409,24 @@
                                             (repetition._repeat_1 != null, context.PropertyTypeToCount, context.InnerClasses));
                                 }
 
+                                private sealed class RepeatToCollectionType : _repeat.Visitor<string, Root.Void>
+                                {
+                                    private RepeatToCollectionType()
+                                    {
+                                    }
+
+                                    public static RepeatToCollectionType Instance { get; } = new RepeatToCollectionType();
+
+                                    protected internal override string Accept(_repeat._Ⲥʺx2Aʺ_ЖDIGITↃ node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
+                                    {
+                                        //// TODO public sealed class HelperRangedAtMost{count}<T> : IEnumerable<T>
+                                    }
+
+                                    protected internal override string Accept(_repeat._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ node, Root.Void context)
+                                    {
+                                    }
+                                }
+
                                 private sealed class _elementToPropertyDefinitionGenerator : _element.Visitor<PropertyDefinition, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses)>
                                 {
                                     private readonly string classNamePrefix;
