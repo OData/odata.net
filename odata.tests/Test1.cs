@@ -4,8 +4,6 @@
     using AbnfParser.CstNodes.Core;
     using AbnfParserGenerator;
     using GeneratorV3;
-    using Microsoft.OData;
-    using Microsoft.OData.Edm.Csdl;
     using Root;
     using Root.OdataResourcePath.CombinatorParsers;
     using Root.OdataResourcePath.Transcribers;
