@@ -28,6 +28,17 @@
         }
 
         [TestMethod]
+        public void OdataTest2()
+        {
+            var url = "https://graph.microsoft.com/v1.0/users/myid/calendar/events?$filter=id eq 'thisisatest'";
+            var urlCst = __GeneratedOdata.Parsers.Rules._odataUriParser.Instance.Parse(url);
+            var stringBuilder = new StringBuilder();
+            __GeneratedOdata.Trancsribers.Rules._odataUriTranscriber.Instance.Transcribe(urlCst, stringBuilder);
+            var transcribed = stringBuilder.ToString();
+            Assert.AreEqual(url, transcribed);
+        }
+
+        [TestMethod]
         public void GenerateOdataWithLatest()
         {
             var fullRulesPath = @"C:\msgithub\odata.net\odata\odata.abnf";
