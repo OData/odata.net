@@ -99,58 +99,21 @@
             var fullRulesPath = @"C:\msgithub\odata.net\odata\odata.abnf";
             var fullRulesText = File.ReadAllText(fullRulesPath);
 
-            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
-            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
-
-            var ruleCstNodesNamespace = "__GeneratedOdata.CstNodes.Rules";
-            var innerCstNodesNamespace = "__GeneratedOdata.CstNodes.Inners";
-            var generatedCstNodes = new _GeneratorV5.CstNodesGenerator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(newCst);
-
-            var ruleCstNodesPath = @"C:\msgithub\odata.net\odata\__GeneratedOdata\CstNodes\Rules";
-            Directory.CreateDirectory(ruleCstNodesPath);
-            TranscribeNamespace(generatedCstNodes.RuleCstNodes, ruleCstNodesPath, true);
-            var innerCstNodesPath = @"C:\msgithub\odata.net\odata\__GeneratedOdata\CstNodes\Inners";
-            Directory.CreateDirectory(innerCstNodesPath);
-            TranscribeNamespace(generatedCstNodes.InnerCstNodes, innerCstNodesPath, true);
-
-            var ruleTranscribersNamespace = "__GeneratedOdata.Trancsribers.Rules";
-            var innerTranscribersNamespace = "__GeneratedOdata.Trancsribers.Inners";
-            var generatedTranscribers = new _GeneratorV5.TranscribersGenerator(ruleTranscribersNamespace, innerTranscribersNamespace).Generate(generatedCstNodes);
-
-            //// TODO transcriber generator should return namespaces
-            var ruleTranscribersPath = @"C:\msgithub\odata.net\odata\__GeneratedOdata\Transcribers\Rules";
-            Directory.CreateDirectory(ruleTranscribersPath);
-            TranscribeNamespace(
-                new Namespace(
-                    ruleTranscribersNamespace,
-                    generatedTranscribers.Rules),
-                ruleTranscribersPath,
-                true);
-            var innerTranscibersPath = @"C:\msgithub\odata.net\odata\__GeneratedOdata\Transcribers\Inners";
-            Directory.CreateDirectory(innerTranscibersPath);
-            TranscribeNamespace(
-                new Namespace(
-                    innerTranscribersNamespace,
-                    generatedTranscribers.Inners),
-                innerTranscibersPath,
-                true);
-
-            var ruleParsersNamespace = "__GeneratedOdata.Parsers.Rules";
-            var innerParsersNamespace = "__GeneratedOdata.Parsers.Inners";
-            var generatedParsers = new _GeneratorV5.ParsersGenerator(ruleParsersNamespace, innerParsersNamespace).Generate(generatedCstNodes);
-
-            var ruleParsersPath = @"C:\msgithub\odata.net\odata\__GeneratedOdata\Parsers\Rules";
-            Directory.CreateDirectory(ruleParsersPath);
-            TranscribeNamespace(
-                generatedParsers.RuleParsers,
-                ruleParsersPath,
-                true);
-            var innerParsersPath = @"C:\msgithub\odata.net\odata\__GeneratedOdata\Parsers\Inners";
-            Directory.CreateDirectory(innerParsersPath);
-            TranscribeNamespace(
-                generatedParsers.InnerParsers,
-                innerParsersPath,
-                true);
+            GenerateParserTypes(
+                fullRulesText,
+                true,
+                "__GeneratedOdata.CstNodes.Rules",
+                "__GeneratedOdata.CstNodes.Inners",
+                @"C:\msgithub\odata.net\odata\__GeneratedOdata\CstNodes\Rules",
+                @"C:\msgithub\odata.net\odata\__GeneratedOdata\CstNodes\Inners",
+                "__GeneratedOdata.Trancsribers.Rules",
+                "__GeneratedOdata.Trancsribers.Inners",
+                @"C:\msgithub\odata.net\odata\__GeneratedOdata\Transcribers\Rules",
+                @"C:\msgithub\odata.net\odata\__GeneratedOdata\Transcribers\Inners",
+                "__GeneratedOdata.Parsers.Rules",
+                "__GeneratedOdata.Parsers.Inners",
+                @"C:\msgithub\odata.net\odata\__GeneratedOdata\Parsers\Rules",
+                @"C:\msgithub\odata.net\odata\__GeneratedOdata\Parsers\Inners");
         }
 
         [TestMethod]
@@ -202,6 +165,59 @@
                 generatedParsers.InnerParsers,
                 @"C:\msgithub\odata.net\odata\__Generated\Parsers\Inners",
                 false);
+        }
+
+        private static void GenerateParserTypes(
+            string fullRulesText,
+            bool useNumericFileNames,
+            string ruleCstNodesNamespace,
+            string innerCstNodesNamespace,
+            string ruleCstNodesDirectory,
+            string innerCstNodesDirectory,
+            string ruleTranscribersNamespace,
+            string innerTranscribersNamespace,
+            string ruleTranscribersDirectory,
+            string innerTranscibersDirectory,
+            string ruleParsersNamespace,
+            string innerParsersNamespace,
+            string ruleParsersDirectory,
+            string innerParsersDirectory
+            )
+        {
+            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
+            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
+
+            var generatedCstNodes = new _GeneratorV5.CstNodesGenerator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(newCst);
+
+            Directory.CreateDirectory(ruleCstNodesDirectory);
+            TranscribeNamespace(generatedCstNodes.RuleCstNodes, ruleCstNodesDirectory, useNumericFileNames);
+            Directory.CreateDirectory(innerCstNodesDirectory);
+            TranscribeNamespace(generatedCstNodes.InnerCstNodes, innerCstNodesDirectory, useNumericFileNames);
+
+            var generatedTranscribers = new _GeneratorV5.TranscribersGenerator(ruleTranscribersNamespace, innerTranscribersNamespace).Generate(generatedCstNodes);
+
+            //// TODO transcriber generator should return namespaces
+            Directory.CreateDirectory(ruleTranscribersDirectory);
+            TranscribeNamespace(
+                new Namespace(
+                    ruleTranscribersNamespace,
+                    generatedTranscribers.Rules),
+                ruleTranscribersDirectory,
+                useNumericFileNames);
+            Directory.CreateDirectory(innerTranscibersDirectory);
+            TranscribeNamespace(
+                new Namespace(
+                    innerTranscribersNamespace,
+                    generatedTranscribers.Inners),
+                innerTranscibersDirectory,
+                useNumericFileNames);
+
+            var generatedParsers = new _GeneratorV5.ParsersGenerator(ruleParsersNamespace, innerParsersNamespace).Generate(generatedCstNodes);
+
+            Directory.CreateDirectory(ruleParsersDirectory);
+            TranscribeNamespace(generatedParsers.RuleParsers, ruleParsersDirectory, useNumericFileNames);
+            Directory.CreateDirectory(innerParsersDirectory);
+            TranscribeNamespace(generatedParsers.InnerParsers, innerParsersDirectory, useNumericFileNames);
         }
 
         private static void TranscribeNamespace(Namespace @namespace, string folderPath, bool useNumericFileNames)
