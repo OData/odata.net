@@ -1,5 +1,6 @@
 ﻿namespace _GeneratorV5.OldToGeneratedCstConverters
 {
+    using _GeneratorV5.ManualParsers.Rules;
     using System.Linq;
 
     public sealed class RuleNameConverter
@@ -16,7 +17,7 @@
                 AlphaConverter.Instance.Visit(ruleName.Alpha, default),
                 ruleName.Inners.Select(inner =>
                     new __Generated.CstNodes.Inners._ⲤALPHAⳆDIGITⳆʺx2DʺↃ(
-                        InnerConverter.Instance.Visit(inner, default))));
+                        InnerConverter.Instance.Visit(inner, default))).Convert());
         }
 
         private sealed class InnerConverter : AbnfParser.CstNodes.RuleName.Inner.Visitor<__Generated.CstNodes.Inners._ALPHAⳆDIGITⳆʺx2Dʺ, Root.Void>

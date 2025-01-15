@@ -1,5 +1,6 @@
 namespace __Generated.Parsers.Rules
 {
+    using _GeneratorV5.ManualParsers.Rules;
     using Sprache;
     
     public static class _definedⲻasParser
@@ -7,7 +8,7 @@ namespace __Generated.Parsers.Rules
         public static Parser<__Generated.CstNodes.Rules._definedⲻas> Instance { get; } = from _cⲻwsp_1 in __Generated.Parsers.Rules._cⲻwspParser.Instance.Many()
 from _Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1 in __Generated.Parsers.Inners._Ⲥʺx3DʺⳆʺx3Dx2FʺↃParser.Instance
 from _cⲻwsp_2 in __Generated.Parsers.Rules._cⲻwspParser.Instance.Many()
-select new __Generated.CstNodes.Rules._definedⲻas(_cⲻwsp_1, _Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1, _cⲻwsp_2);
+select new __Generated.CstNodes.Rules._definedⲻas(_cⲻwsp_1.Convert(), _Ⲥʺx3DʺⳆʺx3Dx2FʺↃ_1, _cⲻwsp_2.Convert());
     }
     
 }

@@ -1,5 +1,6 @@
 ﻿namespace _GeneratorV5.OldToGeneratedCstConverters
 {
+    using _GeneratorV5.ManualParsers.Rules;
     using System.Linq;
 
     public sealed class OptionConverter
@@ -16,10 +17,10 @@
                 new __Generated.CstNodes.Inners._ʺx5Bʺ(
                     x5BConverter.Instance.Convert(option.OpenBracket)),
                 option.PrefixCwsps.Select(cwsp =>
-                    CwspConverter.Instance.Visit(cwsp, default)),
+                    CwspConverter.Instance.Visit(cwsp, default)).Convert(),
                 AlternationConverter.Instance.Convert(option.Alternation),
                 option.SuffixCwsps.Select(cwsp =>
-                    CwspConverter.Instance.Visit(cwsp, default)),
+                    CwspConverter.Instance.Visit(cwsp, default)).Convert(),
                 new __Generated.CstNodes.Inners._ʺx5Dʺ(
                     x5DConverter.Instance.Convert(option.CloseBracket)));
         }

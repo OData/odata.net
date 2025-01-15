@@ -1,5 +1,6 @@
 ﻿namespace _GeneratorV5.OldToGeneratedCstConverters
 {
+    using _GeneratorV5.ManualParsers.Rules;
     using System.Linq;
 
     public sealed class RepeatConverter : AbnfParser.CstNodes.Repeat.Visitor<__Generated.CstNodes.Rules._repeat, Root.Void>
@@ -16,7 +17,7 @@
                 new __Generated.CstNodes.Inners._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ(
                     new __Generated.CstNodes.Inners._1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡(
                         node.Digits.Select(digit =>
-                            DigitConverter.Instance.Visit(digit, context)),
+                            DigitConverter.Instance.Visit(digit, context)).Convert2(),
                         null)));
         }
 
@@ -28,12 +29,12 @@
                     new __Generated.CstNodes.Inners._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ(
                         new __Generated.CstNodes.Inners._1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡(
                             node.PrefixDigits.Select(
-                                digit => DigitConverter.Instance.Visit(digit, context)),
+                                digit => DigitConverter.Instance.Visit(digit, context)).Convert2(),
                             new __Generated.CstNodes.Inners._ʺx2Aʺ_ЖDIGIT(
                                 new __Generated.CstNodes.Inners._ʺx2Aʺ(
                                     x2AConverter.Instance.Convert(node.Asterisk)),
                                 node.SuffixDigits.Select(
-                                    digit => DigitConverter.Instance.Visit(digit, context))))));
+                                    digit => DigitConverter.Instance.Visit(digit, context)).Convert()))));
             }
             else
             {
@@ -43,7 +44,7 @@
                                 new __Generated.CstNodes.Inners._ʺx2Aʺ(
                                     x2AConverter.Instance.Convert(node.Asterisk)),
                                 node.SuffixDigits.Select(
-                                    digit => DigitConverter.Instance.Visit(digit, context)))));
+                                    digit => DigitConverter.Instance.Visit(digit, context)).Convert())));
             }
         }
     }

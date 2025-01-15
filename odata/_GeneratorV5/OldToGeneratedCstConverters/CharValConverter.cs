@@ -1,5 +1,6 @@
 ﻿namespace _GeneratorV5.OldToGeneratedCstConverters
 {
+    using _GeneratorV5.ManualParsers.Rules;
     using System.Linq;
 
     public sealed class CharValConverter
@@ -16,7 +17,7 @@
                 DquoteConverter.Instance.Convert(charVal.OpenDquote),
                 charVal.Inners.Select(inner =>
                     new __Generated.CstNodes.Inners._ⲤⰃx20ⲻ21ⳆⰃx23ⲻ7EↃ(
-                        InnerConverter.Instance.Visit(inner, default))),
+                        InnerConverter.Instance.Visit(inner, default))).Convert(),
                 DquoteConverter.Instance.Convert(charVal.CloseDquote));
         }
 

@@ -1,5 +1,6 @@
 ﻿namespace _GeneratorV5.OldToGeneratedCstConverters
 {
+    using _GeneratorV5.ManualParsers.Rules;
     using System.Linq;
 
     public sealed class CommentConverter
@@ -16,7 +17,7 @@
                 new __Generated.CstNodes.Inners._ʺx3Bʺ(
                     x3BConverter.Instance.Convert(comment.Semicolon)),
                 comment.Inners.Select(inner =>
-                    InnerConverter.Instance.Visit(inner, default)),
+                    InnerConverter.Instance.Visit(inner, default)).Convert(),
                 CrLfConverter.Instance.Convert(comment.Crlf));
         }
 

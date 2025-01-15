@@ -1,5 +1,6 @@
 ﻿namespace _GeneratorV5.OldToGeneratedCstConverters
 {
+    using _GeneratorV5.ManualParsers.Rules;
     using System.Linq;
 
     public sealed class AlternationConverter
@@ -16,7 +17,7 @@
                 ConcatenationConverter.Instance.Convert(alternation.Concatenation),
                 alternation.Inners.Select(inner =>
                     new __Generated.CstNodes.Inners._ⲤЖcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenationↃ(
-                        InnerConverter.Instance.Convert(inner))));
+                        InnerConverter.Instance.Convert(inner))).Convert());
         }
 
         private sealed class InnerConverter
@@ -31,11 +32,11 @@
             {
                 return new __Generated.CstNodes.Inners._Жcⲻwsp_ʺx2Fʺ_Жcⲻwsp_concatenation(
                     inner.PrefixCwsps.Select(cwsp =>
-                        CwspConverter.Instance.Visit(cwsp, default)),
+                        CwspConverter.Instance.Visit(cwsp, default)).Convert(),
                     new __Generated.CstNodes.Inners._ʺx2Fʺ(
                         x2FConverter.Instance.Convert(inner.Slash)),
                     inner.SuffixCwsps.Select(cwsp =>
-                        CwspConverter.Instance.Visit(cwsp, default)),
+                        CwspConverter.Instance.Visit(cwsp, default)).Convert(),
                     ConcatenationConverter.Instance.Convert(inner.Concatenation));
             }
         }

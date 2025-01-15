@@ -1,5 +1,6 @@
 namespace __Generated.Parsers.Rules
 {
+    using _GeneratorV5.ManualParsers.Rules;
     using Sprache;
     
     public static class _binⲻvalParser
@@ -7,7 +8,7 @@ namespace __Generated.Parsers.Rules
         public static Parser<__Generated.CstNodes.Rules._binⲻval> Instance { get; } = from _ʺx62ʺ_1 in __Generated.Parsers.Inners._ʺx62ʺParser.Instance
 from _BIT_1 in __Generated.Parsers.Rules._BITParser.Instance.Many()
 from _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ_1 in __Generated.Parsers.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃParser.Instance.Optional()
-select new __Generated.CstNodes.Rules._binⲻval(_ʺx62ʺ_1, _BIT_1, _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ_1.GetOrElse(null));
+select new __Generated.CstNodes.Rules._binⲻval(_ʺx62ʺ_1, _BIT_1.Convert2(), _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ_1.GetOrElse(null));
     }
     
 }

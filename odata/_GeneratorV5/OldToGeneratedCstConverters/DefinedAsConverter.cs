@@ -1,5 +1,6 @@
 ﻿namespace _GeneratorV5.OldToGeneratedCstConverters
 {
+    using _GeneratorV5.ManualParsers.Rules;
     using System.Linq;
 
     public sealed class DefinedAsConverter : AbnfParser.CstNodes.DefinedAs.Visitor<__Generated.CstNodes.Rules._definedⲻas, Root.Void>
@@ -14,27 +15,27 @@
         {
             return new __Generated.CstNodes.Rules._definedⲻas(
                 node.PrefixCwsps.Select(cwsp =>
-                    CwspConverter.Instance.Visit(cwsp, context)),
+                    CwspConverter.Instance.Visit(cwsp, context)).Convert(),
                 new __Generated.CstNodes.Inners._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ(
                     new __Generated.CstNodes.Inners._ʺx3DʺⳆʺx3Dx2Fʺ._ʺx3Dʺ(
                         new __Generated.CstNodes.Inners._ʺx3Dʺ(
                             x3DConverter.Instance.Convert(node.Equals)))),
                 node.SuffixCwsps.Select(cwsp =>
-                    CwspConverter.Instance.Visit(cwsp, context)));
+                    CwspConverter.Instance.Visit(cwsp, context)).Convert());
         }
 
         protected internal override __Generated.CstNodes.Rules._definedⲻas Accept(AbnfParser.CstNodes.DefinedAs.Incremental node, Root.Void context)
         {
             return new __Generated.CstNodes.Rules._definedⲻas(
                 node.PrefixCwsps.Select(cwsp =>
-                    CwspConverter.Instance.Visit(cwsp, context)),
+                    CwspConverter.Instance.Visit(cwsp, context)).Convert(),
                 new __Generated.CstNodes.Inners._Ⲥʺx3DʺⳆʺx3Dx2FʺↃ(
                     new __Generated.CstNodes.Inners._ʺx3DʺⳆʺx3Dx2Fʺ._ʺx3Dx2Fʺ(
                         new __Generated.CstNodes.Inners._ʺx3Dx2Fʺ(
                             x3DConverter.Instance.Convert(node.Equals),
                             x2FConverter.Instance.Convert(node.Slash)))),
                 node.SuffixCwsps.Select(cwsp =>
-                    CwspConverter.Instance.Visit(cwsp, context)));
+                    CwspConverter.Instance.Visit(cwsp, context)).Convert());
         }
     }
 }
