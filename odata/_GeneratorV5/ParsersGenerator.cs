@@ -90,7 +90,7 @@
                     return $".Repeat(0, {count})";
                 }
 
-                var atLeastDelimiter = "atLeast";
+                var atLeastDelimiter = "AtLeast";
                 if (kindOfHelper.StartsWith(atLeastDelimiter))
                 {
                     var countStart = kindOfHelper.Substring(atLeastDelimiter.Length);
@@ -112,6 +112,8 @@
                     var maximum = minimumStart.Substring(toDelimiterIndex + toDelimiter.Length, genericIndex);
                     return $".Repeat({minimum}, {maximum})";
                 }
+
+                throw new Exception("TODO");
             }
             
             return string.Empty;
