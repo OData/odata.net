@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Text;
     using AbnfParserGenerator;
 
     public sealed class ParsersGenerator
@@ -70,11 +71,11 @@
             var helperRangedDelimiter = $"{innerCstNodesNamespace}.HelperRanged";
             if (property.Type.StartsWith(helperRangedDelimiter))
             {
-                var kindOfHelper = property.Type.Substring(helperRangedDelimiter.Length + 1);
+                var kindOfHelper = property.Type.Substring(helperRangedDelimiter.Length);
                 var exactlyDelimiter = "Exactly";
                 if (kindOfHelper.StartsWith(exactlyDelimiter))
                 {
-                    var countStart = kindOfHelper.Substring(exactlyDelimiter.Length + 1);
+                    var countStart = kindOfHelper.Substring(exactlyDelimiter.Length);
                     var genericIndex = countStart.IndexOf("<");
                     var count = countStart.Substring(0, genericIndex);
                     return $".Repeat({count}, {count})";
@@ -83,7 +84,7 @@
                 var atMostDelimiter = "AtMost";
                 if (kindOfHelper.StartsWith(atMostDelimiter))
                 {
-                    var countStart = kindOfHelper.Substring(atMostDelimiter.Length + 1);
+                    var countStart = kindOfHelper.Substring(atMostDelimiter.Length);
                     var genericIndex = countStart.IndexOf("<");
                     var count = countStart.Substring(0, genericIndex);
                     return $".Repeat(0, {count})";
@@ -92,7 +93,7 @@
                 var atLeastDelimiter = "atLeast";
                 if (kindOfHelper.StartsWith(atLeastDelimiter))
                 {
-                    var countStart = kindOfHelper.Substring(atLeastDelimiter.Length + 1);
+                    var countStart = kindOfHelper.Substring(atLeastDelimiter.Length);
                     var genericIndex = countStart.IndexOf("<");
                     var count = countStart.Substring(0, genericIndex);
                     return $".Repeat({count}, null)";
@@ -101,7 +102,7 @@
                 var fromDelimiter = "From";
                 if (kindOfHelper.StartsWith(fromDelimiter))
                 {
-                    var minimumStart = kindOfHelper.Substring(fromDelimiter.Length + 1);
+                    var minimumStart = kindOfHelper.Substring(fromDelimiter.Length);
                     var toDelimiter = "To";
                     var toDelimiterIndex = minimumStart.IndexOf(toDelimiter);
 
@@ -114,6 +115,32 @@
             }
             
             return string.Empty;
+        }
+
+        private string ConstructorArgument(PropertyDefinition property, string innerCstNodesNamespace)
+        {
+            var builder = new StringBuilder();
+
+            var ranged = false;
+            if (property.Type.StartsWith($"{innerCstNodesNamespace}.HelperRanged"))
+            {
+                ranged = true;
+                builder.Append($"new {property.Type}(");
+            }
+
+            builder.Append(property.Name);
+
+            if (ranged)
+            {
+                builder.Append(")");
+            }
+
+            if (property.Type.EndsWith("?"))
+            {
+                builder.Append(".GetOrElse(null)");
+            }
+
+            return builder.ToString();
         }
 
         private Class GenerateParser(Class @class, string cstNodeNamespace, string ruleCstNodesNamespace, string innerCstNodesNamespace)
@@ -191,7 +218,7 @@
                             string.Join(
                                 ", ",
                                 nonStaticProperties
-                                    .Select(property => $"{property.Name}{(property.Type.EndsWith("?") ? ".GetOrElse(null)" : string.Empty)}")),
+                                    .Select(property => ConstructorArgument(property, innerCstNodesNamespace))),
                             ");");
                     propertyDefinition = new[]
                     {
