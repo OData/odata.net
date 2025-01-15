@@ -148,21 +148,17 @@ public class SingletonUpdateTests : EndToEndTestBase<SingletonUpdateTests.TestsS
 
         // Act
         var entries = await TestsHelper.QueryResourceEntriesAsync("VipCustomer", mimeType);
-        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
-        {
-            // Assert
-            ODataValueAssertEqualHelper.AssertODataPropertyAndResourceEqual(currentHomeAddress, entries[0]);
-        }
+
+        // Assert
+        ODataValueAssertEqualHelper.AssertODataPropertyAndResourceEqual(currentHomeAddress, entries[0]);
 
         // Act
         await this.UpdateEntryAsync("Customer", "VipCustomer", mimeType, properties);
 
         var updatedEntries = await TestsHelper.QueryResourceEntriesAsync("VipCustomer", mimeType);
-        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
-        {
-            // Assert
-            ODataValueAssertEqualHelper.AssertODataPropertyAndResourceEqual(updatedHomeAddress, updatedEntries[0]);
-        }
+
+        // Assert
+        ODataValueAssertEqualHelper.AssertODataPropertyAndResourceEqual(updatedHomeAddress, updatedEntries[0]);
 
         ResetDefaultDataSource();
     }
