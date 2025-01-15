@@ -64,205 +64,282 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         }
 
         [Theory]
-        [MemberData(nameof(GetEdmBinarySet))]
-        public void BinaryTest(EdmBinary entry)
+        [InlineData(new Byte[] { }, "binary''")]
+        [InlineData(new Byte[] { 1 }, "binary'AQ%3D%3D'")]
+        [InlineData(new Byte[] { 2, 3, 4 }, "binary'AgME'")]
+        public void BinaryTest(byte[] entryId, string expectedIdInUrl)
         {
             // Arrange & Act
-            var query = _context.CreateQuery<EdmBinary>("EdmBinarySet").Where(e => e.Id.Equals(entry.Id));
+            var query = _context.CreateQuery<EdmBinary>("EdmBinarySet").Where(e => e.Id.Equals(entryId));
             var queryResult = query.ToArray();
 
             // Assert
+            Assert.Equal($"http://localhost/odata/EdmBinarySet?$filter=Id eq {expectedIdInUrl}", query.ToString());
             Assert.Single(queryResult);
         }
 
         [Theory]
-        [MemberData(nameof(GetEdmBooleanSet))]
-        public void BooleanTest(EdmBoolean entry)
+        [InlineData(true, "true")]
+        [InlineData(false, "false")]
+        public void BooleanTest(bool entryId, string expectedIdInUrl)
         {
             // Arrange & Act
-            var query = _context.CreateQuery<EdmBoolean>("EdmBooleanSet").Where(e => e.Id.Equals(entry.Id));
+            var query = _context.CreateQuery<EdmBoolean>("EdmBooleanSet").Where(e => e.Id.Equals(entryId));
             var queryResult = query.ToArray();
 
             // Assert
+            Assert.Equal($"http://localhost/odata/EdmBooleanSet?$filter=Id eq {expectedIdInUrl}", query.ToString());
             Assert.Single(queryResult);
+        }
+
+
+        public static TheoryData<DateTimeOffset, string> GetEdmDateTimeOffsetSet
+        {
+            get
+            {
+                return new TheoryData<DateTimeOffset, string>
+                {
+                    { DateTimeOffset.MinValue, "0001-01-01T00%3A00%3A00Z" },
+                    { DateTimeOffset.MaxValue, "9999-12-31T23%3A59%3A59.9999999Z" }
+                };
+            }
         }
 
         [Theory]
         [MemberData(nameof(GetEdmDateTimeOffsetSet))]
-        public void DateTimeOffsetTest(EdmDateTimeOffset entry)
+        public void DateTimeOffsetTest(DateTimeOffset entryId, string expectedIdInUrl)
         {
             // Arrange & Act
-            var query = _context.CreateQuery<EdmDateTimeOffset>("EdmDateTimeOffsetSet").Where(e => e.Id.Equals(entry.Id));
+            var query = _context.CreateQuery<EdmDateTimeOffset>("EdmDateTimeOffsetSet").Where(e => e.Id.Equals(entryId));
             var queryResult = query.ToArray();
 
             // Assert
+            Assert.Equal($"http://localhost/odata/EdmDateTimeOffsetSet?$filter=Id eq {expectedIdInUrl}", query.ToString());
             Assert.Single(queryResult);
+        }
+
+        public static TheoryData<decimal, string> GetEdmDecimalSet
+        {
+            get
+            {
+                return new TheoryData<decimal, string>
+                {
+                    { Decimal.Zero, "0" },
+                    { Decimal.MinusOne, "-1" },
+                    { Decimal.One, "1" }
+                };
+            }
         }
 
         [Theory]
         [MemberData(nameof(GetEdmDecimalSet))]
-        public void DecimalTest(EdmDecimal entry)
+        public void DecimalTest(decimal entryId, string expectedIdInUrl)
         {
             // Arrange & Act
-            var query = _context.CreateQuery<EdmDecimal>("EdmDecimalSet").Where(e => e.Id == entry.Id);
+            var query = _context.CreateQuery<EdmDecimal>("EdmDecimalSet").Where(e => e.Id == entryId);
             var queryResult = query.ToArray();
 
             // Assert
+            Assert.Equal($"http://localhost/odata/EdmDecimalSet?$filter=Id eq {expectedIdInUrl}", query.ToString());
             Assert.Single(queryResult);
         }
 
         [Theory]
-        [MemberData(nameof(GetEdmDoubleSet))]
-        public void DoubleTest(EdmDouble entry)
+        [InlineData(0, "0.0")]
+        [InlineData(-1, "-1")]
+        [InlineData(1, "1.0")]
+        [InlineData(Double.MaxValue, "1.7976931348623157E%2B308")]
+        [InlineData(Double.MinValue, "-1.7976931348623157E%2B308")]
+        [InlineData(Double.Epsilon, "5E-324")]
+        [InlineData(Double.NegativeInfinity, "-INF")]
+        [InlineData(Double.PositiveInfinity, "INF")]
+        public void DoubleTest(double entryId, string expectedIdInUrl)
         {
             // Arrange & Act
-            var query = _context.CreateQuery<EdmDouble>("EdmDoubleSet").Where(e => e.Id.Equals(entry.Id));
+            var query = _context.CreateQuery<EdmDouble>("EdmDoubleSet").Where(e => e.Id.Equals(entryId));
             var queryResult = query.ToArray();
 
             // Assert
-            //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
+            Assert.Equal($"http://localhost/odata/EdmDoubleSet?$filter=Id eq {expectedIdInUrl}", query.ToString());
             Assert.Single(queryResult);
         }
 
         [Theory]
-        [MemberData(nameof(GetEdmInt16Set))]
-        public void Int16Test(EdmInt16 entry)
+        [InlineData(Int16.MinValue, "-32768")]
+        [InlineData(Int16.MaxValue, "32767")]
+        [InlineData(0, "0")]
+        [InlineData(-1, "-1")]
+        [InlineData(1, "1")]
+        public void Int16Test(short entryId, string expectedIdInUrl)
         {
             // Arrange & Act
-            var query = _context.CreateQuery<EdmInt16>("EdmInt16Set").Where(e => e.Id.Equals(entry.Id));
+            var query = _context.CreateQuery<EdmInt16>("EdmInt16Set").Where(e => e.Id.Equals(entryId));
             var queryResult = query.ToArray();
 
             // Assert
-            //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
+            Assert.Equal($"http://localhost/odata/EdmInt16Set?$filter=Id eq {expectedIdInUrl}", query.ToString());
             Assert.Single(queryResult);
         }
 
         [Theory]
-        [MemberData(nameof(GetEdmInt32Set))]
-        public void Int32Test(EdmInt32 entry)
+        [InlineData(Int32.MinValue, "-2147483648")]
+        [InlineData(Int32.MaxValue, "2147483647")]
+        [InlineData(0, "0")]
+        [InlineData(-1, "-1")]
+        [InlineData(1, "1")]
+        public void Int32Test(int entryId, string expectedIdInUrl)
         {
             // Arrange & Act
-            var query = _context.CreateQuery<EdmInt32>("EdmInt32Set").Where(e => e.Id.Equals(entry.Id));
+            var query = _context.CreateQuery<EdmInt32>("EdmInt32Set").Where(e => e.Id.Equals(entryId));
             var queryResult = query.ToArray();
 
             // Assert
-            //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
+            Assert.Equal($"http://localhost/odata/EdmInt32Set?$filter=Id eq {expectedIdInUrl}", query.ToString());
             Assert.Single(queryResult);
         }
 
         [Theory]
-        [MemberData(nameof(GetEdmInt64Set))]
-        public void Int64Test(EdmInt64 entry)
+        [InlineData(Int64.MinValue, "-9223372036854775808")]
+        [InlineData(Int64.MaxValue, "9223372036854775807")]
+        [InlineData(0, "0")]
+        [InlineData(-1, "-1")]
+        [InlineData(1, "1")]
+        public void Int64Test(long entryId, string expectedIdInUrl)
         {
             // Arrange & Act
-            var query = _context.CreateQuery<EdmInt64>("EdmInt64Set").Where(e => e.Id.Equals(entry.Id));
+            var query = _context.CreateQuery<EdmInt64>("EdmInt64Set").Where(e => e.Id.Equals(entryId));
             var queryResult = query.ToArray();
 
             // Assert
-            //Expected a single result for key value {0}", entry.Id.ToString(CultureInfo.InvariantCulture)
+            Assert.Equal($"http://localhost/odata/EdmInt64Set?$filter=Id eq {expectedIdInUrl}", query.ToString());
             Assert.Single(queryResult);
         }
 
         [Theory]
-        [MemberData(nameof(GetEdmSingleSet))]
-        public void SingleTest(EdmSingle entry)
+        [InlineData(0, "0")]
+        [InlineData(-1, "-1")]
+        [InlineData(1, "1")]
+        [InlineData(float.MaxValue, "3.4028235E%2B38")]
+        [InlineData(float.MinValue, "-3.4028235E%2B38")]
+        [InlineData(float.Epsilon, "1E-45")]
+        [InlineData(float.NegativeInfinity, "-INF")]
+        [InlineData(float.PositiveInfinity, "INF")]
+        public void SingleTest(float entryId, string expectedIdInUrl)
         {
             // Arrange & Act
-            var query = _context.CreateQuery<EdmSingle>("EdmSingleSet").Where(e => e.Id.Equals(entry.Id));
+            var query = _context.CreateQuery<EdmSingle>("EdmSingleSet").Where(e => e.Id.Equals(entryId));
             var queryResult = query.ToArray();
 
             // Assert
-            //Expected a single result for key value {0}, entry.Id.ToString(CultureInfo.InvariantCulture)
+            Assert.Equal($"http://localhost/odata/EdmSingleSet?$filter=Id eq {expectedIdInUrl}", query.ToString());
             Assert.Single(queryResult);
         }
 
-        [Theory]
-        [MemberData(nameof(GetEdmStringSet))]
-        public void StringTest(EdmString entry)
+        public static TheoryData<TimeSpan, string> GetEdmTimeSet
         {
-            // Arrange & Act
-            var query = _context.CreateQuery<EdmString>("EdmStringSet").Where(e => e.Id.Equals(entry.Id));
-            var queryResult = query.ToArray();
-
-            // Assert
-            //Expected a single result for key value {0} entry.Id)
-            Assert.Single(queryResult);
+            get
+            {
+                return new TheoryData<TimeSpan, string>
+                {
+                    { TimeSpan.MinValue, "duration'-P10675199DT2H48M5.4775808S'" },
+                    { TimeSpan.MaxValue, "duration'P10675199DT2H48M5.4775807S'" },
+                    { TimeSpan.Zero, "duration'PT0S'" }
+                };
+            }
         }
 
         [Theory]
         [MemberData(nameof(GetEdmTimeSet))]
-        public void TimeTest(EdmTime entry)
+        public void TimeTest(TimeSpan entryId, string expectedIdInUrl)
         {
             // Arrange & Act
-            var query = _context.CreateQuery<EdmTime>("EdmTimeSet").Where(e => e.Id.Equals(entry.Id));
+            var query = _context.CreateQuery<EdmTime>("EdmTimeSet").Where(e => e.Id.Equals(entryId));
             var queryResult = query.ToArray();
 
             // Assert
-            //Expected a single result for key value {0}, entry.Id.ToString()
+            Assert.Equal($"http://localhost/odata/EdmTimeSet?$filter=Id eq {expectedIdInUrl}", query.ToString());
             Assert.Single(queryResult);
         }
 
-        #region TheoryData
-
-        public static TheoryData<T> GetTheoryData<T>(Func<Container, IEnumerable<T>> dataSelector)
+        [Theory]
+        [InlineData("!", "%21")]
+        [InlineData("!!", "%21%21")]
+        [InlineData("!!!", "%21%21%21")]
+        [InlineData("*", "%2A")]
+        [InlineData("**", "%2A%2A")]
+        [InlineData("***", "%2A%2A%2A")]
+        [InlineData("(", "%28")]
+        [InlineData("((", "%28%28")]
+        [InlineData("(((", "%28%28%28")]
+        [InlineData(")", "%29")]
+        [InlineData("))", "%29%29")]
+        [InlineData(")))", "%29%29%29")]
+        [InlineData(":", "%3A")]
+        [InlineData("::", "%3A%3A")]
+        [InlineData(":::", "%3A%3A%3A")]
+        [InlineData(";", "%3B")]
+        [InlineData(";;", "%3B%3B")]
+        [InlineData(";;;", "%3B%3B%3B")]
+        [InlineData("=", "%3D")]
+        [InlineData("==", "%3D%3D")]
+        [InlineData("===", "%3D%3D%3D")]
+        [InlineData("@", "%40")]
+        [InlineData("@@", "%40%40")]
+        [InlineData("@@@", "%40%40%40")]
+        [InlineData("[", "%5B")]
+        [InlineData("[[", "%5B%5B")]
+        [InlineData("[[[", "%5B%5B%5B")]
+        [InlineData("]", "%5D")]
+        [InlineData("]]", "%5D%5D")]
+        [InlineData("]]]", "%5D%5D%5D")]
+        [InlineData("}", "}")]
+        [InlineData("}}", "}}")]
+        [InlineData("}}}", "}}}")]
+        [InlineData("{", "{")]
+        [InlineData("{{", "{{")]
+        [InlineData("{{{", "{{{")]
+        [InlineData("?", "%3F")]
+        [InlineData("??", "%3F%3F")]
+        [InlineData("???", "%3F%3F%3F")]
+        [InlineData("&", "%26")]
+        [InlineData("&&", "%26%26")]
+        [InlineData("&&&", "%26%26%26")]
+        [InlineData("$", "%24")]
+        [InlineData("$$", "%24%24")]
+        [InlineData("$$$", "%24%24%24")]
+        [InlineData(",", "%2C")]
+        [InlineData(",,", "%2C%2C")]
+        [InlineData(",,,", "%2C%2C%2C")]
+        [InlineData("+", "%2B")]
+        [InlineData("++", "%2B%2B")]
+        [InlineData("+++", "%2B%2B%2B")]
+        [InlineData("'", "%27%27")]
+        [InlineData("''", "%27%27%27%27")]
+        [InlineData("'''", "%27%27%27%27%27%27")]
+        [InlineData("/", "%2F")]
+        [InlineData("//", "%2F%2F")]
+        [InlineData("///", "%2F%2F%2F")]
+        [InlineData("\"", "\"")]
+        [InlineData("\"\"", "\"\"")]
+        [InlineData("\"\"\"", "\"\"\"")]
+        [InlineData("SomeID", "SomeID")]
+        public void StringTest(string entryId, string expectedIdInUrl)
         {
-            var data = new TheoryData<T>();
-            var instance = CreateInstance();
-            foreach (var entry in dataSelector(instance._context))
-            {
-                if ((entry is EdmSingle { Id: var idSingle } && IsNotSupportedKey(idSingle)) ||
-                    (entry is EdmDouble { Id: var idDouble } && IsNotSupportedKey(idDouble)) ||
-                    (entry is EdmDecimal { Id: Decimal.MaxValue or Decimal.MinValue }))
-                {
-                    continue;
-                }
+            // Arrange & Act
+            var query = _context.CreateQuery<EdmString>("EdmStringSet").Where(e => e.Id.Equals(entryId));
+            var queryResult = query.ToArray();
 
-                data.Add(entry);
-            }
-
-            return data;
+            // Assert
+            Assert.Equal($"http://localhost/odata/EdmStringSet?$filter=Id eq '{expectedIdInUrl}'", query.ToString());
+            Assert.Single(queryResult);
         }
-
-        public static TheoryData<EdmBinary> GetEdmBinarySet() => GetTheoryData(ctx => ctx.EdmBinarySet);
-        public static TheoryData<EdmBoolean> GetEdmBooleanSet() => GetTheoryData(ctx => ctx.EdmBooleanSet);
-        public static TheoryData<EdmDateTimeOffset> GetEdmDateTimeOffsetSet() => GetTheoryData(ctx => ctx.EdmDateTimeOffsetSet);
-        public static TheoryData<EdmDecimal> GetEdmDecimalSet() => GetTheoryData(ctx => ctx.EdmDecimalSet);
-        public static TheoryData<EdmDouble> GetEdmDoubleSet() => GetTheoryData(ctx => ctx.EdmDoubleSet);
-        public static TheoryData<EdmInt16> GetEdmInt16Set() => GetTheoryData(ctx => ctx.EdmInt16Set);
-        public static TheoryData<EdmInt32> GetEdmInt32Set() => GetTheoryData(ctx => ctx.EdmInt32Set);
-        public static TheoryData<EdmInt64> GetEdmInt64Set() => GetTheoryData(ctx => ctx.EdmInt64Set);
-        public static TheoryData<EdmSingle> GetEdmSingleSet() => GetTheoryData(ctx => ctx.EdmSingleSet);
-        public static TheoryData<EdmString> GetEdmStringSet() => GetTheoryData(ctx => ctx.EdmStringSet);
-        public static TheoryData<EdmTime> GetEdmTimeSet() => GetTheoryData(ctx => ctx.EdmTimeSet);
-
-        #endregion
 
         #region Private
-
-        private static bool IsNotSupportedKey(object key)
-        {
-            if (key is float keyInFloat)
-            {
-                return float.IsNaN(keyInFloat);
-            }
-            if (key is double keyInDouble)
-            {
-                return double.IsNaN(keyInDouble);
-            }
-
-            return false;
-        }
 
         private void ResetDefaultDataSource()
         {
             var actionUri = new Uri(_baseUri + "primitivekeyvalues/Default.ResetDefaultDataSource", UriKind.Absolute);
             _context.Execute(actionUri, "POST");
-        }
-
-        private static PrimitiveKeysValuesTests CreateInstance()
-        {
-            var fixture = new TestWebApplicationFactory<TestsStartup>();
-            return new PrimitiveKeysValuesTests(fixture);
         }
 
         #endregion

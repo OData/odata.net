@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataMessageReaderTestsHelper.cs" company="Microsoft">
+// <copyright file="PrimitiveTypesTestsHelper.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -8,16 +8,16 @@ using Microsoft.OData.Client.E2E.TestCommon.Common;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Client.E2E.TestCommon.Helpers;
+namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests;
 
-public class ODataMessageReaderTestsHelper
+public class PrimitiveTypesTestsHelper
 {
     private readonly Uri BaseUri;
     private readonly IEdmModel Model;
     private readonly HttpClient Client;
     private const string IncludeAnnotation = "odata.include-annotations";
 
-    public ODataMessageReaderTestsHelper(Uri baseUri, IEdmModel model, HttpClient client)
+    public PrimitiveTypesTestsHelper(Uri baseUri, IEdmModel model, HttpClient client)
     {
         this.BaseUri = baseUri;
         this.Model = model;
@@ -101,14 +101,18 @@ public class ODataMessageReaderTestsHelper
                 }
                 Assert.Equal(ODataReaderState.Completed, reader.State);
             }
-
         }
 
         return entries;
     }
 
+    /// <summary>
+    /// Queries an OData resource and OData resource set asynchronously based on the provided query text and MIME type.
+    /// </summary>
+    /// <param name="queryText">The query text to append to the base URI.</param>
+    /// <param name="mimeType">The MIME type to set in the request header.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a tuple of list of <see cref="ODataResource"/> and list of <see cref="ODataResourceSet"/>.</returns>
     public async Task<(List<ODataResource>, List<ODataResourceSet>)> QueryResourceAndResourceSetsAsync(string queryText, string mimeType)
-
     {
         ODataMessageReaderSettings readerSettings = new() { BaseUri = BaseUri };
         var requestUrl = new Uri(BaseUri.AbsoluteUri + queryText, UriKind.Absolute);
@@ -214,6 +218,11 @@ public class ODataMessageReaderTestsHelper
         return property;
     }
 
+    /// <summary>
+    /// Queries a property value in string asynchronously based on the provided request URI.
+    /// </summary>
+    /// <param name="requestUri">The query text to append to the base URI.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="object"/> if found; otherwise, null.</returns>
     public async Task<object?> QueryPropertyValueInStringAsync(string requestUri)
     {
         var readerSettings = new ODataMessageReaderSettings() { BaseUri = BaseUri };

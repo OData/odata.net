@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client.E2E.TestCommon;
 using Microsoft.OData.Client.E2E.TestCommon.Common;
-using Microsoft.OData.Client.E2E.TestCommon.Helpers;
 using Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Default;
 using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
 using Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Server;
@@ -56,39 +55,31 @@ public class DurationTests : EndToEndTestBase<DurationTests.TestsStartup>
         ResetDefaultDataSource();
     }
 
-    public static IEnumerable<object[]> MimeTypesData
-    {
-        get
-        {
-            yield return new object[] { MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata };
-            yield return new object[] { MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata };
-            yield return new object[] { MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata };
-        }
-    }
+    // Constants
+    private const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
+    private const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
 
     #region Entity Set
 
     [Theory]
-    [MemberData(nameof(MimeTypesData))]
+    [InlineData(MimeTypeODataParameterFullMetadata)]
+    [InlineData(MimeTypeODataParameterMinimalMetadata)]
     public async Task QueryEntitySetTest(string mimeType)
     {
         // Arrange & Act
         var queryText = "Customers";
         var entries = await this.TestsHelper.QueryResourceSetsAsync(queryText, mimeType);
 
+        entries = entries.Where(e => e.TypeName.EndsWith("Customer")).ToList();
+
         // Assert
-        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
-        {
-            foreach (var entry in entries)
-            {
-                if (entry.TypeName.EndsWith("Customer"))
-                {
-                    var timeBetweenLastTwoOrdersProperty = entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders") as ODataProperty;
-                    Assert.NotNull(timeBetweenLastTwoOrdersProperty);
-                    Assert.NotNull(timeBetweenLastTwoOrdersProperty.Value);
-                }
-            }
-        }
+        var timeBetweenLastTwoOrdersProperty = entries[0].Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders") as ODataProperty;
+        Assert.NotNull(timeBetweenLastTwoOrdersProperty);
+        Assert.Equal(new TimeSpan(1), timeBetweenLastTwoOrdersProperty.Value);
+
+        timeBetweenLastTwoOrdersProperty = entries[1].Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders") as ODataProperty;
+        Assert.NotNull(timeBetweenLastTwoOrdersProperty);
+        Assert.Equal(new TimeSpan(2), timeBetweenLastTwoOrdersProperty.Value);
     }
 
     #endregion
@@ -96,26 +87,23 @@ public class DurationTests : EndToEndTestBase<DurationTests.TestsStartup>
     #region Entity instance
 
     [Theory]
-    [MemberData(nameof(MimeTypesData))]
+    [InlineData(MimeTypeODataParameterFullMetadata)]
+    [InlineData(MimeTypeODataParameterMinimalMetadata)]
     public async Task QueryEntityInstanceTest(string mimeType)
     {
         // Arrange & Act
         var queryText = "Customers(1)";
         var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
 
+        var entry = entries.SingleOrDefault(e => e.TypeName.EndsWith("Customer"));
+
         // Assert
-        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
-        {
-            foreach (var entry in entries)
-            {
-                if (entry.TypeName.EndsWith("Customer"))
-                {
-                    var timeBetweenLastTwoOrdersProperty = entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders") as ODataProperty;
-                    Assert.NotNull(timeBetweenLastTwoOrdersProperty);
-                    Assert.Equal(new TimeSpan(1), timeBetweenLastTwoOrdersProperty.Value);
-                }
-            }
-        }
+        Assert.NotNull(entry);
+
+        var timeBetweenLastTwoOrdersProperty = entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders") as ODataProperty;
+        Assert.NotNull(timeBetweenLastTwoOrdersProperty);
+        Assert.NotNull(timeBetweenLastTwoOrdersProperty.Value);
+        Assert.Equal(new TimeSpan(1), timeBetweenLastTwoOrdersProperty.Value);
     }
 
     #endregion
@@ -123,7 +111,8 @@ public class DurationTests : EndToEndTestBase<DurationTests.TestsStartup>
     #region Entity property
 
     [Theory]
-    [MemberData(nameof(MimeTypesData))]
+    [InlineData(MimeTypeODataParameterFullMetadata)]
+    [InlineData(MimeTypeODataParameterMinimalMetadata)]
     public async Task QueryEntityPropertyTest(string mimeType)
     {
         // Arrange & Act
@@ -131,11 +120,8 @@ public class DurationTests : EndToEndTestBase<DurationTests.TestsStartup>
         var property = await this.TestsHelper.QueryPropertyAsync(queryText, mimeType);
 
         // Assert
-        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
-        {
-            Assert.NotNull(property);
-            Assert.Equal(new TimeSpan(1), property.Value);
-        }
+        Assert.NotNull(property);
+        Assert.Equal(new TimeSpan(1), property.Value);
     }
 
     #endregion
@@ -143,26 +129,22 @@ public class DurationTests : EndToEndTestBase<DurationTests.TestsStartup>
     #region Entity navigation 
 
     [Theory]
-    [MemberData(nameof(MimeTypesData))]
+    [InlineData(MimeTypeODataParameterFullMetadata)]
+    [InlineData(MimeTypeODataParameterMinimalMetadata)]
     public async Task QueryEntityNavigationTest(string mimeType)
     {
         // Arrange & Act
         var queryText = "Orders(7)/CustomerForOrder";
         var entries = await this.TestsHelper.QueryResourceEntriesAsync(queryText, mimeType);
 
+        var entry = entries.SingleOrDefault(e => e.TypeName.EndsWith("Customer"));
+
         // Assert
-        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
-        {
-            foreach (var entry in entries)
-            {
-                if (entry.TypeName.EndsWith("Customer"))
-                {
-                    var timeBetweenLastTwoOrdersProperty = entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders") as ODataProperty;
-                    Assert.NotNull(timeBetweenLastTwoOrdersProperty);
-                    Assert.Equal(new TimeSpan(2), timeBetweenLastTwoOrdersProperty.Value);
-                }
-            }
-        }
+        Assert.NotNull(entry);
+
+        var timeBetweenLastTwoOrdersProperty = entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders") as ODataProperty;
+        Assert.NotNull(timeBetweenLastTwoOrdersProperty);
+        Assert.Equal(new TimeSpan(2), timeBetweenLastTwoOrdersProperty.Value);
     }
 
     #endregion
@@ -247,11 +229,11 @@ public class DurationTests : EndToEndTestBase<DurationTests.TestsStartup>
 
     #region Private methods
 
-    private ODataMessageReaderTestsHelper TestsHelper
+    private PrimitiveTypesTestsHelper TestsHelper
     {
         get
         {
-            return new ODataMessageReaderTestsHelper(_baseUri, _model, Client);
+            return new PrimitiveTypesTestsHelper(_baseUri, _model, Client);
         }
     }
 

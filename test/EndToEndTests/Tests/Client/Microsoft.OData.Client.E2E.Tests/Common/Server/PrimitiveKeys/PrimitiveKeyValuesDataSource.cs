@@ -233,6 +233,25 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys
                 new EdmString { Id = "]" },
                 new EdmString { Id = "]]" },
                 new EdmString { Id = "]]]" },
+                new EdmString { Id = "{" },
+                new EdmString { Id = "{{" },
+                new EdmString { Id = "{{{" },
+                new EdmString { Id = "}" },
+                new EdmString { Id = "}}" },
+                new EdmString { Id = "}}}" },
+                new EdmString { Id = "?" },
+                new EdmString { Id = "??" },
+                new EdmString { Id = "???" },
+                new EdmString { Id = "'" },
+                new EdmString { Id = "''" },
+                new EdmString { Id = "'''" },
+                new EdmString { Id = "/" },
+                new EdmString { Id = "//" },
+                new EdmString { Id = "///" },
+                new EdmString { Id = "\"" },
+                new EdmString { Id = "\"\"" },
+                new EdmString { Id = "\"\"\"" },
+                new EdmString { Id = "SomeID" }
             ];
         }
 
