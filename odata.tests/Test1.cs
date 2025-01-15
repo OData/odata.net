@@ -142,6 +142,32 @@
                 @"C:\msgithub\odata.net\odata\__Generated\Parsers\Inners");
         }
 
+        [TestMethod]
+        public void GenerateAbnfWithLatest_2()
+        {
+            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
+            var coreRulesText = File.ReadAllText(coreRulesPath);
+            var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
+            var abnfRulesText = File.ReadAllText(abnfRulesPath);
+            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
+
+            GenerateParserTypes(
+                fullRulesText,
+                false,
+                "__GeneratedV2.CstNodes.Rules",
+                "__GeneratedV2.CstNodes.Inners",
+                @"C:\msgithub\odata.net\odata\__GeneratedV2\CstNodes\Rules",
+                @"C:\msgithub\odata.net\odata\__GeneratedV2\CstNodes\Inners",
+                "__Generated.Trancsribers.Rules",
+                "__Generated.Trancsribers.Inners",
+                @"C:\msgithub\odata.net\odata\__Generated\Transcribers\Rules",
+                @"C:\msgithub\odata.net\odata\__Generated\Transcribers\Inners",
+                "__Generated.Parsers.Rules",
+                "__Generated.Parsers.Inners",
+                @"C:\msgithub\odata.net\odata\__Generated\Parsers\Rules",
+                @"C:\msgithub\odata.net\odata\__Generated\Parsers\Inners");
+        }
+
         private static void GenerateParserTypes(
             string fullRulesText,
             bool useNumericFileNames,
@@ -169,7 +195,7 @@
             Directory.CreateDirectory(innerCstNodesDirectory);
             TranscribeNamespace(generatedCstNodes.InnerCstNodes, innerCstNodesDirectory, useNumericFileNames);
 
-            var generatedTranscribers = new _GeneratorV5.TranscribersGenerator(ruleTranscribersNamespace, innerTranscribersNamespace).Generate(generatedCstNodes);
+            /*var generatedTranscribers = new _GeneratorV5.TranscribersGenerator(ruleTranscribersNamespace, innerTranscribersNamespace).Generate(generatedCstNodes);
 
             //// TODO transcriber generator should return namespaces
             Directory.CreateDirectory(ruleTranscribersDirectory);
@@ -192,7 +218,7 @@
             Directory.CreateDirectory(ruleParsersDirectory);
             TranscribeNamespace(generatedParsers.RuleParsers, ruleParsersDirectory, useNumericFileNames);
             Directory.CreateDirectory(innerParsersDirectory);
-            TranscribeNamespace(generatedParsers.InnerParsers, innerParsersDirectory, useNumericFileNames);
+            TranscribeNamespace(generatedParsers.InnerParsers, innerParsersDirectory, useNumericFileNames);*/
         }
 
         private static void TranscribeNamespace(Namespace @namespace, string folderPath, bool useNumericFileNames)

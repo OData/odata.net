@@ -385,6 +385,8 @@
                             {
                                 private readonly _elementToPropertyDefinitionGenerator elementToPropertyDefinition;
 
+                                private readonly _repeatToCollectionType repeatToCollectionType;
+
                                 public _repetitonToPropertyDefinitionGenerator(
                                     string classNamePrefix,
                                     string @namespace,
@@ -398,6 +400,7 @@
                                         innersClassName,
                                         alternationToClass,
                                         toClassNames);
+                                    this.repeatToCollectionType = new _repeatToCollectionType(innersClassName);
                                 }
 
                                 public PropertyDefinition Generate(_repetition repetition, (Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
@@ -406,29 +409,109 @@
                                         .elementToPropertyDefinition
                                         .Visit(
                                             repetition._element_1,
-                                            (repetition._repeat_1 != null, context.PropertyTypeToCount, context.InnerClasses));
+                                            (repetition._repeat_1 == null ? null : this.repeatToCollectionType.Visit(repetition._repeat_1, (context.InnerClasses, new Root.Void())), context.PropertyTypeToCount, context.InnerClasses));
                                 }
 
-                                private sealed class RepeatToCollectionType : _repeat.Visitor<string, Root.Void>
+                                private sealed class _repeatToCollectionType : _repeat.Visitor<string, (Dictionary<string, Class> InnerClasses, Root.Void @void)>
                                 {
-                                    private RepeatToCollectionType()
-                                    {
-                                    }
+                                    private readonly string innersClassName;
 
-                                    public static RepeatToCollectionType Instance { get; } = new RepeatToCollectionType();
+                                    public _repeatToCollectionType(string innersClassName)
+                                    {
+                                        this.innersClassName = innersClassName;
+                                    }
 
                                     protected internal override string Accept(_repeat._Ⲥʺx2Aʺ_ЖDIGITↃ node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
                                     {
                                         //// TODO you are here, but you need to consolidate your todos and start actually addressing them
-                                        //// TODO public sealed class HelperRangedAtMost{count}<T> : IEnumerable<T>
+                                        var collectionType = $"HelperRangedAtMost{DigitsToInt.Instance.Generate(node._Ⲥʺx2Aʺ_ЖDIGITↃ_1._ʺx2Aʺ_ЖDIGIT_1._DIGIT_1)}";
+
+                                        if (!context.InnerClasses.ContainsKey(collectionType))
+                                        {
+                                            context.InnerClasses[collectionType] = CreateClass(collectionType);
+                                        }
+
+                                        return $"{this.innersClassName}.{collectionType}";
                                     }
 
-                                    protected internal override string Accept(_repeat._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ node, Root.Void context)
+                                    protected internal override string Accept(_repeat._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
                                     {
+                                        string collectionType;
+                                        if (node._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ_1._1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡_1._ʺx2Aʺ_ЖDIGIT_1 == null)
+                                        {
+                                            collectionType = $"HelperRangedExactly{DigitsToInt.Instance.Generate(node._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ_1._1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡_1._DIGIT_1)}";
+                                        }
+                                        else
+                                        {
+                                            if (node._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ_1._1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡_1._ʺx2Aʺ_ЖDIGIT_1._DIGIT_1.Any())
+                                            {
+                                                collectionType = $"HelperRangedFrom{DigitsToInt.Instance.Generate(node._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ_1._1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡_1._DIGIT_1)}To{DigitsToInt.Instance.Generate(node._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ_1._1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡_1._ʺx2Aʺ_ЖDIGIT_1._DIGIT_1)}";
+                                            }
+                                            else
+                                            {
+                                                collectionType = $"HelperRangedAtLeast{DigitsToInt.Instance.Generate(node._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ_1._1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡_1._DIGIT_1)}";
+                                            }
+                                        }
+
+                                        if (!context.InnerClasses.ContainsKey(collectionType))
+                                        {
+                                            context.InnerClasses[collectionType] = CreateClass(collectionType);
+                                        }
+
+                                        return $"{this.innersClassName}.{collectionType}";
+                                    }
+
+                                    private static Class CreateClass(string collectionType)
+                                    {
+                                        return new Class(
+                                            AccessModifier.Public,
+                                            ClassModifier.Sealed,
+                                            collectionType,
+                                            new[]
+                                            {
+                                                "T",
+                                            },
+                                            "IEnumerable<T>",
+                                            new[]
+                                            {
+                                                new ConstructorDefinition(
+                                                    AccessModifier.Public,
+                                                    new[]
+                                                    {
+                                                        new MethodParameter("System.Collections.Generic.IEnumerable<T>", "source"),
+                                                    },
+                                                    new[]
+                                                    {
+                                                        "this.source = source;",
+                                                    }),
+                                            },
+                                            new[]
+                                            {
+                                                new MethodDefinition(
+                                                    AccessModifier.Public,
+                                                    ClassModifier.None,
+                                                    false,
+                                                    "System.Collections.Generic.IEnumerator<T>",
+                                                    Enumerable.Empty<string>(),
+                                                    "GetEnumerator",
+                                                    Enumerable.Empty<MethodParameter>(),
+                                                    "return this.source.GetEnumerator();"),
+                                                new MethodDefinition(
+                                                    AccessModifier.Public,
+                                                    ClassModifier.None,
+                                                    false,
+                                                    "System.Collections.Generic.IEnumerator",
+                                                    Enumerable.Empty<string>(),
+                                                    "IEnumerable.GetEnumerator",
+                                                    Enumerable.Empty<MethodParameter>(),
+                                                    "return ((IEnumerable)this.source).GetEnumerator();"),
+                                            },
+                                            Enumerable.Empty<Class>(),
+                                            Enumerable.Empty<PropertyDefinition>());
                                     }
                                 }
 
-                                private sealed class _elementToPropertyDefinitionGenerator : _element.Visitor<PropertyDefinition, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses)>
+                                private sealed class _elementToPropertyDefinitionGenerator : _element.Visitor<PropertyDefinition, (string? CollectionType, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses)>
                                 {
                                     private readonly string classNamePrefix;
                                     private readonly string @namespace;
@@ -457,7 +540,7 @@
                                         this._numⲻvalToClass = new _numⲻvalToClassGenerator(classNamePrefix, innersClassName, this.toClassNames);
                                     }
 
-                                    protected internal override PropertyDefinition Accept(_element._rulename node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
+                                    protected internal override PropertyDefinition Accept(_element._rulename node, (string? CollectionType, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
                                         var ruleName = this.classNamePrefix + this
                                             .toClassNames
@@ -465,9 +548,9 @@
                                             .Generate(
                                                 node._rulename_1);
                                         var propertyType = $"{this.@namespace}.{ruleName}";
-                                        if (context.IsCollection)
+                                        if (context.CollectionType != null)
                                         {
-                                            propertyType = $"IEnumerable<{propertyType}>";
+                                            propertyType = $"{context.CollectionType}<{propertyType}>";
                                         }
 
                                         if (!context.PropertyTypeToCount.TryGetValue(ruleName, out var count))
@@ -496,7 +579,7 @@
                                             alternation._concatenation_1._repetition_1._element_1 is _element._rulename;
                                     }
 
-                                    protected internal override PropertyDefinition Accept(_element._group node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
+                                    protected internal override PropertyDefinition Accept(_element._group node, (string? CollectionType, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
                                         var isOnlyRuleName = IsOnlyRuleName(node._group_1._alternation_1);
 
@@ -545,9 +628,9 @@
                                         }
 
                                         var propertyType = $"{this.innersClassName}.{groupClassName}";
-                                        if (context.IsCollection)
+                                        if (context.CollectionType != null)
                                         {
-                                            propertyType = $"IEnumerable<{propertyType}>";
+                                            propertyType = $"{context.CollectionType}<{propertyType}>";
                                         }
 
                                         if (!context.PropertyTypeToCount.TryGetValue(groupClassName, out var count))
@@ -568,7 +651,7 @@
                                             false);
                                     }
 
-                                    protected internal override PropertyDefinition Accept(_element._option node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
+                                    protected internal override PropertyDefinition Accept(_element._option node, (string? CollectionType, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
                                         var isOnlyRuleName = IsOnlyRuleName(node._option_1._alternation_1);
                                         var innerClassName = this.classNamePrefix + this.toClassNames.AlternationToClassName.Generate(node._option_1._alternation_1);
@@ -594,9 +677,9 @@
                                         }
 
                                         var propertyType = $"{(isOnlyRuleName ? this.@namespace : this.innersClassName)}.{innerClassName}?";
-                                        if (context.IsCollection)
+                                        if (context.CollectionType != null)
                                         {
-                                            propertyType = $"IEnumerable<{propertyType}>";
+                                            propertyType = $"{context.CollectionType}<{propertyType}>";
                                         }
 
                                         if (!context.PropertyTypeToCount.TryGetValue(innerClassName, out var count))
@@ -617,7 +700,7 @@
                                             false);
                                     }
 
-                                    protected internal override PropertyDefinition Accept(_element._charⲻval node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
+                                    protected internal override PropertyDefinition Accept(_element._charⲻval node, (string? CollectionType, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
                                         var innerClassName = this.classNamePrefix + this.toClassNames.CharValToClassName.Generate(node._charⲻval_1);
 
@@ -629,9 +712,9 @@
                                         }
 
                                         var propertyType = $"{this.innersClassName}.{innerClassName}";
-                                        if (context.IsCollection)
+                                        if (context.CollectionType != null)
                                         {
-                                            propertyType = $"IEnumerable<{propertyType}>";
+                                            propertyType = $"{context.CollectionType}<{propertyType}>";
                                         }
 
                                         if (!context.PropertyTypeToCount.TryGetValue(innerClassName, out var count))
@@ -652,7 +735,7 @@
                                             false);
                                     }
 
-                                    protected internal override PropertyDefinition Accept(_element._numⲻval node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
+                                    protected internal override PropertyDefinition Accept(_element._numⲻval node, (string? CollectionType, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
                                         var innerClassName = this.classNamePrefix + this.toClassNames.NumValToClassName.Generate(node._numⲻval_1);
 
@@ -666,9 +749,9 @@
                                         }
 
                                         var propertyType = $"{this.innersClassName}.{innerClassName}";
-                                        if (context.IsCollection)
+                                        if (context.CollectionType != null)
                                         {
-                                            propertyType = $"IEnumerable<{propertyType}>";
+                                            propertyType = $"{context.CollectionType}<{propertyType}>";
                                         }
 
                                         if (!context.PropertyTypeToCount.TryGetValue(innerClassName, out var count))
@@ -689,7 +772,7 @@
                                             false);
                                     }
 
-                                    protected internal override PropertyDefinition Accept(_element._proseⲻval node, (bool IsCollection, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
+                                    protected internal override PropertyDefinition Accept(_element._proseⲻval node, (string? CollectionType, Dictionary<string, int> PropertyTypeToCount, Dictionary<string, Class> InnerClasses) context)
                                     {
                                         throw new NotImplementedException("TODO");
                                     }
@@ -3274,6 +3357,27 @@
             {
                 return (char)0x7A;
             }
+        }
+    }
+
+    public sealed class DigitsToInt
+    {
+        private DigitsToInt()
+        {
+        }
+
+        public static DigitsToInt Instance = new DigitsToInt();
+
+        public int Generate(IEnumerable<_DIGIT> digits)
+        {
+            var result = 0;
+            foreach (var digit in digits)
+            {
+                result *= 10;
+                result += DigitToInt.Instance.Generate(digit);
+            }
+
+            return result;
         }
     }
 
