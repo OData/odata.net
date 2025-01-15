@@ -56,27 +56,13 @@ public class BatchRequestWithRelativeUriTests : EndToEndTestBase<BatchRequestWit
         ResetDefaultDataSource();
     }
 
-    [Fact]
-    public async Task BatchRequestWithAbsoluteUriTest()
+    [Theory]
+    [InlineData(BatchPayloadUriOption.AbsoluteUri)]
+    [InlineData(BatchPayloadUriOption.RelativeUri)]
+    [InlineData(BatchPayloadUriOption.AbsoluteUriUsingHostHeader)]
+    public async Task BatchRequestWithResourcePathTest(BatchPayloadUriOption option)
     {
-        await BatchRequestWithPayloadUriWritingOptionAsync(BatchPayloadUriOption.AbsoluteUri);
-    }
-    [Fact]
-    public async Task BatchRequestWithAbsoluteResourcePathAndHostTest()
-    {
-        await BatchRequestWithPayloadUriWritingOptionAsync(BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
-    }
-
-    [Fact]
-    public async Task BatchRequestWithRelativeResourcePathTest()
-    {
-        await BatchRequestWithPayloadUriWritingOptionAsync(BatchPayloadUriOption.RelativeUri);
-    }
-
-    #region Private methods
-
-    private async Task BatchRequestWithPayloadUriWritingOptionAsync(BatchPayloadUriOption option)
-    {
+        // Arrange
         var writerSettings = new ODataMessageWriterSettings
         {
             BaseUri = _baseUri,
@@ -125,7 +111,7 @@ public class BatchRequestWithRelativeUriTests : EndToEndTestBase<BatchRequestWit
             var batchChangesetOperation1 = await batchWriter.CreateOperationRequestMessageAsync("POST", requestUrl, "1", option);
             batchChangesetOperation1.SetHeader("Content-Type", "application/json;odata.metadata=full");
             batchChangesetOperation1.SetHeader("Accept", "application/json;odata.metadata=full");
-            
+
             var paymentInstrumentEntry = new ODataResource() { TypeName = $"{NameSpacePrefix}.PaymentInstrument" };
             var paymentInstrumentEntryP1 = new ODataProperty { Name = "PaymentInstrumentID", Value = 102910 };
             var paymentInstrumentEntryP2 = new ODataProperty { Name = "FriendlyName", Value = "102 batch new PI" };
@@ -151,11 +137,16 @@ public class BatchRequestWithRelativeUriTests : EndToEndTestBase<BatchRequestWit
             await batchWriter.WriteEndBatchAsync();
         }
 
+        // Act
         var responseMessage = await requestMessage.GetResponseAsync();
+
+        // Assert
         Assert.Equal(200, responseMessage.StatusCode);
 
         await ProcessBatchResponseAsync(responseMessage);
     }
+
+    #region Private methods
 
     private async Task ProcessBatchResponseAsync(IODataResponseMessageAsync responseMessage)
     {
