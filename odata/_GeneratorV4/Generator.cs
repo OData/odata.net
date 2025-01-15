@@ -7,8 +7,6 @@
 
     using __Generated.CstNodes.Inners;
     using __Generated.CstNodes.Rules;
-    using AbnfParser.CstNodes;
-    using AbnfParser.CstNodes.Core;
     using AbnfParserGenerator;
 
     public static class NotNullExtension
@@ -163,6 +161,7 @@
             //// TODO preserve ABNF comments as xmldoc?
             //// TODO it would be nice if collection properties on cst nodes were plural
             //// TODO if you let the "innersclassname" actually be a namespace, then the caller could decide if they want all the cases together, or if they want them separate, or whatever
+            //// TODO you need to actually do assertion for the "repeat" types (for example, atleast1 needs to ahve it asserted that the input parameter has at least one)
             //// TODO make "optionals" not be nullable
             //// TODO i don't really like using _ for spaces *and* for the property name conflict resolution
             //// TODO you are entirely skipping out on incremental definitions, by the way

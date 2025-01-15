@@ -1,7 +1,6 @@
 ﻿namespace odata.tests
 {
     using _GeneratorV4;
-    using AbnfParser.CstNodes.Core;
     using AbnfParserGenerator;
     using GeneratorV3;
     using Root;
@@ -12,7 +11,6 @@
     using System.Linq;
     using System.Text;
     using System.Xml;
-    using static AbnfParser.CstNodes.RuleList.Inner;
 
     [TestClass]
     public sealed class Test1
