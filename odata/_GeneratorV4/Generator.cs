@@ -428,6 +428,7 @@
 
                                         if (!context.InnerClasses.ContainsKey(collectionType))
                                         {
+                                            //// TODO allow a separate namespace for helpers
                                             context.InnerClasses[collectionType] = CreateClass(collectionType);
                                         }
 

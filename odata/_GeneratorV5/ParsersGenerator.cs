@@ -52,9 +52,68 @@
         {
             return @namespace
                 .Classes
+                .Where(
+                    @class =>
+                        !@class.Name.StartsWith($"HelperRanged"))
                 .Select(
                     @class =>
                         GenerateParser(@class, @namespace.Name, ruleCstNodesNamespace, innerCstNodesNamespace));
+        }
+
+        private string RangeCount(PropertyDefinition property, string innerCstNodesNamespace)
+        {
+            if (property.Type.StartsWith("System.Collections.Generic.IEnumerable<"))
+            {
+                return ".Many()";
+            }
+
+            var helperRangedDelimiter = $"{innerCstNodesNamespace}.HelperRanged";
+            if (property.Type.StartsWith(helperRangedDelimiter))
+            {
+                var kindOfHelper = property.Type.Substring(helperRangedDelimiter.Length + 1);
+                var exactlyDelimiter = "Exactly";
+                if (kindOfHelper.StartsWith(exactlyDelimiter))
+                {
+                    var countStart = kindOfHelper.Substring(exactlyDelimiter.Length + 1);
+                    var genericIndex = countStart.IndexOf("<");
+                    var count = countStart.Substring(0, genericIndex);
+                    return $".Repeat({count}, {count})";
+                }
+
+                var atMostDelimiter = "AtMost";
+                if (kindOfHelper.StartsWith(atMostDelimiter))
+                {
+                    var countStart = kindOfHelper.Substring(atMostDelimiter.Length + 1);
+                    var genericIndex = countStart.IndexOf("<");
+                    var count = countStart.Substring(0, genericIndex);
+                    return $".Repeat(0, {count})";
+                }
+
+                var atLeastDelimiter = "atLeast";
+                if (kindOfHelper.StartsWith(atLeastDelimiter))
+                {
+                    var countStart = kindOfHelper.Substring(atLeastDelimiter.Length + 1);
+                    var genericIndex = countStart.IndexOf("<");
+                    var count = countStart.Substring(0, genericIndex);
+                    return $".Repeat({count}, null)";
+                }
+
+                var fromDelimiter = "From";
+                if (kindOfHelper.StartsWith(fromDelimiter))
+                {
+                    var minimumStart = kindOfHelper.Substring(fromDelimiter.Length + 1);
+                    var toDelimiter = "To";
+                    var toDelimiterIndex = minimumStart.IndexOf(toDelimiter);
+
+                    var minimum = minimumStart.Substring(toDelimiterIndex);
+
+                    var genericIndex = minimumStart.IndexOf("<");
+                    var maximum = minimumStart.Substring(toDelimiterIndex + toDelimiter.Length, genericIndex);
+                    return $".Repeat({minimum}, {maximum})";
+                }
+            }
+            
+            return string.Empty;
         }
 
         private Class GenerateParser(Class @class, string cstNodeNamespace, string ruleCstNodesNamespace, string innerCstNodesNamespace)
@@ -126,7 +185,7 @@
                                     .Select(
                                         property =>
                                             //// TODO this initializer stuff should probably be its own method and use a builder
-                                            $"from {property.Name} in {UpdatePropertyType(property.Type, ruleCstNodesNamespace, innerCstNodesNamespace)}Parser.Instance{(property.Type.StartsWith("System.Collections.Generic.IEnumerable<") ? ".Many()" : string.Empty)}{(property.Type.EndsWith("?") ? ".Optional()" : string.Empty)}")), //// TODO how to handle different ranges of ienumerable (at most two, at least 3, etc.) //// TODO what are the cases where nullable and enumerable are used together?
+                                            $"from {property.Name} in {UpdatePropertyType(property.Type, ruleCstNodesNamespace, innerCstNodesNamespace)}Parser.Instance{RangeCount(property, innerCstNodesNamespace)}{(property.Type.EndsWith("?") ? ".Optional()" : string.Empty)}")), //// TODO how to handle different ranges of ienumerable (at most two, at least 3, etc.) //// TODO what are the cases where nullable and enumerable are used together?
                             Environment.NewLine,
                             $"select new {cstNodeNamespace}.{@class.Name}(",
                             string.Join(
@@ -240,6 +299,16 @@
                 return UpdatePropertyType(
                     propertyType.Substring(collectionDelimiter.Length, propertyType.Length - collectionDelimiter.Length - 1),
                     ruleCstNodesNamespace, 
+                    innerCstNodesNamespace);
+            }
+
+            if (propertyType.StartsWith($"{innerCstNodesNamespace}.HelperRanged"))
+            {
+                var genericIndex = propertyType.IndexOf("<");
+                var closingGenericIndex = propertyType.IndexOf(">");
+                return UpdatePropertyType(
+                    propertyType.Substring(genericIndex + 1, closingGenericIndex - genericIndex - 1),
+                    ruleCstNodesNamespace,
                     innerCstNodesNamespace);
             }
 

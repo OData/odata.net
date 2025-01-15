@@ -213,12 +213,12 @@
                 innerTranscibersDirectory,
                 useNumericFileNames);
 
-            /*var generatedParsers = new _GeneratorV5.ParsersGenerator(ruleParsersNamespace, innerParsersNamespace).Generate(generatedCstNodes);
+            var generatedParsers = new _GeneratorV5.ParsersGenerator(ruleParsersNamespace, innerParsersNamespace).Generate(generatedCstNodes);
 
             Directory.CreateDirectory(ruleParsersDirectory);
             TranscribeNamespace(generatedParsers.RuleParsers, ruleParsersDirectory, useNumericFileNames);
             Directory.CreateDirectory(innerParsersDirectory);
-            TranscribeNamespace(generatedParsers.InnerParsers, innerParsersDirectory, useNumericFileNames);*/
+            TranscribeNamespace(generatedParsers.InnerParsers, innerParsersDirectory, useNumericFileNames);
         }
 
         private static void TranscribeNamespace(Namespace @namespace, string folderPath, bool useNumericFileNames)
