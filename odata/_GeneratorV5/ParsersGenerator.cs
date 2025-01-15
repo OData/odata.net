@@ -106,10 +106,12 @@
                     var toDelimiter = "To";
                     var toDelimiterIndex = minimumStart.IndexOf(toDelimiter);
 
-                    var minimum = minimumStart.Substring(toDelimiterIndex);
+                    var minimum = minimumStart.Substring(0, toDelimiterIndex);
 
-                    var genericIndex = minimumStart.IndexOf("<");
-                    var maximum = minimumStart.Substring(toDelimiterIndex + toDelimiter.Length, genericIndex);
+                    var maximumStart = minimumStart.Substring(toDelimiterIndex + toDelimiter.Length);
+                    var genericIndex = maximumStart.IndexOf("<");
+
+                    var maximum = maximumStart.Substring(0, genericIndex);
                     return $".Repeat({minimum}, {maximum})";
                 }
 

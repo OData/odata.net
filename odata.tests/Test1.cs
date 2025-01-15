@@ -159,12 +159,11 @@
             string innerParsersDirectory
             )
         {
-            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
-            var newCst = _GeneratorV5.OldToGeneratedCstConverters.RuleListConverter.Instance.Convert(cst);
+            var cst = __Generated.Parsers.Rules._rulelistParser.Instance.Parse(fullRulesText);
 
-            var generatedCstNodes = new _GeneratorV5.CstNodesGenerator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(newCst);
+            var generatedCstNodes = new _GeneratorV5.CstNodesGenerator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(cst);
 
-            Directory.CreateDirectory(ruleCstNodesDirectory);
+            /*Directory.CreateDirectory(ruleCstNodesDirectory);
             TranscribeNamespace(generatedCstNodes.RuleCstNodes, ruleCstNodesDirectory, useNumericFileNames);
             Directory.CreateDirectory(innerCstNodesDirectory);
             TranscribeNamespace(generatedCstNodes.InnerCstNodes, innerCstNodesDirectory, useNumericFileNames);
@@ -185,14 +184,17 @@
                     innerTranscribersNamespace,
                     generatedTranscribers.Inners),
                 innerTranscibersDirectory,
-                useNumericFileNames);
+                useNumericFileNames);*/
 
             var generatedParsers = new _GeneratorV5.ParsersGenerator(ruleParsersNamespace, innerParsersNamespace).Generate(generatedCstNodes);
 
-            Directory.CreateDirectory(ruleParsersDirectory);
+            generatedParsers.RuleParsers.Classes.ToList();
+            generatedParsers.InnerParsers.Classes.ToList();
+
+            /*Directory.CreateDirectory(ruleParsersDirectory);
             TranscribeNamespace(generatedParsers.RuleParsers, ruleParsersDirectory, useNumericFileNames);
             Directory.CreateDirectory(innerParsersDirectory);
-            TranscribeNamespace(generatedParsers.InnerParsers, innerParsersDirectory, useNumericFileNames);
+            TranscribeNamespace(generatedParsers.InnerParsers, innerParsersDirectory, useNumericFileNames);*/
         }
 
         private static void TranscribeNamespace(Namespace @namespace, string folderPath, bool useNumericFileNames)
