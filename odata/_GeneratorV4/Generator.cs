@@ -153,9 +153,7 @@
                 toClassNames);
 
             //// !!!!!IMPORTANT WHENEVER YOU REMOVE OLD CODE, CHECK FOR TODOS!!!!!
-            //// TODO remove the old parsers
-            //// TODO remove the old cst nodes
-            //// TODO automatically generate parsers
+            //// TODO do a little more project cleanup before moving on
 
             //// TODO should you compose transcribers like you do parsers and this would be InnerTranscriber.Instance.Many().Transcribe()?
             //// TODO preserve ABNF comments as xmldoc?
