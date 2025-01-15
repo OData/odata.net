@@ -471,7 +471,7 @@
                                             {
                                                 "T",
                                             },
-                                            "IEnumerable<T>",
+                                            "System.Collections.Generic.IEnumerable<T>",
                                             new[]
                                             {
                                                 new ConstructorDefinition(
@@ -482,7 +482,7 @@
                                                     },
                                                     new[]
                                                     {
-                                                        "this.source = source;",
+                                                        "this.Source = source;",
                                                     }),
                                             },
                                             new[]
@@ -495,19 +495,27 @@
                                                     Enumerable.Empty<string>(),
                                                     "GetEnumerator",
                                                     Enumerable.Empty<MethodParameter>(),
-                                                    "return this.source.GetEnumerator();"),
+                                                    "return this.Source.GetEnumerator();"),
                                                 new MethodDefinition(
                                                     AccessModifier.Public,
                                                     ClassModifier.None,
                                                     false,
-                                                    "System.Collections.Generic.IEnumerator",
+                                                    "System.Collections.IEnumerator",
                                                     Enumerable.Empty<string>(),
-                                                    "IEnumerable.GetEnumerator",
+                                                    "System.Collections.IEnumerable.GetEnumerator",
                                                     Enumerable.Empty<MethodParameter>(),
-                                                    "return ((IEnumerable)this.source).GetEnumerator();"),
+                                                    "return ((System.Collections.IEnumerable)this.Source).GetEnumerator();"),
                                             },
                                             Enumerable.Empty<Class>(),
-                                            Enumerable.Empty<PropertyDefinition>());
+                                            new[]
+                                            {
+                                                new PropertyDefinition(
+                                                    AccessModifier.Private, 
+                                                    "System.Collections.Generic.IEnumerable<T>",
+                                                    "Source",
+                                                    true,
+                                                    false),
+                                            });
                                     }
                                 }
 
