@@ -21,12 +21,12 @@ namespace __Generated.CstNodes.Inners
         
         public sealed class _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ : _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃⳆⲤʺx2Dʺ_1ЖHEXDIGↃ
         {
-            public _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ(__Generated.CstNodes.Inners.HelperRangedAtLeast1<Inners._Ⲥʺx2Eʺ_1ЖHEXDIGↃ> _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1)
+            public _1ЖⲤʺx2Eʺ_1ЖHEXDIGↃ(__Generated.CstNodes.Inners.HelperRangedAtLeast1<__Generated.CstNodes.Inners._Ⲥʺx2Eʺ_1ЖHEXDIGↃ> _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1)
             {
                 this._Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1 = _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1;
             }
             
-            public __Generated.CstNodes.Inners.HelperRangedAtLeast1<Inners._Ⲥʺx2Eʺ_1ЖHEXDIGↃ> _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1 { get; }
+            public __Generated.CstNodes.Inners.HelperRangedAtLeast1<__Generated.CstNodes.Inners._Ⲥʺx2Eʺ_1ЖHEXDIGↃ> _Ⲥʺx2Eʺ_1ЖHEXDIGↃ_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

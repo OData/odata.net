@@ -114,6 +114,14 @@
                 return $"System.Collections.Generic.IEnumerable<{QualifyType(type.Substring(enumerableDelimiter.Length))}";
             }
 
+            var helperRangedDelimiter = "Inners.HelperRanged";
+            if (type.StartsWith(helperRangedDelimiter))
+            {
+                var genenerciIndex = type.IndexOf("<");
+                var helperRanged = type.Substring(0, genenerciIndex).Substring("Inners.".Length);
+                return $"{this.innerCstNodesNamespace}.{helperRanged}<{QualifyType(type.Substring(genenerciIndex + 1))}";
+            }
+
             var innersDelimiter = "Inners.";
             if (type.StartsWith(innersDelimiter))
             {
