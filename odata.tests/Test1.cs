@@ -142,32 +142,6 @@
                 @"C:\msgithub\odata.net\odata\__Generated\Parsers\Inners");
         }
 
-        [TestMethod]
-        public void GenerateAbnfWithLatest_2()
-        {
-            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
-            var coreRulesText = File.ReadAllText(coreRulesPath);
-            var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
-            var abnfRulesText = File.ReadAllText(abnfRulesPath);
-            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
-
-            GenerateParserTypes(
-                fullRulesText,
-                false,
-                "__Generated.CstNodes.Rules",
-                "__Generated.CstNodes.Inners",
-                @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules",
-                @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Inners",
-                "__Generated.Trancsribers.Rules",
-                "__Generated.Trancsribers.Inners",
-                @"C:\msgithub\odata.net\odata\__Generated\Transcribers\Rules",
-                @"C:\msgithub\odata.net\odata\__Generated\Transcribers\Inners",
-                "__Generated.Parsers.Rules",
-                "__Generated.Parsers.Inners",
-                @"C:\msgithub\odata.net\odata\__Generated\Parsers\Rules",
-                @"C:\msgithub\odata.net\odata\__Generated\Parsers\Inners");
-        }
-
         private static void GenerateParserTypes(
             string fullRulesText,
             bool useNumericFileNames,
