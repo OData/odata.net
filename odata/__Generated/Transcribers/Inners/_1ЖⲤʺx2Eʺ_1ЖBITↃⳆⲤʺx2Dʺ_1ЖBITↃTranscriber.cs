@@ -25,7 +25,7 @@ namespace __Generated.Trancsribers.Inners
             {
                 foreach (var _Ⲥʺx2Eʺ_1ЖBITↃ_1 in node._Ⲥʺx2Eʺ_1ЖBITↃ_1)
 {
-__Generated.Trancsribers.Inners._Ⲥʺx2Eʺ_1ЖBITↃTranscriber.Instance.Transcribe(_Ⲥʺx2Eʺ_1ЖBITↃ_1, context);
+Inners._Ⲥʺx2Eʺ_1ЖBITↃTranscriber.Instance.Transcribe(_Ⲥʺx2Eʺ_1ЖBITↃ_1, context);
 }
 
 return default;

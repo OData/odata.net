@@ -12,7 +12,7 @@ namespace __Generated.Trancsribers.Rules
         {
             foreach (var _ⲤWSPⳆCRLF_WSPↃ_1 in value._ⲤWSPⳆCRLF_WSPↃ_1)
 {
-__Generated.Trancsribers.Inners._ⲤWSPⳆCRLF_WSPↃTranscriber.Instance.Transcribe(_ⲤWSPⳆCRLF_WSPↃ_1, builder);
+Inners._ⲤWSPⳆCRLF_WSPↃTranscriber.Instance.Transcribe(_ⲤWSPⳆCRLF_WSPↃ_1, builder);
 }
 
         }

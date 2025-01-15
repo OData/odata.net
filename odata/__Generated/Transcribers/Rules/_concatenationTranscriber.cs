@@ -13,7 +13,7 @@ namespace __Generated.Trancsribers.Rules
             __Generated.Trancsribers.Rules._repetitionTranscriber.Instance.Transcribe(value._repetition_1, builder);
 foreach (var _Ⲥ1Жcⲻwsp_repetitionↃ_1 in value._Ⲥ1Жcⲻwsp_repetitionↃ_1)
 {
-__Generated.Trancsribers.Inners._Ⲥ1Жcⲻwsp_repetitionↃTranscriber.Instance.Transcribe(_Ⲥ1Жcⲻwsp_repetitionↃ_1, builder);
+Inners._Ⲥ1Жcⲻwsp_repetitionↃTranscriber.Instance.Transcribe(_Ⲥ1Жcⲻwsp_repetitionↃ_1, builder);
 }
 
         }

@@ -13,7 +13,7 @@ namespace __Generated.Trancsribers.Rules
             __Generated.Trancsribers.Rules._ALPHATranscriber.Instance.Transcribe(value._ALPHA_1, builder);
 foreach (var _ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1 in value._ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1)
 {
-__Generated.Trancsribers.Inners._ⲤALPHAⳆDIGITⳆʺx2DʺↃTranscriber.Instance.Transcribe(_ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1, builder);
+Inners._ⲤALPHAⳆDIGITⳆʺx2DʺↃTranscriber.Instance.Transcribe(_ⲤALPHAⳆDIGITⳆʺx2DʺↃ_1, builder);
 }
 
         }

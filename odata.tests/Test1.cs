@@ -195,7 +195,7 @@
             Directory.CreateDirectory(innerCstNodesDirectory);
             TranscribeNamespace(generatedCstNodes.InnerCstNodes, innerCstNodesDirectory, useNumericFileNames);
 
-            /*var generatedTranscribers = new _GeneratorV5.TranscribersGenerator(ruleTranscribersNamespace, innerTranscribersNamespace).Generate(generatedCstNodes);
+            var generatedTranscribers = new _GeneratorV5.TranscribersGenerator(ruleTranscribersNamespace, innerTranscribersNamespace).Generate(generatedCstNodes);
 
             //// TODO transcriber generator should return namespaces
             Directory.CreateDirectory(ruleTranscribersDirectory);
@@ -213,7 +213,7 @@
                 innerTranscibersDirectory,
                 useNumericFileNames);
 
-            var generatedParsers = new _GeneratorV5.ParsersGenerator(ruleParsersNamespace, innerParsersNamespace).Generate(generatedCstNodes);
+            /*var generatedParsers = new _GeneratorV5.ParsersGenerator(ruleParsersNamespace, innerParsersNamespace).Generate(generatedCstNodes);
 
             Directory.CreateDirectory(ruleParsersDirectory);
             TranscribeNamespace(generatedParsers.RuleParsers, ruleParsersDirectory, useNumericFileNames);

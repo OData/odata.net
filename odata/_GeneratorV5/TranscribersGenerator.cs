@@ -36,7 +36,7 @@
             string ruleCstNodesNamespace,
             string innerCstNodesNamespace)
         {
-            foreach (var cstNode in @namespace.Classes)
+            foreach (var cstNode in @namespace.Classes.Where(@class => !@class.Name.StartsWith("HelperRanged")))
             {
                 var transcriberName = $"{cstNode.Name}Transcriber";
 
@@ -265,17 +265,9 @@
         {
             foreach (var propertyDefinition in propertyDefinitions)
             {
-                if (propertyDefinition.Type.StartsWith("System.Collections.Generic.IEnumerable<"))
+                if (propertyDefinition.Type.StartsWith("System.Collections.Generic.IEnumerable<") || propertyDefinition.Type.StartsWith($"{innerCstNodesNamespace}.HelperRanged"))
                 {
-                    builder.AppendLine($"foreach (var {propertyDefinition.Name} in {nodeName}.{propertyDefinition.Name})");
-                    builder.AppendLine("{");
-                    var genericsStartIndex = propertyDefinition.Type.IndexOf("<");
-                    var genericsEndIndex = propertyDefinition.Type.IndexOf(">");
-                    var collectionType = propertyDefinition.Type.Substring(genericsStartIndex + 1, genericsEndIndex - genericsStartIndex - 1);
-                    
-                    builder.AppendLine($"{GetTranscriberType(collectionType, ruleCstNodesNamespace, innerCstNodesNamespace)}Transcriber.Instance.Transcribe({propertyDefinition.Name}, {builderName});");
-
-                    builder.AppendLine("}");
+                    HandleCollectionType(propertyDefinition, ruleCstNodesNamespace, innerCstNodesNamespace, nodeName, builderName, builder);
                 }
                 else if (propertyDefinition.Type.EndsWith("?"))
                 {
@@ -295,6 +287,25 @@
                     builder.AppendLine($"{GetTranscriberType(propertyType, ruleCstNodesNamespace, innerCstNodesNamespace)}Transcriber.Instance.Transcribe({nodeName}.{propertyDefinition.Name}, {builderName});");
                 }
             }
+        }
+
+        private void HandleCollectionType(
+            PropertyDefinition propertyDefinition,
+            string ruleCstNodesNamespace,
+            string innerCstNodesNamespace,
+            string nodeName,
+            string builderName,
+            StringBuilder builder)
+        {
+            builder.AppendLine($"foreach (var {propertyDefinition.Name} in {nodeName}.{propertyDefinition.Name})");
+            builder.AppendLine("{");
+            var genericsStartIndex = propertyDefinition.Type.IndexOf("<");
+            var genericsEndIndex = propertyDefinition.Type.IndexOf(">");
+            var collectionType = propertyDefinition.Type.Substring(genericsStartIndex + 1, genericsEndIndex - genericsStartIndex - 1);
+
+            builder.AppendLine($"{GetTranscriberType(collectionType, ruleCstNodesNamespace, innerCstNodesNamespace)}Transcriber.Instance.Transcribe({propertyDefinition.Name}, {builderName});");
+
+            builder.AppendLine("}");
         }
 
         private string GetTranscriberType(string propertyType, string ruleCstNodesNamespace, string innerCstNodesNamespace)
