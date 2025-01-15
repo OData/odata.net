@@ -265,7 +265,7 @@
         }
 
         [TestMethod]
-        public void CoreRulesV5_2()
+        public void CoreRulesV5()
         {
             var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
             var coreRulesText = File.ReadAllText(coreRulesPath);
@@ -284,7 +284,7 @@
         }
 
         [TestMethod]
-        public void AbnfRulesV5_2()
+        public void AbnfRulesV5()
         {
             var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
             var coreRulesText = File.ReadAllText(coreRulesPath);
@@ -302,7 +302,7 @@
         }
 
         [TestMethod]
-        public void OdataRulesV5_2()
+        public void OdataRulesV5()
         {
             var odataRulesPath = @"C:\msgithub\odata.net\odata\odata.abnf";
             var odataRulesText = File.ReadAllText(odataRulesPath);
@@ -317,7 +317,7 @@
         }
 
         [TestMethod]
-        public void TestRulesV5_2()
+        public void TestRulesV5()
         {
             var cst = __Generated.Parsers.Rules._rulelistParser.Instance.Parse(TestAbnf);
 
@@ -330,7 +330,7 @@
         }
 
         [TestMethod]
-        public void TestRules2V5_2()
+        public void TestRules2V5()
         {
             var abnf = File.ReadAllText(@"C:\msgithub\odata.net\odata\GeneratorV3\test.abnf");
             var cst = __Generated.Parsers.Rules._rulelistParser.Instance.Parse(abnf);
