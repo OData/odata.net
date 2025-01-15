@@ -497,7 +497,7 @@
                                                     Enumerable.Empty<MethodParameter>(),
                                                     "return this.Source.GetEnumerator();"),
                                                 new MethodDefinition(
-                                                    AccessModifier.Public,
+                                                    AccessModifier.None,
                                                     ClassModifier.None,
                                                     false,
                                                     "System.Collections.IEnumerator",
