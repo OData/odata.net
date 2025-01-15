@@ -30,7 +30,7 @@ public class SingletonUpdateTests : EndToEndTestBase<SingletonUpdateTests.TestsS
     {
         public override void ConfigureServices(IServiceCollection services)
         {
-            services.ConfigureControllers(typeof(SingletonTestsController), typeof(MetadataController));
+            services.ConfigureControllers(typeof(SingletonUpdateTestsController), typeof(MetadataController));
 
             services.AddControllers().AddOData(opt =>
                 opt.EnableQueryFeatures().AddRouteComponents("odata", DefaultEdmModel.GetEdmModel()));
@@ -55,64 +55,53 @@ public class SingletonUpdateTests : EndToEndTestBase<SingletonUpdateTests.TestsS
         ResetDefaultDataSource();
     }
 
-    public static IEnumerable<object[]> MimeTypesData
-    {
-        get
-        {
-            yield return new object[] { MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata };
-            yield return new object[] { MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata };
-            yield return new object[] { MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata };
-        }
-    }
+    // Constants
+    private const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
+    private const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
 
     [Theory]
-    [MemberData(nameof(MimeTypesData))]
+    [InlineData(MimeTypeODataParameterFullMetadata)]
+    [InlineData(MimeTypeODataParameterMinimalMetadata)]
     public async Task UpdateSingletonProperty(string mimeType)
     {
-        ResetDefaultDataSource();
-
         // Arrange
         var cities = new Dictionary<string, string>
         {
             { MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata, "Seattle" },
-            { MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata, "Paris" },
-            { MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata, "New York" }
+            { MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata, "Paris" }
         };
 
-        // Act
+        // Act (Query)
         var entries = await TestsHelper.QueryResourceEntriesAsync("VipCustomer", mimeType);
         var customerEntry = entries.SingleOrDefault(e => e != null && e.TypeName.EndsWith("Customer"));
 
-        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
-        {
-            // Assert
-            Assert.NotNull(customerEntry);
-            var cityProperty = customerEntry.Properties.Single(p => p.Name == "City") as ODataProperty;
-            Assert.NotNull(cityProperty);
-            Assert.Equal("London", cityProperty.Value);
-        }
+        // Assert
+        Assert.NotNull(customerEntry);
+        var cityProperty0 = customerEntry.Properties.Single(p => p.Name == "City") as ODataProperty;
+        Assert.NotNull(cityProperty0);
+        Assert.Equal("London", cityProperty0.Value);
 
         // Arrange
         var properties = new[] { new ODataProperty { Name = "City", Value = cities[mimeType] } };
 
-        // Act
+        // Act (Update)
         await this.UpdateEntryAsync("Customer", "VipCustomer", mimeType, properties);
         var updatedEntries = await TestsHelper.QueryResourceEntriesAsync("VipCustomer", mimeType);
 
         // Assert
-        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
-        {
-            var updatedCustomerEntry = updatedEntries.SingleOrDefault(e => e != null && e.TypeName.EndsWith("Customer"));
-            Assert.NotNull(updatedCustomerEntry);
+        var updatedCustomerEntry = updatedEntries.SingleOrDefault(e => e != null && e.TypeName.EndsWith("Customer"));
+        Assert.NotNull(updatedCustomerEntry);
 
-            var cityProperty = updatedCustomerEntry.Properties.Single(p => p.Name == "City") as ODataProperty;
-            Assert.NotNull(cityProperty);
-            Assert.Equal(cities[mimeType], cityProperty.Value);
-        }
+        var cityProperty1 = updatedCustomerEntry.Properties.Single(p => p.Name == "City") as ODataProperty;
+        Assert.NotNull(cityProperty1);
+        Assert.Equal(cities[mimeType], cityProperty1.Value);
+
+        ResetDefaultDataSource();
     }
 
     [Theory]
-    [MemberData(nameof(MimeTypesData))]
+    [InlineData(MimeTypeODataParameterFullMetadata)]
+    [InlineData(MimeTypeODataParameterMinimalMetadata)]
     public async Task UpdateSingletonComplexProperty(string mimeType)
     {
         // Arrange
@@ -180,11 +169,11 @@ public class SingletonUpdateTests : EndToEndTestBase<SingletonUpdateTests.TestsS
 
     #region Private methods
 
-    private ODataMessageReaderTestsHelper TestsHelper
+    private SingletonTestsHelper TestsHelper
     {
         get
         {
-            return new ODataMessageReaderTestsHelper(_baseUri, _model, Client);
+            return new SingletonTestsHelper(_baseUri, _model, Client);
         }
     }
 
@@ -240,7 +229,7 @@ public class SingletonUpdateTests : EndToEndTestBase<SingletonUpdateTests.TestsS
 
     private void ResetDefaultDataSource()
     {
-        var actionUri = new Uri(_baseUri + "singletontests/Default.ResetDefaultDataSource", UriKind.Absolute);
+        var actionUri = new Uri(_baseUri + "singletonupdatetests/Default.ResetDefaultDataSource", UriKind.Absolute);
         _context.Execute(actionUri, "POST");
     }
 

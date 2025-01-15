@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataMessageReaderTestsHelper.cs" company="Microsoft">
+// <copyright file="SingletonTestsHelper.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -8,16 +8,16 @@ using Microsoft.OData.Client.E2E.TestCommon.Common;
 using Microsoft.OData.Edm;
 using Xunit;
 
-namespace Microsoft.OData.Client.E2E.TestCommon.Helpers;
+namespace Microsoft.OData.Client.E2E.Tests.SingletonTests.Tests;
 
-public class ODataMessageReaderTestsHelper
+public class SingletonTestsHelper
 {
     private readonly Uri BaseUri;
     private readonly IEdmModel Model;
     private readonly HttpClient Client;
     private const string IncludeAnnotation = "odata.include-annotations";
 
-    public ODataMessageReaderTestsHelper(Uri baseUri, IEdmModel model, HttpClient client)
+    public SingletonTestsHelper(Uri baseUri, IEdmModel model, HttpClient client)
     {
         this.BaseUri = baseUri;
         this.Model = model;
@@ -101,7 +101,6 @@ public class ODataMessageReaderTestsHelper
                 }
                 Assert.Equal(ODataReaderState.Completed, reader.State);
             }
-
         }
 
         return entries;
@@ -140,7 +139,6 @@ public class ODataMessageReaderTestsHelper
                 }
                 Assert.Equal(ODataReaderState.Completed, reader.State);
             }
-
         }
 
         return (resourceEntries, resourceSetEntries);
