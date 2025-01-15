@@ -424,15 +424,22 @@
                                     protected internal override string Accept(_repeat._Ⲥʺx2Aʺ_ЖDIGITↃ node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
                                     {
                                         //// TODO you are here, but you need to consolidate your todos and start actually addressing them
-                                        var collectionType = $"HelperRangedAtMost{DigitsToInt.Instance.Generate(node._Ⲥʺx2Aʺ_ЖDIGITↃ_1._ʺx2Aʺ_ЖDIGIT_1._DIGIT_1)}";
-
-                                        if (!context.InnerClasses.ContainsKey(collectionType))
+                                        if (node._Ⲥʺx2Aʺ_ЖDIGITↃ_1._ʺx2Aʺ_ЖDIGIT_1._DIGIT_1.Any())
                                         {
-                                            //// TODO allow a separate namespace for helpers
-                                            context.InnerClasses[collectionType] = CreateClass(collectionType);
-                                        }
+                                            var collectionType = $"HelperRangedAtMost{DigitsToInt.Instance.Generate(node._Ⲥʺx2Aʺ_ЖDIGITↃ_1._ʺx2Aʺ_ЖDIGIT_1._DIGIT_1)}";
 
-                                        return $"{this.innersClassName}.{collectionType}";
+                                            if (!context.InnerClasses.ContainsKey(collectionType))
+                                            {
+                                                //// TODO allow a separate namespace for helpers
+                                                context.InnerClasses[collectionType] = CreateClass(collectionType);
+                                            }
+
+                                            return $"{this.innersClassName}.{collectionType}";
+                                        }
+                                        else
+                                        {
+                                            return "System.Collections.Generic.IEnumerable";
+                                        }
                                     }
 
                                     protected internal override string Accept(_repeat._Ⲥ1ЖDIGIT_꘡ʺx2Aʺ_ЖDIGIT꘡Ↄ node, (Dictionary<string, Class> InnerClasses, Root.Void @void) context)
