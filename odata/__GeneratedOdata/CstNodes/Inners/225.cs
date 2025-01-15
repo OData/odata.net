@@ -1,12 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _x23
+    public sealed class _ⲤqcharⲻnoⲻAMPⲻEQↃ
     {
-        private _x23()
+        public _ⲤqcharⲻnoⲻAMPⲻEQↃ(__GeneratedOdata.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQ _qcharⲻnoⲻAMPⲻEQ_1)
         {
+            this._qcharⲻnoⲻAMPⲻEQ_1 = _qcharⲻnoⲻAMPⲻEQ_1;
         }
         
-        public static _x23 Instance { get; } = new _x23();
+        public __GeneratedOdata.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQ _qcharⲻnoⲻAMPⲻEQ_1 { get; }
     }
     
 }

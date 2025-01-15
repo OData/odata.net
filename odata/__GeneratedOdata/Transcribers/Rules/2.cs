@@ -20,7 +20,7 @@ __GeneratedOdata.Trancsribers.Inners._ʺx3Aʺ_portTranscriber.Instance.Transcrib
 __GeneratedOdata.Trancsribers.Inners._ʺx2FʺTranscriber.Instance.Transcribe(value._ʺx2Fʺ_1, builder);
 foreach (var _Ⲥsegmentⲻnz_ʺx2FʺↃ_1 in value._Ⲥsegmentⲻnz_ʺx2FʺↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._Ⲥsegmentⲻnz_ʺx2FʺↃTranscriber.Instance.Transcribe(_Ⲥsegmentⲻnz_ʺx2FʺↃ_1, builder);
+Inners._Ⲥsegmentⲻnz_ʺx2FʺↃTranscriber.Instance.Transcribe(_Ⲥsegmentⲻnz_ʺx2FʺↃ_1, builder);
 }
 
         }

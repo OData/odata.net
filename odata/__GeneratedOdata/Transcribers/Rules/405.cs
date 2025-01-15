@@ -12,7 +12,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
         {
             foreach (var _ⲤpcharⳆʺx2FʺⳆʺx3FʺↃ_1 in value._ⲤpcharⳆʺx2FʺⳆʺx3FʺↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤpcharⳆʺx2FʺⳆʺx3FʺↃTranscriber.Instance.Transcribe(_ⲤpcharⳆʺx2FʺⳆʺx3FʺↃ_1, builder);
+Inners._ⲤpcharⳆʺx2FʺⳆʺx3FʺↃTranscriber.Instance.Transcribe(_ⲤpcharⳆʺx2FʺⳆʺx3FʺↃ_1, builder);
 }
 
         }

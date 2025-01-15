@@ -2,7 +2,7 @@ namespace __GeneratedOdata.CstNodes.Rules
 {
     public sealed class _odataⲻmaxversion
     {
-        public _odataⲻmaxversion(__GeneratedOdata.CstNodes.Inners._ʺx4Fx44x61x74x61x2Dx4Dx61x78x56x65x72x73x69x6Fx6Eʺ _ʺx4Fx44x61x74x61x2Dx4Dx61x78x56x65x72x73x69x6Fx6Eʺ_1, __GeneratedOdata.CstNodes.Inners._ʺx3Aʺ _ʺx3Aʺ_1, __GeneratedOdata.CstNodes.Rules._OWS _OWS_1, System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1, __GeneratedOdata.CstNodes.Inners._ʺx2Eʺ _ʺx2Eʺ_1, System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_2)
+        public _odataⲻmaxversion(__GeneratedOdata.CstNodes.Inners._ʺx4Fx44x61x74x61x2Dx4Dx61x78x56x65x72x73x69x6Fx6Eʺ _ʺx4Fx44x61x74x61x2Dx4Dx61x78x56x65x72x73x69x6Fx6Eʺ_1, __GeneratedOdata.CstNodes.Inners._ʺx3Aʺ _ʺx3Aʺ_1, __GeneratedOdata.CstNodes.Rules._OWS _OWS_1, __GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1, __GeneratedOdata.CstNodes.Inners._ʺx2Eʺ _ʺx2Eʺ_1, __GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_2)
         {
             this._ʺx4Fx44x61x74x61x2Dx4Dx61x78x56x65x72x73x69x6Fx6Eʺ_1 = _ʺx4Fx44x61x74x61x2Dx4Dx61x78x56x65x72x73x69x6Fx6Eʺ_1;
             this._ʺx3Aʺ_1 = _ʺx3Aʺ_1;
@@ -15,9 +15,9 @@ namespace __GeneratedOdata.CstNodes.Rules
         public __GeneratedOdata.CstNodes.Inners._ʺx4Fx44x61x74x61x2Dx4Dx61x78x56x65x72x73x69x6Fx6Eʺ _ʺx4Fx44x61x74x61x2Dx4Dx61x78x56x65x72x73x69x6Fx6Eʺ_1 { get; }
         public __GeneratedOdata.CstNodes.Inners._ʺx3Aʺ _ʺx3Aʺ_1 { get; }
         public __GeneratedOdata.CstNodes.Rules._OWS _OWS_1 { get; }
-        public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
         public __GeneratedOdata.CstNodes.Inners._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
-        public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_2 { get; }
+        public __GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_2 { get; }
     }
     
 }

@@ -1,13 +1,12 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx2Dʺ
+    public sealed class _x2D
     {
-        public _ʺx2Dʺ(__GeneratedOdata.CstNodes.Inners._x2D _x2D_1)
+        private _x2D()
         {
-            this._x2D_1 = _x2D_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x2D _x2D_1 { get; }
+        public static _x2D Instance { get; } = new _x2D();
     }
     
 }

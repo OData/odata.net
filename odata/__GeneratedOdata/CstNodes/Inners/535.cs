@@ -1,13 +1,23 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ⲤCOMMA_singleEnumValueↃ
+    public sealed class HelperRangedAtLeast3<T> : System.Collections.Generic.IEnumerable<T>
     {
-        public _ⲤCOMMA_singleEnumValueↃ(__GeneratedOdata.CstNodes.Inners._COMMA_singleEnumValue _COMMA_singleEnumValue_1)
+        public HelperRangedAtLeast3(System.Collections.Generic.IEnumerable<T> source)
         {
-            this._COMMA_singleEnumValue_1 = _COMMA_singleEnumValue_1;
+            this.Source = source;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._COMMA_singleEnumValue _COMMA_singleEnumValue_1 { get; }
+        private System.Collections.Generic.IEnumerable<T> Source { get; }
+        
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator()
+        {
+            return this.Source.GetEnumerator();
+        }
+        
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return ((System.Collections.IEnumerable)this.Source).GetEnumerator();
+        }
     }
     
 }

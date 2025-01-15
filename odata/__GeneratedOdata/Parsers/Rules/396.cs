@@ -9,8 +9,8 @@ namespace __GeneratedOdata.Parsers.Rules
         public static class _ʺx31ʺ_2DIGITParser
         {
             public static Parser<__GeneratedOdata.CstNodes.Rules._decⲻoctet._ʺx31ʺ_2DIGIT> Instance { get; } = from _ʺx31ʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx31ʺParser.Instance
-from _DIGIT_1 in __GeneratedOdata.Parsers.Rules._DIGITParser.Instance.Many()
-select new __GeneratedOdata.CstNodes.Rules._decⲻoctet._ʺx31ʺ_2DIGIT(_ʺx31ʺ_1, _DIGIT_1);
+from _DIGIT_1 in __GeneratedOdata.Parsers.Rules._DIGITParser.Instance.Repeat(2, 2)
+select new __GeneratedOdata.CstNodes.Rules._decⲻoctet._ʺx31ʺ_2DIGIT(_ʺx31ʺ_1, new __GeneratedOdata.CstNodes.Inners.HelperRangedExactly2<__GeneratedOdata.CstNodes.Rules._DIGIT>(_DIGIT_1));
         }
         
         public static class _ʺx32ʺ_Ⰳx30ⲻ34_DIGITParser

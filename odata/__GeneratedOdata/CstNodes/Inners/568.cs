@@ -1,15 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _COMMA_preference
+    public sealed class _ⲤCOMMA_ringLiteralↃ
     {
-        public _COMMA_preference(__GeneratedOdata.CstNodes.Rules._COMMA _COMMA_1, __GeneratedOdata.CstNodes.Rules._preference _preference_1)
+        public _ⲤCOMMA_ringLiteralↃ(__GeneratedOdata.CstNodes.Inners._COMMA_ringLiteral _COMMA_ringLiteral_1)
         {
-            this._COMMA_1 = _COMMA_1;
-            this._preference_1 = _preference_1;
+            this._COMMA_ringLiteral_1 = _COMMA_ringLiteral_1;
         }
         
-        public __GeneratedOdata.CstNodes.Rules._COMMA _COMMA_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._preference _preference_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._COMMA_ringLiteral _COMMA_ringLiteral_1 { get; }
     }
     
 }

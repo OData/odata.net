@@ -4,8 +4,8 @@ namespace __GeneratedOdata.Parsers.Rules
     
     public static class _segmentⲻnzParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._segmentⲻnz> Instance { get; } = from _pchar_1 in __GeneratedOdata.Parsers.Rules._pcharParser.Instance.Many()
-select new __GeneratedOdata.CstNodes.Rules._segmentⲻnz(_pchar_1);
+        public static Parser<__GeneratedOdata.CstNodes.Rules._segmentⲻnz> Instance { get; } = from _pchar_1 in __GeneratedOdata.Parsers.Rules._pcharParser.Instance.Repeat(1, null)
+select new __GeneratedOdata.CstNodes.Rules._segmentⲻnz(new __GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdata.CstNodes.Rules._pchar>(_pchar_1));
     }
     
 }

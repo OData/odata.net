@@ -14,7 +14,7 @@ namespace __GeneratedOdata.Trancsribers.Inners
 __GeneratedOdata.Trancsribers.Rules._expandCountOptionTranscriber.Instance.Transcribe(value._expandCountOption_1, builder);
 foreach (var _ⲤSEMI_expandCountOptionↃ_1 in value._ⲤSEMI_expandCountOptionↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤSEMI_expandCountOptionↃTranscriber.Instance.Transcribe(_ⲤSEMI_expandCountOptionↃ_1, builder);
+Inners._ⲤSEMI_expandCountOptionↃTranscriber.Instance.Transcribe(_ⲤSEMI_expandCountOptionↃ_1, builder);
 }
 __GeneratedOdata.Trancsribers.Rules._CLOSETranscriber.Instance.Transcribe(value._CLOSE_1, builder);
 

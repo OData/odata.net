@@ -1,53 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public abstract class _STARⳆ1Жunreserved
+    public sealed class _Ⲥʺx24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EʺⳆʺx73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EʺↃ
     {
-        private _STARⳆ1Жunreserved()
+        public _Ⲥʺx24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EʺⳆʺx73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EʺↃ(__GeneratedOdata.CstNodes.Inners._ʺx24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EʺⳆʺx73x63x68x65x6Dx61x76x65x72x73x69x6Fx6Eʺ _ʺx24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EʺⳆʺx73x63x68x65x6Dx61x76x65x72x73x69x6Fx6Eʺ_1)
         {
+            this._ʺx24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EʺⳆʺx73x63x68x65x6Dx61x76x65x72x73x69x6Fx6Eʺ_1 = _ʺx24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EʺⳆʺx73x63x68x65x6Dx61x76x65x72x73x69x6Fx6Eʺ_1;
         }
         
-        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-        
-        public abstract class Visitor<TResult, TContext>
-        {
-            public TResult Visit(_STARⳆ1Жunreserved node, TContext context)
-            {
-                return node.Dispatch(this, context);
-            }
-            
-            protected internal abstract TResult Accept(_STARⳆ1Жunreserved._STAR node, TContext context);
-            protected internal abstract TResult Accept(_STARⳆ1Жunreserved._1Жunreserved node, TContext context);
-        }
-        
-        public sealed class _STAR : _STARⳆ1Жunreserved
-        {
-            public _STAR(__GeneratedOdata.CstNodes.Rules._STAR _STAR_1)
-            {
-                this._STAR_1 = _STAR_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._STAR _STAR_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class _1Жunreserved : _STARⳆ1Жunreserved
-        {
-            public _1Жunreserved(System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Rules._unreserved> _unreserved_1)
-            {
-                this._unreserved_1 = _unreserved_1;
-            }
-            
-            public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Rules._unreserved> _unreserved_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
+        public __GeneratedOdata.CstNodes.Inners._ʺx24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EʺⳆʺx73x63x68x65x6Dx61x76x65x72x73x69x6Fx6Eʺ _ʺx24x73x63x68x65x6Dx61x76x65x72x73x69x6Fx6EʺⳆʺx73x63x68x65x6Dx61x76x65x72x73x69x6Fx6Eʺ_1 { get; }
     }
     
 }

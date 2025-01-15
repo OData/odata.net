@@ -13,7 +13,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
             __GeneratedOdata.Trancsribers.Rules._SQUOTETranscriber.Instance.Transcribe(value._SQUOTE_1, builder);
 foreach (var _ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ_1 in value._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃTranscriber.Instance.Transcribe(_ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ_1, builder);
+Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃTranscriber.Instance.Transcribe(_ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ_1, builder);
 }
 __GeneratedOdata.Trancsribers.Rules._SQUOTETranscriber.Instance.Transcribe(value._SQUOTE_2, builder);
 

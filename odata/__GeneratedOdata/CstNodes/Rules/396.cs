@@ -24,14 +24,14 @@ namespace __GeneratedOdata.CstNodes.Rules
         
         public sealed class _ʺx31ʺ_2DIGIT : _decⲻoctet
         {
-            public _ʺx31ʺ_2DIGIT(__GeneratedOdata.CstNodes.Inners._ʺx31ʺ _ʺx31ʺ_1, System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1)
+            public _ʺx31ʺ_2DIGIT(__GeneratedOdata.CstNodes.Inners._ʺx31ʺ _ʺx31ʺ_1, __GeneratedOdata.CstNodes.Inners.HelperRangedExactly2<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1)
             {
                 this._ʺx31ʺ_1 = _ʺx31ʺ_1;
                 this._DIGIT_1 = _DIGIT_1;
             }
             
             public __GeneratedOdata.CstNodes.Inners._ʺx31ʺ _ʺx31ʺ_1 { get; }
-            public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
+            public __GeneratedOdata.CstNodes.Inners.HelperRangedExactly2<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

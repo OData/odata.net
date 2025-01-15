@@ -57,8 +57,8 @@ select new __GeneratedOdata.CstNodes.Inners._quotationⲻmarkⳆescapeⳆⲤʺx2
         public static class _ʺx75ʺ_4HEXDIGParser
         {
             public static Parser<__GeneratedOdata.CstNodes.Inners._quotationⲻmarkⳆescapeⳆⲤʺx2FʺⳆʺx25x32x46ʺↃⳆʺx62ʺⳆʺx66ʺⳆʺx6EʺⳆʺx72ʺⳆʺx74ʺⳆʺx75ʺ_4HEXDIG._ʺx75ʺ_4HEXDIG> Instance { get; } = from _ʺx75ʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx75ʺParser.Instance
-from _HEXDIG_1 in __GeneratedOdata.Parsers.Rules._HEXDIGParser.Instance.Many()
-select new __GeneratedOdata.CstNodes.Inners._quotationⲻmarkⳆescapeⳆⲤʺx2FʺⳆʺx25x32x46ʺↃⳆʺx62ʺⳆʺx66ʺⳆʺx6EʺⳆʺx72ʺⳆʺx74ʺⳆʺx75ʺ_4HEXDIG._ʺx75ʺ_4HEXDIG(_ʺx75ʺ_1, _HEXDIG_1);
+from _HEXDIG_1 in __GeneratedOdata.Parsers.Rules._HEXDIGParser.Instance.Repeat(4, 4)
+select new __GeneratedOdata.CstNodes.Inners._quotationⲻmarkⳆescapeⳆⲤʺx2FʺⳆʺx25x32x46ʺↃⳆʺx62ʺⳆʺx66ʺⳆʺx6EʺⳆʺx72ʺⳆʺx74ʺⳆʺx75ʺ_4HEXDIG._ʺx75ʺ_4HEXDIG(_ʺx75ʺ_1, new __GeneratedOdata.CstNodes.Inners.HelperRangedExactly4<__GeneratedOdata.CstNodes.Rules._HEXDIG>(_HEXDIG_1));
         }
     }
     

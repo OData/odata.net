@@ -1,17 +1,15 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx24x69x74ʺ
+    public sealed class _ʺx23ʺ_annotationQualifier
     {
-        public _ʺx24x69x74ʺ(__GeneratedOdata.CstNodes.Inners._x24 _x24_1, __GeneratedOdata.CstNodes.Inners._x69 _x69_1, __GeneratedOdata.CstNodes.Inners._x74 _x74_1)
+        public _ʺx23ʺ_annotationQualifier(__GeneratedOdata.CstNodes.Inners._ʺx23ʺ _ʺx23ʺ_1, __GeneratedOdata.CstNodes.Rules._annotationQualifier _annotationQualifier_1)
         {
-            this._x24_1 = _x24_1;
-            this._x69_1 = _x69_1;
-            this._x74_1 = _x74_1;
+            this._ʺx23ʺ_1 = _ʺx23ʺ_1;
+            this._annotationQualifier_1 = _annotationQualifier_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x24 _x24_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x69 _x69_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x74 _x74_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._ʺx23ʺ _ʺx23ʺ_1 { get; }
+        public __GeneratedOdata.CstNodes.Rules._annotationQualifier _annotationQualifier_1 { get; }
     }
     
 }

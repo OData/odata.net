@@ -1,13 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx5Fʺ
+    public sealed class _Ⲥʺx2Eʺ_namespacePartↃ
     {
-        public _ʺx5Fʺ(__GeneratedOdata.CstNodes.Inners._x5F _x5F_1)
+        public _Ⲥʺx2Eʺ_namespacePartↃ(__GeneratedOdata.CstNodes.Inners._ʺx2Eʺ_namespacePart _ʺx2Eʺ_namespacePart_1)
         {
-            this._x5F_1 = _x5F_1;
+            this._ʺx2Eʺ_namespacePart_1 = _ʺx2Eʺ_namespacePart_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x5F _x5F_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._ʺx2Eʺ_namespacePart _ʺx2Eʺ_namespacePart_1 { get; }
     }
     
 }

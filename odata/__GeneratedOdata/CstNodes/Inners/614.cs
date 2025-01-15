@@ -1,13 +1,12 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ⲤSPⳆHTABↃ
+    public sealed class _4
     {
-        public _ⲤSPⳆHTABↃ(__GeneratedOdata.CstNodes.Inners._SPⳆHTAB _SPⳆHTAB_1)
+        private _4()
         {
-            this._SPⳆHTAB_1 = _SPⳆHTAB_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._SPⳆHTAB _SPⳆHTAB_1 { get; }
+        public static _4 Instance { get; } = new _4();
     }
     
 }

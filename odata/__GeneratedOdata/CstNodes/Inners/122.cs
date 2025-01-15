@@ -1,15 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _qualifiedComplexTypeName_ʺx2Fʺ
+    public sealed class _ⲤcomplexPropertyⳆcomplexColPropertyↃ
     {
-        public _qualifiedComplexTypeName_ʺx2Fʺ(__GeneratedOdata.CstNodes.Rules._qualifiedComplexTypeName _qualifiedComplexTypeName_1, __GeneratedOdata.CstNodes.Inners._ʺx2Fʺ _ʺx2Fʺ_1)
+        public _ⲤcomplexPropertyⳆcomplexColPropertyↃ(__GeneratedOdata.CstNodes.Inners._complexPropertyⳆcomplexColProperty _complexPropertyⳆcomplexColProperty_1)
         {
-            this._qualifiedComplexTypeName_1 = _qualifiedComplexTypeName_1;
-            this._ʺx2Fʺ_1 = _ʺx2Fʺ_1;
+            this._complexPropertyⳆcomplexColProperty_1 = _complexPropertyⳆcomplexColProperty_1;
         }
         
-        public __GeneratedOdata.CstNodes.Rules._qualifiedComplexTypeName _qualifiedComplexTypeName_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._ʺx2Fʺ _ʺx2Fʺ_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._complexPropertyⳆcomplexColProperty _complexPropertyⳆcomplexColProperty_1 { get; }
     }
     
 }

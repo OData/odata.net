@@ -1,19 +1,19 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx63x61x73x74ʺ
+    public sealed class _commonExpr_BWS_COMMA_BWS
     {
-        public _ʺx63x61x73x74ʺ(__GeneratedOdata.CstNodes.Inners._x63 _x63_1, __GeneratedOdata.CstNodes.Inners._x61 _x61_1, __GeneratedOdata.CstNodes.Inners._x73 _x73_1, __GeneratedOdata.CstNodes.Inners._x74 _x74_1)
+        public _commonExpr_BWS_COMMA_BWS(__GeneratedOdata.CstNodes.Rules._commonExpr _commonExpr_1, __GeneratedOdata.CstNodes.Rules._BWS _BWS_1, __GeneratedOdata.CstNodes.Rules._COMMA _COMMA_1, __GeneratedOdata.CstNodes.Rules._BWS _BWS_2)
         {
-            this._x63_1 = _x63_1;
-            this._x61_1 = _x61_1;
-            this._x73_1 = _x73_1;
-            this._x74_1 = _x74_1;
+            this._commonExpr_1 = _commonExpr_1;
+            this._BWS_1 = _BWS_1;
+            this._COMMA_1 = _COMMA_1;
+            this._BWS_2 = _BWS_2;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x63 _x63_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x61 _x61_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x73 _x73_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x74 _x74_1 { get; }
+        public __GeneratedOdata.CstNodes.Rules._commonExpr _commonExpr_1 { get; }
+        public __GeneratedOdata.CstNodes.Rules._BWS _BWS_1 { get; }
+        public __GeneratedOdata.CstNodes.Rules._COMMA _COMMA_1 { get; }
+        public __GeneratedOdata.CstNodes.Rules._BWS _BWS_2 { get; }
     }
     
 }

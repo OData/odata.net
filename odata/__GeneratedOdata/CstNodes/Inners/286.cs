@@ -1,21 +1,17 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _lambdaVariableExpr_BWS_COLON_BWS_lambdaPredicateExpr
+    public sealed class _ʺx61x6Ex79ʺ
     {
-        public _lambdaVariableExpr_BWS_COLON_BWS_lambdaPredicateExpr(__GeneratedOdata.CstNodes.Rules._lambdaVariableExpr _lambdaVariableExpr_1, __GeneratedOdata.CstNodes.Rules._BWS _BWS_1, __GeneratedOdata.CstNodes.Rules._COLON _COLON_1, __GeneratedOdata.CstNodes.Rules._BWS _BWS_2, __GeneratedOdata.CstNodes.Rules._lambdaPredicateExpr _lambdaPredicateExpr_1)
+        public _ʺx61x6Ex79ʺ(__GeneratedOdata.CstNodes.Inners._x61 _x61_1, __GeneratedOdata.CstNodes.Inners._x6E _x6E_1, __GeneratedOdata.CstNodes.Inners._x79 _x79_1)
         {
-            this._lambdaVariableExpr_1 = _lambdaVariableExpr_1;
-            this._BWS_1 = _BWS_1;
-            this._COLON_1 = _COLON_1;
-            this._BWS_2 = _BWS_2;
-            this._lambdaPredicateExpr_1 = _lambdaPredicateExpr_1;
+            this._x61_1 = _x61_1;
+            this._x6E_1 = _x6E_1;
+            this._x79_1 = _x79_1;
         }
         
-        public __GeneratedOdata.CstNodes.Rules._lambdaVariableExpr _lambdaVariableExpr_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._BWS _BWS_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._COLON _COLON_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._BWS _BWS_2 { get; }
-        public __GeneratedOdata.CstNodes.Rules._lambdaPredicateExpr _lambdaPredicateExpr_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x61 _x61_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x6E _x6E_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x79 _x79_1 { get; }
     }
     
 }

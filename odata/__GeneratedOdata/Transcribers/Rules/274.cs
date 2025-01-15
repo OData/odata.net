@@ -12,7 +12,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
         {
             foreach (var _Ⲥ4base64charↃ_1 in value._Ⲥ4base64charↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._Ⲥ4base64charↃTranscriber.Instance.Transcribe(_Ⲥ4base64charↃ_1, builder);
+Inners._Ⲥ4base64charↃTranscriber.Instance.Transcribe(_Ⲥ4base64charↃ_1, builder);
 }
 if (value._base64b16Ⳇbase64b8_1 != null)
 {

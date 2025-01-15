@@ -1,13 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _Ⲥʺx72x65x70x72x65x73x65x6Ex74x61x74x69x6Fx6EʺⳆʺx6Dx69x6Ex69x6Dx61x6CʺↃ
+    public sealed class _ⲤCOMMA_annotationIdentifierↃ
     {
-        public _Ⲥʺx72x65x70x72x65x73x65x6Ex74x61x74x69x6Fx6EʺⳆʺx6Dx69x6Ex69x6Dx61x6CʺↃ(__GeneratedOdata.CstNodes.Inners._ʺx72x65x70x72x65x73x65x6Ex74x61x74x69x6Fx6EʺⳆʺx6Dx69x6Ex69x6Dx61x6Cʺ _ʺx72x65x70x72x65x73x65x6Ex74x61x74x69x6Fx6EʺⳆʺx6Dx69x6Ex69x6Dx61x6Cʺ_1)
+        public _ⲤCOMMA_annotationIdentifierↃ(__GeneratedOdata.CstNodes.Inners._COMMA_annotationIdentifier _COMMA_annotationIdentifier_1)
         {
-            this._ʺx72x65x70x72x65x73x65x6Ex74x61x74x69x6Fx6EʺⳆʺx6Dx69x6Ex69x6Dx61x6Cʺ_1 = _ʺx72x65x70x72x65x73x65x6Ex74x61x74x69x6Fx6EʺⳆʺx6Dx69x6Ex69x6Dx61x6Cʺ_1;
+            this._COMMA_annotationIdentifier_1 = _COMMA_annotationIdentifier_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._ʺx72x65x70x72x65x73x65x6Ex74x61x74x69x6Fx6EʺⳆʺx6Dx69x6Ex69x6Dx61x6Cʺ _ʺx72x65x70x72x65x73x65x6Ex74x61x74x69x6Fx6EʺⳆʺx6Dx69x6Ex69x6Dx61x6Cʺ_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._COMMA_annotationIdentifier _COMMA_annotationIdentifier_1 { get; }
     }
     
 }

@@ -1,13 +1,31 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _Ⲥʺx2Eʺ_namespacePartↃ
+    public sealed class _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ
     {
-        public _Ⲥʺx2Eʺ_namespacePartↃ(__GeneratedOdata.CstNodes.Inners._ʺx2Eʺ_namespacePart _ʺx2Eʺ_namespacePart_1)
+        public _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ(__GeneratedOdata.CstNodes.Inners._x43 _x43_1, __GeneratedOdata.CstNodes.Inners._x6F _x6F_1, __GeneratedOdata.CstNodes.Inners._x6C _x6C_1, __GeneratedOdata.CstNodes.Inners._x6C _x6C_2, __GeneratedOdata.CstNodes.Inners._x65 _x65_1, __GeneratedOdata.CstNodes.Inners._x63 _x63_1, __GeneratedOdata.CstNodes.Inners._x74 _x74_1, __GeneratedOdata.CstNodes.Inners._x69 _x69_1, __GeneratedOdata.CstNodes.Inners._x6F _x6F_2, __GeneratedOdata.CstNodes.Inners._x6E _x6E_1)
         {
-            this._ʺx2Eʺ_namespacePart_1 = _ʺx2Eʺ_namespacePart_1;
+            this._x43_1 = _x43_1;
+            this._x6F_1 = _x6F_1;
+            this._x6C_1 = _x6C_1;
+            this._x6C_2 = _x6C_2;
+            this._x65_1 = _x65_1;
+            this._x63_1 = _x63_1;
+            this._x74_1 = _x74_1;
+            this._x69_1 = _x69_1;
+            this._x6F_2 = _x6F_2;
+            this._x6E_1 = _x6E_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._ʺx2Eʺ_namespacePart _ʺx2Eʺ_namespacePart_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x43 _x43_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x6F _x6F_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x6C _x6C_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x6C _x6C_2 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x65 _x65_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x63 _x63_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x74 _x74_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x69 _x69_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x6F _x6F_2 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x6E _x6E_1 { get; }
     }
     
 }

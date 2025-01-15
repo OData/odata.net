@@ -1,57 +1,23 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public abstract class _STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ
+    public sealed class _ʺx6Fx64x61x74x61x2Eʺ
     {
-        private _STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ()
+        public _ʺx6Fx64x61x74x61x2Eʺ(__GeneratedOdata.CstNodes.Inners._x6F _x6F_1, __GeneratedOdata.CstNodes.Inners._x64 _x64_1, __GeneratedOdata.CstNodes.Inners._x61 _x61_1, __GeneratedOdata.CstNodes.Inners._x74 _x74_1, __GeneratedOdata.CstNodes.Inners._x61 _x61_2, __GeneratedOdata.CstNodes.Inners._x2E _x2E_1)
         {
+            this._x6F_1 = _x6F_1;
+            this._x64_1 = _x64_1;
+            this._x61_1 = _x61_1;
+            this._x74_1 = _x74_1;
+            this._x61_2 = _x61_2;
+            this._x2E_1 = _x2E_1;
         }
         
-        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-        
-        public abstract class Visitor<TResult, TContext>
-        {
-            public TResult Visit(_STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ node, TContext context)
-            {
-                return node.Dispatch(this, context);
-            }
-            
-            protected internal abstract TResult Accept(_STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ._STAR node, TContext context);
-            protected internal abstract TResult Accept(_STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ._namespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ node, TContext context);
-        }
-        
-        public sealed class _STAR : _STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ
-        {
-            public _STAR(__GeneratedOdata.CstNodes.Rules._STAR _STAR_1)
-            {
-                this._STAR_1 = _STAR_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._STAR _STAR_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class _namespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ : _STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ
-        {
-            public _namespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ(__GeneratedOdata.CstNodes.Rules._namespace _namespace_1, __GeneratedOdata.CstNodes.Inners._ʺx2Eʺ _ʺx2Eʺ_1, __GeneratedOdata.CstNodes.Inners._ⲤtermNameⳆSTARↃ _ⲤtermNameⳆSTARↃ_1)
-            {
-                this._namespace_1 = _namespace_1;
-                this._ʺx2Eʺ_1 = _ʺx2Eʺ_1;
-                this._ⲤtermNameⳆSTARↃ_1 = _ⲤtermNameⳆSTARↃ_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._namespace _namespace_1 { get; }
-            public __GeneratedOdata.CstNodes.Inners._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
-            public __GeneratedOdata.CstNodes.Inners._ⲤtermNameⳆSTARↃ _ⲤtermNameⳆSTARↃ_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
+        public __GeneratedOdata.CstNodes.Inners._x6F _x6F_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x64 _x64_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x61 _x61_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x74 _x74_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x61 _x61_2 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x2E _x2E_1 { get; }
     }
     
 }

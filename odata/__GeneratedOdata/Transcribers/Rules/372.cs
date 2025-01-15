@@ -12,7 +12,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
         {
             foreach (var _ⲤSPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺↃ_1 in value._ⲤSPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤSPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺↃTranscriber.Instance.Transcribe(_ⲤSPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺↃ_1, builder);
+Inners._ⲤSPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺↃTranscriber.Instance.Transcribe(_ⲤSPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺↃ_1, builder);
 }
 
         }

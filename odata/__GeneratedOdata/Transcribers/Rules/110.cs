@@ -14,7 +14,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
 __GeneratedOdata.Trancsribers.Rules._selectListItemTranscriber.Instance.Transcribe(value._selectListItem_1, builder);
 foreach (var _ⲤCOMMA_selectListItemↃ_1 in value._ⲤCOMMA_selectListItemↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤCOMMA_selectListItemↃTranscriber.Instance.Transcribe(_ⲤCOMMA_selectListItemↃ_1, builder);
+Inners._ⲤCOMMA_selectListItemↃTranscriber.Instance.Transcribe(_ⲤCOMMA_selectListItemↃ_1, builder);
 }
 __GeneratedOdata.Trancsribers.Rules._CLOSETranscriber.Instance.Transcribe(value._CLOSE_1, builder);
 

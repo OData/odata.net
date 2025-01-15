@@ -12,7 +12,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
         {
             foreach (var _ⲤunreservedⳆpctⲻencodedⳆsubⲻdelimsↃ_1 in value._ⲤunreservedⳆpctⲻencodedⳆsubⲻdelimsↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤunreservedⳆpctⲻencodedⳆsubⲻdelimsↃTranscriber.Instance.Transcribe(_ⲤunreservedⳆpctⲻencodedⳆsubⲻdelimsↃ_1, builder);
+Inners._ⲤunreservedⳆpctⲻencodedⳆsubⲻdelimsↃTranscriber.Instance.Transcribe(_ⲤunreservedⳆpctⲻencodedⳆsubⲻdelimsↃ_1, builder);
 }
 
         }

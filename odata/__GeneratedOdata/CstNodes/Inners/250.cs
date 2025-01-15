@@ -1,15 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _qualifiedEntityTypeName_ʺx2Fʺ
+    public sealed class _ⲤCOMMA_selectListItemↃ
     {
-        public _qualifiedEntityTypeName_ʺx2Fʺ(__GeneratedOdata.CstNodes.Rules._qualifiedEntityTypeName _qualifiedEntityTypeName_1, __GeneratedOdata.CstNodes.Inners._ʺx2Fʺ _ʺx2Fʺ_1)
+        public _ⲤCOMMA_selectListItemↃ(__GeneratedOdata.CstNodes.Inners._COMMA_selectListItem _COMMA_selectListItem_1)
         {
-            this._qualifiedEntityTypeName_1 = _qualifiedEntityTypeName_1;
-            this._ʺx2Fʺ_1 = _ʺx2Fʺ_1;
+            this._COMMA_selectListItem_1 = _COMMA_selectListItem_1;
         }
         
-        public __GeneratedOdata.CstNodes.Rules._qualifiedEntityTypeName _qualifiedEntityTypeName_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._ʺx2Fʺ _ʺx2Fʺ_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._COMMA_selectListItem _COMMA_selectListItem_1 { get; }
     }
     
 }

@@ -21,7 +21,7 @@ namespace __GeneratedOdata.CstNodes.Rules
         
         public sealed class _꘡SIGN꘡_1ЖDIGIT_꘡ʺx2Eʺ_1ЖDIGIT꘡_꘡ʺx65ʺ_꘡SIGN꘡_1ЖDIGIT꘡ : _decimalValue
         {
-            public _꘡SIGN꘡_1ЖDIGIT_꘡ʺx2Eʺ_1ЖDIGIT꘡_꘡ʺx65ʺ_꘡SIGN꘡_1ЖDIGIT꘡(__GeneratedOdata.CstNodes.Rules._SIGN? _SIGN_1, System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1, __GeneratedOdata.CstNodes.Inners._ʺx2Eʺ_1ЖDIGIT? _ʺx2Eʺ_1ЖDIGIT_1, __GeneratedOdata.CstNodes.Inners._ʺx65ʺ_꘡SIGN꘡_1ЖDIGIT? _ʺx65ʺ_꘡SIGN꘡_1ЖDIGIT_1)
+            public _꘡SIGN꘡_1ЖDIGIT_꘡ʺx2Eʺ_1ЖDIGIT꘡_꘡ʺx65ʺ_꘡SIGN꘡_1ЖDIGIT꘡(__GeneratedOdata.CstNodes.Rules._SIGN? _SIGN_1, __GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1, __GeneratedOdata.CstNodes.Inners._ʺx2Eʺ_1ЖDIGIT? _ʺx2Eʺ_1ЖDIGIT_1, __GeneratedOdata.CstNodes.Inners._ʺx65ʺ_꘡SIGN꘡_1ЖDIGIT? _ʺx65ʺ_꘡SIGN꘡_1ЖDIGIT_1)
             {
                 this._SIGN_1 = _SIGN_1;
                 this._DIGIT_1 = _DIGIT_1;
@@ -30,7 +30,7 @@ namespace __GeneratedOdata.CstNodes.Rules
             }
             
             public __GeneratedOdata.CstNodes.Rules._SIGN? _SIGN_1 { get; }
-            public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
+            public __GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
             public __GeneratedOdata.CstNodes.Inners._ʺx2Eʺ_1ЖDIGIT? _ʺx2Eʺ_1ЖDIGIT_1 { get; }
             public __GeneratedOdata.CstNodes.Inners._ʺx65ʺ_꘡SIGN꘡_1ЖDIGIT? _ʺx65ʺ_꘡SIGN꘡_1ЖDIGIT_1 { get; }
             

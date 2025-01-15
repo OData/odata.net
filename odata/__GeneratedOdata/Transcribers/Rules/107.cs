@@ -13,7 +13,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
             __GeneratedOdata.Trancsribers.Rules._entitySetNameTranscriber.Instance.Transcribe(value._entitySetName_1, builder);
 foreach (var _ⲤcontainmentNavigationↃ_1 in value._ⲤcontainmentNavigationↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤcontainmentNavigationↃTranscriber.Instance.Transcribe(_ⲤcontainmentNavigationↃ_1, builder);
+Inners._ⲤcontainmentNavigationↃTranscriber.Instance.Transcribe(_ⲤcontainmentNavigationↃ_1, builder);
 }
 if (value._ʺx2Fʺ_qualifiedEntityTypeName_1 != null)
 {

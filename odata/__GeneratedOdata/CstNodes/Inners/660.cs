@@ -1,17 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _h16_ʺx3Aʺ_h16
+    public sealed class _ⲤIPv6addressⳆIPvFutureↃ
     {
-        public _h16_ʺx3Aʺ_h16(__GeneratedOdata.CstNodes.Rules._h16 _h16_1, __GeneratedOdata.CstNodes.Inners._ʺx3Aʺ _ʺx3Aʺ_1, __GeneratedOdata.CstNodes.Rules._h16 _h16_2)
+        public _ⲤIPv6addressⳆIPvFutureↃ(__GeneratedOdata.CstNodes.Inners._IPv6addressⳆIPvFuture _IPv6addressⳆIPvFuture_1)
         {
-            this._h16_1 = _h16_1;
-            this._ʺx3Aʺ_1 = _ʺx3Aʺ_1;
-            this._h16_2 = _h16_2;
+            this._IPv6addressⳆIPvFuture_1 = _IPv6addressⳆIPvFuture_1;
         }
         
-        public __GeneratedOdata.CstNodes.Rules._h16 _h16_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._ʺx3Aʺ _ʺx3Aʺ_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._h16 _h16_2 { get; }
+        public __GeneratedOdata.CstNodes.Inners._IPv6addressⳆIPvFuture _IPv6addressⳆIPvFuture_1 { get; }
     }
     
 }

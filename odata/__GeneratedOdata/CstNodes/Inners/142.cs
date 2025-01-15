@@ -1,15 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _COMMA_orderbyItem
+    public sealed class _Ⲥʺx24x6Fx72x64x65x72x62x79ʺⳆʺx6Fx72x64x65x72x62x79ʺↃ
     {
-        public _COMMA_orderbyItem(__GeneratedOdata.CstNodes.Rules._COMMA _COMMA_1, __GeneratedOdata.CstNodes.Rules._orderbyItem _orderbyItem_1)
+        public _Ⲥʺx24x6Fx72x64x65x72x62x79ʺⳆʺx6Fx72x64x65x72x62x79ʺↃ(__GeneratedOdata.CstNodes.Inners._ʺx24x6Fx72x64x65x72x62x79ʺⳆʺx6Fx72x64x65x72x62x79ʺ _ʺx24x6Fx72x64x65x72x62x79ʺⳆʺx6Fx72x64x65x72x62x79ʺ_1)
         {
-            this._COMMA_1 = _COMMA_1;
-            this._orderbyItem_1 = _orderbyItem_1;
+            this._ʺx24x6Fx72x64x65x72x62x79ʺⳆʺx6Fx72x64x65x72x62x79ʺ_1 = _ʺx24x6Fx72x64x65x72x62x79ʺⳆʺx6Fx72x64x65x72x62x79ʺ_1;
         }
         
-        public __GeneratedOdata.CstNodes.Rules._COMMA _COMMA_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._orderbyItem _orderbyItem_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._ʺx24x6Fx72x64x65x72x62x79ʺⳆʺx6Fx72x64x65x72x62x79ʺ _ʺx24x6Fx72x64x65x72x62x79ʺⳆʺx6Fx72x64x65x72x62x79ʺ_1 { get; }
     }
     
 }

@@ -12,7 +12,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
         {
             foreach (var _ⲤSPⳆHTABↃ_1 in value._ⲤSPⳆHTABↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤSPⳆHTABↃTranscriber.Instance.Transcribe(_ⲤSPⳆHTABↃ_1, builder);
+Inners._ⲤSPⳆHTABↃTranscriber.Instance.Transcribe(_ⲤSPⳆHTABↃ_1, builder);
 }
 
         }

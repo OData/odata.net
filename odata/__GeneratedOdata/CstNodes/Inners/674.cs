@@ -1,12 +1,15 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _x7E
+    public sealed class _Ж3Ⲥh16_ʺx3AʺↃ_h16
     {
-        private _x7E()
+        public _Ж3Ⲥh16_ʺx3AʺↃ_h16(__GeneratedOdata.CstNodes.Inners.HelperRangedAtMost3<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1, __GeneratedOdata.CstNodes.Rules._h16 _h16_1)
         {
+            this._Ⲥh16_ʺx3AʺↃ_1 = _Ⲥh16_ʺx3AʺↃ_1;
+            this._h16_1 = _h16_1;
         }
         
-        public static _x7E Instance { get; } = new _x7E();
+        public __GeneratedOdata.CstNodes.Inners.HelperRangedAtMost3<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1 { get; }
+        public __GeneratedOdata.CstNodes.Rules._h16 _h16_1 { get; }
     }
     
 }

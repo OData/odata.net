@@ -1,15 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx2Fʺ_memberExpr
+    public sealed class _ⲤentitySetName_keyPredicateⳆsingletonEntityↃ
     {
-        public _ʺx2Fʺ_memberExpr(__GeneratedOdata.CstNodes.Inners._ʺx2Fʺ _ʺx2Fʺ_1, __GeneratedOdata.CstNodes.Rules._memberExpr _memberExpr_1)
+        public _ⲤentitySetName_keyPredicateⳆsingletonEntityↃ(__GeneratedOdata.CstNodes.Inners._entitySetName_keyPredicateⳆsingletonEntity _entitySetName_keyPredicateⳆsingletonEntity_1)
         {
-            this._ʺx2Fʺ_1 = _ʺx2Fʺ_1;
-            this._memberExpr_1 = _memberExpr_1;
+            this._entitySetName_keyPredicateⳆsingletonEntity_1 = _entitySetName_keyPredicateⳆsingletonEntity_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._ʺx2Fʺ _ʺx2Fʺ_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._memberExpr _memberExpr_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._entitySetName_keyPredicateⳆsingletonEntity _entitySetName_keyPredicateⳆsingletonEntity_1 { get; }
     }
     
 }

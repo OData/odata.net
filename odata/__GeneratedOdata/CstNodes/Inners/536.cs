@@ -1,33 +1,57 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28ʺ
+    public abstract class _ʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGIT
     {
-        public _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28ʺ(__GeneratedOdata.CstNodes.Inners._x43 _x43_1, __GeneratedOdata.CstNodes.Inners._x6F _x6F_1, __GeneratedOdata.CstNodes.Inners._x6C _x6C_1, __GeneratedOdata.CstNodes.Inners._x6C _x6C_2, __GeneratedOdata.CstNodes.Inners._x65 _x65_1, __GeneratedOdata.CstNodes.Inners._x63 _x63_1, __GeneratedOdata.CstNodes.Inners._x74 _x74_1, __GeneratedOdata.CstNodes.Inners._x69 _x69_1, __GeneratedOdata.CstNodes.Inners._x6F _x6F_2, __GeneratedOdata.CstNodes.Inners._x6E _x6E_1, __GeneratedOdata.CstNodes.Inners._x28 _x28_1)
+        private _ʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGIT()
         {
-            this._x43_1 = _x43_1;
-            this._x6F_1 = _x6F_1;
-            this._x6C_1 = _x6C_1;
-            this._x6C_2 = _x6C_2;
-            this._x65_1 = _x65_1;
-            this._x63_1 = _x63_1;
-            this._x74_1 = _x74_1;
-            this._x69_1 = _x69_1;
-            this._x6F_2 = _x6F_2;
-            this._x6E_1 = _x6E_1;
-            this._x28_1 = _x28_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x43 _x43_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x6F _x6F_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x6C _x6C_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x6C _x6C_2 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x65 _x65_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x63 _x63_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x74 _x74_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x69 _x69_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x6F _x6F_2 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x6E _x6E_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x28 _x28_1 { get; }
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(_ʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGIT node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+            
+            protected internal abstract TResult Accept(_ʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGIT._ʺx30ʺ_3DIGIT node, TContext context);
+            protected internal abstract TResult Accept(_ʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGIT._oneToNine_3ЖDIGIT node, TContext context);
+        }
+        
+        public sealed class _ʺx30ʺ_3DIGIT : _ʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGIT
+        {
+            public _ʺx30ʺ_3DIGIT(__GeneratedOdata.CstNodes.Inners._ʺx30ʺ _ʺx30ʺ_1, __GeneratedOdata.CstNodes.Inners.HelperRangedExactly3<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1)
+            {
+                this._ʺx30ʺ_1 = _ʺx30ʺ_1;
+                this._DIGIT_1 = _DIGIT_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Inners._ʺx30ʺ _ʺx30ʺ_1 { get; }
+            public __GeneratedOdata.CstNodes.Inners.HelperRangedExactly3<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _oneToNine_3ЖDIGIT : _ʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGIT
+        {
+            public _oneToNine_3ЖDIGIT(__GeneratedOdata.CstNodes.Rules._oneToNine _oneToNine_1, __GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast3<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1)
+            {
+                this._oneToNine_1 = _oneToNine_1;
+                this._DIGIT_1 = _DIGIT_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Rules._oneToNine _oneToNine_1 { get; }
+            public __GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast3<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
     }
     
 }

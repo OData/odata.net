@@ -1,13 +1,53 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx50ʺ
+    public abstract class _SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE
     {
-        public _ʺx50ʺ(__GeneratedOdata.CstNodes.Inners._x50 _x50_1)
+        private _SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE()
         {
-            this._x50_1 = _x50_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x50 _x50_1 { get; }
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(_SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+            
+            protected internal abstract TResult Accept(_SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._SQUOTEⲻinⲻstring node, TContext context);
+            protected internal abstract TResult Accept(_SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE node, TContext context);
+        }
+        
+        public sealed class _SQUOTEⲻinⲻstring : _SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE
+        {
+            public _SQUOTEⲻinⲻstring(__GeneratedOdata.CstNodes.Rules._SQUOTEⲻinⲻstring _SQUOTEⲻinⲻstring_1)
+            {
+                this._SQUOTEⲻinⲻstring_1 = _SQUOTEⲻinⲻstring_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Rules._SQUOTEⲻinⲻstring _SQUOTEⲻinⲻstring_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _pcharⲻnoⲻSQUOTE : _SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE
+        {
+            public _pcharⲻnoⲻSQUOTE(__GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE _pcharⲻnoⲻSQUOTE_1)
+            {
+                this._pcharⲻnoⲻSQUOTE_1 = _pcharⲻnoⲻSQUOTE_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE _pcharⲻnoⲻSQUOTE_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
     }
     
 }

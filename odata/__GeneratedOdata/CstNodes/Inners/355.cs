@@ -1,21 +1,15 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _quotationⲻmark_primitiveColProperty_quotationⲻmark_nameⲻseparator_primitiveColInUri
+    public sealed class _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ
     {
-        public _quotationⲻmark_primitiveColProperty_quotationⲻmark_nameⲻseparator_primitiveColInUri(__GeneratedOdata.CstNodes.Rules._quotationⲻmark _quotationⲻmark_1, __GeneratedOdata.CstNodes.Rules._primitiveColProperty _primitiveColProperty_1, __GeneratedOdata.CstNodes.Rules._quotationⲻmark _quotationⲻmark_2, __GeneratedOdata.CstNodes.Rules._nameⲻseparator _nameⲻseparator_1, __GeneratedOdata.CstNodes.Rules._primitiveColInUri _primitiveColInUri_1)
+        public _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ(__GeneratedOdata.CstNodes.Inners._ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_1, System.Collections.Generic.IEnumerable<Inners._Ⲥvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ> _Ⲥvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1)
         {
-            this._quotationⲻmark_1 = _quotationⲻmark_1;
-            this._primitiveColProperty_1 = _primitiveColProperty_1;
-            this._quotationⲻmark_2 = _quotationⲻmark_2;
-            this._nameⲻseparator_1 = _nameⲻseparator_1;
-            this._primitiveColInUri_1 = _primitiveColInUri_1;
+            this._ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_1 = _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_1;
+            this._Ⲥvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1 = _Ⲥvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1;
         }
         
-        public __GeneratedOdata.CstNodes.Rules._quotationⲻmark _quotationⲻmark_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._primitiveColProperty _primitiveColProperty_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._quotationⲻmark _quotationⲻmark_2 { get; }
-        public __GeneratedOdata.CstNodes.Rules._nameⲻseparator _nameⲻseparator_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._primitiveColInUri _primitiveColInUri_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_1 { get; }
+        public System.Collections.Generic.IEnumerable<Inners._Ⲥvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ> _Ⲥvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1 { get; }
     }
     
 }

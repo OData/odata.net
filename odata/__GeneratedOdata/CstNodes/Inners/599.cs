@@ -1,12 +1,12 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _2
+    public sealed class _x7A
     {
-        private _2()
+        private _x7A()
         {
         }
         
-        public static _2 Instance { get; } = new _2();
+        public static _x7A Instance { get; } = new _x7A();
     }
     
 }

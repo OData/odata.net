@@ -1,13 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ⲤCOMMA_polygonDataↃ
+    public sealed class _ⲤCOMMA_geoLiteralↃ
     {
-        public _ⲤCOMMA_polygonDataↃ(__GeneratedOdata.CstNodes.Inners._COMMA_polygonData _COMMA_polygonData_1)
+        public _ⲤCOMMA_geoLiteralↃ(__GeneratedOdata.CstNodes.Inners._COMMA_geoLiteral _COMMA_geoLiteral_1)
         {
-            this._COMMA_polygonData_1 = _COMMA_polygonData_1;
+            this._COMMA_geoLiteral_1 = _COMMA_geoLiteral_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._COMMA_polygonData _COMMA_polygonData_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._COMMA_geoLiteral _COMMA_geoLiteral_1 { get; }
     }
     
 }

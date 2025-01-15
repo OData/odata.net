@@ -1,15 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _COMMA_geoLiteral
+    public sealed class _Ⲥʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGITↃ
     {
-        public _COMMA_geoLiteral(__GeneratedOdata.CstNodes.Rules._COMMA _COMMA_1, __GeneratedOdata.CstNodes.Rules._geoLiteral _geoLiteral_1)
+        public _Ⲥʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGITↃ(__GeneratedOdata.CstNodes.Inners._ʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGIT _ʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGIT_1)
         {
-            this._COMMA_1 = _COMMA_1;
-            this._geoLiteral_1 = _geoLiteral_1;
+            this._ʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGIT_1 = _ʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGIT_1;
         }
         
-        public __GeneratedOdata.CstNodes.Rules._COMMA _COMMA_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._geoLiteral _geoLiteral_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._ʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGIT _ʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGIT_1 { get; }
     }
     
 }

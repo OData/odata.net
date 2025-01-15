@@ -13,7 +13,7 @@ namespace __GeneratedOdata.Trancsribers.Inners
             __GeneratedOdata.Trancsribers.Rules._pointDataTranscriber.Instance.Transcribe(value._pointData_1, builder);
 foreach (var _ⲤCOMMA_pointDataↃ_1 in value._ⲤCOMMA_pointDataↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤCOMMA_pointDataↃTranscriber.Instance.Transcribe(_ⲤCOMMA_pointDataↃ_1, builder);
+Inners._ⲤCOMMA_pointDataↃTranscriber.Instance.Transcribe(_ⲤCOMMA_pointDataↃ_1, builder);
 }
 
         }

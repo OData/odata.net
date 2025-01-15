@@ -1,23 +1,57 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx24x76x61x6Cx75x65ʺ
+    public abstract class _refⳆOPEN_levels_CLOSE
     {
-        public _ʺx24x76x61x6Cx75x65ʺ(__GeneratedOdata.CstNodes.Inners._x24 _x24_1, __GeneratedOdata.CstNodes.Inners._x76 _x76_1, __GeneratedOdata.CstNodes.Inners._x61 _x61_1, __GeneratedOdata.CstNodes.Inners._x6C _x6C_1, __GeneratedOdata.CstNodes.Inners._x75 _x75_1, __GeneratedOdata.CstNodes.Inners._x65 _x65_1)
+        private _refⳆOPEN_levels_CLOSE()
         {
-            this._x24_1 = _x24_1;
-            this._x76_1 = _x76_1;
-            this._x61_1 = _x61_1;
-            this._x6C_1 = _x6C_1;
-            this._x75_1 = _x75_1;
-            this._x65_1 = _x65_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x24 _x24_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x76 _x76_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x61 _x61_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x6C _x6C_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x75 _x75_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x65 _x65_1 { get; }
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(_refⳆOPEN_levels_CLOSE node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+            
+            protected internal abstract TResult Accept(_refⳆOPEN_levels_CLOSE._ref node, TContext context);
+            protected internal abstract TResult Accept(_refⳆOPEN_levels_CLOSE._OPEN_levels_CLOSE node, TContext context);
+        }
+        
+        public sealed class _ref : _refⳆOPEN_levels_CLOSE
+        {
+            public _ref(__GeneratedOdata.CstNodes.Rules._ref _ref_1)
+            {
+                this._ref_1 = _ref_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Rules._ref _ref_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _OPEN_levels_CLOSE : _refⳆOPEN_levels_CLOSE
+        {
+            public _OPEN_levels_CLOSE(__GeneratedOdata.CstNodes.Rules._OPEN _OPEN_1, __GeneratedOdata.CstNodes.Rules._levels _levels_1, __GeneratedOdata.CstNodes.Rules._CLOSE _CLOSE_1)
+            {
+                this._OPEN_1 = _OPEN_1;
+                this._levels_1 = _levels_1;
+                this._CLOSE_1 = _CLOSE_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Rules._OPEN _OPEN_1 { get; }
+            public __GeneratedOdata.CstNodes.Rules._levels _levels_1 { get; }
+            public __GeneratedOdata.CstNodes.Rules._CLOSE _CLOSE_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
     }
     
 }

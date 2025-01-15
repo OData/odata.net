@@ -28,13 +28,13 @@ namespace __GeneratedOdata.CstNodes.Rules
         
         public sealed class _6Ⲥh16_ʺx3AʺↃ_ls32 : _IPv6address
         {
-            public _6Ⲥh16_ʺx3AʺↃ_ls32(System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1, __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1)
+            public _6Ⲥh16_ʺx3AʺↃ_ls32(__GeneratedOdata.CstNodes.Inners.HelperRangedExactly6<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1, __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1)
             {
                 this._Ⲥh16_ʺx3AʺↃ_1 = _Ⲥh16_ʺx3AʺↃ_1;
                 this._ls32_1 = _ls32_1;
             }
             
-            public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1 { get; }
+            public __GeneratedOdata.CstNodes.Inners.HelperRangedExactly6<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1 { get; }
             public __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -45,7 +45,7 @@ namespace __GeneratedOdata.CstNodes.Rules
         
         public sealed class _ʺx3Ax3Aʺ_5Ⲥh16_ʺx3AʺↃ_ls32 : _IPv6address
         {
-            public _ʺx3Ax3Aʺ_5Ⲥh16_ʺx3AʺↃ_ls32(__GeneratedOdata.CstNodes.Inners._ʺx3Ax3Aʺ _ʺx3Ax3Aʺ_1, System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1, __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1)
+            public _ʺx3Ax3Aʺ_5Ⲥh16_ʺx3AʺↃ_ls32(__GeneratedOdata.CstNodes.Inners._ʺx3Ax3Aʺ _ʺx3Ax3Aʺ_1, __GeneratedOdata.CstNodes.Inners.HelperRangedExactly5<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1, __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1)
             {
                 this._ʺx3Ax3Aʺ_1 = _ʺx3Ax3Aʺ_1;
                 this._Ⲥh16_ʺx3AʺↃ_1 = _Ⲥh16_ʺx3AʺↃ_1;
@@ -53,7 +53,7 @@ namespace __GeneratedOdata.CstNodes.Rules
             }
             
             public __GeneratedOdata.CstNodes.Inners._ʺx3Ax3Aʺ _ʺx3Ax3Aʺ_1 { get; }
-            public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1 { get; }
+            public __GeneratedOdata.CstNodes.Inners.HelperRangedExactly5<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1 { get; }
             public __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -64,7 +64,7 @@ namespace __GeneratedOdata.CstNodes.Rules
         
         public sealed class _꘡h16꘡_ʺx3Ax3Aʺ_4Ⲥh16_ʺx3AʺↃ_ls32 : _IPv6address
         {
-            public _꘡h16꘡_ʺx3Ax3Aʺ_4Ⲥh16_ʺx3AʺↃ_ls32(__GeneratedOdata.CstNodes.Rules._h16? _h16_1, __GeneratedOdata.CstNodes.Inners._ʺx3Ax3Aʺ _ʺx3Ax3Aʺ_1, System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1, __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1)
+            public _꘡h16꘡_ʺx3Ax3Aʺ_4Ⲥh16_ʺx3AʺↃ_ls32(__GeneratedOdata.CstNodes.Rules._h16? _h16_1, __GeneratedOdata.CstNodes.Inners._ʺx3Ax3Aʺ _ʺx3Ax3Aʺ_1, __GeneratedOdata.CstNodes.Inners.HelperRangedExactly4<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1, __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1)
             {
                 this._h16_1 = _h16_1;
                 this._ʺx3Ax3Aʺ_1 = _ʺx3Ax3Aʺ_1;
@@ -74,7 +74,7 @@ namespace __GeneratedOdata.CstNodes.Rules
             
             public __GeneratedOdata.CstNodes.Rules._h16? _h16_1 { get; }
             public __GeneratedOdata.CstNodes.Inners._ʺx3Ax3Aʺ _ʺx3Ax3Aʺ_1 { get; }
-            public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1 { get; }
+            public __GeneratedOdata.CstNodes.Inners.HelperRangedExactly4<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1 { get; }
             public __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -85,7 +85,7 @@ namespace __GeneratedOdata.CstNodes.Rules
         
         public sealed class _꘡Ж1Ⲥh16_ʺx3AʺↃ_h16꘡_ʺx3Ax3Aʺ_3Ⲥh16_ʺx3AʺↃ_ls32 : _IPv6address
         {
-            public _꘡Ж1Ⲥh16_ʺx3AʺↃ_h16꘡_ʺx3Ax3Aʺ_3Ⲥh16_ʺx3AʺↃ_ls32(__GeneratedOdata.CstNodes.Inners._Ж1Ⲥh16_ʺx3AʺↃ_h16? _Ж1Ⲥh16_ʺx3AʺↃ_h16_1, __GeneratedOdata.CstNodes.Inners._ʺx3Ax3Aʺ _ʺx3Ax3Aʺ_1, System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1, __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1)
+            public _꘡Ж1Ⲥh16_ʺx3AʺↃ_h16꘡_ʺx3Ax3Aʺ_3Ⲥh16_ʺx3AʺↃ_ls32(__GeneratedOdata.CstNodes.Inners._Ж1Ⲥh16_ʺx3AʺↃ_h16? _Ж1Ⲥh16_ʺx3AʺↃ_h16_1, __GeneratedOdata.CstNodes.Inners._ʺx3Ax3Aʺ _ʺx3Ax3Aʺ_1, __GeneratedOdata.CstNodes.Inners.HelperRangedExactly3<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1, __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1)
             {
                 this._Ж1Ⲥh16_ʺx3AʺↃ_h16_1 = _Ж1Ⲥh16_ʺx3AʺↃ_h16_1;
                 this._ʺx3Ax3Aʺ_1 = _ʺx3Ax3Aʺ_1;
@@ -95,7 +95,7 @@ namespace __GeneratedOdata.CstNodes.Rules
             
             public __GeneratedOdata.CstNodes.Inners._Ж1Ⲥh16_ʺx3AʺↃ_h16? _Ж1Ⲥh16_ʺx3AʺↃ_h16_1 { get; }
             public __GeneratedOdata.CstNodes.Inners._ʺx3Ax3Aʺ _ʺx3Ax3Aʺ_1 { get; }
-            public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1 { get; }
+            public __GeneratedOdata.CstNodes.Inners.HelperRangedExactly3<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1 { get; }
             public __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -106,7 +106,7 @@ namespace __GeneratedOdata.CstNodes.Rules
         
         public sealed class _꘡Ж2Ⲥh16_ʺx3AʺↃ_h16꘡_ʺx3Ax3Aʺ_2Ⲥh16_ʺx3AʺↃ_ls32 : _IPv6address
         {
-            public _꘡Ж2Ⲥh16_ʺx3AʺↃ_h16꘡_ʺx3Ax3Aʺ_2Ⲥh16_ʺx3AʺↃ_ls32(__GeneratedOdata.CstNodes.Inners._Ж2Ⲥh16_ʺx3AʺↃ_h16? _Ж2Ⲥh16_ʺx3AʺↃ_h16_1, __GeneratedOdata.CstNodes.Inners._ʺx3Ax3Aʺ _ʺx3Ax3Aʺ_1, System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1, __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1)
+            public _꘡Ж2Ⲥh16_ʺx3AʺↃ_h16꘡_ʺx3Ax3Aʺ_2Ⲥh16_ʺx3AʺↃ_ls32(__GeneratedOdata.CstNodes.Inners._Ж2Ⲥh16_ʺx3AʺↃ_h16? _Ж2Ⲥh16_ʺx3AʺↃ_h16_1, __GeneratedOdata.CstNodes.Inners._ʺx3Ax3Aʺ _ʺx3Ax3Aʺ_1, __GeneratedOdata.CstNodes.Inners.HelperRangedExactly2<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1, __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1)
             {
                 this._Ж2Ⲥh16_ʺx3AʺↃ_h16_1 = _Ж2Ⲥh16_ʺx3AʺↃ_h16_1;
                 this._ʺx3Ax3Aʺ_1 = _ʺx3Ax3Aʺ_1;
@@ -116,7 +116,7 @@ namespace __GeneratedOdata.CstNodes.Rules
             
             public __GeneratedOdata.CstNodes.Inners._Ж2Ⲥh16_ʺx3AʺↃ_h16? _Ж2Ⲥh16_ʺx3AʺↃ_h16_1 { get; }
             public __GeneratedOdata.CstNodes.Inners._ʺx3Ax3Aʺ _ʺx3Ax3Aʺ_1 { get; }
-            public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1 { get; }
+            public __GeneratedOdata.CstNodes.Inners.HelperRangedExactly2<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1 { get; }
             public __GeneratedOdata.CstNodes.Rules._ls32 _ls32_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)

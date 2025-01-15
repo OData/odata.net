@@ -1,13 +1,15 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx65ʺ
+    public sealed class _oneToNine_ЖDIGIT
     {
-        public _ʺx65ʺ(__GeneratedOdata.CstNodes.Inners._x65 _x65_1)
+        public _oneToNine_ЖDIGIT(__GeneratedOdata.CstNodes.Rules._oneToNine _oneToNine_1, System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1)
         {
-            this._x65_1 = _x65_1;
+            this._oneToNine_1 = _oneToNine_1;
+            this._DIGIT_1 = _DIGIT_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x65 _x65_1 { get; }
+        public __GeneratedOdata.CstNodes.Rules._oneToNine _oneToNine_1 { get; }
+        public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
     }
     
 }

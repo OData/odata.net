@@ -15,7 +15,7 @@ __GeneratedOdata.Trancsribers.Rules._EQTranscriber.Instance.Transcribe(value._EQ
 __GeneratedOdata.Trancsribers.Rules._selectItemTranscriber.Instance.Transcribe(value._selectItem_1, builder);
 foreach (var _ⲤCOMMA_selectItemↃ_1 in value._ⲤCOMMA_selectItemↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤCOMMA_selectItemↃTranscriber.Instance.Transcribe(_ⲤCOMMA_selectItemↃ_1, builder);
+Inners._ⲤCOMMA_selectItemↃTranscriber.Instance.Transcribe(_ⲤCOMMA_selectItemↃ_1, builder);
 }
 
         }

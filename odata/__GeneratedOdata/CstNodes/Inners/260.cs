@@ -1,8 +1,8 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public abstract class _eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr
+    public abstract class _addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr
     {
-        private _eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr()
+        private _addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr()
         {
         }
         
@@ -10,29 +10,27 @@ namespace __GeneratedOdata.CstNodes.Inners
         
         public abstract class Visitor<TResult, TContext>
         {
-            public TResult Visit(_eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr node, TContext context)
+            public TResult Visit(_addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr node, TContext context)
             {
                 return node.Dispatch(this, context);
             }
             
-            protected internal abstract TResult Accept(_eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr._eqExpr node, TContext context);
-            protected internal abstract TResult Accept(_eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr._neExpr node, TContext context);
-            protected internal abstract TResult Accept(_eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr._ltExpr node, TContext context);
-            protected internal abstract TResult Accept(_eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr._leExpr node, TContext context);
-            protected internal abstract TResult Accept(_eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr._gtExpr node, TContext context);
-            protected internal abstract TResult Accept(_eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr._geExpr node, TContext context);
-            protected internal abstract TResult Accept(_eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr._hasExpr node, TContext context);
-            protected internal abstract TResult Accept(_eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr._inExpr node, TContext context);
+            protected internal abstract TResult Accept(_addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr._addExpr node, TContext context);
+            protected internal abstract TResult Accept(_addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr._subExpr node, TContext context);
+            protected internal abstract TResult Accept(_addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr._mulExpr node, TContext context);
+            protected internal abstract TResult Accept(_addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr._divExpr node, TContext context);
+            protected internal abstract TResult Accept(_addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr._divbyExpr node, TContext context);
+            protected internal abstract TResult Accept(_addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr._modExpr node, TContext context);
         }
         
-        public sealed class _eqExpr : _eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr
+        public sealed class _addExpr : _addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr
         {
-            public _eqExpr(__GeneratedOdata.CstNodes.Rules._eqExpr _eqExpr_1)
+            public _addExpr(__GeneratedOdata.CstNodes.Rules._addExpr _addExpr_1)
             {
-                this._eqExpr_1 = _eqExpr_1;
+                this._addExpr_1 = _addExpr_1;
             }
             
-            public __GeneratedOdata.CstNodes.Rules._eqExpr _eqExpr_1 { get; }
+            public __GeneratedOdata.CstNodes.Rules._addExpr _addExpr_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -40,14 +38,14 @@ namespace __GeneratedOdata.CstNodes.Inners
             }
         }
         
-        public sealed class _neExpr : _eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr
+        public sealed class _subExpr : _addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr
         {
-            public _neExpr(__GeneratedOdata.CstNodes.Rules._neExpr _neExpr_1)
+            public _subExpr(__GeneratedOdata.CstNodes.Rules._subExpr _subExpr_1)
             {
-                this._neExpr_1 = _neExpr_1;
+                this._subExpr_1 = _subExpr_1;
             }
             
-            public __GeneratedOdata.CstNodes.Rules._neExpr _neExpr_1 { get; }
+            public __GeneratedOdata.CstNodes.Rules._subExpr _subExpr_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -55,14 +53,14 @@ namespace __GeneratedOdata.CstNodes.Inners
             }
         }
         
-        public sealed class _ltExpr : _eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr
+        public sealed class _mulExpr : _addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr
         {
-            public _ltExpr(__GeneratedOdata.CstNodes.Rules._ltExpr _ltExpr_1)
+            public _mulExpr(__GeneratedOdata.CstNodes.Rules._mulExpr _mulExpr_1)
             {
-                this._ltExpr_1 = _ltExpr_1;
+                this._mulExpr_1 = _mulExpr_1;
             }
             
-            public __GeneratedOdata.CstNodes.Rules._ltExpr _ltExpr_1 { get; }
+            public __GeneratedOdata.CstNodes.Rules._mulExpr _mulExpr_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -70,14 +68,14 @@ namespace __GeneratedOdata.CstNodes.Inners
             }
         }
         
-        public sealed class _leExpr : _eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr
+        public sealed class _divExpr : _addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr
         {
-            public _leExpr(__GeneratedOdata.CstNodes.Rules._leExpr _leExpr_1)
+            public _divExpr(__GeneratedOdata.CstNodes.Rules._divExpr _divExpr_1)
             {
-                this._leExpr_1 = _leExpr_1;
+                this._divExpr_1 = _divExpr_1;
             }
             
-            public __GeneratedOdata.CstNodes.Rules._leExpr _leExpr_1 { get; }
+            public __GeneratedOdata.CstNodes.Rules._divExpr _divExpr_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -85,14 +83,14 @@ namespace __GeneratedOdata.CstNodes.Inners
             }
         }
         
-        public sealed class _gtExpr : _eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr
+        public sealed class _divbyExpr : _addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr
         {
-            public _gtExpr(__GeneratedOdata.CstNodes.Rules._gtExpr _gtExpr_1)
+            public _divbyExpr(__GeneratedOdata.CstNodes.Rules._divbyExpr _divbyExpr_1)
             {
-                this._gtExpr_1 = _gtExpr_1;
+                this._divbyExpr_1 = _divbyExpr_1;
             }
             
-            public __GeneratedOdata.CstNodes.Rules._gtExpr _gtExpr_1 { get; }
+            public __GeneratedOdata.CstNodes.Rules._divbyExpr _divbyExpr_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -100,44 +98,14 @@ namespace __GeneratedOdata.CstNodes.Inners
             }
         }
         
-        public sealed class _geExpr : _eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr
+        public sealed class _modExpr : _addExprⳆsubExprⳆmulExprⳆdivExprⳆdivbyExprⳆmodExpr
         {
-            public _geExpr(__GeneratedOdata.CstNodes.Rules._geExpr _geExpr_1)
+            public _modExpr(__GeneratedOdata.CstNodes.Rules._modExpr _modExpr_1)
             {
-                this._geExpr_1 = _geExpr_1;
+                this._modExpr_1 = _modExpr_1;
             }
             
-            public __GeneratedOdata.CstNodes.Rules._geExpr _geExpr_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class _hasExpr : _eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr
-        {
-            public _hasExpr(__GeneratedOdata.CstNodes.Rules._hasExpr _hasExpr_1)
-            {
-                this._hasExpr_1 = _hasExpr_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._hasExpr _hasExpr_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class _inExpr : _eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr
-        {
-            public _inExpr(__GeneratedOdata.CstNodes.Rules._inExpr _inExpr_1)
-            {
-                this._inExpr_1 = _inExpr_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._inExpr _inExpr_1 { get; }
+            public __GeneratedOdata.CstNodes.Rules._modExpr _modExpr_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

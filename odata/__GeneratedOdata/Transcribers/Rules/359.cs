@@ -13,7 +13,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
             __GeneratedOdata.Trancsribers.Rules._annotationIdentifierTranscriber.Instance.Transcribe(value._annotationIdentifier_1, builder);
 foreach (var _ⲤCOMMA_annotationIdentifierↃ_1 in value._ⲤCOMMA_annotationIdentifierↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤCOMMA_annotationIdentifierↃTranscriber.Instance.Transcribe(_ⲤCOMMA_annotationIdentifierↃ_1, builder);
+Inners._ⲤCOMMA_annotationIdentifierↃTranscriber.Instance.Transcribe(_ⲤCOMMA_annotationIdentifierↃ_1, builder);
 }
 
         }

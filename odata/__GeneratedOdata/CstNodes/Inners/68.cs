@@ -1,12 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _x6A
+    public sealed class _ⲤparameterAliasⳆprimitiveLiteralↃ
     {
-        private _x6A()
+        public _ⲤparameterAliasⳆprimitiveLiteralↃ(__GeneratedOdata.CstNodes.Inners._parameterAliasⳆprimitiveLiteral _parameterAliasⳆprimitiveLiteral_1)
         {
+            this._parameterAliasⳆprimitiveLiteral_1 = _parameterAliasⳆprimitiveLiteral_1;
         }
         
-        public static _x6A Instance { get; } = new _x6A();
+        public __GeneratedOdata.CstNodes.Inners._parameterAliasⳆprimitiveLiteral _parameterAliasⳆprimitiveLiteral_1 { get; }
     }
     
 }

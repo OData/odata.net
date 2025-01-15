@@ -1,13 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx43ʺ
+    public sealed class _ʺx24ʺ
     {
-        public _ʺx43ʺ(__GeneratedOdata.CstNodes.Inners._x43 _x43_1)
+        public _ʺx24ʺ(__GeneratedOdata.CstNodes.Inners._x24 _x24_1)
         {
-            this._x43_1 = _x43_1;
+            this._x24_1 = _x24_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x43 _x43_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x24 _x24_1 { get; }
     }
     
 }

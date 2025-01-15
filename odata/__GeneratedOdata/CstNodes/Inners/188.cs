@@ -1,12 +1,53 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _x4F
+    public abstract class _searchOrExprⳆsearchAndExpr
     {
-        private _x4F()
+        private _searchOrExprⳆsearchAndExpr()
         {
         }
         
-        public static _x4F Instance { get; } = new _x4F();
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(_searchOrExprⳆsearchAndExpr node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+            
+            protected internal abstract TResult Accept(_searchOrExprⳆsearchAndExpr._searchOrExpr node, TContext context);
+            protected internal abstract TResult Accept(_searchOrExprⳆsearchAndExpr._searchAndExpr node, TContext context);
+        }
+        
+        public sealed class _searchOrExpr : _searchOrExprⳆsearchAndExpr
+        {
+            public _searchOrExpr(__GeneratedOdata.CstNodes.Rules._searchOrExpr _searchOrExpr_1)
+            {
+                this._searchOrExpr_1 = _searchOrExpr_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Rules._searchOrExpr _searchOrExpr_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _searchAndExpr : _searchOrExprⳆsearchAndExpr
+        {
+            public _searchAndExpr(__GeneratedOdata.CstNodes.Rules._searchAndExpr _searchAndExpr_1)
+            {
+                this._searchAndExpr_1 = _searchAndExpr_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Rules._searchAndExpr _searchAndExpr_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
     }
     
 }

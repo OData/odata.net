@@ -1,17 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx61x6Ex64ʺ
+    public sealed class _ⲤCOMMA_BWS_commonExpr_BWSↃ
     {
-        public _ʺx61x6Ex64ʺ(__GeneratedOdata.CstNodes.Inners._x61 _x61_1, __GeneratedOdata.CstNodes.Inners._x6E _x6E_1, __GeneratedOdata.CstNodes.Inners._x64 _x64_1)
+        public _ⲤCOMMA_BWS_commonExpr_BWSↃ(__GeneratedOdata.CstNodes.Inners._COMMA_BWS_commonExpr_BWS _COMMA_BWS_commonExpr_BWS_1)
         {
-            this._x61_1 = _x61_1;
-            this._x6E_1 = _x6E_1;
-            this._x64_1 = _x64_1;
+            this._COMMA_BWS_commonExpr_BWS_1 = _COMMA_BWS_commonExpr_BWS_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x61 _x61_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x6E _x6E_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x64 _x64_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._COMMA_BWS_commonExpr_BWS _COMMA_BWS_commonExpr_BWS_1 { get; }
     }
     
 }

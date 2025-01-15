@@ -1,53 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public abstract class _searchOrExprⳆsearchAndExpr
+    public sealed class _ⲤOPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTermↃ
     {
-        private _searchOrExprⳆsearchAndExpr()
+        public _ⲤOPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTermↃ(__GeneratedOdata.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm _OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm_1)
         {
+            this._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm_1 = _OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm_1;
         }
         
-        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-        
-        public abstract class Visitor<TResult, TContext>
-        {
-            public TResult Visit(_searchOrExprⳆsearchAndExpr node, TContext context)
-            {
-                return node.Dispatch(this, context);
-            }
-            
-            protected internal abstract TResult Accept(_searchOrExprⳆsearchAndExpr._searchOrExpr node, TContext context);
-            protected internal abstract TResult Accept(_searchOrExprⳆsearchAndExpr._searchAndExpr node, TContext context);
-        }
-        
-        public sealed class _searchOrExpr : _searchOrExprⳆsearchAndExpr
-        {
-            public _searchOrExpr(__GeneratedOdata.CstNodes.Rules._searchOrExpr _searchOrExpr_1)
-            {
-                this._searchOrExpr_1 = _searchOrExpr_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._searchOrExpr _searchOrExpr_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class _searchAndExpr : _searchOrExprⳆsearchAndExpr
-        {
-            public _searchAndExpr(__GeneratedOdata.CstNodes.Rules._searchAndExpr _searchAndExpr_1)
-            {
-                this._searchAndExpr_1 = _searchAndExpr_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._searchAndExpr _searchAndExpr_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
+        public __GeneratedOdata.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm _OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm_1 { get; }
     }
     
 }

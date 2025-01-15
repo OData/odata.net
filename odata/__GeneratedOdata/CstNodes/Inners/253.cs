@@ -1,12 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _x2B
+    public sealed class _ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ
     {
-        private _x2B()
+        public _ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ(__GeneratedOdata.CstNodes.Inners._qualifiedActionNameⳆqualifiedFunctionNameⳆselectListProperty _qualifiedActionNameⳆqualifiedFunctionNameⳆselectListProperty_1)
         {
+            this._qualifiedActionNameⳆqualifiedFunctionNameⳆselectListProperty_1 = _qualifiedActionNameⳆqualifiedFunctionNameⳆselectListProperty_1;
         }
         
-        public static _x2B Instance { get; } = new _x2B();
+        public __GeneratedOdata.CstNodes.Inners._qualifiedActionNameⳆqualifiedFunctionNameⳆselectListProperty _qualifiedActionNameⳆqualifiedFunctionNameⳆselectListProperty_1 { get; }
     }
     
 }

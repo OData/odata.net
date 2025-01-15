@@ -16,7 +16,7 @@ __GeneratedOdata.Trancsribers.Rules._OWSTranscriber.Instance.Transcribe(value._O
 __GeneratedOdata.Trancsribers.Rules._preferenceTranscriber.Instance.Transcribe(value._preference_1, builder);
 foreach (var _ⲤCOMMA_preferenceↃ_1 in value._ⲤCOMMA_preferenceↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤCOMMA_preferenceↃTranscriber.Instance.Transcribe(_ⲤCOMMA_preferenceↃ_1, builder);
+Inners._ⲤCOMMA_preferenceↃTranscriber.Instance.Transcribe(_ⲤCOMMA_preferenceↃ_1, builder);
 }
 
         }

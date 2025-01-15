@@ -14,7 +14,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
 __GeneratedOdata.Trancsribers.Rules._geoLiteralTranscriber.Instance.Transcribe(value._geoLiteral_1, builder);
 foreach (var _ⲤCOMMA_geoLiteralↃ_1 in value._ⲤCOMMA_geoLiteralↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤCOMMA_geoLiteralↃTranscriber.Instance.Transcribe(_ⲤCOMMA_geoLiteralↃ_1, builder);
+Inners._ⲤCOMMA_geoLiteralↃTranscriber.Instance.Transcribe(_ⲤCOMMA_geoLiteralↃ_1, builder);
 }
 __GeneratedOdata.Trancsribers.Rules._CLOSETranscriber.Instance.Transcribe(value._CLOSE_1, builder);
 

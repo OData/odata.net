@@ -1,12 +1,15 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _x48
+    public sealed class _ʺx2Eʺ_fractionalSeconds
     {
-        private _x48()
+        public _ʺx2Eʺ_fractionalSeconds(__GeneratedOdata.CstNodes.Inners._ʺx2Eʺ _ʺx2Eʺ_1, __GeneratedOdata.CstNodes.Rules._fractionalSeconds _fractionalSeconds_1)
         {
+            this._ʺx2Eʺ_1 = _ʺx2Eʺ_1;
+            this._fractionalSeconds_1 = _fractionalSeconds_1;
         }
         
-        public static _x48 Instance { get; } = new _x48();
+        public __GeneratedOdata.CstNodes.Inners._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
+        public __GeneratedOdata.CstNodes.Rules._fractionalSeconds _fractionalSeconds_1 { get; }
     }
     
 }

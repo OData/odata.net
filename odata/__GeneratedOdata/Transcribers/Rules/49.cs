@@ -13,7 +13,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
             __GeneratedOdata.Trancsribers.Rules._queryOptionTranscriber.Instance.Transcribe(value._queryOption_1, builder);
 foreach (var _Ⲥʺx26ʺ_queryOptionↃ_1 in value._Ⲥʺx26ʺ_queryOptionↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._Ⲥʺx26ʺ_queryOptionↃTranscriber.Instance.Transcribe(_Ⲥʺx26ʺ_queryOptionↃ_1, builder);
+Inners._Ⲥʺx26ʺ_queryOptionↃTranscriber.Instance.Transcribe(_Ⲥʺx26ʺ_queryOptionↃ_1, builder);
 }
 
         }

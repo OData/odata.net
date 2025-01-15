@@ -1,17 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx25x33x42ʺ
+    public sealed class _ⲤSPⳆHTABↃ
     {
-        public _ʺx25x33x42ʺ(__GeneratedOdata.CstNodes.Inners._x25 _x25_1, __GeneratedOdata.CstNodes.Inners._x33 _x33_1, __GeneratedOdata.CstNodes.Inners._x42 _x42_1)
+        public _ⲤSPⳆHTABↃ(__GeneratedOdata.CstNodes.Inners._SPⳆHTAB _SPⳆHTAB_1)
         {
-            this._x25_1 = _x25_1;
-            this._x33_1 = _x33_1;
-            this._x42_1 = _x42_1;
+            this._SPⳆHTAB_1 = _SPⳆHTAB_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x25 _x25_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x33 _x33_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x42 _x42_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._SPⳆHTAB _SPⳆHTAB_1 { get; }
     }
     
 }

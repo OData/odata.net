@@ -1,53 +1,15 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public abstract class _parameterAliasⳆprimitiveLiteral
+    public sealed class _functionParameter_ЖⲤCOMMA_functionParameterↃ
     {
-        private _parameterAliasⳆprimitiveLiteral()
+        public _functionParameter_ЖⲤCOMMA_functionParameterↃ(__GeneratedOdata.CstNodes.Rules._functionParameter _functionParameter_1, System.Collections.Generic.IEnumerable<Inners._ⲤCOMMA_functionParameterↃ> _ⲤCOMMA_functionParameterↃ_1)
         {
+            this._functionParameter_1 = _functionParameter_1;
+            this._ⲤCOMMA_functionParameterↃ_1 = _ⲤCOMMA_functionParameterↃ_1;
         }
         
-        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-        
-        public abstract class Visitor<TResult, TContext>
-        {
-            public TResult Visit(_parameterAliasⳆprimitiveLiteral node, TContext context)
-            {
-                return node.Dispatch(this, context);
-            }
-            
-            protected internal abstract TResult Accept(_parameterAliasⳆprimitiveLiteral._parameterAlias node, TContext context);
-            protected internal abstract TResult Accept(_parameterAliasⳆprimitiveLiteral._primitiveLiteral node, TContext context);
-        }
-        
-        public sealed class _parameterAlias : _parameterAliasⳆprimitiveLiteral
-        {
-            public _parameterAlias(__GeneratedOdata.CstNodes.Rules._parameterAlias _parameterAlias_1)
-            {
-                this._parameterAlias_1 = _parameterAlias_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._parameterAlias _parameterAlias_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class _primitiveLiteral : _parameterAliasⳆprimitiveLiteral
-        {
-            public _primitiveLiteral(__GeneratedOdata.CstNodes.Rules._primitiveLiteral _primitiveLiteral_1)
-            {
-                this._primitiveLiteral_1 = _primitiveLiteral_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._primitiveLiteral _primitiveLiteral_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
+        public __GeneratedOdata.CstNodes.Rules._functionParameter _functionParameter_1 { get; }
+        public System.Collections.Generic.IEnumerable<Inners._ⲤCOMMA_functionParameterↃ> _ⲤCOMMA_functionParameterↃ_1 { get; }
     }
     
 }

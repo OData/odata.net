@@ -1,17 +1,19 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx34x2Ex30ʺ
+    public sealed class _ʺx53x52x49x44ʺ
     {
-        public _ʺx34x2Ex30ʺ(__GeneratedOdata.CstNodes.Inners._x34 _x34_1, __GeneratedOdata.CstNodes.Inners._x2E _x2E_1, __GeneratedOdata.CstNodes.Inners._x30 _x30_1)
+        public _ʺx53x52x49x44ʺ(__GeneratedOdata.CstNodes.Inners._x53 _x53_1, __GeneratedOdata.CstNodes.Inners._x52 _x52_1, __GeneratedOdata.CstNodes.Inners._x49 _x49_1, __GeneratedOdata.CstNodes.Inners._x44 _x44_1)
         {
-            this._x34_1 = _x34_1;
-            this._x2E_1 = _x2E_1;
-            this._x30_1 = _x30_1;
+            this._x53_1 = _x53_1;
+            this._x52_1 = _x52_1;
+            this._x49_1 = _x49_1;
+            this._x44_1 = _x44_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x34 _x34_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x2E _x2E_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x30 _x30_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x53 _x53_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x52 _x52_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x49 _x49_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x44 _x44_1 { get; }
     }
     
 }

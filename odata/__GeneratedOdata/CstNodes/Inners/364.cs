@@ -1,15 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _valueⲻseparator_rootExpr
+    public sealed class _ⲤcomplexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUriↃ
     {
-        public _valueⲻseparator_rootExpr(__GeneratedOdata.CstNodes.Rules._valueⲻseparator _valueⲻseparator_1, __GeneratedOdata.CstNodes.Rules._rootExpr _rootExpr_1)
+        public _ⲤcomplexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUriↃ(__GeneratedOdata.CstNodes.Inners._complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri _complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri_1)
         {
-            this._valueⲻseparator_1 = _valueⲻseparator_1;
-            this._rootExpr_1 = _rootExpr_1;
+            this._complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri_1 = _complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri_1;
         }
         
-        public __GeneratedOdata.CstNodes.Rules._valueⲻseparator _valueⲻseparator_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._rootExpr _rootExpr_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri _complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri_1 { get; }
     }
     
 }

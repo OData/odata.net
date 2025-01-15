@@ -14,7 +14,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
 __GeneratedOdata.Trancsribers.Rules._keyValuePairTranscriber.Instance.Transcribe(value._keyValuePair_1, builder);
 foreach (var _ⲤCOMMA_keyValuePairↃ_1 in value._ⲤCOMMA_keyValuePairↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤCOMMA_keyValuePairↃTranscriber.Instance.Transcribe(_ⲤCOMMA_keyValuePairↃ_1, builder);
+Inners._ⲤCOMMA_keyValuePairↃTranscriber.Instance.Transcribe(_ⲤCOMMA_keyValuePairↃ_1, builder);
 }
 __GeneratedOdata.Trancsribers.Rules._CLOSETranscriber.Instance.Transcribe(value._CLOSE_1, builder);
 

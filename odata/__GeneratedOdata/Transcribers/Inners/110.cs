@@ -14,7 +14,7 @@ namespace __GeneratedOdata.Trancsribers.Inners
 __GeneratedOdata.Trancsribers.Rules._expandRefOptionTranscriber.Instance.Transcribe(value._expandRefOption_1, builder);
 foreach (var _ⲤSEMI_expandRefOptionↃ_1 in value._ⲤSEMI_expandRefOptionↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤSEMI_expandRefOptionↃTranscriber.Instance.Transcribe(_ⲤSEMI_expandRefOptionↃ_1, builder);
+Inners._ⲤSEMI_expandRefOptionↃTranscriber.Instance.Transcribe(_ⲤSEMI_expandRefOptionↃ_1, builder);
 }
 __GeneratedOdata.Trancsribers.Rules._CLOSETranscriber.Instance.Transcribe(value._CLOSE_1, builder);
 

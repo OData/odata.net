@@ -2,7 +2,7 @@ namespace __GeneratedOdata.CstNodes.Rules
 {
     public sealed class _listExpr
     {
-        public _listExpr(__GeneratedOdata.CstNodes.Rules._OPEN _OPEN_1, __GeneratedOdata.CstNodes.Rules._BWS _BWS_1, __GeneratedOdata.CstNodes.Rules._commonExpr _commonExpr_1, __GeneratedOdata.CstNodes.Rules._BWS _BWS_2, System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._ⲤCOMMA_BWS_commonExpr_BWSↃ> _ⲤCOMMA_BWS_commonExpr_BWSↃ_1, __GeneratedOdata.CstNodes.Rules._CLOSE _CLOSE_1)
+        public _listExpr(__GeneratedOdata.CstNodes.Rules._OPEN _OPEN_1, __GeneratedOdata.CstNodes.Rules._BWS _BWS_1, __GeneratedOdata.CstNodes.Rules._commonExpr _commonExpr_1, __GeneratedOdata.CstNodes.Rules._BWS _BWS_2, System.Collections.Generic.IEnumerable<Inners._ⲤCOMMA_BWS_commonExpr_BWSↃ> _ⲤCOMMA_BWS_commonExpr_BWSↃ_1, __GeneratedOdata.CstNodes.Rules._CLOSE _CLOSE_1)
         {
             this._OPEN_1 = _OPEN_1;
             this._BWS_1 = _BWS_1;
@@ -16,7 +16,7 @@ namespace __GeneratedOdata.CstNodes.Rules
         public __GeneratedOdata.CstNodes.Rules._BWS _BWS_1 { get; }
         public __GeneratedOdata.CstNodes.Rules._commonExpr _commonExpr_1 { get; }
         public __GeneratedOdata.CstNodes.Rules._BWS _BWS_2 { get; }
-        public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._ⲤCOMMA_BWS_commonExpr_BWSↃ> _ⲤCOMMA_BWS_commonExpr_BWSↃ_1 { get; }
+        public System.Collections.Generic.IEnumerable<Inners._ⲤCOMMA_BWS_commonExpr_BWSↃ> _ⲤCOMMA_BWS_commonExpr_BWSↃ_1 { get; }
         public __GeneratedOdata.CstNodes.Rules._CLOSE _CLOSE_1 { get; }
     }
     

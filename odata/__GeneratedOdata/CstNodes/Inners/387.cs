@@ -1,13 +1,12 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx5Dʺ
+    public sealed class _x5D
     {
-        public _ʺx5Dʺ(__GeneratedOdata.CstNodes.Inners._x5D _x5D_1)
+        private _x5D()
         {
-            this._x5D_1 = _x5D_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x5D _x5D_1 { get; }
+        public static _x5D Instance { get; } = new _x5D();
     }
     
 }

@@ -24,7 +24,7 @@ select new __GeneratedOdata.CstNodes.Inners._ref_꘡OPEN_expandRefOption_ЖⲤSE
         {
             public static Parser<__GeneratedOdata.CstNodes.Inners._ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE._OPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE> Instance { get; } = from _OPEN_1 in __GeneratedOdata.Parsers.Rules._OPENParser.Instance
 from _expandOption_1 in __GeneratedOdata.Parsers.Rules._expandOptionParser.Instance
-from _ⲤSEMI_expandOptionↃ_1 in __GeneratedOdata.Parsers.Inners._ⲤSEMI_expandOptionↃParser.Instance.Many()
+from _ⲤSEMI_expandOptionↃ_1 in Inners._ⲤSEMI_expandOptionↃParser.Instance.Many()
 from _CLOSE_1 in __GeneratedOdata.Parsers.Rules._CLOSEParser.Instance
 select new __GeneratedOdata.CstNodes.Inners._ref_꘡OPEN_expandRefOption_ЖⲤSEMI_expandRefOptionↃ_CLOSE꘡Ⳇcount_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡ⳆOPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE._OPEN_expandOption_ЖⲤSEMI_expandOptionↃ_CLOSE(_OPEN_1, _expandOption_1, _ⲤSEMI_expandOptionↃ_1, _CLOSE_1);
         }

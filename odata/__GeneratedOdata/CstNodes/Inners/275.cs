@@ -1,55 +1,21 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public abstract class _keyPredicate_꘡singleNavigationExpr꘡ⳆcollectionPathExpr
+    public sealed class _ʺx24x74x68x69x73ʺ
     {
-        private _keyPredicate_꘡singleNavigationExpr꘡ⳆcollectionPathExpr()
+        public _ʺx24x74x68x69x73ʺ(__GeneratedOdata.CstNodes.Inners._x24 _x24_1, __GeneratedOdata.CstNodes.Inners._x74 _x74_1, __GeneratedOdata.CstNodes.Inners._x68 _x68_1, __GeneratedOdata.CstNodes.Inners._x69 _x69_1, __GeneratedOdata.CstNodes.Inners._x73 _x73_1)
         {
+            this._x24_1 = _x24_1;
+            this._x74_1 = _x74_1;
+            this._x68_1 = _x68_1;
+            this._x69_1 = _x69_1;
+            this._x73_1 = _x73_1;
         }
         
-        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-        
-        public abstract class Visitor<TResult, TContext>
-        {
-            public TResult Visit(_keyPredicate_꘡singleNavigationExpr꘡ⳆcollectionPathExpr node, TContext context)
-            {
-                return node.Dispatch(this, context);
-            }
-            
-            protected internal abstract TResult Accept(_keyPredicate_꘡singleNavigationExpr꘡ⳆcollectionPathExpr._keyPredicate_꘡singleNavigationExpr꘡ node, TContext context);
-            protected internal abstract TResult Accept(_keyPredicate_꘡singleNavigationExpr꘡ⳆcollectionPathExpr._collectionPathExpr node, TContext context);
-        }
-        
-        public sealed class _keyPredicate_꘡singleNavigationExpr꘡ : _keyPredicate_꘡singleNavigationExpr꘡ⳆcollectionPathExpr
-        {
-            public _keyPredicate_꘡singleNavigationExpr꘡(__GeneratedOdata.CstNodes.Rules._keyPredicate _keyPredicate_1, __GeneratedOdata.CstNodes.Rules._singleNavigationExpr? _singleNavigationExpr_1)
-            {
-                this._keyPredicate_1 = _keyPredicate_1;
-                this._singleNavigationExpr_1 = _singleNavigationExpr_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._keyPredicate _keyPredicate_1 { get; }
-            public __GeneratedOdata.CstNodes.Rules._singleNavigationExpr? _singleNavigationExpr_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class _collectionPathExpr : _keyPredicate_꘡singleNavigationExpr꘡ⳆcollectionPathExpr
-        {
-            public _collectionPathExpr(__GeneratedOdata.CstNodes.Rules._collectionPathExpr _collectionPathExpr_1)
-            {
-                this._collectionPathExpr_1 = _collectionPathExpr_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._collectionPathExpr _collectionPathExpr_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
+        public __GeneratedOdata.CstNodes.Inners._x24 _x24_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x74 _x74_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x68 _x68_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x69 _x69_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x73 _x73_1 { get; }
     }
     
 }

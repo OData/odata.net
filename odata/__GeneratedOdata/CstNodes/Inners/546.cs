@@ -1,15 +1,23 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _COMMA_pointData
+    public sealed class HelperRangedFrom1To12<T> : System.Collections.Generic.IEnumerable<T>
     {
-        public _COMMA_pointData(__GeneratedOdata.CstNodes.Rules._COMMA _COMMA_1, __GeneratedOdata.CstNodes.Rules._pointData _pointData_1)
+        public HelperRangedFrom1To12(System.Collections.Generic.IEnumerable<T> source)
         {
-            this._COMMA_1 = _COMMA_1;
-            this._pointData_1 = _pointData_1;
+            this.Source = source;
         }
         
-        public __GeneratedOdata.CstNodes.Rules._COMMA _COMMA_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._pointData _pointData_1 { get; }
+        private System.Collections.Generic.IEnumerable<T> Source { get; }
+        
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator()
+        {
+            return this.Source.GetEnumerator();
+        }
+        
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return ((System.Collections.IEnumerable)this.Source).GetEnumerator();
+        }
     }
     
 }

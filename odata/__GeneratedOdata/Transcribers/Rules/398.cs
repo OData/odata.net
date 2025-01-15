@@ -12,7 +12,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
         {
             foreach (var _Ⲥʺx2Fʺ_segmentↃ_1 in value._Ⲥʺx2Fʺ_segmentↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._Ⲥʺx2Fʺ_segmentↃTranscriber.Instance.Transcribe(_Ⲥʺx2Fʺ_segmentↃ_1, builder);
+Inners._Ⲥʺx2Fʺ_segmentↃTranscriber.Instance.Transcribe(_Ⲥʺx2Fʺ_segmentↃ_1, builder);
 }
 
         }

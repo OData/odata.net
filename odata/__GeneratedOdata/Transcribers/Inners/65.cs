@@ -13,7 +13,7 @@ namespace __GeneratedOdata.Trancsribers.Inners
             __GeneratedOdata.Trancsribers.Rules._functionParameterTranscriber.Instance.Transcribe(value._functionParameter_1, builder);
 foreach (var _ⲤCOMMA_functionParameterↃ_1 in value._ⲤCOMMA_functionParameterↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤCOMMA_functionParameterↃTranscriber.Instance.Transcribe(_ⲤCOMMA_functionParameterↃ_1, builder);
+Inners._ⲤCOMMA_functionParameterↃTranscriber.Instance.Transcribe(_ⲤCOMMA_functionParameterↃ_1, builder);
 }
 
         }

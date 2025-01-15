@@ -1,15 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _rootExpr_ЖⲤvalueⲻseparator_rootExprↃ
+    public sealed class _Ⲥvalueⲻseparator_rootExprↃ
     {
-        public _rootExpr_ЖⲤvalueⲻseparator_rootExprↃ(__GeneratedOdata.CstNodes.Rules._rootExpr _rootExpr_1, System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._Ⲥvalueⲻseparator_rootExprↃ> _Ⲥvalueⲻseparator_rootExprↃ_1)
+        public _Ⲥvalueⲻseparator_rootExprↃ(__GeneratedOdata.CstNodes.Inners._valueⲻseparator_rootExpr _valueⲻseparator_rootExpr_1)
         {
-            this._rootExpr_1 = _rootExpr_1;
-            this._Ⲥvalueⲻseparator_rootExprↃ_1 = _Ⲥvalueⲻseparator_rootExprↃ_1;
+            this._valueⲻseparator_rootExpr_1 = _valueⲻseparator_rootExpr_1;
         }
         
-        public __GeneratedOdata.CstNodes.Rules._rootExpr _rootExpr_1 { get; }
-        public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._Ⲥvalueⲻseparator_rootExprↃ> _Ⲥvalueⲻseparator_rootExprↃ_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._valueⲻseparator_rootExpr _valueⲻseparator_rootExpr_1 { get; }
     }
     
 }

@@ -1,23 +1,53 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx24x72x6Fx6Fx74x2Fʺ
+    public abstract class _andExprⳆorExpr
     {
-        public _ʺx24x72x6Fx6Fx74x2Fʺ(__GeneratedOdata.CstNodes.Inners._x24 _x24_1, __GeneratedOdata.CstNodes.Inners._x72 _x72_1, __GeneratedOdata.CstNodes.Inners._x6F _x6F_1, __GeneratedOdata.CstNodes.Inners._x6F _x6F_2, __GeneratedOdata.CstNodes.Inners._x74 _x74_1, __GeneratedOdata.CstNodes.Inners._x2F _x2F_1)
+        private _andExprⳆorExpr()
         {
-            this._x24_1 = _x24_1;
-            this._x72_1 = _x72_1;
-            this._x6F_1 = _x6F_1;
-            this._x6F_2 = _x6F_2;
-            this._x74_1 = _x74_1;
-            this._x2F_1 = _x2F_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x24 _x24_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x72 _x72_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x6F _x6F_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x6F _x6F_2 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x74 _x74_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x2F _x2F_1 { get; }
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(_andExprⳆorExpr node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+            
+            protected internal abstract TResult Accept(_andExprⳆorExpr._andExpr node, TContext context);
+            protected internal abstract TResult Accept(_andExprⳆorExpr._orExpr node, TContext context);
+        }
+        
+        public sealed class _andExpr : _andExprⳆorExpr
+        {
+            public _andExpr(__GeneratedOdata.CstNodes.Rules._andExpr _andExpr_1)
+            {
+                this._andExpr_1 = _andExpr_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Rules._andExpr _andExpr_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _orExpr : _andExprⳆorExpr
+        {
+            public _orExpr(__GeneratedOdata.CstNodes.Rules._orExpr _orExpr_1)
+            {
+                this._orExpr_1 = _orExpr_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Rules._orExpr _orExpr_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
     }
     
 }

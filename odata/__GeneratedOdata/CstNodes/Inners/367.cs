@@ -1,12 +1,15 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _x7B
+    public sealed class _rootExpr_ЖⲤvalueⲻseparator_rootExprↃ
     {
-        private _x7B()
+        public _rootExpr_ЖⲤvalueⲻseparator_rootExprↃ(__GeneratedOdata.CstNodes.Rules._rootExpr _rootExpr_1, System.Collections.Generic.IEnumerable<Inners._Ⲥvalueⲻseparator_rootExprↃ> _Ⲥvalueⲻseparator_rootExprↃ_1)
         {
+            this._rootExpr_1 = _rootExpr_1;
+            this._Ⲥvalueⲻseparator_rootExprↃ_1 = _Ⲥvalueⲻseparator_rootExprↃ_1;
         }
         
-        public static _x7B Instance { get; } = new _x7B();
+        public __GeneratedOdata.CstNodes.Rules._rootExpr _rootExpr_1 { get; }
+        public System.Collections.Generic.IEnumerable<Inners._Ⲥvalueⲻseparator_rootExprↃ> _Ⲥvalueⲻseparator_rootExprↃ_1 { get; }
     }
     
 }

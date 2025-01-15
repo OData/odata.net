@@ -13,7 +13,7 @@ namespace __GeneratedOdata.Trancsribers.Inners
             __GeneratedOdata.Trancsribers.Rules._complexInUriTranscriber.Instance.Transcribe(value._complexInUri_1, builder);
 foreach (var _Ⲥvalueⲻseparator_complexInUriↃ_1 in value._Ⲥvalueⲻseparator_complexInUriↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._Ⲥvalueⲻseparator_complexInUriↃTranscriber.Instance.Transcribe(_Ⲥvalueⲻseparator_complexInUriↃ_1, builder);
+Inners._Ⲥvalueⲻseparator_complexInUriↃTranscriber.Instance.Transcribe(_Ⲥvalueⲻseparator_complexInUriↃ_1, builder);
 }
 
         }

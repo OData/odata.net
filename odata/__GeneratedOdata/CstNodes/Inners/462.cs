@@ -1,53 +1,23 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public abstract class _base64b16Ⳇbase64b8
+    public sealed class _ʺx62x69x6Ex61x72x79ʺ
     {
-        private _base64b16Ⳇbase64b8()
+        public _ʺx62x69x6Ex61x72x79ʺ(__GeneratedOdata.CstNodes.Inners._x62 _x62_1, __GeneratedOdata.CstNodes.Inners._x69 _x69_1, __GeneratedOdata.CstNodes.Inners._x6E _x6E_1, __GeneratedOdata.CstNodes.Inners._x61 _x61_1, __GeneratedOdata.CstNodes.Inners._x72 _x72_1, __GeneratedOdata.CstNodes.Inners._x79 _x79_1)
         {
+            this._x62_1 = _x62_1;
+            this._x69_1 = _x69_1;
+            this._x6E_1 = _x6E_1;
+            this._x61_1 = _x61_1;
+            this._x72_1 = _x72_1;
+            this._x79_1 = _x79_1;
         }
         
-        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-        
-        public abstract class Visitor<TResult, TContext>
-        {
-            public TResult Visit(_base64b16Ⳇbase64b8 node, TContext context)
-            {
-                return node.Dispatch(this, context);
-            }
-            
-            protected internal abstract TResult Accept(_base64b16Ⳇbase64b8._base64b16 node, TContext context);
-            protected internal abstract TResult Accept(_base64b16Ⳇbase64b8._base64b8 node, TContext context);
-        }
-        
-        public sealed class _base64b16 : _base64b16Ⳇbase64b8
-        {
-            public _base64b16(__GeneratedOdata.CstNodes.Rules._base64b16 _base64b16_1)
-            {
-                this._base64b16_1 = _base64b16_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._base64b16 _base64b16_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class _base64b8 : _base64b16Ⳇbase64b8
-        {
-            public _base64b8(__GeneratedOdata.CstNodes.Rules._base64b8 _base64b8_1)
-            {
-                this._base64b8_1 = _base64b8_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._base64b8 _base64b8_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
+        public __GeneratedOdata.CstNodes.Inners._x62 _x62_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x69 _x69_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x6E _x6E_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x61 _x61_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x72 _x72_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x79 _x79_1 { get; }
     }
     
 }

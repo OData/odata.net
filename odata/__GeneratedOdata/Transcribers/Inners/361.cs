@@ -13,7 +13,7 @@ namespace __GeneratedOdata.Trancsribers.Inners
             __GeneratedOdata.Trancsribers.Rules._primitiveLiteralInJSONTranscriber.Instance.Transcribe(value._primitiveLiteralInJSON_1, builder);
 foreach (var _Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1 in value._Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._Ⲥvalueⲻseparator_primitiveLiteralInJSONↃTranscriber.Instance.Transcribe(_Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1, builder);
+Inners._Ⲥvalueⲻseparator_primitiveLiteralInJSONↃTranscriber.Instance.Transcribe(_Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1, builder);
 }
 
         }

@@ -1,57 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public abstract class _refⳆOPEN_levels_CLOSE
+    public sealed class _ⲤCOMMA_expandItemↃ
     {
-        private _refⳆOPEN_levels_CLOSE()
+        public _ⲤCOMMA_expandItemↃ(__GeneratedOdata.CstNodes.Inners._COMMA_expandItem _COMMA_expandItem_1)
         {
+            this._COMMA_expandItem_1 = _COMMA_expandItem_1;
         }
         
-        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-        
-        public abstract class Visitor<TResult, TContext>
-        {
-            public TResult Visit(_refⳆOPEN_levels_CLOSE node, TContext context)
-            {
-                return node.Dispatch(this, context);
-            }
-            
-            protected internal abstract TResult Accept(_refⳆOPEN_levels_CLOSE._ref node, TContext context);
-            protected internal abstract TResult Accept(_refⳆOPEN_levels_CLOSE._OPEN_levels_CLOSE node, TContext context);
-        }
-        
-        public sealed class _ref : _refⳆOPEN_levels_CLOSE
-        {
-            public _ref(__GeneratedOdata.CstNodes.Rules._ref _ref_1)
-            {
-                this._ref_1 = _ref_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._ref _ref_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class _OPEN_levels_CLOSE : _refⳆOPEN_levels_CLOSE
-        {
-            public _OPEN_levels_CLOSE(__GeneratedOdata.CstNodes.Rules._OPEN _OPEN_1, __GeneratedOdata.CstNodes.Rules._levels _levels_1, __GeneratedOdata.CstNodes.Rules._CLOSE _CLOSE_1)
-            {
-                this._OPEN_1 = _OPEN_1;
-                this._levels_1 = _levels_1;
-                this._CLOSE_1 = _CLOSE_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._OPEN _OPEN_1 { get; }
-            public __GeneratedOdata.CstNodes.Rules._levels _levels_1 { get; }
-            public __GeneratedOdata.CstNodes.Rules._CLOSE _CLOSE_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
+        public __GeneratedOdata.CstNodes.Inners._COMMA_expandItem _COMMA_expandItem_1 { get; }
     }
     
 }

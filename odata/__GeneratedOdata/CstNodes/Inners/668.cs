@@ -1,15 +1,23 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx2Fʺ_segment
+    public sealed class HelperRangedExactly5<T> : System.Collections.Generic.IEnumerable<T>
     {
-        public _ʺx2Fʺ_segment(__GeneratedOdata.CstNodes.Inners._ʺx2Fʺ _ʺx2Fʺ_1, __GeneratedOdata.CstNodes.Rules._segment _segment_1)
+        public HelperRangedExactly5(System.Collections.Generic.IEnumerable<T> source)
         {
-            this._ʺx2Fʺ_1 = _ʺx2Fʺ_1;
-            this._segment_1 = _segment_1;
+            this.Source = source;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._ʺx2Fʺ _ʺx2Fʺ_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._segment _segment_1 { get; }
+        private System.Collections.Generic.IEnumerable<T> Source { get; }
+        
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator()
+        {
+            return this.Source.GetEnumerator();
+        }
+        
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return ((System.Collections.IEnumerable)this.Source).GetEnumerator();
+        }
     }
     
 }

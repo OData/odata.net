@@ -1,13 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx41ʺ
+    public sealed class _4base64char
     {
-        public _ʺx41ʺ(__GeneratedOdata.CstNodes.Inners._x41 _x41_1)
+        public _4base64char(__GeneratedOdata.CstNodes.Inners.HelperRangedExactly4<__GeneratedOdata.CstNodes.Rules._base64char> _base64char_1)
         {
-            this._x41_1 = _x41_1;
+            this._base64char_1 = _base64char_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x41 _x41_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners.HelperRangedExactly4<__GeneratedOdata.CstNodes.Rules._base64char> _base64char_1 { get; }
     }
     
 }

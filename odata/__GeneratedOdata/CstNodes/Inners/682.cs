@@ -1,13 +1,17 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻFↃ
+    public sealed class _h16_ʺx3Aʺ_h16
     {
-        public _Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻFↃ(__GeneratedOdata.CstNodes.Inners._ʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻF _ʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻF_1)
+        public _h16_ʺx3Aʺ_h16(__GeneratedOdata.CstNodes.Rules._h16 _h16_1, __GeneratedOdata.CstNodes.Inners._ʺx3Aʺ _ʺx3Aʺ_1, __GeneratedOdata.CstNodes.Rules._h16 _h16_2)
         {
-            this._ʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻF_1 = _ʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻF_1;
+            this._h16_1 = _h16_1;
+            this._ʺx3Aʺ_1 = _ʺx3Aʺ_1;
+            this._h16_2 = _h16_2;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._ʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻF _ʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻF_1 { get; }
+        public __GeneratedOdata.CstNodes.Rules._h16 _h16_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._ʺx3Aʺ _ʺx3Aʺ_1 { get; }
+        public __GeneratedOdata.CstNodes.Rules._h16 _h16_2 { get; }
     }
     
 }

@@ -1,15 +1,23 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx2Fʺ_keyPathLiteral
+    public sealed class HelperRangedAtLeast1<T> : System.Collections.Generic.IEnumerable<T>
     {
-        public _ʺx2Fʺ_keyPathLiteral(__GeneratedOdata.CstNodes.Inners._ʺx2Fʺ _ʺx2Fʺ_1, __GeneratedOdata.CstNodes.Rules._keyPathLiteral _keyPathLiteral_1)
+        public HelperRangedAtLeast1(System.Collections.Generic.IEnumerable<T> source)
         {
-            this._ʺx2Fʺ_1 = _ʺx2Fʺ_1;
-            this._keyPathLiteral_1 = _keyPathLiteral_1;
+            this.Source = source;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._ʺx2Fʺ _ʺx2Fʺ_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._keyPathLiteral _keyPathLiteral_1 { get; }
+        private System.Collections.Generic.IEnumerable<T> Source { get; }
+        
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator()
+        {
+            return this.Source.GetEnumerator();
+        }
+        
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return ((System.Collections.IEnumerable)this.Source).GetEnumerator();
+        }
     }
     
 }

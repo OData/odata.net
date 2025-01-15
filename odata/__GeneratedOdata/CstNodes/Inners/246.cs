@@ -1,17 +1,53 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx2Fʺ_complexProperty_꘡ʺx2Fʺ_qualifiedComplexTypeName꘡
+    public abstract class _ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ
     {
-        public _ʺx2Fʺ_complexProperty_꘡ʺx2Fʺ_qualifiedComplexTypeName꘡(__GeneratedOdata.CstNodes.Inners._ʺx2Fʺ _ʺx2Fʺ_1, __GeneratedOdata.CstNodes.Rules._complexProperty _complexProperty_1, __GeneratedOdata.CstNodes.Inners._ʺx2Fʺ_qualifiedComplexTypeName? _ʺx2Fʺ_qualifiedComplexTypeName_1)
+        private _ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ()
         {
-            this._ʺx2Fʺ_1 = _ʺx2Fʺ_1;
-            this._complexProperty_1 = _complexProperty_1;
-            this._ʺx2Fʺ_qualifiedComplexTypeName_1 = _ʺx2Fʺ_qualifiedComplexTypeName_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._ʺx2Fʺ _ʺx2Fʺ_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._complexProperty _complexProperty_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._ʺx2Fʺ_qualifiedComplexTypeName? _ʺx2Fʺ_qualifiedComplexTypeName_1 { get; }
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(_ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+            
+            protected internal abstract TResult Accept(_ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ._ʺx2Fx24x65x6Ex74x69x74x79ʺ node, TContext context);
+            protected internal abstract TResult Accept(_ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ._ʺx2Fx24x64x65x6Cx74x61ʺ node, TContext context);
+        }
+        
+        public sealed class _ʺx2Fx24x65x6Ex74x69x74x79ʺ : _ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ
+        {
+            public _ʺx2Fx24x65x6Ex74x69x74x79ʺ(__GeneratedOdata.CstNodes.Inners._ʺx2Fx24x65x6Ex74x69x74x79ʺ _ʺx2Fx24x65x6Ex74x69x74x79ʺ_1)
+            {
+                this._ʺx2Fx24x65x6Ex74x69x74x79ʺ_1 = _ʺx2Fx24x65x6Ex74x69x74x79ʺ_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Inners._ʺx2Fx24x65x6Ex74x69x74x79ʺ _ʺx2Fx24x65x6Ex74x69x74x79ʺ_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _ʺx2Fx24x64x65x6Cx74x61ʺ : _ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ
+        {
+            public _ʺx2Fx24x64x65x6Cx74x61ʺ(__GeneratedOdata.CstNodes.Inners._ʺx2Fx24x64x65x6Cx74x61ʺ _ʺx2Fx24x64x65x6Cx74x61ʺ_1)
+            {
+                this._ʺx2Fx24x64x65x6Cx74x61ʺ_1 = _ʺx2Fx24x64x65x6Cx74x61ʺ_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Inners._ʺx2Fx24x64x65x6Cx74x61ʺ _ʺx2Fx24x64x65x6Cx74x61ʺ_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
     }
     
 }

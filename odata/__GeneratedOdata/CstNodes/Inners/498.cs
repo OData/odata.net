@@ -1,17 +1,23 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx3Aʺ_second_꘡ʺx2Eʺ_fractionalSeconds꘡
+    public sealed class HelperRangedExactly8<T> : System.Collections.Generic.IEnumerable<T>
     {
-        public _ʺx3Aʺ_second_꘡ʺx2Eʺ_fractionalSeconds꘡(__GeneratedOdata.CstNodes.Inners._ʺx3Aʺ _ʺx3Aʺ_1, __GeneratedOdata.CstNodes.Rules._second _second_1, __GeneratedOdata.CstNodes.Inners._ʺx2Eʺ_fractionalSeconds? _ʺx2Eʺ_fractionalSeconds_1)
+        public HelperRangedExactly8(System.Collections.Generic.IEnumerable<T> source)
         {
-            this._ʺx3Aʺ_1 = _ʺx3Aʺ_1;
-            this._second_1 = _second_1;
-            this._ʺx2Eʺ_fractionalSeconds_1 = _ʺx2Eʺ_fractionalSeconds_1;
+            this.Source = source;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._ʺx3Aʺ _ʺx3Aʺ_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._second _second_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._ʺx2Eʺ_fractionalSeconds? _ʺx2Eʺ_fractionalSeconds_1 { get; }
+        private System.Collections.Generic.IEnumerable<T> Source { get; }
+        
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator()
+        {
+            return this.Source.GetEnumerator();
+        }
+        
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return ((System.Collections.IEnumerable)this.Source).GetEnumerator();
+        }
     }
     
 }

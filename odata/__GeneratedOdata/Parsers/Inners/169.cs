@@ -26,10 +26,10 @@ select new __GeneratedOdata.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6Eʺ
         
         public static class _1Жpchar_ʺx2Fʺ_1ЖpcharParser
         {
-            public static Parser<__GeneratedOdata.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1Жpchar._1Жpchar_ʺx2Fʺ_1Жpchar> Instance { get; } = from _pchar_1 in __GeneratedOdata.Parsers.Rules._pcharParser.Instance.Many()
+            public static Parser<__GeneratedOdata.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1Жpchar._1Жpchar_ʺx2Fʺ_1Жpchar> Instance { get; } = from _pchar_1 in __GeneratedOdata.Parsers.Rules._pcharParser.Instance.Repeat(1, null)
 from _ʺx2Fʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx2FʺParser.Instance
-from _pchar_2 in __GeneratedOdata.Parsers.Rules._pcharParser.Instance.Many()
-select new __GeneratedOdata.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1Жpchar._1Жpchar_ʺx2Fʺ_1Жpchar(_pchar_1, _ʺx2Fʺ_1, _pchar_2);
+from _pchar_2 in __GeneratedOdata.Parsers.Rules._pcharParser.Instance.Repeat(1, null)
+select new __GeneratedOdata.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1Жpchar._1Жpchar_ʺx2Fʺ_1Жpchar(new __GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdata.CstNodes.Rules._pchar>(_pchar_1), _ʺx2Fʺ_1, new __GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdata.CstNodes.Rules._pchar>(_pchar_2));
         }
     }
     

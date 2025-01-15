@@ -13,7 +13,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
             __GeneratedOdata.Trancsribers.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLARTranscriber.Instance.Transcribe(value._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR_1, builder);
 foreach (var _ⲤqcharⲻnoⲻAMPⲻEQↃ_1 in value._ⲤqcharⲻnoⲻAMPⲻEQↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤqcharⲻnoⲻAMPⲻEQↃTranscriber.Instance.Transcribe(_ⲤqcharⲻnoⲻAMPⲻEQↃ_1, builder);
+Inners._ⲤqcharⲻnoⲻAMPⲻEQↃTranscriber.Instance.Transcribe(_ⲤqcharⲻnoⲻAMPⲻEQↃ_1, builder);
 }
 
         }

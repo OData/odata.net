@@ -1,13 +1,55 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ⲤentitySetName_keyPredicateⳆsingletonEntityↃ
+    public abstract class _entitySetName_keyPredicateⳆsingletonEntity
     {
-        public _ⲤentitySetName_keyPredicateⳆsingletonEntityↃ(__GeneratedOdata.CstNodes.Inners._entitySetName_keyPredicateⳆsingletonEntity _entitySetName_keyPredicateⳆsingletonEntity_1)
+        private _entitySetName_keyPredicateⳆsingletonEntity()
         {
-            this._entitySetName_keyPredicateⳆsingletonEntity_1 = _entitySetName_keyPredicateⳆsingletonEntity_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._entitySetName_keyPredicateⳆsingletonEntity _entitySetName_keyPredicateⳆsingletonEntity_1 { get; }
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(_entitySetName_keyPredicateⳆsingletonEntity node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+            
+            protected internal abstract TResult Accept(_entitySetName_keyPredicateⳆsingletonEntity._entitySetName_keyPredicate node, TContext context);
+            protected internal abstract TResult Accept(_entitySetName_keyPredicateⳆsingletonEntity._singletonEntity node, TContext context);
+        }
+        
+        public sealed class _entitySetName_keyPredicate : _entitySetName_keyPredicateⳆsingletonEntity
+        {
+            public _entitySetName_keyPredicate(__GeneratedOdata.CstNodes.Rules._entitySetName _entitySetName_1, __GeneratedOdata.CstNodes.Rules._keyPredicate _keyPredicate_1)
+            {
+                this._entitySetName_1 = _entitySetName_1;
+                this._keyPredicate_1 = _keyPredicate_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Rules._entitySetName _entitySetName_1 { get; }
+            public __GeneratedOdata.CstNodes.Rules._keyPredicate _keyPredicate_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _singletonEntity : _entitySetName_keyPredicateⳆsingletonEntity
+        {
+            public _singletonEntity(__GeneratedOdata.CstNodes.Rules._singletonEntity _singletonEntity_1)
+            {
+                this._singletonEntity_1 = _singletonEntity_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Rules._singletonEntity _singletonEntity_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
     }
     
 }

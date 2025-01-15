@@ -1,15 +1,23 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _COMMA_singleEnumValue
+    public sealed class HelperRangedExactly3<T> : System.Collections.Generic.IEnumerable<T>
     {
-        public _COMMA_singleEnumValue(__GeneratedOdata.CstNodes.Rules._COMMA _COMMA_1, __GeneratedOdata.CstNodes.Rules._singleEnumValue _singleEnumValue_1)
+        public HelperRangedExactly3(System.Collections.Generic.IEnumerable<T> source)
         {
-            this._COMMA_1 = _COMMA_1;
-            this._singleEnumValue_1 = _singleEnumValue_1;
+            this.Source = source;
         }
         
-        public __GeneratedOdata.CstNodes.Rules._COMMA _COMMA_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._singleEnumValue _singleEnumValue_1 { get; }
+        private System.Collections.Generic.IEnumerable<T> Source { get; }
+        
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator()
+        {
+            return this.Source.GetEnumerator();
+        }
+        
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return ((System.Collections.IEnumerable)this.Source).GetEnumerator();
+        }
     }
     
 }

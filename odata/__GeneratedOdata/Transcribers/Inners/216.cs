@@ -27,7 +27,7 @@ namespace __GeneratedOdata.Trancsribers.Inners
 __GeneratedOdata.Trancsribers.Rules._selectOptionTranscriber.Instance.Transcribe(node._selectOption_1, context);
 foreach (var _ⲤSEMI_selectOptionↃ_1 in node._ⲤSEMI_selectOptionↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤSEMI_selectOptionↃTranscriber.Instance.Transcribe(_ⲤSEMI_selectOptionↃ_1, context);
+Inners._ⲤSEMI_selectOptionↃTranscriber.Instance.Transcribe(_ⲤSEMI_selectOptionↃ_1, context);
 }
 __GeneratedOdata.Trancsribers.Rules._CLOSETranscriber.Instance.Transcribe(node._CLOSE_1, context);
 

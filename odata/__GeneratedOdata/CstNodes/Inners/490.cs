@@ -1,17 +1,85 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx65ʺ_꘡SIGN꘡_1ЖDIGIT
+    public abstract class _ʺx41ʺⳆʺx51ʺⳆʺx67ʺⳆʺx77ʺ
     {
-        public _ʺx65ʺ_꘡SIGN꘡_1ЖDIGIT(__GeneratedOdata.CstNodes.Inners._ʺx65ʺ _ʺx65ʺ_1, __GeneratedOdata.CstNodes.Rules._SIGN? _SIGN_1, System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1)
+        private _ʺx41ʺⳆʺx51ʺⳆʺx67ʺⳆʺx77ʺ()
         {
-            this._ʺx65ʺ_1 = _ʺx65ʺ_1;
-            this._SIGN_1 = _SIGN_1;
-            this._DIGIT_1 = _DIGIT_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._ʺx65ʺ _ʺx65ʺ_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._SIGN? _SIGN_1 { get; }
-        public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(_ʺx41ʺⳆʺx51ʺⳆʺx67ʺⳆʺx77ʺ node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+            
+            protected internal abstract TResult Accept(_ʺx41ʺⳆʺx51ʺⳆʺx67ʺⳆʺx77ʺ._ʺx41ʺ node, TContext context);
+            protected internal abstract TResult Accept(_ʺx41ʺⳆʺx51ʺⳆʺx67ʺⳆʺx77ʺ._ʺx51ʺ node, TContext context);
+            protected internal abstract TResult Accept(_ʺx41ʺⳆʺx51ʺⳆʺx67ʺⳆʺx77ʺ._ʺx67ʺ node, TContext context);
+            protected internal abstract TResult Accept(_ʺx41ʺⳆʺx51ʺⳆʺx67ʺⳆʺx77ʺ._ʺx77ʺ node, TContext context);
+        }
+        
+        public sealed class _ʺx41ʺ : _ʺx41ʺⳆʺx51ʺⳆʺx67ʺⳆʺx77ʺ
+        {
+            public _ʺx41ʺ(__GeneratedOdata.CstNodes.Inners._ʺx41ʺ _ʺx41ʺ_1)
+            {
+                this._ʺx41ʺ_1 = _ʺx41ʺ_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Inners._ʺx41ʺ _ʺx41ʺ_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _ʺx51ʺ : _ʺx41ʺⳆʺx51ʺⳆʺx67ʺⳆʺx77ʺ
+        {
+            public _ʺx51ʺ(__GeneratedOdata.CstNodes.Inners._ʺx51ʺ _ʺx51ʺ_1)
+            {
+                this._ʺx51ʺ_1 = _ʺx51ʺ_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Inners._ʺx51ʺ _ʺx51ʺ_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _ʺx67ʺ : _ʺx41ʺⳆʺx51ʺⳆʺx67ʺⳆʺx77ʺ
+        {
+            public _ʺx67ʺ(__GeneratedOdata.CstNodes.Inners._ʺx67ʺ _ʺx67ʺ_1)
+            {
+                this._ʺx67ʺ_1 = _ʺx67ʺ_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Inners._ʺx67ʺ _ʺx67ʺ_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _ʺx77ʺ : _ʺx41ʺⳆʺx51ʺⳆʺx67ʺⳆʺx77ʺ
+        {
+            public _ʺx77ʺ(__GeneratedOdata.CstNodes.Inners._ʺx77ʺ _ʺx77ʺ_1)
+            {
+                this._ʺx77ʺ_1 = _ʺx77ʺ_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Inners._ʺx77ʺ _ʺx77ʺ_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
     }
     
 }

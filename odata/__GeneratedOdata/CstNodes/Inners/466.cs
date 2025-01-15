@@ -1,13 +1,23 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx4Dʺ
+    public sealed class HelperRangedExactly2<T> : System.Collections.Generic.IEnumerable<T>
     {
-        public _ʺx4Dʺ(__GeneratedOdata.CstNodes.Inners._x4D _x4D_1)
+        public HelperRangedExactly2(System.Collections.Generic.IEnumerable<T> source)
         {
-            this._x4D_1 = _x4D_1;
+            this.Source = source;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x4D _x4D_1 { get; }
+        private System.Collections.Generic.IEnumerable<T> Source { get; }
+        
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator()
+        {
+            return this.Source.GetEnumerator();
+        }
+        
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return ((System.Collections.IEnumerable)this.Source).GetEnumerator();
+        }
     }
     
 }

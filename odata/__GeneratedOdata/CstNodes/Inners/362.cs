@@ -1,85 +1,15 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public abstract class _complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri
+    public sealed class _primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ
     {
-        private _complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri()
+        public _primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ(__GeneratedOdata.CstNodes.Rules._primitiveLiteralInJSON _primitiveLiteralInJSON_1, System.Collections.Generic.IEnumerable<Inners._Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ> _Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1)
         {
+            this._primitiveLiteralInJSON_1 = _primitiveLiteralInJSON_1;
+            this._Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1 = _Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1;
         }
         
-        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-        
-        public abstract class Visitor<TResult, TContext>
-        {
-            public TResult Visit(_complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri node, TContext context)
-            {
-                return node.Dispatch(this, context);
-            }
-            
-            protected internal abstract TResult Accept(_complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri._complexInUri node, TContext context);
-            protected internal abstract TResult Accept(_complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri._complexColInUri node, TContext context);
-            protected internal abstract TResult Accept(_complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri._primitiveLiteralInJSON node, TContext context);
-            protected internal abstract TResult Accept(_complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri._primitiveColInUri node, TContext context);
-        }
-        
-        public sealed class _complexInUri : _complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri
-        {
-            public _complexInUri(__GeneratedOdata.CstNodes.Rules._complexInUri _complexInUri_1)
-            {
-                this._complexInUri_1 = _complexInUri_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._complexInUri _complexInUri_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class _complexColInUri : _complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri
-        {
-            public _complexColInUri(__GeneratedOdata.CstNodes.Rules._complexColInUri _complexColInUri_1)
-            {
-                this._complexColInUri_1 = _complexColInUri_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._complexColInUri _complexColInUri_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class _primitiveLiteralInJSON : _complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri
-        {
-            public _primitiveLiteralInJSON(__GeneratedOdata.CstNodes.Rules._primitiveLiteralInJSON _primitiveLiteralInJSON_1)
-            {
-                this._primitiveLiteralInJSON_1 = _primitiveLiteralInJSON_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._primitiveLiteralInJSON _primitiveLiteralInJSON_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class _primitiveColInUri : _complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri
-        {
-            public _primitiveColInUri(__GeneratedOdata.CstNodes.Rules._primitiveColInUri _primitiveColInUri_1)
-            {
-                this._primitiveColInUri_1 = _primitiveColInUri_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._primitiveColInUri _primitiveColInUri_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
+        public __GeneratedOdata.CstNodes.Rules._primitiveLiteralInJSON _primitiveLiteralInJSON_1 { get; }
+        public System.Collections.Generic.IEnumerable<Inners._Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ> _Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1 { get; }
     }
     
 }

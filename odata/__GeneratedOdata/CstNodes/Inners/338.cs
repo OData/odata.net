@@ -1,17 +1,17 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx64x69x76ʺ
+    public sealed class _ʺx6Dx75x6Cʺ
     {
-        public _ʺx64x69x76ʺ(__GeneratedOdata.CstNodes.Inners._x64 _x64_1, __GeneratedOdata.CstNodes.Inners._x69 _x69_1, __GeneratedOdata.CstNodes.Inners._x76 _x76_1)
+        public _ʺx6Dx75x6Cʺ(__GeneratedOdata.CstNodes.Inners._x6D _x6D_1, __GeneratedOdata.CstNodes.Inners._x75 _x75_1, __GeneratedOdata.CstNodes.Inners._x6C _x6C_1)
         {
-            this._x64_1 = _x64_1;
-            this._x69_1 = _x69_1;
-            this._x76_1 = _x76_1;
+            this._x6D_1 = _x6D_1;
+            this._x75_1 = _x75_1;
+            this._x6C_1 = _x6C_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x64 _x64_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x69 _x69_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x76 _x76_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x6D _x6D_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x75 _x75_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x6C _x6C_1 { get; }
     }
     
 }

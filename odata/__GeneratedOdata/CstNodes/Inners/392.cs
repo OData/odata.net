@@ -1,17 +1,12 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx25x32x32ʺ
+    public sealed class _x32
     {
-        public _ʺx25x32x32ʺ(__GeneratedOdata.CstNodes.Inners._x25 _x25_1, __GeneratedOdata.CstNodes.Inners._x32 _x32_1, __GeneratedOdata.CstNodes.Inners._x32 _x32_2)
+        private _x32()
         {
-            this._x25_1 = _x25_1;
-            this._x32_1 = _x32_1;
-            this._x32_2 = _x32_2;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x25 _x25_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x32 _x32_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x32 _x32_2 { get; }
+        public static _x32 Instance { get; } = new _x32();
     }
     
 }

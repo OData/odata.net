@@ -49,7 +49,7 @@ return default;
 __GeneratedOdata.Trancsribers.Rules._expandOptionTranscriber.Instance.Transcribe(node._expandOption_1, context);
 foreach (var _ⲤSEMI_expandOptionↃ_1 in node._ⲤSEMI_expandOptionↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤSEMI_expandOptionↃTranscriber.Instance.Transcribe(_ⲤSEMI_expandOptionↃ_1, context);
+Inners._ⲤSEMI_expandOptionↃTranscriber.Instance.Transcribe(_ⲤSEMI_expandOptionↃ_1, context);
 }
 __GeneratedOdata.Trancsribers.Rules._CLOSETranscriber.Instance.Transcribe(node._CLOSE_1, context);
 

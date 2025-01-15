@@ -1,53 +1,19 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public abstract class _ʺx24x73x6Bx69x70ʺⳆʺx73x6Bx69x70ʺ
+    public sealed class _ʺx73x6Bx69x70ʺ
     {
-        private _ʺx24x73x6Bx69x70ʺⳆʺx73x6Bx69x70ʺ()
+        public _ʺx73x6Bx69x70ʺ(__GeneratedOdata.CstNodes.Inners._x73 _x73_1, __GeneratedOdata.CstNodes.Inners._x6B _x6B_1, __GeneratedOdata.CstNodes.Inners._x69 _x69_1, __GeneratedOdata.CstNodes.Inners._x70 _x70_1)
         {
+            this._x73_1 = _x73_1;
+            this._x6B_1 = _x6B_1;
+            this._x69_1 = _x69_1;
+            this._x70_1 = _x70_1;
         }
         
-        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-        
-        public abstract class Visitor<TResult, TContext>
-        {
-            public TResult Visit(_ʺx24x73x6Bx69x70ʺⳆʺx73x6Bx69x70ʺ node, TContext context)
-            {
-                return node.Dispatch(this, context);
-            }
-            
-            protected internal abstract TResult Accept(_ʺx24x73x6Bx69x70ʺⳆʺx73x6Bx69x70ʺ._ʺx24x73x6Bx69x70ʺ node, TContext context);
-            protected internal abstract TResult Accept(_ʺx24x73x6Bx69x70ʺⳆʺx73x6Bx69x70ʺ._ʺx73x6Bx69x70ʺ node, TContext context);
-        }
-        
-        public sealed class _ʺx24x73x6Bx69x70ʺ : _ʺx24x73x6Bx69x70ʺⳆʺx73x6Bx69x70ʺ
-        {
-            public _ʺx24x73x6Bx69x70ʺ(__GeneratedOdata.CstNodes.Inners._ʺx24x73x6Bx69x70ʺ _ʺx24x73x6Bx69x70ʺ_1)
-            {
-                this._ʺx24x73x6Bx69x70ʺ_1 = _ʺx24x73x6Bx69x70ʺ_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Inners._ʺx24x73x6Bx69x70ʺ _ʺx24x73x6Bx69x70ʺ_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class _ʺx73x6Bx69x70ʺ : _ʺx24x73x6Bx69x70ʺⳆʺx73x6Bx69x70ʺ
-        {
-            public _ʺx73x6Bx69x70ʺ(__GeneratedOdata.CstNodes.Inners._ʺx73x6Bx69x70ʺ _ʺx73x6Bx69x70ʺ_1)
-            {
-                this._ʺx73x6Bx69x70ʺ_1 = _ʺx73x6Bx69x70ʺ_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Inners._ʺx73x6Bx69x70ʺ _ʺx73x6Bx69x70ʺ_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
+        public __GeneratedOdata.CstNodes.Inners._x73 _x73_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x6B _x6B_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x69 _x69_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x70 _x70_1 { get; }
     }
     
 }

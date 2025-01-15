@@ -1,15 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _SEMI_selectOptionPC
+    public sealed class _ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ
     {
-        public _SEMI_selectOptionPC(__GeneratedOdata.CstNodes.Rules._SEMI _SEMI_1, __GeneratedOdata.CstNodes.Rules._selectOptionPC _selectOptionPC_1)
+        public _ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ(__GeneratedOdata.CstNodes.Inners._selectPropertyⳆqualifiedActionNameⳆqualifiedFunctionName _selectPropertyⳆqualifiedActionNameⳆqualifiedFunctionName_1)
         {
-            this._SEMI_1 = _SEMI_1;
-            this._selectOptionPC_1 = _selectOptionPC_1;
+            this._selectPropertyⳆqualifiedActionNameⳆqualifiedFunctionName_1 = _selectPropertyⳆqualifiedActionNameⳆqualifiedFunctionName_1;
         }
         
-        public __GeneratedOdata.CstNodes.Rules._SEMI _SEMI_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._selectOptionPC _selectOptionPC_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._selectPropertyⳆqualifiedActionNameⳆqualifiedFunctionName _selectPropertyⳆqualifiedActionNameⳆqualifiedFunctionName_1 { get; }
     }
     
 }

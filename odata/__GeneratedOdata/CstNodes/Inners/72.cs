@@ -1,12 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _x26
+    public sealed class _ⲤCOMMA_entitySetNameↃ
     {
-        private _x26()
+        public _ⲤCOMMA_entitySetNameↃ(__GeneratedOdata.CstNodes.Inners._COMMA_entitySetName _COMMA_entitySetName_1)
         {
+            this._COMMA_entitySetName_1 = _COMMA_entitySetName_1;
         }
         
-        public static _x26 Instance { get; } = new _x26();
+        public __GeneratedOdata.CstNodes.Inners._COMMA_entitySetName _COMMA_entitySetName_1 { get; }
     }
     
 }

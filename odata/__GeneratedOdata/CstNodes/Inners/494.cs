@@ -1,53 +1,17 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public abstract class _SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE
+    public sealed class _ʺx65ʺ_꘡SIGN꘡_1ЖDIGIT
     {
-        private _SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE()
+        public _ʺx65ʺ_꘡SIGN꘡_1ЖDIGIT(__GeneratedOdata.CstNodes.Inners._ʺx65ʺ _ʺx65ʺ_1, __GeneratedOdata.CstNodes.Rules._SIGN? _SIGN_1, __GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1)
         {
+            this._ʺx65ʺ_1 = _ʺx65ʺ_1;
+            this._SIGN_1 = _SIGN_1;
+            this._DIGIT_1 = _DIGIT_1;
         }
         
-        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-        
-        public abstract class Visitor<TResult, TContext>
-        {
-            public TResult Visit(_SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE node, TContext context)
-            {
-                return node.Dispatch(this, context);
-            }
-            
-            protected internal abstract TResult Accept(_SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._SQUOTEⲻinⲻstring node, TContext context);
-            protected internal abstract TResult Accept(_SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE node, TContext context);
-        }
-        
-        public sealed class _SQUOTEⲻinⲻstring : _SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE
-        {
-            public _SQUOTEⲻinⲻstring(__GeneratedOdata.CstNodes.Rules._SQUOTEⲻinⲻstring _SQUOTEⲻinⲻstring_1)
-            {
-                this._SQUOTEⲻinⲻstring_1 = _SQUOTEⲻinⲻstring_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._SQUOTEⲻinⲻstring _SQUOTEⲻinⲻstring_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
-        
-        public sealed class _pcharⲻnoⲻSQUOTE : _SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE
-        {
-            public _pcharⲻnoⲻSQUOTE(__GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE _pcharⲻnoⲻSQUOTE_1)
-            {
-                this._pcharⲻnoⲻSQUOTE_1 = _pcharⲻnoⲻSQUOTE_1;
-            }
-            
-            public __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE _pcharⲻnoⲻSQUOTE_1 { get; }
-            
-            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-            {
-                return visitor.Accept(this, context);
-            }
-        }
+        public __GeneratedOdata.CstNodes.Inners._ʺx65ʺ _ʺx65ʺ_1 { get; }
+        public __GeneratedOdata.CstNodes.Rules._SIGN? _SIGN_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
     }
     
 }

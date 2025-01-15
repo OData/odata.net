@@ -15,7 +15,7 @@ __GeneratedOdata.Trancsribers.Rules._OPENTranscriber.Instance.Transcribe(value._
 __GeneratedOdata.Trancsribers.Rules._entitySetNameTranscriber.Instance.Transcribe(value._entitySetName_1, builder);
 foreach (var _ⲤCOMMA_entitySetNameↃ_1 in value._ⲤCOMMA_entitySetNameↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤCOMMA_entitySetNameↃTranscriber.Instance.Transcribe(_ⲤCOMMA_entitySetNameↃ_1, builder);
+Inners._ⲤCOMMA_entitySetNameↃTranscriber.Instance.Transcribe(_ⲤCOMMA_entitySetNameↃ_1, builder);
 }
 __GeneratedOdata.Trancsribers.Rules._CLOSETranscriber.Instance.Transcribe(value._CLOSE_1, builder);
 

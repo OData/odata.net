@@ -1,13 +1,23 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx7Eʺ
+    public sealed class HelperRangedAtMost4<T> : System.Collections.Generic.IEnumerable<T>
     {
-        public _ʺx7Eʺ(__GeneratedOdata.CstNodes.Inners._x7E _x7E_1)
+        public HelperRangedAtMost4(System.Collections.Generic.IEnumerable<T> source)
         {
-            this._x7E_1 = _x7E_1;
+            this.Source = source;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x7E _x7E_1 { get; }
+        private System.Collections.Generic.IEnumerable<T> Source { get; }
+        
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator()
+        {
+            return this.Source.GetEnumerator();
+        }
+        
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return ((System.Collections.IEnumerable)this.Source).GetEnumerator();
+        }
     }
     
 }

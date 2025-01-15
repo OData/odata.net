@@ -1,13 +1,15 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx37ʺ
+    public sealed class _1ЖDIGIT_ʺx48ʺ
     {
-        public _ʺx37ʺ(__GeneratedOdata.CstNodes.Inners._x37 _x37_1)
+        public _1ЖDIGIT_ʺx48ʺ(__GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1, __GeneratedOdata.CstNodes.Inners._ʺx48ʺ _ʺx48ʺ_1)
         {
-            this._x37_1 = _x37_1;
+            this._DIGIT_1 = _DIGIT_1;
+            this._ʺx48ʺ_1 = _ʺx48ʺ_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x37 _x37_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdata.CstNodes.Rules._DIGIT> _DIGIT_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._ʺx48ʺ _ʺx48ʺ_1 { get; }
     }
     
 }

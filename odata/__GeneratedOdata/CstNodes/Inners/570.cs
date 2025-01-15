@@ -1,23 +1,27 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx6Fx64x61x74x61x2Eʺ
+    public sealed class _ʺx67x65x6Fx6Dx65x74x72x79ʺ
     {
-        public _ʺx6Fx64x61x74x61x2Eʺ(__GeneratedOdata.CstNodes.Inners._x6F _x6F_1, __GeneratedOdata.CstNodes.Inners._x64 _x64_1, __GeneratedOdata.CstNodes.Inners._x61 _x61_1, __GeneratedOdata.CstNodes.Inners._x74 _x74_1, __GeneratedOdata.CstNodes.Inners._x61 _x61_2, __GeneratedOdata.CstNodes.Inners._x2E _x2E_1)
+        public _ʺx67x65x6Fx6Dx65x74x72x79ʺ(__GeneratedOdata.CstNodes.Inners._x67 _x67_1, __GeneratedOdata.CstNodes.Inners._x65 _x65_1, __GeneratedOdata.CstNodes.Inners._x6F _x6F_1, __GeneratedOdata.CstNodes.Inners._x6D _x6D_1, __GeneratedOdata.CstNodes.Inners._x65 _x65_2, __GeneratedOdata.CstNodes.Inners._x74 _x74_1, __GeneratedOdata.CstNodes.Inners._x72 _x72_1, __GeneratedOdata.CstNodes.Inners._x79 _x79_1)
         {
+            this._x67_1 = _x67_1;
+            this._x65_1 = _x65_1;
             this._x6F_1 = _x6F_1;
-            this._x64_1 = _x64_1;
-            this._x61_1 = _x61_1;
+            this._x6D_1 = _x6D_1;
+            this._x65_2 = _x65_2;
             this._x74_1 = _x74_1;
-            this._x61_2 = _x61_2;
-            this._x2E_1 = _x2E_1;
+            this._x72_1 = _x72_1;
+            this._x79_1 = _x79_1;
         }
         
+        public __GeneratedOdata.CstNodes.Inners._x67 _x67_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x65 _x65_1 { get; }
         public __GeneratedOdata.CstNodes.Inners._x6F _x6F_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x64 _x64_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x61 _x61_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x6D _x6D_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x65 _x65_2 { get; }
         public __GeneratedOdata.CstNodes.Inners._x74 _x74_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x61 _x61_2 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x2E _x2E_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x72 _x72_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x79 _x79_1 { get; }
     }
     
 }

@@ -4,7 +4,7 @@ namespace __GeneratedOdata.Parsers.Rules
     
     public static class _customValueParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._customValue> Instance { get; } = from _ⲤqcharⲻnoⲻAMPↃ_1 in __GeneratedOdata.Parsers.Inners._ⲤqcharⲻnoⲻAMPↃParser.Instance.Many()
+        public static Parser<__GeneratedOdata.CstNodes.Rules._customValue> Instance { get; } = from _ⲤqcharⲻnoⲻAMPↃ_1 in Inners._ⲤqcharⲻnoⲻAMPↃParser.Instance.Many()
 select new __GeneratedOdata.CstNodes.Rules._customValue(_ⲤqcharⲻnoⲻAMPↃ_1);
     }
     

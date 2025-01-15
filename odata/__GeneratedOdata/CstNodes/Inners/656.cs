@@ -1,15 +1,15 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _Ж3Ⲥh16_ʺx3AʺↃ_h16
+    public sealed class _userinfo_ʺx40ʺ
     {
-        public _Ж3Ⲥh16_ʺx3AʺↃ_h16(System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1, __GeneratedOdata.CstNodes.Rules._h16 _h16_1)
+        public _userinfo_ʺx40ʺ(__GeneratedOdata.CstNodes.Rules._userinfo _userinfo_1, __GeneratedOdata.CstNodes.Inners._ʺx40ʺ _ʺx40ʺ_1)
         {
-            this._Ⲥh16_ʺx3AʺↃ_1 = _Ⲥh16_ʺx3AʺↃ_1;
-            this._h16_1 = _h16_1;
+            this._userinfo_1 = _userinfo_1;
+            this._ʺx40ʺ_1 = _ʺx40ʺ_1;
         }
         
-        public System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._Ⲥh16_ʺx3AʺↃ> _Ⲥh16_ʺx3AʺↃ_1 { get; }
-        public __GeneratedOdata.CstNodes.Rules._h16 _h16_1 { get; }
+        public __GeneratedOdata.CstNodes.Rules._userinfo _userinfo_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._ʺx40ʺ _ʺx40ʺ_1 { get; }
     }
     
 }

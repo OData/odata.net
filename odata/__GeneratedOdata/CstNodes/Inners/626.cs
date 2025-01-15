@@ -1,17 +1,53 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ʺx25x32x42ʺ
+    public abstract class _SPⳆHTAB
     {
-        public _ʺx25x32x42ʺ(__GeneratedOdata.CstNodes.Inners._x25 _x25_1, __GeneratedOdata.CstNodes.Inners._x32 _x32_1, __GeneratedOdata.CstNodes.Inners._x42 _x42_1)
+        private _SPⳆHTAB()
         {
-            this._x25_1 = _x25_1;
-            this._x32_1 = _x32_1;
-            this._x42_1 = _x42_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._x25 _x25_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x32 _x32_1 { get; }
-        public __GeneratedOdata.CstNodes.Inners._x42 _x42_1 { get; }
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(_SPⳆHTAB node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+            
+            protected internal abstract TResult Accept(_SPⳆHTAB._SP node, TContext context);
+            protected internal abstract TResult Accept(_SPⳆHTAB._HTAB node, TContext context);
+        }
+        
+        public sealed class _SP : _SPⳆHTAB
+        {
+            public _SP(__GeneratedOdata.CstNodes.Rules._SP _SP_1)
+            {
+                this._SP_1 = _SP_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Rules._SP _SP_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _HTAB : _SPⳆHTAB
+        {
+            public _HTAB(__GeneratedOdata.CstNodes.Rules._HTAB _HTAB_1)
+            {
+                this._HTAB_1 = _HTAB_1;
+            }
+            
+            public __GeneratedOdata.CstNodes.Rules._HTAB _HTAB_1 { get; }
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
     }
     
 }

@@ -1,13 +1,13 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _ⲤunreservedⳆpctⲻencodedⳆsubⲻdelimsⳆʺx3AʺↃ
+    public sealed class _ʺx27ʺ
     {
-        public _ⲤunreservedⳆpctⲻencodedⳆsubⲻdelimsⳆʺx3AʺↃ(__GeneratedOdata.CstNodes.Inners._unreservedⳆpctⲻencodedⳆsubⲻdelimsⳆʺx3Aʺ _unreservedⳆpctⲻencodedⳆsubⲻdelimsⳆʺx3Aʺ_1)
+        public _ʺx27ʺ(__GeneratedOdata.CstNodes.Inners._x27 _x27_1)
         {
-            this._unreservedⳆpctⲻencodedⳆsubⲻdelimsⳆʺx3Aʺ_1 = _unreservedⳆpctⲻencodedⳆsubⲻdelimsⳆʺx3Aʺ_1;
+            this._x27_1 = _x27_1;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._unreservedⳆpctⲻencodedⳆsubⲻdelimsⳆʺx3Aʺ _unreservedⳆpctⲻencodedⳆsubⲻdelimsⳆʺx3Aʺ_1 { get; }
+        public __GeneratedOdata.CstNodes.Inners._x27 _x27_1 { get; }
     }
     
 }

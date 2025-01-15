@@ -13,7 +13,7 @@ namespace __GeneratedOdata.Trancsribers.Rules
             __GeneratedOdata.Trancsribers.Rules._singleEnumValueTranscriber.Instance.Transcribe(value._singleEnumValue_1, builder);
 foreach (var _ⲤCOMMA_singleEnumValueↃ_1 in value._ⲤCOMMA_singleEnumValueↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤCOMMA_singleEnumValueↃTranscriber.Instance.Transcribe(_ⲤCOMMA_singleEnumValueↃ_1, builder);
+Inners._ⲤCOMMA_singleEnumValueↃTranscriber.Instance.Transcribe(_ⲤCOMMA_singleEnumValueↃ_1, builder);
 }
 
         }

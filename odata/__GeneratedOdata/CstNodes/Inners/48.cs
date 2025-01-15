@@ -1,8 +1,8 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public abstract class _ʺx2Fʺ_propertyPathⳆboundOperation
+    public abstract class _countⳆboundOperation
     {
-        private _ʺx2Fʺ_propertyPathⳆboundOperation()
+        private _countⳆboundOperation()
         {
         }
         
@@ -10,25 +10,23 @@ namespace __GeneratedOdata.CstNodes.Inners
         
         public abstract class Visitor<TResult, TContext>
         {
-            public TResult Visit(_ʺx2Fʺ_propertyPathⳆboundOperation node, TContext context)
+            public TResult Visit(_countⳆboundOperation node, TContext context)
             {
                 return node.Dispatch(this, context);
             }
             
-            protected internal abstract TResult Accept(_ʺx2Fʺ_propertyPathⳆboundOperation._ʺx2Fʺ_propertyPath node, TContext context);
-            protected internal abstract TResult Accept(_ʺx2Fʺ_propertyPathⳆboundOperation._boundOperation node, TContext context);
+            protected internal abstract TResult Accept(_countⳆboundOperation._count node, TContext context);
+            protected internal abstract TResult Accept(_countⳆboundOperation._boundOperation node, TContext context);
         }
         
-        public sealed class _ʺx2Fʺ_propertyPath : _ʺx2Fʺ_propertyPathⳆboundOperation
+        public sealed class _count : _countⳆboundOperation
         {
-            public _ʺx2Fʺ_propertyPath(__GeneratedOdata.CstNodes.Inners._ʺx2Fʺ _ʺx2Fʺ_1, __GeneratedOdata.CstNodes.Rules._propertyPath _propertyPath_1)
+            public _count(__GeneratedOdata.CstNodes.Rules._count _count_1)
             {
-                this._ʺx2Fʺ_1 = _ʺx2Fʺ_1;
-                this._propertyPath_1 = _propertyPath_1;
+                this._count_1 = _count_1;
             }
             
-            public __GeneratedOdata.CstNodes.Inners._ʺx2Fʺ _ʺx2Fʺ_1 { get; }
-            public __GeneratedOdata.CstNodes.Rules._propertyPath _propertyPath_1 { get; }
+            public __GeneratedOdata.CstNodes.Rules._count _count_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -36,7 +34,7 @@ namespace __GeneratedOdata.CstNodes.Inners
             }
         }
         
-        public sealed class _boundOperation : _ʺx2Fʺ_propertyPathⳆboundOperation
+        public sealed class _boundOperation : _countⳆboundOperation
         {
             public _boundOperation(__GeneratedOdata.CstNodes.Rules._boundOperation _boundOperation_1)
             {

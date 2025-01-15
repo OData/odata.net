@@ -13,7 +13,7 @@ namespace __GeneratedOdata.Trancsribers.Inners
             __GeneratedOdata.Trancsribers.Rules._polygonDataTranscriber.Instance.Transcribe(value._polygonData_1, builder);
 foreach (var _ⲤCOMMA_polygonDataↃ_1 in value._ⲤCOMMA_polygonDataↃ_1)
 {
-__GeneratedOdata.Trancsribers.Inners._ⲤCOMMA_polygonDataↃTranscriber.Instance.Transcribe(_ⲤCOMMA_polygonDataↃ_1, builder);
+Inners._ⲤCOMMA_polygonDataↃTranscriber.Instance.Transcribe(_ⲤCOMMA_polygonDataↃ_1, builder);
 }
 
         }

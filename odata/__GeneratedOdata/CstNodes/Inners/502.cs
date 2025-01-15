@@ -1,13 +1,23 @@
 namespace __GeneratedOdata.CstNodes.Inners
 {
-    public sealed class _Ⲥʺx5AʺⳆSIGN_hour_ʺx3Aʺ_minuteↃ
+    public sealed class HelperRangedFrom1To10<T> : System.Collections.Generic.IEnumerable<T>
     {
-        public _Ⲥʺx5AʺⳆSIGN_hour_ʺx3Aʺ_minuteↃ(__GeneratedOdata.CstNodes.Inners._ʺx5AʺⳆSIGN_hour_ʺx3Aʺ_minute _ʺx5AʺⳆSIGN_hour_ʺx3Aʺ_minute_1)
+        public HelperRangedFrom1To10(System.Collections.Generic.IEnumerable<T> source)
         {
-            this._ʺx5AʺⳆSIGN_hour_ʺx3Aʺ_minute_1 = _ʺx5AʺⳆSIGN_hour_ʺx3Aʺ_minute_1;
+            this.Source = source;
         }
         
-        public __GeneratedOdata.CstNodes.Inners._ʺx5AʺⳆSIGN_hour_ʺx3Aʺ_minute _ʺx5AʺⳆSIGN_hour_ʺx3Aʺ_minute_1 { get; }
+        private System.Collections.Generic.IEnumerable<T> Source { get; }
+        
+        public System.Collections.Generic.IEnumerator<T> GetEnumerator()
+        {
+            return this.Source.GetEnumerator();
+        }
+        
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return ((System.Collections.IEnumerable)this.Source).GetEnumerator();
+        }
     }
     
 }

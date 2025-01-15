@@ -4,7 +4,7 @@ namespace __GeneratedOdata.Parsers.Rules
     
     public static class _BWSⲻhParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._BWSⲻh> Instance { get; } = from _ⲤSPⳆHTABↃ_1 in __GeneratedOdata.Parsers.Inners._ⲤSPⳆHTABↃParser.Instance.Many()
+        public static Parser<__GeneratedOdata.CstNodes.Rules._BWSⲻh> Instance { get; } = from _ⲤSPⳆHTABↃ_1 in Inners._ⲤSPⳆHTABↃParser.Instance.Many()
 select new __GeneratedOdata.CstNodes.Rules._BWSⲻh(_ⲤSPⳆHTABↃ_1);
     }
     
