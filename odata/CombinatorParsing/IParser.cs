@@ -74,6 +74,7 @@
 
         public Output()
         {
+            //// TODO you need one of these constructors for each of your ref structs
             throw new System.InvalidOperationException("TODO actually invent your own custom exception type for this");
         }
 
