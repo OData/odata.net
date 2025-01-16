@@ -162,6 +162,7 @@
 
             public TOutput Parse(TInput input)
             {
+                //// TODO make it return a collection
                 TOutput output;
                 for (int i = 0; i < this.minimum; ++i)
                 {
