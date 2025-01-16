@@ -180,7 +180,7 @@
             }
         }
 
-        public readonly ref struct ExactlyParser<TInput, TToken, TOutput, TParsed, TParser, TOutput2> : IParser<TInput, TToken, Output<IEnumerable<TParsed>, TToken, TInput>, IEnumerable<TParsed>, ExactlyParser<TInput, TToken, TOutput, TParsed, TParser, TOutput2>> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<IEnumerable<TParsed>, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput2, TParsed, TParser>, allows ref struct where TOutput2 : IOutput<TParsed, TToken, TInput>, allows ref struct
+        public readonly ref struct ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2> : IParser<TInput, TToken, Output<IEnumerable<TParsed>, TToken, TInput>, IEnumerable<TParsed>, ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2>> where TInput : IInput<TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput2, TParsed, TParser>, allows ref struct where TOutput2 : IOutput<TParsed, TToken, TInput>, allows ref struct
         {
             private readonly TParser parser;
             private readonly int count;
@@ -264,9 +264,9 @@
                 return new OrParser<TInput, TToken, TOutput, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>, TNextParser>(this, next);
             }
 
-            public ExactlyParser<TInput, TToken, TOutput, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>> Exactly<TParser>(int count)
+            public ExactlyParser<TInput, TToken, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>, TOutput> Exactly<TParser>(int count)
             {
-                return new ExactlyParser<TInput, TToken, TOutput, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>>(this, count);
+                return new ExactlyParser<TInput, TToken, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>, TOutput>(this, count);
             }
         }
     }
