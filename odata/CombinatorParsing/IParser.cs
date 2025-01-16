@@ -9,11 +9,7 @@
     {
         TOutput Parse(TInput input);
 
-        ParserExtensions.OrParser<TInput, TToken, TOutput, TParsed, TParser, TNextParser> Or<TNextParser>(TNextParser next) where TNextParser : IParser<TInput, TToken, TOutput, TParsed, TNextParser>, allows ref struct
-        {
-            //// TODO
-            return new ParserExtensions.OrParser<TInput, TToken, TOutput, TParsed, TParser, TNextParser>();
-        }
+        ParserExtensions.OrParser<TInput, TToken, TOutput, TParsed, TParser, TNextParser> Or<TNextParser>(TNextParser next) where TNextParser : IParser<TInput, TToken, TOutput, TParsed, TNextParser>, allows ref struct;
     }
 
     public interface IInput<TToken, TInput> where TInput : IInput<TToken, TInput>, allows ref struct where TToken : allows ref struct
@@ -152,6 +148,53 @@
             return new OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>();
         }*/
 
+        public readonly ref struct ExactlyParser<TInput, TToken, TOutput, TParsed, TParser> : IParser<TInput, TToken, TOutput, TParsed, ExactlyParser<TInput, TToken, TOutput, TParsed, TParser>> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TParsed, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput, TParsed, TParser>, allows ref struct
+        {
+            private readonly TParser parser;
+            private readonly int count;
+
+            public ExactlyParser(TParser parser, int count)
+            {
+                if (count < 1)
+                {
+                    throw new System.Exception("TODO is this necessary");
+                }
+
+                this.parser = parser;
+                this.count = count;
+            }
+
+            public TOutput Parse(TInput input)
+            {
+                //// tODO not your best work
+                var output = this.parser.Parse(input);
+                if (!output.Success)
+                {
+                    return output;
+                }
+
+                input = output.Remainder;
+
+                for (int i = 1; i < this.count; ++i)
+                {
+                    output = this.parser.Parse(input);
+                    if (!output.Success)
+                    {
+                        return output;
+                    }
+
+                    input = output.Remainder;
+                }
+
+                return output;
+            }
+
+            public OrParser<TInput, TToken, TOutput, TParsed, ExactlyParser<TInput, TToken, TOutput, TParsed, TParser>, TNextParser> Or<TNextParser>(TNextParser next) where TNextParser : IParser<TInput, TToken, TOutput, TParsed, TNextParser>, allows ref struct
+            {
+                return new OrParser<TInput, TToken, TOutput, TParsed, ExactlyParser<TInput, TToken, TOutput, TParsed, TParser>, TNextParser>(this, next);
+            }
+        }
+
         public readonly ref struct OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser> : IParser<TInput, TToken, TOutput, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TParsed, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TFirstParser : IParser<TInput, TToken, TOutput, TParsed, TFirstParser>, allows ref struct where TSecondParser : IParser<TInput, TToken, TOutput, TParsed, TSecondParser>, allows ref struct
         {
             private readonly TFirstParser firstParser;
@@ -184,6 +227,11 @@
             public OrParser<TInput, TToken, TOutput, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>, TNextParser> Or<TNextParser>(TNextParser next) where TNextParser : IParser<TInput, TToken, TOutput, TParsed, TNextParser>, allows ref struct
             {
                 return new OrParser<TInput, TToken, TOutput, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>, TNextParser>(this, next);
+            }
+
+            public ExactlyParser<TInput, TToken, TOutput, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>> Exactly<TParser>(int count)
+            {
+                return new ExactlyParser<TInput, TToken, TOutput, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>>(this, count);
             }
         }
     }
