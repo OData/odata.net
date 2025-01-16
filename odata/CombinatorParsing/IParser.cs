@@ -160,11 +160,6 @@
                 this.minimum = minimum;
             }
 
-            public OrParser<TInput, TToken, TOutput, TParsed, AtLeast<TInput, TToken, TOutput, TParsed, TParser>, TNextParser> Or<TNextParser>(TNextParser next) where TNextParser : IParser<TInput, TToken, TOutput, TParsed, TNextParser>, allows ref struct
-            {
-                throw new System.NotImplementedException();
-            }
-
             public TOutput Parse(TInput input)
             {
                 TOutput output;
