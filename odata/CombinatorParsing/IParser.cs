@@ -1,7 +1,9 @@
 ﻿namespace CombinatorParsing
 {
     using __GeneratedOdata.Parsers.Rules;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
 
     //// TODO add covariance and contravariance where able
 
@@ -185,9 +187,9 @@
 
             public ExactlyParser(TParser parser, int count)
             {
-                if (count < 1)
+                if (count < 0)
                 {
-                    throw new System.Exception("TODO is this necessary");
+                    throw new System.Exception("TODO");
                 }
 
                 this.parser = parser;
@@ -196,8 +198,36 @@
 
             public Output<IEnumerable<TParsed>, TToken, TInput> Parse(TInput input)
             {
-                throw new System.NotImplementedException();
+                var parsed = Empty<TParsed>();
+                for (int i = 0; i < this.count; ++i)
+                {
+                    var output = this.parser.Parse(input);
+                    if (!output.Success)
+                    {
+                        return new Output<IEnumerable<TParsed>, TToken, TInput>(input); //// TODO you need a way to expose errors
+                    }
+
+                    Append(parsed, output.Parsed);
+                    input = output.Remainder;
+                }
+
+                return new Output<IEnumerable<TParsed>, TToken, TInput>(parsed, input);
             }
+        }
+
+        private static IEnumerable<T> Empty<T>() where T : allows ref struct
+        {
+            yield break;
+        }
+
+        private static IEnumerable<T> Append<T>(IEnumerable<T> source, T value) where T : allows ref struct
+        {
+            foreach (var element in source)
+            {
+                yield return element;
+            }
+
+            yield return value;
         }
 
         public readonly ref struct OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser> : IParser<TInput, TToken, TOutput, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TParsed, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TFirstParser : IParser<TInput, TToken, TOutput, TParsed, TFirstParser>, allows ref struct where TSecondParser : IParser<TInput, TToken, TOutput, TParsed, TSecondParser>, allows ref struct
