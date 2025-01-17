@@ -17,6 +17,7 @@ namespace Microsoft.OData
     using Microsoft.OData.UriParser;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
+    using System.Text.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -454,22 +455,35 @@ namespace Microsoft.OData
                 return ODataConstants.ContextUriFragmentUntyped;
             }
 
-            ODataPrimitiveValue primitive = value as ODataPrimitiveValue;
-            if (primitive == null)
+            if (value is ODataPrimitiveValue primitive)
             {
-                Debug.Assert(value is ODataStreamReferenceValue, "value is ODataStreamReferenceValue");
-                throw new ODataException(SRResources.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataResource);
+
+                // Try convert to underlying type if the primitive value is unsigned int.
+                IEdmTypeDefinitionReference typeDefinitionReference = model.ResolveUIntTypeDefinition(primitive.Value);
+                if (typeDefinitionReference != null)
+                {
+                    return typeDefinitionReference.FullName();
+                }
+
+                IEdmPrimitiveTypeReference primitiveValueTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(primitive.Value.GetType());
+                return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.FullName();
             }
 
-            // Try convert to underlying type if the primitive value is unsigned int.
-            IEdmTypeDefinitionReference typeDefinitionReference = model.ResolveUIntTypeDefinition(primitive.Value);
-            if (typeDefinitionReference != null)
+            if (value is ODataJsonElementValue jsonElementValue)
             {
-                return typeDefinitionReference.FullName();
-            }
+                JsonElement jsonElement = jsonElementValue.Value;
+                return jsonElement.ValueKind switch
+                {
+                    JsonValueKind.True or JsonValueKind.False => EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Boolean, true).FullName(),
+                    JsonValueKind.Number => EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Double, true).FullName(),
+                    JsonValueKind.String => EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.String, true).FullName(),
+                    JsonValueKind.Null => ODataConstants.ContextUriFragmentNull,
+                    _ => ODataConstants.ContextUriFragmentUntyped
+                };
+            };
 
-            IEdmPrimitiveTypeReference primitiveValueTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(primitive.Value.GetType());
-            return primitiveValueTypeReference == null ? null : primitiveValueTypeReference.FullName();
+            Debug.Assert(value is ODataStreamReferenceValue, "value is ODataStreamReferenceValue");
+            throw new ODataException(SRResources.ODataContextUriBuilder_StreamValueMustBePropertiesOfODataResource);
         }
 
         private static string CreateApplyUriSegment(ApplyClause applyClause)
