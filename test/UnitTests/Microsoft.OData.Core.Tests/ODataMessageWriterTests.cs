@@ -310,6 +310,35 @@ namespace Microsoft.OData.Tests
         }
 
         [Theory]
+        [InlineData("true", "Edm.Boolean")]
+        [InlineData("false", "Edm.Boolean")]
+        [InlineData("123", "Edm.Int32")]
+        [InlineData("\"This is a string\"", "Edm.String")]
+        public async Task SupportsTopLevelPropertyWithPrimitiveJsonElementValue(string rawValue, string expectedType)
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            JsonElement jsonElement = JsonDocument.Parse(rawValue).RootElement;
+            
+            // Act
+            string output = await WriteAndGetPayloadAsync(
+                model,
+                "application/json",
+                (writer) => writer.WritePropertyAsync(new ODataProperty()
+                {
+                    Name = "Name",
+                    Value = new ODataJsonElementValue(jsonElement)
+                }),
+                configureServices: (containerBuilder) =>
+                {
+                    containerBuilder.AddSingleton<IJsonWriterFactory>(sp => ODataUtf8JsonWriterFactory.Default);
+                });
+
+            // Assert
+            Assert.Equal($"{{\"@odata.context\":\"http://www.example.com/$metadata#{expectedType}\",\"value\":{rawValue}}}", output);
+        }
+
+        [Theory]
         [InlineData("utf-8")]
         [InlineData("utf-16")]
         [InlineData("utf-16BE")]
