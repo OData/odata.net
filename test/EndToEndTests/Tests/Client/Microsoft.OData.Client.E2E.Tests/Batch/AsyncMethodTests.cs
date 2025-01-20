@@ -86,6 +86,54 @@ namespace Microsoft.OData.Client.E2E.Tests.Batch
             Assert.Equal(201, bankResponse.StatusCode);
             Assert.Equal(201, bankAccountResponse.StatusCode);
         }
+
+        [Fact]
+        // Validating regression reported here: https://github.com/OData/odata.net/issues/3150
+        public async Task BatchSequencingSingleChangeSetWithRelatedAlone()
+        {
+            // Create new Bank object
+            var bank = new Bank
+            {
+                Id = 45,
+                Name = "Test Bank",
+                Location = "KE",
+                BankAccounts = new List<BankAccount>()
+            };
+
+            // Add the Bank entity to the context
+            _context.AddObject("Banks", bank);
+
+            // Save bank
+            var response = await _context.SaveChangesAsync();
+            Assert.Equal(1, response.Count());
+
+            var bankResponse = response.First() as ChangeOperationResponse;
+            Assert.NotNull(bankResponse);
+            Assert.Equal(201, bankResponse.StatusCode);
+
+            // Create new BankAccount object
+            var bankAccount = new BankAccount
+            {
+                Id = 890,
+                AccountNumber = "4567890",
+                BankId = bank.Id,
+                Bank = bank
+            };
+
+            // Establish the relationship between Bank and BankAccount
+            bank.BankAccounts.Add(bankAccount);
+
+            // Add the related BankAccount entity
+            _context.AddRelatedObject(bank, "BankAccounts", bankAccount);
+
+            // Save bankAccount in a single batch request. 
+            response = await _context.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+            Assert.Equal(1, response.Count());
+
+            var bankAccountResponse = response.Last() as ChangeOperationResponse;
+            Assert.NotNull(bankAccountResponse);
+            Assert.Equal(201, bankAccountResponse.StatusCode);
+        }
     }
 
     class Container : DataServiceContext
