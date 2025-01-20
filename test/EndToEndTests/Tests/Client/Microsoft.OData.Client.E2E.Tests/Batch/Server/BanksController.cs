@@ -15,7 +15,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Batch.Server
 {
     public class BanksController : ODataController
     {
-        private static CommonEndToEndDataSource _dataSource = CommonEndToEndDataSource.CreateInstance();
+        internal static CommonEndToEndDataSource _dataSource = CommonEndToEndDataSource.CreateInstance();
 
         [EnableQuery]
         [HttpGet("odata/Banks")]
