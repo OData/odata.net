@@ -31,7 +31,6 @@ public class SingletonTestsHelper
     /// <param name="mimeType">The MIME type to set in the request header.</param>
     /// <returns>A task that represents the asynchronous operation. The task result contains a list of <see cref="ODataResource"/>.</returns>
     public async Task<List<ODataResource>> QueryResourceEntriesAsync(string queryText, string mimeType)
-
     {
         ODataMessageReaderSettings readerSettings = new() { BaseUri = BaseUri };
         var requestUrl = new Uri(BaseUri.AbsoluteUri + queryText, UriKind.Absolute);
@@ -106,80 +105,6 @@ public class SingletonTestsHelper
         return entries;
     }
 
-    public async Task<(List<ODataResource>, List<ODataResourceSet>)> QueryResourceAndResourceSetsAsync(string queryText, string mimeType)
-
-    {
-        ODataMessageReaderSettings readerSettings = new() { BaseUri = BaseUri };
-        var requestUrl = new Uri(BaseUri.AbsoluteUri + queryText, UriKind.Absolute);
-
-        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
-        requestMessage.SetHeader("Accept", mimeType);
-
-        var responseMessage = await requestMessage.GetResponseAsync();
-
-        Assert.Equal(200, responseMessage.StatusCode);
-
-        var resourceEntries = new List<ODataResource>();
-        var resourceSetEntries = new List<ODataResourceSet>();
-        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
-        {
-            using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
-            {
-                var reader = await messageReader.CreateODataResourceSetReaderAsync();
-                while (await reader.ReadAsync())
-                {
-                    if (reader.State == ODataReaderState.ResourceEnd && reader.Item is ODataResource odataResource)
-                    {
-                        resourceEntries.Add(odataResource);
-                    }
-                    else if (reader.State == ODataReaderState.ResourceSetEnd && reader.Item is ODataResourceSet odataResourceSet)
-                    {
-                        resourceSetEntries.Add(odataResourceSet);
-                    }
-                }
-                Assert.Equal(ODataReaderState.Completed, reader.State);
-            }
-        }
-
-        return (resourceEntries, resourceSetEntries);
-    }
-
-    /// <summary>
-    /// Queries an OData resource set asynchronously based on the provided query text and MIME type.
-    /// </summary>
-    /// <param name="queryText">The query text to append to the base URI.</param>
-    /// <param name="mimeType">The MIME type to set in the request header.</param>
-    /// <returns>A task that represents the asynchronous operation. The task result contains an <see cref="ODataResourceSet"/> if found; otherwise, null.</returns>
-    public async Task<ODataResourceSet?> QueryODataResourceSetAsync(string queryText, string mimeType)
-    {
-        ODataMessageReaderSettings readerSettings = new() { BaseUri = BaseUri };
-        var requestUrl = new Uri(BaseUri.AbsoluteUri + queryText, UriKind.Absolute);
-
-        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
-        requestMessage.SetHeader("Accept", mimeType);
-
-        var responseMessage = await requestMessage.GetResponseAsync();
-
-        Assert.Equal(200, responseMessage.StatusCode);
-
-        if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
-        {
-            using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
-            {
-                var reader = await messageReader.CreateODataResourceReaderAsync();
-                while (await reader.ReadAsync())
-                {
-                    if (reader.State == ODataReaderState.ResourceSetEnd && reader.Item is ODataResourceSet oDataResourceSet)
-                    {
-                        return oDataResourceSet;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
     /// <summary>
     /// Queries a property asynchronously based on the provided request URI and MIME type.
     /// </summary>
@@ -210,24 +135,5 @@ public class SingletonTestsHelper
         }
 
         return property;
-    }
-
-    public async Task<object?> QueryPropertyValueInStringAsync(string requestUri)
-    {
-        var readerSettings = new ODataMessageReaderSettings() { BaseUri = BaseUri };
-
-        var uri = new Uri(BaseUri.AbsoluteUri + requestUri, UriKind.Absolute);
-        var requestMessage = new TestHttpClientRequestMessage(uri, Client);
-
-        requestMessage.SetHeader("Accept", "*/*");
-
-        var responseMessage = await requestMessage.GetResponseAsync();
-
-        Assert.Equal(200, responseMessage.StatusCode);
-
-        using (var messageReader = new ODataMessageReader(responseMessage, readerSettings, Model))
-        {
-            return messageReader.ReadValue(EdmCoreModel.Instance.GetString(false));
-        }
     }
 }
