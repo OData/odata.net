@@ -140,6 +140,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                  }
                 ];
 
+            this.BankAccounts = new List<BankAccount>();
         }
 
         private void PopulateBankAccount()

@@ -27,7 +27,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Batch
         {
             public override void ConfigureServices(IServiceCollection services)
             {
-                services.ConfigureControllers(typeof(BanksController), typeof(MetadataController));
+                services.ConfigureControllers(typeof(BanksController), typeof(BankAccountsController), typeof(MetadataController));
                 services.AddControllers().AddOData(opt => opt.Count().Filter().Expand().Select().OrderBy().SetMaxTop(null)
                     .AddRouteComponents("odata", CommonEndToEndEdmModel.GetEdmModel(), new DefaultODataBatchHandler()));
             }
@@ -133,6 +133,50 @@ namespace Microsoft.OData.Client.E2E.Tests.Batch
             var bankAccountResponse = response.Last() as ChangeOperationResponse;
             Assert.NotNull(bankAccountResponse);
             Assert.Equal(201, bankAccountResponse.StatusCode);
+        }
+
+        [Fact]
+        public async Task JsonBatchSequencingSingeChangeSetTest_SetLink()
+        {
+            // Create new BankAccounts object
+            var bank = new Bank
+            {
+                Id = 45,
+                Name = "Test Bank",
+                Location = "KE",
+                BankAccounts = new List<BankAccount>()
+            };
+
+            // Create new BankAccount object
+            var bankAccount = new BankAccount
+            {
+                Id = 890,
+                AccountNumber = "4567890",
+                BankId = bank.Id,
+            };
+
+            // Add the Bank and Account entities to the context
+            _context.AddObject("Banks", bank);
+            _context.AddObject("BankAccounts", bankAccount);
+
+            // Set the link from BankAccount to Bank entity
+            _context.SetLink(bankAccount, "Bank", bank);
+
+            // Save both entities in a single batch request using JSON
+            var response = await _context.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.UseJsonBatch);
+            Assert.Equal(3, response.Count()); // We get 2 POST's and a PUT for the link
+
+            var bankResponse = response.ElementAt(0) as ChangeOperationResponse;
+            var bankAccountResponse = response.ElementAt(1) as ChangeOperationResponse;
+            var bankAccountBankResponse = response.ElementAt(2) as ChangeOperationResponse;
+
+            Assert.NotNull(bankResponse);
+            Assert.NotNull(bankAccountResponse);
+            Assert.NotNull(bankAccountBankResponse);
+
+            Assert.Equal(201, bankResponse.StatusCode);
+            Assert.Equal(201, bankAccountResponse.StatusCode);
+            Assert.Equal(204, bankAccountBankResponse.StatusCode);
         }
     }
 
