@@ -5,16 +5,11 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-using System.IO;
-using System.Net.Mime;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Primitives;
-using Microsoft.Net.Http.Headers;
 using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
 
 namespace Microsoft.OData.Client.E2E.Tests.DeltaTests.Server;
