@@ -16,6 +16,15 @@
     public sealed class Test1
     {
         [TestMethod]
+        public void Asdf()
+        {
+            ulong foo = ulong.MaxValue;
+
+            Assert.AreEqual(0ul, Interlocked.Increment(ref foo));
+            Assert.AreEqual(0ul, foo);
+        }
+
+        [TestMethod]
         public void OdataTest1()
         {
             var url = "https://graph.microsoft.com/v1.0/$metadata";

@@ -1,13 +1,106 @@
 ﻿namespace CombinatorParsing
 {
     using __GeneratedOdata.Parsers.Rules;
+    using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
+    using System.Runtime.CompilerServices;
+    using System.Threading;
 
     //// TODO add covariance and contravariance where able
 
-    public interface IParser<TInput, TToken, TOutput, TParsed, TParser> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TParsed, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput, TParsed, TParser>, allows ref struct
+    public ref struct BigCounter
+    {
+        private ulong smallEnd;
+        
+        private uint bigEnd;
+
+        public BigCounter()
+        {
+            this.smallEnd = 0;
+            this.bigEnd = 0;
+        }
+
+        public void Increment()
+        {
+            // increment the small end of the counter
+            var result = Interlocked.Increment(ref this.smallEnd);
+            if (result == 0)
+            {
+                // if `result` is `0`, then we have overflowed; let's increment the big end
+                Interlocked.Increment(ref this.bigEnd);
+            }
+        }
+    }
+
+    public static class Interlocked2
+    {
+        private struct Thing
+        {
+            public Thing(ulong smallEnd, ulong bigEnd)
+            {
+                this.SmallEnd = smallEnd;
+                this.BigEnd = bigEnd;
+            }
+
+            public ulong SmallEnd;
+
+            public ulong BigEnd;
+        }
+
+        public static UInt128 Increment(ref UInt128 value)
+        {
+            var originalValue = value;
+            var newValue = originalValue + 1;
+            while (Interlocked.CompareExchange(ref value, newValue, originalValue) != originalValue)
+            {
+                originalValue = value;
+                newValue = originalValue + 1;
+            }
+
+            return newValue;
+
+
+
+
+            var thing = Unsafe.As<UInt128, Thing>(ref value);
+            var smallEnd = thing.SmallEnd;
+            var bigEnd = thing.BigEnd;
+
+            Thing result;
+
+            // increment the small end of the counter
+            var smallResult = Interlocked.Increment(ref thing.SmallEnd);
+            if (smallResult == 0)
+            {
+                // if `smallResult` is `0`, then we have overflowed; let's increment the big end
+                var bigResult = Interlocked.Increment(ref thing.BigEnd);
+                result = new Thing(smallResult, bigResult);
+            }
+            else
+            {
+                //// TODO the issue is, we don't know if some other thread overflowed us before we called increment; if they did, we should return bigend + 1
+                if (thing.BigEnd == bigEnd)
+                {
+                    //// TODO and this assumes that only increments are allowed
+                    result = new Thing(smallResult, bigEnd);
+                }
+                else
+                {
+                    result = new Thing(smallResult, bigEnd);
+                }
+            }
+
+            return Unsafe.As<Thing, UInt128>(ref result);
+        }
+    }
+
+    //// TODO use this instead of selectmany? https://github.com/xtofs/Floskel/blob/main/README.md
+
+
+    /*public interface IParser<TInput, TToken, TOutput, TParsed, TParser> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TParsed, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput, TParsed, TParser>, allows ref struct
     {
         TOutput Parse(TInput input);
     }
@@ -132,23 +225,11 @@
 
             var parser3 = parser1.Or(parser2);
             var parser4 = parser3.Or(parser1);
-
-            /*Or
-                <
-                    Parser<Input<char>, char, Output<object, char, Input<char>>, object>,
-                    Parser<Input<char>, char, Output<object, char, Input<char>>, object>,
-                    Input<char>,
-                    Output<object, char, Input<char>>,
-                    char,
-                    object
-                >(parser1, parser2);*/
         }
 
-        /*public static OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser> Or<TFirstParser, TSecondParser, TInput, TOutput, TToken, TParsed>(this TFirstParser first, TSecondParser second) where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TParsed, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TFirstParser : IParser<TInput, TToken, TOutput, TParsed>, allows ref struct where TSecondParser : IParser<TInput, TToken, TOutput, TParsed>, allows ref struct
-        {
-            return new OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>();
-        }*/
-
+    //// TODO parser need to be ref struct? they really only get instantiated once; it's really the closures and delegates that are probably perforamnce issues
+    //// TODO profile delegates
+    //// TODO create a parser tree akin to an expression tree that can be optimized?
         public readonly ref struct AtLeast<TInput, TToken, TOutput, TParsed, TParser> : IParser<TInput, TToken, TOutput, TParsed, AtLeast<TInput, TToken, TOutput, TParsed, TParser>> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TParsed, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput, TParsed, TParser>, allows ref struct
         {
             private readonly TParser parser;
@@ -266,5 +347,5 @@
                 return new ExactlyParser<TInput, TToken, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>, TOutput>(this, count);
             }
         }
-    }
+    }*/
 }
