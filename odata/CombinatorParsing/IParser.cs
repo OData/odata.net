@@ -276,7 +276,7 @@
 
             public Output<IEnumerable<TParsed>, TToken, TInput> Parse(TInput input)
             {
-                var parsed = Empty<TParsed>();
+                /*var parsed = Empty<TParsed>();
                 while (true)
                 {
                     var output = this.parser.Parse(input);
@@ -289,7 +289,8 @@
 
                     parsed = Append(parsed, output.Parsed);
                     input = output.Remainder;
-                }
+                }*/
+                return default;
             }
         }
 
@@ -312,7 +313,12 @@
             public Output<IEnumerable<TParsed>, TToken, TInput> Parse(TInput input)
             {
                 var parsed = Empty<TParsed>();
-                for (int i = 0; i < this.count; ++i)
+                var appended = Append(Enumerable.Empty<string>(), "ASdf");
+                foreach (var element in appended)
+                {
+                }
+
+                /*for (int i = 0; i < this.count; ++i)
                 {
                     var output = this.parser.Parse(input);
                     if (!output.Success)
@@ -324,23 +330,100 @@
                     input = output.Remainder;
                 }
 
-                return new Output<IEnumerable<TParsed>, TToken, TInput>(parsed, input);
+                return new Output<IEnumerable<TParsed>, TToken, TInput>(parsed, input);*/
+                return default;
             }
         }
 
-        private static IEnumerable<T> Empty<T>() where T : allows ref struct
+        public ref struct RefEnumerable<T> : IEnumerable<T> where T : allows ref struct
         {
-            yield break;
-        }
-
-        private static IEnumerable<T> Append<T>(IEnumerable<T> source, T value) where T : allows ref struct
-        {
-            foreach (var element in source)
+            public RefEnumerable()
             {
-                yield return element;
             }
 
-            yield return value;
+            public IEnumerator<T> GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public static class RefEnumerable
+        {
+            public static RefEnumerable<T> Empty<T>() where T : allows ref struct
+            {
+                return new RefEnumerable<T>();
+            }
+        }
+
+        private static RefEnumerable<T> Empty<T>() where T : allows ref struct
+        {
+            return RefEnumerable.Empty<T>();
+        }
+
+        private static AppendEnumerable<T> Append<T>(IEnumerable<T> source, T value) where T : allows ref struct
+        {
+            return new AppendEnumerable<T>(source, value);
+        }
+
+        private ref struct AppendEnumerable<T> : IEnumerable<T> where T : allows ref struct
+        {
+            private readonly IEnumerable<T> source;
+            private readonly T value;
+
+            public AppendEnumerable(IEnumerable<T> source, T value)
+            {
+                this.source = source;
+                this.value = value;
+            }
+
+            IEnumerator<T> IEnumerable<T>.GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            public AppendEnumerator GetEnumerator()
+            {
+                return new AppendEnumerator(this);
+            }
+
+            public ref struct AppendEnumerator : IEnumerator<T>
+            {
+                private readonly AppendEnumerable<T> enumerable;
+
+                public AppendEnumerator(AppendEnumerable<T> enumerable)
+                {
+                    this.enumerable = enumerable;
+                }
+
+                public T Current => throw new NotImplementedException();
+
+                object IEnumerator.Current => throw new NotImplementedException();
+
+                public void Dispose()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public bool MoveNext()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public void Reset()
+                {
+                    throw new NotImplementedException();
+                }
+            }
         }
 
         private static IEnumerable<T> Concat<T>(IEnumerable<T> first, IEnumerable<T> second) where T : allows ref struct
