@@ -204,7 +204,7 @@
 
     public static class ParserExtensions
     {
-        /*private readonly ref struct Parser<TInput, TToken, TOutput, TParsed> : IParser<TInput, TToken, TOutput, TParsed, Parser<TInput, TToken, TOutput, TParsed>> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TParsed, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct
+        private readonly ref struct Parser<TInput, TToken, TOutput, TParsed> : IParser<TInput, TToken, TOutput, TParsed, Parser<TInput, TToken, TOutput, TParsed>> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TParsed, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct
         {
             public TOutput Parse(TInput input)
             {
@@ -218,7 +218,7 @@
             }
         }
 
-        public static void DoWork()
+        /*public static void DoWork()
         {
             var parser1 = new Parser<Input<char>, char, Output<object, char, Input<char>>, object>();
             var parser2 = new Parser<Input<char>, char, Output<object, char, Input<char>>, object>();
