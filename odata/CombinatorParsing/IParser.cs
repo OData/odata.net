@@ -337,7 +337,7 @@
             }
         }
 
-        /*public ref struct RefEnumerable<T> : IEnumerable<T> where T : allows ref struct
+        public ref struct RefEnumerable<T> : IEnumerable<T> where T : allows ref struct
         {
             public RefEnumerable()
             {
@@ -354,7 +354,7 @@
             }
         }
 
-        public static class RefEnumerable
+        /*public static class RefEnumerable
         {
             public static RefEnumerable<T> Empty<T>() where T : allows ref struct
             {
