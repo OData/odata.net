@@ -100,7 +100,7 @@
     //// TODO use this instead of selectmany? https://github.com/xtofs/Floskel/blob/main/README.md
 
 
-    /*public interface IParser<TInput, TToken, TOutput, TParsed, TParser> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TParsed, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput, TParsed, TParser>, allows ref struct
+    public interface IParser<TInput, TToken, TOutput, TParsed, TParser> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TParsed, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput, TParsed, TParser>, allows ref struct
     {
         TOutput Parse(TInput input);
     }
@@ -227,10 +227,10 @@
             var parser4 = parser3.Or(parser1);
         }
 
-    //// TODO parser need to be ref struct? they really only get instantiated once; it's really the closures and delegates that are probably perforamnce issues
-    //// TODO profile delegates
-    //// TODO create a parser tree akin to an expression tree that can be optimized?
-        public readonly ref struct AtLeast<TInput, TToken, TOutput, TParsed, TParser> : IParser<TInput, TToken, TOutput, TParsed, AtLeast<TInput, TToken, TOutput, TParsed, TParser>> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TParsed, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput, TParsed, TParser>, allows ref struct
+        //// TODO parser need to be ref struct? they really only get instantiated once; it's really the closures and delegates that are probably perforamnce issues
+        //// TODO profile delegates
+        //// TODO create a parser tree akin to an expression tree that can be optimized?
+        public readonly ref struct AtLeast<TInput, TToken, TParsed, TOutput2, TParser> : IParser<TInput, TToken, Output<IEnumerable<TParsed>, TToken, TInput>, IEnumerable<TParsed>, AtLeast<TInput, TToken, TParsed, TOutput2, TParser>> where TInput : IInput<TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput2, TParsed, TParser>, allows ref struct where TOutput2 : IOutput<TParsed, TToken, TInput>, allows ref struct
         {
             private readonly TParser parser;
             private readonly int minimum;
@@ -241,18 +241,53 @@
                 this.minimum = minimum;
             }
 
-            public TOutput Parse(TInput input)
+            public Output<IEnumerable<TParsed>, TToken, TInput> Parse(TInput input)
             {
-                //// TODO make it return a collection
-                TOutput output;
-                for (int i = 0; i < this.minimum; ++i)
+                var exactly = new ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2>(this.parser, this.minimum);
+                var exactlyOutput = exactly.Parse(input);
+                if (!exactlyOutput.Success)
                 {
-                    output = this.parser.Parse(input);
+                    return new Output<IEnumerable<TParsed>, TToken, TInput>(exactlyOutput.Remainder);
+                }
+
+                var many = new ManyParser<TInput, TToken, TParsed, TParser, TOutput2>(this.parser);
+                var manyOutput = many.Parse(exactlyOutput.Remainder);
+                if (manyOutput.Success)
+                {
+                    return new Output<IEnumerable<TParsed>, TToken, TInput>(
+                        Concat(exactlyOutput.Parsed, manyOutput.Parsed),
+                        manyOutput.Remainder);
+                }
+                else
+                {
+                    return exactlyOutput;
+                }
+            }
+        }
+
+        public readonly ref struct ManyParser<TInput, TToken, TParsed, TParser, TOutput2> : IParser<TInput, TToken, Output<IEnumerable<TParsed>, TToken, TInput>, IEnumerable<TParsed>, ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2>> where TInput : IInput<TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput2, TParsed, TParser>, allows ref struct where TOutput2 : IOutput<TParsed, TToken, TInput>, allows ref struct
+        {
+            private readonly TParser parser;
+
+            public ManyParser(TParser parser)
+            {
+                this.parser = parser;
+            }
+
+            public Output<IEnumerable<TParsed>, TToken, TInput> Parse(TInput input)
+            {
+                var parsed = Empty<TParsed>();
+                while (true)
+                {
+                    var output = this.parser.Parse(input);
                     if (!output.Success)
                     {
-                        return output;
+                        return new Output<IEnumerable<TParsed>, TToken, TInput>(
+                            parsed, 
+                            input);
                     }
 
+                    parsed = Append(parsed, output.Parsed);
                     input = output.Remainder;
                 }
             }
@@ -285,7 +320,7 @@
                         return new Output<IEnumerable<TParsed>, TToken, TInput>(input); //// TODO you need a way to expose errors
                     }
 
-                    Append(parsed, output.Parsed);
+                    parsed = Append(parsed, output.Parsed);
                     input = output.Remainder;
                 }
 
@@ -306,6 +341,19 @@
             }
 
             yield return value;
+        }
+
+        private static IEnumerable<T> Concat<T>(IEnumerable<T> first, IEnumerable<T> second) where T : allows ref struct
+        {
+            foreach (var element in first)
+            {
+                yield return element;
+            }
+
+            foreach (var element in second)
+            {
+                yield return element;
+            }
         }
 
         public readonly ref struct OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser> : IParser<TInput, TToken, TOutput, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TParsed, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TFirstParser : IParser<TInput, TToken, TOutput, TParsed, TFirstParser>, allows ref struct where TSecondParser : IParser<TInput, TToken, TOutput, TParsed, TSecondParser>, allows ref struct
@@ -347,5 +395,5 @@
                 return new ExactlyParser<TInput, TToken, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>, TOutput>(this, count);
             }
         }
-    }*/
+    }
 }
