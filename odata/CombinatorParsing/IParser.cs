@@ -292,7 +292,7 @@
                 }*/
                 /*return default;
             }
-        }
+        }*/
 
         public readonly ref struct ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2> : IParser<TInput, TToken, Output<IEnumerable<TParsed>, TToken, TInput>, IEnumerable<TParsed>, ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2>> where TInput : IInput<TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput2, TParsed, TParser>, allows ref struct where TOutput2 : IOutput<TParsed, TToken, TInput>, allows ref struct
         {
@@ -312,11 +312,11 @@
 
             public Output<IEnumerable<TParsed>, TToken, TInput> Parse(TInput input)
             {
-                var parsed = Empty<TParsed>();
+                /*var parsed = Empty<TParsed>();
                 var appended = Append(Enumerable.Empty<string>(), "ASdf");
                 foreach (var element in appended)
                 {
-                }
+                }*/
 
                 /*for (int i = 0; i < this.count; ++i)
                 {
@@ -331,11 +331,11 @@
                 }
 
                 return new Output<IEnumerable<TParsed>, TToken, TInput>(parsed, input);*/
-                /*return default;
+                return default;
             }
         }
 
-        public ref struct RefEnumerable<T> : IEnumerable<T> where T : allows ref struct
+        /*public ref struct RefEnumerable<T> : IEnumerable<T> where T : allows ref struct
         {
             public RefEnumerable()
             {
