@@ -333,7 +333,7 @@
                         return new Output<LinkedList<TParsed>, TToken, TInput>(input); //// TODO you need a way to expose errors
                     }
 
-                    parsed = LinkedListExtensions.Add(parsed, output.Parsed, () => parsed.start);
+                    parsed = LinkedListExtensions.Add(parsed, output.Parsed, parsed.GetStart);
                     input = output.Remainder;
                 }
 
@@ -473,9 +473,9 @@
         /// <typeparam name="TElement"></typeparam>
         public ref struct LinkedList<TElement> : IEnumerable<TElement> where TElement : allows ref struct
         {
-            public Nullable2<Node<LinkedList<TElement>>> start;
+            public Nullable2<Node> start;
 
-            public Nullable2<Node<LinkedList<TElement>>> end;
+            public Nullable2<Node> end;
 
             public LinkedList()
             {
@@ -501,6 +501,11 @@
                     new Node(
                         element,
                         getStart));
+            }
+
+            public Nullable2<Node> GetStart()
+            {
+                return this.start;
             }
 
             public Enumerator GetEnumerator()
@@ -560,30 +565,28 @@
                 }
             }
 
-            public ref struct Node<TInput>
+            public ref struct Node
             {
-                private readonly Func<TInput, Nullable2<Node<TInput>>> previous;
-                private readonly TInput input;
+                private readonly Func<Nullable2<Node>> previous;
 
                 public Node(TElement value)
-                    : this(value, () => new Nullable2<Node<TInput>>(), default)
+                    : this(value, () => new Nullable2<Node>())
                 {
                 }
 
-                public Node(TElement value, Func<TInput, Nullable2<Node<TInput>>> previous, TInput input)
+                public Node(TElement value, Func<Nullable2<Node>> previous)
                 {
                     this.Value = value;
                     this.previous = previous;
-                    this.input = input;
                 }
 
                 public TElement Value { get; }
 
-                public Nullable2<Node<TInput>> Previous
+                public Nullable2<Node> Previous
                 {
                     get
                     {
-                        return this.previous(this.input);
+                        return this.previous();
                     }
                 }
             }
