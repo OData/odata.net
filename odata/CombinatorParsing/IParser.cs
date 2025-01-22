@@ -341,6 +341,137 @@
             }
         }
 
+        public static class Ref2
+        {
+            public static Ref2<TElement, IRefEnumerable<TElement, IRefEnumerator<TElement>>, IRefEnumerator<TElement>> Empty<TElement>()
+            {
+                //// TODO actually implement this
+                return new Ref2<TElement, IRefEnumerable<TElement, IRefEnumerator<TElement>>, IRefEnumerator<TElement>>();
+            }
+
+            public ref struct AppendEnumerable<TElement, TEnumerable, TEnumerator> : IRefEnumerable<TElement, AppendEnumerable<TElement, TEnumerable, TEnumerator>.Enumerator> 
+                where TElement : allows ref struct
+                where TEnumerable : IRefEnumerable<TElement, TEnumerator>, allows ref struct
+                where TEnumerator : IRefEnumerator<TElement>, allows ref struct
+            {
+                public AppendEnumerable(TEnumerable enumerable, TElement value)
+                {
+                }
+
+                public Enumerator GetEnumerator()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public ref struct Enumerator : IRefEnumerator<TElement>
+                {
+                    public TElement Current => throw new NotImplementedException();
+
+                    public bool MoveNext()
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
+            }
+
+            public ref struct AppendEnumerable2<TElement, TEnumerable, TEnumerator> : IRefEnumerable<TElement, AppendEnumerable2<TElement, TEnumerable, TEnumerator>.Enumerator>
+                where TElement : allows ref struct
+                where TEnumerable : IRefEnumerable<TElement, TEnumerator>, allows ref struct
+                where TEnumerator : IRefEnumerator<TElement>, allows ref struct
+            {
+                private readonly Ref2<TElement, TEnumerable, TEnumerator> source;
+                private readonly TElement value;
+
+                public AppendEnumerable2(Ref2<TElement, TEnumerable, TEnumerator> source, TElement value)
+                {
+                    this.source = source;
+                    this.value = value;
+                }
+
+                public Enumerator GetEnumerator()
+                {
+                    throw new NotImplementedException();
+                }
+
+                public ref struct Enumerator : IRefEnumerator<TElement>
+                {
+                    public TElement Current => throw new NotImplementedException();
+
+                    public bool MoveNext()
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
+            }
+
+            public static Ref2<TElement, AppendEnumerable2<TElement, TEnumerable, TEnumerator>, AppendEnumerable2<TElement, TEnumerable, TEnumerator>.Enumerator> Append2<TElement, TEnumerable, TEnumerator>(
+                Ref2<TElement, TEnumerable, TEnumerator> source,
+                TElement value)
+                where TElement : allows ref struct
+                where TEnumerable : IRefEnumerable<TElement, TEnumerator>, allows ref struct
+                where TEnumerator : IRefEnumerator<TElement>, allows ref struct
+            {
+                return new Ref2<TElement, AppendEnumerable2<TElement, TEnumerable, TEnumerator>, AppendEnumerable2<TElement, TEnumerable, TEnumerator>.Enumerator>(
+                    new AppendEnumerable2<TElement, TEnumerable, TEnumerator>(source, value));
+            }
+        }
+
+        public ref struct Ref2<TElement, TEnumerable, TEnumerator> : IRefEnumerable<TElement, Ref2<TElement, TEnumerable, TEnumerator>.Enumerator>
+            where TElement : allows ref struct 
+            where TEnumerable : IRefEnumerable<TElement, TEnumerator>, allows ref struct
+            where TEnumerator : IRefEnumerator<TElement>, allows ref struct
+        {
+            private readonly TEnumerable enumerable;
+
+            public Ref2(TEnumerable enumerable)
+            {
+                this.enumerable = enumerable;
+            }
+
+            public Enumerator GetEnumerator()
+            {
+                return new Enumerator(
+                    this.enumerable.GetEnumerator());
+            }
+
+            public ref struct Enumerator : IRefEnumerator<TElement>
+            {
+                private readonly TEnumerator enumerator;
+
+                public Enumerator(TEnumerator enumerator)
+                {
+                    this.enumerator = enumerator;
+                }
+
+                public TElement Current
+                {
+                    get
+                    {
+                        return this.enumerator.Current;
+                    }
+                }
+
+                public bool MoveNext()
+                {
+                    return this.enumerator.MoveNext();
+                }
+            }
+        }
+
+        public interface IRefEnumerable<TElement, TEnumerator> 
+            where TElement : allows ref struct 
+            where TEnumerator : IRefEnumerator<TElement>, allows ref struct
+        {
+            TEnumerator GetEnumerator();
+        }
+
+        public interface IRefEnumerator<T> where T : allows ref struct
+        {
+            T Current { get; }
+
+            bool MoveNext();
+        }
+
         public ref struct RefEnumerable<TElement, TEnumerableContext, TEnumeratorContext> : IEnumerable<TElement> where TElement : allows ref struct where TEnumerableContext : allows ref struct where TEnumeratorContext : allows ref struct
         {
             private readonly Func<TEnumerableContext, RefEnumerator> getEnumerator;
