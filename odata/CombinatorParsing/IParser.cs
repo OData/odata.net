@@ -362,16 +362,6 @@
             }
         }
 
-        /*private static RefEnumerable<T> Empty<T>() where T : allows ref struct
-        {
-            return RefEnumerable.Empty<T>();
-        }
-
-        private static AppendEnumerable<T> Append<T>(IEnumerable<T> source, T value) where T : allows ref struct
-        {
-            return new AppendEnumerable<T>(source, value);
-        }
-
         private ref struct AppendEnumerable<T> : IEnumerable<T> where T : allows ref struct
         {
             private readonly IEnumerable<T> source;
@@ -427,6 +417,18 @@
                 }
             }
         }
+
+        /*private static RefEnumerable<T> Empty<T>() where T : allows ref struct
+        {
+            return RefEnumerable.Empty<T>();
+        }
+
+        private static AppendEnumerable<T> Append<T>(IEnumerable<T> source, T value) where T : allows ref struct
+        {
+            return new AppendEnumerable<T>(source, value);
+        }
+
+        
 
         private static IEnumerable<T> Concat<T>(IEnumerable<T> first, IEnumerable<T> second) where T : allows ref struct
         {
