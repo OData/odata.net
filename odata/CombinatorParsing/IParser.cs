@@ -297,7 +297,7 @@
             }
         }
 
-        public readonly ref struct ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2> : IParser<TInput, TToken, Output<IEnumerable<TParsed>, TToken, TInput>, IEnumerable<TParsed>, ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2>> where TInput : IInput<TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput2, TParsed, TParser>, allows ref struct where TOutput2 : IOutput<TParsed, TToken, TInput>, allows ref struct
+        public readonly ref struct ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2> : IParser<TInput, TToken, Output<LinkedList<TParsed>, TToken, TInput>, LinkedList<TParsed>, ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2>> where TInput : IInput<TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput2, TParsed, TParser>, allows ref struct where TOutput2 : IOutput<TParsed, TToken, TInput>, allows ref struct
         {
             private readonly TParser parser;
             private readonly int count;
@@ -313,31 +313,31 @@
                 this.count = count;
             }
 
-            public Output<IEnumerable<TParsed>, TToken, TInput> Parse(TInput input)
+            public Output<LinkedList<TParsed>, TToken, TInput> Parse(TInput input)
             {
-                var parsed = RefEnumerable.Empty<TParsed>();
+                /*var parsed = RefEnumerable.Empty<TParsed>();
                 var empty = RefEnumerable.Empty<string>();
                 var appended = RefEnumerable.Append(empty, "ASdf");
                 foreach (var element in appended)
                 {
-                }
+                }*/
 
                 ////empty = RefEnumerable.Append(empty, "asdf");
 
-                /*for (int i = 0; i < this.count; ++i)
+                var parsed = new LinkedList<TParsed>();
+                for (int i = 0; i < this.count; ++i)
                 {
                     var output = this.parser.Parse(input);
                     if (!output.Success)
                     {
-                        return new Output<IEnumerable<TParsed>, TToken, TInput>(input); //// TODO you need a way to expose errors
+                        return new Output<LinkedList<TParsed>, TToken, TInput>(input); //// TODO you need a way to expose errors
                     }
 
-                    parsed = Append(parsed, output.Parsed);
+                    parsed = LinkedListExtensions.Add(parsed, output.Parsed, () => parsed.start);
                     input = output.Remainder;
                 }
 
-                return new Output<IEnumerable<TParsed>, TToken, TInput>(parsed, input);*/
-                return default;
+                return new Output<LinkedList<TParsed>, TToken, TInput>(parsed, input);
             }
         }
 
@@ -413,6 +413,177 @@
             {
                 return new Ref2<TElement, AppendEnumerable2<TElement, TEnumerable, TEnumerator>, AppendEnumerable2<TElement, TEnumerable, TEnumerator>.Enumerator>(
                     new AppendEnumerable2<TElement, TEnumerable, TEnumerator>(source, value));
+            }
+        }
+
+        public ref struct Nullable2<T> where T : allows ref struct
+        {
+            private readonly T value;
+
+            private readonly bool hasValue;
+
+            public Nullable2()
+            {
+                this.hasValue = false;
+            }
+
+            public Nullable2(T value)
+            {
+                this.value = value;
+                this.hasValue = true;
+            }
+
+            public T Value
+            {
+                get
+                {
+                    if (!this.hasValue)
+                    {
+                        throw new InvalidOperationException("TODO");
+                    }
+
+                    return this.value;
+                }
+            }
+
+            public bool HasValue
+            {
+                get
+                {
+                    return this.hasValue;
+                }
+            }
+        }
+
+        public static class LinkedListExtensions
+        {
+            public static LinkedList<TElement> Add<TElement>(LinkedList<TElement> list, TElement element, Func<Nullable2<LinkedList<TElement>.Node>> getStart)
+                where TElement : allows ref struct
+            {
+                return new LinkedList<TElement>(
+                    element,
+                    list,
+                    getStart);
+            }
+        }
+
+        /// <summary>
+        /// TODO create an immutable variant?
+        /// </summary>
+        /// <typeparam name="TElement"></typeparam>
+        public ref struct LinkedList<TElement> : IEnumerable<TElement> where TElement : allows ref struct
+        {
+            public Nullable2<Node> start;
+
+            public Nullable2<Node> end;
+
+            public LinkedList()
+            {
+                this.start = new Nullable2<Node>();
+                this.end = new Nullable2<Node>();
+            }
+
+            public LinkedList(TElement element)
+            {
+                this.start = new Nullable2<Node>(new Node(element));
+                this.end = this.start;
+            }
+
+            public LinkedList(
+                TElement element, 
+                LinkedList<TElement> subsequent,
+                Func<Nullable2<Node>> getStart)
+            {
+                //// TODO assert that subsequent isn't empty
+                this.end = subsequent.end;
+
+                this.start = new Nullable2<Node>(
+                    new Node(
+                        element,
+                        getStart));
+            }
+
+            public Enumerator GetEnumerator()
+            {
+                return new Enumerator(this);
+            }
+
+            IEnumerator<TElement> IEnumerable<TElement>.GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            public ref struct Enumerator : IEnumerator<TElement>
+            {
+                private readonly LinkedList<TElement> elements;
+
+                internal Enumerator(LinkedList<TElement> elements)
+                {
+                    //// TODO can you make this private somehow?
+                    this.elements = elements;
+                }
+
+                public TElement Current
+                {
+                    get
+                    {
+                        if (!this.elements.start.HasValue)
+                        {
+                            throw new InvalidOperationException("TODO");
+                        }
+                    }
+                }
+
+                object IEnumerator.Current => throw new NotImplementedException();
+
+                public void Dispose()
+                {
+                }
+
+                public bool MoveNext()
+                {
+                    if (!this.elements.start.HasValue)
+                    {
+                        return false;
+                    }
+
+                }
+
+                public void Reset()
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public ref struct Node
+            {
+                private readonly Func<Nullable2<Node>> previous;
+
+                public Node(TElement value)
+                    : this(value, () => new Nullable2<Node>())
+                {
+                }
+
+                public Node(TElement value, Func<Nullable2<Node>> previous)
+                {
+                    this.Value = value;
+                    this.previous = previous;
+                }
+
+                public TElement Value { get; }
+
+                public Nullable2<Node> Previous
+                {
+                    get
+                    {
+                        return this.previous();
+                    }
+                }
             }
         }
 
