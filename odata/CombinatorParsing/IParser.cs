@@ -218,14 +218,14 @@
             }
         }
 
-        /*public static void DoWork()
+        public static void DoWork()
         {
             var parser1 = new Parser<Input<char>, char, Output<object, char, Input<char>>, object>();
             var parser2 = new Parser<Input<char>, char, Output<object, char, Input<char>>, object>();
 
             var parser3 = parser1.Or(parser2);
             var parser4 = parser3.Or(parser1);
-        }*/
+        }
 
         //// TODO parser need to be ref struct? they really only get instantiated once; it's really the closures and delegates that are probably perforamnce issues
         //// TODO profile delegates
