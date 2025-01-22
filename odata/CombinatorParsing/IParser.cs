@@ -1,6 +1,7 @@
 ﻿namespace CombinatorParsing
 {
     using __GeneratedOdata.Parsers.Rules;
+    using Root;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -314,11 +315,14 @@
 
             public Output<IEnumerable<TParsed>, TToken, TInput> Parse(TInput input)
             {
-                /*var parsed = Empty<TParsed>();
-                var appended = Append(Enumerable.Empty<string>(), "ASdf");
+                var parsed = RefEnumerable.Empty<TParsed>();
+                var empty = RefEnumerable.Empty<string>();
+                var appended = RefEnumerable.Append(empty, "ASdf");
                 foreach (var element in appended)
                 {
-                }*/
+                }
+
+                ////empty = RefEnumerable.Append(empty, "asdf");
 
                 /*for (int i = 0; i < this.count; ++i)
                 {
@@ -337,43 +341,19 @@
             }
         }
 
-        public ref struct RefEnumerable<T> : IEnumerable<T> where T : allows ref struct
+        public ref struct RefEnumerable<TElement, TEnumerableContext, TEnumeratorContext> : IEnumerable<TElement> where TElement : allows ref struct where TEnumerableContext : allows ref struct where TEnumeratorContext : allows ref struct
         {
-            public RefEnumerable()
+            private readonly Func<TEnumerableContext, RefEnumerator> getEnumerator;
+
+            private readonly TEnumerableContext enumerableContext;
+
+            public RefEnumerable(Func<TEnumerableContext, RefEnumerator> getEnumerator, TEnumerableContext enumerableContext)
             {
+                this.getEnumerator = getEnumerator;
+                this.enumerableContext = enumerableContext;
             }
 
-            public IEnumerator<T> GetEnumerator()
-            {
-                throw new NotImplementedException();
-            }
-
-            IEnumerator IEnumerable.GetEnumerator()
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public static class RefEnumerable
-        {
-            public static RefEnumerable<T> Empty<T>() where T : allows ref struct
-            {
-                return new RefEnumerable<T>();
-            }
-        }
-
-        private ref struct AppendEnumerable<T> : IEnumerable<T> where T : allows ref struct
-        {
-            private readonly IEnumerable<T> source;
-            private readonly T value;
-
-            public AppendEnumerable(IEnumerable<T> source, T value)
-            {
-                this.source = source;
-                this.value = value;
-            }
-
-            IEnumerator<T> IEnumerable<T>.GetEnumerator()
+            IEnumerator<TElement> IEnumerable<TElement>.GetEnumerator()
             {
                 throw new NotImplementedException();
             }
@@ -383,38 +363,157 @@
                 throw new NotImplementedException();
             }
 
-            public AppendEnumerator GetEnumerator()
+            public RefEnumerator GetEnumerator()
             {
-                return new AppendEnumerator(this);
+                return this.getEnumerator(this.enumerableContext);
             }
 
-            public ref struct AppendEnumerator : IEnumerator<T>
+            public ref struct RefEnumerator : IEnumerator<TElement>
             {
-                private readonly AppendEnumerable<T> enumerable;
+                private readonly Func<TEnumeratorContext, TElement> current;
+                private readonly Func<TEnumeratorContext, bool> moveNext;
+                private readonly TEnumeratorContext context;
 
-                public AppendEnumerator(AppendEnumerable<T> enumerable)
+                public RefEnumerator(Func<TEnumeratorContext, TElement> current, Func<TEnumeratorContext, bool> moveNext, TEnumeratorContext context)
                 {
-                    this.enumerable = enumerable;
+                    //// TODO do all methods
+                    //// TODO this seems like it probably defeats the purpose
+
+                    this.current = current;
+                    this.moveNext = moveNext;
+                    this.context = context;
                 }
 
-                public T Current => throw new NotImplementedException();
+                public TElement Current
+                {
+                    get
+                    {
+
+                        return this.current(this.context);
+                    }
+                }
 
                 object IEnumerator.Current => throw new NotImplementedException();
 
                 public void Dispose()
                 {
-                    throw new NotImplementedException();
                 }
 
                 public bool MoveNext()
                 {
-                    throw new NotImplementedException();
+                    return this.moveNext(this.context);
                 }
 
                 public void Reset()
                 {
                     throw new NotImplementedException();
                 }
+            }
+        }
+
+        public static class RefEnumerable
+        {
+            public static RefEnumerable<T, Root.Void, Root.Void> Empty<T>() where T : allows ref struct
+            {
+                return new RefEnumerable<T, Root.Void, Root.Void>();
+            }
+
+            public static RefEnumerable<TElement, AppendContext<TElement, TEnumerableContext, TEnumeratorContext>, AppendEnumerator<TElement, TEnumerableContext, TEnumeratorContext>> Append<TElement, TEnumerableContext, TEnumeratorContext>(RefEnumerable<TElement, TEnumerableContext, TEnumeratorContext> source, TElement value) where TElement : allows ref struct where TEnumerableContext : allows ref struct where TEnumeratorContext : allows ref struct
+            {
+                return new RefEnumerable
+                    <
+                        TElement,
+                        AppendContext<TElement, TEnumerableContext, TEnumeratorContext>, 
+                        AppendEnumerator<TElement, TEnumerableContext, TEnumeratorContext>
+                    >(
+                    appendContext => 
+                        new RefEnumerable<TElement, AppendContext<TElement, TEnumerableContext, TEnumeratorContext>, AppendEnumerator<TElement, TEnumerableContext, TEnumeratorContext>>.RefEnumerator(
+                            appendEnumerator => appendEnumerator.Current,
+                            appendEnumerator => appendEnumerator.MoveNext(),
+                            new AppendEnumerator<TElement, TEnumerableContext, TEnumeratorContext>(
+                                appendContext.Source.GetEnumerator(),
+                                appendContext.Value)),
+                    new AppendContext<TElement, TEnumerableContext, TEnumeratorContext>(
+                        source,
+                        value));
+            }
+
+            public ref struct AppendContext<TElement, TEnumerableContext, TEnumeratorContext> where TElement : allows ref struct where TEnumerableContext : allows ref struct where TEnumeratorContext : allows ref struct
+            {
+                public AppendContext(RefEnumerable<TElement, TEnumerableContext, TEnumeratorContext> source, TElement value)
+                {
+                    Source = source;
+                    Value = value;
+                }
+
+                public RefEnumerable<TElement, TEnumerableContext, TEnumeratorContext> Source { get; }
+                public TElement Value { get; }
+            }
+        }
+
+        public ref struct AppendEnumerator<TElement, TEnumerableContext, TEnumeratorContext> : IEnumerator<TElement> where TElement : allows ref struct where TEnumerableContext : allows ref struct where TEnumeratorContext : allows ref struct
+        {
+            private readonly RefEnumerable<TElement, TEnumerableContext, TEnumeratorContext>.RefEnumerator enumerator;
+
+            private readonly TElement value;
+
+            private bool finished;
+
+            public AppendEnumerator(RefEnumerable<TElement, TEnumerableContext, TEnumeratorContext>.RefEnumerator enumerator, TElement value)
+            {
+                this.enumerator = enumerator;
+                this.value = value;
+
+                this.finished = false;
+            }
+
+            public TElement Current
+            {
+                get
+                {
+                    if (this.finished)
+                    {
+                        return this.value;
+                    }
+
+                    return this.enumerator.Current;
+                }
+            }
+
+            object IEnumerator.Current
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            public void Dispose()
+            {
+                //// TODO proper dispose
+                this.enumerator.Dispose();
+            }
+
+            public bool MoveNext()
+            {
+                if (this.finished)
+                {
+                    return false;
+                }
+
+                var moved = this.enumerator.MoveNext();
+                if (!moved)
+                {
+                    this.finished = true;
+                    return true;
+                }
+
+                return moved;
+            }
+
+            public void Reset()
+            {
+                throw new NotImplementedException();
             }
         }
 
