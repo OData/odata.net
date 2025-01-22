@@ -202,7 +202,7 @@
         public TInput Remainder { get; }
     }
 
-    public static class ParserExtensions
+    /*public static class ParserExtensions
     {
         private readonly ref struct Parser<TInput, TToken, TOutput, TParsed> : IParser<TInput, TToken, TOutput, TParsed, Parser<TInput, TToken, TOutput, TParsed>> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TParsed, TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct
         {
@@ -290,7 +290,7 @@
                     parsed = Append(parsed, output.Parsed);
                     input = output.Remainder;
                 }*/
-                return default;
+                /*return default;
             }
         }
 
@@ -331,7 +331,7 @@
                 }
 
                 return new Output<IEnumerable<TParsed>, TToken, TInput>(parsed, input);*/
-                return default;
+                /*return default;
             }
         }
 
@@ -478,5 +478,5 @@
                 return new ExactlyParser<TInput, TToken, TParsed, OrParser<TInput, TToken, TOutput, TParsed, TFirstParser, TSecondParser>, TOutput>(this, count);
             }
         }
-    }
+    }*/
 }
