@@ -230,7 +230,7 @@
         //// TODO parser need to be ref struct? they really only get instantiated once; it's really the closures and delegates that are probably perforamnce issues
         //// TODO profile delegates
         //// TODO create a parser tree akin to an expression tree that can be optimized?
-        /*public readonly ref struct AtLeast<TInput, TToken, TParsed, TOutput2, TParser> : IParser<TInput, TToken, Output<IEnumerable<TParsed>, TToken, TInput>, IEnumerable<TParsed>, AtLeast<TInput, TToken, TParsed, TOutput2, TParser>> where TInput : IInput<TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput2, TParsed, TParser>, allows ref struct where TOutput2 : IOutput<TParsed, TToken, TInput>, allows ref struct
+        public readonly ref struct AtLeast<TInput, TToken, TParsed, TOutput2, TParser> : IParser<TInput, TToken, Output<IEnumerable<TParsed>, TToken, TInput>, IEnumerable<TParsed>, AtLeast<TInput, TToken, TParsed, TOutput2, TParser>> where TInput : IInput<TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput2, TParsed, TParser>, allows ref struct where TOutput2 : IOutput<TParsed, TToken, TInput>, allows ref struct
         {
             private readonly TParser parser;
             private readonly int minimum;
@@ -243,7 +243,7 @@
 
             public Output<IEnumerable<TParsed>, TToken, TInput> Parse(TInput input)
             {
-                var exactly = new ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2>(this.parser, this.minimum);
+                /*var exactly = new ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2>(this.parser, this.minimum);
                 var exactlyOutput = exactly.Parse(input);
                 if (!exactlyOutput.Success)
                 {
@@ -261,9 +261,11 @@
                 else
                 {
                     return exactlyOutput;
-                }
+                }*/
+
+                return default;
             }
-        }*/
+        }
 
         public readonly ref struct ManyParser<TInput, TToken, TParsed, TParser, TOutput2> : IParser<TInput, TToken, Output<IEnumerable<TParsed>, TToken, TInput>, IEnumerable<TParsed>, ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2>> where TInput : IInput<TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput2, TParsed, TParser>, allows ref struct where TOutput2 : IOutput<TParsed, TToken, TInput>, allows ref struct
         {
