@@ -473,9 +473,9 @@
         /// <typeparam name="TElement"></typeparam>
         public ref struct LinkedList<TElement> : IEnumerable<TElement> where TElement : allows ref struct
         {
-            public Nullable2<Node> start;
+            public Nullable2<Node<LinkedList<TElement>>> start;
 
-            public Nullable2<Node> end;
+            public Nullable2<Node<LinkedList<TElement>>> end;
 
             public LinkedList()
             {
@@ -560,28 +560,30 @@
                 }
             }
 
-            public ref struct Node
+            public ref struct Node<TInput>
             {
-                private readonly Func<Nullable2<Node>> previous;
+                private readonly Func<TInput, Nullable2<Node<TInput>>> previous;
+                private readonly TInput input;
 
                 public Node(TElement value)
-                    : this(value, () => new Nullable2<Node>())
+                    : this(value, () => new Nullable2<Node<TInput>>(), default)
                 {
                 }
 
-                public Node(TElement value, Func<Nullable2<Node>> previous)
+                public Node(TElement value, Func<TInput, Nullable2<Node<TInput>>> previous, TInput input)
                 {
                     this.Value = value;
                     this.previous = previous;
+                    this.input = input;
                 }
 
                 public TElement Value { get; }
 
-                public Nullable2<Node> Previous
+                public Nullable2<Node<TInput>> Previous
                 {
                     get
                     {
-                        return this.previous();
+                        return this.previous(this.input);
                     }
                 }
             }
