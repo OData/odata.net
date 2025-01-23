@@ -473,14 +473,22 @@
         /// <typeparam name="TElement"></typeparam>
         public unsafe ref struct LinkedList2<TElement> : IEnumerable<TElement> where TElement : allows ref struct
         {
-            private readonly TElement* values;
+            private readonly TElement** values;
 
-            public unsafe LinkedList2(TElement* values)
+            private readonly int length;
+
+            public unsafe LinkedList2(TElement** values, int length)
             {
                 this.values = values;
+                this.length = length;
             }
 
-            public IEnumerator<TElement> GetEnumerator()
+            public Enumerator GetEnumerator()
+            {
+                return new Enumerator(this);
+            }
+
+            IEnumerator<TElement> IEnumerable<TElement>.GetEnumerator()
             {
                 throw new NotImplementedException();
             }
@@ -488,6 +496,50 @@
             IEnumerator IEnumerable.GetEnumerator()
             {
                 throw new NotImplementedException();
+            }
+
+            public ref struct Enumerator : IEnumerator<TElement>
+            {
+                private readonly LinkedList2<TElement> elements;
+
+                private int index;
+
+                public Enumerator(LinkedList2<TElement> elements)
+                {
+                    this.elements = elements;
+
+                    this.index = -1;
+                }
+
+                public TElement Current
+                {
+                    get
+                    {
+                        if (this.index < 0)
+                        {
+                            throw new Exception("TODO");
+                        }
+
+                        return *this.elements.values[this.index];
+                    }
+                }
+
+                object IEnumerator.Current => throw new NotImplementedException();
+
+                public void Dispose()
+                {
+                }
+
+                public bool MoveNext()
+                {
+                    ++this.index;
+                    return this.index < this.elements.length;
+                }
+
+                public void Reset()
+                {
+                    throw new NotImplementedException();
+                }
             }
         }
 
@@ -534,7 +586,6 @@
                 return new Output<LinkedList<TParsed>, TToken, TInput>(list, input);*/
 
                 var values = stackalloc TParsed*[this.count];
-                var current = 0;
                 for (int i = 0; i < this.count; ++i)
                 {
                     var output = this.parser.Parse(input);
@@ -547,7 +598,10 @@
                     values[i] = &temp;
                 }
 
-                return new Output<LinkedList2<TParsed>, TToken, TInput>();
+                //// TODO im pretty when this returns, the stackframe is popped off the stack and `values` is now unmanaged, so the `linkedlist2` will have a bunch of pointers to who knows what
+                return new Output<LinkedList2<TParsed>, TToken, TInput>(
+                    new LinkedList2<TParsed>(values, this.count),
+                    input);
 
                 var parsed = new LinkedList<TParsed>();
                 LinkedList<TParsed>.Node start;
