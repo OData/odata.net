@@ -559,6 +559,30 @@
                 this.count = count;
             }
 
+            public void ReallyTry()
+            {
+                string* local;
+                Try(count =>
+                {
+                    var mem = stackalloc string*[count];
+                    var span = new Span<string>(mem, count);
+                    fixed (string* foo = span)
+                    {
+                        //// TODO will `local` now have pointers to `try`s stack frame, or will the allocated memory be in `reallytry`s stack frame?
+                        local = foo;
+                    }
+
+                    return span;
+                });
+
+
+            }
+
+            public static void Try<T>(Func<int, Span<T>> func)
+            {
+                var span = func(10);
+            }
+
             public unsafe Output<LinkedList2<TParsed>, TToken, TInput> Parse(TInput input)
             {
                 /*var parsed = RefEnumerable.Empty<TParsed>();
