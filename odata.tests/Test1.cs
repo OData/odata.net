@@ -8,6 +8,7 @@
     using Root.OdataResourcePath.Transcribers;
     using Sprache;
     using System;
+    using System.Collections;
     using System.Linq;
     using System.Text;
     using System.Xml;
@@ -15,6 +16,130 @@
     [TestClass]
     public sealed class Test1
     {
+        [TestMethod]
+        public void StackPointer()
+        {
+            AssertCast<Foo>(ParseFoo);
+        }
+
+        private static void AssertCast<T>(Parse<T> parse) where T : struct
+        {
+        }
+
+        public struct Foo
+        {
+        }
+
+        public ref struct StructList<T> : IEnumerable<T>
+        {
+            private readonly Span<T> span;
+
+            private readonly int count;
+
+            public StructList(Span<T> span, int count)
+            {
+                this.span = span;
+                this.count = count;
+            }
+
+            IEnumerator<T> IEnumerable<T>.GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                throw new NotImplementedException();
+            }
+
+            public ref struct Enumerator : IEnumerator<T>
+            {
+                private readonly StructList<T> values;
+
+                private int index;
+
+                public Enumerator(StructList<T> values)
+                {
+                    this.values = values;
+
+                    this.index = -1;
+                }
+
+                public T Current
+                {
+                    get
+                    {
+                        if (this.index < 0)
+                        {
+                            throw new Exception("TODO");
+                        }
+
+                        return this.values.span[this.index];
+                    }
+                }
+
+                object IEnumerator.Current => throw new NotImplementedException();
+
+                public void Dispose()
+                {
+                }
+
+                public bool MoveNext()
+                {
+                    ++this.index;
+                    return this.index <= this.values.count;
+                }
+
+                public void Reset()
+                {
+                    throw new NotImplementedException();
+                }
+            }
+        }
+
+        public static StructList<Foo> ParseFoo(Func<TopLevel<Foo>, int, Span<Foo>> allocate, in TopLevel<Foo> topLevel, Func<Foo?> doParse)
+        {
+            var count = 10;
+            var span = allocate(topLevel, count);
+
+            for (int i = 0; i < count; ++i)
+            {
+                var foo = doParse();
+                if (foo == null)
+                {
+                    break;
+                }
+
+                span[i] = foo.Value;
+            }
+
+            return new StructList<Foo>(span, count);
+        }
+
+        public delegate StructList<T> Parse<T>(Func<TopLevel<T>, int, Span<T>> allocate, in TopLevel<T> topLevel, Func<T?> doParse) where T : struct;
+
+        public unsafe struct TopLevel<T>
+        {
+            public TopLevel()
+            {
+            }
+
+            private T* Values { get; set; }
+
+            public Span<T> Generate(int count)
+            {
+                var memory = stackalloc T*[count];
+                Span<T> span = new Span<T>(memory, count);
+
+                fixed (T* temp = span)
+                {
+                    this.Values = temp;
+                }
+
+                return span;
+            }
+        }
+
         [TestMethod]
         public void Asdf()
         {
