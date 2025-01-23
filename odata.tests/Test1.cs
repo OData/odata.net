@@ -20,6 +20,15 @@
         public void StackPointer()
         {
             AssertCast<Foo>(ParseFoo);
+
+            //// TODO does *this* end up with the memory allocated in `stackpointer` instead of `parsefoo`?
+            var topLevel = new TopLevel<Foo>();
+            //// TODO see what it looks like when you need to allocate more memory
+            var foos = ParseFoo((TopLevel<Foo> first, int second) => first.Generate(second), topLevel, () => new Foo());
+            foreach (var foo in foos)
+            {
+
+            }
         }
 
         private static void AssertCast<T>(Parse<T> parse) where T : struct
