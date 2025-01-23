@@ -1,4 +1,4 @@
-﻿namespace CombinatorParsing
+﻿namespace CombinatorParsingV1
 {
     using __GeneratedOdata.Parsers.Rules;
     using Root;
@@ -9,7 +9,6 @@
     using System.Linq;
     using System.Runtime.CompilerServices;
     using System.Threading;
-    using static CombinatorParsing.ParserExtensions.ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2>;
 
     //// TODO add covariance and contravariance where able
 
@@ -116,7 +115,7 @@
 
 
 
-    public static class Demo
+    /*public static class Demo
     {
         public struct Foo
         {
@@ -201,7 +200,7 @@
                 }
             }
         }
-    }
+    }*/
 
 
 
@@ -438,7 +437,7 @@
             }
         }
 
-        public readonly ref struct ManyParser<TInput, TToken, TParsed, TParser, TOutput2> : IParser<TInput, TToken, Output<IEnumerable<TParsed>, TToken, TInput>, IEnumerable<TParsed>, ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2>> where TInput : IInput<TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput2, TParsed, TParser>, allows ref struct where TOutput2 : IOutput<TParsed, TToken, TInput>, allows ref struct
+        /*public readonly ref struct ManyParser<TInput, TToken, TParsed, TParser, TOutput2> : IParser<TInput, TToken, Output<IEnumerable<TParsed>, TToken, TInput>, IEnumerable<TParsed>, ExactlyParser<TInput, TToken, TParsed, TParser, TOutput2>> where TInput : IInput<TToken, TInput>, allows ref struct where TToken : allows ref struct where TParsed : allows ref struct where TParser : IParser<TInput, TToken, TOutput2, TParsed, TParser>, allows ref struct where TOutput2 : IOutput<TParsed, TToken, TInput>, allows ref struct
         {
             private readonly TParser parser;
 
@@ -463,9 +462,9 @@
                     parsed = Append(parsed, output.Parsed);
                     input = output.Remainder;
                 }*/
-                return default;
+                /*return default;
             }
-        }
+        }*/
 
         /// <summary>
         /// TODO create an immutable variant?
@@ -627,7 +626,7 @@
                     new LinkedList2<TParsed>(values, this.count),
                     input);
 
-                var parsed = new LinkedList<TParsed>();
+                /*var parsed = new LinkedList<TParsed>();
                 LinkedList<TParsed>.Node start;
                 LinkedList<TParsed>.Node end;
                 var isEmpty = true;
@@ -659,7 +658,7 @@
                     input = output.Remainder;
                 }
 
-                return new Output<LinkedList<TParsed>, TToken, TInput>(parsed, input);
+                return new Output<LinkedList<TParsed>, TToken, TInput>(parsed, input);*/
             }
 
             public unsafe ref struct Items<T> : IEnumerable<T> where T : allows ref struct
@@ -778,7 +777,7 @@
                 public int Length => throw new NotImplementedException();
             }
 
-            public ref struct Foo<TElement, TContext> : IStuff<TElement>
+            /*public ref struct Foo<TElement, TContext> : IStuff<TElement>
             {
                 private Bar<Wrapper<TElement, TContext>> bar;
 
@@ -800,9 +799,9 @@
                 }
 
                 public int Length => throw new NotImplementedException();
-            }
+            }*/
 
-            public struct Node<TValue, TContext>
+            /*public struct Node<TValue, TContext>
                 where TValue : allows ref struct
                 where TContext : allows ref struct
             {
@@ -814,7 +813,7 @@
                     this.value = value;
                     this.context = context;
                 }
-            }
+            }*/
         }
 
         public static class Playground
@@ -989,7 +988,7 @@
         /// TODO create an immutable variant?
         /// </summary>
         /// <typeparam name="TElement"></typeparam>
-        public struct LinkedList<TElement> : IEnumerable<TElement> where TElement : allows ref struct
+        /*public struct LinkedList<TElement> : IEnumerable<TElement> where TElement : allows ref struct
         {
             public Nullable2<Node> start;
 
@@ -1116,7 +1115,7 @@
             }
 
             public delegate ref Nullable2<Node> Foo();
-        }
+        }*/
 
         public ref struct Ref2<TElement, TEnumerable, TEnumerator> : IRefEnumerable<TElement, Ref2<TElement, TEnumerable, TEnumerator>.Enumerator>
             where TElement : allows ref struct
