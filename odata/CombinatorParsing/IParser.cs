@@ -477,17 +477,7 @@
             {
             }
 
-            public Nullable2<Node> GetStart()
-            {
-                return this.start;
-            }
-
-            public Enumerator GetEnumerator()
-            {
-                return new Enumerator(this);
-            }
-
-            IEnumerator<TElement> IEnumerable<TElement>.GetEnumerator()
+            public IEnumerator<TElement> GetEnumerator()
             {
                 throw new NotImplementedException();
             }
