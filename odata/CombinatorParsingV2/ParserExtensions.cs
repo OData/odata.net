@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection.Metadata;
 
     public static class ParserExtensions
     {
@@ -212,6 +213,33 @@
                 }
 
                 output = this.parser.AtMost(this.maximum - this.minimum).Parse(output.Remainder);
+
+                return output;
+            }
+        }
+
+
+        public static IParser<TToken, TParsed?> Optional<TToken, TParsed>(this IParser<TToken, TParsed> parser)
+        {
+            return new OptionalParser<TToken, TParsed>(parser);
+        }
+
+        private sealed class OptionalParser<TToken, TParsed> : IParser<TToken, TParsed?>
+        {
+            private readonly IParser<TToken, TParsed> parser;
+
+            public OptionalParser(IParser<TToken, TParsed> parser)
+            {
+                this.parser = parser;
+            }
+
+            public IOutput<TToken, TParsed?> Parse(IInput<TToken> input)
+            {
+                var output = this.parser.Parse(input);
+                if (!output.Success)
+                {
+                    return Output.Create(true, default(TParsed?), output.Remainder);
+                }
 
                 return output;
             }
