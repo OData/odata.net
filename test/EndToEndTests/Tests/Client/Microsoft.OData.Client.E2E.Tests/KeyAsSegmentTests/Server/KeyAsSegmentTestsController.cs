@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -70,26 +69,6 @@ public class KeyAsSegmentTestsController : ODataController
     }
 
     [EnableQuery]
-    [HttpGet("odata/People/{key}/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/$/Salary")]
-    public IActionResult GetEmployeeSalary([FromRoute] int key)
-    {
-        var employee = _dataSource.People?.OfType<Employee>().SingleOrDefault(a => a.PersonId == key);
-        if (employee == null)
-        {
-            return NotFound();
-        }
-        return Ok(employee.Salary);
-    }
-
-    [EnableQuery]
-    [HttpGet("odata/Orders")]
-    public IActionResult GetOrders()
-    {
-        var orders = _dataSource.Orders;
-        return Ok(orders);
-    }
-
-    [EnableQuery]
     [HttpGet("odata/Products/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct/{key}/RelatedProducts/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct/{relatedKey}/Photos")]
     public IActionResult GetProductRelatedPhotos([FromRoute] int key, [FromRoute] int relatedKey)
     {
@@ -106,33 +85,6 @@ public class KeyAsSegmentTestsController : ODataController
         }
 
         return Ok(relatedProduct.Photos);
-    }
-
-    [EnableQuery]
-    [HttpGet("odata/Products/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct")]
-    public IActionResult GetDiscontinuedProducts()
-    {
-        var discontinuedProducts = _dataSource.Products?.OfType<DiscontinuedProduct>();
-
-        return Ok(discontinuedProducts);
-    }
-
-    [EnableQuery]
-    [HttpGet("odata/Products/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct/$")]
-    public IActionResult GetAnotherDiscontinuedProducts()
-    {
-        var discontinuedProducts = _dataSource.Products?.OfType<DiscontinuedProduct>();
-
-        return Ok(discontinuedProducts);
-    }
-
-    [EnableQuery]
-    [HttpGet("odata/Products/$/$/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct")]
-    public IActionResult GetDiscontinuedProductsMultipleDollarSegments()
-    {
-        var discontinuedProducts = _dataSource.Products?.OfType<DiscontinuedProduct>();
-
-        return Ok(discontinuedProducts);
     }
 
     [EnableQuery]
@@ -169,32 +121,24 @@ public class KeyAsSegmentTestsController : ODataController
     }
 
     [EnableQuery]
-    [HttpGet("odata/Login")]
-    public IActionResult GetLogin()
-    {
-        var login = _dataSource.Logins;
-        return Ok(login);
-    }
-
-    [EnableQuery]
-    [HttpGet("odata/Login/{key}/Customer")]
-    public IActionResult GetLoginCustomers([FromODataUri] string key)
-    {
-        var login = _dataSource.Logins?.SingleOrDefault(l => l.Username == key);
-        if (login == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(login.Customer);
-    }
-
-    [EnableQuery]
     [HttpGet("odata/CustomerInfos")]
     public IActionResult GetCustomerInfos()
     {
         var customerInfos = _dataSource.CustomerInfos;
         return Ok(customerInfos);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/CustomerInfos({key})/$value")]
+    public IActionResult GetCustomerInfosValue([FromODataUri] int key)
+    {
+        var customerInfo = _dataSource.CustomerInfos?.SingleOrDefault(c => c.CustomerInfoId == key);
+        if (customerInfo == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(customerInfo);
     }
 
     [EnableQuery]
@@ -205,107 +149,19 @@ public class KeyAsSegmentTestsController : ODataController
         return Ok(cars);
     }
 
-    [HttpPost("odata/People/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/$/Default.IncreaseSalaries")]
-    public IActionResult IncreaseSalaries([FromODataBody] int n)
+    [EnableQuery]
+    [HttpGet("odata/Cars({key})/Photo")]
+    public IActionResult GetCarPhoto([FromODataUri] int key)
     {
-        _dataSource.People?.OfType<Employee>().ToList().ForEach(e => e.Salary += n);
-        return Ok();
-    }
-
-    [HttpPost("odata/People/$/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/$/$/Default.IncreaseSalaries")]
-    public IActionResult IncreaseSalariesMultipleDollarSegments([FromODataBody] int n)
-    {
-        _dataSource.People?.OfType<Employee>().ToList().ForEach(e => e.Salary += n);
-        return Ok();
-    }
-
-    [HttpPost("odata/People/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/$/Default.IncreaseSalaries/$")]
-    public IActionResult IncreaseSalariesDollarSegmentAtUriEnd([FromODataBody] int n)
-    {
-        _dataSource.People?.OfType<Employee>().ToList().ForEach(e => e.Salary += n);
-        return Ok();
-    }
-
-    [HttpPost("odata/People/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/{key}/$/Default.Sack")]
-    public IActionResult Sack([FromODataUri] int key)
-    {
-        var employee = _dataSource.People?.OfType<Employee>().SingleOrDefault(a => a.PersonId == key);
-        if (employee == null)
+        var car = _dataSource.Cars?.SingleOrDefault(c => c.VIN == key);
+        if (car == null)
         {
             return NotFound();
         }
 
-        _dataSource.People?.Remove(employee);
-        return NoContent();
-    }
+        car.Photo = new MemoryStream([0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f]);
 
-    [HttpPost("odata/People")]
-    public IActionResult AddPerson([FromBody] Person person)
-    {
-        _dataSource.People?.Add(person);
-        return Created(person);
-    }
-
-    [HttpPost("odata/Customers")]
-    public IActionResult AddCustomer([FromBody] Customer customer)
-    {
-        _dataSource.Customers?.Add(customer);
-        return Created(customer);
-    }
-
-    [HttpPost("odata/Customers({key})/Orders")]
-    public IActionResult AddOrderToCustomer([FromODataUri] int key, [FromBody] Order order)
-    {
-        var customer = _dataSource.Customers?.SingleOrDefault(c => c.CustomerId == key);
-        if (customer == null)
-        {
-            return NotFound();
-        }
-
-        customer.Orders ??= [];
-        customer.Orders.Add(order);
-        return Created(order);
-    }
-
-    [HttpPost("odata/Login")]
-    public IActionResult PostLogin([FromBody] Login login)
-    {
-        _dataSource.Logins?.Add(login);
-        return Created(login);
-    }
-
-    [HttpPost("odata/Customers({key})/Logins/$ref")]
-    public IActionResult AddLoginsRefToCustomer([FromODataUri] int key, [FromBody] Uri loginUri)
-    {
-        if (loginUri == null)
-        {
-            return BadRequest();
-        }
-
-        // Extract the login ID from the URI
-        var lastSegment = loginUri.Segments.Last();
-        int startIndex = lastSegment.IndexOf("('") + 2; // +2 to skip the opening parenthesis and the single quote
-        int endIndex = lastSegment.IndexOf("')") - 1; // -1 to skip the closing single quote
-
-        var loginUserName = Uri.UnescapeDataString(lastSegment.Substring(startIndex, endIndex - startIndex + 1));
-
-        // Find the login by ID
-        var login = _dataSource.Logins?.SingleOrDefault(d => d.Username == loginUserName);
-        if (login == null)
-        {
-            return NotFound();
-        }
-
-        var customer = _dataSource.Customers?.SingleOrDefault(c => c.CustomerId == key);
-        if (customer == null)
-        {
-            return NotFound();
-        }
-
-        customer.Logins ??= [];
-        customer.Logins.Add(login); 
-
-        return Ok(login);
+        return Ok(car.Photo);
     }
 
     [HttpPut("odata/Cars({key})/Video")]
@@ -322,29 +178,19 @@ public class KeyAsSegmentTestsController : ODataController
         return Updated(car);
     }
 
-    [HttpPatch("odata/People/{key}")]
-    public IActionResult PatchPerson([FromRoute] int key, [FromBody] Delta<Person> patch)
+    [EnableQuery]
+    [HttpPut("odata/CustomerInfos({key})/$value")]
+    public IActionResult AddStreamValueToCustomerInfo([FromODataUri] int key)
     {
-        var person = _dataSource.People?.SingleOrDefault(a => a.PersonId == key);
-        if (person == null)
-        {
-            return NotFound();
-        }
-        patch.Patch(person);
-        return Updated(person);
-    }
-
-    [HttpDelete("odata/People({key})/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee")]
-    public IActionResult DeleteSpecialEmployee([FromRoute] int key)
-    {
-        var person = _dataSource.People?.SingleOrDefault(a => a.PersonId == key);
-        if (person == null)
+        var customerInfo = _dataSource.CustomerInfos?.SingleOrDefault(c => c.CustomerInfoId == key);
+        if (customerInfo == null)
         {
             return NotFound();
         }
 
-        _dataSource.People?.Remove(person);
-        return NoContent();
+        var stream = Request.Body;
+
+        return Updated(customerInfo);
     }
 
     [HttpPost("odata/keyassegmenttests/Default.ResetDefaultDataSource")]

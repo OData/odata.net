@@ -64,12 +64,12 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
     public void GetSingleEntity()
     {
         // Arrange & Act
-        _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+        var contextWrapper = this.CreateWrappedContext();
 
-        var queryByKey = _context.CreateQuery<Person>("People").ByKey(-10);
+        var queryByKey = contextWrapper .CreateQuery<Person>("People").ByKey(-10);
         var personByKey = queryByKey.GetValue();
 
-        var query = _context.CreateQuery<Person>("People").Where(p => p.PersonId == -10) as DataServiceQuery<Person>;
+        var query = contextWrapper .CreateQuery<Person>("People").Where(p => p.PersonId == -10) as DataServiceQuery<Person>;
 
         // Assert
         Assert.EndsWith("/odata/People/-10", queryByKey.RequestUri.OriginalString);
@@ -86,12 +86,12 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
     public void LinqQueryWithKeyUsingMethodSyntax()
     {
         // Arrange & Act
-        _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+        var contextWrapper = this.CreateWrappedContext();
 
-        var queryByKey = _context.People.ByKey(-10);
+        var queryByKey = contextWrapper .People.ByKey(-10);
         var personByKey = queryByKey.GetValue();
 
-        var query = _context.People.Where(p => p.PersonId == -10);
+        var query = contextWrapper .People.Where(p => p.PersonId == -10);
 
         // Assert
         Assert.EndsWith("/odata/People/-10", queryByKey.RequestUri.OriginalString);
@@ -108,10 +108,10 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
     public void LinqQueryWithNullStringInKey()
     {
         // Arrange
-        _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+        var contextWrapper = this.CreateWrappedContext();
 
         var query =
-            from p in _context.People
+            from p in contextWrapper .People
             where p.Name == "\0te\0st\0"
             select p;
 
@@ -127,10 +127,10 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
     public void LinqQueryWithKey()
     {
         // Arrange
-        _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+        var contextWrapper = this.CreateWrappedContext();
 
         var query =
-            from p in _context.People
+            from p in contextWrapper .People
             where p.PersonId == -10
             select p;
 
@@ -150,10 +150,10 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
     public void LinqQueryWithKeyAndOfType()
     {
         // Arrange
-        _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+        var contextWrapper = this.CreateWrappedContext();
 
         var query = (
-            from p in _context.People.OfType<Employee>()
+            from p in contextWrapper .People.OfType<Employee>()
             where p.PersonId == -6
             select p) as DataServiceQuery<Employee>;
 
@@ -172,10 +172,10 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
     public void MultipleNavigationAndOfTypeInQuery()
     {
         // Arrange
-        _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+        var contextWrapper = this.CreateWrappedContext();
 
         var query = (
-            from product in _context.Products.OfType<DiscontinuedProduct>()
+            from product in contextWrapper .Products.OfType<DiscontinuedProduct>()
             from related in product.RelatedProducts.OfType<DiscontinuedProduct>()
             from photo in related.Photos
             where 
@@ -203,29 +203,29 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
     public void AttachTo()
     {
         // Arrange
-        _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+        var contextWrapper = this.CreateWrappedContext();
 
         var person = new Person { PersonId = -10 };
 
         // Act
-        _context.AttachTo("Person", person);
+        contextWrapper .AttachTo("Person", person);
 
         // Assert
-        Assert.Single(_context.Entities);
-        Assert.Equal(-10, (_context.Entities[0].Entity as Person)?.PersonId);
+        Assert.Single(contextWrapper .Entities);
+        Assert.Equal(-10, (contextWrapper .Entities[0].Entity as Person)?.PersonId);
     }
 
     [Fact]
     public void AttachToLoadProperty()
     {
         // Arrange
-        _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+        var contextWrapper = this.CreateWrappedContext();
 
         var person = new Person { PersonId = -10 };
 
         // Act
-        _context.AttachTo("People", person);
-        _context.LoadProperty(person, "PersonMetadata");
+        contextWrapper .AttachTo("People", person);
+        contextWrapper .LoadProperty(person, "PersonMetadata");
 
         // Assert
         Assert.Equal(3, person.PersonMetadata.Count);
@@ -238,16 +238,16 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
     public void LoadPropertyWithNextLink()
     {
         // Arrange
-        _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+        var contextWrapper = this.CreateWrappedContext();
 
-        var response = _context.Customers.Expand(c => c.Orders).Execute() as QueryOperationResponse<Customer>;
+        var response = contextWrapper .Customers.Expand(c => c.Orders).Execute() as QueryOperationResponse<Customer>;
         DataServiceQueryContinuation<Customer>? customerContinuation = null;
 
         do
         {
             if (customerContinuation != null)
             {
-                response = _context.Execute<Customer>(customerContinuation);
+                response = contextWrapper .Execute<Customer>(customerContinuation);
             }
 
             foreach (var customer in response)
@@ -256,7 +256,7 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
 
                 while (orderContinuation != null)
                 {
-                    var ordersResponse = _context.LoadProperty(customer, "Orders", orderContinuation);
+                    var ordersResponse = contextWrapper .LoadProperty(customer, "Orders", orderContinuation);
                     orderContinuation = ordersResponse.GetContinuation();
                 }
             }
@@ -265,6 +265,16 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
     }
 
     #region Private methods
+    private Container CreateWrappedContext()
+    {
+        var context = new Container(_baseUri)
+        {
+            HttpClientFactory = HttpClientFactory,
+            UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash
+        };
+
+        return context;
+    }
 
     private void ResetDefaultDataSource()
     {

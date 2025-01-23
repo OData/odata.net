@@ -28,7 +28,7 @@ public class LiteralFormatTests : EndToEndTestBase<LiteralFormatTests.TestsStart
     {
         public override void ConfigureServices(IServiceCollection services)
         {
-            services.ConfigureControllers(typeof(KeyAsSegmentTestsController), typeof(MetadataController));
+            services.ConfigureControllers(typeof(LiteralFormatTestsController), typeof(MetadataController));
 
             services.AddControllers().AddOData(opt =>
                 opt.EnableQueryFeatures().AddRouteComponents("odata", CommonEndToEndEdmModel.GetEdmModel()));
@@ -68,8 +68,12 @@ public class LiteralFormatTests : EndToEndTestBase<LiteralFormatTests.TestsStart
     [InlineData("$select")]
     public void PrimaryKeyValueBeginsWithDollarSign(string dollarSignKeyValue)
     {
+        ResetDefaultDataSource();
+
         // Arrange
         _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+        _context.MergeOption = MergeOption.PreserveChanges;
+
         var customer = _context.Customers.Take(1).Single();
 
         var newLogin = new Login { Username = dollarSignKeyValue };
@@ -98,6 +102,8 @@ public class LiteralFormatTests : EndToEndTestBase<LiteralFormatTests.TestsStart
     {
         // Arrange
         _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+        _context.MergeOption = MergeOption.PreserveChanges;
+
         var customer = _context.Customers.Take(1).Single();
 
         var newLogin = new Login { Username = keyValue };
@@ -113,6 +119,8 @@ public class LiteralFormatTests : EndToEndTestBase<LiteralFormatTests.TestsStart
         // Assert
         Assert.Single(loginQuery);
         Assert.Equal(keyValue, loginQuery[0].Username);
+
+        ResetDefaultDataSource();
     }
 
     [Theory]
@@ -122,6 +130,8 @@ public class LiteralFormatTests : EndToEndTestBase<LiteralFormatTests.TestsStart
     {
         // Arrange
         _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+        _context.MergeOption = MergeOption.PreserveChanges;
+
         var customer = _context.Customers.Take(1).Single();
 
         var newLogin = new Login { Username = keyValue };
@@ -137,13 +147,15 @@ public class LiteralFormatTests : EndToEndTestBase<LiteralFormatTests.TestsStart
 
         var customerQuery = _context.Execute<Customer>(new Uri(_baseUri + "Login/" + keyValue + "/Customer")).ToArray();
         Assert.True(customer == customerQuery.Single(), "Execute query result does not equal associated customer");
+
+        ResetDefaultDataSource();
     }
 
     #region Private methods
 
     private void ResetDefaultDataSource()
     {
-        var actionUri = new Uri(_baseUri + "keyassegmenttests/Default.ResetDefaultDataSource", UriKind.Absolute);
+        var actionUri = new Uri(_baseUri + "keyasssegmentliteralformattests/Default.ResetDefaultDataSource", UriKind.Absolute);
         _context.Execute(actionUri, "POST");
     }
 

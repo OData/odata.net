@@ -29,7 +29,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
     {
         public override void ConfigureServices(IServiceCollection services)
         {
-            services.ConfigureControllers(typeof(KeyAsSegmentTestsController), typeof(MetadataController));
+            services.ConfigureControllers(typeof(DollarSegmentTestsController), typeof(MetadataController));
 
             services.AddControllers().AddOData(opt =>
                 opt.EnableQueryFeatures().AddRouteComponents("odata", CommonEndToEndEdmModel.GetEdmModel()));
@@ -244,7 +244,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
 
     private void ResetDefaultDataSource()
     {
-        var actionUri = new Uri(_baseUri + "keyassegmenttests/Default.ResetDefaultDataSource", UriKind.Absolute);
+        var actionUri = new Uri(_baseUri + "dollarsegmenttests/Default.ResetDefaultDataSource", UriKind.Absolute);
         _context.Execute(actionUri, "POST");
     }
 
