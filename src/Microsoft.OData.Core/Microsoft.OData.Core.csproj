@@ -57,7 +57,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.ObjectPool"  Version="9.0.1" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="9.0.1" />
   </ItemGroup>
 
   <ItemGroup>
@@ -68,6 +68,8 @@
   <ItemGroup>
     <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Shipped.txt" />
     <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Unshipped.txt" />
+    <AdditionalFiles Include="PublicAPI\net9.0\PublicAPI.Shipped.txt" />
+    <AdditionalFiles Include="PublicAPI\net9.0\PublicAPI.Unshipped.txt" />
   </ItemGroup>
 
   <ItemGroup>
