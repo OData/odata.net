@@ -473,8 +473,11 @@
         /// <typeparam name="TElement"></typeparam>
         public unsafe ref struct LinkedList2<TElement> : IEnumerable<TElement> where TElement : allows ref struct
         {
-            public LinkedList2()
+            private readonly TElement* values;
+
+            public unsafe LinkedList2(TElement* values)
             {
+                this.values = values;
             }
 
             public IEnumerator<TElement> GetEnumerator()
