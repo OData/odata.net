@@ -1,8 +1,8 @@
 ﻿namespace CombinatorParsingV2
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection.Metadata;
 
     public static class ParserExtensions
     {
@@ -255,6 +255,11 @@
 
         public static IParser<TToken, IOption<TParsed>> Optional<TToken, TParsed>(this IParser<TToken, TParsed> parser)
         {
+            var asdf = 
+                from foo in parser
+                from bar in parser
+                select new object();
+
             return new OptionalParser<TToken, TParsed>(parser);
         }
 
@@ -276,6 +281,81 @@
                 }
 
                 return Output.Create(true, new Option<TParsed>(output.Parsed), output.Remainder);
+            }
+        }
+
+        public static IParser<TToken, TResult> SelectMany<TToken, TSource, TParser, TResult>(
+            this IParser<TToken, TSource> parser,
+            Func<TSource, IParser<TToken, TParser>> parserSelector,
+            Func<TSource, TParser, TResult> resultSelector)
+        {
+            return new SelectManyParser<TToken, TSource, TParser, TResult>(parser, parserSelector, resultSelector);
+        }
+
+        private sealed class SelectManyParser<TToken, TSource, TParser, TResult> : IParser<TToken, TResult>
+        {
+            private readonly IParser<TToken, TSource> parser;
+            private readonly Func<TSource, IParser<TToken, TParser>> parserSelector;
+            private readonly Func<TSource, TParser, TResult> resultSelector;
+
+            public SelectManyParser(
+                IParser<TToken, TSource> parser,
+                Func<TSource, IParser<TToken, TParser>> parserSelector,
+                Func<TSource, TParser, TResult> resultSelector)
+            {
+                this.parser = parser;
+                this.parserSelector = parserSelector;
+                this.resultSelector = resultSelector;
+            }
+
+            public IOutput<TToken, TResult> Parse(IInput<TToken> input)
+            {
+                var output = this.parser.Parse(input);
+                if (!output.Success)
+                {
+                    return Output.Create(false, default(TResult)!, input);
+                }
+
+                var subParser = this.parserSelector(output.Parsed);
+                var subOutput = subParser.Parse(output.Remainder);
+                if (!subOutput.Success)
+                {
+                    return Output.Create(false, default(TResult)!, input);
+                }
+
+                var parsed = this.resultSelector(output.Parsed, subOutput.Parsed);
+
+                return Output.Create(true, parsed, subOutput.Remainder);
+            }
+        }
+
+        public static IParser<TToken, TResult> Select<TToken, TSource, TResult>(
+            this IParser<TToken, TSource> parser,
+            Func<TSource, TResult> selector)
+        {
+            return new SelectParser<TToken, TSource, TResult>(parser, selector);
+        }
+
+        private sealed class SelectParser<TToken, TSource, TResult> : IParser<TToken, TResult>
+        {
+            private readonly IParser<TToken, TSource> parser;
+            private readonly Func<TSource, TResult> selector;
+
+            public SelectParser(IParser<TToken, TSource> parser, Func<TSource, TResult> selector)
+            {
+                this.parser = parser;
+                this.selector = selector;
+            }
+
+            public IOutput<TToken, TResult> Parse(IInput<TToken> input)
+            {
+                var output = this.parser.Parse(input);
+                if (!output.Success)
+                {
+                    return Output.Create(false, default(TResult)!, input);
+                }
+
+                return Output.Create(true, this.selector(output.Parsed), output.Remainder);
             }
         }
     }
