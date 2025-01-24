@@ -2,7 +2,7 @@
 {
     public sealed class Output<TToken, TParsed> : IOutput<TToken, TParsed>
     {
-        public Output(bool success, TParsed parsed, IInput<TToken> remainder)
+        public Output(bool success, TParsed parsed, IInput<TToken>? remainder)
         {
             this.Success = success;
             this.Parsed = parsed;
@@ -13,6 +13,6 @@
 
         public TParsed Parsed { get; }
 
-        public IInput<TToken> Remainder { get; }
+        public IInput<TToken>? Remainder { get; }
     }
 }

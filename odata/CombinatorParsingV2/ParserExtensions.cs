@@ -115,6 +115,11 @@
 
                     //// TODO is lazy evaluation a consideration here
                     parsed.Add(output.Parsed);
+                    if (output.Remainder == null)
+                    {
+                        return Output.Create(true, parsed, input);
+                    }
+
                     input = output.Remainder;
                 }
             }
@@ -185,6 +190,11 @@
                     }
 
                     parsed.Add(output.Parsed);
+                    if (output.Remainder == null)
+                    {
+                        return Output.Create(true, parsed, input);
+                    }
+
                     input = output.Remainder;
                 }
 
@@ -215,6 +225,11 @@
             {
                 var output = this.parser.Exactly(this.minimum).Parse(input);
                 if (!output.Success)
+                {
+                    return output;
+                }
+
+                if (output.Remainder == null)
                 {
                     return output;
                 }
@@ -251,6 +266,11 @@
             {
                 var output = this.parser.Exactly(this.minimum).Parse(input);
                 if (!output.Success)
+                {
+                    return output;
+                }
+
+                if (output.Remainder == null)
                 {
                     return output;
                 }
@@ -359,7 +379,13 @@
                     return Output.Create(false, default(TResult)!, input);
                 }
 
+                if (output.Remainder == null)
+                {
+                    return Output.Create(false, default(TResult)!, input);
+                }
+
                 var subParser = this.parserSelector(output.Parsed);
+
                 var subOutput = subParser.Parse(output.Remainder);
                 if (!subOutput.Success)
                 {

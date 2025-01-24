@@ -11,7 +11,7 @@
     {
         TToken Current { get; }
 
-        IInput<TToken> Next();
+        IInput<TToken>? Next();
     }
 
     public interface IOutput<out TToken, out TParsed> //// TODO make a struct and use `in` parameter whereever applicable?
@@ -20,6 +20,6 @@
 
         public TParsed Parsed { get; }
 
-        IInput<TToken> Remainder { get; }
+        IInput<TToken>? Remainder { get; }
     }
 }
