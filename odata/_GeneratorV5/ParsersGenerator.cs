@@ -34,7 +34,7 @@
                             cstNodes.InnerCstNodes.Name),
                         new[]
                         {
-                            "Sprache",
+                            "CombinatorParsingV2",
                         }),
                     new Namespace(
                         this.innerParsersNamespace,
@@ -44,7 +44,7 @@
                             cstNodes.InnerCstNodes.Name),
                         new[]
                         {
-                            "Sprache",
+                            "CombinatorParsingV2",
                         })
                 );
         }
@@ -173,7 +173,7 @@
                         new PropertyDefinition(
                             AccessModifier.Public,
                             true,
-                            $"Parser<{cstNodeNamespace}.{@class.Name}>",
+                            $"IParser<char, {cstNodeNamespace}.{@class.Name}>",
                             "Instance",
                             true,
                             false,
@@ -198,7 +198,7 @@
                         new PropertyDefinition(
                             AccessModifier.Public,
                             true,
-                            $"Parser<{cstNodeNamespace}.{@class.Name}>",
+                            $"IParser<char, {cstNodeNamespace}.{@class.Name}>",
                             "Instance",
                             true,
                             false,
@@ -229,7 +229,7 @@
                         new PropertyDefinition(
                             AccessModifier.Public,
                             true,
-                            $"Parser<{cstNodeNamespace}.{@class.Name}>",
+                            $"IParser<char, {cstNodeNamespace}.{@class.Name}>",
                             "Instance",
                             true,
                             false,
@@ -255,7 +255,7 @@
                     .Concat(
                         "(",
                         string.Join(
-                            $").Or<{cstNodeNamespace}.{@class.Name}>(",
+                            $").Or<char, {cstNodeNamespace}.{@class.Name}>(",
                             nestedClasses
                                 .Select(
                                     nestedClass =>
@@ -266,7 +266,7 @@
                     new PropertyDefinition(
                         AccessModifier.Public,
                         true,
-                        $"Parser<{cstNodeNamespace}.{@class.Name}>",
+                        $"IParser<char, {cstNodeNamespace}.{@class.Name}>",
                         "Instance",
                         true,
                         false,
@@ -285,7 +285,7 @@
                         new PropertyDefinition(
                             AccessModifier.Public,
                             true,
-                            $"Parser<{cstNodeNamespace}.{@class.Name}>",
+                            $"IParser<char, {cstNodeNamespace}.{@class.Name}>",
                             "Instance",
                             true,
                             false,
@@ -301,7 +301,7 @@
                         new PropertyDefinition(
                             AccessModifier.Public,
                             true,
-                            $"Parser<{cstNodeNamespace}.{@class.Name}>",
+                            $"IParser<char, {cstNodeNamespace}.{@class.Name}>",
                             "Instance",
                             true,
                             false,

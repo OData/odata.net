@@ -1,10 +1,10 @@
 namespace __Generated.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _ruleParser
     {
-        public static Parser<__Generated.CstNodes.Rules._rule> Instance { get; } = from _rulename_1 in __Generated.Parsers.Rules._rulenameParser.Instance
+        public static IParser<char, __Generated.CstNodes.Rules._rule> Instance { get; } = from _rulename_1 in __Generated.Parsers.Rules._rulenameParser.Instance
 from _definedⲻas_1 in __Generated.Parsers.Rules._definedⲻasParser.Instance
 from _elements_1 in __Generated.Parsers.Rules._elementsParser.Instance
 from _cⲻnl_1 in __Generated.Parsers.Rules._cⲻnlParser.Instance

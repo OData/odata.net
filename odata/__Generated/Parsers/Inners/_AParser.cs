@@ -1,10 +1,10 @@
 namespace __Generated.Parsers.Inners
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _AParser
     {
-        public static Parser<__Generated.CstNodes.Inners._A> Instance { get; }
+        public static IParser<char, __Generated.CstNodes.Inners._A> Instance { get; }
     }
     
 }

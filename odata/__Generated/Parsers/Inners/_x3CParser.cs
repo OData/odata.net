@@ -1,10 +1,10 @@
 namespace __Generated.Parsers.Inners
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _x3CParser
     {
-        public static Parser<__Generated.CstNodes.Inners._x3C> Instance { get; } = from _x3C in Parse.Char((char)0x3C) select __Generated.CstNodes.Inners._x3C.Instance;
+        public static IParser<char, __Generated.CstNodes.Inners._x3C> Instance { get; } = from _x3C in Parse.Char((char)0x3C) select __Generated.CstNodes.Inners._x3C.Instance;
     }
     
 }

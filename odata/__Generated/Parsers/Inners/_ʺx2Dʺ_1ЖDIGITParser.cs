@@ -1,10 +1,10 @@
 namespace __Generated.Parsers.Inners
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _ʺx2Dʺ_1ЖDIGITParser
     {
-        public static Parser<__Generated.CstNodes.Inners._ʺx2Dʺ_1ЖDIGIT> Instance { get; } = from _ʺx2Dʺ_1 in __Generated.Parsers.Inners._ʺx2DʺParser.Instance
+        public static IParser<char, __Generated.CstNodes.Inners._ʺx2Dʺ_1ЖDIGIT> Instance { get; } = from _ʺx2Dʺ_1 in __Generated.Parsers.Inners._ʺx2DʺParser.Instance
 from _DIGIT_1 in __Generated.Parsers.Rules._DIGITParser.Instance.Repeat(1, null)
 select new __Generated.CstNodes.Inners._ʺx2Dʺ_1ЖDIGIT(_ʺx2Dʺ_1, new __Generated.CstNodes.Inners.HelperRangedAtLeast1<__Generated.CstNodes.Rules._DIGIT>(_DIGIT_1));
     }

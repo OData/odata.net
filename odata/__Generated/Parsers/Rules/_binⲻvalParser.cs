@@ -1,10 +1,10 @@
 namespace __Generated.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _binⲻvalParser
     {
-        public static Parser<__Generated.CstNodes.Rules._binⲻval> Instance { get; } = from _ʺx62ʺ_1 in __Generated.Parsers.Inners._ʺx62ʺParser.Instance
+        public static IParser<char, __Generated.CstNodes.Rules._binⲻval> Instance { get; } = from _ʺx62ʺ_1 in __Generated.Parsers.Inners._ʺx62ʺParser.Instance
 from _BIT_1 in __Generated.Parsers.Rules._BITParser.Instance.Repeat(1, null)
 from _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ_1 in __Generated.Parsers.Inners._1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃParser.Instance.Optional()
 select new __Generated.CstNodes.Rules._binⲻval(_ʺx62ʺ_1, new __Generated.CstNodes.Inners.HelperRangedAtLeast1<__Generated.CstNodes.Rules._BIT>(_BIT_1), _1ЖⲤʺx2Eʺ_1ЖBITↃⳆⲤʺx2Dʺ_1ЖBITↃ_1.GetOrElse(null));

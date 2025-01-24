@@ -1,10 +1,10 @@
 namespace __Generated.Parsers.Inners
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃParser
     {
-        public static Parser<__Generated.CstNodes.Inners._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ> Instance { get; } = from _ruleⳆⲤЖcⲻwsp_cⲻnlↃ_1 in __Generated.Parsers.Inners._ruleⳆⲤЖcⲻwsp_cⲻnlↃParser.Instance
+        public static IParser<char, __Generated.CstNodes.Inners._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ> Instance { get; } = from _ruleⳆⲤЖcⲻwsp_cⲻnlↃ_1 in __Generated.Parsers.Inners._ruleⳆⲤЖcⲻwsp_cⲻnlↃParser.Instance
 select new __Generated.CstNodes.Inners._ⲤruleⳆⲤЖcⲻwsp_cⲻnlↃↃ(_ruleⳆⲤЖcⲻwsp_cⲻnlↃ_1);
     }
     

@@ -2,6 +2,7 @@
 {
     using _GeneratorV4;
     using AbnfParserGenerator;
+    using CombinatorParsingV2;
     using GeneratorV3;
     using Root;
     using Root.OdataResourcePath.CombinatorParsers;
@@ -300,7 +301,10 @@
             string innerParsersDirectory
             )
         {
-            var cst = __Generated.Parsers.Rules._rulelistParser.Instance.Parse(fullRulesText);
+            if (!__Generated.Parsers.Rules._rulelistParser.Instance.TryParse(fullRulesText, out var cst))
+            {
+                throw new Exception("TODO");
+            }
 
             var generatedCstNodes = new _GeneratorV5.CstNodesGenerator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(cst);
 
@@ -410,7 +414,10 @@
         {
             var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
             var coreRulesText = File.ReadAllText(coreRulesPath);
-            var cst = __Generated.Parsers.Rules._rulelistParser.Instance.Parse(coreRulesText);
+            if (!__Generated.Parsers.Rules._rulelistParser.Instance.TryParse(coreRulesText, out var cst))
+            {
+                throw new Exception("TODO");
+            }
 
             //// TODO if the ABNF is missing a trailing newline, the last rule will be dropped
 
@@ -432,11 +439,14 @@
             var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
             var abnfRulesText = File.ReadAllText(abnfRulesPath);
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
-            var cst = __Generated.Parsers.Rules._rulelistParser.Instance.TryParse(fullRulesText);
+            if (!__Generated.Parsers.Rules._rulelistParser.Instance.TryParse(fullRulesText, out var cst))
+            {
+                throw new Exception("TODO");
+            }
 
             var stringBuilder = new StringBuilder();
 
-            __Generated.Trancsribers.Rules._rulelistTranscriber.Instance.Transcribe(cst.Value, stringBuilder);
+            __Generated.Trancsribers.Rules._rulelistTranscriber.Instance.Transcribe(cst, stringBuilder);
 
             var transcribedText = stringBuilder.ToString();
             Assert.AreEqual(fullRulesText, transcribedText);
@@ -447,7 +457,10 @@
         {
             var odataRulesPath = @"C:\msgithub\odata.net\odata\odata.abnf";
             var odataRulesText = File.ReadAllText(odataRulesPath);
-            var cst = __Generated.Parsers.Rules._rulelistParser.Instance.Parse(odataRulesText);
+            if (!__Generated.Parsers.Rules._rulelistParser.Instance.TryParse(odataRulesText, out var cst))
+            {
+                throw new Exception("TODO");
+            }
 
             var stringBuilder = new StringBuilder();
 
@@ -460,7 +473,10 @@
         [TestMethod]
         public void TestRulesV5()
         {
-            var cst = __Generated.Parsers.Rules._rulelistParser.Instance.Parse(TestAbnf);
+            if (!__Generated.Parsers.Rules._rulelistParser.Instance.TryParse(TestAbnf, out var cst))
+            {
+                throw new Exception("TODO");
+            }
 
             var stringBuilder = new StringBuilder();
 
@@ -474,7 +490,10 @@
         public void TestRules2V5()
         {
             var abnf = File.ReadAllText(@"C:\msgithub\odata.net\odata\GeneratorV3\test.abnf");
-            var cst = __Generated.Parsers.Rules._rulelistParser.Instance.Parse(abnf);
+            if (!__Generated.Parsers.Rules._rulelistParser.Instance.TryParse(abnf, out var cst))
+            {
+                throw new Exception("TODO");
+            }
 
             var stringBuilder = new StringBuilder();
 

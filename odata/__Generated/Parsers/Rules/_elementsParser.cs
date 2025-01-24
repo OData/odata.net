@@ -1,10 +1,10 @@
 namespace __Generated.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _elementsParser
     {
-        public static Parser<__Generated.CstNodes.Rules._elements> Instance { get; } = from _alternation_1 in __Generated.Parsers.Rules._alternationParser.Instance
+        public static IParser<char, __Generated.CstNodes.Rules._elements> Instance { get; } = from _alternation_1 in __Generated.Parsers.Rules._alternationParser.Instance
 from _cⲻwsp_1 in __Generated.Parsers.Rules._cⲻwspParser.Instance.Many()
 select new __Generated.CstNodes.Rules._elements(_alternation_1, _cⲻwsp_1);
     }

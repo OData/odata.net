@@ -6,6 +6,49 @@
 
     public static class ParserExtensions
     {
+        public static bool TryParse<TParsed>(this IParser<char, TParsed> parser, string input, out TParsed parsed)
+        {
+            return parser.TryParse(new StringInput(input), out parsed);
+        }
+
+        public static bool TryParse<TToken, TParsed>(this IParser<TToken, TParsed> parser, IInput<TToken> input, out TParsed parsed)
+        {
+            var output = parser.Parse(input);
+            if (!output.Success)
+            {
+                parsed = default(TParsed)!;
+                return false;
+            }
+
+            parsed = output.Parsed;
+            return true;
+        }
+
+        public static IParser<TToken, IEnumerable<TParsed>> Repeat<TToken, TParsed>(
+            this IParser<TToken, TParsed> parser,
+            int? minimum,
+            int? maximum)
+        {
+            //// TODO remove this; you only did it so you didn't have to make massive changes to the generator when moving away from sprach
+
+            if (minimum == null && maximum == null)
+            {
+                return parser.Many();
+            }
+
+            if (minimum == null)
+            {
+                return parser.AtMost(maximum.Value);
+            }
+
+            if (maximum == null)
+            {
+                return parser.AtLeast(minimum.Value);
+            }
+
+            return parser.Range(minimum.Value, maximum.Value);
+        }
+
         public static IParser<TToken, TParsed> Or<TToken, TParsed>(
             this IParser<TToken, TParsed> first,
             IParser<TToken, TParsed> second)
