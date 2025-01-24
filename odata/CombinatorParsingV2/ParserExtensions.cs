@@ -218,13 +218,47 @@
             }
         }
 
+        public interface IOption<TParsed>
+        {
+            TParsed GetOrElse(TParsed value);
+        }
 
-        public static IParser<TToken, TParsed?> Optional<TToken, TParsed>(this IParser<TToken, TParsed> parser)
+        private sealed class Option<TParsed> : IOption<TParsed>
+        {
+            private readonly TParsed parsed;
+
+            private readonly bool hasValue;
+
+            public Option(TParsed parsed)
+            {
+                this.parsed = parsed;
+                this.hasValue = true;
+            }
+
+            public Option()
+            {
+                this.hasValue = false;
+            }
+
+            public TParsed GetOrElse(TParsed value)
+            {
+                if (this.hasValue)
+                {
+                    return this.parsed;
+                }
+                else
+                {
+                    return value;
+                }
+            }
+        }
+
+        public static IParser<TToken, IOption<TParsed>> Optional<TToken, TParsed>(this IParser<TToken, TParsed> parser)
         {
             return new OptionalParser<TToken, TParsed>(parser);
         }
 
-        private sealed class OptionalParser<TToken, TParsed> : IParser<TToken, TParsed?>
+        private sealed class OptionalParser<TToken, TParsed> : IParser<TToken, IOption<TParsed>>
         {
             private readonly IParser<TToken, TParsed> parser;
 
@@ -233,15 +267,15 @@
                 this.parser = parser;
             }
 
-            public IOutput<TToken, TParsed?> Parse(IInput<TToken> input)
+            public IOutput<TToken, IOption<TParsed>> Parse(IInput<TToken> input)
             {
                 var output = this.parser.Parse(input);
                 if (!output.Success)
                 {
-                    return Output.Create(true, default(TParsed?), output.Remainder);
+                    return Output.Create(true, new Option<TParsed>(), output.Remainder);
                 }
 
-                return output;
+                return Output.Create(true, new Option<TParsed>(output.Parsed), output.Remainder);
             }
         }
     }

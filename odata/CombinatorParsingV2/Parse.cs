@@ -1,29 +1,39 @@
 ﻿namespace CombinatorParsingV2
 {
+    using System.Collections.Generic;
+
     public static class Parse
     {
-        public static IParser<char, char> Char(char @char)
+        public static IParser<TToken, TParsed> Token<TToken, TParsed>(TParsed token, IEqualityComparer<TToken> comparer) where TParsed : TToken
         {
-
+            return new TokenParser<TToken, TParsed>(token, comparer);
         }
 
-        private sealed class CharParser : IParser<char, char>
+        private sealed class TokenParser<TToken, TParsed> : IParser<TToken, TParsed> where TParsed : TToken
         {
-            private readonly char @char;
+            private readonly TParsed parsed;
+            private readonly IEqualityComparer<TToken> comparer;
 
-            public CharParser(char @char)
+            public TokenParser(TParsed parsed, IEqualityComparer<TToken> comparer)
             {
-                this.@char = @char;
+                this.parsed = parsed;
+                this.comparer = comparer;
             }
 
-            public IOutput<char, char> Parse(IInput<char> input)
+            public IOutput<TToken, TParsed> Parse(IInput<TToken> input)
             {
-                if (input.Current == this.@char)
+                if (this.comparer.Equals(input.Current, this.parsed))
                 {
-                    //// TODO is this the right output? also, you need a concrete `input` implementation now
-                    return Output.Create(true, this.@char, )
+                    return Output.Create(true, this.parsed, input.Next());
                 }
+
+                return Output.Create(false, default(TParsed)!, input);
             }
+        }
+
+        public static IParser<char, char> Char(char @char)
+        {
+            return Parse.Token(@char, EqualityComparer<char>.Default);
         }
     }
 }
