@@ -59,6 +59,19 @@ public class PrimitiveKeyValuesTestsController : ODataController
     }
 
     [EnableQuery]
+    [HttpGet("odata/EdmBooleanSet({key})")]
+    public IActionResult GetEdmBooleanWithParentheses([FromODataUri] bool key)
+    {
+        var result = _dataSource.EdmBooleans?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
+    [EnableQuery]
     [HttpGet("odata/EdmInt16Set")]
     public IActionResult GetEdmInt16s()
     {
@@ -69,6 +82,19 @@ public class PrimitiveKeyValuesTestsController : ODataController
     [EnableQuery]
     [HttpGet("odata/EdmInt16Set/{key}")]
     public IActionResult GetEdmInt16([FromODataUri] short key)
+    {
+        var result = _dataSource.EdmInt16s?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/EdmInt16Set({key})")]
+    public IActionResult GetEdmInt16WithParenthese([FromODataUri] short key)
     {
         var result = _dataSource.EdmInt16s?.SingleOrDefault(a => a.Id == key);
         if (result == null)
@@ -100,6 +126,18 @@ public class PrimitiveKeyValuesTestsController : ODataController
         return Ok(result);
     }
 
+    [EnableQuery]
+    [HttpGet("odata/EdmInt32Set({key})")]
+    public IActionResult GetEdmInt32WithParentheses([FromODataUri] int key)
+    {
+        var result = _dataSource.EdmInt32s?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
+        return Ok(result);
+    }
+
     [EnableQuery(PageSize = 2)]
     [HttpGet("odata/EdmInt64Set")]
     public IActionResult GetEdmInt64s()
@@ -119,6 +157,19 @@ public class PrimitiveKeyValuesTestsController : ODataController
     [EnableQuery]
     [HttpGet("odata/EdmInt64Set/{key}")]
     public IActionResult GetEdmInt64([FromODataUri] long key)
+    {
+        var result = _dataSource.EdmInt64s?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/EdmInt64Set({key})")]
+    public IActionResult GetEdmInt64WithParentheses([FromODataUri] long key)
     {
         var result = _dataSource.EdmInt64s?.SingleOrDefault(a => a.Id == key);
         if (result == null)
@@ -158,6 +209,19 @@ public class PrimitiveKeyValuesTestsController : ODataController
         return Ok(result);
     }
 
+    [EnableQuery]
+    [HttpGet("odata/EdmSingleSet({key})")]
+    public IActionResult GetEdmSingleWithParentheses([FromODataUri] float key)
+    {
+        var result = _dataSource.EdmSingles?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
     [EnableQuery(PageSize = 2)]
     [HttpGet("odata/EdmDoubleSet")]
     public IActionResult GetEdmDoubles()
@@ -179,6 +243,19 @@ public class PrimitiveKeyValuesTestsController : ODataController
         return Ok(result);
     }
 
+    [EnableQuery]
+    [HttpGet("odata/EdmDoubleSet({key})")]
+    public IActionResult GetEdmDoubleWithParentheses([FromODataUri] double key)
+    {
+        var result = _dataSource.EdmDoubles?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
     [EnableQuery(PageSize = 2)]
     [HttpGet("odata/EdmDecimalSet")]
     public IActionResult GetEdmDecimals()
@@ -190,6 +267,18 @@ public class PrimitiveKeyValuesTestsController : ODataController
     [EnableQuery]
     [HttpGet("odata/EdmDecimalSet/{key}")]
     public IActionResult GetEdmDecimal([FromODataUri] decimal key)
+    {
+        var result = _dataSource.EdmDecimals?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+    [EnableQuery]
+    [HttpGet("odata/EdmDecimalSet({key})")]
+    public IActionResult GetEdmDecimalWithParentheses([FromODataUri] decimal key)
     {
         var result = _dataSource.EdmDecimals?.SingleOrDefault(a => a.Id == key);
         if (result == null)
@@ -222,6 +311,19 @@ public class PrimitiveKeyValuesTestsController : ODataController
     }
 
     [EnableQuery]
+    [HttpGet("odata/EdmDateTimeOffsetSet({key})")]
+    public IActionResult GetEdmDateTimeOffsetWithParentheses([FromODataUri] DateTimeOffset key)
+    {
+        var result = _dataSource.EdmDateTimeOffsets?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
+
+        return Ok(result);
+    }
+
+    [EnableQuery]
     [HttpGet("odata/EdmTimeSet")]
     public IActionResult GetEdmTimes()
     {
@@ -239,6 +341,18 @@ public class PrimitiveKeyValuesTestsController : ODataController
             return NotFound();
         }
 
+        return Ok(result);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/EdmTimeSet({key})")]
+    public IActionResult GetEdmTimeWithParentheses([FromODataUri] TimeSpan key)
+    {
+        var result = _dataSource.EdmTimes?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
         return Ok(result);
     }
 
@@ -260,6 +374,18 @@ public class PrimitiveKeyValuesTestsController : ODataController
             return NotFound();
         }
 
+        return Ok(result);
+    }
+
+    [EnableQuery]
+    [HttpGet("odata/EdmStringSet({key})")]
+    public IActionResult GetEdmStringWithParentheses([FromODataUri] string key)
+    {
+        var result = _dataSource.EdmStrings?.SingleOrDefault(a => a.Id == key);
+        if (result == null)
+        {
+            return NotFound();
+        }
         return Ok(result);
     }
 
