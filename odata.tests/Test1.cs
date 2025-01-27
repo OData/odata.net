@@ -412,7 +412,7 @@
         [TestMethod]
         public void CoreRulesV5()
         {
-            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
+            var coreRulesPath = @"C:\github\odata.net\odata\AbnfParser\core.abnf";
             var coreRulesText = File.ReadAllText(coreRulesPath);
             if (!__Generated.Parsers.Rules._rulelistParser.Instance.TryParse(coreRulesText, out var cst))
             {

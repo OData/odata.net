@@ -28,8 +28,13 @@ namespace CombinatorParsingV2
             }
         }
 
-        public IInput<char> Next()
+        public IInput<char>? Next()
         {
+            if (this.index == this.input.Length - 1)
+            {
+                return null;
+            }
+
             return new StringInput(this.input, this.index + 1);
         }
     }
