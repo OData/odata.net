@@ -238,7 +238,7 @@
         [TestMethod]
         public void GenerateOdataWithLatest()
         {
-            var fullRulesPath = @"C:\msgithub\odata.net\odata\odata.abnf";
+            var fullRulesPath = @"C:\github\odata.net\odata\odata.abnf";
             var fullRulesText = File.ReadAllText(fullRulesPath);
 
             GenerateParserTypes(
@@ -246,24 +246,24 @@
                 true,
                 "__GeneratedOdata.CstNodes.Rules",
                 "__GeneratedOdata.CstNodes.Inners",
-                @"C:\msgithub\odata.net\odata\__GeneratedOdata\CstNodes\Rules",
-                @"C:\msgithub\odata.net\odata\__GeneratedOdata\CstNodes\Inners",
+                @"C:\github\odata.net\odata\__GeneratedOdata\CstNodes\Rules",
+                @"C:\github\odata.net\odata\__GeneratedOdata\CstNodes\Inners",
                 "__GeneratedOdata.Trancsribers.Rules",
                 "__GeneratedOdata.Trancsribers.Inners",
-                @"C:\msgithub\odata.net\odata\__GeneratedOdata\Transcribers\Rules",
-                @"C:\msgithub\odata.net\odata\__GeneratedOdata\Transcribers\Inners",
+                @"C:\github\odata.net\odata\__GeneratedOdata\Transcribers\Rules",
+                @"C:\github\odata.net\odata\__GeneratedOdata\Transcribers\Inners",
                 "__GeneratedOdata.Parsers.Rules",
                 "__GeneratedOdata.Parsers.Inners",
-                @"C:\msgithub\odata.net\odata\__GeneratedOdata\Parsers\Rules",
-                @"C:\msgithub\odata.net\odata\__GeneratedOdata\Parsers\Inners");
+                @"C:\github\odata.net\odata\__GeneratedOdata\Parsers\Rules",
+                @"C:\github\odata.net\odata\__GeneratedOdata\Parsers\Inners");
         }
 
         [TestMethod]
         public void GenerateAbnfWithLatest()
         {
-            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
+            var coreRulesPath = @"C:\github\odata.net\odata\AbnfParser\core.abnf";
             var coreRulesText = File.ReadAllText(coreRulesPath);
-            var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
+            var abnfRulesPath = @"C:\github\odata.net\odata\AbnfParser\abnf.abnf";
             var abnfRulesText = File.ReadAllText(abnfRulesPath);
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
 
@@ -272,16 +272,16 @@
                 false,
                 "__Generated.CstNodes.Rules",
                 "__Generated.CstNodes.Inners",
-                @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Rules",
-                @"C:\msgithub\odata.net\odata\__Generated\CstNodes\Inners",
+                @"C:\github\odata.net\odata\__Generated\CstNodes\Rules",
+                @"C:\github\odata.net\odata\__Generated\CstNodes\Inners",
                 "__Generated.Trancsribers.Rules",
                 "__Generated.Trancsribers.Inners",
-                @"C:\msgithub\odata.net\odata\__Generated\Transcribers\Rules",
-                @"C:\msgithub\odata.net\odata\__Generated\Transcribers\Inners",
+                @"C:\github\odata.net\odata\__Generated\Transcribers\Rules",
+                @"C:\github\odata.net\odata\__Generated\Transcribers\Inners",
                 "__Generated.Parsers.Rules",
                 "__Generated.Parsers.Inners",
-                @"C:\msgithub\odata.net\odata\__Generated\Parsers\Rules",
-                @"C:\msgithub\odata.net\odata\__Generated\Parsers\Inners");
+                @"C:\github\odata.net\odata\__Generated\Parsers\Rules",
+                @"C:\github\odata.net\odata\__Generated\Parsers\Inners");
         }
 
         private static void GenerateParserTypes(
@@ -434,9 +434,9 @@
         [TestMethod]
         public void AbnfRulesV5()
         {
-            var coreRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\core.abnf";
+            var coreRulesPath = @"C:\github\odata.net\odata\AbnfParser\core.abnf";
             var coreRulesText = File.ReadAllText(coreRulesPath);
-            var abnfRulesPath = @"C:\msgithub\odata.net\odata\AbnfParser\abnf.abnf";
+            var abnfRulesPath = @"C:\github\odata.net\odata\AbnfParser\abnf.abnf";
             var abnfRulesText = File.ReadAllText(abnfRulesPath);
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
             if (!__Generated.Parsers.Rules._rulelistParser.Instance.TryParse(fullRulesText, out var cst))
@@ -455,7 +455,7 @@
         [TestMethod]
         public void OdataRulesV5()
         {
-            var odataRulesPath = @"C:\msgithub\odata.net\odata\odata.abnf";
+            var odataRulesPath = @"C:\github\odata.net\odata\odata.abnf";
             var odataRulesText = File.ReadAllText(odataRulesPath);
             if (!__Generated.Parsers.Rules._rulelistParser.Instance.TryParse(odataRulesText, out var cst))
             {
@@ -489,7 +489,7 @@
         [TestMethod]
         public void TestRules2V5()
         {
-            var abnf = File.ReadAllText(@"C:\msgithub\odata.net\odata\GeneratorV3\test.abnf");
+            var abnf = File.ReadAllText(@"C:\github\odata.net\odata\GeneratorV3\test.abnf");
             if (!__Generated.Parsers.Rules._rulelistParser.Instance.TryParse(abnf, out var cst))
             {
                 throw new Exception("TODO");
