@@ -223,7 +223,44 @@
 
             public IOutput<TToken, IEnumerable<TParsed>> Parse(IInput<TToken> input)
             {
-                var output = this.parser.Exactly(this.minimum).Parse(input);
+                var parsed = new List<TParsed>();
+                for (int i = 0; i < this.minimum; ++i)
+                {
+                    var output = this.parser.Parse(input);
+                    if (!output.Success)
+                    {
+                        return Output.Create(false, Enumerable.Empty<TParsed>(), input);
+                    }
+
+                    parsed.Add(output.Parsed);
+
+                    if (output.Remainder == null)
+                    {
+                        return Output.Create(false, Enumerable.Empty<TParsed>(), input);
+                    }
+
+                    input = output.Remainder;
+                }
+
+                while (true)
+                {
+                    var output = this.parser.Parse(input);
+                    if (!output.Success)
+                    {
+                        return Output.Create(true, parsed, output.Remainder);
+                    }
+
+                    parsed.Add(output.Parsed);
+
+                    if (output.Remainder == null)
+                    {
+                        return Output.Create(true, parsed, output.Remainder);
+                    }
+
+                    input = output.Remainder;
+                }
+
+                /*var output = this.parser.Exactly(this.minimum).Parse(input);
                 if (!output.Success)
                 {
                     return output;
@@ -236,7 +273,7 @@
 
                 output = this.parser.Many().Parse(output.Remainder);
 
-                return output;
+                return output;*/
             }
         }
 
