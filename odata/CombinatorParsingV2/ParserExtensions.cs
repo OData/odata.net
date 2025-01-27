@@ -250,7 +250,7 @@
                         return Output.Create(true, parsed, output.Remainder);
                     }
 
-                    parsed.Add(output.Parsed);
+                    parsed.Add(output.Parsed); //// TODO fix this everywhere
 
                     if (output.Remainder == null)
                     {
