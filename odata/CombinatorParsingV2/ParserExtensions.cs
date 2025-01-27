@@ -257,6 +257,7 @@
             public RangeParser(IParser<TToken, TParsed> parser, int minimum, int maximum)
             {
                 //// TODO nail down if `maximum` is inclusive or exclusive, and then propogate that to the `helperranged` classes in the cst nodess
+                //// TODO it's implemented as inclusive
                 this.parser = parser;
                 this.minimum = minimum;
                 this.maximum = maximum;
