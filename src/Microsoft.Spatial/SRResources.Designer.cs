@@ -403,6 +403,96 @@ namespace Microsoft.Spatial {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The WKB reader is reading a &quot;{0}&quot; value with &quot;{1}&quot; bytes expected but only get &quot;{2}&quot; bytes..
+        /// </summary>
+        internal static string WellKnownBinary_ByteLengthNotEnough {
+            get {
+                return ResourceManager.GetString("WellKnownBinary_ByteLengthNotEnough", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The WKB writer: Invalid to AddLineTo for &quot;{0}&quot;.{1}.
+        /// </summary>
+        internal static string WellKnownBinary_InvalidAddLineTo {
+            get {
+                return ResourceManager.GetString("WellKnownBinary_InvalidAddLineTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The WKB writer: Invalid to begin a figure for spatial type &quot;{0}&quot;..
+        /// </summary>
+        internal static string WellKnownBinary_InvalidBeginFigureOnSpatial {
+            get {
+                return ResourceManager.GetString("WellKnownBinary_InvalidBeginFigureOnSpatial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The WKB writer: Invalid to begin a new figure &quot;{0}&quot; without ending the previou figure..
+        /// </summary>
+        internal static string WellKnownBinary_InvalidBeginFigureWithoutEndingPrevious {
+            get {
+                return ResourceManager.GetString("WellKnownBinary_InvalidBeginFigureWithoutEndingPrevious", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The WKB writer: Invalid to &quot;{0}&quot; without specify the spatial type. Please call BeginGeometry(), or beginGeography() first..
+        /// </summary>
+        internal static string WellKnownBinary_InvalidBeginOrEndFigureOrAddLine {
+            get {
+                return ResourceManager.GetString("WellKnownBinary_InvalidBeginOrEndFigureOrAddLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The WKB writer: Invalid to end figure on &quot;{0}&quot;.{1}.
+        /// </summary>
+        internal static string WellKnownBinary_InvalidEndFigure {
+            get {
+                return ResourceManager.GetString("WellKnownBinary_InvalidEndFigure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The WKB writer: Invalid to end spatial type &quot;{0}&quot;.{1}.
+        /// </summary>
+        internal static string WellKnownBinary_InvalidEndGeo {
+            get {
+                return ResourceManager.GetString("WellKnownBinary_InvalidEndGeo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The WKB writer: Invalid to begin a &quot;{0}&quot; under &quot;{1}&quot;, Details: &quot;{2}&quot;..
+        /// </summary>
+        internal static string WellKnownBinary_InvalidSubSpatial {
+            get {
+                return ResourceManager.GetString("WellKnownBinary_InvalidSubSpatial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The WKB writer: Spatial type &quot;{0}&quot; is not supported..
+        /// </summary>
+        internal static string WellKnownBinary_NotSupportedSpatial {
+            get {
+                return ResourceManager.GetString("WellKnownBinary_NotSupportedSpatial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The WKB reader: the byte order &apos;{0}&apos; is unknown. It should be 0x00 (BigEndian) and 0x01 (LittleEndian)..
+        /// </summary>
+        internal static string WellKnownBinary_UnknownByteOrder {
+            get {
+                return ResourceManager.GetString("WellKnownBinary_UnknownByteOrder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The WellKnownTextReader is configured to allow only two dimensions, and a third dimension was encountered..
         /// </summary>
         internal static string WellKnownText_TooManyDimensions {
