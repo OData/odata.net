@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Inners
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _lambdaVariableExpr_BWS_COLON_BWS_lambdaPredicateExprParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Inners._lambdaVariableExpr_BWS_COLON_BWS_lambdaPredicateExpr> Instance { get; } = from _lambdaVariableExpr_1 in __GeneratedOdata.Parsers.Rules._lambdaVariableExprParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Inners._lambdaVariableExpr_BWS_COLON_BWS_lambdaPredicateExpr> Instance { get; } = from _lambdaVariableExpr_1 in __GeneratedOdata.Parsers.Rules._lambdaVariableExprParser.Instance
 from _BWS_1 in __GeneratedOdata.Parsers.Rules._BWSParser.Instance
 from _COLON_1 in __GeneratedOdata.Parsers.Rules._COLONParser.Instance
 from _BWS_2 in __GeneratedOdata.Parsers.Rules._BWSParser.Instance

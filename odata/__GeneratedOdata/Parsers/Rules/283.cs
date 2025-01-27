@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _guidValueParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._guidValue> Instance { get; } = from _HEXDIG_1 in __GeneratedOdata.Parsers.Rules._HEXDIGParser.Instance.Repeat(8, 8)
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._guidValue> Instance { get; } = from _HEXDIG_1 in __GeneratedOdata.Parsers.Rules._HEXDIGParser.Instance.Repeat(8, 8)
 from _ʺx2Dʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx2DʺParser.Instance
 from _HEXDIG_2 in __GeneratedOdata.Parsers.Rules._HEXDIGParser.Instance.Repeat(4, 4)
 from _ʺx2Dʺ_2 in __GeneratedOdata.Parsers.Inners._ʺx2DʺParser.Instance

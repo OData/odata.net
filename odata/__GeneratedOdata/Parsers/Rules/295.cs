@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _timeOfDayValueParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._timeOfDayValue> Instance { get; } = from _hour_1 in __GeneratedOdata.Parsers.Rules._hourParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._timeOfDayValue> Instance { get; } = from _hour_1 in __GeneratedOdata.Parsers.Rules._hourParser.Instance
 from _ʺx3Aʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx3AʺParser.Instance
 from _minute_1 in __GeneratedOdata.Parsers.Rules._minuteParser.Instance
 from _ʺx3Aʺ_second_꘡ʺx2Eʺ_fractionalSeconds꘡_1 in __GeneratedOdata.Parsers.Inners._ʺx3Aʺ_second_꘡ʺx2Eʺ_fractionalSeconds꘡Parser.Instance.Optional()

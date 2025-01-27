@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Inners
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _quotationⲻmark_complexColProperty_quotationⲻmark_nameⲻseparator_complexColInUriParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Inners._quotationⲻmark_complexColProperty_quotationⲻmark_nameⲻseparator_complexColInUri> Instance { get; } = from _quotationⲻmark_1 in __GeneratedOdata.Parsers.Rules._quotationⲻmarkParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Inners._quotationⲻmark_complexColProperty_quotationⲻmark_nameⲻseparator_complexColInUri> Instance { get; } = from _quotationⲻmark_1 in __GeneratedOdata.Parsers.Rules._quotationⲻmarkParser.Instance
 from _complexColProperty_1 in __GeneratedOdata.Parsers.Rules._complexColPropertyParser.Instance
 from _quotationⲻmark_2 in __GeneratedOdata.Parsers.Rules._quotationⲻmarkParser.Instance
 from _nameⲻseparator_1 in __GeneratedOdata.Parsers.Rules._nameⲻseparatorParser.Instance

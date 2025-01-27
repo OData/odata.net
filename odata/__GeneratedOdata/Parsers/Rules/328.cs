@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _sridLiteralParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._sridLiteral> Instance { get; } = from _ʺx53x52x49x44ʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx53x52x49x44ʺParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._sridLiteral> Instance { get; } = from _ʺx53x52x49x44ʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx53x52x49x44ʺParser.Instance
 from _EQ_1 in __GeneratedOdata.Parsers.Rules._EQParser.Instance
 from _DIGIT_1 in __GeneratedOdata.Parsers.Rules._DIGITParser.Instance.Repeat(1, 5)
 from _SEMI_1 in __GeneratedOdata.Parsers.Rules._SEMIParser.Instance

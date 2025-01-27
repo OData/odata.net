@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _IPv4addressParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._IPv4address> Instance { get; } = from _decⲻoctet_1 in __GeneratedOdata.Parsers.Rules._decⲻoctetParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._IPv4address> Instance { get; } = from _decⲻoctet_1 in __GeneratedOdata.Parsers.Rules._decⲻoctetParser.Instance
 from _ʺx2Eʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx2EʺParser.Instance
 from _decⲻoctet_2 in __GeneratedOdata.Parsers.Rules._decⲻoctetParser.Instance
 from _ʺx2Eʺ_2 in __GeneratedOdata.Parsers.Inners._ʺx2EʺParser.Instance

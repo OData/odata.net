@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Inners
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _ʺx68x61x73x73x75x62x73x65x71x75x65x6Ex63x65ʺParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Inners._ʺx68x61x73x73x75x62x73x65x71x75x65x6Ex63x65ʺ> Instance { get; } = from _x68_1 in __GeneratedOdata.Parsers.Inners._x68Parser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Inners._ʺx68x61x73x73x75x62x73x65x71x75x65x6Ex63x65ʺ> Instance { get; } = from _x68_1 in __GeneratedOdata.Parsers.Inners._x68Parser.Instance
 from _x61_1 in __GeneratedOdata.Parsers.Inners._x61Parser.Instance
 from _x73_1 in __GeneratedOdata.Parsers.Inners._x73Parser.Instance
 from _x73_2 in __GeneratedOdata.Parsers.Inners._x73Parser.Instance

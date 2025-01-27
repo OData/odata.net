@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _complexPropertyInUriParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._complexPropertyInUri> Instance { get; } = from _quotationⲻmark_1 in __GeneratedOdata.Parsers.Rules._quotationⲻmarkParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._complexPropertyInUri> Instance { get; } = from _quotationⲻmark_1 in __GeneratedOdata.Parsers.Rules._quotationⲻmarkParser.Instance
 from _complexProperty_1 in __GeneratedOdata.Parsers.Rules._complexPropertyParser.Instance
 from _quotationⲻmark_2 in __GeneratedOdata.Parsers.Rules._quotationⲻmarkParser.Instance
 from _nameⲻseparator_1 in __GeneratedOdata.Parsers.Rules._nameⲻseparatorParser.Instance

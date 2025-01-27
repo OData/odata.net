@@ -1,14 +1,14 @@
 namespace __GeneratedOdata.Parsers.Inners
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTermParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm> Instance { get; } = (_OPEN_BWS_searchExpr_BWS_CLOSEParser.Instance).Or<__GeneratedOdata.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm>(_searchTermParser.Instance);
+        public static IParser<char, __GeneratedOdata.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm> Instance { get; } = (_OPEN_BWS_searchExpr_BWS_CLOSEParser.Instance).Or<char, __GeneratedOdata.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm>(_searchTermParser.Instance);
         
         public static class _OPEN_BWS_searchExpr_BWS_CLOSEParser
         {
-            public static Parser<__GeneratedOdata.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE> Instance { get; } = from _OPEN_1 in __GeneratedOdata.Parsers.Rules._OPENParser.Instance
+            public static IParser<char, __GeneratedOdata.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE> Instance { get; } = from _OPEN_1 in __GeneratedOdata.Parsers.Rules._OPENParser.Instance
 from _BWS_1 in __GeneratedOdata.Parsers.Rules._BWSParser.Instance
 from _searchExpr_1 in __GeneratedOdata.Parsers.Rules._searchExprParser.Instance
 from _BWS_2 in __GeneratedOdata.Parsers.Rules._BWSParser.Instance
@@ -18,7 +18,7 @@ select new __GeneratedOdata.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsea
         
         public static class _searchTermParser
         {
-            public static Parser<__GeneratedOdata.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._searchTerm> Instance { get; } = from _searchTerm_1 in __GeneratedOdata.Parsers.Rules._searchTermParser.Instance
+            public static IParser<char, __GeneratedOdata.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._searchTerm> Instance { get; } = from _searchTerm_1 in __GeneratedOdata.Parsers.Rules._searchTermParser.Instance
 select new __GeneratedOdata.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._searchTerm(_searchTerm_1);
         }
     }

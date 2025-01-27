@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _gtExprParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._gtExpr> Instance { get; } = from _RWS_1 in __GeneratedOdata.Parsers.Rules._RWSParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._gtExpr> Instance { get; } = from _RWS_1 in __GeneratedOdata.Parsers.Rules._RWSParser.Instance
 from _ʺx67x74ʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx67x74ʺParser.Instance
 from _RWS_2 in __GeneratedOdata.Parsers.Rules._RWSParser.Instance
 from _commonExpr_1 in __GeneratedOdata.Parsers.Rules._commonExprParser.Instance

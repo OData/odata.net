@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _geographyMultiPolygonParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._geographyMultiPolygon> Instance { get; } = from _geographyPrefix_1 in __GeneratedOdata.Parsers.Rules._geographyPrefixParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._geographyMultiPolygon> Instance { get; } = from _geographyPrefix_1 in __GeneratedOdata.Parsers.Rules._geographyPrefixParser.Instance
 from _SQUOTE_1 in __GeneratedOdata.Parsers.Rules._SQUOTEParser.Instance
 from _fullMultiPolygonLiteral_1 in __GeneratedOdata.Parsers.Rules._fullMultiPolygonLiteralParser.Instance
 from _SQUOTE_2 in __GeneratedOdata.Parsers.Rules._SQUOTEParser.Instance

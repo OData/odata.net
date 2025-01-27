@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _isolationParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._isolation> Instance { get; } = from _ʺx4Fx44x61x74x61x2Dʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx4Fx44x61x74x61x2DʺParser.Instance.Optional()
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._isolation> Instance { get; } = from _ʺx4Fx44x61x74x61x2Dʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx4Fx44x61x74x61x2DʺParser.Instance.Optional()
 from _ʺx49x73x6Fx6Cx61x74x69x6Fx6Eʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx49x73x6Fx6Cx61x74x69x6Fx6EʺParser.Instance
 from _ʺx3Aʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx3AʺParser.Instance
 from _OWS_1 in __GeneratedOdata.Parsers.Rules._OWSParser.Instance

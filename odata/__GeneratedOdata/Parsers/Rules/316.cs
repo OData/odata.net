@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _lineStringDataParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._lineStringData> Instance { get; } = from _OPEN_1 in __GeneratedOdata.Parsers.Rules._OPENParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._lineStringData> Instance { get; } = from _OPEN_1 in __GeneratedOdata.Parsers.Rules._OPENParser.Instance
 from _positionLiteral_1 in __GeneratedOdata.Parsers.Rules._positionLiteralParser.Instance
 from _ⲤCOMMA_positionLiteralↃ_1 in __GeneratedOdata.Parsers.Inners._ⲤCOMMA_positionLiteralↃParser.Instance.Repeat(1, null)
 from _CLOSE_1 in __GeneratedOdata.Parsers.Rules._CLOSEParser.Instance

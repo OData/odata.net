@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _dateTimeOffsetValueParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._dateTimeOffsetValue> Instance { get; } = from _year_1 in __GeneratedOdata.Parsers.Rules._yearParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._dateTimeOffsetValue> Instance { get; } = from _year_1 in __GeneratedOdata.Parsers.Rules._yearParser.Instance
 from _ʺx2Dʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx2DʺParser.Instance
 from _month_1 in __GeneratedOdata.Parsers.Rules._monthParser.Instance
 from _ʺx2Dʺ_2 in __GeneratedOdata.Parsers.Inners._ʺx2DʺParser.Instance

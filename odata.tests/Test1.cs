@@ -163,7 +163,11 @@
         public void OdataTest1()
         {
             var url = "https://graph.microsoft.com/v1.0/$metadata";
-            var urlCst = __GeneratedOdata.Parsers.Rules._odataUriParser.Instance.Parse(url);
+            if (!__GeneratedOdata.Parsers.Rules._odataUriParser.Instance.TryParse(url, out var urlCst))
+            {
+                throw new Exception("TODO");
+            }
+
             var stringBuilder = new StringBuilder();
             __GeneratedOdata.Trancsribers.Rules._odataUriTranscriber.Instance.Transcribe(urlCst, stringBuilder);
             var transcribed = stringBuilder.ToString();
@@ -174,7 +178,11 @@
         public void OdataTest2()
         {
             var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
-            var urlCst = __GeneratedOdata.Parsers.Rules._odataRelativeUriParser.Instance.Parse(url);
+            if (!__GeneratedOdata.Parsers.Rules._odataRelativeUriParser.Instance.TryParse(url, out var urlCst))
+            {
+                throw new Exception("TODO");
+            }
+
             var stringBuilder = new StringBuilder();
             __GeneratedOdata.Trancsribers.Rules._odataRelativeUriTranscriber.Instance.Transcribe(urlCst, stringBuilder);
             var transcribed = stringBuilder.ToString();

@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _URIParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._URI> Instance { get; } = from _scheme_1 in __GeneratedOdata.Parsers.Rules._schemeParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._URI> Instance { get; } = from _scheme_1 in __GeneratedOdata.Parsers.Rules._schemeParser.Instance
 from _ʺx3Aʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx3AʺParser.Instance
 from _hierⲻpart_1 in __GeneratedOdata.Parsers.Rules._hierⲻpartParser.Instance
 from _ʺx3Fʺ_query_1 in __GeneratedOdata.Parsers.Inners._ʺx3Fʺ_queryParser.Instance.Optional()

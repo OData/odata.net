@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _boundEntityFunctionCallParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._boundEntityFunctionCall> Instance { get; } = from _namespace_1 in __GeneratedOdata.Parsers.Rules._namespaceParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._boundEntityFunctionCall> Instance { get; } = from _namespace_1 in __GeneratedOdata.Parsers.Rules._namespaceParser.Instance
 from _ʺx2Eʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx2EʺParser.Instance
 from _entityFunction_1 in __GeneratedOdata.Parsers.Rules._entityFunctionParser.Instance
 from _functionParameters_1 in __GeneratedOdata.Parsers.Rules._functionParametersParser.Instance

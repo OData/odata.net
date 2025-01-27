@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _annotationInUriParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._annotationInUri> Instance { get; } = from _quotationⲻmark_1 in __GeneratedOdata.Parsers.Rules._quotationⲻmarkParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._annotationInUri> Instance { get; } = from _quotationⲻmark_1 in __GeneratedOdata.Parsers.Rules._quotationⲻmarkParser.Instance
 from _AT_1 in __GeneratedOdata.Parsers.Rules._ATParser.Instance
 from _namespace_1 in __GeneratedOdata.Parsers.Rules._namespaceParser.Instance
 from _ʺx2Eʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx2EʺParser.Instance

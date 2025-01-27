@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _numberInJSONParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._numberInJSON> Instance { get; } = from _ʺx2Dʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx2DʺParser.Instance.Optional()
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._numberInJSON> Instance { get; } = from _ʺx2Dʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx2DʺParser.Instance.Optional()
 from _int_1 in __GeneratedOdata.Parsers.Rules._intParser.Instance
 from _frac_1 in __GeneratedOdata.Parsers.Rules._fracParser.Instance.Optional()
 from _exp_1 in __GeneratedOdata.Parsers.Rules._expParser.Instance.Optional()

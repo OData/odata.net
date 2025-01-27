@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _geometryCollectionParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._geometryCollection> Instance { get; } = from _geometryPrefix_1 in __GeneratedOdata.Parsers.Rules._geometryPrefixParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._geometryCollection> Instance { get; } = from _geometryPrefix_1 in __GeneratedOdata.Parsers.Rules._geometryPrefixParser.Instance
 from _SQUOTE_1 in __GeneratedOdata.Parsers.Rules._SQUOTEParser.Instance
 from _fullCollectionLiteral_1 in __GeneratedOdata.Parsers.Rules._fullCollectionLiteralParser.Instance
 from _SQUOTE_2 in __GeneratedOdata.Parsers.Rules._SQUOTEParser.Instance

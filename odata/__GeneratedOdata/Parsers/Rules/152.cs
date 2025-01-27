@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _monthMethodCallExprParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._monthMethodCallExpr> Instance { get; } = from _ʺx6Dx6Fx6Ex74x68ʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx6Dx6Fx6Ex74x68ʺParser.Instance
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._monthMethodCallExpr> Instance { get; } = from _ʺx6Dx6Fx6Ex74x68ʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx6Dx6Fx6Ex74x68ʺParser.Instance
 from _OPEN_1 in __GeneratedOdata.Parsers.Rules._OPENParser.Instance
 from _BWS_1 in __GeneratedOdata.Parsers.Rules._BWSParser.Instance
 from _commonExpr_1 in __GeneratedOdata.Parsers.Rules._commonExprParser.Instance

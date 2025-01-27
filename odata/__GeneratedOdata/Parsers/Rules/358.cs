@@ -1,10 +1,10 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using Sprache;
+    using CombinatorParsingV2;
     
     public static class _includeAnnotationsPreferenceParser
     {
-        public static Parser<__GeneratedOdata.CstNodes.Rules._includeAnnotationsPreference> Instance { get; } = from _ʺx6Fx64x61x74x61x2Eʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx6Fx64x61x74x61x2EʺParser.Instance.Optional()
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._includeAnnotationsPreference> Instance { get; } = from _ʺx6Fx64x61x74x61x2Eʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx6Fx64x61x74x61x2EʺParser.Instance.Optional()
 from _ʺx69x6Ex63x6Cx75x64x65x2Dx61x6Ex6Ex6Fx74x61x74x69x6Fx6Ex73ʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx69x6Ex63x6Cx75x64x65x2Dx61x6Ex6Ex6Fx74x61x74x69x6Fx6Ex73ʺParser.Instance
 from _EQⲻh_1 in __GeneratedOdata.Parsers.Rules._EQⲻhParser.Instance
 from _DQUOTE_1 in __GeneratedOdata.Parsers.Rules._DQUOTEParser.Instance
