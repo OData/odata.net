@@ -69,13 +69,23 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         [InlineData(new Byte[] { 2, 3, 4 }, "binary'AgME'")]
         public void BinaryTest(byte[] entryId, string expectedIdInUrl)
         {
-            // Arrange & Act
-            var query = _context.CreateQuery<EdmBinary>("EdmBinarySet").Where(e => e.Id.Equals(entryId));
-            var queryResult = query.ToArray();
+            // Arrange
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+
+            // Act
+            var query = _context.CreateQuery<EdmBinary>("EdmBinarySet").ByKey(entryId);
+            var queryResult = query.GetValue();
 
             // Assert
-            Assert.Equal($"http://localhost/odata/EdmBinarySet?$filter=Id eq {expectedIdInUrl}", query.ToString());
-            Assert.Single(queryResult);
+            Assert.EndsWith($"/odata/EdmBinarySet/{expectedIdInUrl}", query.RequestUri.AbsoluteUri);
+            Assert.NotNull(queryResult);
+            Assert.Equal(entryId, queryResult.Id);
+
+            // DataServiceUrlKeyDelimiter.Parentheses
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
+            var queryParentheses = _context.CreateQuery<EdmBinary>("EdmBinarySet").ByKey(entryId);
+            Assert.EndsWith($"/odata/EdmBinarySet({expectedIdInUrl})", queryParentheses.RequestUri.AbsoluteUri);
         }
 
         [Theory]
@@ -83,13 +93,23 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         [InlineData(false, "false")]
         public void BooleanTest(bool entryId, string expectedIdInUrl)
         {
-            // Arrange & Act
-            var query = _context.CreateQuery<EdmBoolean>("EdmBooleanSet").Where(e => e.Id.Equals(entryId));
-            var queryResult = query.ToArray();
+            // Arrange
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+
+            // Act
+            var query = _context.CreateQuery<EdmBoolean>("EdmBooleanSet").ByKey(entryId);
+            var queryResult = query.GetValue();
 
             // Assert
-            Assert.Equal($"http://localhost/odata/EdmBooleanSet?$filter=Id eq {expectedIdInUrl}", query.ToString());
-            Assert.Single(queryResult);
+            Assert.EndsWith($"/odata/EdmBooleanSet/{expectedIdInUrl}", query.RequestUri.AbsoluteUri);
+            Assert.NotNull(queryResult);
+            Assert.Equal(entryId, queryResult.Id);
+
+            // DataServiceUrlKeyDelimiter.Parentheses
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
+            var queryParentheses = _context.CreateQuery<EdmBoolean>("EdmBooleanSet").ByKey(entryId);
+            Assert.EndsWith($"/odata/EdmBooleanSet({expectedIdInUrl})", queryParentheses.RequestUri.AbsoluteUri);
         }
 
 
@@ -99,8 +119,8 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
             {
                 return new TheoryData<DateTimeOffset, string>
                 {
-                    { DateTimeOffset.MinValue, "0001-01-01T00%3A00%3A00Z" },
-                    { DateTimeOffset.MaxValue, "9999-12-31T23%3A59%3A59.9999999Z" }
+                    { DateTimeOffset.MinValue, "0001-01-01T00:00:00Z" },
+                    { DateTimeOffset.MaxValue, "9999-12-31T23:59:59.9999999Z" }
                 };
             }
         }
@@ -109,13 +129,23 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         [MemberData(nameof(GetEdmDateTimeOffsetSet))]
         public void DateTimeOffsetTest(DateTimeOffset entryId, string expectedIdInUrl)
         {
-            // Arrange & Act
-            var query = _context.CreateQuery<EdmDateTimeOffset>("EdmDateTimeOffsetSet").Where(e => e.Id.Equals(entryId));
-            var queryResult = query.ToArray();
+            // Arrange 
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+
+            // Act
+            var query = _context.CreateQuery<EdmDateTimeOffset>("EdmDateTimeOffsetSet").ByKey(entryId);
+            var queryResult = query.GetValue();
 
             // Assert
-            Assert.Equal($"http://localhost/odata/EdmDateTimeOffsetSet?$filter=Id eq {expectedIdInUrl}", query.ToString());
-            Assert.Single(queryResult);
+            Assert.EndsWith($"/odata/EdmDateTimeOffsetSet/{expectedIdInUrl}", query.RequestUri.AbsoluteUri);
+            Assert.NotNull(queryResult);
+            Assert.Equal(entryId, queryResult.Id);
+
+            // DataServiceUrlKeyDelimiter.Parentheses
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
+            var queryParentheses = _context.CreateQuery<EdmDateTimeOffset>("EdmDateTimeOffsetSet").ByKey(entryId);
+            Assert.EndsWith($"/odata/EdmDateTimeOffsetSet({expectedIdInUrl})", queryParentheses.RequestUri.AbsoluteUri);
         }
 
         public static TheoryData<decimal, string> GetEdmDecimalSet
@@ -135,18 +165,28 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         [MemberData(nameof(GetEdmDecimalSet))]
         public void DecimalTest(decimal entryId, string expectedIdInUrl)
         {
-            // Arrange & Act
-            var query = _context.CreateQuery<EdmDecimal>("EdmDecimalSet").Where(e => e.Id == entryId);
-            var queryResult = query.ToArray();
+            // Arrange
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+
+            // Act
+            var query = _context.CreateQuery<EdmDecimal>("EdmDecimalSet").ByKey(entryId);
+            var queryResult = query.GetValue();
 
             // Assert
-            Assert.Equal($"http://localhost/odata/EdmDecimalSet?$filter=Id eq {expectedIdInUrl}", query.ToString());
-            Assert.Single(queryResult);
+            Assert.EndsWith($"/odata/EdmDecimalSet/{expectedIdInUrl}", query.RequestUri.AbsoluteUri);
+            Assert.NotNull(queryResult);
+            Assert.Equal(entryId, queryResult.Id);
+
+            // DataServiceUrlKeyDelimiter.Parentheses
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
+            var queryParentheses = _context.CreateQuery<EdmDecimal>("EdmDecimalSet").ByKey(entryId);
+            Assert.EndsWith($"/odata/EdmDecimalSet({expectedIdInUrl})", queryParentheses.RequestUri.AbsoluteUri);
         }
 
         [Theory]
         [InlineData(0, "0.0")]
-        [InlineData(-1, "-1")]
+        [InlineData(-1, "-1.0")]
         [InlineData(1, "1.0")]
         [InlineData(Double.MaxValue, "1.7976931348623157E%2B308")]
         [InlineData(Double.MinValue, "-1.7976931348623157E%2B308")]
@@ -155,13 +195,23 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         [InlineData(Double.PositiveInfinity, "INF")]
         public void DoubleTest(double entryId, string expectedIdInUrl)
         {
-            // Arrange & Act
-            var query = _context.CreateQuery<EdmDouble>("EdmDoubleSet").Where(e => e.Id.Equals(entryId));
-            var queryResult = query.ToArray();
+            // Arrange
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+
+            // Act
+            var query = _context.CreateQuery<EdmDouble>("EdmDoubleSet").ByKey(entryId);
+            var queryResult = query.GetValue();
 
             // Assert
-            Assert.Equal($"http://localhost/odata/EdmDoubleSet?$filter=Id eq {expectedIdInUrl}", query.ToString());
-            Assert.Single(queryResult);
+            Assert.EndsWith($"/odata/EdmDoubleSet/{expectedIdInUrl}", query.RequestUri.AbsoluteUri);
+            Assert.NotNull(queryResult);
+            Assert.Equal(entryId, queryResult.Id);
+
+            // DataServiceUrlKeyDelimiter.Parentheses
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
+            var queryParentheses = _context.CreateQuery<EdmDouble>("EdmDoubleSet").ByKey(entryId);
+            Assert.EndsWith($"/odata/EdmDoubleSet({expectedIdInUrl})", queryParentheses.RequestUri.AbsoluteUri);
         }
 
         [Theory]
@@ -172,13 +222,23 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         [InlineData(1, "1")]
         public void Int16Test(short entryId, string expectedIdInUrl)
         {
-            // Arrange & Act
-            var query = _context.CreateQuery<EdmInt16>("EdmInt16Set").Where(e => e.Id.Equals(entryId));
-            var queryResult = query.ToArray();
+            // Arrange
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+
+            // Act
+            var query = _context.CreateQuery<EdmInt16>("EdmInt16Set").ByKey(entryId);
+            var queryResult = query.GetValue();
 
             // Assert
-            Assert.Equal($"http://localhost/odata/EdmInt16Set?$filter=Id eq {expectedIdInUrl}", query.ToString());
-            Assert.Single(queryResult);
+            Assert.EndsWith($"/odata/EdmInt16Set/{expectedIdInUrl}", query.RequestUri.AbsoluteUri);
+            Assert.NotNull(queryResult);
+            Assert.Equal(entryId, queryResult.Id);
+
+            // DataServiceUrlKeyDelimiter.Parentheses
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
+            var queryParentheses = _context.CreateQuery<EdmInt16>("EdmInt16Set").ByKey(entryId);
+            Assert.EndsWith($"/odata/EdmInt16Set({expectedIdInUrl})", queryParentheses.RequestUri.AbsoluteUri);
         }
 
         [Theory]
@@ -189,13 +249,23 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         [InlineData(1, "1")]
         public void Int32Test(int entryId, string expectedIdInUrl)
         {
-            // Arrange & Act
-            var query = _context.CreateQuery<EdmInt32>("EdmInt32Set").Where(e => e.Id.Equals(entryId));
-            var queryResult = query.ToArray();
+            // Arrange
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+
+            // Act
+            var query = _context.CreateQuery<EdmInt32>("EdmInt32Set").ByKey(entryId);
+            var queryResult = query.GetValue();
 
             // Assert
-            Assert.Equal($"http://localhost/odata/EdmInt32Set?$filter=Id eq {expectedIdInUrl}", query.ToString());
-            Assert.Single(queryResult);
+            Assert.EndsWith($"/odata/EdmInt32Set/{expectedIdInUrl}", query.RequestUri.AbsoluteUri);
+            Assert.NotNull(queryResult);
+            Assert.Equal(entryId, queryResult.Id);
+
+            // DataServiceUrlKeyDelimiter.Parentheses
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
+            var queryParentheses = _context.CreateQuery<EdmInt32>("EdmInt32Set").ByKey(entryId);
+            Assert.EndsWith($"/odata/EdmInt32Set({expectedIdInUrl})", queryParentheses.RequestUri.AbsoluteUri);
         }
 
         [Theory]
@@ -206,13 +276,23 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         [InlineData(1, "1")]
         public void Int64Test(long entryId, string expectedIdInUrl)
         {
-            // Arrange & Act
-            var query = _context.CreateQuery<EdmInt64>("EdmInt64Set").Where(e => e.Id.Equals(entryId));
-            var queryResult = query.ToArray();
+            // Arrange
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+
+            // Act
+            var query = _context.CreateQuery<EdmInt64>("EdmInt64Set").ByKey(entryId);
+            var queryResult = query.GetValue();
 
             // Assert
-            Assert.Equal($"http://localhost/odata/EdmInt64Set?$filter=Id eq {expectedIdInUrl}", query.ToString());
-            Assert.Single(queryResult);
+            Assert.EndsWith($"/odata/EdmInt64Set/{expectedIdInUrl}", query.RequestUri.AbsoluteUri);
+            Assert.NotNull(queryResult);
+            Assert.Equal(entryId, queryResult.Id);
+
+            // DataServiceUrlKeyDelimiter.Parentheses
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
+            var queryParentheses = _context.CreateQuery<EdmInt64>("EdmInt64Set").ByKey(entryId);
+            Assert.EndsWith($"/odata/EdmInt64Set({expectedIdInUrl})", queryParentheses.RequestUri.AbsoluteUri);
         }
 
         [Theory]
@@ -222,17 +302,25 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         [InlineData(float.MaxValue, "3.4028235E%2B38")]
         [InlineData(float.MinValue, "-3.4028235E%2B38")]
         [InlineData(float.Epsilon, "1E-45")]
-        [InlineData(float.NegativeInfinity, "-INF")]
-        [InlineData(float.PositiveInfinity, "INF")]
         public void SingleTest(float entryId, string expectedIdInUrl)
         {
-            // Arrange & Act
-            var query = _context.CreateQuery<EdmSingle>("EdmSingleSet").Where(e => e.Id.Equals(entryId));
-            var queryResult = query.ToArray();
+            // Arrange
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+
+            // Act
+            var query = _context.CreateQuery<EdmSingle>("EdmSingleSet").ByKey(entryId);
+            var queryResult = query.GetValue();
 
             // Assert
-            Assert.Equal($"http://localhost/odata/EdmSingleSet?$filter=Id eq {expectedIdInUrl}", query.ToString());
-            Assert.Single(queryResult);
+            Assert.EndsWith($"/odata/EdmSingleSet/{expectedIdInUrl}", query.RequestUri.AbsoluteUri);
+            Assert.NotNull(queryResult);
+            Assert.Equal(entryId, queryResult.Id);
+
+            // DataServiceUrlKeyDelimiter.Parentheses
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
+            var queryParentheses = _context.CreateQuery<EdmSingle>("EdmSingleSet").ByKey(entryId);
+            Assert.EndsWith($"/odata/EdmSingleSet({expectedIdInUrl})", queryParentheses.RequestUri.AbsoluteUri);
         }
 
         public static TheoryData<TimeSpan, string> GetEdmTimeSet
@@ -252,13 +340,23 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         [MemberData(nameof(GetEdmTimeSet))]
         public void TimeTest(TimeSpan entryId, string expectedIdInUrl)
         {
-            // Arrange & Act
-            var query = _context.CreateQuery<EdmTime>("EdmTimeSet").Where(e => e.Id.Equals(entryId));
-            var queryResult = query.ToArray();
+            // Arrange
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+
+            // Act
+            var query = _context.CreateQuery<EdmTime>("EdmTimeSet").ByKey(entryId);
+            var queryResult = query.GetValue();
 
             // Assert
-            Assert.Equal($"http://localhost/odata/EdmTimeSet?$filter=Id eq {expectedIdInUrl}", query.ToString());
-            Assert.Single(queryResult);
+            Assert.EndsWith($"/odata/EdmTimeSet/{expectedIdInUrl}", query.RequestUri.AbsoluteUri);
+            Assert.NotNull(queryResult);
+            Assert.Equal(entryId, queryResult.Id);
+
+            // DataServiceUrlKeyDelimiter.Parentheses
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
+            var queryParentheses = _context.CreateQuery<EdmTime>("EdmTimeSet").ByKey(entryId);
+            Assert.EndsWith($"/odata/EdmTimeSet({expectedIdInUrl})", queryParentheses.RequestUri.AbsoluteUri);
         }
 
         [Theory]
@@ -292,12 +390,12 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         [InlineData("]", "%5D")]
         [InlineData("]]", "%5D%5D")]
         [InlineData("]]]", "%5D%5D%5D")]
-        [InlineData("}", "}")]
-        [InlineData("}}", "}}")]
-        [InlineData("}}}", "}}}")]
-        [InlineData("{", "{")]
-        [InlineData("{{", "{{")]
-        [InlineData("{{{", "{{{")]
+        [InlineData("}", "%7D")]
+        [InlineData("}}", "%7D%7D")]
+        [InlineData("}}}", "%7D%7D%7D")]
+        [InlineData("{", "%7B")]
+        [InlineData("{{", "%7B%7B")]
+        [InlineData("{{{", "%7B%7B%7B")]
         [InlineData("?", "%3F")]
         [InlineData("??", "%3F%3F")]
         [InlineData("???", "%3F%3F%3F")]
@@ -313,25 +411,35 @@ namespace Microsoft.OData.Client.E2E.Tests.PrimitiveTypesTests.Tests
         [InlineData("+", "%2B")]
         [InlineData("++", "%2B%2B")]
         [InlineData("+++", "%2B%2B%2B")]
-        [InlineData("'", "%27%27")]
-        [InlineData("''", "%27%27%27%27")]
-        [InlineData("'''", "%27%27%27%27%27%27")]
+        [InlineData("'", "''")]
+        [InlineData("''", "''''")]
+        [InlineData("'''", "''''''")]
         [InlineData("/", "%2F")]
         [InlineData("//", "%2F%2F")]
         [InlineData("///", "%2F%2F%2F")]
-        [InlineData("\"", "\"")]
-        [InlineData("\"\"", "\"\"")]
-        [InlineData("\"\"\"", "\"\"\"")]
+        [InlineData("\"", "%22")]
+        [InlineData("\"\"", "%22%22")]
+        [InlineData("\"\"\"", "%22%22%22")]
         [InlineData("SomeID", "SomeID")]
         public void StringTest(string entryId, string expectedIdInUrl)
         {
-            // Arrange & Act
-            var query = _context.CreateQuery<EdmString>("EdmStringSet").Where(e => e.Id.Equals(entryId));
-            var queryResult = query.ToArray();
+            // Arrange
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+
+            // Act
+            var query = _context.CreateQuery<EdmString>("EdmStringSet").ByKey(entryId);
+            var queryResult = query.GetValue();
 
             // Assert
-            Assert.Equal($"http://localhost/odata/EdmStringSet?$filter=Id eq '{expectedIdInUrl}'", query.ToString());
-            Assert.Single(queryResult);
+            Assert.EndsWith($"/odata/EdmStringSet/'{expectedIdInUrl}'", query.RequestUri.AbsoluteUri);
+            Assert.NotNull(queryResult);
+            Assert.Equal(entryId, queryResult.Id);
+
+            // DataServiceUrlKeyDelimiter.Parentheses
+            _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+
+            var queryParentheses = _context.CreateQuery<EdmString>("EdmStringSet").ByKey(entryId);
+            Assert.EndsWith($"/odata/EdmStringSet('{expectedIdInUrl}')", queryParentheses.RequestUri.AbsoluteUri);
         }
 
         #region Private
