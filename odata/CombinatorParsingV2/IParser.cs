@@ -4,7 +4,7 @@
     
     public interface IParser<TToken, out TParsed>
     {
-        IOutput<TToken, TParsed> Parse(IInput<TToken> input);
+        IOutput<TToken, TParsed> Parse(IInput<TToken>? input);
     }
 
     public interface IInput<out TToken> //// TODO make a struct an use `in` parameter for `iparser.parse` method?

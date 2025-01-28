@@ -20,8 +20,13 @@
                 this.comparer = comparer;
             }
 
-            public IOutput<TToken, TParsed> Parse(IInput<TToken> input)
+            public IOutput<TToken, TParsed> Parse(IInput<TToken>? input)
             {
+                if (input == null)
+                {
+                    return Output.Create(false, default(TParsed)!, input);
+                }
+
                 if (this.comparer.Equals(input.Current, this.parsed))
                 {
                     return Output.Create(true, this.parsed, input.Next());

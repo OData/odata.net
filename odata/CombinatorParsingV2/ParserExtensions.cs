@@ -46,7 +46,7 @@
                 return parser.AtLeast(minimum.Value);
             }
 
-            return parser.Range(minimum.Value, maximum.Value);
+            return parser.Between(minimum.Value, maximum.Value);
         }
 
         public static IParser<TToken, TParsed> Or<TToken, TParsed>(
@@ -67,7 +67,7 @@
                 this.second = second;
             }
 
-            public IOutput<TToken, TParsed> Parse(IInput<TToken> input)
+            public IOutput<TToken, TParsed> Parse(IInput<TToken>? input)
             {
                 var firstOutput = this.first.Parse(input);
                 if (firstOutput.Success)
@@ -102,7 +102,7 @@
                 this.parser = parser;
             }
 
-            public IOutput<TToken, IEnumerable<TParsed>> Parse(IInput<TToken> input)
+            public IOutput<TToken, IEnumerable<TParsed>> Parse(IInput<TToken>? input)
             {
                 var parsed = new List<TParsed>();
                 while (true)
@@ -115,10 +115,10 @@
 
                     //// TODO is lazy evaluation a consideration here
                     parsed.Add(output.Parsed);
-                    if (output.Remainder == null)
+                    /*if (output.Remainder == null)
                     {
-                        return Output.Create(true, parsed, input);
-                    }
+                        return Output.Create(true, parsed, output.Remainder); //// TODO output.reaminder?
+                    }*/
 
                     input = output.Remainder;
                 }
@@ -143,7 +143,7 @@
                 this.count = count;
             }
 
-            public IOutput<TToken, IEnumerable<TParsed>> Parse(IInput<TToken> input)
+            public IOutput<TToken, IEnumerable<TParsed>> Parse(IInput<TToken>? input)
             {
                 var output = this.parser.AtMost(this.count).Parse(input);
                 if (!output.Success)
@@ -178,7 +178,7 @@
                 this.maximum = maximum;
             }
 
-            public IOutput<TToken, IEnumerable<TParsed>> Parse(IInput<TToken> input)
+            public IOutput<TToken, IEnumerable<TParsed>> Parse(IInput<TToken>? input)
             {
                 var parsed = new List<TParsed>();
                 for (int i = 0; i < this.maximum; ++i)
@@ -190,10 +190,10 @@
                     }
 
                     parsed.Add(output.Parsed);
-                    if (output.Remainder == null)
+                    /*if (output.Remainder == null)
                     {
-                        return Output.Create(true, parsed, input);
-                    }
+                        return Output.Create(true, parsed, output.Remainder); //// TODO output.reaminder?
+                    }*/
 
                     input = output.Remainder;
                 }
@@ -221,7 +221,7 @@
                 this.minimum = minimum;
             }
 
-            public IOutput<TToken, IEnumerable<TParsed>> Parse(IInput<TToken> input)
+            public IOutput<TToken, IEnumerable<TParsed>> Parse(IInput<TToken>? input)
             {
                 var parsed = new List<TParsed>();
                 for (int i = 0; i < this.minimum; ++i)
@@ -234,10 +234,10 @@
 
                     parsed.Add(output.Parsed);
 
-                    if (output.Remainder == null)
+                    /*if (output.Remainder == null)
                     {
                         return Output.Create(false, Enumerable.Empty<TParsed>(), input);
-                    }
+                    }*/
 
                     input = output.Remainder;
                 }
@@ -252,10 +252,10 @@
 
                     parsed.Add(output.Parsed); //// TODO fix this everywhere
 
-                    if (output.Remainder == null)
+                    /*if (output.Remainder == null)
                     {
                         return Output.Create(true, parsed, output.Remainder);
-                    }
+                    }*/
 
                     input = output.Remainder;
                 }
@@ -277,21 +277,21 @@
             }
         }
 
-        public static IParser<TToken, IEnumerable<TParsed>> Range<TToken, TParsed>(
+        public static IParser<TToken, IEnumerable<TParsed>> Between<TToken, TParsed>(
             this IParser<TToken, TParsed> parser,
             int minimum, 
             int maximum)
         {
-            return new RangeParser<TToken, TParsed>(parser, minimum, maximum);
+            return new BetweenParser<TToken, TParsed>(parser, minimum, maximum);
         }
 
-        private sealed class RangeParser<TToken, TParsed> : IParser<TToken, IEnumerable<TParsed>>
+        private sealed class BetweenParser<TToken, TParsed> : IParser<TToken, IEnumerable<TParsed>>
         {
             private readonly IParser<TToken, TParsed> parser;
             private readonly int minimum;
             private readonly int maximum;
 
-            public RangeParser(IParser<TToken, TParsed> parser, int minimum, int maximum)
+            public BetweenParser(IParser<TToken, TParsed> parser, int minimum, int maximum)
             {
                 //// TODO nail down if `maximum` is inclusive or exclusive, and then propogate that to the `helperranged` classes in the cst nodess
                 //// TODO it's implemented as inclusive
@@ -300,9 +300,48 @@
                 this.maximum = maximum;
             }
 
-            public IOutput<TToken, IEnumerable<TParsed>> Parse(IInput<TToken> input)
+            public IOutput<TToken, IEnumerable<TParsed>> Parse(IInput<TToken>? input)
             {
-                var output = this.parser.Exactly(this.minimum).Parse(input);
+                var parsed = new List<TParsed>();
+
+                int count;
+                for (count = 0; count < this.minimum; ++count)
+                {
+                    var output = this.parser.Parse(input);
+                    if (!output.Success)
+                    {
+                        return Output.Create(false, Enumerable.Empty<TParsed>(), input);
+                    }
+
+                    parsed.Add(output.Parsed);
+                    /*if (output.Remainder == null)
+                    {
+                        return Output.Create(false, Enumerable.Empty<TParsed>(), input);
+                    }*/
+
+                    input = output.Remainder;
+                }
+
+                for (; count < this.maximum; ++count)
+                {
+                    var output = this.parser.Parse(input);
+                    if (!output.Success)
+                    {
+                        return Output.Create(true, parsed, input);
+                    }
+
+                    parsed.Add(output.Parsed);
+                    /*if (output.Remainder == null)
+                    {
+                        return Output.Create(true, parsed, output.Remainder);
+                    }*/
+
+                    input = output.Remainder;
+                }
+
+                return Output.Create(true, parsed, input);
+
+                /*var output = this.parser.Exactly(this.minimum).Parse(input);
                 if (!output.Success)
                 {
                     return output;
@@ -315,7 +354,7 @@
 
                 output = this.parser.AtMost(this.maximum - this.minimum).Parse(output.Remainder);
 
-                return output;
+                return output;*/
             }
         }
 
@@ -373,7 +412,7 @@
                 this.parser = parser;
             }
 
-            public IOutput<TToken, IOption<TParsed>> Parse(IInput<TToken> input)
+            public IOutput<TToken, IOption<TParsed>> Parse(IInput<TToken>? input)
             {
                 var output = this.parser.Parse(input);
                 if (!output.Success)
@@ -409,7 +448,7 @@
                 this.resultSelector = resultSelector;
             }
 
-            public IOutput<TToken, TResult> Parse(IInput<TToken> input)
+            public IOutput<TToken, TResult> Parse(IInput<TToken>? input)
             {
                 var output = this.parser.Parse(input);
                 if (!output.Success)
@@ -417,9 +456,13 @@
                     return Output.Create(false, default(TResult)!, input);
                 }
 
-                if (output.Remainder == null)
+                /*if (output.Remainder == null)
                 {
                     return Output.Create(false, default(TResult)!, input);
+                }*/
+
+                if (output.Remainder == null)
+                {
                 }
 
                 var subParser = this.parserSelector(output.Parsed);
@@ -454,7 +497,7 @@
                 this.selector = selector;
             }
 
-            public IOutput<TToken, TResult> Parse(IInput<TToken> input)
+            public IOutput<TToken, TResult> Parse(IInput<TToken>? input)
             {
                 var output = this.parser.Parse(input);
                 if (!output.Success)
