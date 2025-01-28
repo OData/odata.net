@@ -5,18 +5,19 @@ namespace __GeneratedOdata.Parsers.Rules
     
     public static class _resourcePathParser
     {
-        public static IParser<char, __GeneratedOdata.CstNodes.Rules._resourcePath> Instance { get; } = (_entitySetName_꘡collectionNavigation꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_singletonEntity_꘡singleNavigation꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_actionImportCallParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_entityColFunctionImportCall_꘡collectionNavigation꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_entityFunctionImportCall_꘡singleNavigation꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_complexColFunctionImportCall_꘡complexColPath꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_complexFunctionImportCall_꘡complexPath꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_primitiveColFunctionImportCall_꘡primitiveColPath꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_primitiveFunctionImportCall_꘡primitivePath꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_functionImportCallNoParensParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_crossjoinParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡Parser.Instance);
-            //// PERF _entitySetName_꘡collectionNavigation꘡Parser.Instance;
+        /*public static IParser<char, __GeneratedOdata.CstNodes.Rules._resourcePath> Instance { get; } = (_entitySetName_꘡collectionNavigation꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_singletonEntity_꘡singleNavigation꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_actionImportCallParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_entityColFunctionImportCall_꘡collectionNavigation꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_entityFunctionImportCall_꘡singleNavigation꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_complexColFunctionImportCall_꘡complexColPath꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_complexFunctionImportCall_꘡complexPath꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_primitiveColFunctionImportCall_꘡primitiveColPath꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_primitiveFunctionImportCall_꘡primitivePath꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_functionImportCallNoParensParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_crossjoinParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._resourcePath>(_ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡Parser.Instance);
+        */
+        //// PERF
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._resourcePath> Instance { get; } = _entitySetName_꘡collectionNavigation꘡Parser.Instance;
 
         public static class _entitySetName_꘡collectionNavigation꘡Parser
         {
-            public static IParser<char, __GeneratedOdata.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡> Instance { get; } = from _entitySetName_1 in __GeneratedOdata.Parsers.Rules._entitySetNameParser.Instance
+            /*public static IParser<char, __GeneratedOdata.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡> Instance { get; } = from _entitySetName_1 in __GeneratedOdata.Parsers.Rules._entitySetNameParser.Instance
 from _collectionNavigation_1 in __GeneratedOdata.Parsers.Rules._collectionNavigationParser.Instance.Optional()
 select new __GeneratedOdata.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡(_entitySetName_1, _collectionNavigation_1.GetOrElse(null));
-
+            */
             //// PERF
-            /*public static IParser<char, __GeneratedOdata.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡> Instance { get; } =
-                new Parser();*/
+            public static IParser<char, __GeneratedOdata.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡> Instance { get; } = new Parser();
 
             private sealed class Parser : IParser<char, __GeneratedOdata.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡>
             {

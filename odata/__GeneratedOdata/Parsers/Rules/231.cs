@@ -5,11 +5,11 @@ namespace __GeneratedOdata.Parsers.Rules
     
     public static class _entitySetNameParser
     {
-        public static IParser<char, __GeneratedOdata.CstNodes.Rules._entitySetName> Instance { get; } = from _odataIdentifier_1 in __GeneratedOdata.Parsers.Rules._odataIdentifierParser.Instance
+        /*public static IParser<char, __GeneratedOdata.CstNodes.Rules._entitySetName> Instance { get; } = from _odataIdentifier_1 in __GeneratedOdata.Parsers.Rules._odataIdentifierParser.Instance
 select new __GeneratedOdata.CstNodes.Rules._entitySetName(_odataIdentifier_1);
-
+        */
         //// PERF
-        //// public static IParser<char, __GeneratedOdata.CstNodes.Rules._entitySetName> Instance { get; } = new Parser();
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._entitySetName> Instance { get; } = new Parser();
 
         private sealed class Parser : IParser<char, __GeneratedOdata.CstNodes.Rules._entitySetName>
         {
