@@ -24,11 +24,11 @@ namespace __GeneratedOdata.Parsers.Rules
                 public IOutput<char, _collectionNavPath._keyPredicate_꘡singleNavigation꘡> Parse(IInput<char>? input)
                 {
                     var _keyPredicate_1 = __GeneratedOdata.Parsers.Rules._keyPredicateParser.Instance.Parse(input);
-                    var _singleNavigation_1 = __GeneratedOdata.Parsers.Rules._singleNavigationParser.Instance.Optional().Parse(_keyPredicate_1.Remainder);
+                    ////var _singleNavigation_1 = __GeneratedOdata.Parsers.Rules._singleNavigationParser.Instance.Optional().Parse(_keyPredicate_1.Remainder);
                     return Output.Create(
                         true, 
-                        new __GeneratedOdata.CstNodes.Rules._collectionNavPath._keyPredicate_꘡singleNavigation꘡(_keyPredicate_1.Parsed, _singleNavigation_1.Parsed.GetOrElse(null)),
-                        _singleNavigation_1.Remainder);
+                        new __GeneratedOdata.CstNodes.Rules._collectionNavPath._keyPredicate_꘡singleNavigation꘡(_keyPredicate_1.Parsed, null),
+                        _keyPredicate_1.Remainder);
                 }
             }
         }
