@@ -1,4 +1,6 @@
-﻿namespace CombinatorParsingV2
+﻿using __GeneratedOdata.CstNodes.Inners;
+
+namespace CombinatorParsingV2
 {
     //// TODO covariance and contravariance
     
