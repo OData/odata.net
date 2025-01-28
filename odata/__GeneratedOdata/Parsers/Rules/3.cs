@@ -7,48 +7,287 @@ namespace __GeneratedOdata.Parsers.Rules
 
     public static class _odataRelativeUriParser
     {
-        public static IParser<char, __GeneratedOdata.CstNodes.Rules._odataRelativeUri> Instance { get; } = ////(_ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._odataRelativeUri>(_ʺx24x65x6Ex74x69x74x79ʺ_ʺx3Fʺ_entityOptionsParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._odataRelativeUri>(_ʺx24x65x6Ex74x69x74x79ʺ_ʺx2Fʺ_qualifiedEntityTypeName_ʺx3Fʺ_entityCastOptionsParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._odataRelativeUri>(_ʺx24x6Dx65x74x61x64x61x74x61ʺ_꘡ʺx3Fʺ_metadataOptions꘡_꘡context꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._odataRelativeUri>(_resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance);
-            new Parser();
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._odataRelativeUri> Instance { get; } = (_ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._odataRelativeUri>(_ʺx24x65x6Ex74x69x74x79ʺ_ʺx3Fʺ_entityOptionsParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._odataRelativeUri>(_ʺx24x65x6Ex74x69x74x79ʺ_ʺx2Fʺ_qualifiedEntityTypeName_ʺx3Fʺ_entityCastOptionsParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._odataRelativeUri>(_ʺx24x6Dx65x74x61x64x61x74x61ʺ_꘡ʺx3Fʺ_metadataOptions꘡_꘡context꘡Parser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._odataRelativeUri>(_resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance);
+            ////new Parser();
 
         private sealed class Parser : IParser<char, __GeneratedOdata.CstNodes.Rules._odataRelativeUri>
         {
+            private static _odataIdentifier Users = 
+                new _odataIdentifier(
+                    new _identifierLeadingCharacter._ALPHA(
+                        new _ALPHA._Ⰳx61ⲻ7A(
+                            new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._75(
+                                CstNodes.Inners._7.Instance,
+                                CstNodes.Inners._5.Instance))),
+                    new CstNodes.Inners.HelperRangedAtMost127<_identifierCharacter>(
+                        new[]
+                        {
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._73(
+                                        CstNodes.Inners._7.Instance,
+                                        CstNodes.Inners._3.Instance))),
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._65(
+                                        CstNodes.Inners._6.Instance,
+                                        CstNodes.Inners._5.Instance))),
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._72(
+                                        CstNodes.Inners._7.Instance,
+                                        CstNodes.Inners._2.Instance))),
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._73(
+                                        CstNodes.Inners._7.Instance,
+                                        CstNodes.Inners._3.Instance))),
+                        }));
+
+            private static _ʺx2Fʺ_keyPathLiteral MyId =
+                new CstNodes.Inners._ʺx2Fʺ_keyPathLiteral(
+                    new CstNodes.Inners._ʺx2Fʺ(
+                        CstNodes.Inners._x2F.Instance),
+                    new _keyPathLiteral(
+                        new[]
+                        {
+                            new _pchar._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._6D(
+                                            CstNodes.Inners._6.Instance,
+                                            CstNodes.Inners._D.Instance)))),
+                            new _pchar._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._79(
+                                            CstNodes.Inners._7.Instance,
+                                            CstNodes.Inners._9.Instance)))),
+                            new _pchar._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._69(
+                                            CstNodes.Inners._6.Instance,
+                                            CstNodes.Inners._9.Instance)))),
+                            new _pchar._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._64(
+                                            CstNodes.Inners._6.Instance,
+                                            CstNodes.Inners._4.Instance)))),
+                        }));
+
+            private static _odataIdentifier Calendar =
+                new _odataIdentifier(
+                    new _identifierLeadingCharacter._ALPHA(
+                        new _ALPHA._Ⰳx61ⲻ7A(
+                            new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._63(
+                                CstNodes.Inners._6.Instance,
+                                CstNodes.Inners._3.Instance))),
+                    new CstNodes.Inners.HelperRangedAtMost127<_identifierCharacter>(
+                        new[]
+                        {
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._61(
+                                        CstNodes.Inners._6.Instance,
+                                        CstNodes.Inners._1.Instance))),
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._6C(
+                                        CstNodes.Inners._6.Instance,
+                                        CstNodes.Inners._C.Instance))),
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._65(
+                                        CstNodes.Inners._6.Instance,
+                                        CstNodes.Inners._5.Instance))),
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._6E(
+                                        CstNodes.Inners._6.Instance,
+                                        CstNodes.Inners._E.Instance))),
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._64(
+                                        CstNodes.Inners._6.Instance,
+                                        CstNodes.Inners._4.Instance))),
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._61(
+                                        CstNodes.Inners._6.Instance,
+                                        CstNodes.Inners._1.Instance))),
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._72(
+                                        CstNodes.Inners._7.Instance,
+                                        CstNodes.Inners._2.Instance))),
+                        }));
+
+            private static _odataIdentifier Events =
+                new _odataIdentifier(
+                    new _identifierLeadingCharacter._ALPHA(
+                        new _ALPHA._Ⰳx61ⲻ7A(
+                            new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._65(
+                                CstNodes.Inners._6.Instance,
+                                CstNodes.Inners._5.Instance))),
+                    new CstNodes.Inners.HelperRangedAtMost127<_identifierCharacter>(
+                        new[]
+                        {
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._76(
+                                        CstNodes.Inners._7.Instance,
+                                        CstNodes.Inners._6.Instance))),
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._65(
+                                        CstNodes.Inners._6.Instance,
+                                        CstNodes.Inners._5.Instance))),
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._6E(
+                                        CstNodes.Inners._6.Instance,
+                                        CstNodes.Inners._E.Instance))),
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._74(
+                                        CstNodes.Inners._7.Instance,
+                                        CstNodes.Inners._4.Instance))),
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._73(
+                                        CstNodes.Inners._7.Instance,
+                                        CstNodes.Inners._3.Instance))),
+                        }));
+
+            private static CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺ Filter =
+                new CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺ(
+                    CstNodes.Inners._x24.Instance,
+                    CstNodes.Inners._x66.Instance,
+                    CstNodes.Inners._x69.Instance,
+                    CstNodes.Inners._x6C.Instance,
+                    CstNodes.Inners._x74.Instance,
+                    CstNodes.Inners._x65.Instance,
+                    CstNodes.Inners._x72.Instance);
+
+            private static _odataIdentifier Id =
+                new _odataIdentifier(
+                    new _identifierLeadingCharacter._ALPHA(
+                        new _ALPHA._Ⰳx61ⲻ7A(
+                            new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._69(
+                                CstNodes.Inners._6.Instance,
+                                CstNodes.Inners._9.Instance))),
+                    new CstNodes.Inners.HelperRangedAtMost127<_identifierCharacter>(
+                        new[]
+                        {
+                            new _identifierCharacter._ALPHA(
+                                new _ALPHA._Ⰳx61ⲻ7A(
+                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._64(
+                                        CstNodes.Inners._6.Instance,
+                                        CstNodes.Inners._4.Instance))),
+                        }));
+
+            private static System.Collections.Generic.IEnumerable<__GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ> ThisIsATest =
+                new[]
+                {
+                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
+                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
+                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._74(
+                                            _7.Instance,
+                                            _4.Instance)))))),
+                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
+                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
+                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._68(
+                                            _6.Instance,
+                                            _8.Instance)))))),
+                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
+                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
+                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._69(
+                                            _6.Instance,
+                                            _9.Instance)))))),
+                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
+                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
+                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._73(
+                                            _7.Instance,
+                                            _3.Instance)))))),
+                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
+                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
+                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._69(
+                                            _6.Instance,
+                                            _9.Instance)))))),
+                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
+                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
+                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._73(
+                                            _7.Instance,
+                                            _3.Instance)))))),
+                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
+                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
+                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._61(
+                                            _6.Instance,
+                                            _1.Instance)))))),
+                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
+                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
+                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._74(
+                                            _7.Instance,
+                                            _4.Instance)))))),
+                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
+                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
+                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._65(
+                                            _6.Instance,
+                                            _5.Instance)))))),
+                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
+                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
+                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._73(
+                                            _7.Instance,
+                                            _3.Instance)))))),
+                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
+                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
+                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
+                                new _unreserved._ALPHA(
+                                    new _ALPHA._Ⰳx61ⲻ7A(
+                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._74(
+                                            _7.Instance,
+                                            _4.Instance)))))),
+                };
+
             public IOutput<char, _odataRelativeUri> Parse(IInput<char>? input)
             {
-                return Output.Create(
-                    true,
+                var node =
                     new _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡(
                         new _resourcePath._entitySetName_꘡collectionNavigation꘡(
                             new _entitySetName(
-                                new _odataIdentifier(
-                                    new _identifierLeadingCharacter._ALPHA(
-                                        new _ALPHA._Ⰳx61ⲻ7A(
-                                            new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._75(
-                                                CstNodes.Inners._7.Instance,
-                                                CstNodes.Inners._5.Instance))),
-                                    new CstNodes.Inners.HelperRangedAtMost127<_identifierCharacter>(
-                                        new[]
-                                        {
-                                            new _identifierCharacter._ALPHA(
-                                                new _ALPHA._Ⰳx61ⲻ7A(
-                                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._73(
-                                                        CstNodes.Inners._7.Instance,
-                                                        CstNodes.Inners._3.Instance))),
-                                            new _identifierCharacter._ALPHA(
-                                                new _ALPHA._Ⰳx61ⲻ7A(
-                                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._65(
-                                                        CstNodes.Inners._6.Instance,
-                                                        CstNodes.Inners._5.Instance))),
-                                            new _identifierCharacter._ALPHA(
-                                                new _ALPHA._Ⰳx61ⲻ7A(
-                                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._72(
-                                                        CstNodes.Inners._7.Instance,
-                                                        CstNodes.Inners._2.Instance))),
-                                            new _identifierCharacter._ALPHA(
-                                                new _ALPHA._Ⰳx61ⲻ7A(
-                                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._73(
-                                                        CstNodes.Inners._7.Instance,
-                                                        CstNodes.Inners._3.Instance))),
-                                        }))),
+                                Users),
                             new _collectionNavigation(
                                 null,
                                 new _collectionNavPath._keyPredicate_꘡singleNavigation꘡(
@@ -58,37 +297,7 @@ namespace __GeneratedOdata.Parsers.Rules
                                                 new[]
                                                 {
                                                     new CstNodes.Inners._Ⲥʺx2Fʺ_keyPathLiteralↃ(
-                                                        new CstNodes.Inners._ʺx2Fʺ_keyPathLiteral(
-                                                            new CstNodes.Inners._ʺx2Fʺ(
-                                                                CstNodes.Inners._x2F.Instance),
-                                                            new _keyPathLiteral(
-                                                                new[]
-                                                                {
-                                                                    new _pchar._unreserved(
-                                                                        new _unreserved._ALPHA(
-                                                                            new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._6D(
-                                                                                    CstNodes.Inners._6.Instance,
-                                                                                    CstNodes.Inners._D.Instance)))),
-                                                                    new _pchar._unreserved(
-                                                                        new _unreserved._ALPHA(
-                                                                            new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._79(
-                                                                                    CstNodes.Inners._7.Instance,
-                                                                                    CstNodes.Inners._9.Instance)))),
-                                                                    new _pchar._unreserved(
-                                                                        new _unreserved._ALPHA(
-                                                                            new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._69(
-                                                                                    CstNodes.Inners._6.Instance,
-                                                                                    CstNodes.Inners._9.Instance)))),
-                                                                    new _pchar._unreserved(
-                                                                        new _unreserved._ALPHA(
-                                                                            new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._64(
-                                                                                    CstNodes.Inners._6.Instance,
-                                                                                    CstNodes.Inners._4.Instance)))),
-                                                                }))),
+                                                        MyId)
                                                 }))),
                                     new _singleNavigation(
                                         null,
@@ -97,51 +306,7 @@ namespace __GeneratedOdata.Parsers.Rules
                                                 CstNodes.Inners._x2F.Instance),
                                             new _propertyPath._entityNavigationProperty_꘡singleNavigation꘡(
                                                 new _entityNavigationProperty(
-                                                    new _odataIdentifier(
-                                                        new _identifierLeadingCharacter._ALPHA(
-                                                            new _ALPHA._Ⰳx61ⲻ7A(
-                                                                new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._63(
-                                                                    CstNodes.Inners._6.Instance,
-                                                                    CstNodes.Inners._3.Instance))),
-                                                        new CstNodes.Inners.HelperRangedAtMost127<_identifierCharacter>(
-                                                            new[]
-                                                            {
-                                                                new _identifierCharacter._ALPHA(
-                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._61(
-                                                                            CstNodes.Inners._6.Instance,
-                                                                            CstNodes.Inners._1.Instance))),
-                                                                new _identifierCharacter._ALPHA(
-                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._6C(
-                                                                            CstNodes.Inners._6.Instance,
-                                                                            CstNodes.Inners._C.Instance))),
-                                                                new _identifierCharacter._ALPHA(
-                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._65(
-                                                                            CstNodes.Inners._6.Instance,
-                                                                            CstNodes.Inners._5.Instance))),
-                                                                new _identifierCharacter._ALPHA(
-                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._6E(
-                                                                            CstNodes.Inners._6.Instance,
-                                                                            CstNodes.Inners._E.Instance))),
-                                                                new _identifierCharacter._ALPHA(
-                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._64(
-                                                                            CstNodes.Inners._6.Instance,
-                                                                            CstNodes.Inners._4.Instance))),
-                                                                new _identifierCharacter._ALPHA(
-                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._61(
-                                                                            CstNodes.Inners._6.Instance,
-                                                                            CstNodes.Inners._1.Instance))),
-                                                                new _identifierCharacter._ALPHA(
-                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._72(
-                                                                            CstNodes.Inners._7.Instance,
-                                                                            CstNodes.Inners._2.Instance))),
-                                                            }))),
+                                                    Calendar),
                                                 new _singleNavigation(
                                                     null,
                                                     new __GeneratedOdata.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue._ʺx2Fʺ_propertyPath(
@@ -149,41 +314,7 @@ namespace __GeneratedOdata.Parsers.Rules
                                                             CstNodes.Inners._x2F.Instance),
                                                         new _propertyPath._entityColNavigationProperty_꘡collectionNavigation꘡(
                                                             new _entityColNavigationProperty(
-                                                                new _odataIdentifier(
-                                                                    new _identifierLeadingCharacter._ALPHA(
-                                                                        new _ALPHA._Ⰳx61ⲻ7A(
-                                                                            new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._65(
-                                                                                CstNodes.Inners._6.Instance,
-                                                                                CstNodes.Inners._5.Instance))),
-                                                                    new CstNodes.Inners.HelperRangedAtMost127<_identifierCharacter>(
-                                                                        new[]
-                                                                        {
-                                                                            new _identifierCharacter._ALPHA(
-                                                                                new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._76(
-                                                                                        CstNodes.Inners._7.Instance,
-                                                                                        CstNodes.Inners._6.Instance))),
-                                                                            new _identifierCharacter._ALPHA(
-                                                                                new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._65(
-                                                                                        CstNodes.Inners._6.Instance,
-                                                                                        CstNodes.Inners._5.Instance))),
-                                                                            new _identifierCharacter._ALPHA(
-                                                                                new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._6E(
-                                                                                        CstNodes.Inners._6.Instance,
-                                                                                        CstNodes.Inners._E.Instance))),
-                                                                            new _identifierCharacter._ALPHA(
-                                                                                new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._74(
-                                                                                        CstNodes.Inners._7.Instance,
-                                                                                        CstNodes.Inners._4.Instance))),
-                                                                            new _identifierCharacter._ALPHA(
-                                                                                new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._73(
-                                                                                        CstNodes.Inners._7.Instance,
-                                                                                        CstNodes.Inners._3.Instance))),
-                                                                        }))),
+                                                                Events),
                                                             null))))))))),
                         new CstNodes.Inners._ʺx3Fʺ_queryOptions(
                             new CstNodes.Inners._ʺx3Fʺ(
@@ -194,14 +325,7 @@ namespace __GeneratedOdata.Parsers.Rules
                                         new _filter(
                                             new CstNodes.Inners._Ⲥʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺↃ(
                                                 new __GeneratedOdata.CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺ._ʺx24x66x69x6Cx74x65x72ʺ(
-                                                    new CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺ(
-                                                        CstNodes.Inners._x24.Instance,
-                                                        CstNodes.Inners._x66.Instance,
-                                                        CstNodes.Inners._x69.Instance,
-                                                        CstNodes.Inners._x6C.Instance,
-                                                        CstNodes.Inners._x74.Instance,
-                                                        CstNodes.Inners._x65.Instance,
-                                                        CstNodes.Inners._x72.Instance))),
+                                                    Filter)),
                                             new _EQ(
                                                 new CstNodes.Inners._ʺx3Dʺ(
                                                     CstNodes.Inners._x3D.Instance)),
@@ -219,21 +343,7 @@ namespace __GeneratedOdata.Parsers.Rules
                                                                                     new _entityColNavigationProperty_꘡collectionNavigationExpr꘡ⳆentityNavigationProperty_꘡singleNavigationExpr꘡ⳆcomplexColProperty_꘡complexColPathExpr꘡ⳆcomplexProperty_꘡complexPathExpr꘡ⳆprimitiveColProperty_꘡collectionPathExpr꘡ⳆprimitiveProperty_꘡primitivePathExpr꘡ⳆstreamProperty_꘡primitivePathExpr꘡._primitiveProperty_꘡primitivePathExpr꘡(
                                                                                         new _primitiveProperty._primitiveKeyProperty(
                                                                                             new _primitiveKeyProperty(
-                                                                                                new _odataIdentifier(
-                                                                                                    new _identifierLeadingCharacter._ALPHA(
-                                                                                                        new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                                            new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._69(
-                                                                                                                CstNodes.Inners._6.Instance,
-                                                                                                                CstNodes.Inners._9.Instance))),
-                                                                                                    new CstNodes.Inners.HelperRangedAtMost127<_identifierCharacter>(
-                                                                                                        new[]
-                                                                                                        {
-                                                                                                            new _identifierCharacter._ALPHA(
-                                                                                                                new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                                                    new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._64(
-                                                                                                                        CstNodes.Inners._6.Instance,
-                                                                                                                        CstNodes.Inners._4.Instance))),
-                                                                                                        })))),
+                                                                                                Id)),
                                                                                         null))))))))),
                                                     null,
                                                     new __GeneratedOdata.CstNodes.Inners._eqExprⳆneExprⳆltExprⳆleExprⳆgtExprⳆgeExprⳆhasExprⳆinExpr._eqExpr(
@@ -271,97 +381,7 @@ namespace __GeneratedOdata.Parsers.Rules
                                                                                 new _SQUOTE._ʺx27ʺ(
                                                                                     new _ʺx27ʺ(
                                                                                         _x27.Instance)),
-                                                                                new[]
-                                                                                {
-                                                                                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
-                                                                                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
-                                                                                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
-                                                                                                new _unreserved._ALPHA(
-                                                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._74(
-                                                                                                            _7.Instance,
-                                                                                                            _4.Instance)))))),
-                                                                                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
-                                                                                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
-                                                                                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
-                                                                                                new _unreserved._ALPHA(
-                                                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._68(
-                                                                                                            _6.Instance,
-                                                                                                            _8.Instance)))))),
-                                                                                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
-                                                                                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
-                                                                                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
-                                                                                                new _unreserved._ALPHA(
-                                                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._69(
-                                                                                                            _6.Instance,
-                                                                                                            _9.Instance)))))),
-                                                                                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
-                                                                                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
-                                                                                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
-                                                                                                new _unreserved._ALPHA(
-                                                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._73(
-                                                                                                            _7.Instance,
-                                                                                                            _3.Instance)))))),
-                                                                                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
-                                                                                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
-                                                                                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
-                                                                                                new _unreserved._ALPHA(
-                                                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._69(
-                                                                                                            _6.Instance,
-                                                                                                            _9.Instance)))))),
-                                                                                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
-                                                                                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
-                                                                                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
-                                                                                                new _unreserved._ALPHA(
-                                                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._73(
-                                                                                                            _7.Instance,
-                                                                                                            _3.Instance)))))),
-                                                                                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
-                                                                                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
-                                                                                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
-                                                                                                new _unreserved._ALPHA(
-                                                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._61(
-                                                                                                            _6.Instance,
-                                                                                                            _1.Instance)))))),
-                                                                                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
-                                                                                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
-                                                                                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
-                                                                                                new _unreserved._ALPHA(
-                                                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._74(
-                                                                                                            _7.Instance,
-                                                                                                            _4.Instance)))))),
-                                                                                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
-                                                                                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
-                                                                                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
-                                                                                                new _unreserved._ALPHA(
-                                                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._65(
-                                                                                                            _6.Instance,
-                                                                                                            _5.Instance)))))),
-                                                                                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
-                                                                                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
-                                                                                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
-                                                                                                new _unreserved._ALPHA(
-                                                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._73(
-                                                                                                            _7.Instance,
-                                                                                                            _3.Instance)))))),
-                                                                                    new __GeneratedOdata.CstNodes.Inners._ⲤSQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTEↃ(
-                                                                                        new __GeneratedOdata.CstNodes.Inners._SQUOTEⲻinⲻstringⳆpcharⲻnoⲻSQUOTE._pcharⲻnoⲻSQUOTE(
-                                                                                            new __GeneratedOdata.CstNodes.Rules._pcharⲻnoⲻSQUOTE._unreserved(
-                                                                                                new _unreserved._ALPHA(
-                                                                                                    new _ALPHA._Ⰳx61ⲻ7A(
-                                                                                                        new __GeneratedOdata.CstNodes.Inners._Ⰳx61ⲻ7A._74(
-                                                                                                            _7.Instance,
-                                                                                                            _4.Instance)))))),
-                                                                                },
+                                                                                ThisIsATest,
                                                                                 new _SQUOTE._ʺx27ʺ(
                                                                                     new _ʺx27ʺ(
                                                                                         _x27.Instance)))))),
@@ -369,7 +389,10 @@ namespace __GeneratedOdata.Parsers.Rules
                                                                 null,
                                                                 null))),
                                                     null))))),
-                                Enumerable.Empty<__GeneratedOdata.CstNodes.Inners._Ⲥʺx26ʺ_queryOptionↃ>()))),
+                                Enumerable.Empty<__GeneratedOdata.CstNodes.Inners._Ⲥʺx26ʺ_queryOptionↃ>())));
+                return Output.Create(
+                    true,
+                    node,
                     (IInput<char>?)null);
             }
         }
