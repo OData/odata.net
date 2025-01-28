@@ -1,11 +1,27 @@
 namespace __GeneratedOdata.Parsers.Inners
 {
+    using __GeneratedOdata.CstNodes.Inners;
     using CombinatorParsingV2;
     
     public static class _Ⲥʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺↃParser
     {
-        public static IParser<char, __GeneratedOdata.CstNodes.Inners._Ⲥʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺↃ> Instance { get; } = from _ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺParser.Instance
+        /*public static IParser<char, __GeneratedOdata.CstNodes.Inners._Ⲥʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺↃ> Instance { get; } = from _ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺ_1 in __GeneratedOdata.Parsers.Inners._ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺParser.Instance
 select new __GeneratedOdata.CstNodes.Inners._Ⲥʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺↃ(_ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺ_1);
+        */
+        //// PERF
+        public static IParser<char, __GeneratedOdata.CstNodes.Inners._Ⲥʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺↃ> Instance { get; } = new Parser();
+
+        private sealed class Parser : IParser<char, __GeneratedOdata.CstNodes.Inners._Ⲥʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺↃ>
+        {
+            public IOutput<char, _Ⲥʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺↃ> Parse(IInput<char>? input)
+            {
+                var _ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺ_1 = __GeneratedOdata.Parsers.Inners._ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺParser.Instance.Parse(input);
+                return Output.Create(
+                    true,
+                    new __GeneratedOdata.CstNodes.Inners._Ⲥʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺↃ(_ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺ_1.Parsed),
+                    _ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺ_1.Remainder);
+            }
+        }
     }
     
 }
