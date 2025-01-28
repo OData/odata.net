@@ -4,12 +4,14 @@
     using AbnfParserGenerator;
     using CombinatorParsingV2;
     using GeneratorV3;
+    using Microsoft.OData.UriParser;
     using Root;
     using Root.OdataResourcePath.CombinatorParsers;
     using Root.OdataResourcePath.Transcribers;
     using Sprache;
     using System;
     using System.Collections;
+    using System.Diagnostics;
     using System.Linq;
     using System.Text;
     using System.Xml;
@@ -18,7 +20,7 @@
     public sealed class Test1
     {
         [TestMethod]
-        public void StackPointer()
+        /*public void StackPointer()
         {
             AssertCast<Foo>(ParseFoo);
 
@@ -30,7 +32,7 @@
             {
 
             }
-        }
+        }*/
 
         private static void AssertCast<T>(Parse<T> parse) where T : struct
         {
@@ -189,7 +191,112 @@
             Assert.AreEqual(url, transcribed);
         }
 
-        /*[TestMethod]
+        private static void Perf1(int iterations)
+        {
+            var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
+            var parser = __GeneratedOdata.Parsers.Rules._odataRelativeUriParser.Instance;
+            var transcriber = __GeneratedOdata.Trancsribers.Rules._odataRelativeUriTranscriber.Instance;
+            for (int i = 0; i < iterations; ++i)
+            {
+                if (!parser.TryParse(url, out var urlCst))
+                {
+                    throw new Exception("TODO");
+                }
+
+                var stringBuilder = new StringBuilder();
+                transcriber.Transcribe(urlCst, stringBuilder);
+                var transcribed = stringBuilder.ToString();
+                Assert.AreEqual(url, transcribed);
+            }
+        }
+
+        [TestMethod]
+        public void Perf()
+        {
+            var iterations = 10000;
+            var stopwatch = Stopwatch.StartNew();
+            Perf1(iterations);
+            Console.WriteLine(stopwatch.ElapsedTicks);
+
+            stopwatch = Stopwatch.StartNew();
+            Perf2(iterations);
+            Console.WriteLine(stopwatch.ElapsedTicks);
+        }
+
+        private static void Perf2(int iterations)
+        {
+            var csdl =
+"""
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="microsoft.graph" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <EntityType Name="user" OpenType="true">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Edm.String" Nullable="false" />
+          <NavigationProperty Name="calendar" Type="microsoft.graph.calendar" ContainsTarget="true" />
+        </EntityType>
+        <EntityType Name="calendar">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Edm.String" Nullable="false" />
+          <NavigationProperty Name="events" Type="Collection(microsoft.graph.event)" ContainsTarget="true" />
+        </EntityType>
+        <EntityType Name="event">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Edm.String" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="GraphService">
+          <EntitySet Name="users" EntityType="microsoft.graph.user" />
+        </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+""";
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(csdl)))
+            {
+                using (var xmlReader = XmlReader.Create(stream))
+                {
+                    var model = Microsoft.OData.Edm.Csdl.CsdlReader.Parse(xmlReader);
+
+                    var original = "users/myid/calendar/events?$filter=id%20eq%20%27thisisatest%27";
+
+                    for (int i = 0; i < iterations; ++i)
+                    {
+                        var odataUri = new Microsoft.OData.UriParser.ODataUriParser(
+                            model,
+                            new Uri(original, UriKind.Relative))
+                            .ParseUri();
+                        Assert.IsTrue(odataUri.Filter.Expression.Kind == Microsoft.OData.UriParser.QueryNodeKind.BinaryOperator);
+                        if (!(odataUri.Filter.Expression is BinaryOperatorNode binaryNode))
+                        {
+                            throw new AssertFailedException();
+                        }
+
+                        Assert.IsTrue(binaryNode.Left.Kind == QueryNodeKind.Convert);
+                        if (!(binaryNode.Left is ConvertNode convert))
+                        {
+                            throw new AssertFailedException();
+                        }
+
+                        Assert.IsTrue(convert.Source.Kind == QueryNodeKind.SingleValuePropertyAccess);
+
+                        Assert.IsTrue(binaryNode.Right.Kind == QueryNodeKind.Constant);
+                        
+                        var uri = Microsoft.OData.ODataUriExtensions.BuildUri(odataUri, Microsoft.OData.ODataUrlKeyDelimiter.Slash).ToString();
+
+                        Assert.AreEqual(original, uri);
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
         public void OdataTest3()
         {
             var csdl =
@@ -229,19 +336,19 @@
             {
                 using (var xmlReader = XmlReader.Create(stream))
                 {
-                    var model = CsdlReader.Parse(xmlReader);
+                    var model = Microsoft.OData.Edm.Csdl.CsdlReader.Parse(xmlReader);
 
                     var original = "users/myid/calendar/events?$filter=id%20eq%20%27thisisatest%27";
                     var odataUri = new Microsoft.OData.UriParser.ODataUriParser(
                         model, 
                         new Uri(original, UriKind.Relative))
                         .ParseUri();
-                    var uri = odataUri.BuildUri(ODataUrlKeyDelimiter.Slash).ToString();
+                    var uri = Microsoft.OData.ODataUriExtensions.BuildUri(odataUri, Microsoft.OData.ODataUrlKeyDelimiter.Slash).ToString();
 
                     Assert.AreEqual(original, uri);
                 }
             }
-        }*/
+        }
 
         [TestMethod]
         public void GenerateOdataWithLatest()
