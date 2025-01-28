@@ -24,7 +24,7 @@ namespace CombinatorParsingV2
         {
             get
             {
-                return this.input[this.index];
+                return this.input[this.index]; //// TODO just record this once in the constructor?
             }
         }
 
