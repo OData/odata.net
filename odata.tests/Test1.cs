@@ -221,6 +221,14 @@
             stopwatch = Stopwatch.StartNew();
             Perf2(iterations);
             Console.WriteLine(stopwatch.ElapsedTicks);
+
+            stopwatch = Stopwatch.StartNew();
+            Perf1(iterations);
+            Console.WriteLine(stopwatch.ElapsedTicks);
+
+            stopwatch = Stopwatch.StartNew();
+            Perf2(iterations);
+            Console.WriteLine(stopwatch.ElapsedTicks);
         }
 
         private static void Perf2(int iterations)
