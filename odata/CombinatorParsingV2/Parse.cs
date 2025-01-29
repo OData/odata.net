@@ -38,7 +38,34 @@
 
         public static IParser<char, char> Char(char @char)
         {
-            return Parse.Token(@char, EqualityComparer<char>.Default);
+            ////return Parse.Token(@char, EqualityComparer<char>.Default);
+            //// PERF
+            return new CharParser(@char);
+        }
+
+        private sealed class CharParser : IParser<char, char>
+        {
+            private readonly char @char;
+
+            public CharParser(char @char)
+            {
+                this.@char = @char;
+            }
+
+            public IOutput<char, char> Parse(IInput<char>? input)
+            {
+                if (input == null)
+                {
+                    return Output.Create(false, default(char), input);
+                }
+
+                if (input.Current == this.@char)
+                {
+                    return Output.Create(true, this.@char, input.Next());
+                }
+
+                return Output.Create(false, default(char), input);
+            }
         }
     }
 }
