@@ -25,9 +25,12 @@ select new __GeneratedOdata.CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x6
                     var _ʺx24x66x69x6Cx74x65x72ʺ_1 = __GeneratedOdata.Parsers.Inners._ʺx24x66x69x6Cx74x65x72ʺParser.Instance.Parse(input);
                     return Output.Create(
                         true,
-                        new __GeneratedOdata.CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺ._ʺx24x66x69x6Cx74x65x72ʺ(_ʺx24x66x69x6Cx74x65x72ʺ_1.Parsed),
+                        Instance,
                         _ʺx24x66x69x6Cx74x65x72ʺ_1.Remainder);
                 }
+
+                public static __GeneratedOdata.CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺ._ʺx24x66x69x6Cx74x65x72ʺ Instance { get; } = new __GeneratedOdata.CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺ._ʺx24x66x69x6Cx74x65x72ʺ(
+                    new __GeneratedOdata.CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺ(_x24.Instance, _x66.Instance, _x69.Instance, _x6C.Instance, _x74.Instance, _x65.Instance, _x72.Instance));
             }
         }
         

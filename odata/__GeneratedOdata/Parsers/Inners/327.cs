@@ -36,9 +36,11 @@ select new __GeneratedOdata.CstNodes.Inners._ʺx65x71ʺ(_x65_1, _x71_1);
 
                 return Output.Create(
                     true,
-                    new __GeneratedOdata.CstNodes.Inners._ʺx65x71ʺ(_x65_1.Parsed, _x71_1.Parsed),
+                    Instance,
                     _x71_1.Remainder);
             }
+
+            private static __GeneratedOdata.CstNodes.Inners._ʺx65x71ʺ Instance { get; } = new __GeneratedOdata.CstNodes.Inners._ʺx65x71ʺ(_x65.Instance, _x71.Instance);
         }
     }
     

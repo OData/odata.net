@@ -1,5 +1,6 @@
 namespace __GeneratedOdata.Parsers.Inners
 {
+    using __Generated.CstNodes.Inners;
     using __GeneratedOdata.CstNodes.Inners;
     using CombinatorParsingV2;
     
@@ -30,9 +31,10 @@ select new __GeneratedOdata.CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺ(_x24_1, _
                 var _x72_1 = __GeneratedOdata.Parsers.Inners._x72Parser.Instance.Parse(_x65_1.Remainder);
                 return Output.Create(
                     true,
-                    new __GeneratedOdata.CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺ(_x24_1.Parsed, _x66_1.Parsed, _x69_1.Parsed, _x6C_1.Parsed, _x74_1.Parsed, _x65_1.Parsed, _x72_1.Parsed),
+                    Instance,
                     _x72_1.Remainder);
             }
+            private static __GeneratedOdata.CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺ Instance { get; } = new __GeneratedOdata.CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺ(_x24.Instance, _x66.Instance, _x69.Instance, _x6C.Instance, _x74.Instance, _x65.Instance, _x72.Instance);
         }
     }
     
