@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Validation;
@@ -42,6 +43,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private static readonly Func<CsdlSemanticsEntityContainer, IEdmEntityContainer> ComputeExtendsFunc = (me) => me.ComputeExtends();
         private static readonly Func<CsdlSemanticsEntityContainer, IEdmEntityContainer> OnCycleExtendsFunc = (me) => new CyclicEntityContainer(me.entityContainer.Extends, me.Location);
 
+#if NET9_0
+        private readonly Cache<CsdlSemanticsEntityContainer, Dictionary<string, IEdmEntitySet>.AlternateLookup<ReadOnlyMemory<char>>> entitySetDictionaryReadonlyMemoryCache = new();
+        private readonly Cache<CsdlSemanticsEntityContainer, Dictionary<string, IEdmEntitySet>.AlternateLookup<ReadOnlySpan<char>>> entitySetReadonlySpanCache = new();
+#endif
         public CsdlSemanticsEntityContainer(CsdlSemanticsSchema context, CsdlEntityContainer entityContainer)
             : base(entityContainer)
         {
@@ -108,6 +113,15 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.entitySetDictionaryCache.GetValue(this, ComputeEntitySetDictionaryFunc, null); }
         }
 
+#if NET9_0
+        private Dictionary<string, IEdmEntitySet>.AlternateLookup<ReadOnlyMemory<char>> EntitySetReadOnlyMemoryAlternateLookup 
+            => this.entitySetDictionaryReadonlyMemoryCache.GetValue(this, static (me) => me.EntitySetDictionary.GetAlternateLookup<ReadOnlyMemory<char>>(), null);
+
+        [Experimental(diagnosticId: "ODataNet9ExperimentalFeatures")]
+        private Dictionary<string, IEdmEntitySet>.AlternateLookup<ReadOnlySpan<char>> EntitySetReadOnlySpanAlternateLookup
+            => this.entitySetReadonlySpanCache.GetValue(this, static (me) => me.EntitySetDictionary.GetAlternateLookup<ReadOnlySpan<char>>(), null);
+#endif
+
         private Dictionary<string, IEdmSingleton> SingletonDictionary
         {
             get { return this.singletonDictionaryCache.GetValue(this, ComputeSingletonDictionaryFunc, null); }
@@ -123,7 +137,21 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             IEdmEntitySet element;
             return this.EntitySetDictionary.TryGetValue(name, out element) ? element : null;
         }
+#if NET9_0
+        public IEdmEntitySet FindEntitySet(ReadOnlyMemory<char> name)
+        {
+            IEdmEntitySet element;
+            return this.EntitySetReadOnlyMemoryAlternateLookup.TryGetValue(name, out element) ? element : null;
+        }
 
+
+        [Experimental(diagnosticId: "ODataNet9ExperimentalFeatures")]
+        public IEdmEntitySet FindEntitySet(ReadOnlySpan<char> name)
+        {
+            IEdmEntitySet element;
+            return this.EntitySetReadOnlySpanAlternateLookup.TryGetValue(name, out element) ? element : null;
+        }
+#endif
         public IEdmSingleton FindSingleton(string name)
         {
             IEdmSingleton element;

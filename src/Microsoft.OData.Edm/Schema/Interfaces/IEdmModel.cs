@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using Microsoft.OData.Edm.Vocabularies;
 
@@ -86,6 +87,65 @@ namespace Microsoft.OData.Edm
         /// <returns>The requested term, or null if no such term exists.</returns>
         IEdmTerm FindDeclaredTerm(string qualifiedName);
 
+#if NET9_0
+        /// <summary>
+        /// Searches for a type with the given name in this model only and returns null if no such type exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the type being found.</param>
+        /// <returns>The requested type, or null if no such type exists.</returns>
+        IEdmSchemaType FindDeclaredType(ReadOnlyMemory<char> qualifiedName);
+
+        /// <summary>
+        /// Searches for bound operations based on the qualified name and binding type, returns an empty enumerable if no operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation.</param>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>A set of operations that share the qualified name and binding type or empty enumerable if no such operation exists.</returns>
+        IEnumerable<IEdmOperation> FindDeclaredBoundOperations(ReadOnlyMemory<char> qualifiedName, IEdmType bindingType);
+
+        /// <summary>
+        /// Searches for operations with the given name in this model and returns an empty enumerable if no such operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation being found.</param>
+        /// <returns>A set of operations sharing the specified qualified name, or an empty enumerable if no such operation exists.</returns>
+        IEnumerable<IEdmOperation> FindDeclaredOperations(ReadOnlyMemory<char> qualifiedName);
+
+        /// <summary>
+        /// Searches for a term with the given name in this model and returns null if no such term exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
+        IEdmTerm FindDeclaredTerm(ReadOnlyMemory<char> qualifiedName);
+        
+        /// <summary>
+        /// Searches for a type with the given name in this model only and returns null if no such type exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the type being found.</param>
+        /// <returns>The requested type, or null if no such type exists.</returns>
+        IEdmSchemaType FindDeclaredType(ReadOnlySpan<char> qualifiedName);
+
+        /// <summary>
+        /// Searches for bound operations based on the qualified name and binding type, returns an empty enumerable if no operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation.</param>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>A set of operations that share the qualified name and binding type or empty enumerable if no such operation exists.</returns>
+        IEnumerable<IEdmOperation> FindDeclaredBoundOperations(ReadOnlySpan<char> qualifiedName, IEdmType bindingType);
+
+        /// <summary>
+        /// Searches for operations with the given name in this model and returns an empty enumerable if no such operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation being found.</param>
+        /// <returns>A set of operations sharing the specified qualified name, or an empty enumerable if no such operation exists.</returns>
+        IEnumerable<IEdmOperation> FindDeclaredOperations(ReadOnlySpan<char> qualifiedName);
+
+        /// <summary>
+        /// Searches for a term with the given name in this model and returns null if no such term exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
+        IEdmTerm FindDeclaredTerm(ReadOnlySpan<char> qualifiedName);
+#endif
         /// <summary>
         /// Searches for vocabulary annotations specified by this model.
         /// </summary>

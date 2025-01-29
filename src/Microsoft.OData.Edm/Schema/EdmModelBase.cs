@@ -10,6 +10,11 @@ using System.Linq;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 
+#if NET9_0
+using System;
+using System.Diagnostics.CodeAnalysis;
+#endif
+
 namespace Microsoft.OData.Edm
 {
     /// <summary>
@@ -28,6 +33,20 @@ namespace Microsoft.OData.Edm
         /// Cache of operations that are bindable to entity types, its a cache of all bindable functions, indexed by binding type.
         /// </summary>
         private readonly ConcurrentDictionary<string, IList<IEdmOperation>> bindableOperationsCache;
+
+
+#if NET9_0
+        private readonly Dictionary<string, IEdmEntityContainer>.AlternateLookup<ReadOnlyMemory<char>> containersDictionaryReadOnlyMemoryLookup;
+        private readonly Dictionary<string, IEdmSchemaType>.AlternateLookup<ReadOnlyMemory<char>> schemaTypeDictionaryReadOnlyMemoryLookup;
+        private readonly Dictionary<string, IEdmTerm>.AlternateLookup<ReadOnlyMemory<char>> termDictionaryReadOnlyMemoryLookup;
+        private readonly Dictionary<string, IList<IEdmOperation>>.AlternateLookup<ReadOnlyMemory<char>> functionDictionaryReadOnlyMemoryLookup;
+        
+        // ReadOnlySpan lookups are currently in preview
+        private readonly Dictionary<string, IEdmEntityContainer>.AlternateLookup<ReadOnlySpan<char>> containersDictionaryReadOnlySpanLookup;
+        private readonly Dictionary<string, IEdmSchemaType>.AlternateLookup<ReadOnlySpan<char>> schemaTypeDictionaryReadOnlySpanLookup;
+        private readonly Dictionary<string, IEdmTerm>.AlternateLookup<ReadOnlySpan<char>> termDictionaryReadOnlySpanLookup;
+        private readonly Dictionary<string, IList<IEdmOperation>>.AlternateLookup<ReadOnlySpan<char>> functionDictionaryReadOnlySpanLookup;
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmModelBase"/> class.
@@ -64,6 +83,19 @@ namespace Microsoft.OData.Edm
             }
 
             this.annotationsManager = annotationsManager;
+
+#if NET9_0
+            this.containersDictionaryReadOnlyMemoryLookup = this.containersDictionary.GetAlternateLookup<ReadOnlyMemory<char>>();
+            this.schemaTypeDictionaryReadOnlyMemoryLookup = this.schemaTypeDictionary.GetAlternateLookup<ReadOnlyMemory<char>>();
+            this.termDictionaryReadOnlyMemoryLookup = this.termDictionary.GetAlternateLookup<ReadOnlyMemory<char>>();
+            this.functionDictionaryReadOnlyMemoryLookup = this.functionDictionary.GetAlternateLookup<ReadOnlyMemory<char>>();
+
+            // Note ReadOnlySpan is a preview only feature
+            this.containersDictionaryReadOnlySpanLookup = this.containersDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+            this.schemaTypeDictionaryReadOnlySpanLookup = this.schemaTypeDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+            this.termDictionaryReadOnlySpanLookup = this.termDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+            this.functionDictionaryReadOnlySpanLookup = this.functionDictionary.GetAlternateLookup<ReadOnlySpan<char>>();
+#endif
         }
 
         /// <summary>
@@ -126,6 +158,33 @@ namespace Microsoft.OData.Edm
             return result;
         }
 
+#if NET9_0
+        /// <summary>
+        /// Searches for a type with the given name in this model only and returns null if no such type exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the type being found.</param>
+        /// <returns>The requested type, or null if no such type exists.</returns>
+        public IEdmSchemaType FindDeclaredType(ReadOnlyMemory<char> qualifiedName)
+        {
+            IEdmSchemaType result;
+            this.schemaTypeDictionaryReadOnlyMemoryLookup.TryGetValue(qualifiedName, out result);
+            return result;
+        }
+
+        /// <summary>
+        /// Searches for a type with the given name in this model only and returns null if no such type exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the type being found.</param>
+        /// <returns>The requested type, or null if no such type exists.</returns>
+        [Experimental("ODataNet9PreviewFeatures")]
+        public IEdmSchemaType FindDeclaredType(ReadOnlySpan<char> qualifiedName)
+        {
+            IEdmSchemaType result;
+            this.schemaTypeDictionaryReadOnlySpanLookup.TryGetValue(qualifiedName, out result);
+            return result;
+        }
+#endif
+
         /// <summary>
         /// Searches for a term with the given name in this model and returns null if no such term exists.
         /// </summary>
@@ -137,6 +196,34 @@ namespace Microsoft.OData.Edm
             this.termDictionary.TryGetValue(qualifiedName, out result);
             return result;
         }
+
+#if NET9_0
+        /// <summary>
+        /// Searches for a term with the given name in this model and returns null if no such term exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
+        public IEdmTerm FindDeclaredTerm(ReadOnlyMemory<char> qualifiedName)
+        {
+            IEdmTerm result;
+            this.termDictionaryReadOnlyMemoryLookup.TryGetValue(qualifiedName, out result);
+            return result;
+        }
+
+
+        /// <summary>
+        /// Searches for a term with the given name in this model and returns null if no such term exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the term being found.</param>
+        /// <returns>The requested term, or null if no such term exists.</returns>
+        [Experimental("ODataNet9PreviewFeatures")]
+        public IEdmTerm FindDeclaredTerm(ReadOnlySpan<char> qualifiedName)
+        {
+            IEdmTerm result;
+            this.termDictionaryReadOnlySpanLookup.TryGetValue(qualifiedName, out result);
+            return result;
+        }
+#endif
 
         /// <summary>
         /// Searches for a operation with the given name in this model and returns null if no such operation exists.
@@ -153,6 +240,41 @@ namespace Microsoft.OData.Edm
 
             return Enumerable.Empty<IEdmOperation>();
         }
+
+#if NET9_0
+        /// <summary>
+        /// Searches for a operation with the given name in this model and returns null if no such operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation being found.</param>
+        /// <returns>A group of operations sharing the specified qualified name, or an empty enumerable if no such operation exists.</returns>
+        public IEnumerable<IEdmOperation> FindDeclaredOperations(ReadOnlyMemory<char> qualifiedName)
+        {
+            IList<IEdmOperation> elements;
+            if (this.functionDictionaryReadOnlyMemoryLookup.TryGetValue(qualifiedName, out elements))
+            {
+                return elements;
+            }
+
+            return Enumerable.Empty<IEdmOperation>();
+        }
+
+        /// <summary>
+        /// Searches for a operation with the given name in this model and returns null if no such operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation being found.</param>
+        /// <returns>A group of operations sharing the specified qualified name, or an empty enumerable if no such operation exists.</returns>
+        [Experimental("ODataNet9PreviewFeatures")]
+        public IEnumerable<IEdmOperation> FindDeclaredOperations(ReadOnlySpan<char> qualifiedName)
+        {
+            IList<IEdmOperation> elements;
+            if (this.functionDictionaryReadOnlySpanLookup.TryGetValue(qualifiedName, out elements))
+            {
+                return elements;
+            }
+
+            return Enumerable.Empty<IEdmOperation>();
+        }
+#endif
 
         /// <summary>
         /// Searches for bound operations based on the binding type, returns an empty enumerable if no operation exists.

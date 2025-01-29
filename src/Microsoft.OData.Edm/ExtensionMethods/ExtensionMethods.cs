@@ -41,6 +41,11 @@ namespace Microsoft.OData.Edm
         private static readonly Func<IEdmModel, string, IEdmEntityContainer> findEntityContainer = (model, qualifiedName) => { return model.ExistsContainer(qualifiedName) ? model.EntityContainer : null; };
         private static readonly Func<IEnumerable<IEdmOperation>, IEnumerable<IEdmOperation>, IEnumerable<IEdmOperation>> mergeFunctions = (f1, f2) => Enumerable.Concat(f1, f2);
 
+#if NET9_0
+        private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEdmSchemaType> findTypeReadOnlySpan = (model, qualifiedName) => model.FindDeclaredType(qualifiedName);
+        private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEdmTerm> findTermReadOnlySpan = (model, qualifiedName) => model.FindDeclaredTerm(qualifiedName);
+        private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEnumerable<IEdmOperation>> findOperationsReadOnlySpan = (model, qualifiedName) => model.FindDeclaredOperations(qualifiedName);
+#endif
         /// <summary>
         /// Gets the value for the EDM version of the <paramref name="model"/>.
         /// </summary>
