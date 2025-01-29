@@ -4,7 +4,13 @@ namespace CombinatorParsingV2
 {
     //// TODO covariance and contravariance
     
-    //// TODO more singletons
+    //// TODO stuff that you did to improve performance:
+    //// charparser
+
+    //// TODO update generator with stuff that *definitely* worked:
+    //// remove selectmany
+    //// more singletons
+    
     //// TODO ref structs for parser types
     //// TODO structs for node types?
 
