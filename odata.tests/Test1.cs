@@ -177,6 +177,67 @@
         }
 
         [TestMethod]
+        public void EntityTest()
+        {
+            var url = "$entity?$id eq asdf";
+            if (!__GeneratedOdata.Parsers.Rules._odataRelativeUriParser.Instance.TryParse(url, out var urlCst))
+            {
+                throw new Exception("TODO");
+            }
+
+            var stringBuilder = new StringBuilder();
+            __GeneratedOdata.Trancsribers.Rules._odataRelativeUriTranscriber.Instance.Transcribe(urlCst, stringBuilder);
+            var transcribed = stringBuilder.ToString();
+            Assert.AreEqual(url, transcribed);
+
+            var csdl =
+"""
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="microsoft.graph" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+        <EntityType Name="user" OpenType="true">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Edm.String" Nullable="false" />
+          <NavigationProperty Name="calendar" Type="microsoft.graph.calendar" ContainsTarget="true" />
+        </EntityType>
+        <EntityType Name="calendar">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Edm.String" Nullable="false" />
+          <NavigationProperty Name="events" Type="Collection(microsoft.graph.event)" ContainsTarget="true" />
+        </EntityType>
+        <EntityType Name="event">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Edm.String" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="GraphService">
+          <EntitySet Name="users" EntityType="microsoft.graph.user" />
+        </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+""";
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(csdl)))
+            {
+                using (var xmlReader = XmlReader.Create(stream))
+                {
+                    var model = Microsoft.OData.Edm.Csdl.CsdlReader.Parse(xmlReader);
+
+                    var odataUri = new Microsoft.OData.UriParser.ODataUriParser(
+                        model,
+                        new Uri(url, UriKind.Relative))
+                        .ParseUri();
+                }
+            }
+        }
+
+        [TestMethod]
         public void OdataTest2()
         {
             var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
