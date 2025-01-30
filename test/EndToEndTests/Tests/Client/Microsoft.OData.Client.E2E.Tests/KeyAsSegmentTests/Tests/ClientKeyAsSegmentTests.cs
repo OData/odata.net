@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ClientEndToEndTests.cs" company="Microsoft">
+// <copyright file="ClientUrlConventionsTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -8,28 +8,25 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client.E2E.TestCommon;
-using Microsoft.OData.Client.E2E.Tests.Common.Client.Default;
 using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd;
 using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default;
 using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
 using Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Server;
-using Microsoft.OData.Edm;
 using Xunit;
+using Customer = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer;
 using Employee = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee;
 using Person = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person;
 using SpecialEmployee = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee;
 using DiscontinuedProduct = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProduct;
 using ProductPhoto = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto;
-using Customer = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer;
 using Order = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order;
 
 namespace Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Tests;
 
-public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsStartup>
+public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.TestsStartup>
 {
     private readonly Uri _baseUri;
     private readonly Container _context;
-    private readonly IEdmModel _model;
 
     public class TestsStartup : TestStartupBase
     {
@@ -42,7 +39,7 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
         }
     }
 
-    public ClientEndToEndTests(TestWebApplicationFactory<TestsStartup> fixture) : base(fixture)
+    public ClientKeyAsSegmentTests(TestWebApplicationFactory<TestsStartup> fixture) : base(fixture)
     {
         if (Client.BaseAddress == null)
         {
@@ -56,20 +53,39 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
             HttpClientFactory = HttpClientFactory
         };
 
-        _model = CommonEndToEndEdmModel.GetEdmModel();
         ResetDefaultDataSource();
     }
 
     [Fact]
-    public void GetSingleEntity()
+    public void ClientChangesUrlConventionsBetweenQueries()
+    {
+        // Arrange & Act & Assert
+        var contextWrapper = this.CreateWrappedContext();
+
+        var query = contextWrapper.CreateQuery<Customer>("Customers").OrderBy(c => c.CustomerId).ToList();
+        Assert.Equal(10, query.Count);
+
+        contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Parentheses;
+        var queryWithDefaultKeys = contextWrapper.CreateQuery<Customer>("Customers").OrderBy(c => c.CustomerId).ToList();
+        Assert.Equal(10, queryWithDefaultKeys.Count);
+        Assert.Equal(query, queryWithDefaultKeys);
+
+        contextWrapper.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
+        query = contextWrapper.CreateQuery<Customer>("Customers").OrderBy(c => c.CustomerId).ToList();
+        Assert.Equal(10, query.Count);
+        Assert.Equal(query, queryWithDefaultKeys);
+    }
+
+    [Fact]
+    public void GetSingleEntityWithKeyAsSegment()
     {
         // Arrange & Act
         var contextWrapper = this.CreateWrappedContext();
 
-        var queryByKey = contextWrapper .CreateQuery<Person>("People").ByKey(-10);
+        var queryByKey = contextWrapper.CreateQuery<Person>("People").ByKey(-10);
         var personByKey = queryByKey.GetValue();
 
-        var query = contextWrapper .CreateQuery<Person>("People").Where(p => p.PersonId == -10) as DataServiceQuery<Person>;
+        var query = contextWrapper.CreateQuery<Person>("People").Where(p => p.PersonId == -10) as DataServiceQuery<Person>;
 
         // Assert
         Assert.EndsWith("/odata/People/-10", queryByKey.RequestUri.OriginalString);
@@ -88,10 +104,10 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
         // Arrange & Act
         var contextWrapper = this.CreateWrappedContext();
 
-        var queryByKey = contextWrapper .People.ByKey(-10);
+        var queryByKey = contextWrapper.People.ByKey(-10);
         var personByKey = queryByKey.GetValue();
 
-        var query = contextWrapper .People.Where(p => p.PersonId == -10);
+        var query = contextWrapper.People.Where(p => p.PersonId == -10);
 
         // Assert
         Assert.EndsWith("/odata/People/-10", queryByKey.RequestUri.OriginalString);
@@ -111,7 +127,7 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
         var contextWrapper = this.CreateWrappedContext();
 
         var query =
-            from p in contextWrapper .People
+            from p in contextWrapper.People
             where p.Name == "\0te\0st\0"
             select p;
 
@@ -130,7 +146,7 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
         var contextWrapper = this.CreateWrappedContext();
 
         var query =
-            from p in contextWrapper .People
+            from p in contextWrapper.People
             where p.PersonId == -10
             select p;
 
@@ -153,7 +169,7 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
         var contextWrapper = this.CreateWrappedContext();
 
         var query = (
-            from p in contextWrapper .People.OfType<Employee>()
+            from p in contextWrapper.People.OfType<Employee>()
             where p.PersonId == -6
             select p) as DataServiceQuery<Employee>;
 
@@ -175,13 +191,13 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
         var contextWrapper = this.CreateWrappedContext();
 
         var query = (
-            from product in contextWrapper .Products.OfType<DiscontinuedProduct>()
+            from product in contextWrapper.Products.OfType<DiscontinuedProduct>()
             from related in product.RelatedProducts.OfType<DiscontinuedProduct>()
             from photo in related.Photos
-            where 
+            where
                 product.ProductId == -9 &&
                 related.ProductId == -9 &&
-                photo.PhotoId == -4 && 
+                photo.PhotoId == -4 &&
                 photo.ProductId == -4
 
             select photo) as IQueryable<ProductPhoto>;
@@ -200,7 +216,7 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
     }
 
     [Fact]
-    public void AttachTo()
+    public void AttachToWithKeyAsSegment()
     {
         // Arrange
         var contextWrapper = this.CreateWrappedContext();
@@ -208,15 +224,15 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
         var person = new Person { PersonId = -10 };
 
         // Act
-        contextWrapper .AttachTo("Person", person);
+        contextWrapper.AttachTo("Person", person);
 
         // Assert
-        Assert.Single(contextWrapper .Entities);
-        Assert.Equal(-10, (contextWrapper .Entities[0].Entity as Person)?.PersonId);
+        Assert.Single(contextWrapper.Entities);
+        Assert.Equal(-10, (contextWrapper.Entities[0].Entity as Person)?.PersonId);
     }
 
     [Fact]
-    public void AttachToLoadProperty()
+    public void AttachToAndLoadPropertyWithKeyAsSegment()
     {
         // Arrange
         var contextWrapper = this.CreateWrappedContext();
@@ -224,8 +240,8 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
         var person = new Person { PersonId = -10 };
 
         // Act
-        contextWrapper .AttachTo("People", person);
-        contextWrapper .LoadProperty(person, "PersonMetadata");
+        contextWrapper.AttachTo("People", person);
+        contextWrapper.LoadProperty(person, "PersonMetadata");
 
         // Assert
         Assert.Equal(3, person.PersonMetadata.Count);
@@ -240,14 +256,14 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
         // Arrange
         var contextWrapper = this.CreateWrappedContext();
 
-        var response = contextWrapper .Customers.Expand(c => c.Orders).Execute() as QueryOperationResponse<Customer>;
+        var response = contextWrapper.Customers.Expand(c => c.Orders).Execute() as QueryOperationResponse<Customer>;
         DataServiceQueryContinuation<Customer>? customerContinuation = null;
 
         do
         {
             if (customerContinuation != null)
             {
-                response = contextWrapper .Execute<Customer>(customerContinuation);
+                response = contextWrapper.Execute<Customer>(customerContinuation);
             }
 
             foreach (var customer in response)
@@ -256,7 +272,7 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
 
                 while (orderContinuation != null)
                 {
-                    var ordersResponse = contextWrapper .LoadProperty(customer, "Orders", orderContinuation);
+                    var ordersResponse = contextWrapper.LoadProperty(customer, "Orders", orderContinuation);
                     orderContinuation = ordersResponse.GetContinuation();
                 }
             }
@@ -264,7 +280,25 @@ public class ClientEndToEndTests : EndToEndTestBase<ClientEndToEndTests.TestsSta
         } while ((customerContinuation = response.GetContinuation()) != null);
     }
 
+
+    [Fact]
+    public void ClientWithKeyAsSegmentSendsRequestsToServerWithoutKeyAsSegment()
+    {
+        // Arrange
+        var contextWrapper = this.CreateWrappedContext();
+
+        // Act
+        var queryable = contextWrapper.Orders.ByKey(0);
+        var exception = Record.Exception(() => queryable.GetValue());
+
+        // Assert
+        Assert.EndsWith("/Orders/0", queryable.RequestUri.OriginalString);
+        Assert.NotNull(exception.InnerException);
+        Assert.IsType<DataServiceClientException>(exception.InnerException);
+    }
+
     #region Private methods
+
     private Container CreateWrappedContext()
     {
         var context = new Container(_baseUri)
