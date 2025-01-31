@@ -215,7 +215,7 @@
         <Property Name="PhotoId" Type="Edm.Int32" Nullable="false" />
         <Property Name="Photo" Type="Edm.Binary" />
       </EntityType>
-      <EntityType Name="CustomerInfo">
+      <EntityType Name="CustomerInfo" HasStream="true">
         <Key>
           <PropertyRef Name="CustomerInfoId" />
         </Key>
@@ -287,7 +287,7 @@
         <Property Name="ComplexPhone" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Phone" />
         <Property Name="ComplexContactDetails" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ContactDetails" />
       </EntityType>
-      <EntityType Name="Car">
+      <EntityType Name="Car" HasStream="true">
         <Key>
           <PropertyRef Name="VIN" />
         </Key>
