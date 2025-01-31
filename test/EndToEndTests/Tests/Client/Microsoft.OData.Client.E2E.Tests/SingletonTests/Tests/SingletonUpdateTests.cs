@@ -150,7 +150,7 @@ public class SingletonUpdateTests : EndToEndTestBase<SingletonUpdateTests.TestsS
         var entries = await TestsHelper.QueryResourceEntriesAsync("VipCustomer", mimeType);
 
         // Assert
-        ODataValueAssertEqualHelper.AssertODataPropertyAndResourceEqual(currentHomeAddress, entries[0]);
+        SingletonODataValueAssertEqualHelper.AssertODataPropertyAndResourceEqual(currentHomeAddress, entries[0]);
 
         // Act
         await this.UpdateEntryAsync("Customer", "VipCustomer", mimeType, properties);
@@ -158,7 +158,7 @@ public class SingletonUpdateTests : EndToEndTestBase<SingletonUpdateTests.TestsS
         var updatedEntries = await TestsHelper.QueryResourceEntriesAsync("VipCustomer", mimeType);
 
         // Assert
-        ODataValueAssertEqualHelper.AssertODataPropertyAndResourceEqual(updatedHomeAddress, updatedEntries[0]);
+        SingletonODataValueAssertEqualHelper.AssertODataPropertyAndResourceEqual(updatedHomeAddress, updatedEntries[0]);
 
         ResetDefaultDataSource();
     }
