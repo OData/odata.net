@@ -1,0 +1,372 @@
+﻿abstract Microsoft.Spatial.Geography.IsEmpty.get -> bool
+abstract Microsoft.Spatial.GeographyCollection.Geographies.get -> System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.Spatial.Geography>
+abstract Microsoft.Spatial.GeographyLineString.Points.get -> System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.Spatial.GeographyPoint>
+abstract Microsoft.Spatial.GeographyMultiLineString.LineStrings.get -> System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.Spatial.GeographyLineString>
+abstract Microsoft.Spatial.GeographyMultiPoint.Points.get -> System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.Spatial.GeographyPoint>
+abstract Microsoft.Spatial.GeographyMultiPolygon.Polygons.get -> System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.Spatial.GeographyPolygon>
+abstract Microsoft.Spatial.GeographyPipeline.BeginFigure(Microsoft.Spatial.GeographyPosition position) -> void
+abstract Microsoft.Spatial.GeographyPipeline.BeginGeography(Microsoft.Spatial.SpatialType type) -> void
+abstract Microsoft.Spatial.GeographyPipeline.EndFigure() -> void
+abstract Microsoft.Spatial.GeographyPipeline.EndGeography() -> void
+abstract Microsoft.Spatial.GeographyPipeline.LineTo(Microsoft.Spatial.GeographyPosition position) -> void
+abstract Microsoft.Spatial.GeographyPipeline.Reset() -> void
+abstract Microsoft.Spatial.GeographyPipeline.SetCoordinateSystem(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> void
+abstract Microsoft.Spatial.GeographyPoint.Latitude.get -> double
+abstract Microsoft.Spatial.GeographyPoint.Longitude.get -> double
+abstract Microsoft.Spatial.GeographyPoint.M.get -> double?
+abstract Microsoft.Spatial.GeographyPoint.Z.get -> double?
+abstract Microsoft.Spatial.GeographyPolygon.Rings.get -> System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.Spatial.GeographyLineString>
+abstract Microsoft.Spatial.GeoJsonObjectFormatter.CreateWriter(Microsoft.Spatial.IGeoJsonWriter writer) -> Microsoft.Spatial.SpatialPipeline
+abstract Microsoft.Spatial.GeoJsonObjectFormatter.Read<T>(System.Collections.Generic.IDictionary<string, object> source) -> T
+abstract Microsoft.Spatial.GeoJsonObjectFormatter.Write(Microsoft.Spatial.ISpatial value) -> System.Collections.Generic.IDictionary<string, object>
+abstract Microsoft.Spatial.Geometry.IsEmpty.get -> bool
+abstract Microsoft.Spatial.GeometryCollection.Geometries.get -> System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.Spatial.Geometry>
+abstract Microsoft.Spatial.GeometryLineString.Points.get -> System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.Spatial.GeometryPoint>
+abstract Microsoft.Spatial.GeometryMultiLineString.LineStrings.get -> System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.Spatial.GeometryLineString>
+abstract Microsoft.Spatial.GeometryMultiPoint.Points.get -> System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.Spatial.GeometryPoint>
+abstract Microsoft.Spatial.GeometryMultiPolygon.Polygons.get -> System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.Spatial.GeometryPolygon>
+abstract Microsoft.Spatial.GeometryPipeline.BeginFigure(Microsoft.Spatial.GeometryPosition position) -> void
+abstract Microsoft.Spatial.GeometryPipeline.BeginGeometry(Microsoft.Spatial.SpatialType type) -> void
+abstract Microsoft.Spatial.GeometryPipeline.EndFigure() -> void
+abstract Microsoft.Spatial.GeometryPipeline.EndGeometry() -> void
+abstract Microsoft.Spatial.GeometryPipeline.LineTo(Microsoft.Spatial.GeometryPosition position) -> void
+abstract Microsoft.Spatial.GeometryPipeline.Reset() -> void
+abstract Microsoft.Spatial.GeometryPipeline.SetCoordinateSystem(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> void
+abstract Microsoft.Spatial.GeometryPoint.M.get -> double?
+abstract Microsoft.Spatial.GeometryPoint.X.get -> double
+abstract Microsoft.Spatial.GeometryPoint.Y.get -> double
+abstract Microsoft.Spatial.GeometryPoint.Z.get -> double?
+abstract Microsoft.Spatial.GeometryPolygon.Rings.get -> System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.Spatial.GeometryLineString>
+abstract Microsoft.Spatial.SpatialFormatter<TReaderStream, TWriterStream>.CreateWriter(TWriterStream writerStream) -> Microsoft.Spatial.SpatialPipeline
+abstract Microsoft.Spatial.SpatialFormatter<TReaderStream, TWriterStream>.ReadGeography(TReaderStream readerStream, Microsoft.Spatial.SpatialPipeline pipeline) -> void
+abstract Microsoft.Spatial.SpatialFormatter<TReaderStream, TWriterStream>.ReadGeometry(TReaderStream readerStream, Microsoft.Spatial.SpatialPipeline pipeline) -> void
+abstract Microsoft.Spatial.SpatialImplementation.CreateBuilder() -> Microsoft.Spatial.SpatialBuilder
+abstract Microsoft.Spatial.SpatialImplementation.CreateGeoJsonObjectFormatter() -> Microsoft.Spatial.GeoJsonObjectFormatter
+abstract Microsoft.Spatial.SpatialImplementation.CreateGmlFormatter() -> Microsoft.Spatial.GmlFormatter
+abstract Microsoft.Spatial.SpatialImplementation.CreateValidator() -> Microsoft.Spatial.SpatialPipeline
+abstract Microsoft.Spatial.SpatialImplementation.CreateWellKnownTextSqlFormatter() -> Microsoft.Spatial.WellKnownTextSqlFormatter
+abstract Microsoft.Spatial.SpatialImplementation.CreateWellKnownTextSqlFormatter(bool allowOnlyTwoDimensions) -> Microsoft.Spatial.WellKnownTextSqlFormatter
+abstract Microsoft.Spatial.SpatialImplementation.Operations.get -> Microsoft.Spatial.SpatialOperations
+abstract Microsoft.Spatial.SpatialImplementation.Operations.set -> void
+Microsoft.Spatial.CoordinateSystem
+Microsoft.Spatial.CoordinateSystem.EpsgId.get -> int?
+Microsoft.Spatial.CoordinateSystem.Equals(Microsoft.Spatial.CoordinateSystem other) -> bool
+Microsoft.Spatial.CoordinateSystem.Id.get -> string
+Microsoft.Spatial.CoordinateSystem.Name.get -> string
+Microsoft.Spatial.CoordinateSystem.ToWktId() -> string
+Microsoft.Spatial.FormatterExtensions
+Microsoft.Spatial.Geography
+Microsoft.Spatial.Geography.CoordinateSystem.get -> Microsoft.Spatial.CoordinateSystem
+Microsoft.Spatial.Geography.Geography(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeographyCollection
+Microsoft.Spatial.GeographyCollection.Equals(Microsoft.Spatial.GeographyCollection other) -> bool
+Microsoft.Spatial.GeographyCollection.GeographyCollection(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeographyCurve
+Microsoft.Spatial.GeographyCurve.GeographyCurve(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeographyFactory
+Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.Build() -> T
+Microsoft.Spatial.GeographyFactory<T>.Collection() -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.LineString() -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.LineString(double latitude, double longitude) -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.LineString(double latitude, double longitude, double? z, double? m) -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.LineTo(double latitude, double longitude) -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.LineTo(double latitude, double longitude, double? z, double? m) -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.MultiLineString() -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.MultiPoint() -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.MultiPolygon() -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.Point() -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.Point(double latitude, double longitude) -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.Point(double latitude, double longitude, double? z, double? m) -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.Polygon() -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.Ring(double latitude, double longitude) -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFactory<T>.Ring(double latitude, double longitude, double? z, double? m) -> Microsoft.Spatial.GeographyFactory<T>
+Microsoft.Spatial.GeographyFullGlobe
+Microsoft.Spatial.GeographyFullGlobe.Equals(Microsoft.Spatial.GeographyFullGlobe other) -> bool
+Microsoft.Spatial.GeographyFullGlobe.GeographyFullGlobe(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeographyLineString
+Microsoft.Spatial.GeographyLineString.Equals(Microsoft.Spatial.GeographyLineString other) -> bool
+Microsoft.Spatial.GeographyLineString.GeographyLineString(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeographyMultiCurve
+Microsoft.Spatial.GeographyMultiCurve.GeographyMultiCurve(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeographyMultiLineString
+Microsoft.Spatial.GeographyMultiLineString.Equals(Microsoft.Spatial.GeographyMultiLineString other) -> bool
+Microsoft.Spatial.GeographyMultiLineString.GeographyMultiLineString(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeographyMultiPoint
+Microsoft.Spatial.GeographyMultiPoint.Equals(Microsoft.Spatial.GeographyMultiPoint other) -> bool
+Microsoft.Spatial.GeographyMultiPoint.GeographyMultiPoint(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeographyMultiPolygon
+Microsoft.Spatial.GeographyMultiPolygon.Equals(Microsoft.Spatial.GeographyMultiPolygon other) -> bool
+Microsoft.Spatial.GeographyMultiPolygon.GeographyMultiPolygon(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeographyMultiSurface
+Microsoft.Spatial.GeographyMultiSurface.GeographyMultiSurface(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeographyOperationsExtensions
+Microsoft.Spatial.GeographyPipeline
+Microsoft.Spatial.GeographyPipeline.GeographyPipeline() -> void
+Microsoft.Spatial.GeographyPoint
+Microsoft.Spatial.GeographyPoint.Equals(Microsoft.Spatial.GeographyPoint other) -> bool
+Microsoft.Spatial.GeographyPoint.GeographyPoint(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeographyPolygon
+Microsoft.Spatial.GeographyPolygon.Equals(Microsoft.Spatial.GeographyPolygon other) -> bool
+Microsoft.Spatial.GeographyPolygon.GeographyPolygon(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeographyPosition
+Microsoft.Spatial.GeographyPosition.Equals(Microsoft.Spatial.GeographyPosition other) -> bool
+Microsoft.Spatial.GeographyPosition.GeographyPosition(double latitude, double longitude) -> void
+Microsoft.Spatial.GeographyPosition.GeographyPosition(double latitude, double longitude, double? z, double? m) -> void
+Microsoft.Spatial.GeographyPosition.Latitude.get -> double
+Microsoft.Spatial.GeographyPosition.Longitude.get -> double
+Microsoft.Spatial.GeographyPosition.M.get -> double?
+Microsoft.Spatial.GeographyPosition.Z.get -> double?
+Microsoft.Spatial.GeographySurface
+Microsoft.Spatial.GeographySurface.GeographySurface(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeoJsonObjectFormatter
+Microsoft.Spatial.GeoJsonObjectFormatter.GeoJsonObjectFormatter() -> void
+Microsoft.Spatial.Geometry
+Microsoft.Spatial.Geometry.CoordinateSystem.get -> Microsoft.Spatial.CoordinateSystem
+Microsoft.Spatial.Geometry.Geometry(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeometryCollection
+Microsoft.Spatial.GeometryCollection.Equals(Microsoft.Spatial.GeometryCollection other) -> bool
+Microsoft.Spatial.GeometryCollection.GeometryCollection(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeometryCurve
+Microsoft.Spatial.GeometryCurve.GeometryCurve(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeometryFactory
+Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.Build() -> T
+Microsoft.Spatial.GeometryFactory<T>.Collection() -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.LineString() -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.LineString(double x, double y) -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.LineString(double x, double y, double? z, double? m) -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.LineTo(double x, double y) -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.LineTo(double x, double y, double? z, double? m) -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.MultiLineString() -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.MultiPoint() -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.MultiPolygon() -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.Point() -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.Point(double x, double y) -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.Point(double x, double y, double? z, double? m) -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.Polygon() -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.Ring(double x, double y) -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryFactory<T>.Ring(double x, double y, double? z, double? m) -> Microsoft.Spatial.GeometryFactory<T>
+Microsoft.Spatial.GeometryLineString
+Microsoft.Spatial.GeometryLineString.Equals(Microsoft.Spatial.GeometryLineString other) -> bool
+Microsoft.Spatial.GeometryLineString.GeometryLineString(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeometryMultiCurve
+Microsoft.Spatial.GeometryMultiCurve.GeometryMultiCurve(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeometryMultiLineString
+Microsoft.Spatial.GeometryMultiLineString.Equals(Microsoft.Spatial.GeometryMultiLineString other) -> bool
+Microsoft.Spatial.GeometryMultiLineString.GeometryMultiLineString(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeometryMultiPoint
+Microsoft.Spatial.GeometryMultiPoint.Equals(Microsoft.Spatial.GeometryMultiPoint other) -> bool
+Microsoft.Spatial.GeometryMultiPoint.GeometryMultiPoint(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeometryMultiPolygon
+Microsoft.Spatial.GeometryMultiPolygon.Equals(Microsoft.Spatial.GeometryMultiPolygon other) -> bool
+Microsoft.Spatial.GeometryMultiPolygon.GeometryMultiPolygon(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeometryMultiSurface
+Microsoft.Spatial.GeometryOperationsExtensions
+Microsoft.Spatial.GeometryPipeline
+Microsoft.Spatial.GeometryPipeline.GeometryPipeline() -> void
+Microsoft.Spatial.GeometryPoint
+Microsoft.Spatial.GeometryPoint.Equals(Microsoft.Spatial.GeometryPoint other) -> bool
+Microsoft.Spatial.GeometryPoint.GeometryPoint(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeometryPolygon
+Microsoft.Spatial.GeometryPolygon.Equals(Microsoft.Spatial.GeometryPolygon other) -> bool
+Microsoft.Spatial.GeometryPolygon.GeometryPolygon(Microsoft.Spatial.CoordinateSystem coordinateSystem, Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.GeometryPosition
+Microsoft.Spatial.GeometryPosition.Equals(Microsoft.Spatial.GeometryPosition other) -> bool
+Microsoft.Spatial.GeometryPosition.GeometryPosition(double x, double y) -> void
+Microsoft.Spatial.GeometryPosition.GeometryPosition(double x, double y, double? z, double? m) -> void
+Microsoft.Spatial.GeometryPosition.M.get -> double?
+Microsoft.Spatial.GeometryPosition.X.get -> double
+Microsoft.Spatial.GeometryPosition.Y.get -> double
+Microsoft.Spatial.GeometryPosition.Z.get -> double?
+Microsoft.Spatial.GeometrySurface
+Microsoft.Spatial.GmlFormatter
+Microsoft.Spatial.GmlFormatter.GmlFormatter(Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.IGeographyProvider
+Microsoft.Spatial.IGeographyProvider.ConstructedGeography.get -> Microsoft.Spatial.Geography
+Microsoft.Spatial.IGeographyProvider.ProduceGeography -> System.Action<Microsoft.Spatial.Geography>
+Microsoft.Spatial.IGeoJsonWriter
+Microsoft.Spatial.IGeoJsonWriter.AddPropertyName(string name) -> void
+Microsoft.Spatial.IGeoJsonWriter.AddValue(double value) -> void
+Microsoft.Spatial.IGeoJsonWriter.AddValue(string value) -> void
+Microsoft.Spatial.IGeoJsonWriter.EndArrayScope() -> void
+Microsoft.Spatial.IGeoJsonWriter.EndObjectScope() -> void
+Microsoft.Spatial.IGeoJsonWriter.StartArrayScope() -> void
+Microsoft.Spatial.IGeoJsonWriter.StartObjectScope() -> void
+Microsoft.Spatial.IGeometryProvider
+Microsoft.Spatial.IGeometryProvider.ConstructedGeometry.get -> Microsoft.Spatial.Geometry
+Microsoft.Spatial.IGeometryProvider.ProduceGeometry -> System.Action<Microsoft.Spatial.Geometry>
+Microsoft.Spatial.IShapeProvider
+Microsoft.Spatial.ISpatial
+Microsoft.Spatial.ISpatial.CoordinateSystem.get -> Microsoft.Spatial.CoordinateSystem
+Microsoft.Spatial.ISpatial.IsEmpty.get -> bool
+Microsoft.Spatial.ParseErrorException
+Microsoft.Spatial.ParseErrorException.ParseErrorException() -> void
+Microsoft.Spatial.ParseErrorException.ParseErrorException(string message) -> void
+Microsoft.Spatial.ParseErrorException.ParseErrorException(string message, System.Exception innerException) -> void
+Microsoft.Spatial.SpatialBuilder
+Microsoft.Spatial.SpatialBuilder.ConstructedGeography.get -> Microsoft.Spatial.Geography
+Microsoft.Spatial.SpatialBuilder.ConstructedGeometry.get -> Microsoft.Spatial.Geometry
+Microsoft.Spatial.SpatialBuilder.ProduceGeography -> System.Action<Microsoft.Spatial.Geography>
+Microsoft.Spatial.SpatialBuilder.ProduceGeometry -> System.Action<Microsoft.Spatial.Geometry>
+Microsoft.Spatial.SpatialBuilder.SpatialBuilder(Microsoft.Spatial.GeographyPipeline geographyInput, Microsoft.Spatial.GeometryPipeline geometryInput, Microsoft.Spatial.IGeographyProvider geographyOutput, Microsoft.Spatial.IGeometryProvider geometryOutput) -> void
+Microsoft.Spatial.SpatialFactory
+Microsoft.Spatial.SpatialFormatter<TReaderStream, TWriterStream>
+Microsoft.Spatial.SpatialFormatter<TReaderStream, TWriterStream>.MakeValidatingBuilder() -> System.Collections.Generic.KeyValuePair<Microsoft.Spatial.SpatialPipeline, Microsoft.Spatial.IShapeProvider>
+Microsoft.Spatial.SpatialFormatter<TReaderStream, TWriterStream>.Read<TResult>(TReaderStream input) -> TResult
+Microsoft.Spatial.SpatialFormatter<TReaderStream, TWriterStream>.Read<TResult>(TReaderStream input, Microsoft.Spatial.SpatialPipeline pipeline) -> void
+Microsoft.Spatial.SpatialFormatter<TReaderStream, TWriterStream>.SpatialFormatter(Microsoft.Spatial.SpatialImplementation creator) -> void
+Microsoft.Spatial.SpatialFormatter<TReaderStream, TWriterStream>.Write(Microsoft.Spatial.ISpatial spatial, TWriterStream writerStream) -> void
+Microsoft.Spatial.SpatialImplementation
+Microsoft.Spatial.SpatialImplementation.SpatialImplementation() -> void
+Microsoft.Spatial.SpatialOperations
+Microsoft.Spatial.SpatialOperations.SpatialOperations() -> void
+Microsoft.Spatial.SpatialPipeline
+Microsoft.Spatial.SpatialPipeline.SpatialPipeline() -> void
+Microsoft.Spatial.SpatialPipeline.SpatialPipeline(Microsoft.Spatial.GeographyPipeline geographyPipeline, Microsoft.Spatial.GeometryPipeline geometryPipeline) -> void
+Microsoft.Spatial.SpatialPipeline.StartingLink.get -> Microsoft.Spatial.SpatialPipeline
+Microsoft.Spatial.SpatialPipeline.StartingLink.set -> void
+Microsoft.Spatial.SpatialType
+Microsoft.Spatial.SpatialType.Collection = 7 -> Microsoft.Spatial.SpatialType
+Microsoft.Spatial.SpatialType.FullGlobe = 11 -> Microsoft.Spatial.SpatialType
+Microsoft.Spatial.SpatialType.LineString = 2 -> Microsoft.Spatial.SpatialType
+Microsoft.Spatial.SpatialType.MultiLineString = 5 -> Microsoft.Spatial.SpatialType
+Microsoft.Spatial.SpatialType.MultiPoint = 4 -> Microsoft.Spatial.SpatialType
+Microsoft.Spatial.SpatialType.MultiPolygon = 6 -> Microsoft.Spatial.SpatialType
+Microsoft.Spatial.SpatialType.Point = 1 -> Microsoft.Spatial.SpatialType
+Microsoft.Spatial.SpatialType.Polygon = 3 -> Microsoft.Spatial.SpatialType
+Microsoft.Spatial.SpatialType.Unknown = 0 -> Microsoft.Spatial.SpatialType
+Microsoft.Spatial.SpatialTypeExtensions
+Microsoft.Spatial.SpatialValidator
+Microsoft.Spatial.WellKnownTextSqlFormatter
+Microsoft.Spatial.WellKnownTextSqlFormatter.WellKnownTextSqlFormatter(Microsoft.Spatial.SpatialImplementation creator) -> void
+override Microsoft.Spatial.CoordinateSystem.Equals(object obj) -> bool
+override Microsoft.Spatial.CoordinateSystem.GetHashCode() -> int
+override Microsoft.Spatial.CoordinateSystem.ToString() -> string
+override Microsoft.Spatial.GeographyCollection.Equals(object obj) -> bool
+override Microsoft.Spatial.GeographyCollection.GetHashCode() -> int
+override Microsoft.Spatial.GeographyFullGlobe.Equals(object obj) -> bool
+override Microsoft.Spatial.GeographyFullGlobe.GetHashCode() -> int
+override Microsoft.Spatial.GeographyLineString.Equals(object obj) -> bool
+override Microsoft.Spatial.GeographyLineString.GetHashCode() -> int
+override Microsoft.Spatial.GeographyMultiLineString.Equals(object obj) -> bool
+override Microsoft.Spatial.GeographyMultiLineString.GetHashCode() -> int
+override Microsoft.Spatial.GeographyMultiPoint.Equals(object obj) -> bool
+override Microsoft.Spatial.GeographyMultiPoint.GetHashCode() -> int
+override Microsoft.Spatial.GeographyMultiPolygon.Equals(object obj) -> bool
+override Microsoft.Spatial.GeographyMultiPolygon.GetHashCode() -> int
+override Microsoft.Spatial.GeographyPoint.Equals(object obj) -> bool
+override Microsoft.Spatial.GeographyPoint.GetHashCode() -> int
+override Microsoft.Spatial.GeographyPolygon.Equals(object obj) -> bool
+override Microsoft.Spatial.GeographyPolygon.GetHashCode() -> int
+override Microsoft.Spatial.GeographyPosition.Equals(object obj) -> bool
+override Microsoft.Spatial.GeographyPosition.GetHashCode() -> int
+override Microsoft.Spatial.GeographyPosition.ToString() -> string
+override Microsoft.Spatial.GeometryCollection.Equals(object obj) -> bool
+override Microsoft.Spatial.GeometryCollection.GetHashCode() -> int
+override Microsoft.Spatial.GeometryLineString.Equals(object obj) -> bool
+override Microsoft.Spatial.GeometryLineString.GetHashCode() -> int
+override Microsoft.Spatial.GeometryMultiLineString.Equals(object obj) -> bool
+override Microsoft.Spatial.GeometryMultiLineString.GetHashCode() -> int
+override Microsoft.Spatial.GeometryMultiPoint.Equals(object obj) -> bool
+override Microsoft.Spatial.GeometryMultiPoint.GetHashCode() -> int
+override Microsoft.Spatial.GeometryMultiPolygon.Equals(object obj) -> bool
+override Microsoft.Spatial.GeometryMultiPolygon.GetHashCode() -> int
+override Microsoft.Spatial.GeometryPoint.Equals(object obj) -> bool
+override Microsoft.Spatial.GeometryPoint.GetHashCode() -> int
+override Microsoft.Spatial.GeometryPolygon.Equals(object obj) -> bool
+override Microsoft.Spatial.GeometryPolygon.GetHashCode() -> int
+override Microsoft.Spatial.GeometryPosition.Equals(object obj) -> bool
+override Microsoft.Spatial.GeometryPosition.GetHashCode() -> int
+override Microsoft.Spatial.GeometryPosition.ToString() -> string
+static Microsoft.Spatial.CoordinateSystem.Geography(int? epsgId) -> Microsoft.Spatial.CoordinateSystem
+static Microsoft.Spatial.CoordinateSystem.Geometry(int? epsgId) -> Microsoft.Spatial.CoordinateSystem
+static Microsoft.Spatial.FormatterExtensions.Write(this Microsoft.Spatial.SpatialFormatter<System.IO.TextReader, System.IO.TextWriter> formatter, Microsoft.Spatial.ISpatial spatial) -> string
+static Microsoft.Spatial.FormatterExtensions.Write(this Microsoft.Spatial.SpatialFormatter<System.Xml.XmlReader, System.Xml.XmlWriter> formatter, Microsoft.Spatial.ISpatial spatial) -> string
+static Microsoft.Spatial.GeographyFactory.Collection() -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyCollection>
+static Microsoft.Spatial.GeographyFactory.Collection(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyCollection>
+static Microsoft.Spatial.GeographyFactory.LineString() -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyLineString>
+static Microsoft.Spatial.GeographyFactory.LineString(double latitude, double longitude) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyLineString>
+static Microsoft.Spatial.GeographyFactory.LineString(double latitude, double longitude, double? z, double? m) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyLineString>
+static Microsoft.Spatial.GeographyFactory.LineString(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyLineString>
+static Microsoft.Spatial.GeographyFactory.LineString(Microsoft.Spatial.CoordinateSystem coordinateSystem, double latitude, double longitude) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyLineString>
+static Microsoft.Spatial.GeographyFactory.LineString(Microsoft.Spatial.CoordinateSystem coordinateSystem, double latitude, double longitude, double? z, double? m) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyLineString>
+static Microsoft.Spatial.GeographyFactory.MultiLineString() -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyMultiLineString>
+static Microsoft.Spatial.GeographyFactory.MultiLineString(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyMultiLineString>
+static Microsoft.Spatial.GeographyFactory.MultiPoint() -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyMultiPoint>
+static Microsoft.Spatial.GeographyFactory.MultiPoint(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyMultiPoint>
+static Microsoft.Spatial.GeographyFactory.MultiPolygon() -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyMultiPolygon>
+static Microsoft.Spatial.GeographyFactory.MultiPolygon(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyMultiPolygon>
+static Microsoft.Spatial.GeographyFactory.Point() -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyPoint>
+static Microsoft.Spatial.GeographyFactory.Point(double latitude, double longitude) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyPoint>
+static Microsoft.Spatial.GeographyFactory.Point(double latitude, double longitude, double? z, double? m) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyPoint>
+static Microsoft.Spatial.GeographyFactory.Point(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyPoint>
+static Microsoft.Spatial.GeographyFactory.Point(Microsoft.Spatial.CoordinateSystem coordinateSystem, double latitude, double longitude) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyPoint>
+static Microsoft.Spatial.GeographyFactory.Point(Microsoft.Spatial.CoordinateSystem coordinateSystem, double latitude, double longitude, double? z, double? m) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyPoint>
+static Microsoft.Spatial.GeographyFactory.Polygon() -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyPolygon>
+static Microsoft.Spatial.GeographyFactory.Polygon(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> Microsoft.Spatial.GeographyFactory<Microsoft.Spatial.GeographyPolygon>
+static Microsoft.Spatial.GeographyFactory<T>.implicit operator T(Microsoft.Spatial.GeographyFactory<T> factory) -> T
+static Microsoft.Spatial.GeographyOperationsExtensions.Distance(this Microsoft.Spatial.Geography operand1, Microsoft.Spatial.Geography operand2) -> double?
+static Microsoft.Spatial.GeographyOperationsExtensions.Intersects(this Microsoft.Spatial.Geography operand1, Microsoft.Spatial.Geography operand2) -> bool?
+static Microsoft.Spatial.GeographyOperationsExtensions.Length(this Microsoft.Spatial.Geography operand) -> double?
+static Microsoft.Spatial.GeographyPoint.Create(double latitude, double longitude) -> Microsoft.Spatial.GeographyPoint
+static Microsoft.Spatial.GeographyPoint.Create(double latitude, double longitude, double? z) -> Microsoft.Spatial.GeographyPoint
+static Microsoft.Spatial.GeographyPoint.Create(double latitude, double longitude, double? z, double? m) -> Microsoft.Spatial.GeographyPoint
+static Microsoft.Spatial.GeographyPoint.Create(Microsoft.Spatial.CoordinateSystem coordinateSystem, double latitude, double longitude, double? z, double? m) -> Microsoft.Spatial.GeographyPoint
+static Microsoft.Spatial.GeographyPosition.operator !=(Microsoft.Spatial.GeographyPosition left, Microsoft.Spatial.GeographyPosition right) -> bool
+static Microsoft.Spatial.GeographyPosition.operator ==(Microsoft.Spatial.GeographyPosition left, Microsoft.Spatial.GeographyPosition right) -> bool
+static Microsoft.Spatial.GeoJsonObjectFormatter.Create() -> Microsoft.Spatial.GeoJsonObjectFormatter
+static Microsoft.Spatial.GeometryFactory.Collection() -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryCollection>
+static Microsoft.Spatial.GeometryFactory.Collection(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryCollection>
+static Microsoft.Spatial.GeometryFactory.LineString() -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryLineString>
+static Microsoft.Spatial.GeometryFactory.LineString(double x, double y) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryLineString>
+static Microsoft.Spatial.GeometryFactory.LineString(double x, double y, double? z, double? m) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryLineString>
+static Microsoft.Spatial.GeometryFactory.LineString(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryLineString>
+static Microsoft.Spatial.GeometryFactory.LineString(Microsoft.Spatial.CoordinateSystem coordinateSystem, double x, double y) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryLineString>
+static Microsoft.Spatial.GeometryFactory.LineString(Microsoft.Spatial.CoordinateSystem coordinateSystem, double x, double y, double? z, double? m) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryLineString>
+static Microsoft.Spatial.GeometryFactory.MultiLineString() -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryMultiLineString>
+static Microsoft.Spatial.GeometryFactory.MultiLineString(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryMultiLineString>
+static Microsoft.Spatial.GeometryFactory.MultiPoint() -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryMultiPoint>
+static Microsoft.Spatial.GeometryFactory.MultiPoint(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryMultiPoint>
+static Microsoft.Spatial.GeometryFactory.MultiPolygon() -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryMultiPolygon>
+static Microsoft.Spatial.GeometryFactory.MultiPolygon(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryMultiPolygon>
+static Microsoft.Spatial.GeometryFactory.Point() -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryPoint>
+static Microsoft.Spatial.GeometryFactory.Point(double x, double y) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryPoint>
+static Microsoft.Spatial.GeometryFactory.Point(double x, double y, double? z, double? m) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryPoint>
+static Microsoft.Spatial.GeometryFactory.Point(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryPoint>
+static Microsoft.Spatial.GeometryFactory.Point(Microsoft.Spatial.CoordinateSystem coordinateSystem, double x, double y) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryPoint>
+static Microsoft.Spatial.GeometryFactory.Point(Microsoft.Spatial.CoordinateSystem coordinateSystem, double x, double y, double? z, double? m) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryPoint>
+static Microsoft.Spatial.GeometryFactory.Polygon() -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryPolygon>
+static Microsoft.Spatial.GeometryFactory.Polygon(Microsoft.Spatial.CoordinateSystem coordinateSystem) -> Microsoft.Spatial.GeometryFactory<Microsoft.Spatial.GeometryPolygon>
+static Microsoft.Spatial.GeometryFactory<T>.implicit operator T(Microsoft.Spatial.GeometryFactory<T> factory) -> T
+static Microsoft.Spatial.GeometryOperationsExtensions.Distance(this Microsoft.Spatial.Geometry operand1, Microsoft.Spatial.Geometry operand2) -> double?
+static Microsoft.Spatial.GeometryOperationsExtensions.Intersects(this Microsoft.Spatial.Geometry operand1, Microsoft.Spatial.Geometry operand2) -> bool?
+static Microsoft.Spatial.GeometryOperationsExtensions.Length(this Microsoft.Spatial.Geometry operand) -> double?
+static Microsoft.Spatial.GeometryPoint.Create(double x, double y) -> Microsoft.Spatial.GeometryPoint
+static Microsoft.Spatial.GeometryPoint.Create(double x, double y, double? z) -> Microsoft.Spatial.GeometryPoint
+static Microsoft.Spatial.GeometryPoint.Create(double x, double y, double? z, double? m) -> Microsoft.Spatial.GeometryPoint
+static Microsoft.Spatial.GeometryPoint.Create(Microsoft.Spatial.CoordinateSystem coordinateSystem, double x, double y, double? z, double? m) -> Microsoft.Spatial.GeometryPoint
+static Microsoft.Spatial.GeometryPosition.operator !=(Microsoft.Spatial.GeometryPosition left, Microsoft.Spatial.GeometryPosition right) -> bool
+static Microsoft.Spatial.GeometryPosition.operator ==(Microsoft.Spatial.GeometryPosition left, Microsoft.Spatial.GeometryPosition right) -> bool
+static Microsoft.Spatial.GmlFormatter.Create() -> Microsoft.Spatial.GmlFormatter
+static Microsoft.Spatial.SpatialBuilder.Create() -> Microsoft.Spatial.SpatialBuilder
+static Microsoft.Spatial.SpatialImplementation.CurrentImplementation.get -> Microsoft.Spatial.SpatialImplementation
+static Microsoft.Spatial.SpatialPipeline.implicit operator Microsoft.Spatial.GeographyPipeline(Microsoft.Spatial.SpatialPipeline spatialPipeline) -> Microsoft.Spatial.GeographyPipeline
+static Microsoft.Spatial.SpatialPipeline.implicit operator Microsoft.Spatial.GeometryPipeline(Microsoft.Spatial.SpatialPipeline spatialPipeline) -> Microsoft.Spatial.GeometryPipeline
+static Microsoft.Spatial.SpatialTypeExtensions.SendTo(this Microsoft.Spatial.ISpatial shape, Microsoft.Spatial.SpatialPipeline destination) -> void
+static Microsoft.Spatial.SpatialValidator.Create() -> Microsoft.Spatial.SpatialPipeline
+static Microsoft.Spatial.WellKnownTextSqlFormatter.Create() -> Microsoft.Spatial.WellKnownTextSqlFormatter
+static Microsoft.Spatial.WellKnownTextSqlFormatter.Create(bool allowOnlyTwoDimensions) -> Microsoft.Spatial.WellKnownTextSqlFormatter
+static readonly Microsoft.Spatial.CoordinateSystem.DefaultGeography -> Microsoft.Spatial.CoordinateSystem
+static readonly Microsoft.Spatial.CoordinateSystem.DefaultGeometry -> Microsoft.Spatial.CoordinateSystem
+virtual Microsoft.Spatial.Geography.SendTo(Microsoft.Spatial.GeographyPipeline chain) -> void
+virtual Microsoft.Spatial.Geometry.SendTo(Microsoft.Spatial.GeometryPipeline chain) -> void
+virtual Microsoft.Spatial.SpatialOperations.Distance(Microsoft.Spatial.Geography operand1, Microsoft.Spatial.Geography operand2) -> double
+virtual Microsoft.Spatial.SpatialOperations.Distance(Microsoft.Spatial.Geometry operand1, Microsoft.Spatial.Geometry operand2) -> double
+virtual Microsoft.Spatial.SpatialOperations.Intersects(Microsoft.Spatial.Geography operand1, Microsoft.Spatial.Geography operand2) -> bool
+virtual Microsoft.Spatial.SpatialOperations.Intersects(Microsoft.Spatial.Geometry operand1, Microsoft.Spatial.Geometry operand2) -> bool
+virtual Microsoft.Spatial.SpatialOperations.Length(Microsoft.Spatial.Geography operand) -> double
+virtual Microsoft.Spatial.SpatialOperations.Length(Microsoft.Spatial.Geometry operand) -> double
+virtual Microsoft.Spatial.SpatialPipeline.ChainTo(Microsoft.Spatial.SpatialPipeline destination) -> Microsoft.Spatial.SpatialPipeline
+virtual Microsoft.Spatial.SpatialPipeline.GeographyPipeline.get -> Microsoft.Spatial.GeographyPipeline
+virtual Microsoft.Spatial.SpatialPipeline.GeometryPipeline.get -> Microsoft.Spatial.GeometryPipeline
