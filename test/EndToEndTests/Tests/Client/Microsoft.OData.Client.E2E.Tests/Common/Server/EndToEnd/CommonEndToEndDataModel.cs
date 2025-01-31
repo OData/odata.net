@@ -5,6 +5,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using Microsoft.OData.ModelBuilder;
 using Microsoft.Spatial;
 using EfKey = System.ComponentModel.DataAnnotations.KeyAttribute;
 
@@ -182,6 +183,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
         public byte[]? Photo { get; set; }
     }
 
+    [MediaType]
     public class CustomerInfo
     {
         public int CustomerInfoId { get; set; }
@@ -250,6 +252,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
         public ContactDetails? ComplexContactDetails { get; set; }
     }
 
+    [MediaType]
     public class Car
     {
         [EfKey]
