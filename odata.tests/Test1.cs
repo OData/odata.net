@@ -252,6 +252,24 @@
             Assert.AreEqual(url, transcribed);
         }
 
+        private static void Perf2Generator(int iterations)
+        {
+            var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
+            var parser = __GeneratedOdata.Parsers.Rules._odataRelativeUriParser.Instance;
+            var transcriber = __GeneratedOdata.Trancsribers.Rules._odataRelativeUriTranscriber.Instance;
+            for (int i = 0; i < iterations; ++i)
+            {
+                if (!parser.TryParse(url, out var urlCst))
+                {
+                    throw new Exception("TODO");
+                }
+
+                var stringBuilder = new StringBuilder();
+                transcriber.Transcribe(urlCst, stringBuilder);
+                var transcribed = stringBuilder.ToString();
+                Assert.AreEqual(url, transcribed);
+            }
+        }
 
         [TestMethod]
         public void Perf2()
@@ -293,24 +311,49 @@
             }
         }
 
-        private static void Perf2Generator(int iterations)
+        /*
+    public static class _customNameParser
+    {
+        ////public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._customName> Instance { get; } = from _qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR_1 in __GeneratedOdataV2.Parsers.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLARParser.Instance
+////from _ⲤqcharⲻnoⲻAMPⲻEQↃ_1 in Inners._ⲤqcharⲻnoⲻAMPⲻEQↃParser.Instance.Many()
+////select new __GeneratedOdataV2.CstNodes.Rules._customName(_qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR_1, _ⲤqcharⲻnoⲻAMPⲻEQↃ_1);
+        public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._customName> Instance { get; } = Parser.Instance;
+
+        private sealed class Parser : IParser<char, __GeneratedOdataV2.CstNodes.Rules._customName>
         {
-            var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
-            var parser = __GeneratedOdata.Parsers.Rules._odataRelativeUriParser.Instance;
-            var transcriber = __GeneratedOdata.Trancsribers.Rules._odataRelativeUriTranscriber.Instance;
-            for (int i = 0; i < iterations; ++i)
+            private Parser()
             {
-                if (!parser.TryParse(url, out var urlCst))
+            }
+
+            public static Parser Instance { get; } = new Parser();
+
+            public IOutput<char, _customName> Parse(IInput<char>? input)
+            {
+                //// from _qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR_1 in __GeneratedOdataV2.Parsers.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLARParser.Instance
+                var _qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR_1 = __GeneratedOdataV2.Parsers.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLARParser.Instance.Parse(input);
+                if (!_qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR_1.Success)
                 {
-                    throw new Exception("TODO");
+                    //// TODO this bang can hopefully be removed...
+                    return Output.Create(false, default(_customName)!, input);
                 }
 
-                var stringBuilder = new StringBuilder();
-                transcriber.Transcribe(urlCst, stringBuilder);
-                var transcribed = stringBuilder.ToString();
-                Assert.AreEqual(url, transcribed);
+                //// from _ⲤqcharⲻnoⲻAMPⲻEQↃ_1 in Inners._ⲤqcharⲻnoⲻAMPⲻEQↃParser.Instance.Many()
+                var _ⲤqcharⲻnoⲻAMPⲻEQↃ_1 = Inners._ⲤqcharⲻnoⲻAMPⲻEQↃParser.Instance.Many().Parse(_qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR_1.Remainder); //// TODO can you save the "many" parser instance?
+                if (!_ⲤqcharⲻnoⲻAMPⲻEQↃ_1.Success)
+                {
+                    //// TODO this bang can hopefully be removed...
+                    return Output.Create(false, default(_customName)!, input);
+                }
+
+                //// select new __GeneratedOdataV2.CstNodes.Rules._customName(_qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR_1, _ⲤqcharⲻnoⲻAMPⲻEQↃ_1);
+                return Output.Create(
+                    true,
+                    new __GeneratedOdataV2.CstNodes.Rules._customName(_qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR_1.Parsed, _ⲤqcharⲻnoⲻAMPⲻEQↃ_1.Parsed),
+                    _ⲤqcharⲻnoⲻAMPⲻEQↃ_1.Remainder);
             }
         }
+    }
+        */
 
         [TestMethod]
         public void Perf1()
