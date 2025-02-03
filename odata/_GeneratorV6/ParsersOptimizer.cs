@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Security.Cryptography.X509Certificates;
     using AbnfParserGenerator;
 
     public sealed class ParsersOptimizer
@@ -54,7 +54,7 @@
                     {
                         var selectDelimiter = "select ";
                         returnType = returnType.Substring(selectDelimiter.Length);
-                        returnType = returnType.Substring(returnType.IndexOf(";"));
+                        returnType = returnType.Substring(returnType.IndexOf(".Instance"));
                     }
 
                     var blocks = 
@@ -166,45 +166,54 @@ if (!{{splitLine.Name}}.Success)
 
         private string GenerateLastLine(string line, string remainder)
         {
-            var result = "return Output.Create(true, new ";
-
-            var typeStartIndex = "select new ".Length;
-            var typeEndIndex = line.IndexOf("(");
-            var typeName = line.Substring(typeStartIndex, typeEndIndex - typeStartIndex + 1);
-
-            result += typeName;
-            result += "(";
-
-            var first = true;
-            while (true)
+            if (line.StartsWith("select new "))
             {
-                if (!first)
-                {
-                    result += ", ";
-                }
+                var result = "return Output.Create(true, new ";
 
-                first = false;
+                var typeStartIndex = "select new ".Length;
+                var typeEndIndex = line.IndexOf("(");
+                var typeName = line.Substring(typeStartIndex, typeEndIndex - typeStartIndex + 1);
 
-                var commaIndex = line.IndexOf(", ", typeEndIndex + 1);
-                if (commaIndex < 0)
+                result += typeName;
+                result += "(";
+
+                var first = true;
+                while (true)
                 {
-                    var parenIndex = line.IndexOf(")", typeEndIndex + 1);
-                    result += line.Substring(typeEndIndex, parenIndex - typeEndIndex + 1);
+                    if (!first)
+                    {
+                        result += ", ";
+                    }
+
+                    first = false;
+
+                    var commaIndex = line.IndexOf(", ", typeEndIndex + 1);
+                    if (commaIndex < 0)
+                    {
+                        var parenIndex = line.IndexOf(")", typeEndIndex + 1);
+                        result += line.Substring(typeEndIndex, parenIndex - typeEndIndex + 1);
+                        result += ".Parsed";
+                        break;
+                    }
+
+                    result += line.Substring(typeEndIndex, commaIndex - typeEndIndex + 1);
                     result += ".Parsed";
-                    break;
+
+                    typeEndIndex = commaIndex + 2;
                 }
 
-                result += line.Substring(typeEndIndex, commaIndex - typeEndIndex + 1);
-                result += ".Parsed";
+                result += "), ";
+                result += remainder;
+                result += ");";
 
-                typeEndIndex = commaIndex + 2;
+                return result;
             }
-
-            result += "), ";
-            result += remainder;
-            result += ");";
-
-            return result;
+            else
+            {
+                var singleton = line.Substring("select ".Length);
+                singleton = singleton.Substring(0, singleton.Length - 1);
+                return $"return Output.Create(true, {singleton}, {remainder});";
+            }
         }
     }
 }
