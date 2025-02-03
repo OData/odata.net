@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Transactions;
     using AbnfParserGenerator;
 
     public sealed class CstNodesOptimizer
@@ -90,7 +90,36 @@
 
         private bool IsSingleton(string fullyQualifiedType, Namespace someNodes, Namespace moreNodes)
         {
+            if (fullyQualifiedType.StartsWith(someNodes.Name))
+            {
+                if (IsSingleton(fullyQualifiedType, someNodes))
+                {
+                    return true;
+                }
+            }
+
+            if (fullyQualifiedType.StartsWith(moreNodes.Name))
+            {
+                if (IsSingleton(fullyQualifiedType, moreNodes))
+                {
+                    return true;
+                }
+            }
+
             return false;
+        }
+
+        private bool IsSingleton(string fullyQualifiedType, Namespace nodes)
+        {
+            var typeName = fullyQualifiedType.Substring(someNodes.Name.Length);
+
+            foreach (var @class in nodes.Classes)
+            {
+                if (string.Equals(typeName, @class.Name))
+                {
+                    return IsSingleton(@class);
+                }
+            }
         }
 
         private bool IsSingleton(Class @class)
