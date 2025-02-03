@@ -179,6 +179,11 @@
         [TestMethod]
         public void EntityTest()
         {
+            //// TODO perf improvments that worked:
+            //// implementing a charparser in the parsing library
+            //// removing selectmany calls in the generated code
+            //// producing more singletons in the generated code
+
             var url = "$entity?$id=asdf";
             if (!__GeneratedOdata.Parsers.Rules._odataRelativeUriParser.Instance.TryParse(url, out var urlCst))
             {

@@ -4,13 +4,6 @@ namespace CombinatorParsingV2
 {
     //// TODO covariance and contravariance
 
-    //// TODO stuff that you did to improve performance:
-    //// charparser
-
-    //// TODO update generator with stuff that *definitely* worked:
-    //// remove selectmany
-    //// more singletons
-
     //// TODO you need to make structs and ref structs v3 and v4
     //// TODO structs made performance worse and in made it even worse
     //// TODO ref structs for parser types
