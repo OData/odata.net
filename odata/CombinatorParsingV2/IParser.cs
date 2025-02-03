@@ -4,11 +4,6 @@ namespace CombinatorParsingV2
 {
     //// TODO covariance and contravariance
 
-    //// TODO you need to make structs and ref structs v3 and v4
-    //// TODO structs made performance worse and in made it even worse
-    //// TODO ref structs for parser types
-    //// TODO structs for node types?
-    
     public interface IParser<TToken, out TParsed>
     {
         IOutput<TToken, TParsed> Parse(IInput<TToken>? input); //// TODO would it make sense to have a TInput and a IIndex? that way the index can be as small as an int, so there's no trade-off with using a struct? iindex would have a `TToken current(TInput)` method or something
