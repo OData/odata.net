@@ -451,8 +451,7 @@
                 "__GeneratedOdata.Parsers.Rules",
                 "__GeneratedOdata.Parsers.Inners",
                 @"C:\github\odata.net\odata\__GeneratedOdata\Parsers\Rules",
-                @"C:\github\odata.net\odata\__GeneratedOdata\Parsers\Inners",
-                true);
+                @"C:\github\odata.net\odata\__GeneratedOdata\Parsers\Inners");
         }
 
         [TestMethod]

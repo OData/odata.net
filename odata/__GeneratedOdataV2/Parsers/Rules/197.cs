@@ -1,0 +1,13 @@
+namespace __GeneratedOdataV2.Parsers.Rules
+{
+    using CombinatorParsingV2;
+    
+    public static class _complexInUriParser
+    {
+        public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._complexInUri> Instance { get; } = from _beginⲻobject_1 in __GeneratedOdataV2.Parsers.Rules._beginⲻobjectParser.Instance
+from _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1 in __GeneratedOdataV2.Parsers.Inners._ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃParser.Instance.Optional()
+from _endⲻobject_1 in __GeneratedOdataV2.Parsers.Rules._endⲻobjectParser.Instance
+select new __GeneratedOdataV2.CstNodes.Rules._complexInUri(_beginⲻobject_1, _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1.GetOrElse(null), _endⲻobject_1);
+    }
+    
+}

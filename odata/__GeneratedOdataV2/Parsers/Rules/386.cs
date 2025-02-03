@@ -1,0 +1,13 @@
+namespace __GeneratedOdataV2.Parsers.Rules
+{
+    using CombinatorParsingV2;
+    
+    public static class _authorityParser
+    {
+        public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._authority> Instance { get; } = from _userinfo_ʺx40ʺ_1 in __GeneratedOdataV2.Parsers.Inners._userinfo_ʺx40ʺParser.Instance.Optional()
+from _host_1 in __GeneratedOdataV2.Parsers.Rules._hostParser.Instance
+from _ʺx3Aʺ_port_1 in __GeneratedOdataV2.Parsers.Inners._ʺx3Aʺ_portParser.Instance.Optional()
+select new __GeneratedOdataV2.CstNodes.Rules._authority(_userinfo_ʺx40ʺ_1.GetOrElse(null), _host_1, _ʺx3Aʺ_port_1.GetOrElse(null));
+    }
+    
+}

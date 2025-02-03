@@ -1,0 +1,24 @@
+namespace __GeneratedOdataV2.Parsers.Rules
+{
+    using CombinatorParsingV2;
+    
+    public static class _monthParser
+    {
+        public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._month> Instance { get; } = (_ʺx30ʺ_oneToNineParser.Instance).Or<char, __GeneratedOdataV2.CstNodes.Rules._month>(_ʺx31ʺ_Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃParser.Instance);
+        
+        public static class _ʺx30ʺ_oneToNineParser
+        {
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._month._ʺx30ʺ_oneToNine> Instance { get; } = from _ʺx30ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx30ʺParser.Instance
+from _oneToNine_1 in __GeneratedOdataV2.Parsers.Rules._oneToNineParser.Instance
+select new __GeneratedOdataV2.CstNodes.Rules._month._ʺx30ʺ_oneToNine(_ʺx30ʺ_1, _oneToNine_1);
+        }
+        
+        public static class _ʺx31ʺ_Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃParser
+        {
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._month._ʺx31ʺ_Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃ> Instance { get; } = from _ʺx31ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx31ʺParser.Instance
+from _Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃ_1 in __GeneratedOdataV2.Parsers.Inners._Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃParser.Instance
+select new __GeneratedOdataV2.CstNodes.Rules._month._ʺx31ʺ_Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃ(_ʺx31ʺ_1, _Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺↃ_1);
+        }
+    }
+    
+}

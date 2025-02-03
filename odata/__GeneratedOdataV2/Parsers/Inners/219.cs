@@ -1,0 +1,11 @@
+namespace __GeneratedOdataV2.Parsers.Inners
+{
+    using CombinatorParsingV2;
+    
+    public static class _ⲤCOMMA_parameterNameↃParser
+    {
+        public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._ⲤCOMMA_parameterNameↃ> Instance { get; } = from _COMMA_parameterName_1 in __GeneratedOdataV2.Parsers.Inners._COMMA_parameterNameParser.Instance
+select new __GeneratedOdataV2.CstNodes.Inners._ⲤCOMMA_parameterNameↃ(_COMMA_parameterName_1);
+    }
+    
+}
