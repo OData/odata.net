@@ -362,6 +362,7 @@
             //// TODO update generator to remove all selects
             //// TODO does iinput allow for the underlying type to be a stream? (you're thinking of async here)
             //// TODO you need to move on from the perf stuff (don't lose your other branch) and work on syntactic ast + futures
+            //// TODO parser classes don't need to be static anymore, they have a nested sinlgeton, the top-level class could just be the singleton
             //// TODO does transcription matter?
             //// TODO pull structs from other branch for v3 combinator parser; //// TODO test performance
             //// TODO pull ref struct from other branch for v4 combinator parser //// TODO test performance
