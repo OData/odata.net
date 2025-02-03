@@ -1,15 +1,11 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using __GeneratedOdata.CstNodes.Rules;
     using CombinatorParsingV2;
     
     public static class _primitiveLiteralParser
     {
-        /*public static IParser<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral> Instance { get; } = (_nullValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_booleanValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_guidValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_dateValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_dateTimeOffsetValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_timeOfDayValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_decimalValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_doubleValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_singleValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_sbyteValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_byteValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_int16ValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_int32ValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_int64ValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_stringParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_durationParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_enumParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_binaryParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geographyCollectionParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geographyLineStringParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geographyMultiLineStringParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geographyMultiPointParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geographyMultiPolygonParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geographyPointParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geographyPolygonParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geometryCollectionParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geometryLineStringParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geometryMultiLineStringParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geometryMultiPointParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geometryMultiPolygonParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geometryPointParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geometryPolygonParser.Instance);
-        */
-        //// PERF
-        public static IParser<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral> Instance { get; } = _stringParser.Instance;
-
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral> Instance { get; } = (_nullValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_booleanValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_guidValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_dateValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_dateTimeOffsetValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_timeOfDayValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_decimalValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_doubleValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_singleValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_sbyteValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_byteValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_int16ValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_int32ValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_int64ValueParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_stringParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_durationParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_enumParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_binaryParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geographyCollectionParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geographyLineStringParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geographyMultiLineStringParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geographyMultiPointParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geographyMultiPolygonParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geographyPointParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geographyPolygonParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geometryCollectionParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geometryLineStringParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geometryMultiLineStringParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geometryMultiPointParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geometryMultiPolygonParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geometryPointParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral>(_geometryPolygonParser.Instance);
+        
         public static class _nullValueParser
         {
             public static IParser<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral._nullValue> Instance { get; } = from _nullValue_1 in __GeneratedOdata.Parsers.Rules._nullValueParser.Instance
@@ -96,31 +92,8 @@ select new __GeneratedOdata.CstNodes.Rules._primitiveLiteral._int64Value(_int64V
         
         public static class _stringParser
         {
-            /*public static IParser<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral._string> Instance { get; } = from _string_1 in __GeneratedOdata.Parsers.Rules._stringParser.Instance
+            public static IParser<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral._string> Instance { get; } = from _string_1 in __GeneratedOdata.Parsers.Rules._stringParser.Instance
 select new __GeneratedOdata.CstNodes.Rules._primitiveLiteral._string(_string_1);
-            */
-            //// PERF
-            public static IParser<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral._string> Instance { get; } = new Parser();
-
-            private sealed class Parser : IParser<char, __GeneratedOdata.CstNodes.Rules._primitiveLiteral._string>
-            {
-                public IOutput<char, _primitiveLiteral._string> Parse(IInput<char>? input)
-                {
-                    var _string_1 = __GeneratedOdata.Parsers.Rules._stringParser.Instance.Parse(input);
-                    if (!_string_1.Success)
-                    {
-                        return Output.Create(
-                            false,
-                            default(_primitiveLiteral._string)!,
-                            input);
-                    }
-
-                    return Output.Create(
-                        true,
-                        new __GeneratedOdata.CstNodes.Rules._primitiveLiteral._string(_string_1.Parsed),
-                        _string_1.Remainder);
-                }
-            }
         }
         
         public static class _durationParser

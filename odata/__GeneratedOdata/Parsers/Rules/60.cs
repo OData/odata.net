@@ -1,15 +1,11 @@
 namespace __GeneratedOdata.Parsers.Rules
 {
-    using __GeneratedOdata.CstNodes.Rules;
     using CombinatorParsingV2;
     
     public static class _systemQueryOptionParser
     {
-        /*public static IParser<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption> Instance { get; } = (_computeParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_deltatokenParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_expandParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_filterParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_formatParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_idParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_inlinecountParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_orderbyParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_schemaversionParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_searchParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_selectParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_skipParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_skiptokenParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_topParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_indexParser.Instance);
-        */
-        //// PERF
-        public static IParser<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption> Instance { get; } = _filterParser.Instance;
-
+        public static IParser<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption> Instance { get; } = (_computeParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_deltatokenParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_expandParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_filterParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_formatParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_idParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_inlinecountParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_orderbyParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_schemaversionParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_searchParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_selectParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_skipParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_skiptokenParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_topParser.Instance).Or<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption>(_indexParser.Instance);
+        
         public static class _computeParser
         {
             public static IParser<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption._compute> Instance { get; } = from _compute_1 in __GeneratedOdata.Parsers.Rules._computeParser.Instance
@@ -30,23 +26,8 @@ select new __GeneratedOdata.CstNodes.Rules._systemQueryOption._expand(_expand_1)
         
         public static class _filterParser
         {
-            /*public static IParser<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption._filter> Instance { get; } = from _filter_1 in __GeneratedOdata.Parsers.Rules._filterParser.Instance
+            public static IParser<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption._filter> Instance { get; } = from _filter_1 in __GeneratedOdata.Parsers.Rules._filterParser.Instance
 select new __GeneratedOdata.CstNodes.Rules._systemQueryOption._filter(_filter_1);
-            */
-            //// PERF
-            public static IParser<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption._filter> Instance { get; } = new Parser();
-
-            private sealed class Parser : IParser<char, __GeneratedOdata.CstNodes.Rules._systemQueryOption._filter>
-            {
-                public IOutput<char, _systemQueryOption._filter> Parse(IInput<char>? input)
-                {
-                    var _filter_1 = __GeneratedOdata.Parsers.Rules._filterParser.Instance.Parse(input);
-                    return Output.Create(
-                        true,
-                        new __GeneratedOdata.CstNodes.Rules._systemQueryOption._filter(_filter_1.Parsed),
-                        _filter_1.Remainder);
-                }
-            }
         }
         
         public static class _formatParser
