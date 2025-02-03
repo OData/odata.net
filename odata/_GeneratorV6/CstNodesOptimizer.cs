@@ -1,5 +1,6 @@
 ﻿namespace _GeneratorV6
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Transactions;
@@ -127,9 +128,24 @@
 
         private bool IsSingleton(Class @class)
         {
-            if (
-                @class.Constructors.Skip(1).Any() ||
-                @class.Constructors.Where(constructor => constructor.AccessModifier != AccessModifier.Private && constructor.Parameters.Any()).Any())
+            if (@class.Constructors.Skip(1).Any())
+            {
+                // more than 1 constructor
+                return false;
+            }
+
+            var constructor = @class.Constructors.ElementAt(0);
+            if (constructor.AccessModifier != AccessModifier.Private)
+            {
+                return false;
+            }
+
+            if (constructor.Parameters.Any())
+            {
+                return false;
+            }
+
+            if (!@class.Properties.Where(property => property.IsStatic && property.Name == "Instance").Any())
             {
                 return false;
             }
