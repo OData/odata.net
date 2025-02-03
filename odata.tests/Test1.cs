@@ -252,7 +252,48 @@
             Assert.AreEqual(url, transcribed);
         }
 
+
+        [TestMethod]
+        public void Perf2()
+        {
+            var iterations = 10000;
+            var stopwatch = Stopwatch.StartNew();
+            Perf2Generator(iterations);
+            Console.WriteLine(stopwatch.ElapsedTicks);
+
+            stopwatch = Stopwatch.StartNew();
+            Perf1Odata(iterations);
+            Console.WriteLine(stopwatch.ElapsedTicks);
+
+            stopwatch = Stopwatch.StartNew();
+            Perf2Generator(iterations);
+            Console.WriteLine(stopwatch.ElapsedTicks);
+
+            stopwatch = Stopwatch.StartNew();
+            Perf1Odata(iterations);
+            Console.WriteLine(stopwatch.ElapsedTicks);
+        }
+
         private static void Perf1Generator(int iterations)
+        {
+            var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
+            var parser = __GeneratedOdata.Parsers.Rules._odataRelativeUriParser.Instance;
+            var transcriber = __GeneratedOdata.Trancsribers.Rules._odataRelativeUriTranscriber.Instance;
+            for (int i = 0; i < iterations; ++i)
+            {
+                if (!parser.TryParse(url, out var urlCst))
+                {
+                    throw new Exception("TODO");
+                }
+
+                var stringBuilder = new StringBuilder();
+                transcriber.Transcribe(urlCst, stringBuilder);
+                var transcribed = stringBuilder.ToString();
+                Assert.AreEqual(url, transcribed);
+            }
+        }
+
+        private static void Perf2Generator(int iterations)
         {
             var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
             var parser = __GeneratedOdata.Parsers.Rules._odataRelativeUriParser.Instance;
@@ -274,7 +315,6 @@
         [TestMethod]
         public void Perf1()
         {
-            //// TODO update generator to create more singletons
             //// TODO update generator to remove selectmany
             //// TODO does transcription matter?
             //// TODO pull structs from other branch for v3 combinator parser; //// TODO test performance
