@@ -5,7 +5,6 @@
     <RootNamespace>Microsoft.Spatial</RootNamespace>
 
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
     <DefineConstants>TRACE;SPATIAL;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <IsPackable>true</IsPackable>
@@ -22,10 +21,6 @@
 
   <ItemGroup>
     <None Remove="Microsoft.Spatial.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -66,5 +61,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>SRResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="Docs\README.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
