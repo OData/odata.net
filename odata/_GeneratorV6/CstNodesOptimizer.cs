@@ -111,7 +111,7 @@
 
         private bool IsSingleton(string fullyQualifiedType, Namespace nodes)
         {
-            var typeName = fullyQualifiedType.Substring(someNodes.Name.Length);
+            var typeName = fullyQualifiedType.Substring(nodes.Name.Length + 1);
 
             foreach (var @class in nodes.Classes)
             {
@@ -120,6 +120,8 @@
                     return IsSingleton(@class);
                 }
             }
+
+            return false;
         }
 
         private bool IsSingleton(Class @class)
