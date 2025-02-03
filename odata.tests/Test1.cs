@@ -179,8 +179,8 @@
         [TestMethod]
         public void EntityTest()
         {
-            //// TODO update generator to remove selectmany
             //// TODO update generator to create more singletons
+            //// TODO update generator to remove selectmany
             //// TODO pull structs from other branch for v3 combinator parser; //// TODO test performance
             //// TODO pull ref struct from other branch for v4 combinator parser //// TODO test performance
             //// TODO use structs for the node types? //// TODO test performance
@@ -454,6 +454,30 @@
         }
 
         [TestMethod]
+        public void V2GenerateOdataWithLatest()
+        {
+            var fullRulesPath = @"C:\github\odata.net\odata\odata.abnf";
+            var fullRulesText = File.ReadAllText(fullRulesPath);
+
+            GenerateParserTypes(
+                fullRulesText,
+                true,
+                "__GeneratedOdataV2.CstNodes.Rules",
+                "__GeneratedOdataV2.CstNodes.Inners",
+                @"C:\github\odata.net\odata\__GeneratedOdataV2\CstNodes\Rules",
+                @"C:\github\odata.net\odata\__GeneratedOdataV2\CstNodes\Inners",
+                "__GeneratedOdataV2.Trancsribers.Rules",
+                "__GeneratedOdataV2.Trancsribers.Inners",
+                @"C:\github\odata.net\odata\__GeneratedOdataV2\Transcribers\Rules",
+                @"C:\github\odata.net\odata\__GeneratedOdataV2\Transcribers\Inners",
+                "__GeneratedOdataV2.Parsers.Rules",
+                "__GeneratedOdataV2.Parsers.Inners",
+                @"C:\github\odata.net\odata\__GeneratedOdataV2\Parsers\Rules",
+                @"C:\github\odata.net\odata\__GeneratedOdataV2\Parsers\Inners",
+                true);
+        }
+
+        [TestMethod]
         public void GenerateAbnfWithLatest()
         {
             var coreRulesPath = @"C:\github\odata.net\odata\AbnfParser\core.abnf";
@@ -493,7 +517,8 @@
             string ruleParsersNamespace,
             string innerParsersNamespace,
             string ruleParsersDirectory,
-            string innerParsersDirectory
+            string innerParsersDirectory,
+            bool optimizeSingletons = false
             )
         {
             if (!__Generated.Parsers.Rules._rulelistParser.Instance.TryParse(fullRulesText, out var cst))
@@ -502,6 +527,10 @@
             }
 
             var generatedCstNodes = new _GeneratorV5.CstNodesGenerator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(cst);
+
+            if (optimizeSingletons)
+            {
+            }
 
             Directory.CreateDirectory(ruleCstNodesDirectory);
             TranscribeNamespace(generatedCstNodes.RuleCstNodes, ruleCstNodesDirectory, useNumericFileNames);
