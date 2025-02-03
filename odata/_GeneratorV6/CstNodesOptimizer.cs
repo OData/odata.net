@@ -25,9 +25,10 @@
                     cstNodes.InnerCstNodes.Classes.ToList(),
                     cstNodes.InnerCstNodes.UsingDeclarations);
 
-            var modified = false;
+            bool modified;
             do
             {
+                modified = false;
                 modified |= Optimize(ruleCstNodes, innerCstNodes);
                 modified |= Optimize(innerCstNodes, ruleCstNodes);
             }
