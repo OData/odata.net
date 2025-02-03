@@ -215,6 +215,11 @@ if (!{{splitLine.Name}}.Success)
                             result += ".Parsed";
                         }
 
+                        if (variable2.Contains("HelperRanged"))
+                        {
+                            result += ")";
+                        }
+
                         break;
                     }
 
@@ -229,6 +234,11 @@ if (!{{splitLine.Name}}.Success)
                     {
                         result += variable;
                         result += ".Parsed";
+                    }
+
+                    if (variable.Contains("HelperRanged"))
+                    {
+                        result += ")";
                     }
 
                     typeEndIndex = commaIndex + 1;
