@@ -179,6 +179,9 @@
         [TestMethod]
         public void EntityTest()
         {
+            //// TODO update generator to remove selectmany
+            //// TODO update generator to create more singletons
+
             //// TODO perf improvments that worked:
             //// implementing a charparser in the parsing library
             //// removing selectmany calls in the generated code
