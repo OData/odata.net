@@ -197,19 +197,41 @@ if (!{{splitLine.Name}}.Success)
 
                     first = false;
 
+                    var getOrElseDelimiter = ".GetOrElse(null";
                     var commaIndex = line.IndexOf(", ", typeEndIndex + 1);
                     if (commaIndex < 0)
                     {
                         var parenIndex = line.IndexOf(")", typeEndIndex + 1);
-                        result += line.Substring(typeEndIndex, parenIndex - typeEndIndex);
-                        result += ".Parsed";
+                        var variable2 = line.Substring(typeEndIndex, parenIndex - typeEndIndex);
+                        if (variable2.EndsWith(getOrElseDelimiter))
+                        {
+                            result += variable2.Substring(0, variable2.Length - getOrElseDelimiter.Length);
+                            result += ".Parsed";
+                            result += getOrElseDelimiter + ")";
+                        }
+                        else
+                        {
+                            result += variable2;
+                            result += ".Parsed";
+                        }
+
                         break;
                     }
 
-                    result += line.Substring(typeEndIndex + 1, commaIndex - typeEndIndex - 1);
-                    result += ".Parsed";
+                    var variable = line.Substring(typeEndIndex + 1, commaIndex - typeEndIndex - 1);
+                    if (variable.EndsWith(getOrElseDelimiter))
+                    {
+                        result += variable.Substring(0, variable.Length - getOrElseDelimiter.Length);
+                        result += ".Parsed";
+                        result += getOrElseDelimiter;
+                    }
+                    else
+                    {
+                        result += variable;
+                        result += ".Parsed";
+                    }
 
-                    typeEndIndex = commaIndex + 2;
+                    typeEndIndex = commaIndex + 1;
                 }
 
                 result += "), ";
