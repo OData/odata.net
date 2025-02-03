@@ -206,7 +206,7 @@ if (!{{splitLine.Name}}.Success)
                         break;
                     }
 
-                    result += line.Substring(typeEndIndex, commaIndex - typeEndIndex + 1);
+                    result += line.Substring(typeEndIndex + 1, commaIndex - typeEndIndex - 1);
                     result += ".Parsed";
 
                     typeEndIndex = commaIndex + 2;
