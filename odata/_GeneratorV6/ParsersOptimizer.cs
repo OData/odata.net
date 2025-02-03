@@ -36,8 +36,14 @@
                     .Properties
                     .Where(property => property.IsStatic && property.Name == "Instance")
                     .First();
-                var lines = instanceProperty
-                    .Initializer!
+
+                var initializer = instanceProperty.Initializer;
+                if (initializer == null)
+                {
+                    continue;
+                }
+
+                var lines = initializer
                     .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
                     .ToList();
 
@@ -48,13 +54,13 @@
                     if (returnType.StartsWith(selectNewDelimiter))
                     {
                         returnType = returnType.Substring(selectNewDelimiter.Length);
-                        returnType = returnType.Substring(returnType.IndexOf("("));
+                        returnType = returnType.Substring(0, returnType.IndexOf("("));
                     }
                     else
                     {
                         var selectDelimiter = "select ";
                         returnType = returnType.Substring(selectDelimiter.Length);
-                        returnType = returnType.Substring(returnType.IndexOf(".Instance"));
+                        returnType = returnType.Substring(0, returnType.IndexOf(".Instance"));
                     }
 
                     var blocks = 
