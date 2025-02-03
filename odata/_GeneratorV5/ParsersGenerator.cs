@@ -159,15 +159,21 @@
                 {
                     //// TODO document from transcribers generator
                     nestedClasses = Enumerable.Empty<Class>();
+                    var isSingleton = @class.Properties.Where(property => property.IsStatic && property.Name == "Instance").Any();
+
                     var initializer = string
                         .Concat(
-                            $"from {@class.Name} in Parse.Char((char)0{@class.Name.Substring(2)}) select new {cstNodeNamespace}.{@class.Name}(",
-                            string.Join(
-                                ", ",
-                                nonStaticProperties.Select(
-                                    property =>
-                                        $"{property.Type}.Instance")),
-                            ");");
+                            $"from {@class.Name} in Parse.Char((char)0{@class.Name.Substring(2)}) select ",
+                            isSingleton ?
+                                $"{cstNodeNamespace}.{@class.Name}.Instance;" :
+                                string.Concat(
+                                    $"new {cstNodeNamespace}.{@class.Name}(",
+                                    string.Join(
+                                        ", ",
+                                        nonStaticProperties.Select(
+                                            property =>
+                                                $"{property.Type}.Instance")),
+                                    ");"));
                     propertyDefinition = new[]
                     {
                         new PropertyDefinition(
@@ -184,15 +190,21 @@
                 {
                     //// TODO document from transcribers generator
                     nestedClasses = Enumerable.Empty<Class>();
+                    var isSingleton = @class.Properties.Where(property => property.IsStatic && property.Name == "Instance").Any();
+
                     var initializer = string
                         .Concat(
-                            $"from {@class.Name} in Parse.Char((char)0x{@class.Name.Substring(1)}) select new {cstNodeNamespace}.{@class.Name}(",
-                            string.Join(
-                                ", ",
-                                nonStaticProperties.Select(
-                                    property =>
-                                        $"{property.Type}.Instance")),
-                            ");");
+                            $"from {@class.Name} in Parse.Char((char)0x{@class.Name.Substring(1)}) select ",
+                            isSingleton ?
+                                $"{cstNodeNamespace}.{@class.Name}.Instance;" :
+                                string.Concat(
+                                    $"new {cstNodeNamespace}.{@class.Name}(",
+                                    string.Join(
+                                        ", ",
+                                        nonStaticProperties.Select(
+                                            property =>
+                                                $"{property.Type}.Instance")),
+                                    ");"));
                     propertyDefinition = new[]
                     {
                         new PropertyDefinition(
