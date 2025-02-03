@@ -220,12 +220,15 @@
                                             //// TODO this initializer stuff should probably be its own method and use a builder
                                             $"from {property.Name} in {UpdatePropertyType(property.Type, ruleCstNodesNamespace, innerCstNodesNamespace)}Parser.Instance{RangeCount(property, innerCstNodesNamespace)}{(property.Type.EndsWith("?") ? ".Optional()" : string.Empty)}")), //// TODO how to handle different ranges of ienumerable (at most two, at least 3, etc.) //// TODO what are the cases where nullable and enumerable are used together?
                             Environment.NewLine,
-                            isSingleton ? $"{cstNodeNamespace}.{@class.Name}.Instance" : $"select new {cstNodeNamespace}.{@class.Name}(",
-                            string.Join(
-                                ", ",
-                                nonStaticProperties
-                                    .Select(property => ConstructorArgument(property, innerCstNodesNamespace))),
-                            ");");
+                            isSingleton ? 
+                                $"{cstNodeNamespace}.{@class.Name}.Instance" : 
+                                string.Concat(
+                                    $"select new {cstNodeNamespace}.{@class.Name}(",
+                                    string.Join(
+                                        ", ",
+                                        nonStaticProperties
+                                            .Select(property => ConstructorArgument(property, innerCstNodesNamespace))),
+                                    ");"));
                     propertyDefinition = new[]
                     {
                         new PropertyDefinition(
