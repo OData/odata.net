@@ -77,7 +77,7 @@
                                     "Instance",
                                     true,
                                     false,
-                                    $"new {toOptimize.Name}.{cstNode.Name}"))
+                                    $"new {toOptimize.Name}.{cstNode.Name}();"))
                         );
 
                     toOptimize.Classes[i] = optimized;
