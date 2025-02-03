@@ -263,7 +263,7 @@
             Assert.AreEqual(url, transcribed);
         }
 
-        private static void Perf1(int iterations)
+        private static void Perf1Generator(int iterations)
         {
             var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
             var parser = __GeneratedOdata.Parsers.Rules._odataRelativeUriParser.Instance;
@@ -283,27 +283,27 @@
         }
 
         [TestMethod]
-        public void Perf()
+        public void Perf1()
         {
             var iterations = 10000;
             var stopwatch = Stopwatch.StartNew();
-            Perf1(iterations);
+            Perf1Generator(iterations);
             Console.WriteLine(stopwatch.ElapsedTicks);
 
             stopwatch = Stopwatch.StartNew();
-            Perf2(iterations);
+            Perf1Odata(iterations);
             Console.WriteLine(stopwatch.ElapsedTicks);
 
             stopwatch = Stopwatch.StartNew();
-            Perf1(iterations);
+            Perf1Generator(iterations);
             Console.WriteLine(stopwatch.ElapsedTicks);
 
             stopwatch = Stopwatch.StartNew();
-            Perf2(iterations);
+            Perf1Odata(iterations);
             Console.WriteLine(stopwatch.ElapsedTicks);
         }
 
-        private static void Perf2(int iterations)
+        private static void Perf1Odata(int iterations)
         {
             var csdl =
 """
