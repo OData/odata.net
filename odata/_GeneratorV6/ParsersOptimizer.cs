@@ -232,6 +232,11 @@ if (!{{splitLine.Name}}.Success)
                     }
                     else
                     {
+                        if (variable.Contains("HelperRanged"))
+                        {
+                            variable = variable.Substring(0, variable.Length - 1);
+                        }
+
                         result += variable;
                         result += ".Parsed";
                     }
