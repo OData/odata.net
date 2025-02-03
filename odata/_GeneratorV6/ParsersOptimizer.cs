@@ -63,7 +63,7 @@
                         returnType = returnType.Substring(0, returnType.IndexOf(".Instance"));
                     }
 
-                    var blocks = 
+                    var blocks =
                         GenerateBlocks(
                             lines
                                 .Take(lines.Count - 1)
@@ -124,13 +124,17 @@
                             .Where(property => !property.IsStatic && property.Name != "Instance")
                             .Append(
                                 new PropertyDefinition(
-                                    AccessModifier.Public, 
-                                    true, 
+                                    AccessModifier.Public,
+                                    true,
                                     instanceProperty.Type,
-                                    "Instance", 
-                                    true, 
-                                    false, 
+                                    "Instance",
+                                    true,
+                                    false,
                                     "new Parser();")));
+                }
+                else
+                {
+                    yield return parser;
                 }
             }
         }
