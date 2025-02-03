@@ -44,8 +44,18 @@
                 if (lines.Count > 2)
                 {
                     var returnType = lines[lines.Count - 1];
-                    returnType = returnType.Substring("select new ".Length);
-                    returnType = returnType.Substring(returnType.IndexOf("("));
+                    var selectNewDelimiter = "select new ";
+                    if (returnType.StartsWith(selectNewDelimiter))
+                    {
+                        returnType = returnType.Substring(selectNewDelimiter.Length);
+                        returnType = returnType.Substring(returnType.IndexOf("("));
+                    }
+                    else
+                    {
+                        var selectDelimiter = "select ";
+                        returnType = returnType.Substring(selectDelimiter.Length);
+                        returnType = returnType.Substring(returnType.IndexOf(";"));
+                    }
 
                     var blocks = 
                         GenerateBlocks(
