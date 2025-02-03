@@ -208,6 +208,8 @@
                 else
                 {
                     nestedClasses = Enumerable.Empty<Class>();
+                    var isSingleton = @class.Properties.Where(property => property.IsStatic && property.Name == "Instance").Any();
+
                     var initializer = string
                         .Concat(
                             string.Join(
@@ -218,7 +220,7 @@
                                             //// TODO this initializer stuff should probably be its own method and use a builder
                                             $"from {property.Name} in {UpdatePropertyType(property.Type, ruleCstNodesNamespace, innerCstNodesNamespace)}Parser.Instance{RangeCount(property, innerCstNodesNamespace)}{(property.Type.EndsWith("?") ? ".Optional()" : string.Empty)}")), //// TODO how to handle different ranges of ienumerable (at most two, at least 3, etc.) //// TODO what are the cases where nullable and enumerable are used together?
                             Environment.NewLine,
-                            $"select new {cstNodeNamespace}.{@class.Name}(",
+                            isSingleton ? $"{cstNodeNamespace}.{@class.Name}.Instance" : $"select new {cstNodeNamespace}.{@class.Name}(",
                             string.Join(
                                 ", ",
                                 nonStaticProperties
