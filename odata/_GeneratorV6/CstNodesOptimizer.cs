@@ -44,7 +44,7 @@
             for (int i = 0; i < cstNodes.Count; ++i)
             {
                 var cstNode = cstNodes[i];
-                if (cstNode.Properties.All(IsSingleton))
+                if (!IsSingleton(cstNode) && cstNode.Properties.All(property => IsSingleton(property.Type)))
                 {
                     var optimized = new Class(
                         cstNode.AccessModifier,
@@ -86,7 +86,12 @@
             return modified;
         }
 
-        private bool IsSingleton(PropertyDefinition propertyDefinition)
+        private bool IsSingleton(string fullyQualifiedType)
+        {
+            return false;
+        }
+
+        private bool IsSingleton(Class @class)
         {
             return false;
         }
