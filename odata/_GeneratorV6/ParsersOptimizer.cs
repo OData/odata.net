@@ -38,10 +38,28 @@
                     .First();
                 var lines = instanceProperty
                     .Initializer!
-                    .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+                    .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
+                    .ToList();
 
-                if (lines.Length > 2)
+                if (lines.Count > 2)
                 {
+                    var returnType = lines[lines.Count - 1];
+                    returnType = returnType.Substring("select new ".Length);
+                    returnType = returnType.Substring(returnType.IndexOf("("));
+
+                    var blocks = 
+                        GenerateBlocks(
+                            lines
+                                .Take(lines.Count - 1)
+                                .Select(SplitLine),
+                            returnType)
+                        .ToList();
+
+                    var parseBody = blocks
+                        .Take(blocks.Count - 1)
+                        .Append(
+                            GenerateLastLine(lines[lines.Count - 1], blocks[blocks.Count - 1]));
+
                     var nestedParser = new Class(
                         AccessModifier.Private,
                         ClassModifier.Sealed,
@@ -68,7 +86,9 @@
                                 {
                                     new MethodParameter("IInput<char>?", "input"),
                                 },
-                                "") //// TODO
+                                string.Join(
+                                    Environment.NewLine,
+                                    parseBody)),
                         },
                         Enumerable.Empty<Class>(),
                         Enumerable.Empty<PropertyDefinition>());
@@ -97,6 +117,84 @@
                                     "new Parser();")));
                 }
             }
+        }
+
+        private (string Name, string Parser) SplitLine(string line)
+        {
+            var fromDelimiter = "from ";
+            var inDelimiter = " in ";
+
+            var nameStartIndex = fromDelimiter.Length;
+            var nameEndIndex = line.IndexOf(inDelimiter, nameStartIndex);
+            var name = line.Substring(nameStartIndex, nameEndIndex - nameStartIndex + 1);
+
+            var parserStartIndex = nameEndIndex + inDelimiter.Length;
+            var parser = line.Substring(parserStartIndex);
+
+            return (name, parser);
+        }
+
+        private IEnumerable<string> GenerateBlocks(IEnumerable<(string Name, string Parser)> splitLines, string returnType)
+        {
+            var remainderName = "input";
+            foreach (var splitLine in splitLines)
+            {
+                yield return
+$$"""
+var {{splitLine.Name}} = {{splitLine.Parser}}.Parse({{remainderName}});
+if (!{{splitLine.Name}}.Success)
+{
+    return Output.Create(false, default({{returnType}})!, input);
+}
+
+""";
+                remainderName = $"{splitLine.Name}.Remainder";
+            }
+
+            yield return remainderName;
+        }
+
+        private string GenerateLastLine(string line, string remainder)
+        {
+            var result = "return Output.Create(true, new ";
+
+            var typeStartIndex = "select new ".Length;
+            var typeEndIndex = line.IndexOf("(");
+            var typeName = line.Substring(typeStartIndex, typeEndIndex - typeStartIndex + 1);
+
+            result += typeName;
+            result += "(";
+
+            var first = true;
+            while (true)
+            {
+                if (!first)
+                {
+                    result += ", ";
+                }
+
+                first = false;
+
+                var commaIndex = line.IndexOf(", ", typeEndIndex + 1);
+                if (commaIndex < 0)
+                {
+                    var parenIndex = line.IndexOf(")", typeEndIndex + 1);
+                    result += line.Substring(typeEndIndex, parenIndex - typeEndIndex + 1);
+                    result += ".Parsed";
+                    break;
+                }
+
+                result += line.Substring(typeEndIndex, commaIndex - typeEndIndex + 1);
+                result += ".Parsed";
+
+                typeEndIndex = commaIndex + 2;
+            }
+
+            result += "), ";
+            result += remainder;
+            result += ");";
+
+            return result;
         }
     }
 }
