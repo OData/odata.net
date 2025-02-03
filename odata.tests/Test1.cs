@@ -185,10 +185,10 @@
                 throw new Exception("TODO");
             }
 
-            /*var stringBuilder = new StringBuilder();
+            var stringBuilder = new StringBuilder();
             __GeneratedOdata.Trancsribers.Rules._odataRelativeUriTranscriber.Instance.Transcribe(urlCst, stringBuilder);
             var transcribed = stringBuilder.ToString();
-            Assert.AreEqual(url, transcribed);*/
+            Assert.AreEqual(url, transcribed);
 
             var csdl =
 """
@@ -274,6 +274,7 @@
         [TestMethod]
         public void Perf1()
         {
+            //// TODO does transcription matter?
             //// TODO update generator to create more singletons
             //// TODO update generator to remove selectmany
             //// TODO pull structs from other branch for v3 combinator parser; //// TODO test performance
@@ -450,7 +451,8 @@
                 "__GeneratedOdata.Parsers.Rules",
                 "__GeneratedOdata.Parsers.Inners",
                 @"C:\github\odata.net\odata\__GeneratedOdata\Parsers\Rules",
-                @"C:\github\odata.net\odata\__GeneratedOdata\Parsers\Inners");
+                @"C:\github\odata.net\odata\__GeneratedOdata\Parsers\Inners",
+                true);
         }
 
         [TestMethod]
