@@ -646,6 +646,14 @@
             generatedParsers.RuleParsers.Classes.ToList();
             generatedParsers.InnerParsers.Classes.ToList();
 
+            if (optimizeSingletons)
+            {
+                generatedParsers = new _GeneratorV6.ParsersOptimizer().Optimize(generatedParsers);
+            }
+
+            generatedParsers.RuleParsers.Classes.ToList();
+            generatedParsers.InnerParsers.Classes.ToList();
+
             Directory.CreateDirectory(ruleParsersDirectory);
             TranscribeNamespace(generatedParsers.RuleParsers, ruleParsersDirectory, useNumericFileNames);
             Directory.CreateDirectory(innerParsersDirectory);
