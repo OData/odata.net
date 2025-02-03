@@ -146,7 +146,7 @@
 
             var nameStartIndex = fromDelimiter.Length;
             var nameEndIndex = line.IndexOf(inDelimiter, nameStartIndex);
-            var name = line.Substring(nameStartIndex, nameEndIndex - nameStartIndex + 1);
+            var name = line.Substring(nameStartIndex, nameEndIndex - nameStartIndex);
 
             var parserStartIndex = nameEndIndex + inDelimiter.Length;
             var parser = line.Substring(parserStartIndex);
@@ -182,7 +182,7 @@ if (!{{splitLine.Name}}.Success)
 
                 var typeStartIndex = "select new ".Length;
                 var typeEndIndex = line.IndexOf("(");
-                var typeName = line.Substring(typeStartIndex, typeEndIndex - typeStartIndex + 1);
+                var typeName = line.Substring(typeStartIndex, typeEndIndex - typeStartIndex);
 
                 result += typeName;
                 result += "(";
