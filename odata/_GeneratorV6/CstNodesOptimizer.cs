@@ -48,7 +48,7 @@
             for (int i = 0; i < toOptimize.Classes.Count; ++i)
             {
                 var cstNode = toOptimize.Classes[i];
-                if (!IsSingleton(cstNode) && cstNode.Properties.All(property => IsSingleton(property.Type, toOptimize, other)))
+                if (!IsSingleton(cstNode) && cstNode.Properties.Any() && cstNode.Properties.All(property => IsSingleton(property.Type, toOptimize, other)))
                 {
                     var optimized = new Class(
                         cstNode.AccessModifier,
@@ -144,6 +144,12 @@
             {
                 return false;
             }
+
+            /*if (@class.NestedClasses.Any())
+            {
+                // TODO this is capturing visitors; it could probably be more robust
+                return false;
+            }*/
 
             if (!@class.Properties.Where(property => property.IsStatic && property.Name == "Instance").Any())
             {
