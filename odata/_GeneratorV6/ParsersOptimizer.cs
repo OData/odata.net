@@ -223,12 +223,13 @@ if (!{{splitLine.Name}}.Success)
                         break;
                     }
 
+                    var getOrElseDelimiter2 = ".GetOrElse(null)";
                     var variable = line.Substring(typeEndIndex + 1, commaIndex - typeEndIndex - 1);
-                    if (variable.EndsWith(getOrElseDelimiter))
+                    if (variable.EndsWith(getOrElseDelimiter2))
                     {
-                        result += variable.Substring(0, variable.Length - getOrElseDelimiter.Length);
+                        result += variable.Substring(0, variable.Length - getOrElseDelimiter2.Length);
                         result += ".Parsed";
-                        result += getOrElseDelimiter;
+                        result += getOrElseDelimiter2;
                     }
                     else
                     {

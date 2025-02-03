@@ -578,6 +578,31 @@
         }
 
         [TestMethod]
+        public void V3GenerateOdataWithLatest()
+        {
+            var fullRulesPath = @"C:\github\odata.net\odata\odata.abnf";
+            var fullRulesText = File.ReadAllText(fullRulesPath);
+
+            GenerateParserTypes(
+                fullRulesText,
+                true,
+                "__GeneratedOdataV3.CstNodes.Rules",
+                "__GeneratedOdataV3.CstNodes.Inners",
+                @"C:\github\odata.net\odata\__GeneratedOdataV3\CstNodes\Rules",
+                @"C:\github\odata.net\odata\__GeneratedOdataV3\CstNodes\Inners",
+                "__GeneratedOdataV3.Trancsribers.Rules",
+                "__GeneratedOdataV3.Trancsribers.Inners",
+                @"C:\github\odata.net\odata\__GeneratedOdataV3\Transcribers\Rules",
+                @"C:\github\odata.net\odata\__GeneratedOdataV3\Transcribers\Inners",
+                "__GeneratedOdataV3.Parsers.Rules",
+                "__GeneratedOdataV3.Parsers.Inners",
+                @"C:\github\odata.net\odata\__GeneratedOdataV3\Parsers\Rules",
+                @"C:\github\odata.net\odata\__GeneratedOdataV3\Parsers\Inners",
+                true, 
+                true);
+        }
+
+        [TestMethod]
         public void V2GenerateOdataWithLatest()
         {
             var fullRulesPath = @"C:\github\odata.net\odata\odata.abnf";
@@ -642,7 +667,8 @@
             string innerParsersNamespace,
             string ruleParsersDirectory,
             string innerParsersDirectory,
-            bool optimizeSingletons = false
+            bool optimizeSingletons = false,
+            bool optimizeSelectMany = false
             )
         {
             if (!__Generated.Parsers.Rules._rulelistParser.Instance.TryParse(fullRulesText, out var cst))
@@ -685,7 +711,7 @@
             generatedParsers.RuleParsers.Classes.ToList();
             generatedParsers.InnerParsers.Classes.ToList();
 
-            if (optimizeSingletons)
+            if (optimizeSelectMany)
             {
                 generatedParsers = new _GeneratorV6.ParsersOptimizer().Optimize(generatedParsers);
             }
