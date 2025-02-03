@@ -93,7 +93,14 @@
 
         private bool IsSingleton(Class @class)
         {
-            return false;
+            if (
+                @class.Constructors.Skip(1).Any() ||
+                @class.Constructors.Where(constructor => constructor.AccessModifier != AccessModifier.Private && constructor.Parameters.Any()).Any())
+            {
+                return false;
+            }
+
+            return true;
         }
     }
 }
