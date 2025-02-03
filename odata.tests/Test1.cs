@@ -274,9 +274,9 @@
         [TestMethod]
         public void Perf1()
         {
-            //// TODO does transcription matter?
             //// TODO update generator to create more singletons
             //// TODO update generator to remove selectmany
+            //// TODO does transcription matter?
             //// TODO pull structs from other branch for v3 combinator parser; //// TODO test performance
             //// TODO pull ref struct from other branch for v4 combinator parser //// TODO test performance
             //// TODO use structs for the node types? //// TODO test performance
