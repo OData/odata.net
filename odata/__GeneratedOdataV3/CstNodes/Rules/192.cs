@@ -1,0 +1,17 @@
+namespace __GeneratedOdataV3.CstNodes.Rules
+{
+    public sealed class _notExpr
+    {
+        public _notExpr(__GeneratedOdataV3.CstNodes.Inners._ʺx6Ex6Fx74ʺ _ʺx6Ex6Fx74ʺ_1, __GeneratedOdataV3.CstNodes.Rules._RWS _RWS_1, __GeneratedOdataV3.CstNodes.Rules._boolCommonExpr _boolCommonExpr_1)
+        {
+            this._ʺx6Ex6Fx74ʺ_1 = _ʺx6Ex6Fx74ʺ_1;
+            this._RWS_1 = _RWS_1;
+            this._boolCommonExpr_1 = _boolCommonExpr_1;
+        }
+        
+        public __GeneratedOdataV3.CstNodes.Inners._ʺx6Ex6Fx74ʺ _ʺx6Ex6Fx74ʺ_1 { get; }
+        public __GeneratedOdataV3.CstNodes.Rules._RWS _RWS_1 { get; }
+        public __GeneratedOdataV3.CstNodes.Rules._boolCommonExpr _boolCommonExpr_1 { get; }
+    }
+    
+}

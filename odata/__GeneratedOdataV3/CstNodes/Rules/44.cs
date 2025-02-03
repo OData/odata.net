@@ -1,0 +1,17 @@
+namespace __GeneratedOdataV3.CstNodes.Rules
+{
+    public sealed class _functionParameters
+    {
+        public _functionParameters(__GeneratedOdataV3.CstNodes.Rules._OPEN _OPEN_1, __GeneratedOdataV3.CstNodes.Inners._functionParameter_ЖⲤCOMMA_functionParameterↃ? _functionParameter_ЖⲤCOMMA_functionParameterↃ_1, __GeneratedOdataV3.CstNodes.Rules._CLOSE _CLOSE_1)
+        {
+            this._OPEN_1 = _OPEN_1;
+            this._functionParameter_ЖⲤCOMMA_functionParameterↃ_1 = _functionParameter_ЖⲤCOMMA_functionParameterↃ_1;
+            this._CLOSE_1 = _CLOSE_1;
+        }
+        
+        public __GeneratedOdataV3.CstNodes.Rules._OPEN _OPEN_1 { get; }
+        public __GeneratedOdataV3.CstNodes.Inners._functionParameter_ЖⲤCOMMA_functionParameterↃ? _functionParameter_ЖⲤCOMMA_functionParameterↃ_1 { get; }
+        public __GeneratedOdataV3.CstNodes.Rules._CLOSE _CLOSE_1 { get; }
+    }
+    
+}

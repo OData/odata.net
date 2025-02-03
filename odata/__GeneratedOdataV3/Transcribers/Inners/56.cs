@@ -1,0 +1,22 @@
+namespace __GeneratedOdataV3.Trancsribers.Inners
+{
+    public sealed class _ʺx2Fx24x72x65x66ʺTranscriber : GeneratorV3.ITranscriber<__GeneratedOdataV3.CstNodes.Inners._ʺx2Fx24x72x65x66ʺ>
+    {
+        private _ʺx2Fx24x72x65x66ʺTranscriber()
+        {
+        }
+        
+        public static _ʺx2Fx24x72x65x66ʺTranscriber Instance { get; } = new _ʺx2Fx24x72x65x66ʺTranscriber();
+        
+        public void Transcribe(__GeneratedOdataV3.CstNodes.Inners._ʺx2Fx24x72x65x66ʺ value, System.Text.StringBuilder builder)
+        {
+            __GeneratedOdataV3.Trancsribers.Inners._x2FTranscriber.Instance.Transcribe(value._x2F_1, builder);
+__GeneratedOdataV3.Trancsribers.Inners._x24Transcriber.Instance.Transcribe(value._x24_1, builder);
+__GeneratedOdataV3.Trancsribers.Inners._x72Transcriber.Instance.Transcribe(value._x72_1, builder);
+__GeneratedOdataV3.Trancsribers.Inners._x65Transcriber.Instance.Transcribe(value._x65_1, builder);
+__GeneratedOdataV3.Trancsribers.Inners._x66Transcriber.Instance.Transcribe(value._x66_1, builder);
+
+        }
+    }
+    
+}
