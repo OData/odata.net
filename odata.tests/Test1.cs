@@ -179,17 +179,6 @@
         [TestMethod]
         public void EntityTest()
         {
-            //// TODO update generator to create more singletons
-            //// TODO update generator to remove selectmany
-            //// TODO pull structs from other branch for v3 combinator parser; //// TODO test performance
-            //// TODO pull ref struct from other branch for v4 combinator parser //// TODO test performance
-            //// TODO use structs for the node types? //// TODO test performance
-
-            //// TODO perf improvments that worked:
-            //// implementing a charparser in the parsing library
-            //// removing selectmany calls in the generated code
-            //// producing more singletons in the generated code
-
             var url = "$entity?$id=asdf";
             if (!__GeneratedOdata.Parsers.Rules._odataRelativeUriParser.Instance.TryParse(url, out var urlCst))
             {
@@ -285,6 +274,17 @@
         [TestMethod]
         public void Perf1()
         {
+            //// TODO update generator to create more singletons
+            //// TODO update generator to remove selectmany
+            //// TODO pull structs from other branch for v3 combinator parser; //// TODO test performance
+            //// TODO pull ref struct from other branch for v4 combinator parser //// TODO test performance
+            //// TODO use structs for the node types? //// TODO test performance
+
+            //// TODO perf improvments that worked:
+            //// implementing a charparser in the parsing library
+            //// removing selectmany calls in the generated code
+            //// producing more singletons in the generated code
+
             var iterations = 10000;
             var stopwatch = Stopwatch.StartNew();
             Perf1Generator(iterations);
