@@ -35,14 +35,16 @@
                         ruleNodes
                             .Select(
                                 @class =>
-                                    this.FullyQualify(@class))),
+                                    this.FullyQualify(@class))
+                            .ToList()),
                     new Namespace(
                         this.innerCstNodesNamespace,
                         innerNode
                             .NestedClasses
                             .Select(
                                 @class =>
-                                    this.FullyQualify(@class)))
+                                    this.FullyQualify(@class))
+                            .ToList())
                 );
         }
 

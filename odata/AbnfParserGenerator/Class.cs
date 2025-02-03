@@ -6,12 +6,12 @@
 
     public sealed class Namespace
     {
-        public Namespace(string name, IEnumerable<Class> classes)
+        public Namespace(string name, List<Class> classes)
             : this(name, classes, Enumerable.Empty<string>())
         {
         }
 
-        public Namespace(string name, IEnumerable<Class> classes, IEnumerable<string> usingDeclarations)
+        public Namespace(string name, List<Class> classes, IEnumerable<string> usingDeclarations)
         {
             Name = name;
             Classes = classes;
@@ -19,7 +19,7 @@
         }
 
         public string Name { get; }
-        public IEnumerable<Class> Classes { get; }
+        public List<Class> Classes { get; } //// TODO should be ienumerable probably
         public IEnumerable<string> UsingDeclarations { get; }
     }
 

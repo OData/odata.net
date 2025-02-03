@@ -547,14 +547,14 @@
             TranscribeNamespace(
                 new Namespace(
                     ruleTranscribersNamespace,
-                    generatedTranscribers.Rules),
+                    generatedTranscribers.Rules.ToList()),
                 ruleTranscribersDirectory,
                 useNumericFileNames);
             Directory.CreateDirectory(innerTranscibersDirectory);
             TranscribeNamespace(
                 new Namespace(
                     innerTranscribersNamespace,
-                    generatedTranscribers.Inners),
+                    generatedTranscribers.Inners.ToList()),
                 innerTranscibersDirectory,
                 useNumericFileNames);
 

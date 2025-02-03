@@ -31,7 +31,7 @@
                         GenerateParsers(
                             cstNodes.RuleCstNodes,
                             cstNodes.RuleCstNodes.Name,
-                            cstNodes.InnerCstNodes.Name),
+                            cstNodes.InnerCstNodes.Name).ToList(),
                         new[]
                         {
                             "CombinatorParsingV2",
@@ -41,7 +41,7 @@
                         GenerateParsers(
                             cstNodes.InnerCstNodes,
                             cstNodes.RuleCstNodes.Name,
-                            cstNodes.InnerCstNodes.Name),
+                            cstNodes.InnerCstNodes.Name).ToList(),
                         new[]
                         {
                             "CombinatorParsingV2",
