@@ -20,8 +20,8 @@
             var modified = false;
             do
             {
-                modified |= Optimize(ruleCstNodes, cstNodes.RuleCstNodes.Name);
-                modified |= Optimize(innerCstNodes, cstNodes.InnerCstNodes.Name);
+                modified |= Optimize(ruleCstNodes, cstNodes.RuleCstNodes.Name, cstNodes);
+                modified |= Optimize(innerCstNodes, cstNodes.InnerCstNodes.Name, cstNodes);
             }
             while (modified);
 
@@ -38,13 +38,13 @@
                 );
         }
 
-        private bool Optimize(List<Class> cstNodes, string @namespace)
+        private bool Optimize(List<Class> toOptimize, string @namespace, (Namespace RuleCstNodes, Namespace InnerCstNodes) cstNodes)
         {
             var modified = false;
-            for (int i = 0; i < cstNodes.Count; ++i)
+            for (int i = 0; i < toOptimize.Count; ++i)
             {
-                var cstNode = cstNodes[i];
-                if (!IsSingleton(cstNode) && cstNode.Properties.All(property => IsSingleton(property.Type)))
+                var cstNode = toOptimize[i];
+                if (!IsSingleton(cstNode) && cstNode.Properties.All(property => IsSingleton(property.Type, cstNodes)))
                 {
                     var optimized = new Class(
                         cstNode.AccessModifier,
@@ -77,7 +77,7 @@
                                     $"new {@namespace}.{cstNode.Name}"))
                         );
 
-                    cstNodes[i] = optimized;
+                    toOptimize[i] = optimized;
 
                     modified = true;
                 }
@@ -86,7 +86,7 @@
             return modified;
         }
 
-        private bool IsSingleton(string fullyQualifiedType)
+        private bool IsSingleton(string fullyQualifiedType, (Namespace RuleCstNodes, Namespace InnerCstNodes) cstNodes)
         {
             return false;
         }
