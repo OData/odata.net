@@ -164,7 +164,7 @@
                             $"from {@class.Name} in Parse.Char((char)0{@class.Name.Substring(2)}) select new {cstNodeNamespace}.{@class.Name}(",
                             string.Join(
                                 ", ",
-                                @class.Properties.Select(
+                                nonStaticProperties.Select(
                                     property =>
                                         $"{property.Type}.Instance")),
                             ");");
@@ -189,7 +189,7 @@
                             $"from {@class.Name} in Parse.Char((char)0x{@class.Name.Substring(1)}) select new {cstNodeNamespace}.{@class.Name}(",
                             string.Join(
                                 ", ",
-                                @class.Properties.Select(
+                                nonStaticProperties.Select(
                                     property =>
                                         $"{property.Type}.Instance")),
                             ");");
