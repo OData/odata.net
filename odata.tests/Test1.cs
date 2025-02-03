@@ -530,6 +530,7 @@
 
             if (optimizeSingletons)
             {
+                generatedCstNodes = new _GeneratorV6.CstNodesOptimizer().Optimize(generatedCstNodes);
             }
 
             Directory.CreateDirectory(ruleCstNodesDirectory);
