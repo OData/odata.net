@@ -116,9 +116,7 @@
                         parser.BaseType,
                         parser.Constructors,
                         parser.Methods,
-                        parser
-                            .NestedClasses
-                            .Append(nestedParser),
+                        Optimize(parser.NestedClasses).Append(nestedParser),
                         parser
                             .Properties
                             .Where(property => !property.IsStatic && property.Name != "Instance")
@@ -134,7 +132,16 @@
                 }
                 else
                 {
-                    yield return parser;
+                    yield return new Class(
+                        parser.AccessModifier,
+                        parser.ClassModifier,
+                        parser.Name,
+                        parser.GenericTypeParameters,
+                        parser.BaseType,
+                        parser.Constructors,
+                        parser.Methods,
+                        Optimize(parser.NestedClasses),
+                        parser.Properties);
                 }
             }
         }

@@ -398,7 +398,6 @@
         [TestMethod]
         public void Perf1()
         {
-            //// TODO update generator to remove selectmany
             //// TODO update generator to remove all selects
             //// TODO does iinput allow for the underlying type to be a stream? (you're thinking of async here)
             //// TODO you need to move on from the perf stuff (don't lose your other branch) and work on syntactic ast + futures
