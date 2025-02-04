@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Inners
     
     public static class _ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalueParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue> Instance { get; } = (_ʺx2Fʺ_propertyPathParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue>(_boundOperationParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue>(_refParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue>(_valueParser.Instance);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue> Instance { get; } = (_ʺx2Fʺ_propertyPathParser.Instance);
         
         public static class _ʺx2Fʺ_propertyPathParser
         {

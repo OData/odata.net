@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Inners
     
     public static class _propertyPathExprⳆboundFunctionExprⳆannotationExprParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._propertyPathExprⳆboundFunctionExprⳆannotationExpr> Instance { get; } = (_propertyPathExprParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Inners._propertyPathExprⳆboundFunctionExprⳆannotationExpr>(_boundFunctionExprParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Inners._propertyPathExprⳆboundFunctionExprⳆannotationExpr>(_annotationExprParser.Instance);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._propertyPathExprⳆboundFunctionExprⳆannotationExpr> Instance { get; } = (_propertyPathExprParser.Instance);
         
         public static class _propertyPathExprParser
         {
@@ -19,10 +19,6 @@ namespace __GeneratedOdataV3.Parsers.Inners
                 public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._propertyPathExprⳆboundFunctionExprⳆannotationExpr._propertyPathExpr> Parse(IInput<char>? input)
                 {
                     var _propertyPathExpr_1 = __GeneratedOdataV3.Parsers.Rules._propertyPathExprParser.Instance.Parse(input);
-if (!_propertyPathExpr_1.Success)
-{
-    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._propertyPathExprⳆboundFunctionExprⳆannotationExpr._propertyPathExpr)!, input);
-}
 
 return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._propertyPathExprⳆboundFunctionExprⳆannotationExpr._propertyPathExpr(_propertyPathExpr_1.Parsed), _propertyPathExpr_1.Remainder);
                 }

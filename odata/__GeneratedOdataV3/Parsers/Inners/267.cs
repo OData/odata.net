@@ -15,10 +15,6 @@ namespace __GeneratedOdataV3.Parsers.Inners
             public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._ⲤpropertyPathExprⳆboundFunctionExprⳆannotationExprↃ> Parse(IInput<char>? input)
             {
                 var _propertyPathExprⳆboundFunctionExprⳆannotationExpr_1 = __GeneratedOdataV3.Parsers.Inners._propertyPathExprⳆboundFunctionExprⳆannotationExprParser.Instance.Parse(input);
-if (!_propertyPathExprⳆboundFunctionExprⳆannotationExpr_1.Success)
-{
-    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ⲤpropertyPathExprⳆboundFunctionExprⳆannotationExprↃ)!, input);
-}
 
 return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ⲤpropertyPathExprⳆboundFunctionExprⳆannotationExprↃ(_propertyPathExprⳆboundFunctionExprⳆannotationExpr_1.Parsed), _propertyPathExprⳆboundFunctionExprⳆannotationExpr_1.Remainder);
             }
