@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Rules
     
     public static class _queryOptionParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._queryOption> Instance { get; } = (_systemQueryOptionParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._queryOption>(_aliasAndValueParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._queryOption>(_nameAndValueParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._queryOption>(_customQueryOptionParser.Instance);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._queryOption> Instance { get; } = (_systemQueryOptionParser.Instance);
         
         public static class _systemQueryOptionParser
         {

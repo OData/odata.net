@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Rules
     
     public static class _systemQueryOptionParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption> Instance { get; } = (_computeParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_deltatokenParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_expandParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_filterParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_formatParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_idParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_inlinecountParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_orderbyParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_schemaversionParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_searchParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_selectParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_skipParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_skiptokenParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_topParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_indexParser.Instance);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption> Instance { get; } = _filterParser.Instance;
         
         public static class _computeParser
         {

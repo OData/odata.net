@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Rules
     
     public static class _collectionNavPathParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath> Instance { get; } = (_keyPredicate_꘡singleNavigation꘡Parser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath>(_filterInPath_꘡collectionNavigation꘡Parser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath>(_each_꘡boundOperation꘡Parser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath>(_boundOperationParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath>(_countParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath>(_refParser.Instance);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath> Instance { get; } = (_keyPredicate_꘡singleNavigation꘡Parser.Instance);
         
         public static class _keyPredicate_꘡singleNavigation꘡Parser
         {

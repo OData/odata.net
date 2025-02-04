@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Inners
     
     public static class _ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺ> Instance { get; } = (_ʺx24x66x69x6Cx74x65x72ʺParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺ>(_ʺx66x69x6Cx74x65x72ʺParser.Instance);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺ> Instance { get; } = (_ʺx24x66x69x6Cx74x65x72ʺParser.Instance);
         
         public static class _ʺx24x66x69x6Cx74x65x72ʺParser
         {
