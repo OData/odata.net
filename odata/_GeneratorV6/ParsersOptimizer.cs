@@ -47,6 +47,17 @@
                     .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
                     .ToList();
 
+                if (lines.Count == 1 && !lines[0].Contains(").Or<"))
+                {
+                    var splitDelimiter = " select ";
+                    var selectIndex = lines[0].IndexOf(splitDelimiter);
+                    lines = new List<string>
+                    {
+                        lines[0].Substring(0, selectIndex),
+                        lines[0].Substring(selectIndex + 1)
+                    };
+                }
+
                 if (lines.Count > 1)
                 {
                     var returnType = lines[lines.Count - 1];
@@ -166,9 +177,15 @@
             var remainderName = "input";
             foreach (var splitLine in splitLines)
             {
+                var parser = splitLine.Parser;
+                if (parser.StartsWith("Parse.Char"))
+                {
+                    parser = "CombinatorParsingV2." + parser;
+                }
+
                 yield return
 $$"""
-var {{splitLine.Name}} = {{splitLine.Parser}}.Parse({{remainderName}});
+var {{splitLine.Name}} = {{parser}}.Parse({{remainderName}});
 if (!{{splitLine.Name}}.Success)
 {
     return Output.Create(false, default({{returnType}})!, input);
@@ -210,7 +227,11 @@ if (!{{splitLine.Name}}.Success)
                     {
                         var parenIndex = line.LastIndexOf(")");
                         var variable2 = line.Substring(typeEndIndex + 1, parenIndex - typeEndIndex - 1);
-                        if (variable2.EndsWith(getOrElseDelimiter))
+                        if (variable2.EndsWith(".Instance"))
+                        {
+                            result += variable2;
+                        }
+                        else if (variable2.EndsWith(getOrElseDelimiter))
                         {
                             result += variable2.Substring(0, variable2.Length - getOrElseDelimiter.Length);
                             result += ".Parsed";
@@ -237,7 +258,11 @@ if (!{{splitLine.Name}}.Success)
 
                     var getOrElseDelimiter2 = ".GetOrElse(null)";
                     var variable = line.Substring(typeEndIndex + 1, commaIndex - typeEndIndex - 1);
-                    if (variable.EndsWith(getOrElseDelimiter2))
+                    if (variable.EndsWith(".Instance"))
+                    {
+                        result += variable;
+                    }
+                    else if (variable.EndsWith(getOrElseDelimiter2))
                     {
                         result += variable.Substring(0, variable.Length - getOrElseDelimiter2.Length);
                         result += ".Parsed";

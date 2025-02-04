@@ -8,132 +8,600 @@ namespace __GeneratedOdataV3.Parsers.Inners
         
         public static class _61Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._61> Instance { get; } = from _61 in Parse.Char((char)0x61) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._61(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._1.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._61> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._61>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._61> Parse(IInput<char>? input)
+                {
+                    var _61 = CombinatorParsingV2.Parse.Char((char)0x61).Parse(input);
+if (!_61.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._61)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._61(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._1.Instance), _61.Remainder);
+                }
+            }
         }
         
         public static class _62Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._62> Instance { get; } = from _62 in Parse.Char((char)0x62) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._62(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._2.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._62> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._62>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._62> Parse(IInput<char>? input)
+                {
+                    var _62 = CombinatorParsingV2.Parse.Char((char)0x62).Parse(input);
+if (!_62.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._62)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._62(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._2.Instance), _62.Remainder);
+                }
+            }
         }
         
         public static class _63Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._63> Instance { get; } = from _63 in Parse.Char((char)0x63) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._63(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._3.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._63> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._63>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._63> Parse(IInput<char>? input)
+                {
+                    var _63 = CombinatorParsingV2.Parse.Char((char)0x63).Parse(input);
+if (!_63.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._63)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._63(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._3.Instance), _63.Remainder);
+                }
+            }
         }
         
         public static class _64Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._64> Instance { get; } = from _64 in Parse.Char((char)0x64) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._64(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._4.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._64> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._64>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._64> Parse(IInput<char>? input)
+                {
+                    var _64 = CombinatorParsingV2.Parse.Char((char)0x64).Parse(input);
+if (!_64.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._64)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._64(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._4.Instance), _64.Remainder);
+                }
+            }
         }
         
         public static class _65Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._65> Instance { get; } = from _65 in Parse.Char((char)0x65) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._65(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._5.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._65> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._65>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._65> Parse(IInput<char>? input)
+                {
+                    var _65 = CombinatorParsingV2.Parse.Char((char)0x65).Parse(input);
+if (!_65.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._65)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._65(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._5.Instance), _65.Remainder);
+                }
+            }
         }
         
         public static class _66Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._66> Instance { get; } = from _66 in Parse.Char((char)0x66) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._66(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._6.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._66> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._66>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._66> Parse(IInput<char>? input)
+                {
+                    var _66 = CombinatorParsingV2.Parse.Char((char)0x66).Parse(input);
+if (!_66.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._66)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._66(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._6.Instance), _66.Remainder);
+                }
+            }
         }
         
         public static class _67Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._67> Instance { get; } = from _67 in Parse.Char((char)0x67) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._67(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._7.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._67> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._67>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._67> Parse(IInput<char>? input)
+                {
+                    var _67 = CombinatorParsingV2.Parse.Char((char)0x67).Parse(input);
+if (!_67.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._67)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._67(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._7.Instance), _67.Remainder);
+                }
+            }
         }
         
         public static class _68Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._68> Instance { get; } = from _68 in Parse.Char((char)0x68) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._68(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._8.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._68> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._68>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._68> Parse(IInput<char>? input)
+                {
+                    var _68 = CombinatorParsingV2.Parse.Char((char)0x68).Parse(input);
+if (!_68.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._68)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._68(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._8.Instance), _68.Remainder);
+                }
+            }
         }
         
         public static class _69Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._69> Instance { get; } = from _69 in Parse.Char((char)0x69) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._69(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._9.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._69> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._69>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._69> Parse(IInput<char>? input)
+                {
+                    var _69 = CombinatorParsingV2.Parse.Char((char)0x69).Parse(input);
+if (!_69.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._69)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._69(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._9.Instance), _69.Remainder);
+                }
+            }
         }
         
         public static class _6AParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6A> Instance { get; } = from _6A in Parse.Char((char)0x6A) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6A(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._A.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6A> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6A>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6A> Parse(IInput<char>? input)
+                {
+                    var _6A = CombinatorParsingV2.Parse.Char((char)0x6A).Parse(input);
+if (!_6A.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6A)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6A(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._A.Instance), _6A.Remainder);
+                }
+            }
         }
         
         public static class _6BParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6B> Instance { get; } = from _6B in Parse.Char((char)0x6B) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6B(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._B.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6B> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6B>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6B> Parse(IInput<char>? input)
+                {
+                    var _6B = CombinatorParsingV2.Parse.Char((char)0x6B).Parse(input);
+if (!_6B.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6B)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6B(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._B.Instance), _6B.Remainder);
+                }
+            }
         }
         
         public static class _6CParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6C> Instance { get; } = from _6C in Parse.Char((char)0x6C) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6C(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._C.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6C> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6C>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6C> Parse(IInput<char>? input)
+                {
+                    var _6C = CombinatorParsingV2.Parse.Char((char)0x6C).Parse(input);
+if (!_6C.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6C)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6C(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._C.Instance), _6C.Remainder);
+                }
+            }
         }
         
         public static class _6DParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6D> Instance { get; } = from _6D in Parse.Char((char)0x6D) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6D(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._D.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6D> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6D>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6D> Parse(IInput<char>? input)
+                {
+                    var _6D = CombinatorParsingV2.Parse.Char((char)0x6D).Parse(input);
+if (!_6D.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6D)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6D(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._D.Instance), _6D.Remainder);
+                }
+            }
         }
         
         public static class _6EParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6E> Instance { get; } = from _6E in Parse.Char((char)0x6E) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6E(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._E.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6E> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6E>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6E> Parse(IInput<char>? input)
+                {
+                    var _6E = CombinatorParsingV2.Parse.Char((char)0x6E).Parse(input);
+if (!_6E.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6E)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6E(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._E.Instance), _6E.Remainder);
+                }
+            }
         }
         
         public static class _6FParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6F> Instance { get; } = from _6F in Parse.Char((char)0x6F) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6F(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._F.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6F> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6F>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6F> Parse(IInput<char>? input)
+                {
+                    var _6F = CombinatorParsingV2.Parse.Char((char)0x6F).Parse(input);
+if (!_6F.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6F)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._6F(__GeneratedOdataV3.CstNodes.Inners._6.Instance, __GeneratedOdataV3.CstNodes.Inners._F.Instance), _6F.Remainder);
+                }
+            }
         }
         
         public static class _70Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._70> Instance { get; } = from _70 in Parse.Char((char)0x70) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._70(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._0.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._70> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._70>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._70> Parse(IInput<char>? input)
+                {
+                    var _70 = CombinatorParsingV2.Parse.Char((char)0x70).Parse(input);
+if (!_70.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._70)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._70(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._0.Instance), _70.Remainder);
+                }
+            }
         }
         
         public static class _71Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._71> Instance { get; } = from _71 in Parse.Char((char)0x71) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._71(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._1.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._71> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._71>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._71> Parse(IInput<char>? input)
+                {
+                    var _71 = CombinatorParsingV2.Parse.Char((char)0x71).Parse(input);
+if (!_71.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._71)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._71(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._1.Instance), _71.Remainder);
+                }
+            }
         }
         
         public static class _72Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._72> Instance { get; } = from _72 in Parse.Char((char)0x72) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._72(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._2.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._72> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._72>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._72> Parse(IInput<char>? input)
+                {
+                    var _72 = CombinatorParsingV2.Parse.Char((char)0x72).Parse(input);
+if (!_72.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._72)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._72(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._2.Instance), _72.Remainder);
+                }
+            }
         }
         
         public static class _73Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._73> Instance { get; } = from _73 in Parse.Char((char)0x73) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._73(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._3.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._73> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._73>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._73> Parse(IInput<char>? input)
+                {
+                    var _73 = CombinatorParsingV2.Parse.Char((char)0x73).Parse(input);
+if (!_73.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._73)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._73(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._3.Instance), _73.Remainder);
+                }
+            }
         }
         
         public static class _74Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._74> Instance { get; } = from _74 in Parse.Char((char)0x74) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._74(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._4.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._74> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._74>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._74> Parse(IInput<char>? input)
+                {
+                    var _74 = CombinatorParsingV2.Parse.Char((char)0x74).Parse(input);
+if (!_74.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._74)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._74(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._4.Instance), _74.Remainder);
+                }
+            }
         }
         
         public static class _75Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._75> Instance { get; } = from _75 in Parse.Char((char)0x75) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._75(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._5.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._75> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._75>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._75> Parse(IInput<char>? input)
+                {
+                    var _75 = CombinatorParsingV2.Parse.Char((char)0x75).Parse(input);
+if (!_75.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._75)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._75(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._5.Instance), _75.Remainder);
+                }
+            }
         }
         
         public static class _76Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._76> Instance { get; } = from _76 in Parse.Char((char)0x76) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._76(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._6.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._76> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._76>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._76> Parse(IInput<char>? input)
+                {
+                    var _76 = CombinatorParsingV2.Parse.Char((char)0x76).Parse(input);
+if (!_76.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._76)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._76(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._6.Instance), _76.Remainder);
+                }
+            }
         }
         
         public static class _77Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._77> Instance { get; } = from _77 in Parse.Char((char)0x77) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._77(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._7.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._77> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._77>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._77> Parse(IInput<char>? input)
+                {
+                    var _77 = CombinatorParsingV2.Parse.Char((char)0x77).Parse(input);
+if (!_77.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._77)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._77(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._7.Instance), _77.Remainder);
+                }
+            }
         }
         
         public static class _78Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._78> Instance { get; } = from _78 in Parse.Char((char)0x78) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._78(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._8.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._78> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._78>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._78> Parse(IInput<char>? input)
+                {
+                    var _78 = CombinatorParsingV2.Parse.Char((char)0x78).Parse(input);
+if (!_78.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._78)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._78(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._8.Instance), _78.Remainder);
+                }
+            }
         }
         
         public static class _79Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._79> Instance { get; } = from _79 in Parse.Char((char)0x79) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._79(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._9.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._79> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._79>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._79> Parse(IInput<char>? input)
+                {
+                    var _79 = CombinatorParsingV2.Parse.Char((char)0x79).Parse(input);
+if (!_79.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._79)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._79(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._9.Instance), _79.Remainder);
+                }
+            }
         }
         
         public static class _7AParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._7A> Instance { get; } = from _7A in Parse.Char((char)0x7A) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._7A(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._A.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._7A> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._7A>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._7A> Parse(IInput<char>? input)
+                {
+                    var _7A = CombinatorParsingV2.Parse.Char((char)0x7A).Parse(input);
+if (!_7A.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._7A)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx61ⲻ7A._7A(__GeneratedOdataV3.CstNodes.Inners._7.Instance, __GeneratedOdataV3.CstNodes.Inners._A.Instance), _7A.Remainder);
+                }
+            }
         }
     }
     

@@ -8,27 +8,117 @@ namespace __GeneratedOdataV3.Parsers.Inners
         
         public static class _30Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._30> Instance { get; } = from _30 in Parse.Char((char)0x30) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._30(__GeneratedOdataV3.CstNodes.Inners._3.Instance, __GeneratedOdataV3.CstNodes.Inners._0.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._30> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._30>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._30> Parse(IInput<char>? input)
+                {
+                    var _30 = CombinatorParsingV2.Parse.Char((char)0x30).Parse(input);
+if (!_30.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._30)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._30(__GeneratedOdataV3.CstNodes.Inners._3.Instance, __GeneratedOdataV3.CstNodes.Inners._0.Instance), _30.Remainder);
+                }
+            }
         }
         
         public static class _31Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._31> Instance { get; } = from _31 in Parse.Char((char)0x31) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._31(__GeneratedOdataV3.CstNodes.Inners._3.Instance, __GeneratedOdataV3.CstNodes.Inners._1.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._31> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._31>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._31> Parse(IInput<char>? input)
+                {
+                    var _31 = CombinatorParsingV2.Parse.Char((char)0x31).Parse(input);
+if (!_31.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._31)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._31(__GeneratedOdataV3.CstNodes.Inners._3.Instance, __GeneratedOdataV3.CstNodes.Inners._1.Instance), _31.Remainder);
+                }
+            }
         }
         
         public static class _32Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._32> Instance { get; } = from _32 in Parse.Char((char)0x32) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._32(__GeneratedOdataV3.CstNodes.Inners._3.Instance, __GeneratedOdataV3.CstNodes.Inners._2.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._32> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._32>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._32> Parse(IInput<char>? input)
+                {
+                    var _32 = CombinatorParsingV2.Parse.Char((char)0x32).Parse(input);
+if (!_32.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._32)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._32(__GeneratedOdataV3.CstNodes.Inners._3.Instance, __GeneratedOdataV3.CstNodes.Inners._2.Instance), _32.Remainder);
+                }
+            }
         }
         
         public static class _33Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._33> Instance { get; } = from _33 in Parse.Char((char)0x33) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._33(__GeneratedOdataV3.CstNodes.Inners._3.Instance, __GeneratedOdataV3.CstNodes.Inners._3.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._33> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._33>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._33> Parse(IInput<char>? input)
+                {
+                    var _33 = CombinatorParsingV2.Parse.Char((char)0x33).Parse(input);
+if (!_33.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._33)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._33(__GeneratedOdataV3.CstNodes.Inners._3.Instance, __GeneratedOdataV3.CstNodes.Inners._3.Instance), _33.Remainder);
+                }
+            }
         }
         
         public static class _34Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._34> Instance { get; } = from _34 in Parse.Char((char)0x34) select new __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._34(__GeneratedOdataV3.CstNodes.Inners._3.Instance, __GeneratedOdataV3.CstNodes.Inners._4.Instance);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._34> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._34>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._34> Parse(IInput<char>? input)
+                {
+                    var _34 = CombinatorParsingV2.Parse.Char((char)0x34).Parse(input);
+if (!_34.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._34)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⰳx30ⲻ34._34(__GeneratedOdataV3.CstNodes.Inners._3.Instance, __GeneratedOdataV3.CstNodes.Inners._4.Instance), _34.Remainder);
+                }
+            }
         }
     }
     

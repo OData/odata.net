@@ -4,7 +4,25 @@ namespace __GeneratedOdataV3.Parsers.Inners
     
     public static class _x63Parser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._x63> Instance { get; } = from _x63 in Parse.Char((char)0x63) select __GeneratedOdataV3.CstNodes.Inners._x63.Instance;
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._x63> Instance { get; } = new Parser();
+        
+        private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._x63>
+        {
+            public Parser()
+            {
+            }
+            
+            public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._x63> Parse(IInput<char>? input)
+            {
+                var _x63 = CombinatorParsingV2.Parse.Char((char)0x63).Parse(input);
+if (!_x63.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._x63)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Inners._x63.Instance, _x63.Remainder);
+            }
+        }
     }
     
 }
