@@ -19,16 +19,8 @@ namespace __GeneratedOdataV3.Parsers.Rules
                 public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡> Parse(IInput<char>? input)
                 {
                     var _entitySetName_1 = __GeneratedOdataV3.Parsers.Rules._entitySetNameParser.Instance.Parse(input);
-if (!_entitySetName_1.Success)
-{
-    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡)!, input);
-}
 
 var _collectionNavigation_1 = __GeneratedOdataV3.Parsers.Rules._collectionNavigationParser.Instance.Optional().Parse(_entitySetName_1.Remainder);
-if (!_collectionNavigation_1.Success)
-{
-    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡)!, input);
-}
 
 return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡(_entitySetName_1.Parsed, _collectionNavigation_1.Parsed.GetOrElse(null)), _collectionNavigation_1.Remainder);
                 }

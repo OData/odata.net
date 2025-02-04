@@ -88,10 +88,6 @@ return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._systemQueryOpt
                 public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption._filter> Parse(IInput<char>? input)
                 {
                     var _filter_1 = __GeneratedOdataV3.Parsers.Rules._filterParser.Instance.Parse(input);
-if (!_filter_1.Success)
-{
-    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._systemQueryOption._filter)!, input);
-}
 
 return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._systemQueryOption._filter(_filter_1.Parsed), _filter_1.Remainder);
                 }

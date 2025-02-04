@@ -15,10 +15,6 @@ namespace __GeneratedOdataV3.Parsers.Rules
             public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._entitySetName> Parse(IInput<char>? input)
             {
                 var _odataIdentifier_1 = __GeneratedOdataV3.Parsers.Rules._odataIdentifierParser.Instance.Parse(input);
-if (!_odataIdentifier_1.Success)
-{
-    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._entitySetName)!, input);
-}
 
 return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._entitySetName(_odataIdentifier_1.Parsed), _odataIdentifier_1.Remainder);
             }

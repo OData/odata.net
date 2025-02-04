@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Rules
     
     public static class _identifierCharacterParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._identifierCharacter> Instance { get; } = (_ALPHAParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._identifierCharacter>(_ʺx5FʺParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._identifierCharacter>(_DIGITParser.Instance);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._identifierCharacter> Instance { get; } = (_ALPHAParser.Instance);
         
         public static class _ALPHAParser
         {
