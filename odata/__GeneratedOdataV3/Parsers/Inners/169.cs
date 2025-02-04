@@ -26,10 +26,37 @@ select new __GeneratedOdataV3.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6E
         
         public static class _1Жpchar_ʺx2Fʺ_1ЖpcharParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1Жpchar._1Жpchar_ʺx2Fʺ_1Жpchar> Instance { get; } = from _pchar_1 in __GeneratedOdataV3.Parsers.Rules._pcharParser.Instance.Repeat(1, null)
-from _ʺx2Fʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx2FʺParser.Instance
-from _pchar_2 in __GeneratedOdataV3.Parsers.Rules._pcharParser.Instance.Repeat(1, null)
-select new __GeneratedOdataV3.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1Жpchar._1Жpchar_ʺx2Fʺ_1Жpchar(new __GeneratedOdataV3.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdataV3.CstNodes.Rules._pchar>(_pchar_1), _ʺx2Fʺ_1, new __GeneratedOdataV3.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdataV3.CstNodes.Rules._pchar>(_pchar_2));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1Жpchar._1Жpchar_ʺx2Fʺ_1Жpchar> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1Жpchar._1Жpchar_ʺx2Fʺ_1Жpchar>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1Жpchar._1Жpchar_ʺx2Fʺ_1Жpchar> Parse(IInput<char>? input)
+                {
+                    var _pchar_1 = __GeneratedOdataV3.Parsers.Rules._pcharParser.Instance.Repeat(1, null).Parse(input);
+if (!_pchar_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1Жpchar._1Жpchar_ʺx2Fʺ_1Жpchar)!, input);
+}
+
+var _ʺx2Fʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx2FʺParser.Instance.Parse(_pchar_1.Remainder);
+if (!_ʺx2Fʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1Жpchar._1Жpchar_ʺx2Fʺ_1Жpchar)!, input);
+}
+
+var _pchar_2 = __GeneratedOdataV3.Parsers.Rules._pcharParser.Instance.Repeat(1, null).Parse(_ʺx2Fʺ_1.Remainder);
+if (!_pchar_2.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1Жpchar._1Жpchar_ʺx2Fʺ_1Жpchar)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1Жpchar._1Жpchar_ʺx2Fʺ_1Жpchar(new __GeneratedOdataV3.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdataV3.CstNodes.Rules._pchar>(_pchar_1.Parsed), _ʺx2Fʺ_1.Parsed,  new __GeneratedOdataV3.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdataV3.CstNodes.Rules._pchar>(_pchar_2.Parsed)), _pchar_2.Remainder);
+                }
+            }
         }
     }
     

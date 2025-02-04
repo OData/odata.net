@@ -8,16 +8,60 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _entitySetName_꘡collectionNavigation꘡Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡> Instance { get; } = from _entitySetName_1 in __GeneratedOdataV3.Parsers.Rules._entitySetNameParser.Instance
-from _collectionNavigation_1 in __GeneratedOdataV3.Parsers.Rules._collectionNavigationParser.Instance.Optional()
-select new __GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡(_entitySetName_1, _collectionNavigation_1.GetOrElse(null));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡> Parse(IInput<char>? input)
+                {
+                    var _entitySetName_1 = __GeneratedOdataV3.Parsers.Rules._entitySetNameParser.Instance.Parse(input);
+if (!_entitySetName_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡)!, input);
+}
+
+var _collectionNavigation_1 = __GeneratedOdataV3.Parsers.Rules._collectionNavigationParser.Instance.Optional().Parse(_entitySetName_1.Remainder);
+if (!_collectionNavigation_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡(_entitySetName_1.Parsed,  _collectionNavigation_1.Parsed.GetOrElse(null)), _collectionNavigation_1.Remainder);
+                }
+            }
         }
         
         public static class _singletonEntity_꘡singleNavigation꘡Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._singletonEntity_꘡singleNavigation꘡> Instance { get; } = from _singletonEntity_1 in __GeneratedOdataV3.Parsers.Rules._singletonEntityParser.Instance
-from _singleNavigation_1 in __GeneratedOdataV3.Parsers.Rules._singleNavigationParser.Instance.Optional()
-select new __GeneratedOdataV3.CstNodes.Rules._resourcePath._singletonEntity_꘡singleNavigation꘡(_singletonEntity_1, _singleNavigation_1.GetOrElse(null));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._singletonEntity_꘡singleNavigation꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._singletonEntity_꘡singleNavigation꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._singletonEntity_꘡singleNavigation꘡> Parse(IInput<char>? input)
+                {
+                    var _singletonEntity_1 = __GeneratedOdataV3.Parsers.Rules._singletonEntityParser.Instance.Parse(input);
+if (!_singletonEntity_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._singletonEntity_꘡singleNavigation꘡)!, input);
+}
+
+var _singleNavigation_1 = __GeneratedOdataV3.Parsers.Rules._singleNavigationParser.Instance.Optional().Parse(_singletonEntity_1.Remainder);
+if (!_singleNavigation_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._singletonEntity_꘡singleNavigation꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._singletonEntity_꘡singleNavigation꘡(_singletonEntity_1.Parsed,  _singleNavigation_1.Parsed.GetOrElse(null)), _singleNavigation_1.Remainder);
+                }
+            }
         }
         
         public static class _actionImportCallParser
@@ -28,44 +72,176 @@ select new __GeneratedOdataV3.CstNodes.Rules._resourcePath._actionImportCall(_ac
         
         public static class _entityColFunctionImportCall_꘡collectionNavigation꘡Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityColFunctionImportCall_꘡collectionNavigation꘡> Instance { get; } = from _entityColFunctionImportCall_1 in __GeneratedOdataV3.Parsers.Rules._entityColFunctionImportCallParser.Instance
-from _collectionNavigation_1 in __GeneratedOdataV3.Parsers.Rules._collectionNavigationParser.Instance.Optional()
-select new __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityColFunctionImportCall_꘡collectionNavigation꘡(_entityColFunctionImportCall_1, _collectionNavigation_1.GetOrElse(null));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityColFunctionImportCall_꘡collectionNavigation꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityColFunctionImportCall_꘡collectionNavigation꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityColFunctionImportCall_꘡collectionNavigation꘡> Parse(IInput<char>? input)
+                {
+                    var _entityColFunctionImportCall_1 = __GeneratedOdataV3.Parsers.Rules._entityColFunctionImportCallParser.Instance.Parse(input);
+if (!_entityColFunctionImportCall_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._entityColFunctionImportCall_꘡collectionNavigation꘡)!, input);
+}
+
+var _collectionNavigation_1 = __GeneratedOdataV3.Parsers.Rules._collectionNavigationParser.Instance.Optional().Parse(_entityColFunctionImportCall_1.Remainder);
+if (!_collectionNavigation_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._entityColFunctionImportCall_꘡collectionNavigation꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityColFunctionImportCall_꘡collectionNavigation꘡(_entityColFunctionImportCall_1.Parsed,  _collectionNavigation_1.Parsed.GetOrElse(null)), _collectionNavigation_1.Remainder);
+                }
+            }
         }
         
         public static class _entityFunctionImportCall_꘡singleNavigation꘡Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityFunctionImportCall_꘡singleNavigation꘡> Instance { get; } = from _entityFunctionImportCall_1 in __GeneratedOdataV3.Parsers.Rules._entityFunctionImportCallParser.Instance
-from _singleNavigation_1 in __GeneratedOdataV3.Parsers.Rules._singleNavigationParser.Instance.Optional()
-select new __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityFunctionImportCall_꘡singleNavigation꘡(_entityFunctionImportCall_1, _singleNavigation_1.GetOrElse(null));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityFunctionImportCall_꘡singleNavigation꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityFunctionImportCall_꘡singleNavigation꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityFunctionImportCall_꘡singleNavigation꘡> Parse(IInput<char>? input)
+                {
+                    var _entityFunctionImportCall_1 = __GeneratedOdataV3.Parsers.Rules._entityFunctionImportCallParser.Instance.Parse(input);
+if (!_entityFunctionImportCall_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._entityFunctionImportCall_꘡singleNavigation꘡)!, input);
+}
+
+var _singleNavigation_1 = __GeneratedOdataV3.Parsers.Rules._singleNavigationParser.Instance.Optional().Parse(_entityFunctionImportCall_1.Remainder);
+if (!_singleNavigation_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._entityFunctionImportCall_꘡singleNavigation꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityFunctionImportCall_꘡singleNavigation꘡(_entityFunctionImportCall_1.Parsed,  _singleNavigation_1.Parsed.GetOrElse(null)), _singleNavigation_1.Remainder);
+                }
+            }
         }
         
         public static class _complexColFunctionImportCall_꘡complexColPath꘡Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexColFunctionImportCall_꘡complexColPath꘡> Instance { get; } = from _complexColFunctionImportCall_1 in __GeneratedOdataV3.Parsers.Rules._complexColFunctionImportCallParser.Instance
-from _complexColPath_1 in __GeneratedOdataV3.Parsers.Rules._complexColPathParser.Instance.Optional()
-select new __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexColFunctionImportCall_꘡complexColPath꘡(_complexColFunctionImportCall_1, _complexColPath_1.GetOrElse(null));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexColFunctionImportCall_꘡complexColPath꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexColFunctionImportCall_꘡complexColPath꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexColFunctionImportCall_꘡complexColPath꘡> Parse(IInput<char>? input)
+                {
+                    var _complexColFunctionImportCall_1 = __GeneratedOdataV3.Parsers.Rules._complexColFunctionImportCallParser.Instance.Parse(input);
+if (!_complexColFunctionImportCall_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._complexColFunctionImportCall_꘡complexColPath꘡)!, input);
+}
+
+var _complexColPath_1 = __GeneratedOdataV3.Parsers.Rules._complexColPathParser.Instance.Optional().Parse(_complexColFunctionImportCall_1.Remainder);
+if (!_complexColPath_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._complexColFunctionImportCall_꘡complexColPath꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexColFunctionImportCall_꘡complexColPath꘡(_complexColFunctionImportCall_1.Parsed,  _complexColPath_1.Parsed.GetOrElse(null)), _complexColPath_1.Remainder);
+                }
+            }
         }
         
         public static class _complexFunctionImportCall_꘡complexPath꘡Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexFunctionImportCall_꘡complexPath꘡> Instance { get; } = from _complexFunctionImportCall_1 in __GeneratedOdataV3.Parsers.Rules._complexFunctionImportCallParser.Instance
-from _complexPath_1 in __GeneratedOdataV3.Parsers.Rules._complexPathParser.Instance.Optional()
-select new __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexFunctionImportCall_꘡complexPath꘡(_complexFunctionImportCall_1, _complexPath_1.GetOrElse(null));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexFunctionImportCall_꘡complexPath꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexFunctionImportCall_꘡complexPath꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexFunctionImportCall_꘡complexPath꘡> Parse(IInput<char>? input)
+                {
+                    var _complexFunctionImportCall_1 = __GeneratedOdataV3.Parsers.Rules._complexFunctionImportCallParser.Instance.Parse(input);
+if (!_complexFunctionImportCall_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._complexFunctionImportCall_꘡complexPath꘡)!, input);
+}
+
+var _complexPath_1 = __GeneratedOdataV3.Parsers.Rules._complexPathParser.Instance.Optional().Parse(_complexFunctionImportCall_1.Remainder);
+if (!_complexPath_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._complexFunctionImportCall_꘡complexPath꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexFunctionImportCall_꘡complexPath꘡(_complexFunctionImportCall_1.Parsed,  _complexPath_1.Parsed.GetOrElse(null)), _complexPath_1.Remainder);
+                }
+            }
         }
         
         public static class _primitiveColFunctionImportCall_꘡primitiveColPath꘡Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveColFunctionImportCall_꘡primitiveColPath꘡> Instance { get; } = from _primitiveColFunctionImportCall_1 in __GeneratedOdataV3.Parsers.Rules._primitiveColFunctionImportCallParser.Instance
-from _primitiveColPath_1 in __GeneratedOdataV3.Parsers.Rules._primitiveColPathParser.Instance.Optional()
-select new __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveColFunctionImportCall_꘡primitiveColPath꘡(_primitiveColFunctionImportCall_1, _primitiveColPath_1.GetOrElse(null));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveColFunctionImportCall_꘡primitiveColPath꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveColFunctionImportCall_꘡primitiveColPath꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveColFunctionImportCall_꘡primitiveColPath꘡> Parse(IInput<char>? input)
+                {
+                    var _primitiveColFunctionImportCall_1 = __GeneratedOdataV3.Parsers.Rules._primitiveColFunctionImportCallParser.Instance.Parse(input);
+if (!_primitiveColFunctionImportCall_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveColFunctionImportCall_꘡primitiveColPath꘡)!, input);
+}
+
+var _primitiveColPath_1 = __GeneratedOdataV3.Parsers.Rules._primitiveColPathParser.Instance.Optional().Parse(_primitiveColFunctionImportCall_1.Remainder);
+if (!_primitiveColPath_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveColFunctionImportCall_꘡primitiveColPath꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveColFunctionImportCall_꘡primitiveColPath꘡(_primitiveColFunctionImportCall_1.Parsed,  _primitiveColPath_1.Parsed.GetOrElse(null)), _primitiveColPath_1.Remainder);
+                }
+            }
         }
         
         public static class _primitiveFunctionImportCall_꘡primitivePath꘡Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveFunctionImportCall_꘡primitivePath꘡> Instance { get; } = from _primitiveFunctionImportCall_1 in __GeneratedOdataV3.Parsers.Rules._primitiveFunctionImportCallParser.Instance
-from _primitivePath_1 in __GeneratedOdataV3.Parsers.Rules._primitivePathParser.Instance.Optional()
-select new __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveFunctionImportCall_꘡primitivePath꘡(_primitiveFunctionImportCall_1, _primitivePath_1.GetOrElse(null));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveFunctionImportCall_꘡primitivePath꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveFunctionImportCall_꘡primitivePath꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveFunctionImportCall_꘡primitivePath꘡> Parse(IInput<char>? input)
+                {
+                    var _primitiveFunctionImportCall_1 = __GeneratedOdataV3.Parsers.Rules._primitiveFunctionImportCallParser.Instance.Parse(input);
+if (!_primitiveFunctionImportCall_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveFunctionImportCall_꘡primitivePath꘡)!, input);
+}
+
+var _primitivePath_1 = __GeneratedOdataV3.Parsers.Rules._primitivePathParser.Instance.Optional().Parse(_primitiveFunctionImportCall_1.Remainder);
+if (!_primitivePath_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveFunctionImportCall_꘡primitivePath꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveFunctionImportCall_꘡primitivePath꘡(_primitiveFunctionImportCall_1.Parsed,  _primitivePath_1.Parsed.GetOrElse(null)), _primitivePath_1.Remainder);
+                }
+            }
         }
         
         public static class _functionImportCallNoParensParser
@@ -82,9 +258,31 @@ select new __GeneratedOdataV3.CstNodes.Rules._resourcePath._crossjoin(_crossjoin
         
         public static class _ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡> Instance { get; } = from _ʺx24x61x6Cx6Cʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx24x61x6Cx6CʺParser.Instance
-from _ʺx2Fʺ_qualifiedEntityTypeName_1 in __GeneratedOdataV3.Parsers.Inners._ʺx2Fʺ_qualifiedEntityTypeNameParser.Instance.Optional()
-select new __GeneratedOdataV3.CstNodes.Rules._resourcePath._ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡(_ʺx24x61x6Cx6Cʺ_1, _ʺx2Fʺ_qualifiedEntityTypeName_1.GetOrElse(null));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡> Parse(IInput<char>? input)
+                {
+                    var _ʺx24x61x6Cx6Cʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx24x61x6Cx6CʺParser.Instance.Parse(input);
+if (!_ʺx24x61x6Cx6Cʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡)!, input);
+}
+
+var _ʺx2Fʺ_qualifiedEntityTypeName_1 = __GeneratedOdataV3.Parsers.Inners._ʺx2Fʺ_qualifiedEntityTypeNameParser.Instance.Optional().Parse(_ʺx24x61x6Cx6Cʺ_1.Remainder);
+if (!_ʺx2Fʺ_qualifiedEntityTypeName_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡(_ʺx24x61x6Cx6Cʺ_1.Parsed,  _ʺx2Fʺ_qualifiedEntityTypeName_1.Parsed.GetOrElse(null)), _ʺx2Fʺ_qualifiedEntityTypeName_1.Remainder);
+                }
+            }
         }
     }
     

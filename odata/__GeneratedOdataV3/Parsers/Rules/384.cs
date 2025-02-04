@@ -8,10 +8,37 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _ʺx2Fx2Fʺ_authority_pathⲻabemptyParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._ʺx2Fx2Fʺ_authority_pathⲻabempty> Instance { get; } = from _ʺx2Fx2Fʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx2Fx2FʺParser.Instance
-from _authority_1 in __GeneratedOdataV3.Parsers.Rules._authorityParser.Instance
-from _pathⲻabempty_1 in __GeneratedOdataV3.Parsers.Rules._pathⲻabemptyParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._ʺx2Fx2Fʺ_authority_pathⲻabempty(_ʺx2Fx2Fʺ_1, _authority_1, _pathⲻabempty_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._ʺx2Fx2Fʺ_authority_pathⲻabempty> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._ʺx2Fx2Fʺ_authority_pathⲻabempty>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._ʺx2Fx2Fʺ_authority_pathⲻabempty> Parse(IInput<char>? input)
+                {
+                    var _ʺx2Fx2Fʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx2Fx2FʺParser.Instance.Parse(input);
+if (!_ʺx2Fx2Fʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._hierⲻpart._ʺx2Fx2Fʺ_authority_pathⲻabempty)!, input);
+}
+
+var _authority_1 = __GeneratedOdataV3.Parsers.Rules._authorityParser.Instance.Parse(_ʺx2Fx2Fʺ_1.Remainder);
+if (!_authority_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._hierⲻpart._ʺx2Fx2Fʺ_authority_pathⲻabempty)!, input);
+}
+
+var _pathⲻabempty_1 = __GeneratedOdataV3.Parsers.Rules._pathⲻabemptyParser.Instance.Parse(_authority_1.Remainder);
+if (!_pathⲻabempty_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._hierⲻpart._ʺx2Fx2Fʺ_authority_pathⲻabempty)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._ʺx2Fx2Fʺ_authority_pathⲻabempty(_ʺx2Fx2Fʺ_1.Parsed, _authority_1.Parsed,  _pathⲻabempty_1.Parsed), _pathⲻabempty_1.Remainder);
+                }
+            }
         }
         
         public static class _pathⲻabsoluteParser

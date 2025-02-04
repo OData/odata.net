@@ -8,12 +8,49 @@ namespace __GeneratedOdataV3.Parsers.Inners
         
         public static class _OPEN_BWS_searchExpr_BWS_CLOSEParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE> Instance { get; } = from _OPEN_1 in __GeneratedOdataV3.Parsers.Rules._OPENParser.Instance
-from _BWS_1 in __GeneratedOdataV3.Parsers.Rules._BWSParser.Instance
-from _searchExpr_1 in __GeneratedOdataV3.Parsers.Rules._searchExprParser.Instance
-from _BWS_2 in __GeneratedOdataV3.Parsers.Rules._BWSParser.Instance
-from _CLOSE_1 in __GeneratedOdataV3.Parsers.Rules._CLOSEParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE(_OPEN_1, _BWS_1, _searchExpr_1, _BWS_2, _CLOSE_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE> Parse(IInput<char>? input)
+                {
+                    var _OPEN_1 = __GeneratedOdataV3.Parsers.Rules._OPENParser.Instance.Parse(input);
+if (!_OPEN_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE)!, input);
+}
+
+var _BWS_1 = __GeneratedOdataV3.Parsers.Rules._BWSParser.Instance.Parse(_OPEN_1.Remainder);
+if (!_BWS_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE)!, input);
+}
+
+var _searchExpr_1 = __GeneratedOdataV3.Parsers.Rules._searchExprParser.Instance.Parse(_BWS_1.Remainder);
+if (!_searchExpr_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE)!, input);
+}
+
+var _BWS_2 = __GeneratedOdataV3.Parsers.Rules._BWSParser.Instance.Parse(_searchExpr_1.Remainder);
+if (!_BWS_2.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE)!, input);
+}
+
+var _CLOSE_1 = __GeneratedOdataV3.Parsers.Rules._CLOSEParser.Instance.Parse(_BWS_2.Remainder);
+if (!_CLOSE_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE(_OPEN_1.Parsed, _BWS_1.Parsed, _searchExpr_1.Parsed, _BWS_2.Parsed,  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+                }
+            }
         }
         
         public static class _searchTermParser

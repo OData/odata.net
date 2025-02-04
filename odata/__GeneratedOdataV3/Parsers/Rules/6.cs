@@ -8,23 +8,89 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _keyPredicate_꘡singleNavigation꘡Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._keyPredicate_꘡singleNavigation꘡> Instance { get; } = from _keyPredicate_1 in __GeneratedOdataV3.Parsers.Rules._keyPredicateParser.Instance
-from _singleNavigation_1 in __GeneratedOdataV3.Parsers.Rules._singleNavigationParser.Instance.Optional()
-select new __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._keyPredicate_꘡singleNavigation꘡(_keyPredicate_1, _singleNavigation_1.GetOrElse(null));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._keyPredicate_꘡singleNavigation꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._keyPredicate_꘡singleNavigation꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._keyPredicate_꘡singleNavigation꘡> Parse(IInput<char>? input)
+                {
+                    var _keyPredicate_1 = __GeneratedOdataV3.Parsers.Rules._keyPredicateParser.Instance.Parse(input);
+if (!_keyPredicate_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionNavPath._keyPredicate_꘡singleNavigation꘡)!, input);
+}
+
+var _singleNavigation_1 = __GeneratedOdataV3.Parsers.Rules._singleNavigationParser.Instance.Optional().Parse(_keyPredicate_1.Remainder);
+if (!_singleNavigation_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionNavPath._keyPredicate_꘡singleNavigation꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._keyPredicate_꘡singleNavigation꘡(_keyPredicate_1.Parsed,  _singleNavigation_1.Parsed.GetOrElse(null)), _singleNavigation_1.Remainder);
+                }
+            }
         }
         
         public static class _filterInPath_꘡collectionNavigation꘡Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._filterInPath_꘡collectionNavigation꘡> Instance { get; } = from _filterInPath_1 in __GeneratedOdataV3.Parsers.Rules._filterInPathParser.Instance
-from _collectionNavigation_1 in __GeneratedOdataV3.Parsers.Rules._collectionNavigationParser.Instance.Optional()
-select new __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._filterInPath_꘡collectionNavigation꘡(_filterInPath_1, _collectionNavigation_1.GetOrElse(null));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._filterInPath_꘡collectionNavigation꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._filterInPath_꘡collectionNavigation꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._filterInPath_꘡collectionNavigation꘡> Parse(IInput<char>? input)
+                {
+                    var _filterInPath_1 = __GeneratedOdataV3.Parsers.Rules._filterInPathParser.Instance.Parse(input);
+if (!_filterInPath_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionNavPath._filterInPath_꘡collectionNavigation꘡)!, input);
+}
+
+var _collectionNavigation_1 = __GeneratedOdataV3.Parsers.Rules._collectionNavigationParser.Instance.Optional().Parse(_filterInPath_1.Remainder);
+if (!_collectionNavigation_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionNavPath._filterInPath_꘡collectionNavigation꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._filterInPath_꘡collectionNavigation꘡(_filterInPath_1.Parsed,  _collectionNavigation_1.Parsed.GetOrElse(null)), _collectionNavigation_1.Remainder);
+                }
+            }
         }
         
         public static class _each_꘡boundOperation꘡Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._each_꘡boundOperation꘡> Instance { get; } = from _each_1 in __GeneratedOdataV3.Parsers.Rules._eachParser.Instance
-from _boundOperation_1 in __GeneratedOdataV3.Parsers.Rules._boundOperationParser.Instance.Optional()
-select new __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._each_꘡boundOperation꘡(_each_1, _boundOperation_1.GetOrElse(null));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._each_꘡boundOperation꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._each_꘡boundOperation꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._each_꘡boundOperation꘡> Parse(IInput<char>? input)
+                {
+                    var _each_1 = __GeneratedOdataV3.Parsers.Rules._eachParser.Instance.Parse(input);
+if (!_each_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionNavPath._each_꘡boundOperation꘡)!, input);
+}
+
+var _boundOperation_1 = __GeneratedOdataV3.Parsers.Rules._boundOperationParser.Instance.Optional().Parse(_each_1.Remainder);
+if (!_boundOperation_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionNavPath._each_꘡boundOperation꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._each_꘡boundOperation꘡(_each_1.Parsed,  _boundOperation_1.Parsed.GetOrElse(null)), _boundOperation_1.Remainder);
+                }
+            }
         }
         
         public static class _boundOperationParser

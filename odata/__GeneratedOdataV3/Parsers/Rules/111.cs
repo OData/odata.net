@@ -20,9 +20,31 @@ select new __GeneratedOdataV3.CstNodes.Rules._selectListItem._allOperationsInSch
         
         public static class _꘡qualifiedEntityTypeName_ʺx2Fʺ꘡_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListItem._꘡qualifiedEntityTypeName_ʺx2Fʺ꘡_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ> Instance { get; } = from _qualifiedEntityTypeName_ʺx2Fʺ_1 in __GeneratedOdataV3.Parsers.Inners._qualifiedEntityTypeName_ʺx2FʺParser.Instance.Optional()
-from _ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ_1 in __GeneratedOdataV3.Parsers.Inners._ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._selectListItem._꘡qualifiedEntityTypeName_ʺx2Fʺ꘡_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ(_qualifiedEntityTypeName_ʺx2Fʺ_1.GetOrElse(null), _ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListItem._꘡qualifiedEntityTypeName_ʺx2Fʺ꘡_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListItem._꘡qualifiedEntityTypeName_ʺx2Fʺ꘡_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._selectListItem._꘡qualifiedEntityTypeName_ʺx2Fʺ꘡_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ> Parse(IInput<char>? input)
+                {
+                    var _qualifiedEntityTypeName_ʺx2Fʺ_1 = __GeneratedOdataV3.Parsers.Inners._qualifiedEntityTypeName_ʺx2FʺParser.Instance.Optional().Parse(input);
+if (!_qualifiedEntityTypeName_ʺx2Fʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectListItem._꘡qualifiedEntityTypeName_ʺx2Fʺ꘡_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ)!, input);
+}
+
+var _ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ_1 = __GeneratedOdataV3.Parsers.Inners._ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃParser.Instance.Parse(_qualifiedEntityTypeName_ʺx2Fʺ_1.Remainder);
+if (!_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectListItem._꘡qualifiedEntityTypeName_ʺx2Fʺ꘡_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectListItem._꘡qualifiedEntityTypeName_ʺx2Fʺ꘡_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ(_qualifiedEntityTypeName_ʺx2Fʺ_1.Parsed.GetOrElse(null),  _ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ_1.Parsed), _ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ_1.Remainder);
+                }
+            }
         }
     }
     

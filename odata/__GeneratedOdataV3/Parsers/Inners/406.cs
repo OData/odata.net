@@ -56,9 +56,31 @@ select new __GeneratedOdataV3.CstNodes.Inners._quotationⲻmarkⳆescapeⳆⲤʺ
         
         public static class _ʺx75ʺ_4HEXDIGParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._quotationⲻmarkⳆescapeⳆⲤʺx2FʺⳆʺx25x32x46ʺↃⳆʺx62ʺⳆʺx66ʺⳆʺx6EʺⳆʺx72ʺⳆʺx74ʺⳆʺx75ʺ_4HEXDIG._ʺx75ʺ_4HEXDIG> Instance { get; } = from _ʺx75ʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx75ʺParser.Instance
-from _HEXDIG_1 in __GeneratedOdataV3.Parsers.Rules._HEXDIGParser.Instance.Repeat(4, 4)
-select new __GeneratedOdataV3.CstNodes.Inners._quotationⲻmarkⳆescapeⳆⲤʺx2FʺⳆʺx25x32x46ʺↃⳆʺx62ʺⳆʺx66ʺⳆʺx6EʺⳆʺx72ʺⳆʺx74ʺⳆʺx75ʺ_4HEXDIG._ʺx75ʺ_4HEXDIG(_ʺx75ʺ_1, new __GeneratedOdataV3.CstNodes.Inners.HelperRangedExactly4<__GeneratedOdataV3.CstNodes.Rules._HEXDIG>(_HEXDIG_1));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._quotationⲻmarkⳆescapeⳆⲤʺx2FʺⳆʺx25x32x46ʺↃⳆʺx62ʺⳆʺx66ʺⳆʺx6EʺⳆʺx72ʺⳆʺx74ʺⳆʺx75ʺ_4HEXDIG._ʺx75ʺ_4HEXDIG> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._quotationⲻmarkⳆescapeⳆⲤʺx2FʺⳆʺx25x32x46ʺↃⳆʺx62ʺⳆʺx66ʺⳆʺx6EʺⳆʺx72ʺⳆʺx74ʺⳆʺx75ʺ_4HEXDIG._ʺx75ʺ_4HEXDIG>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._quotationⲻmarkⳆescapeⳆⲤʺx2FʺⳆʺx25x32x46ʺↃⳆʺx62ʺⳆʺx66ʺⳆʺx6EʺⳆʺx72ʺⳆʺx74ʺⳆʺx75ʺ_4HEXDIG._ʺx75ʺ_4HEXDIG> Parse(IInput<char>? input)
+                {
+                    var _ʺx75ʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx75ʺParser.Instance.Parse(input);
+if (!_ʺx75ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._quotationⲻmarkⳆescapeⳆⲤʺx2FʺⳆʺx25x32x46ʺↃⳆʺx62ʺⳆʺx66ʺⳆʺx6EʺⳆʺx72ʺⳆʺx74ʺⳆʺx75ʺ_4HEXDIG._ʺx75ʺ_4HEXDIG)!, input);
+}
+
+var _HEXDIG_1 = __GeneratedOdataV3.Parsers.Rules._HEXDIGParser.Instance.Repeat(4, 4).Parse(_ʺx75ʺ_1.Remainder);
+if (!_HEXDIG_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._quotationⲻmarkⳆescapeⳆⲤʺx2FʺⳆʺx25x32x46ʺↃⳆʺx62ʺⳆʺx66ʺⳆʺx6EʺⳆʺx72ʺⳆʺx74ʺⳆʺx75ʺ_4HEXDIG._ʺx75ʺ_4HEXDIG)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._quotationⲻmarkⳆescapeⳆⲤʺx2FʺⳆʺx25x32x46ʺↃⳆʺx62ʺⳆʺx66ʺⳆʺx6EʺⳆʺx72ʺⳆʺx74ʺⳆʺx75ʺ_4HEXDIG._ʺx75ʺ_4HEXDIG(_ʺx75ʺ_1.Parsed,  new __GeneratedOdataV3.CstNodes.Inners.HelperRangedExactly4<__GeneratedOdataV3.CstNodes.Rules._HEXDIG>(_HEXDIG_1.Parsed)), _HEXDIG_1.Remainder);
+                }
+            }
         }
     }
     

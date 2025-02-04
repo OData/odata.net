@@ -20,17 +20,66 @@ select new __GeneratedOdataV3.CstNodes.Rules._selectListProperty._primitiveColPr
         
         public static class _navigationProperty_꘡ʺx2Bʺ꘡_꘡selectList꘡Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListProperty._navigationProperty_꘡ʺx2Bʺ꘡_꘡selectList꘡> Instance { get; } = from _navigationProperty_1 in __GeneratedOdataV3.Parsers.Rules._navigationPropertyParser.Instance
-from _ʺx2Bʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx2BʺParser.Instance.Optional()
-from _selectList_1 in __GeneratedOdataV3.Parsers.Rules._selectListParser.Instance.Optional()
-select new __GeneratedOdataV3.CstNodes.Rules._selectListProperty._navigationProperty_꘡ʺx2Bʺ꘡_꘡selectList꘡(_navigationProperty_1, _ʺx2Bʺ_1.GetOrElse(null), _selectList_1.GetOrElse(null));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListProperty._navigationProperty_꘡ʺx2Bʺ꘡_꘡selectList꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListProperty._navigationProperty_꘡ʺx2Bʺ꘡_꘡selectList꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._selectListProperty._navigationProperty_꘡ʺx2Bʺ꘡_꘡selectList꘡> Parse(IInput<char>? input)
+                {
+                    var _navigationProperty_1 = __GeneratedOdataV3.Parsers.Rules._navigationPropertyParser.Instance.Parse(input);
+if (!_navigationProperty_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectListProperty._navigationProperty_꘡ʺx2Bʺ꘡_꘡selectList꘡)!, input);
+}
+
+var _ʺx2Bʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx2BʺParser.Instance.Optional().Parse(_navigationProperty_1.Remainder);
+if (!_ʺx2Bʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectListProperty._navigationProperty_꘡ʺx2Bʺ꘡_꘡selectList꘡)!, input);
+}
+
+var _selectList_1 = __GeneratedOdataV3.Parsers.Rules._selectListParser.Instance.Optional().Parse(_ʺx2Bʺ_1.Remainder);
+if (!_selectList_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectListProperty._navigationProperty_꘡ʺx2Bʺ꘡_꘡selectList꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectListProperty._navigationProperty_꘡ʺx2Bʺ꘡_꘡selectList꘡(_navigationProperty_1.Parsed, _ʺx2Bʺ_1.Parsed.GetOrElse(null),  _selectList_1.Parsed.GetOrElse(null)), _selectList_1.Remainder);
+                }
+            }
         }
         
         public static class _selectPath_꘡ʺx2Fʺ_selectListProperty꘡Parser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListProperty._selectPath_꘡ʺx2Fʺ_selectListProperty꘡> Instance { get; } = from _selectPath_1 in __GeneratedOdataV3.Parsers.Rules._selectPathParser.Instance
-from _ʺx2Fʺ_selectListProperty_1 in __GeneratedOdataV3.Parsers.Inners._ʺx2Fʺ_selectListPropertyParser.Instance.Optional()
-select new __GeneratedOdataV3.CstNodes.Rules._selectListProperty._selectPath_꘡ʺx2Fʺ_selectListProperty꘡(_selectPath_1, _ʺx2Fʺ_selectListProperty_1.GetOrElse(null));
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListProperty._selectPath_꘡ʺx2Fʺ_selectListProperty꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListProperty._selectPath_꘡ʺx2Fʺ_selectListProperty꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._selectListProperty._selectPath_꘡ʺx2Fʺ_selectListProperty꘡> Parse(IInput<char>? input)
+                {
+                    var _selectPath_1 = __GeneratedOdataV3.Parsers.Rules._selectPathParser.Instance.Parse(input);
+if (!_selectPath_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectListProperty._selectPath_꘡ʺx2Fʺ_selectListProperty꘡)!, input);
+}
+
+var _ʺx2Fʺ_selectListProperty_1 = __GeneratedOdataV3.Parsers.Inners._ʺx2Fʺ_selectListPropertyParser.Instance.Optional().Parse(_selectPath_1.Remainder);
+if (!_ʺx2Fʺ_selectListProperty_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectListProperty._selectPath_꘡ʺx2Fʺ_selectListProperty꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectListProperty._selectPath_꘡ʺx2Fʺ_selectListProperty꘡(_selectPath_1.Parsed,  _ʺx2Fʺ_selectListProperty_1.Parsed.GetOrElse(null)), _ʺx2Fʺ_selectListProperty_1.Remainder);
+                }
+            }
         }
     }
     

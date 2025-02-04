@@ -14,11 +14,43 @@ select new __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._singleQualified
         
         public static class _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSEParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSE> Instance { get; } = from _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6EʺParser.Instance
-from _OPEN_1 in __GeneratedOdataV3.Parsers.Rules._OPENParser.Instance
-from _singleQualifiedTypeName_1 in __GeneratedOdataV3.Parsers.Rules._singleQualifiedTypeNameParser.Instance
-from _CLOSE_1 in __GeneratedOdataV3.Parsers.Rules._CLOSEParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSE(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_1, _OPEN_1, _singleQualifiedTypeName_1, _CLOSE_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSE> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSE>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSE> Parse(IInput<char>? input)
+                {
+                    var _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6EʺParser.Instance.Parse(input);
+if (!_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSE)!, input);
+}
+
+var _OPEN_1 = __GeneratedOdataV3.Parsers.Rules._OPENParser.Instance.Parse(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_1.Remainder);
+if (!_OPEN_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSE)!, input);
+}
+
+var _singleQualifiedTypeName_1 = __GeneratedOdataV3.Parsers.Rules._singleQualifiedTypeNameParser.Instance.Parse(_OPEN_1.Remainder);
+if (!_singleQualifiedTypeName_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSE)!, input);
+}
+
+var _CLOSE_1 = __GeneratedOdataV3.Parsers.Rules._CLOSEParser.Instance.Parse(_singleQualifiedTypeName_1.Remainder);
+if (!_CLOSE_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSE)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSE(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_1.Parsed, _OPEN_1.Parsed, _singleQualifiedTypeName_1.Parsed,  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+                }
+            }
         }
     }
     
