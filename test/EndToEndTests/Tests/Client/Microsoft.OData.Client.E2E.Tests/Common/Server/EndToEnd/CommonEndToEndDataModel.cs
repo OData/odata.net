@@ -260,6 +260,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
         public Stream? Photo { get; set; }
         public Stream? Video { get; set; }
         public string? Description { get; set; }
+
+        public IDictionary<string, object?> Properties { get; set; } = new Dictionary<string, object?>();
     }
 
     public class Person

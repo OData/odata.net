@@ -21,6 +21,9 @@ using Product = Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Product;
 
 namespace Microsoft.OData.Client.E2E.Tests.EnumerationTypeTests.Tests;
 
+/// <summary>
+/// Contains end-to-end tests for creating, updating, and deleting entities with enumeration type properties.
+/// </summary>
 public class EnumerationTypeUpdateTests : EndToEndTestBase<EnumerationTypeUpdateTests.TestsStartup>
 {
     private readonly Uri _baseUri;
@@ -63,7 +66,7 @@ public class EnumerationTypeUpdateTests : EndToEndTestBase<EnumerationTypeUpdate
     private const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
     private const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
 
-    #region Create and delete a simple entity.
+    #region Tests creating and deleting an entity with enumeration type properties.
 
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
@@ -153,12 +156,12 @@ public class EnumerationTypeUpdateTests : EndToEndTestBase<EnumerationTypeUpdate
 
     #endregion
 
-    #region Update a simple entity.
+    #region Tests updating the enumeration type properties of an entity.
 
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]
-    public async Task UpdateEnumProperty(string mimeType)
+    public async Task UpdateEnumProperties(string mimeType)
     {
         // Arrange
         // query an entry
@@ -211,8 +214,12 @@ public class EnumerationTypeUpdateTests : EndToEndTestBase<EnumerationTypeUpdate
 
     #region client operations
 
+    /// <summary>
+    /// Tests creating and updating a Product entity with enumeration type properties using the OData client.
+    /// </summary>
+
     [Fact]
-    public void CreateUpdateEntityFromODataClient()
+    public void CreateAndUpdateEntityUsingODataClient()
     {
         // Arrange
         _context.Format.UseJson(_model);

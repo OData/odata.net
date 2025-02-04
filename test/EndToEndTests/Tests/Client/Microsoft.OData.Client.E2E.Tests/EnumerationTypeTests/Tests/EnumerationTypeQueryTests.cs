@@ -21,6 +21,9 @@ using Product = Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Product;
 
 namespace Microsoft.OData.Client.E2E.Tests.EnumerationTypeTests.Tests;
 
+/// <summary>
+/// Contains end-to-end tests for querying enumeration type properties.
+/// </summary>
 public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTests.TestsStartup>
 {
     private readonly Uri _baseUri;
@@ -64,13 +67,13 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     private const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
     private const string MimeTypeApplicationAtomXml = MimeTypes.ApplicationAtomXml;
 
-    #region Query entity set
+    #region Tests querying entity set and verifies the enumeration type properties
 
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]
     [InlineData(MimeTypeApplicationAtomXml)]
-    public async Task QueryEntitySet(string mimeType)
+    public async Task QueryEntitySetAndVerifyEnumProperties(string mimeType)
     {
         // Arrange & Act
         List<ODataResource> entries = await TestsHelper.QueryResourceSetsAsync("Products", mimeType);
@@ -91,13 +94,13 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
 
     #endregion
 
-    #region Query specific entity
+    #region Tests querying an entity and verifies the enumeration type properties
 
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]
     [InlineData(MimeTypeApplicationAtomXml)]
-    public async Task QuerySpecificEntity(string mimeType)
+    public async Task QuerySpecificEntityAndVerifyEnumProperties(string mimeType)
     {
         // Arrange & Act
         List<ODataResource> entries = await TestsHelper.QueryResourceEntriesAsync("Products(6)", mimeType);
@@ -119,13 +122,13 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
 
     #endregion
 
-    #region Query property
+    #region Tests querying an Enum property of an entity and verifies its value.
 
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]
     [InlineData(MimeTypeApplicationAtomXml)]
-    public async Task QueryEnumProperty(string mimeType)
+    public async Task QueryEnumPropertyAndVerifyValue(string mimeType)
     {
         // Arrange & Act
         var skinColorProperty = await TestsHelper.QueryPropertyAsync("Products(5)/SkinColor", mimeType);
@@ -138,13 +141,13 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
 
     #endregion
 
-    #region Query property value
+    #region Tests querying the value of an enum property of an entity and verifies its value.
 
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]
     [InlineData(MimeTypeApplicationAtomXml)]
-    public async Task QueryEnumPropertyValue(string mimeType)
+    public async Task QueryEnumPropertyValueAndVerifyValue(string mimeType)
     {
         // Arrange
         var readerSettings = new ODataMessageReaderSettings() { BaseUri = _baseUri };
@@ -168,12 +171,12 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
 
     #endregion
 
-    #region Invoke action with enum parameter and return type
+    #region Tests invoking an action with an enumeration type parameter and verifies the returned enumeration type value.
 
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]
-    public async Task InvokeActionWithEnumParameterAndReturnType(string mimeType)
+    public async Task InvokeActionWithEnumParameterAndVerifyReturnValue(string mimeType)
     {
         // Arrange
         var writerSettings = new ODataMessageWriterSettings
@@ -217,13 +220,13 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
 
     #endregion
 
-    #region Invoke function with enum parameter and return type
+    #region Tests calling an unbound function that returns an enumeration type value and verifies the returned value.
 
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]
     [InlineData(MimeTypeApplicationAtomXml)]
-    public async Task CallUnboundFunctionWhichReturnsEnumValue(string mimeType)
+    public async Task CallUnboundFunctionAndVerifyEnumReturnValue(string mimeType)
     {
         // Arrange
         var readerSettings = new ODataMessageReaderSettings() { BaseUri = _baseUri };
@@ -251,13 +254,13 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
 
     #endregion
 
-    #region Query entities filter by enum property
+    #region Tests querying entity set with a filter on an enumeration type property and verifies the results.
 
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]
     [InlineData(MimeTypeApplicationAtomXml)]
-    public async Task QueryEntitiesFilterByEnumProperty(string mimeType)
+    public async Task QueryEntitiesWithEnumFilterAndVerifyResults(string mimeType)
     {
         // Arrange
         var queryText = "Products?$filter=UserAccess has Microsoft.OData.Client.E2E.Tests.Common.Server.Default.AccessLevel'Read'";
@@ -289,13 +292,13 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
 
     #endregion
 
-    #region Query entities order by enum property
+    #region Tests querying entity set ordered by an enumeration type property and verifies the results.
 
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]
     [InlineData(MimeTypeApplicationAtomXml)]
-    public async Task QueryEntitiesOrderByEnumProperty(string mimeType)
+    public async Task QueryEntitiesOrderedByEnumPropertyAndVerifyResults(string mimeType)
     {
         // Arrange
         var queryText = "Products?$orderby=SkinColor";
@@ -316,13 +319,13 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     #endregion
 
 
-    #region Query entities select enum property
+    #region Tests querying entity set and selecting only enumeration type properties.
 
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]
     [InlineData(MimeTypeApplicationAtomXml)]
-    public async Task QueryEntitiesSelectEnumProperty(string mimeType)
+    public async Task QueryEntitiesAndSelectEnumProperties(string mimeType)
     {
         // Arrange
         var queryText = "Products?$select=SkinColor,UserAccess";
@@ -334,14 +337,15 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
         Assert.Equal(5, entries.Count);
 
         Assert.DoesNotContain(entries[0].Properties, p => p.Name != "SkinColor" && p.Name != "UserAccess");
+        Assert.All(entries[0].Properties, p => Assert.Contains(p.Name, new[] { "SkinColor", "UserAccess" }));
     }
 
     #endregion
 
-    #region client operations
+    #region client operations.
 
     [Fact]
-    public void QueryEntitySetFromODataClient()
+    public void QueryEntitySetUsingODataClientAndVerifyEnumProperties()
     {
         // Arrange
         _context.Format.UseJson(_model);
@@ -358,7 +362,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     }
 
     [Fact]
-    public void QueryEntityFromODataClient()
+    public void QueryEntityUsingODataClientAndVerifyEnumProperties()
     {
         // Arrange
         _context.Format.UseJson(_model);
@@ -375,7 +379,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     }
 
     [Fact]
-    public void QueryEnumPropertyFromODataClient()
+    public void QueryEnumPropertyUsingODataClientAndVerifyValue()
     {
         // Arrange
         _context.Format.UseJson(_model);
@@ -388,7 +392,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     }
 
     [Fact]
-    public void QueryEnumCollectionPropertyFromODataClient()
+    public void QueryEnumCollectionPropertyUsingODataClientAndVerifyValues()
     {
         // Arrange
         _context.Format.UseJson(_model);
@@ -403,7 +407,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     }
 
     [Fact]
-    public void QueryEntitiesWithQueryOptionsFromODataClient()
+    public void QueryEntitiesWithQueryOptionsUsingODataClientAndVerifyResults()
     {
         // MinimalMetadata: UseJson() + no $select in request uri
         _context.Format.UseJson(_model);
@@ -445,7 +449,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     }
 
     [Fact]
-    public void QueryEntitiesWithBinaryOperationFilterFromODataClient()
+    public void QueryEntitiesWithBinaryOperationFilterUsingODataClientAndVerifyResults()
     {
         // Arrange
         var products = _context.Products.ToList();
@@ -466,7 +470,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     }
 
     [Fact]
-    public void QueryEntitiesWithEqualityFilterFromODataClient()
+    public void QueryEntitiesWithEqualityFilterUsingODataClientAndVerifyResults()
     {
         // Arrange
         var products = _context.Products.ToList();
@@ -484,7 +488,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     }
 
     [Fact]
-    public void QueryEntitiesWithHasFilterFromODataClient()
+    public void QueryEntitiesWithHasInFilterUsingODataClientAndVerifyResults()
     {
         // Arrange
         var products = _context.Products.ToList();
@@ -502,7 +506,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     }
 
     [Fact]
-    public void QueryEntitiesWithIsofFilterFromODataClient()
+    public void QueryEntitiesWithIsofInFilterUsingODataClientAndVerifyResults()
     {
         // Arrange
         var products = _context.Products.ToList();
@@ -519,7 +523,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     }
 
     [Fact]
-    public void QueryEntitiesWithAnyFilterFromODataClient()
+    public void QueryEntitiesWithAnyInFilterUsingODataClientAndVerifyResults()
     {
         // Arrange
         var products = _context.Products.ToList();
@@ -536,7 +540,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     }
 
     [Fact]
-    public void QueryEntitiesWithAllFilterFromODataClient()
+    public void QueryEntitiesWithAllInFilterUsingODataClientAndVerifyResults()
     {
         // Arrange
         var products = _context.Products.ToList();
@@ -554,7 +558,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
 
 
     [Fact]
-    public void QueryEntitiesWithOrderByFromODataClient()
+    public void QueryEntitiesWithOrderByUsingODataClientAndVerifyResults()
     {
         // Arrange
         var products = _context.Products.ToList();
@@ -584,7 +588,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
     }
 
     [Fact]
-    public void QueryEntityByIdAndSelectUserAccessFromODataClient()
+    public void QueryEntityByIdAndSelectUserAccessUsingODataClientAndVerifyResults()
     {
         // Arrange
         var products = _context.Products.ToList();
@@ -602,7 +606,7 @@ public class EnumerationTypeQueryTests : EndToEndTestBase<EnumerationTypeQueryTe
 
 
     [Fact]
-    public void QueryEntitiesAndSelectMultiplePropertiesFromODataClient()
+    public void QueryEntitiesAndSelectMultiplePropertiesUsingODataClientAndVerifyResults()
     {
         // Arrange
         var products = _context.Products.ToList();
