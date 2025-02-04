@@ -32,7 +32,7 @@ if (!_commonExpr_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._negateExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._negateExpr(_ʺx2Dʺ_1.Parsed, _BWS_1.Parsed,  _commonExpr_1.Parsed), _commonExpr_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._negateExpr(_ʺx2Dʺ_1.Parsed, _BWS_1.Parsed, _commonExpr_1.Parsed), _commonExpr_1.Remainder);
             }
         }
     }

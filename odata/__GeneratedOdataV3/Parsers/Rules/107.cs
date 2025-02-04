@@ -32,7 +32,7 @@ if (!_ʺx2Fʺ_qualifiedEntityTypeName_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._entitySet)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._entitySet(_entitySetName_1.Parsed, _ⲤcontainmentNavigationↃ_1.Parsed,  _ʺx2Fʺ_qualifiedEntityTypeName_1.Parsed.GetOrElse(null)), _ʺx2Fʺ_qualifiedEntityTypeName_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._entitySet(_entitySetName_1.Parsed, _ⲤcontainmentNavigationↃ_1.Parsed, _ʺx2Fʺ_qualifiedEntityTypeName_1.Parsed.GetOrElse(null)), _ʺx2Fʺ_qualifiedEntityTypeName_1.Remainder);
             }
         }
     }

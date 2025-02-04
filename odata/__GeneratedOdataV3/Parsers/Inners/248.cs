@@ -26,7 +26,7 @@ if (!_selectListItem_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._COMMA_selectListItem)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._COMMA_selectListItem(_COMMA_1.Parsed,  _selectListItem_1.Parsed), _selectListItem_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._COMMA_selectListItem(_COMMA_1.Parsed, _selectListItem_1.Parsed), _selectListItem_1.Remainder);
             }
         }
     }

@@ -8,14 +8,48 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _ʺx40ʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._AT._ʺx40ʺ> Instance { get; } = from _ʺx40ʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx40ʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._AT._ʺx40ʺ(_ʺx40ʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._AT._ʺx40ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._AT._ʺx40ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._AT._ʺx40ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx40ʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx40ʺParser.Instance.Parse(input);
+if (!_ʺx40ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._AT._ʺx40ʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._AT._ʺx40ʺ(_ʺx40ʺ_1.Parsed), _ʺx40ʺ_1.Remainder);
+                }
+            }
         }
         
         public static class _ʺx25x34x30ʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._AT._ʺx25x34x30ʺ> Instance { get; } = from _ʺx25x34x30ʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx25x34x30ʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._AT._ʺx25x34x30ʺ(_ʺx25x34x30ʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._AT._ʺx25x34x30ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._AT._ʺx25x34x30ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._AT._ʺx25x34x30ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx25x34x30ʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx25x34x30ʺParser.Instance.Parse(input);
+if (!_ʺx25x34x30ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._AT._ʺx25x34x30ʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._AT._ʺx25x34x30ʺ(_ʺx25x34x30ʺ_1.Parsed), _ʺx25x34x30ʺ_1.Remainder);
+                }
+            }
         }
     }
     

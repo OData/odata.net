@@ -4,8 +4,25 @@ namespace __GeneratedOdataV3.Parsers.Inners
     
     public static class _ʺx35ʺParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ʺx35ʺ> Instance { get; } = from _x35_1 in __GeneratedOdataV3.Parsers.Inners._x35Parser.Instance
-select __GeneratedOdataV3.CstNodes.Inners._ʺx35ʺ.Instance;
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ʺx35ʺ> Instance { get; } = new Parser();
+        
+        private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._ʺx35ʺ>
+        {
+            public Parser()
+            {
+            }
+            
+            public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._ʺx35ʺ> Parse(IInput<char>? input)
+            {
+                var _x35_1 = __GeneratedOdataV3.Parsers.Inners._x35Parser.Instance.Parse(input);
+if (!_x35_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ʺx35ʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Inners._ʺx35ʺ.Instance, _x35_1.Remainder);
+            }
+        }
     }
     
 }

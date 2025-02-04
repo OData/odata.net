@@ -32,7 +32,7 @@ if (!_ʺx3Aʺ_port_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._authority)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._authority(_userinfo_ʺx40ʺ_1.Parsed.GetOrElse(null), _host_1.Parsed,  _ʺx3Aʺ_port_1.Parsed.GetOrElse(null)), _ʺx3Aʺ_port_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._authority(_userinfo_ʺx40ʺ_1.Parsed.GetOrElse(null), _host_1.Parsed, _ʺx3Aʺ_port_1.Parsed.GetOrElse(null)), _ʺx3Aʺ_port_1.Remainder);
             }
         }
     }

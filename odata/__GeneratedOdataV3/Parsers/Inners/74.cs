@@ -26,7 +26,7 @@ if (!_queryOption_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ʺx26ʺ_queryOption)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx26ʺ_queryOption(_ʺx26ʺ_1.Parsed,  _queryOption_1.Parsed), _queryOption_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx26ʺ_queryOption(_ʺx26ʺ_1.Parsed, _queryOption_1.Parsed), _queryOption_1.Remainder);
             }
         }
     }

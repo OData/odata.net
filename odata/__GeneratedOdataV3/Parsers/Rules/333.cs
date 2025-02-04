@@ -26,7 +26,7 @@ if (!_polygonLiteral_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._fullPolygonLiteral)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._fullPolygonLiteral(_sridLiteral_1.Parsed,  _polygonLiteral_1.Parsed), _polygonLiteral_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._fullPolygonLiteral(_sridLiteral_1.Parsed, _polygonLiteral_1.Parsed), _polygonLiteral_1.Remainder);
             }
         }
     }

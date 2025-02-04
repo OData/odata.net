@@ -48,15 +48,32 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE(_OPEN_1.Parsed, _BWS_1.Parsed, _searchExpr_1.Parsed, _BWS_2.Parsed,  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._OPEN_BWS_searchExpr_BWS_CLOSE(_OPEN_1.Parsed, _BWS_1.Parsed, _searchExpr_1.Parsed, _BWS_2.Parsed, _CLOSE_1.Parsed), _CLOSE_1.Remainder);
                 }
             }
         }
         
         public static class _searchTermParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._searchTerm> Instance { get; } = from _searchTerm_1 in __GeneratedOdataV3.Parsers.Rules._searchTermParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._searchTerm(_searchTerm_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._searchTerm> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._searchTerm>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._searchTerm> Parse(IInput<char>? input)
+                {
+                    var _searchTerm_1 = __GeneratedOdataV3.Parsers.Rules._searchTermParser.Instance.Parse(input);
+if (!_searchTerm_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._searchTerm)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._OPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTerm._searchTerm(_searchTerm_1.Parsed), _searchTerm_1.Remainder);
+                }
+            }
         }
     }
     

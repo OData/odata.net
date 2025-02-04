@@ -26,7 +26,7 @@ if (!_searchOrExprⳆsearchAndExpr_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._searchExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._searchExpr(_ⲤOPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTermↃ_1.Parsed,  _searchOrExprⳆsearchAndExpr_1.Parsed.GetOrElse(null)), _searchOrExprⳆsearchAndExpr_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._searchExpr(_ⲤOPEN_BWS_searchExpr_BWS_CLOSEⳆsearchTermↃ_1.Parsed, _searchOrExprⳆsearchAndExpr_1.Parsed.GetOrElse(null)), _searchOrExprⳆsearchAndExpr_1.Remainder);
             }
         }
     }

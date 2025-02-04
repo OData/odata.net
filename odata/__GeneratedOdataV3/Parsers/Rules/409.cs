@@ -8,44 +8,163 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _ʺx21ʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx21ʺ> Instance { get; } = from _ʺx21ʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx21ʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx21ʺ(_ʺx21ʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx21ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx21ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx21ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx21ʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx21ʺParser.Instance.Parse(input);
+if (!_ʺx21ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx21ʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx21ʺ(_ʺx21ʺ_1.Parsed), _ʺx21ʺ_1.Remainder);
+                }
+            }
         }
         
         public static class _ʺx28ʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx28ʺ> Instance { get; } = from _ʺx28ʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx28ʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx28ʺ(_ʺx28ʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx28ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx28ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx28ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx28ʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx28ʺParser.Instance.Parse(input);
+if (!_ʺx28ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx28ʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx28ʺ(_ʺx28ʺ_1.Parsed), _ʺx28ʺ_1.Remainder);
+                }
+            }
         }
         
         public static class _ʺx29ʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx29ʺ> Instance { get; } = from _ʺx29ʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx29ʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx29ʺ(_ʺx29ʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx29ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx29ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx29ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx29ʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx29ʺParser.Instance.Parse(input);
+if (!_ʺx29ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx29ʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx29ʺ(_ʺx29ʺ_1.Parsed), _ʺx29ʺ_1.Remainder);
+                }
+            }
         }
         
         public static class _ʺx2AʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Aʺ> Instance { get; } = from _ʺx2Aʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx2AʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Aʺ(_ʺx2Aʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Aʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Aʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Aʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx2Aʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx2AʺParser.Instance.Parse(input);
+if (!_ʺx2Aʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Aʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Aʺ(_ʺx2Aʺ_1.Parsed), _ʺx2Aʺ_1.Remainder);
+                }
+            }
         }
         
         public static class _ʺx2BʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Bʺ> Instance { get; } = from _ʺx2Bʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx2BʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Bʺ(_ʺx2Bʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Bʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Bʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Bʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx2Bʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx2BʺParser.Instance.Parse(input);
+if (!_ʺx2Bʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Bʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Bʺ(_ʺx2Bʺ_1.Parsed), _ʺx2Bʺ_1.Remainder);
+                }
+            }
         }
         
         public static class _ʺx2CʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Cʺ> Instance { get; } = from _ʺx2Cʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx2CʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Cʺ(_ʺx2Cʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Cʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Cʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Cʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx2Cʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx2CʺParser.Instance.Parse(input);
+if (!_ʺx2Cʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Cʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx2Cʺ(_ʺx2Cʺ_1.Parsed), _ʺx2Cʺ_1.Remainder);
+                }
+            }
         }
         
         public static class _ʺx3BʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx3Bʺ> Instance { get; } = from _ʺx3Bʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx3BʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx3Bʺ(_ʺx3Bʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx3Bʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx3Bʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx3Bʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx3Bʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx3BʺParser.Instance.Parse(input);
+if (!_ʺx3Bʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx3Bʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._otherⲻdelims._ʺx3Bʺ(_ʺx3Bʺ_1.Parsed), _ʺx3Bʺ_1.Remainder);
+                }
+            }
         }
     }
     

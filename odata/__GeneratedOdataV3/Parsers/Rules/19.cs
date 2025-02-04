@@ -8,8 +8,25 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _ordinalIndexParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._complexColPath._ordinalIndex> Instance { get; } = from _ordinalIndex_1 in __GeneratedOdataV3.Parsers.Rules._ordinalIndexParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._complexColPath._ordinalIndex(_ordinalIndex_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._complexColPath._ordinalIndex> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._complexColPath._ordinalIndex>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._complexColPath._ordinalIndex> Parse(IInput<char>? input)
+                {
+                    var _ordinalIndex_1 = __GeneratedOdataV3.Parsers.Rules._ordinalIndexParser.Instance.Parse(input);
+if (!_ordinalIndex_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._complexColPath._ordinalIndex)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._complexColPath._ordinalIndex(_ordinalIndex_1.Parsed), _ordinalIndex_1.Remainder);
+                }
+            }
         }
         
         public static class _꘡ʺx2Fʺ_qualifiedComplexTypeName꘡_꘡countⳆboundOperation꘡Parser
@@ -36,7 +53,7 @@ if (!_countⳆboundOperation_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._complexColPath._꘡ʺx2Fʺ_qualifiedComplexTypeName꘡_꘡countⳆboundOperation꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._complexColPath._꘡ʺx2Fʺ_qualifiedComplexTypeName꘡_꘡countⳆboundOperation꘡(_ʺx2Fʺ_qualifiedComplexTypeName_1.Parsed.GetOrElse(null),  _countⳆboundOperation_1.Parsed.GetOrElse(null)), _countⳆboundOperation_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._complexColPath._꘡ʺx2Fʺ_qualifiedComplexTypeName꘡_꘡countⳆboundOperation꘡(_ʺx2Fʺ_qualifiedComplexTypeName_1.Parsed.GetOrElse(null), _countⳆboundOperation_1.Parsed.GetOrElse(null)), _countⳆboundOperation_1.Remainder);
                 }
             }
         }

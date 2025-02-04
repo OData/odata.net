@@ -26,7 +26,7 @@ if (!_annotationExprⳆboundFunctionExpr_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._primitivePathExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._primitivePathExpr(_ʺx2Fʺ_1.Parsed,  _annotationExprⳆboundFunctionExpr_1.Parsed.GetOrElse(null)), _annotationExprⳆboundFunctionExpr_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._primitivePathExpr(_ʺx2Fʺ_1.Parsed, _annotationExprⳆboundFunctionExpr_1.Parsed.GetOrElse(null)), _annotationExprⳆboundFunctionExpr_1.Remainder);
             }
         }
     }

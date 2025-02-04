@@ -30,7 +30,7 @@ if (!_collectionNavigation_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡(_entitySetName_1.Parsed,  _collectionNavigation_1.Parsed.GetOrElse(null)), _collectionNavigation_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡(_entitySetName_1.Parsed, _collectionNavigation_1.Parsed.GetOrElse(null)), _collectionNavigation_1.Remainder);
                 }
             }
         }
@@ -59,15 +59,32 @@ if (!_singleNavigation_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._singletonEntity_꘡singleNavigation꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._singletonEntity_꘡singleNavigation꘡(_singletonEntity_1.Parsed,  _singleNavigation_1.Parsed.GetOrElse(null)), _singleNavigation_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._singletonEntity_꘡singleNavigation꘡(_singletonEntity_1.Parsed, _singleNavigation_1.Parsed.GetOrElse(null)), _singleNavigation_1.Remainder);
                 }
             }
         }
         
         public static class _actionImportCallParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._actionImportCall> Instance { get; } = from _actionImportCall_1 in __GeneratedOdataV3.Parsers.Rules._actionImportCallParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._resourcePath._actionImportCall(_actionImportCall_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._actionImportCall> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._actionImportCall>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._actionImportCall> Parse(IInput<char>? input)
+                {
+                    var _actionImportCall_1 = __GeneratedOdataV3.Parsers.Rules._actionImportCallParser.Instance.Parse(input);
+if (!_actionImportCall_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._actionImportCall)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._actionImportCall(_actionImportCall_1.Parsed), _actionImportCall_1.Remainder);
+                }
+            }
         }
         
         public static class _entityColFunctionImportCall_꘡collectionNavigation꘡Parser
@@ -94,7 +111,7 @@ if (!_collectionNavigation_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._entityColFunctionImportCall_꘡collectionNavigation꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityColFunctionImportCall_꘡collectionNavigation꘡(_entityColFunctionImportCall_1.Parsed,  _collectionNavigation_1.Parsed.GetOrElse(null)), _collectionNavigation_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityColFunctionImportCall_꘡collectionNavigation꘡(_entityColFunctionImportCall_1.Parsed, _collectionNavigation_1.Parsed.GetOrElse(null)), _collectionNavigation_1.Remainder);
                 }
             }
         }
@@ -123,7 +140,7 @@ if (!_singleNavigation_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._entityFunctionImportCall_꘡singleNavigation꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityFunctionImportCall_꘡singleNavigation꘡(_entityFunctionImportCall_1.Parsed,  _singleNavigation_1.Parsed.GetOrElse(null)), _singleNavigation_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._entityFunctionImportCall_꘡singleNavigation꘡(_entityFunctionImportCall_1.Parsed, _singleNavigation_1.Parsed.GetOrElse(null)), _singleNavigation_1.Remainder);
                 }
             }
         }
@@ -152,7 +169,7 @@ if (!_complexColPath_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._complexColFunctionImportCall_꘡complexColPath꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexColFunctionImportCall_꘡complexColPath꘡(_complexColFunctionImportCall_1.Parsed,  _complexColPath_1.Parsed.GetOrElse(null)), _complexColPath_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexColFunctionImportCall_꘡complexColPath꘡(_complexColFunctionImportCall_1.Parsed, _complexColPath_1.Parsed.GetOrElse(null)), _complexColPath_1.Remainder);
                 }
             }
         }
@@ -181,7 +198,7 @@ if (!_complexPath_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._complexFunctionImportCall_꘡complexPath꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexFunctionImportCall_꘡complexPath꘡(_complexFunctionImportCall_1.Parsed,  _complexPath_1.Parsed.GetOrElse(null)), _complexPath_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._complexFunctionImportCall_꘡complexPath꘡(_complexFunctionImportCall_1.Parsed, _complexPath_1.Parsed.GetOrElse(null)), _complexPath_1.Remainder);
                 }
             }
         }
@@ -210,7 +227,7 @@ if (!_primitiveColPath_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveColFunctionImportCall_꘡primitiveColPath꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveColFunctionImportCall_꘡primitiveColPath꘡(_primitiveColFunctionImportCall_1.Parsed,  _primitiveColPath_1.Parsed.GetOrElse(null)), _primitiveColPath_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveColFunctionImportCall_꘡primitiveColPath꘡(_primitiveColFunctionImportCall_1.Parsed, _primitiveColPath_1.Parsed.GetOrElse(null)), _primitiveColPath_1.Remainder);
                 }
             }
         }
@@ -239,21 +256,55 @@ if (!_primitivePath_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveFunctionImportCall_꘡primitivePath꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveFunctionImportCall_꘡primitivePath꘡(_primitiveFunctionImportCall_1.Parsed,  _primitivePath_1.Parsed.GetOrElse(null)), _primitivePath_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._primitiveFunctionImportCall_꘡primitivePath꘡(_primitiveFunctionImportCall_1.Parsed, _primitivePath_1.Parsed.GetOrElse(null)), _primitivePath_1.Remainder);
                 }
             }
         }
         
         public static class _functionImportCallNoParensParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._functionImportCallNoParens> Instance { get; } = from _functionImportCallNoParens_1 in __GeneratedOdataV3.Parsers.Rules._functionImportCallNoParensParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._resourcePath._functionImportCallNoParens(_functionImportCallNoParens_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._functionImportCallNoParens> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._functionImportCallNoParens>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._functionImportCallNoParens> Parse(IInput<char>? input)
+                {
+                    var _functionImportCallNoParens_1 = __GeneratedOdataV3.Parsers.Rules._functionImportCallNoParensParser.Instance.Parse(input);
+if (!_functionImportCallNoParens_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._functionImportCallNoParens)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._functionImportCallNoParens(_functionImportCallNoParens_1.Parsed), _functionImportCallNoParens_1.Remainder);
+                }
+            }
         }
         
         public static class _crossjoinParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._crossjoin> Instance { get; } = from _crossjoin_1 in __GeneratedOdataV3.Parsers.Rules._crossjoinParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._resourcePath._crossjoin(_crossjoin_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._crossjoin> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._crossjoin>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._crossjoin> Parse(IInput<char>? input)
+                {
+                    var _crossjoin_1 = __GeneratedOdataV3.Parsers.Rules._crossjoinParser.Instance.Parse(input);
+if (!_crossjoin_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._crossjoin)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._crossjoin(_crossjoin_1.Parsed), _crossjoin_1.Remainder);
+                }
+            }
         }
         
         public static class _ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡Parser
@@ -280,7 +331,7 @@ if (!_ʺx2Fʺ_qualifiedEntityTypeName_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡(_ʺx24x61x6Cx6Cʺ_1.Parsed,  _ʺx2Fʺ_qualifiedEntityTypeName_1.Parsed.GetOrElse(null)), _ʺx2Fʺ_qualifiedEntityTypeName_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡(_ʺx24x61x6Cx6Cʺ_1.Parsed, _ʺx2Fʺ_qualifiedEntityTypeName_1.Parsed.GetOrElse(null)), _ʺx2Fʺ_qualifiedEntityTypeName_1.Remainder);
                 }
             }
         }

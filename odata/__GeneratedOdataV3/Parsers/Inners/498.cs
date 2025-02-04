@@ -32,7 +32,7 @@ if (!_ʺx2Eʺ_fractionalSeconds_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ʺx3Aʺ_second_꘡ʺx2Eʺ_fractionalSeconds꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx3Aʺ_second_꘡ʺx2Eʺ_fractionalSeconds꘡(_ʺx3Aʺ_1.Parsed, _second_1.Parsed,  _ʺx2Eʺ_fractionalSeconds_1.Parsed.GetOrElse(null)), _ʺx2Eʺ_fractionalSeconds_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx3Aʺ_second_꘡ʺx2Eʺ_fractionalSeconds꘡(_ʺx3Aʺ_1.Parsed, _second_1.Parsed, _ʺx2Eʺ_fractionalSeconds_1.Parsed.GetOrElse(null)), _ʺx2Eʺ_fractionalSeconds_1.Remainder);
             }
         }
     }

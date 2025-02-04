@@ -8,38 +8,140 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _filterParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._filter> Instance { get; } = from _filter_1 in __GeneratedOdataV3.Parsers.Rules._filterParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._filter(_filter_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._filter> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._filter>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._filter> Parse(IInput<char>? input)
+                {
+                    var _filter_1 = __GeneratedOdataV3.Parsers.Rules._filterParser.Instance.Parse(input);
+if (!_filter_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectOptionPC._filter)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._filter(_filter_1.Parsed), _filter_1.Remainder);
+                }
+            }
         }
         
         public static class _searchParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._search> Instance { get; } = from _search_1 in __GeneratedOdataV3.Parsers.Rules._searchParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._search(_search_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._search> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._search>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._search> Parse(IInput<char>? input)
+                {
+                    var _search_1 = __GeneratedOdataV3.Parsers.Rules._searchParser.Instance.Parse(input);
+if (!_search_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectOptionPC._search)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._search(_search_1.Parsed), _search_1.Remainder);
+                }
+            }
         }
         
         public static class _inlinecountParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._inlinecount> Instance { get; } = from _inlinecount_1 in __GeneratedOdataV3.Parsers.Rules._inlinecountParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._inlinecount(_inlinecount_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._inlinecount> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._inlinecount>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._inlinecount> Parse(IInput<char>? input)
+                {
+                    var _inlinecount_1 = __GeneratedOdataV3.Parsers.Rules._inlinecountParser.Instance.Parse(input);
+if (!_inlinecount_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectOptionPC._inlinecount)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._inlinecount(_inlinecount_1.Parsed), _inlinecount_1.Remainder);
+                }
+            }
         }
         
         public static class _orderbyParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._orderby> Instance { get; } = from _orderby_1 in __GeneratedOdataV3.Parsers.Rules._orderbyParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._orderby(_orderby_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._orderby> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._orderby>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._orderby> Parse(IInput<char>? input)
+                {
+                    var _orderby_1 = __GeneratedOdataV3.Parsers.Rules._orderbyParser.Instance.Parse(input);
+if (!_orderby_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectOptionPC._orderby)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._orderby(_orderby_1.Parsed), _orderby_1.Remainder);
+                }
+            }
         }
         
         public static class _skipParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._skip> Instance { get; } = from _skip_1 in __GeneratedOdataV3.Parsers.Rules._skipParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._skip(_skip_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._skip> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._skip>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._skip> Parse(IInput<char>? input)
+                {
+                    var _skip_1 = __GeneratedOdataV3.Parsers.Rules._skipParser.Instance.Parse(input);
+if (!_skip_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectOptionPC._skip)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._skip(_skip_1.Parsed), _skip_1.Remainder);
+                }
+            }
         }
         
         public static class _topParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._top> Instance { get; } = from _top_1 in __GeneratedOdataV3.Parsers.Rules._topParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._top(_top_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._top> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._top>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._top> Parse(IInput<char>? input)
+                {
+                    var _top_1 = __GeneratedOdataV3.Parsers.Rules._topParser.Instance.Parse(input);
+if (!_top_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectOptionPC._top)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectOptionPC._top(_top_1.Parsed), _top_1.Remainder);
+                }
+            }
         }
     }
     

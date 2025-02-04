@@ -26,7 +26,7 @@ if (!_Ⲥʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGITↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._year)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._year(_ʺx2Dʺ_1.Parsed.GetOrElse(null),  _Ⲥʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGITↃ_1.Parsed), _Ⲥʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGITↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._year(_ʺx2Dʺ_1.Parsed.GetOrElse(null), _Ⲥʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGITↃ_1.Parsed), _Ⲥʺx30ʺ_3DIGITⳆoneToNine_3ЖDIGITↃ_1.Remainder);
             }
         }
     }

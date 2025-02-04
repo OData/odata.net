@@ -8,14 +8,48 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _DIGITParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._HEXDIG._DIGIT> Instance { get; } = from _DIGIT_1 in __GeneratedOdataV3.Parsers.Rules._DIGITParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._HEXDIG._DIGIT(_DIGIT_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._HEXDIG._DIGIT> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._HEXDIG._DIGIT>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._HEXDIG._DIGIT> Parse(IInput<char>? input)
+                {
+                    var _DIGIT_1 = __GeneratedOdataV3.Parsers.Rules._DIGITParser.Instance.Parse(input);
+if (!_DIGIT_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._HEXDIG._DIGIT)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._HEXDIG._DIGIT(_DIGIT_1.Parsed), _DIGIT_1.Remainder);
+                }
+            }
         }
         
         public static class _AⲻtoⲻFParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._HEXDIG._AⲻtoⲻF> Instance { get; } = from _AⲻtoⲻF_1 in __GeneratedOdataV3.Parsers.Rules._AⲻtoⲻFParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._HEXDIG._AⲻtoⲻF(_AⲻtoⲻF_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._HEXDIG._AⲻtoⲻF> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._HEXDIG._AⲻtoⲻF>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._HEXDIG._AⲻtoⲻF> Parse(IInput<char>? input)
+                {
+                    var _AⲻtoⲻF_1 = __GeneratedOdataV3.Parsers.Rules._AⲻtoⲻFParser.Instance.Parse(input);
+if (!_AⲻtoⲻF_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._HEXDIG._AⲻtoⲻF)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._HEXDIG._AⲻtoⲻF(_AⲻtoⲻF_1.Parsed), _AⲻtoⲻF_1.Remainder);
+                }
+            }
         }
     }
     

@@ -26,7 +26,7 @@ if (!_DIGIT_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._sbyteValue)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._sbyteValue(_SIGN_1.Parsed.GetOrElse(null),  new __GeneratedOdataV3.CstNodes.Inners.HelperRangedFrom1To3<__GeneratedOdataV3.CstNodes.Rules._DIGIT>(_DIGIT_1.Parsed)), _DIGIT_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._sbyteValue(_SIGN_1.Parsed.GetOrElse(null), new __GeneratedOdataV3.CstNodes.Inners.HelperRangedFrom1To3<__GeneratedOdataV3.CstNodes.Rules._DIGIT>(_DIGIT_1.Parsed)), _DIGIT_1.Remainder);
             }
         }
     }

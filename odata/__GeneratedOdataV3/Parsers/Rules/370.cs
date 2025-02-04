@@ -32,7 +32,7 @@ if (!_BWSⲻh_2.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._EQⲻh)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._EQⲻh(_BWSⲻh_1.Parsed, _EQ_1.Parsed,  _BWSⲻh_2.Parsed), _BWSⲻh_2.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._EQⲻh(_BWSⲻh_1.Parsed, _EQ_1.Parsed, _BWSⲻh_2.Parsed), _BWSⲻh_2.Remainder);
             }
         }
     }

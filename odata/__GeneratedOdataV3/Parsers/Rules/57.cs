@@ -32,7 +32,7 @@ if (!_Ⲥʺx26ʺ_entityCastOptionↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._entityCastOptions)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._entityCastOptions(_ⲤentityCastOption_ʺx26ʺↃ_1.Parsed, _id_1.Parsed,  _Ⲥʺx26ʺ_entityCastOptionↃ_1.Parsed), _Ⲥʺx26ʺ_entityCastOptionↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._entityCastOptions(_ⲤentityCastOption_ʺx26ʺↃ_1.Parsed, _id_1.Parsed, _Ⲥʺx26ʺ_entityCastOptionↃ_1.Parsed), _Ⲥʺx26ʺ_entityCastOptionↃ_1.Remainder);
             }
         }
     }

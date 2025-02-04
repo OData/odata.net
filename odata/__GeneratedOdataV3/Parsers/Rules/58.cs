@@ -8,20 +8,71 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _entityIdOptionParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._entityCastOption._entityIdOption> Instance { get; } = from _entityIdOption_1 in __GeneratedOdataV3.Parsers.Rules._entityIdOptionParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._entityCastOption._entityIdOption(_entityIdOption_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._entityCastOption._entityIdOption> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._entityCastOption._entityIdOption>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._entityCastOption._entityIdOption> Parse(IInput<char>? input)
+                {
+                    var _entityIdOption_1 = __GeneratedOdataV3.Parsers.Rules._entityIdOptionParser.Instance.Parse(input);
+if (!_entityIdOption_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._entityCastOption._entityIdOption)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._entityCastOption._entityIdOption(_entityIdOption_1.Parsed), _entityIdOption_1.Remainder);
+                }
+            }
         }
         
         public static class _expandParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._entityCastOption._expand> Instance { get; } = from _expand_1 in __GeneratedOdataV3.Parsers.Rules._expandParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._entityCastOption._expand(_expand_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._entityCastOption._expand> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._entityCastOption._expand>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._entityCastOption._expand> Parse(IInput<char>? input)
+                {
+                    var _expand_1 = __GeneratedOdataV3.Parsers.Rules._expandParser.Instance.Parse(input);
+if (!_expand_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._entityCastOption._expand)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._entityCastOption._expand(_expand_1.Parsed), _expand_1.Remainder);
+                }
+            }
         }
         
         public static class _selectParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._entityCastOption._select> Instance { get; } = from _select_1 in __GeneratedOdataV3.Parsers.Rules._selectParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._entityCastOption._select(_select_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._entityCastOption._select> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._entityCastOption._select>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._entityCastOption._select> Parse(IInput<char>? input)
+                {
+                    var _select_1 = __GeneratedOdataV3.Parsers.Rules._selectParser.Instance.Parse(input);
+if (!_select_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._entityCastOption._select)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._entityCastOption._select(_select_1.Parsed), _select_1.Remainder);
+                }
+            }
         }
     }
     

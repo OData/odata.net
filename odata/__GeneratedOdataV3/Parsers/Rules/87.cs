@@ -38,7 +38,7 @@ if (!_ⲤCOMMA_selectItemↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._select)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._select(_Ⲥʺx24x73x65x6Cx65x63x74ʺⳆʺx73x65x6Cx65x63x74ʺↃ_1.Parsed, _EQ_1.Parsed, _selectItem_1.Parsed,  _ⲤCOMMA_selectItemↃ_1.Parsed), _ⲤCOMMA_selectItemↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._select(_Ⲥʺx24x73x65x6Cx65x63x74ʺⳆʺx73x65x6Cx65x63x74ʺↃ_1.Parsed, _EQ_1.Parsed, _selectItem_1.Parsed, _ⲤCOMMA_selectItemↃ_1.Parsed), _ⲤCOMMA_selectItemↃ_1.Remainder);
             }
         }
     }

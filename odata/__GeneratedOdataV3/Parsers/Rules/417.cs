@@ -8,8 +8,25 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _qcharⲻunescapedParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻDQUOTE._qcharⲻunescaped> Instance { get; } = from _qcharⲻunescaped_1 in __GeneratedOdataV3.Parsers.Rules._qcharⲻunescapedParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻDQUOTE._qcharⲻunescaped(_qcharⲻunescaped_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻDQUOTE._qcharⲻunescaped> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻDQUOTE._qcharⲻunescaped>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻDQUOTE._qcharⲻunescaped> Parse(IInput<char>? input)
+                {
+                    var _qcharⲻunescaped_1 = __GeneratedOdataV3.Parsers.Rules._qcharⲻunescapedParser.Instance.Parse(input);
+if (!_qcharⲻunescaped_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻDQUOTE._qcharⲻunescaped)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻDQUOTE._qcharⲻunescaped(_qcharⲻunescaped_1.Parsed), _qcharⲻunescaped_1.Remainder);
+                }
+            }
         }
         
         public static class _escape_ⲤescapeⳆquotationⲻmarkↃParser
@@ -36,7 +53,7 @@ if (!_ⲤescapeⳆquotationⲻmarkↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻDQUOTE._escape_ⲤescapeⳆquotationⲻmarkↃ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻDQUOTE._escape_ⲤescapeⳆquotationⲻmarkↃ(_escape_1.Parsed,  _ⲤescapeⳆquotationⲻmarkↃ_1.Parsed), _ⲤescapeⳆquotationⲻmarkↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻDQUOTE._escape_ⲤescapeⳆquotationⲻmarkↃ(_escape_1.Parsed, _ⲤescapeⳆquotationⲻmarkↃ_1.Parsed), _ⲤescapeⳆquotationⲻmarkↃ_1.Remainder);
                 }
             }
         }

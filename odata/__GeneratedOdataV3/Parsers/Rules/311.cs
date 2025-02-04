@@ -38,7 +38,7 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionLiteral)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionLiteral(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28ʺ_1.Parsed, _geoLiteral_1.Parsed, _ⲤCOMMA_geoLiteralↃ_1.Parsed,  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionLiteral(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28ʺ_1.Parsed, _geoLiteral_1.Parsed, _ⲤCOMMA_geoLiteralↃ_1.Parsed, _CLOSE_1.Parsed), _CLOSE_1.Remainder);
             }
         }
     }

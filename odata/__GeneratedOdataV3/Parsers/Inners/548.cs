@@ -26,7 +26,7 @@ if (!_ⲤCOMMA_pointDataↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._pointData_ЖⲤCOMMA_pointDataↃ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._pointData_ЖⲤCOMMA_pointDataↃ(_pointData_1.Parsed,  _ⲤCOMMA_pointDataↃ_1.Parsed), _ⲤCOMMA_pointDataↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._pointData_ЖⲤCOMMA_pointDataↃ(_pointData_1.Parsed, _ⲤCOMMA_pointDataↃ_1.Parsed), _ⲤCOMMA_pointDataↃ_1.Remainder);
             }
         }
     }

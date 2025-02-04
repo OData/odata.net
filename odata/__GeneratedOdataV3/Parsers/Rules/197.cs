@@ -32,7 +32,7 @@ if (!_endⲻobject_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._complexInUri)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._complexInUri(_beginⲻobject_1.Parsed, _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1.Parsed.GetOrElse(null),  _endⲻobject_1.Parsed), _endⲻobject_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._complexInUri(_beginⲻobject_1.Parsed, _ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃ_ЖⲤvalueⲻseparator_ⲤannotationInUriⳆprimitivePropertyInUriⳆcomplexPropertyInUriⳆcollectionPropertyInUriⳆnavigationPropertyInUriↃↃ_1.Parsed.GetOrElse(null), _endⲻobject_1.Parsed), _endⲻobject_1.Remainder);
             }
         }
     }

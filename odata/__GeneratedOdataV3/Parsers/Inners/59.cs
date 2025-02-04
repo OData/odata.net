@@ -8,8 +8,25 @@ namespace __GeneratedOdataV3.Parsers.Inners
         
         public static class _boundActionCallParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundActionCall> Instance { get; } = from _boundActionCall_1 in __GeneratedOdataV3.Parsers.Rules._boundActionCallParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundActionCall(_boundActionCall_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundActionCall> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundActionCall>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundActionCall> Parse(IInput<char>? input)
+                {
+                    var _boundActionCall_1 = __GeneratedOdataV3.Parsers.Rules._boundActionCallParser.Instance.Parse(input);
+if (!_boundActionCall_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundActionCall)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundActionCall(_boundActionCall_1.Parsed), _boundActionCall_1.Remainder);
+                }
+            }
         }
         
         public static class _boundEntityColFunctionCall_꘡collectionNavigation꘡Parser
@@ -36,7 +53,7 @@ if (!_collectionNavigation_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundEntityColFunctionCall_꘡collectionNavigation꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundEntityColFunctionCall_꘡collectionNavigation꘡(_boundEntityColFunctionCall_1.Parsed,  _collectionNavigation_1.Parsed.GetOrElse(null)), _collectionNavigation_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundEntityColFunctionCall_꘡collectionNavigation꘡(_boundEntityColFunctionCall_1.Parsed, _collectionNavigation_1.Parsed.GetOrElse(null)), _collectionNavigation_1.Remainder);
                 }
             }
         }
@@ -65,7 +82,7 @@ if (!_singleNavigation_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundEntityFunctionCall_꘡singleNavigation꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundEntityFunctionCall_꘡singleNavigation꘡(_boundEntityFunctionCall_1.Parsed,  _singleNavigation_1.Parsed.GetOrElse(null)), _singleNavigation_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundEntityFunctionCall_꘡singleNavigation꘡(_boundEntityFunctionCall_1.Parsed, _singleNavigation_1.Parsed.GetOrElse(null)), _singleNavigation_1.Remainder);
                 }
             }
         }
@@ -94,7 +111,7 @@ if (!_complexColPath_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundComplexColFunctionCall_꘡complexColPath꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundComplexColFunctionCall_꘡complexColPath꘡(_boundComplexColFunctionCall_1.Parsed,  _complexColPath_1.Parsed.GetOrElse(null)), _complexColPath_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundComplexColFunctionCall_꘡complexColPath꘡(_boundComplexColFunctionCall_1.Parsed, _complexColPath_1.Parsed.GetOrElse(null)), _complexColPath_1.Remainder);
                 }
             }
         }
@@ -123,7 +140,7 @@ if (!_complexPath_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundComplexFunctionCall_꘡complexPath꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundComplexFunctionCall_꘡complexPath꘡(_boundComplexFunctionCall_1.Parsed,  _complexPath_1.Parsed.GetOrElse(null)), _complexPath_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundComplexFunctionCall_꘡complexPath꘡(_boundComplexFunctionCall_1.Parsed, _complexPath_1.Parsed.GetOrElse(null)), _complexPath_1.Remainder);
                 }
             }
         }
@@ -152,7 +169,7 @@ if (!_primitiveColPath_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundPrimitiveColFunctionCall_꘡primitiveColPath꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundPrimitiveColFunctionCall_꘡primitiveColPath꘡(_boundPrimitiveColFunctionCall_1.Parsed,  _primitiveColPath_1.Parsed.GetOrElse(null)), _primitiveColPath_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundPrimitiveColFunctionCall_꘡primitiveColPath꘡(_boundPrimitiveColFunctionCall_1.Parsed, _primitiveColPath_1.Parsed.GetOrElse(null)), _primitiveColPath_1.Remainder);
                 }
             }
         }
@@ -181,15 +198,32 @@ if (!_primitivePath_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundPrimitiveFunctionCall_꘡primitivePath꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundPrimitiveFunctionCall_꘡primitivePath꘡(_boundPrimitiveFunctionCall_1.Parsed,  _primitivePath_1.Parsed.GetOrElse(null)), _primitivePath_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundPrimitiveFunctionCall_꘡primitivePath꘡(_boundPrimitiveFunctionCall_1.Parsed, _primitivePath_1.Parsed.GetOrElse(null)), _primitivePath_1.Remainder);
                 }
             }
         }
         
         public static class _boundFunctionCallNoParensParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundFunctionCallNoParens> Instance { get; } = from _boundFunctionCallNoParens_1 in __GeneratedOdataV3.Parsers.Rules._boundFunctionCallNoParensParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundFunctionCallNoParens(_boundFunctionCallNoParens_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundFunctionCallNoParens> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundFunctionCallNoParens>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundFunctionCallNoParens> Parse(IInput<char>? input)
+                {
+                    var _boundFunctionCallNoParens_1 = __GeneratedOdataV3.Parsers.Rules._boundFunctionCallNoParensParser.Instance.Parse(input);
+if (!_boundFunctionCallNoParens_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundFunctionCallNoParens)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._boundActionCallⳆboundEntityColFunctionCall_꘡collectionNavigation꘡ⳆboundEntityFunctionCall_꘡singleNavigation꘡ⳆboundComplexColFunctionCall_꘡complexColPath꘡ⳆboundComplexFunctionCall_꘡complexPath꘡ⳆboundPrimitiveColFunctionCall_꘡primitiveColPath꘡ⳆboundPrimitiveFunctionCall_꘡primitivePath꘡ⳆboundFunctionCallNoParens._boundFunctionCallNoParens(_boundFunctionCallNoParens_1.Parsed), _boundFunctionCallNoParens_1.Remainder);
+                }
+            }
         }
     }
     

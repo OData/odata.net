@@ -8,14 +8,48 @@ namespace __GeneratedOdataV3.Parsers.Inners
         
         public static class _SPParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._SP> Instance { get; } = from _SP_1 in __GeneratedOdataV3.Parsers.Rules._SPParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._SP(_SP_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._SP> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._SP>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._SP> Parse(IInput<char>? input)
+                {
+                    var _SP_1 = __GeneratedOdataV3.Parsers.Rules._SPParser.Instance.Parse(input);
+if (!_SP_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._SP)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._SP(_SP_1.Parsed), _SP_1.Remainder);
+                }
+            }
         }
         
         public static class _HTABParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._HTAB> Instance { get; } = from _HTAB_1 in __GeneratedOdataV3.Parsers.Rules._HTABParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._HTAB(_HTAB_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._HTAB> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._HTAB>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._HTAB> Parse(IInput<char>? input)
+                {
+                    var _HTAB_1 = __GeneratedOdataV3.Parsers.Rules._HTABParser.Instance.Parse(input);
+if (!_HTAB_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._HTAB)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._HTAB(_HTAB_1.Parsed), _HTAB_1.Remainder);
+                }
+            }
         }
     }
     

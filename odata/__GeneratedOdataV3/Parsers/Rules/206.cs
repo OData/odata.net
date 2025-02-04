@@ -32,7 +32,7 @@ if (!_endⲻarray_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._rootExprCol)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._rootExprCol(_beginⲻarray_1.Parsed, _rootExpr_ЖⲤvalueⲻseparator_rootExprↃ_1.Parsed.GetOrElse(null),  _endⲻarray_1.Parsed), _endⲻarray_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._rootExprCol(_beginⲻarray_1.Parsed, _rootExpr_ЖⲤvalueⲻseparator_rootExprↃ_1.Parsed.GetOrElse(null), _endⲻarray_1.Parsed), _endⲻarray_1.Remainder);
             }
         }
     }

@@ -32,7 +32,7 @@ if (!_quotationⲻmark_2.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._stringInJSON)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._stringInJSON(_quotationⲻmark_1.Parsed, _charInJSON_1.Parsed,  _quotationⲻmark_2.Parsed), _quotationⲻmark_2.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._stringInJSON(_quotationⲻmark_1.Parsed, _charInJSON_1.Parsed, _quotationⲻmark_2.Parsed), _quotationⲻmark_2.Remainder);
             }
         }
     }

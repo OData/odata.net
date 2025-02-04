@@ -44,7 +44,7 @@ if (!_primitiveColInUri_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._quotationⲻmark_primitiveColProperty_quotationⲻmark_nameⲻseparator_primitiveColInUri)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._quotationⲻmark_primitiveColProperty_quotationⲻmark_nameⲻseparator_primitiveColInUri(_quotationⲻmark_1.Parsed, _primitiveColProperty_1.Parsed, _quotationⲻmark_2.Parsed, _nameⲻseparator_1.Parsed,  _primitiveColInUri_1.Parsed), _primitiveColInUri_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._quotationⲻmark_primitiveColProperty_quotationⲻmark_nameⲻseparator_primitiveColInUri(_quotationⲻmark_1.Parsed, _primitiveColProperty_1.Parsed, _quotationⲻmark_2.Parsed, _nameⲻseparator_1.Parsed, _primitiveColInUri_1.Parsed), _primitiveColInUri_1.Remainder);
             }
         }
     }

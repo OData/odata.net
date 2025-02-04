@@ -38,7 +38,7 @@ if (!_ʺx23ʺ_annotationQualifier_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._annotation)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._annotation(_AT_1.Parsed, _namespace_ʺx2Eʺ_1.Parsed.GetOrElse(null), _termName_1.Parsed,  _ʺx23ʺ_annotationQualifier_1.Parsed.GetOrElse(null)), _ʺx23ʺ_annotationQualifier_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._annotation(_AT_1.Parsed, _namespace_ʺx2Eʺ_1.Parsed.GetOrElse(null), _termName_1.Parsed, _ʺx23ʺ_annotationQualifier_1.Parsed.GetOrElse(null)), _ʺx23ʺ_annotationQualifier_1.Remainder);
             }
         }
     }

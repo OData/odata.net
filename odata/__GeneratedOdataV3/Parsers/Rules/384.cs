@@ -36,21 +36,55 @@ if (!_pathⲻabempty_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._hierⲻpart._ʺx2Fx2Fʺ_authority_pathⲻabempty)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._ʺx2Fx2Fʺ_authority_pathⲻabempty(_ʺx2Fx2Fʺ_1.Parsed, _authority_1.Parsed,  _pathⲻabempty_1.Parsed), _pathⲻabempty_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._ʺx2Fx2Fʺ_authority_pathⲻabempty(_ʺx2Fx2Fʺ_1.Parsed, _authority_1.Parsed, _pathⲻabempty_1.Parsed), _pathⲻabempty_1.Remainder);
                 }
             }
         }
         
         public static class _pathⲻabsoluteParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._pathⲻabsolute> Instance { get; } = from _pathⲻabsolute_1 in __GeneratedOdataV3.Parsers.Rules._pathⲻabsoluteParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._pathⲻabsolute(_pathⲻabsolute_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._pathⲻabsolute> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._pathⲻabsolute>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._pathⲻabsolute> Parse(IInput<char>? input)
+                {
+                    var _pathⲻabsolute_1 = __GeneratedOdataV3.Parsers.Rules._pathⲻabsoluteParser.Instance.Parse(input);
+if (!_pathⲻabsolute_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._hierⲻpart._pathⲻabsolute)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._pathⲻabsolute(_pathⲻabsolute_1.Parsed), _pathⲻabsolute_1.Remainder);
+                }
+            }
         }
         
         public static class _pathⲻrootlessParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._pathⲻrootless> Instance { get; } = from _pathⲻrootless_1 in __GeneratedOdataV3.Parsers.Rules._pathⲻrootlessParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._pathⲻrootless(_pathⲻrootless_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._pathⲻrootless> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._pathⲻrootless>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._pathⲻrootless> Parse(IInput<char>? input)
+                {
+                    var _pathⲻrootless_1 = __GeneratedOdataV3.Parsers.Rules._pathⲻrootlessParser.Instance.Parse(input);
+if (!_pathⲻrootless_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._hierⲻpart._pathⲻrootless)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._hierⲻpart._pathⲻrootless(_pathⲻrootless_1.Parsed), _pathⲻrootless_1.Remainder);
+                }
+            }
         }
     }
     

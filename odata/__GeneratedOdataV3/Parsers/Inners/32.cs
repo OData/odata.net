@@ -26,7 +26,7 @@ if (!_metadataOptions_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ʺx3Fʺ_metadataOptions)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx3Fʺ_metadataOptions(_ʺx3Fʺ_1.Parsed,  _metadataOptions_1.Parsed), _metadataOptions_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx3Fʺ_metadataOptions(_ʺx3Fʺ_1.Parsed, _metadataOptions_1.Parsed), _metadataOptions_1.Remainder);
             }
         }
     }

@@ -26,7 +26,7 @@ if (!_namespacePart_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ʺx2Eʺ_namespacePart)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx2Eʺ_namespacePart(_ʺx2Eʺ_1.Parsed,  _namespacePart_1.Parsed), _namespacePart_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx2Eʺ_namespacePart(_ʺx2Eʺ_1.Parsed, _namespacePart_1.Parsed), _namespacePart_1.Remainder);
             }
         }
     }

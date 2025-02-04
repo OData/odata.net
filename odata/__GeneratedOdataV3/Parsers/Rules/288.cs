@@ -26,7 +26,7 @@ if (!_DIGIT_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._int64Value)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._int64Value(_SIGN_1.Parsed.GetOrElse(null),  new __GeneratedOdataV3.CstNodes.Inners.HelperRangedFrom1To19<__GeneratedOdataV3.CstNodes.Rules._DIGIT>(_DIGIT_1.Parsed)), _DIGIT_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._int64Value(_SIGN_1.Parsed.GetOrElse(null), new __GeneratedOdataV3.CstNodes.Inners.HelperRangedFrom1To19<__GeneratedOdataV3.CstNodes.Rules._DIGIT>(_DIGIT_1.Parsed)), _DIGIT_1.Remainder);
             }
         }
     }

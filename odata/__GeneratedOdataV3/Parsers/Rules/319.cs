@@ -32,7 +32,7 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._multiLineStringLiteral)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._multiLineStringLiteral(_ʺx4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67x28ʺ_1.Parsed, _lineStringData_ЖⲤCOMMA_lineStringDataↃ_1.Parsed.GetOrElse(null),  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._multiLineStringLiteral(_ʺx4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67x28ʺ_1.Parsed, _lineStringData_ЖⲤCOMMA_lineStringDataↃ_1.Parsed.GetOrElse(null), _CLOSE_1.Parsed), _CLOSE_1.Remainder);
             }
         }
     }

@@ -26,7 +26,7 @@ if (!_segmentⲻnz_ЖⲤʺx2Fʺ_segmentↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._pathⲻabsolute)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._pathⲻabsolute(_ʺx2Fʺ_1.Parsed,  _segmentⲻnz_ЖⲤʺx2Fʺ_segmentↃ_1.Parsed.GetOrElse(null)), _segmentⲻnz_ЖⲤʺx2Fʺ_segmentↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._pathⲻabsolute(_ʺx2Fʺ_1.Parsed, _segmentⲻnz_ЖⲤʺx2Fʺ_segmentↃ_1.Parsed.GetOrElse(null)), _segmentⲻnz_ЖⲤʺx2Fʺ_segmentↃ_1.Remainder);
             }
         }
     }

@@ -26,7 +26,7 @@ if (!_ⲤCOMMA_singleEnumValueↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._enumValue)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._enumValue(_singleEnumValue_1.Parsed,  _ⲤCOMMA_singleEnumValueↃ_1.Parsed), _ⲤCOMMA_singleEnumValueↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._enumValue(_singleEnumValue_1.Parsed, _ⲤCOMMA_singleEnumValueↃ_1.Parsed), _ⲤCOMMA_singleEnumValueↃ_1.Remainder);
             }
         }
     }

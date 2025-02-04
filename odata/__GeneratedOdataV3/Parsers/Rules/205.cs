@@ -44,7 +44,7 @@ if (!_rootExprCol_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionNavPropInJSON)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionNavPropInJSON(_quotationⲻmark_1.Parsed, _entityColNavigationProperty_1.Parsed, _quotationⲻmark_2.Parsed, _nameⲻseparator_1.Parsed,  _rootExprCol_1.Parsed), _rootExprCol_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionNavPropInJSON(_quotationⲻmark_1.Parsed, _entityColNavigationProperty_1.Parsed, _quotationⲻmark_2.Parsed, _nameⲻseparator_1.Parsed, _rootExprCol_1.Parsed), _rootExprCol_1.Remainder);
             }
         }
     }

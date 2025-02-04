@@ -26,7 +26,7 @@ if (!_ⲤsearchPhraseⳆsearchWordↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._searchTerm)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._searchTerm(_ʺx4Ex4Fx54ʺ_RWS_1.Parsed.GetOrElse(null),  _ⲤsearchPhraseⳆsearchWordↃ_1.Parsed), _ⲤsearchPhraseⳆsearchWordↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._searchTerm(_ʺx4Ex4Fx54ʺ_RWS_1.Parsed.GetOrElse(null), _ⲤsearchPhraseⳆsearchWordↃ_1.Parsed), _ⲤsearchPhraseⳆsearchWordↃ_1.Remainder);
             }
         }
     }

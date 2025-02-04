@@ -38,7 +38,7 @@ if (!_exp_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._numberInJSON)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._numberInJSON(_ʺx2Dʺ_1.Parsed.GetOrElse(null), _int_1.Parsed, _frac_1.Parsed.GetOrElse(null),  _exp_1.Parsed.GetOrElse(null)), _exp_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._numberInJSON(_ʺx2Dʺ_1.Parsed.GetOrElse(null), _int_1.Parsed, _frac_1.Parsed.GetOrElse(null), _exp_1.Parsed.GetOrElse(null)), _exp_1.Remainder);
             }
         }
     }

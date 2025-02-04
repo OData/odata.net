@@ -26,7 +26,7 @@ if (!_selectOption_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._SEMI_selectOption)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._SEMI_selectOption(_SEMI_1.Parsed,  _selectOption_1.Parsed), _selectOption_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._SEMI_selectOption(_SEMI_1.Parsed, _selectOption_1.Parsed), _selectOption_1.Remainder);
             }
         }
     }

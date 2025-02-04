@@ -38,7 +38,7 @@ if (!_ʺx3Aʺ_second_꘡ʺx2Eʺ_fractionalSeconds꘡_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._timeOfDayValue)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._timeOfDayValue(_hour_1.Parsed, _ʺx3Aʺ_1.Parsed, _minute_1.Parsed,  _ʺx3Aʺ_second_꘡ʺx2Eʺ_fractionalSeconds꘡_1.Parsed.GetOrElse(null)), _ʺx3Aʺ_second_꘡ʺx2Eʺ_fractionalSeconds꘡_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._timeOfDayValue(_hour_1.Parsed, _ʺx3Aʺ_1.Parsed, _minute_1.Parsed, _ʺx3Aʺ_second_꘡ʺx2Eʺ_fractionalSeconds꘡_1.Parsed.GetOrElse(null)), _ʺx3Aʺ_second_꘡ʺx2Eʺ_fractionalSeconds꘡_1.Remainder);
             }
         }
     }

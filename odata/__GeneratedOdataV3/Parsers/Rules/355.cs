@@ -26,7 +26,7 @@ if (!_ʺx61x6Cx6Cx6Fx77x2Dx65x6Ex74x69x74x79x72x65x66x65x72x65x6Ex63x65x73ʺ_1.S
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._allowEntityReferencesPreference)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._allowEntityReferencesPreference(_ʺx6Fx64x61x74x61x2Eʺ_1.Parsed.GetOrElse(null),  _ʺx61x6Cx6Cx6Fx77x2Dx65x6Ex74x69x74x79x72x65x66x65x72x65x6Ex63x65x73ʺ_1.Parsed), _ʺx61x6Cx6Cx6Fx77x2Dx65x6Ex74x69x74x79x72x65x66x65x72x65x6Ex63x65x73ʺ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._allowEntityReferencesPreference(_ʺx6Fx64x61x74x61x2Eʺ_1.Parsed.GetOrElse(null), _ʺx61x6Cx6Cx6Fx77x2Dx65x6Ex74x69x74x79x72x65x66x65x72x65x6Ex63x65x73ʺ_1.Parsed), _ʺx61x6Cx6Cx6Fx77x2Dx65x6Ex74x69x74x79x72x65x66x65x72x65x6Ex63x65x73ʺ_1.Remainder);
             }
         }
     }

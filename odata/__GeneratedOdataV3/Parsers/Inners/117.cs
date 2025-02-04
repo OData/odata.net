@@ -8,14 +8,48 @@ namespace __GeneratedOdataV3.Parsers.Inners
         
         public static class _qualifiedEntityTypeNameParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeNameⳆqualifiedComplexTypeName._qualifiedEntityTypeName> Instance { get; } = from _qualifiedEntityTypeName_1 in __GeneratedOdataV3.Parsers.Rules._qualifiedEntityTypeNameParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeNameⳆqualifiedComplexTypeName._qualifiedEntityTypeName(_qualifiedEntityTypeName_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeNameⳆqualifiedComplexTypeName._qualifiedEntityTypeName> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeNameⳆqualifiedComplexTypeName._qualifiedEntityTypeName>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeNameⳆqualifiedComplexTypeName._qualifiedEntityTypeName> Parse(IInput<char>? input)
+                {
+                    var _qualifiedEntityTypeName_1 = __GeneratedOdataV3.Parsers.Rules._qualifiedEntityTypeNameParser.Instance.Parse(input);
+if (!_qualifiedEntityTypeName_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeNameⳆqualifiedComplexTypeName._qualifiedEntityTypeName)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeNameⳆqualifiedComplexTypeName._qualifiedEntityTypeName(_qualifiedEntityTypeName_1.Parsed), _qualifiedEntityTypeName_1.Remainder);
+                }
+            }
         }
         
         public static class _qualifiedComplexTypeNameParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeNameⳆqualifiedComplexTypeName._qualifiedComplexTypeName> Instance { get; } = from _qualifiedComplexTypeName_1 in __GeneratedOdataV3.Parsers.Rules._qualifiedComplexTypeNameParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeNameⳆqualifiedComplexTypeName._qualifiedComplexTypeName(_qualifiedComplexTypeName_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeNameⳆqualifiedComplexTypeName._qualifiedComplexTypeName> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeNameⳆqualifiedComplexTypeName._qualifiedComplexTypeName>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeNameⳆqualifiedComplexTypeName._qualifiedComplexTypeName> Parse(IInput<char>? input)
+                {
+                    var _qualifiedComplexTypeName_1 = __GeneratedOdataV3.Parsers.Rules._qualifiedComplexTypeNameParser.Instance.Parse(input);
+if (!_qualifiedComplexTypeName_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeNameⳆqualifiedComplexTypeName._qualifiedComplexTypeName)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeNameⳆqualifiedComplexTypeName._qualifiedComplexTypeName(_qualifiedComplexTypeName_1.Parsed), _qualifiedComplexTypeName_1.Remainder);
+                }
+            }
         }
     }
     

@@ -26,7 +26,7 @@ if (!_ʺx40ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._userinfo_ʺx40ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._userinfo_ʺx40ʺ(_userinfo_1.Parsed,  _ʺx40ʺ_1.Parsed), _ʺx40ʺ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._userinfo_ʺx40ʺ(_userinfo_1.Parsed, _ʺx40ʺ_1.Parsed), _ʺx40ʺ_1.Remainder);
             }
         }
     }

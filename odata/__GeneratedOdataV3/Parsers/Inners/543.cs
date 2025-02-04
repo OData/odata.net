@@ -4,8 +4,25 @@ namespace __GeneratedOdataV3.Parsers.Inners
     
     public static class _ⲤCOMMA_lineStringDataↃParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_lineStringDataↃ> Instance { get; } = from _COMMA_lineStringData_1 in __GeneratedOdataV3.Parsers.Inners._COMMA_lineStringDataParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_lineStringDataↃ(_COMMA_lineStringData_1);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_lineStringDataↃ> Instance { get; } = new Parser();
+        
+        private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_lineStringDataↃ>
+        {
+            public Parser()
+            {
+            }
+            
+            public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_lineStringDataↃ> Parse(IInput<char>? input)
+            {
+                var _COMMA_lineStringData_1 = __GeneratedOdataV3.Parsers.Inners._COMMA_lineStringDataParser.Instance.Parse(input);
+if (!_COMMA_lineStringData_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_lineStringDataↃ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_lineStringDataↃ(_COMMA_lineStringData_1.Parsed), _COMMA_lineStringData_1.Remainder);
+            }
+        }
     }
     
 }

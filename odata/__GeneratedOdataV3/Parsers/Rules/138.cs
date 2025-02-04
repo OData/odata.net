@@ -4,8 +4,25 @@ namespace __GeneratedOdataV3.Parsers.Rules
     
     public static class _lambdaPredicateExprParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._lambdaPredicateExpr> Instance { get; } = from _boolCommonExpr_1 in __GeneratedOdataV3.Parsers.Rules._boolCommonExprParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._lambdaPredicateExpr(_boolCommonExpr_1);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._lambdaPredicateExpr> Instance { get; } = new Parser();
+        
+        private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._lambdaPredicateExpr>
+        {
+            public Parser()
+            {
+            }
+            
+            public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._lambdaPredicateExpr> Parse(IInput<char>? input)
+            {
+                var _boolCommonExpr_1 = __GeneratedOdataV3.Parsers.Rules._boolCommonExprParser.Instance.Parse(input);
+if (!_boolCommonExpr_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._lambdaPredicateExpr)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._lambdaPredicateExpr(_boolCommonExpr_1.Parsed), _boolCommonExpr_1.Remainder);
+            }
+        }
     }
     
 }

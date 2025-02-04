@@ -8,8 +8,25 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _singleQualifiedTypeNameParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._singleQualifiedTypeName> Instance { get; } = from _singleQualifiedTypeName_1 in __GeneratedOdataV3.Parsers.Rules._singleQualifiedTypeNameParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._singleQualifiedTypeName(_singleQualifiedTypeName_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._singleQualifiedTypeName> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._singleQualifiedTypeName>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._singleQualifiedTypeName> Parse(IInput<char>? input)
+                {
+                    var _singleQualifiedTypeName_1 = __GeneratedOdataV3.Parsers.Rules._singleQualifiedTypeNameParser.Instance.Parse(input);
+if (!_singleQualifiedTypeName_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._singleQualifiedTypeName)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._singleQualifiedTypeName(_singleQualifiedTypeName_1.Parsed), _singleQualifiedTypeName_1.Remainder);
+                }
+            }
         }
         
         public static class _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSEParser
@@ -48,7 +65,7 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSE)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSE(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_1.Parsed, _OPEN_1.Parsed, _singleQualifiedTypeName_1.Parsed,  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qualifiedTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_OPEN_singleQualifiedTypeName_CLOSE(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_1.Parsed, _OPEN_1.Parsed, _singleQualifiedTypeName_1.Parsed, _CLOSE_1.Parsed), _CLOSE_1.Remainder);
                 }
             }
         }

@@ -38,7 +38,7 @@ if (!_SQUOTE_2.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._enum)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._enum(_qualifiedEnumTypeName_1.Parsed.GetOrElse(null), _SQUOTE_1.Parsed, _enumValue_1.Parsed,  _SQUOTE_2.Parsed), _SQUOTE_2.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._enum(_qualifiedEnumTypeName_1.Parsed.GetOrElse(null), _SQUOTE_1.Parsed, _enumValue_1.Parsed, _SQUOTE_2.Parsed), _SQUOTE_2.Remainder);
             }
         }
     }

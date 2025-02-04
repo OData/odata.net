@@ -30,7 +30,7 @@ if (!_collectionNavigation_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._propertyPath._entityColNavigationProperty_꘡collectionNavigation꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._propertyPath._entityColNavigationProperty_꘡collectionNavigation꘡(_entityColNavigationProperty_1.Parsed,  _collectionNavigation_1.Parsed.GetOrElse(null)), _collectionNavigation_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._propertyPath._entityColNavigationProperty_꘡collectionNavigation꘡(_entityColNavigationProperty_1.Parsed, _collectionNavigation_1.Parsed.GetOrElse(null)), _collectionNavigation_1.Remainder);
                 }
             }
         }
@@ -59,7 +59,7 @@ if (!_singleNavigation_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._propertyPath._entityNavigationProperty_꘡singleNavigation꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._propertyPath._entityNavigationProperty_꘡singleNavigation꘡(_entityNavigationProperty_1.Parsed,  _singleNavigation_1.Parsed.GetOrElse(null)), _singleNavigation_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._propertyPath._entityNavigationProperty_꘡singleNavigation꘡(_entityNavigationProperty_1.Parsed, _singleNavigation_1.Parsed.GetOrElse(null)), _singleNavigation_1.Remainder);
                 }
             }
         }
@@ -88,7 +88,7 @@ if (!_complexColPath_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._propertyPath._complexColProperty_꘡complexColPath꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._propertyPath._complexColProperty_꘡complexColPath꘡(_complexColProperty_1.Parsed,  _complexColPath_1.Parsed.GetOrElse(null)), _complexColPath_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._propertyPath._complexColProperty_꘡complexColPath꘡(_complexColProperty_1.Parsed, _complexColPath_1.Parsed.GetOrElse(null)), _complexColPath_1.Remainder);
                 }
             }
         }
@@ -117,7 +117,7 @@ if (!_complexPath_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._propertyPath._complexProperty_꘡complexPath꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._propertyPath._complexProperty_꘡complexPath꘡(_complexProperty_1.Parsed,  _complexPath_1.Parsed.GetOrElse(null)), _complexPath_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._propertyPath._complexProperty_꘡complexPath꘡(_complexProperty_1.Parsed, _complexPath_1.Parsed.GetOrElse(null)), _complexPath_1.Remainder);
                 }
             }
         }
@@ -146,7 +146,7 @@ if (!_primitiveColPath_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._propertyPath._primitiveColProperty_꘡primitiveColPath꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._propertyPath._primitiveColProperty_꘡primitiveColPath꘡(_primitiveColProperty_1.Parsed,  _primitiveColPath_1.Parsed.GetOrElse(null)), _primitiveColPath_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._propertyPath._primitiveColProperty_꘡primitiveColPath꘡(_primitiveColProperty_1.Parsed, _primitiveColPath_1.Parsed.GetOrElse(null)), _primitiveColPath_1.Remainder);
                 }
             }
         }
@@ -175,7 +175,7 @@ if (!_primitivePath_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._propertyPath._primitiveProperty_꘡primitivePath꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._propertyPath._primitiveProperty_꘡primitivePath꘡(_primitiveProperty_1.Parsed,  _primitivePath_1.Parsed.GetOrElse(null)), _primitivePath_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._propertyPath._primitiveProperty_꘡primitivePath꘡(_primitiveProperty_1.Parsed, _primitivePath_1.Parsed.GetOrElse(null)), _primitivePath_1.Remainder);
                 }
             }
         }
@@ -204,7 +204,7 @@ if (!_boundOperation_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._propertyPath._streamProperty_꘡boundOperation꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._propertyPath._streamProperty_꘡boundOperation꘡(_streamProperty_1.Parsed,  _boundOperation_1.Parsed.GetOrElse(null)), _boundOperation_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._propertyPath._streamProperty_꘡boundOperation꘡(_streamProperty_1.Parsed, _boundOperation_1.Parsed.GetOrElse(null)), _boundOperation_1.Remainder);
                 }
             }
         }

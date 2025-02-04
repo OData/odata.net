@@ -26,7 +26,7 @@ if (!_EQ_customValue_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._customQueryOption)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._customQueryOption(_customName_1.Parsed,  _EQ_customValue_1.Parsed.GetOrElse(null)), _EQ_customValue_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._customQueryOption(_customName_1.Parsed, _EQ_customValue_1.Parsed.GetOrElse(null)), _EQ_customValue_1.Remainder);
             }
         }
     }

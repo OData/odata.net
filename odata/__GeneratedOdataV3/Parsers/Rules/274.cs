@@ -26,7 +26,7 @@ if (!_base64b16Ⳇbase64b8_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._binaryValue)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._binaryValue(_Ⲥ4base64charↃ_1.Parsed,  _base64b16Ⳇbase64b8_1.Parsed.GetOrElse(null)), _base64b16Ⳇbase64b8_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._binaryValue(_Ⲥ4base64charↃ_1.Parsed, _base64b16Ⳇbase64b8_1.Parsed.GetOrElse(null)), _base64b16Ⳇbase64b8_1.Remainder);
             }
         }
     }

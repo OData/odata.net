@@ -30,7 +30,7 @@ if (!_DIGIT_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._hour._Ⲥʺx30ʺⳆʺx31ʺↃ_DIGIT)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._hour._Ⲥʺx30ʺⳆʺx31ʺↃ_DIGIT(_Ⲥʺx30ʺⳆʺx31ʺↃ_1.Parsed,  _DIGIT_1.Parsed), _DIGIT_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._hour._Ⲥʺx30ʺⳆʺx31ʺↃ_DIGIT(_Ⲥʺx30ʺⳆʺx31ʺↃ_1.Parsed, _DIGIT_1.Parsed), _DIGIT_1.Remainder);
                 }
             }
         }
@@ -59,7 +59,7 @@ if (!_Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._hour._ʺx32ʺ_Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺↃ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._hour._ʺx32ʺ_Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺↃ(_ʺx32ʺ_1.Parsed,  _Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺↃ_1.Parsed), _Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._hour._ʺx32ʺ_Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺↃ(_ʺx32ʺ_1.Parsed, _Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺↃ_1.Parsed), _Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺↃ_1.Remainder);
                 }
             }
         }

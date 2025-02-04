@@ -8,14 +8,48 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _ʺx3BʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._SEMI._ʺx3Bʺ> Instance { get; } = from _ʺx3Bʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx3BʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._SEMI._ʺx3Bʺ(_ʺx3Bʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._SEMI._ʺx3Bʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._SEMI._ʺx3Bʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._SEMI._ʺx3Bʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx3Bʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx3BʺParser.Instance.Parse(input);
+if (!_ʺx3Bʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._SEMI._ʺx3Bʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._SEMI._ʺx3Bʺ(_ʺx3Bʺ_1.Parsed), _ʺx3Bʺ_1.Remainder);
+                }
+            }
         }
         
         public static class _ʺx25x33x42ʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._SEMI._ʺx25x33x42ʺ> Instance { get; } = from _ʺx25x33x42ʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx25x33x42ʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._SEMI._ʺx25x33x42ʺ(_ʺx25x33x42ʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._SEMI._ʺx25x33x42ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._SEMI._ʺx25x33x42ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._SEMI._ʺx25x33x42ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx25x33x42ʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx25x33x42ʺParser.Instance.Parse(input);
+if (!_ʺx25x33x42ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._SEMI._ʺx25x33x42ʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._SEMI._ʺx25x33x42ʺ(_ʺx25x33x42ʺ_1.Parsed), _ʺx25x33x42ʺ_1.Remainder);
+                }
+            }
         }
     }
     

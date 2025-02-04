@@ -26,7 +26,7 @@ if (!_fractionalSeconds_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ʺx2Eʺ_fractionalSeconds)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx2Eʺ_fractionalSeconds(_ʺx2Eʺ_1.Parsed,  _fractionalSeconds_1.Parsed), _fractionalSeconds_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx2Eʺ_fractionalSeconds(_ʺx2Eʺ_1.Parsed, _fractionalSeconds_1.Parsed), _fractionalSeconds_1.Remainder);
             }
         }
     }

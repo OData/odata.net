@@ -26,7 +26,7 @@ if (!_memberExpr_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._singleNavigationExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._singleNavigationExpr(_ʺx2Fʺ_1.Parsed,  _memberExpr_1.Parsed), _memberExpr_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._singleNavigationExpr(_ʺx2Fʺ_1.Parsed, _memberExpr_1.Parsed), _memberExpr_1.Remainder);
             }
         }
     }

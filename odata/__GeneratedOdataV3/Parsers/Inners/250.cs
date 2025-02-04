@@ -26,7 +26,7 @@ if (!_ʺx2Fʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeName_ʺx2Fʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeName_ʺx2Fʺ(_qualifiedEntityTypeName_1.Parsed,  _ʺx2Fʺ_1.Parsed), _ʺx2Fʺ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._qualifiedEntityTypeName_ʺx2Fʺ(_qualifiedEntityTypeName_1.Parsed, _ʺx2Fʺ_1.Parsed), _ʺx2Fʺ_1.Remainder);
             }
         }
     }

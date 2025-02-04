@@ -26,7 +26,7 @@ if (!_Ⲥʺx26ʺ_metadataOptionↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._metadataOptions)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._metadataOptions(_metadataOption_1.Parsed,  _Ⲥʺx26ʺ_metadataOptionↃ_1.Parsed), _Ⲥʺx26ʺ_metadataOptionↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._metadataOptions(_metadataOption_1.Parsed, _Ⲥʺx26ʺ_metadataOptionↃ_1.Parsed), _Ⲥʺx26ʺ_metadataOptionↃ_1.Remainder);
             }
         }
     }

@@ -8,14 +8,48 @@ namespace __GeneratedOdataV3.Parsers.Inners
         
         public static class _searchOrExprParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._searchOrExprⳆsearchAndExpr._searchOrExpr> Instance { get; } = from _searchOrExpr_1 in __GeneratedOdataV3.Parsers.Rules._searchOrExprParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._searchOrExprⳆsearchAndExpr._searchOrExpr(_searchOrExpr_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._searchOrExprⳆsearchAndExpr._searchOrExpr> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._searchOrExprⳆsearchAndExpr._searchOrExpr>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._searchOrExprⳆsearchAndExpr._searchOrExpr> Parse(IInput<char>? input)
+                {
+                    var _searchOrExpr_1 = __GeneratedOdataV3.Parsers.Rules._searchOrExprParser.Instance.Parse(input);
+if (!_searchOrExpr_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._searchOrExprⳆsearchAndExpr._searchOrExpr)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._searchOrExprⳆsearchAndExpr._searchOrExpr(_searchOrExpr_1.Parsed), _searchOrExpr_1.Remainder);
+                }
+            }
         }
         
         public static class _searchAndExprParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._searchOrExprⳆsearchAndExpr._searchAndExpr> Instance { get; } = from _searchAndExpr_1 in __GeneratedOdataV3.Parsers.Rules._searchAndExprParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._searchOrExprⳆsearchAndExpr._searchAndExpr(_searchAndExpr_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._searchOrExprⳆsearchAndExpr._searchAndExpr> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._searchOrExprⳆsearchAndExpr._searchAndExpr>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._searchOrExprⳆsearchAndExpr._searchAndExpr> Parse(IInput<char>? input)
+                {
+                    var _searchAndExpr_1 = __GeneratedOdataV3.Parsers.Rules._searchAndExprParser.Instance.Parse(input);
+if (!_searchAndExpr_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._searchOrExprⳆsearchAndExpr._searchAndExpr)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._searchOrExprⳆsearchAndExpr._searchAndExpr(_searchAndExpr_1.Parsed), _searchAndExpr_1.Remainder);
+                }
+            }
         }
     }
     

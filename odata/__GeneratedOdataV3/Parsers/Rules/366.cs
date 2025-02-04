@@ -32,7 +32,7 @@ if (!_DIGIT_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._waitPreference)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._waitPreference(_ʺx77x61x69x74ʺ_1.Parsed, _EQⲻh_1.Parsed,  new __GeneratedOdataV3.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdataV3.CstNodes.Rules._DIGIT>(_DIGIT_1.Parsed)), _DIGIT_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._waitPreference(_ʺx77x61x69x74ʺ_1.Parsed, _EQⲻh_1.Parsed, new __GeneratedOdataV3.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdataV3.CstNodes.Rules._DIGIT>(_DIGIT_1.Parsed)), _DIGIT_1.Remainder);
             }
         }
     }

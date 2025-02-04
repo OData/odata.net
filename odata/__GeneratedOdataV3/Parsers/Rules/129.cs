@@ -30,7 +30,7 @@ if (!_OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._count_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._count_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡(_count_1.Parsed,  _OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE_1.Parsed.GetOrElse(null)), _OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._count_꘡OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE꘡(_count_1.Parsed, _OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE_1.Parsed.GetOrElse(null)), _OPEN_expandCountOption_ЖⲤSEMI_expandCountOptionↃ_CLOSE_1.Remainder);
                 }
             }
         }
@@ -59,7 +59,7 @@ if (!_boundFunctionExpr_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._ʺx2Fʺ_boundFunctionExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._ʺx2Fʺ_boundFunctionExpr(_ʺx2Fʺ_1.Parsed,  _boundFunctionExpr_1.Parsed), _boundFunctionExpr_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._ʺx2Fʺ_boundFunctionExpr(_ʺx2Fʺ_1.Parsed, _boundFunctionExpr_1.Parsed), _boundFunctionExpr_1.Remainder);
                 }
             }
         }
@@ -88,7 +88,7 @@ if (!_annotationExpr_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._ʺx2Fʺ_annotationExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._ʺx2Fʺ_annotationExpr(_ʺx2Fʺ_1.Parsed,  _annotationExpr_1.Parsed), _annotationExpr_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._ʺx2Fʺ_annotationExpr(_ʺx2Fʺ_1.Parsed, _annotationExpr_1.Parsed), _annotationExpr_1.Remainder);
                 }
             }
         }
@@ -117,7 +117,7 @@ if (!_anyExpr_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._ʺx2Fʺ_anyExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._ʺx2Fʺ_anyExpr(_ʺx2Fʺ_1.Parsed,  _anyExpr_1.Parsed), _anyExpr_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._ʺx2Fʺ_anyExpr(_ʺx2Fʺ_1.Parsed, _anyExpr_1.Parsed), _anyExpr_1.Remainder);
                 }
             }
         }
@@ -146,7 +146,7 @@ if (!_allExpr_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._ʺx2Fʺ_allExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._ʺx2Fʺ_allExpr(_ʺx2Fʺ_1.Parsed,  _allExpr_1.Parsed), _allExpr_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionPathExpr._ʺx2Fʺ_allExpr(_ʺx2Fʺ_1.Parsed, _allExpr_1.Parsed), _allExpr_1.Remainder);
                 }
             }
         }

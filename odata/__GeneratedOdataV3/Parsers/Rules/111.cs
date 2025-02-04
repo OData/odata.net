@@ -8,14 +8,48 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _STARParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListItem._STAR> Instance { get; } = from _STAR_1 in __GeneratedOdataV3.Parsers.Rules._STARParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._selectListItem._STAR(_STAR_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListItem._STAR> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListItem._STAR>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._selectListItem._STAR> Parse(IInput<char>? input)
+                {
+                    var _STAR_1 = __GeneratedOdataV3.Parsers.Rules._STARParser.Instance.Parse(input);
+if (!_STAR_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectListItem._STAR)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectListItem._STAR(_STAR_1.Parsed), _STAR_1.Remainder);
+                }
+            }
         }
         
         public static class _allOperationsInSchemaParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListItem._allOperationsInSchema> Instance { get; } = from _allOperationsInSchema_1 in __GeneratedOdataV3.Parsers.Rules._allOperationsInSchemaParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._selectListItem._allOperationsInSchema(_allOperationsInSchema_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListItem._allOperationsInSchema> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectListItem._allOperationsInSchema>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._selectListItem._allOperationsInSchema> Parse(IInput<char>? input)
+                {
+                    var _allOperationsInSchema_1 = __GeneratedOdataV3.Parsers.Rules._allOperationsInSchemaParser.Instance.Parse(input);
+if (!_allOperationsInSchema_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectListItem._allOperationsInSchema)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectListItem._allOperationsInSchema(_allOperationsInSchema_1.Parsed), _allOperationsInSchema_1.Remainder);
+                }
+            }
         }
         
         public static class _꘡qualifiedEntityTypeName_ʺx2Fʺ꘡_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃParser
@@ -42,7 +76,7 @@ if (!_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ_1.S
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectListItem._꘡qualifiedEntityTypeName_ʺx2Fʺ꘡_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectListItem._꘡qualifiedEntityTypeName_ʺx2Fʺ꘡_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ(_qualifiedEntityTypeName_ʺx2Fʺ_1.Parsed.GetOrElse(null),  _ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ_1.Parsed), _ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectListItem._꘡qualifiedEntityTypeName_ʺx2Fʺ꘡_ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ(_qualifiedEntityTypeName_ʺx2Fʺ_1.Parsed.GetOrElse(null), _ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ_1.Parsed), _ⲤqualifiedActionNameⳆqualifiedFunctionNameⳆselectListPropertyↃ_1.Remainder);
                 }
             }
         }

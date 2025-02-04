@@ -32,7 +32,7 @@ if (!_entityTypeName_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qualifiedEntityTypeName)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qualifiedEntityTypeName(_namespace_1.Parsed, _ʺx2Eʺ_1.Parsed,  _entityTypeName_1.Parsed), _entityTypeName_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qualifiedEntityTypeName(_namespace_1.Parsed, _ʺx2Eʺ_1.Parsed, _entityTypeName_1.Parsed), _entityTypeName_1.Remainder);
             }
         }
     }

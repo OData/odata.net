@@ -32,7 +32,7 @@ if (!_ⲤoneToNine_ЖDIGITⳆʺx6Dx61x78ʺↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._levels)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._levels(_Ⲥʺx24x6Cx65x76x65x6Cx73ʺⳆʺx6Cx65x76x65x6Cx73ʺↃ_1.Parsed, _EQ_1.Parsed,  _ⲤoneToNine_ЖDIGITⳆʺx6Dx61x78ʺↃ_1.Parsed), _ⲤoneToNine_ЖDIGITⳆʺx6Dx61x78ʺↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._levels(_Ⲥʺx24x6Cx65x76x65x6Cx73ʺⳆʺx6Cx65x76x65x6Cx73ʺↃ_1.Parsed, _EQ_1.Parsed, _ⲤoneToNine_ЖDIGITⳆʺx6Dx61x78ʺↃ_1.Parsed), _ⲤoneToNine_ЖDIGITⳆʺx6Dx61x78ʺↃ_1.Remainder);
             }
         }
     }

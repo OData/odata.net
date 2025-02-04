@@ -50,7 +50,7 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._monthMethodCallExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._monthMethodCallExpr(_ʺx6Dx6Fx6Ex74x68ʺ_1.Parsed, _OPEN_1.Parsed, _BWS_1.Parsed, _commonExpr_1.Parsed, _BWS_2.Parsed,  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._monthMethodCallExpr(_ʺx6Dx6Fx6Ex74x68ʺ_1.Parsed, _OPEN_1.Parsed, _BWS_1.Parsed, _commonExpr_1.Parsed, _BWS_2.Parsed, _CLOSE_1.Parsed), _CLOSE_1.Remainder);
             }
         }
     }

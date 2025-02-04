@@ -26,7 +26,7 @@ if (!_ⲤCOMMA_annotationIdentifierↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._annotationsList)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._annotationsList(_annotationIdentifier_1.Parsed,  _ⲤCOMMA_annotationIdentifierↃ_1.Parsed), _ⲤCOMMA_annotationIdentifierↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._annotationsList(_annotationIdentifier_1.Parsed, _ⲤCOMMA_annotationIdentifierↃ_1.Parsed), _ⲤCOMMA_annotationIdentifierↃ_1.Remainder);
             }
         }
     }

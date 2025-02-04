@@ -26,7 +26,7 @@ if (!_collectionPathExpr_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._complexColPathExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._complexColPathExpr(_ʺx2Fʺ_qualifiedComplexTypeName_1.Parsed.GetOrElse(null),  _collectionPathExpr_1.Parsed.GetOrElse(null)), _collectionPathExpr_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._complexColPathExpr(_ʺx2Fʺ_qualifiedComplexTypeName_1.Parsed.GetOrElse(null), _collectionPathExpr_1.Parsed.GetOrElse(null)), _collectionPathExpr_1.Remainder);
             }
         }
     }

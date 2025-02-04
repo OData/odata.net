@@ -50,7 +50,7 @@ if (!_DIGIT_2.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._odataⲻmaxversion)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._odataⲻmaxversion(_ʺx4Fx44x61x74x61x2Dx4Dx61x78x56x65x72x73x69x6Fx6Eʺ_1.Parsed, _ʺx3Aʺ_1.Parsed, _OWS_1.Parsed, new __GeneratedOdataV3.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdataV3.CstNodes.Rules._DIGIT>(_DIGIT_1.Parsed), _ʺx2Eʺ_1.Parsed,  new __GeneratedOdataV3.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdataV3.CstNodes.Rules._DIGIT>(_DIGIT_2.Parsed)), _DIGIT_2.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._odataⲻmaxversion(_ʺx4Fx44x61x74x61x2Dx4Dx61x78x56x65x72x73x69x6Fx6Eʺ_1.Parsed, _ʺx3Aʺ_1.Parsed, _OWS_1.Parsed, new __GeneratedOdataV3.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdataV3.CstNodes.Rules._DIGIT>(_DIGIT_1.Parsed), _ʺx2Eʺ_1.Parsed, new __GeneratedOdataV3.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdataV3.CstNodes.Rules._DIGIT>(_DIGIT_2.Parsed)), _DIGIT_2.Remainder);
             }
         }
     }

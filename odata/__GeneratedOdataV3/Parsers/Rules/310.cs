@@ -26,7 +26,7 @@ if (!_collectionLiteral_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._fullCollectionLiteral)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._fullCollectionLiteral(_sridLiteral_1.Parsed,  _collectionLiteral_1.Parsed), _collectionLiteral_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._fullCollectionLiteral(_sridLiteral_1.Parsed, _collectionLiteral_1.Parsed), _collectionLiteral_1.Remainder);
             }
         }
     }

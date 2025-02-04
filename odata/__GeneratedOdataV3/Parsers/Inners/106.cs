@@ -8,8 +8,25 @@ namespace __GeneratedOdataV3.Parsers.Inners
         
         public static class _refParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._refⳆOPEN_levels_CLOSE._ref> Instance { get; } = from _ref_1 in __GeneratedOdataV3.Parsers.Rules._refParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._refⳆOPEN_levels_CLOSE._ref(_ref_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._refⳆOPEN_levels_CLOSE._ref> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._refⳆOPEN_levels_CLOSE._ref>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._refⳆOPEN_levels_CLOSE._ref> Parse(IInput<char>? input)
+                {
+                    var _ref_1 = __GeneratedOdataV3.Parsers.Rules._refParser.Instance.Parse(input);
+if (!_ref_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._refⳆOPEN_levels_CLOSE._ref)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._refⳆOPEN_levels_CLOSE._ref(_ref_1.Parsed), _ref_1.Remainder);
+                }
+            }
         }
         
         public static class _OPEN_levels_CLOSEParser
@@ -42,7 +59,7 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._refⳆOPEN_levels_CLOSE._OPEN_levels_CLOSE)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._refⳆOPEN_levels_CLOSE._OPEN_levels_CLOSE(_OPEN_1.Parsed, _levels_1.Parsed,  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._refⳆOPEN_levels_CLOSE._OPEN_levels_CLOSE(_OPEN_1.Parsed, _levels_1.Parsed, _CLOSE_1.Parsed), _CLOSE_1.Remainder);
                 }
             }
         }

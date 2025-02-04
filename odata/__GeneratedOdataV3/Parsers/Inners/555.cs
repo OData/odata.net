@@ -4,8 +4,25 @@ namespace __GeneratedOdataV3.Parsers.Inners
     
     public static class _ⲤCOMMA_ringLiteralↃParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_ringLiteralↃ> Instance { get; } = from _COMMA_ringLiteral_1 in __GeneratedOdataV3.Parsers.Inners._COMMA_ringLiteralParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_ringLiteralↃ(_COMMA_ringLiteral_1);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_ringLiteralↃ> Instance { get; } = new Parser();
+        
+        private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_ringLiteralↃ>
+        {
+            public Parser()
+            {
+            }
+            
+            public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_ringLiteralↃ> Parse(IInput<char>? input)
+            {
+                var _COMMA_ringLiteral_1 = __GeneratedOdataV3.Parsers.Inners._COMMA_ringLiteralParser.Instance.Parse(input);
+if (!_COMMA_ringLiteral_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_ringLiteralↃ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_ringLiteralↃ(_COMMA_ringLiteral_1.Parsed), _COMMA_ringLiteral_1.Remainder);
+            }
+        }
     }
     
 }

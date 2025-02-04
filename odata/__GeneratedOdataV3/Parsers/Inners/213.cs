@@ -38,7 +38,7 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._OPEN_selectOptionPC_ЖⲤSEMI_selectOptionPCↃ_CLOSE)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._OPEN_selectOptionPC_ЖⲤSEMI_selectOptionPCↃ_CLOSE(_OPEN_1.Parsed, _selectOptionPC_1.Parsed, _ⲤSEMI_selectOptionPCↃ_1.Parsed,  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._OPEN_selectOptionPC_ЖⲤSEMI_selectOptionPCↃ_CLOSE(_OPEN_1.Parsed, _selectOptionPC_1.Parsed, _ⲤSEMI_selectOptionPCↃ_1.Parsed, _CLOSE_1.Parsed), _CLOSE_1.Remainder);
             }
         }
     }

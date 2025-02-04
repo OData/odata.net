@@ -38,7 +38,7 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._lineStringData)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._lineStringData(_OPEN_1.Parsed, _positionLiteral_1.Parsed, new __GeneratedOdataV3.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_positionLiteralↃ>(_ⲤCOMMA_positionLiteralↃ_1.Parsed),  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._lineStringData(_OPEN_1.Parsed, _positionLiteral_1.Parsed, new __GeneratedOdataV3.CstNodes.Inners.HelperRangedAtLeast1<__GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_positionLiteralↃ>(_ⲤCOMMA_positionLiteralↃ_1.Parsed), _CLOSE_1.Parsed), _CLOSE_1.Remainder);
             }
         }
     }

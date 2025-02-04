@@ -38,7 +38,7 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._nowMethodCallExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._nowMethodCallExpr(_ʺx6Ex6Fx77ʺ_1.Parsed, _OPEN_1.Parsed, _BWS_1.Parsed,  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._nowMethodCallExpr(_ʺx6Ex6Fx77ʺ_1.Parsed, _OPEN_1.Parsed, _BWS_1.Parsed, _CLOSE_1.Parsed), _CLOSE_1.Remainder);
             }
         }
     }

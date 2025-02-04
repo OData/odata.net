@@ -32,7 +32,7 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._multiPointLiteral)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._multiPointLiteral(_ʺx4Dx75x6Cx74x69x50x6Fx69x6Ex74x28ʺ_1.Parsed, _pointData_ЖⲤCOMMA_pointDataↃ_1.Parsed.GetOrElse(null),  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._multiPointLiteral(_ʺx4Dx75x6Cx74x69x50x6Fx69x6Ex74x28ʺ_1.Parsed, _pointData_ЖⲤCOMMA_pointDataↃ_1.Parsed.GetOrElse(null), _CLOSE_1.Parsed), _CLOSE_1.Remainder);
             }
         }
     }

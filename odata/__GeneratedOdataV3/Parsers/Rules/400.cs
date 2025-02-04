@@ -26,7 +26,7 @@ if (!_Ⲥʺx2Fʺ_segmentↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._pathⲻrootless)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._pathⲻrootless(_segmentⲻnz_1.Parsed,  _Ⲥʺx2Fʺ_segmentↃ_1.Parsed), _Ⲥʺx2Fʺ_segmentↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._pathⲻrootless(_segmentⲻnz_1.Parsed, _Ⲥʺx2Fʺ_segmentↃ_1.Parsed), _Ⲥʺx2Fʺ_segmentↃ_1.Remainder);
             }
         }
     }

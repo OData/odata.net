@@ -26,7 +26,7 @@ if (!_contextFragment_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._context)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._context(_ʺx23ʺ_1.Parsed,  _contextFragment_1.Parsed), _contextFragment_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._context(_ʺx23ʺ_1.Parsed, _contextFragment_1.Parsed), _contextFragment_1.Remainder);
             }
         }
     }

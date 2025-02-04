@@ -38,7 +38,7 @@ if (!_SQUOTE_2.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._geographyPoint)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._geographyPoint(_geographyPrefix_1.Parsed, _SQUOTE_1.Parsed, _fullPointLiteral_1.Parsed,  _SQUOTE_2.Parsed), _SQUOTE_2.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._geographyPoint(_geographyPrefix_1.Parsed, _SQUOTE_1.Parsed, _fullPointLiteral_1.Parsed, _SQUOTE_2.Parsed), _SQUOTE_2.Remainder);
             }
         }
     }

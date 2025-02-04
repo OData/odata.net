@@ -32,7 +32,7 @@ if (!_Ⲥʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._format)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._format(_Ⲥʺx24x66x6Fx72x6Dx61x74ʺⳆʺx66x6Fx72x6Dx61x74ʺↃ_1.Parsed, _EQ_1.Parsed,  _Ⲥʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1ЖpcharↃ_1.Parsed), _Ⲥʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1ЖpcharↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._format(_Ⲥʺx24x66x6Fx72x6Dx61x74ʺⳆʺx66x6Fx72x6Dx61x74ʺↃ_1.Parsed, _EQ_1.Parsed, _Ⲥʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1ЖpcharↃ_1.Parsed), _Ⲥʺx61x74x6Fx6DʺⳆʺx6Ax73x6Fx6EʺⳆʺx78x6Dx6CʺⳆ1Жpchar_ʺx2Fʺ_1ЖpcharↃ_1.Remainder);
             }
         }
     }

@@ -8,8 +8,25 @@ namespace __GeneratedOdataV3.Parsers.Inners
         
         public static class _STARParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ._STAR> Instance { get; } = from _STAR_1 in __GeneratedOdataV3.Parsers.Rules._STARParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ._STAR(_STAR_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ._STAR> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ._STAR>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ._STAR> Parse(IInput<char>? input)
+                {
+                    var _STAR_1 = __GeneratedOdataV3.Parsers.Rules._STARParser.Instance.Parse(input);
+if (!_STAR_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ._STAR)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ._STAR(_STAR_1.Parsed), _STAR_1.Remainder);
+                }
+            }
         }
         
         public static class _namespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃParser
@@ -42,7 +59,7 @@ if (!_ⲤtermNameⳆSTARↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ._namespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ._namespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ(_namespace_1.Parsed, _ʺx2Eʺ_1.Parsed,  _ⲤtermNameⳆSTARↃ_1.Parsed), _ⲤtermNameⳆSTARↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._STARⳆnamespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ._namespace_ʺx2Eʺ_ⲤtermNameⳆSTARↃ(_namespace_1.Parsed, _ʺx2Eʺ_1.Parsed, _ⲤtermNameⳆSTARↃ_1.Parsed), _ⲤtermNameⳆSTARↃ_1.Remainder);
                 }
             }
         }

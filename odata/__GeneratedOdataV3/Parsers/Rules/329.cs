@@ -26,7 +26,7 @@ if (!_pointData_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._pointLiteral)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._pointLiteral(_ʺx50x6Fx69x6Ex74ʺ_1.Parsed,  _pointData_1.Parsed), _pointData_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._pointLiteral(_ʺx50x6Fx69x6Ex74ʺ_1.Parsed, _pointData_1.Parsed), _pointData_1.Remainder);
             }
         }
     }

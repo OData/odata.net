@@ -38,7 +38,7 @@ if (!_SQUOTE_2.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._binary)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._binary(_ʺx62x69x6Ex61x72x79ʺ_1.Parsed, _SQUOTE_1.Parsed, _binaryValue_1.Parsed,  _SQUOTE_2.Parsed), _SQUOTE_2.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._binary(_ʺx62x69x6Ex61x72x79ʺ_1.Parsed, _SQUOTE_1.Parsed, _binaryValue_1.Parsed, _SQUOTE_2.Parsed), _SQUOTE_2.Remainder);
             }
         }
     }

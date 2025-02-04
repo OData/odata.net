@@ -56,7 +56,7 @@ if (!_decⲻoctet_4.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._IPv4address)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._IPv4address(_decⲻoctet_1.Parsed, _ʺx2Eʺ_1.Parsed, _decⲻoctet_2.Parsed, _ʺx2Eʺ_2.Parsed, _decⲻoctet_3.Parsed, _ʺx2Eʺ_3.Parsed,  _decⲻoctet_4.Parsed), _decⲻoctet_4.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._IPv4address(_decⲻoctet_1.Parsed, _ʺx2Eʺ_1.Parsed, _decⲻoctet_2.Parsed, _ʺx2Eʺ_2.Parsed, _decⲻoctet_3.Parsed, _ʺx2Eʺ_3.Parsed, _decⲻoctet_4.Parsed), _decⲻoctet_4.Remainder);
             }
         }
     }

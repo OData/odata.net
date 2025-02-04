@@ -26,7 +26,7 @@ if (!_DIGIT_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._zeroToFiftyNine)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._zeroToFiftyNine(_Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺↃ_1.Parsed,  _DIGIT_1.Parsed), _DIGIT_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._zeroToFiftyNine(_Ⲥʺx30ʺⳆʺx31ʺⳆʺx32ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺↃ_1.Parsed, _DIGIT_1.Parsed), _DIGIT_1.Remainder);
             }
         }
     }

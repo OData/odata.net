@@ -62,7 +62,7 @@ if (!_ⲤcomplexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColI
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._annotationInUri)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._annotationInUri(_quotationⲻmark_1.Parsed, _AT_1.Parsed, _namespace_1.Parsed, _ʺx2Eʺ_1.Parsed, _termName_1.Parsed, _quotationⲻmark_2.Parsed, _nameⲻseparator_1.Parsed,  _ⲤcomplexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUriↃ_1.Parsed), _ⲤcomplexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUriↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._annotationInUri(_quotationⲻmark_1.Parsed, _AT_1.Parsed, _namespace_1.Parsed, _ʺx2Eʺ_1.Parsed, _termName_1.Parsed, _quotationⲻmark_2.Parsed, _nameⲻseparator_1.Parsed, _ⲤcomplexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUriↃ_1.Parsed), _ⲤcomplexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUriↃ_1.Remainder);
             }
         }
     }

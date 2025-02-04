@@ -8,14 +8,48 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _STARParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectItem._STAR> Instance { get; } = from _STAR_1 in __GeneratedOdataV3.Parsers.Rules._STARParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._selectItem._STAR(_STAR_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectItem._STAR> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectItem._STAR>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._selectItem._STAR> Parse(IInput<char>? input)
+                {
+                    var _STAR_1 = __GeneratedOdataV3.Parsers.Rules._STARParser.Instance.Parse(input);
+if (!_STAR_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectItem._STAR)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectItem._STAR(_STAR_1.Parsed), _STAR_1.Remainder);
+                }
+            }
         }
         
         public static class _allOperationsInSchemaParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectItem._allOperationsInSchema> Instance { get; } = from _allOperationsInSchema_1 in __GeneratedOdataV3.Parsers.Rules._allOperationsInSchemaParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._selectItem._allOperationsInSchema(_allOperationsInSchema_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectItem._allOperationsInSchema> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._selectItem._allOperationsInSchema>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._selectItem._allOperationsInSchema> Parse(IInput<char>? input)
+                {
+                    var _allOperationsInSchema_1 = __GeneratedOdataV3.Parsers.Rules._allOperationsInSchemaParser.Instance.Parse(input);
+if (!_allOperationsInSchema_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectItem._allOperationsInSchema)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectItem._allOperationsInSchema(_allOperationsInSchema_1.Parsed), _allOperationsInSchema_1.Remainder);
+                }
+            }
         }
         
         public static class _꘡ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ꘡_ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃParser
@@ -42,7 +76,7 @@ if (!_ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ_1.Succe
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._selectItem._꘡ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ꘡_ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectItem._꘡ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ꘡_ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ(_ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ_1.Parsed.GetOrElse(null),  _ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ_1.Parsed), _ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._selectItem._꘡ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ꘡_ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ(_ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ_1.Parsed.GetOrElse(null), _ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ_1.Parsed), _ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ_1.Remainder);
                 }
             }
         }

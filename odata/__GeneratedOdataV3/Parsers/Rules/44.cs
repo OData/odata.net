@@ -32,7 +32,7 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._functionParameters)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._functionParameters(_OPEN_1.Parsed, _functionParameter_ЖⲤCOMMA_functionParameterↃ_1.Parsed.GetOrElse(null),  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._functionParameters(_OPEN_1.Parsed, _functionParameter_ЖⲤCOMMA_functionParameterↃ_1.Parsed.GetOrElse(null), _CLOSE_1.Parsed), _CLOSE_1.Remainder);
             }
         }
     }

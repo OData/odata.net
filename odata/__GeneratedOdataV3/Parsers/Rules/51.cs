@@ -26,7 +26,7 @@ if (!_Ⲥʺx26ʺ_batchOptionↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._batchOptions)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._batchOptions(_batchOption_1.Parsed,  _Ⲥʺx26ʺ_batchOptionↃ_1.Parsed), _Ⲥʺx26ʺ_batchOptionↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._batchOptions(_batchOption_1.Parsed, _Ⲥʺx26ʺ_batchOptionↃ_1.Parsed), _Ⲥʺx26ʺ_batchOptionↃ_1.Remainder);
             }
         }
     }

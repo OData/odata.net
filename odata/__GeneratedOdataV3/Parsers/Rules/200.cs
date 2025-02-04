@@ -44,7 +44,7 @@ if (!_complexInUri_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._complexPropertyInUri)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._complexPropertyInUri(_quotationⲻmark_1.Parsed, _complexProperty_1.Parsed, _quotationⲻmark_2.Parsed, _nameⲻseparator_1.Parsed,  _complexInUri_1.Parsed), _complexInUri_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._complexPropertyInUri(_quotationⲻmark_1.Parsed, _complexProperty_1.Parsed, _quotationⲻmark_2.Parsed, _nameⲻseparator_1.Parsed, _complexInUri_1.Parsed), _complexInUri_1.Remainder);
             }
         }
     }

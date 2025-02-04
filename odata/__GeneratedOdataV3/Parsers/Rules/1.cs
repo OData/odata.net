@@ -26,7 +26,7 @@ if (!_odataRelativeUri_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._odataUri)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._odataUri(_serviceRoot_1.Parsed,  _odataRelativeUri_1.Parsed.GetOrElse(null)), _odataRelativeUri_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._odataUri(_serviceRoot_1.Parsed, _odataRelativeUri_1.Parsed.GetOrElse(null)), _odataRelativeUri_1.Remainder);
             }
         }
     }

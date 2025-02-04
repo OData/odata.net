@@ -26,7 +26,7 @@ if (!_selectOptionPC_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._SEMI_selectOptionPC)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._SEMI_selectOptionPC(_SEMI_1.Parsed,  _selectOptionPC_1.Parsed), _selectOptionPC_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._SEMI_selectOptionPC(_SEMI_1.Parsed, _selectOptionPC_1.Parsed), _selectOptionPC_1.Remainder);
             }
         }
     }

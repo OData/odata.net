@@ -26,7 +26,7 @@ if (!_ringLiteral_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._COMMA_ringLiteral)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._COMMA_ringLiteral(_COMMA_1.Parsed,  _ringLiteral_1.Parsed), _ringLiteral_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._COMMA_ringLiteral(_COMMA_1.Parsed, _ringLiteral_1.Parsed), _ringLiteral_1.Remainder);
             }
         }
     }

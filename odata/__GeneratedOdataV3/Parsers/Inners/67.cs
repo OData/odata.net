@@ -4,8 +4,25 @@ namespace __GeneratedOdataV3.Parsers.Inners
     
     public static class _ⲤparameterAliasⳆprimitiveLiteralↃParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤparameterAliasⳆprimitiveLiteralↃ> Instance { get; } = from _parameterAliasⳆprimitiveLiteral_1 in __GeneratedOdataV3.Parsers.Inners._parameterAliasⳆprimitiveLiteralParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._ⲤparameterAliasⳆprimitiveLiteralↃ(_parameterAliasⳆprimitiveLiteral_1);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤparameterAliasⳆprimitiveLiteralↃ> Instance { get; } = new Parser();
+        
+        private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤparameterAliasⳆprimitiveLiteralↃ>
+        {
+            public Parser()
+            {
+            }
+            
+            public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._ⲤparameterAliasⳆprimitiveLiteralↃ> Parse(IInput<char>? input)
+            {
+                var _parameterAliasⳆprimitiveLiteral_1 = __GeneratedOdataV3.Parsers.Inners._parameterAliasⳆprimitiveLiteralParser.Instance.Parse(input);
+if (!_parameterAliasⳆprimitiveLiteral_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ⲤparameterAliasⳆprimitiveLiteralↃ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ⲤparameterAliasⳆprimitiveLiteralↃ(_parameterAliasⳆprimitiveLiteral_1.Parsed), _parameterAliasⳆprimitiveLiteral_1.Remainder);
+            }
+        }
     }
     
 }

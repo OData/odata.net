@@ -38,7 +38,7 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._polygonData)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._polygonData(_OPEN_1.Parsed, _ringLiteral_1.Parsed, _ⲤCOMMA_ringLiteralↃ_1.Parsed,  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._polygonData(_OPEN_1.Parsed, _ringLiteral_1.Parsed, _ⲤCOMMA_ringLiteralↃ_1.Parsed, _CLOSE_1.Parsed), _CLOSE_1.Remainder);
             }
         }
     }

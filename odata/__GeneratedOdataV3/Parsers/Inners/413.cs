@@ -26,7 +26,7 @@ if (!_DIGIT_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._oneToNine_ЖDIGIT)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._oneToNine_ЖDIGIT(_oneToNine_1.Parsed,  _DIGIT_1.Parsed), _DIGIT_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._oneToNine_ЖDIGIT(_oneToNine_1.Parsed, _DIGIT_1.Parsed), _DIGIT_1.Remainder);
             }
         }
     }

@@ -44,7 +44,7 @@ if (!_day_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._dateValue)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._dateValue(_year_1.Parsed, _ʺx2Dʺ_1.Parsed, _month_1.Parsed, _ʺx2Dʺ_2.Parsed,  _day_1.Parsed), _day_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._dateValue(_year_1.Parsed, _ʺx2Dʺ_1.Parsed, _month_1.Parsed, _ʺx2Dʺ_2.Parsed, _day_1.Parsed), _day_1.Remainder);
             }
         }
     }

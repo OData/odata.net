@@ -26,7 +26,7 @@ if (!_polygonData_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._COMMA_polygonData)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._COMMA_polygonData(_COMMA_1.Parsed,  _polygonData_1.Parsed), _polygonData_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._COMMA_polygonData(_COMMA_1.Parsed, _polygonData_1.Parsed), _polygonData_1.Remainder);
             }
         }
     }

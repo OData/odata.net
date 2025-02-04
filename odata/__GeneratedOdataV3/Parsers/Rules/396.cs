@@ -30,7 +30,7 @@ if (!_DIGIT_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._decⲻoctet._ʺx31ʺ_2DIGIT)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._decⲻoctet._ʺx31ʺ_2DIGIT(_ʺx31ʺ_1.Parsed,  new __GeneratedOdataV3.CstNodes.Inners.HelperRangedExactly2<__GeneratedOdataV3.CstNodes.Rules._DIGIT>(_DIGIT_1.Parsed)), _DIGIT_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._decⲻoctet._ʺx31ʺ_2DIGIT(_ʺx31ʺ_1.Parsed, new __GeneratedOdataV3.CstNodes.Inners.HelperRangedExactly2<__GeneratedOdataV3.CstNodes.Rules._DIGIT>(_DIGIT_1.Parsed)), _DIGIT_1.Remainder);
                 }
             }
         }
@@ -65,7 +65,7 @@ if (!_DIGIT_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._decⲻoctet._ʺx32ʺ_Ⰳx30ⲻ34_DIGIT)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._decⲻoctet._ʺx32ʺ_Ⰳx30ⲻ34_DIGIT(_ʺx32ʺ_1.Parsed, _Ⰳx30ⲻ34_1.Parsed,  _DIGIT_1.Parsed), _DIGIT_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._decⲻoctet._ʺx32ʺ_Ⰳx30ⲻ34_DIGIT(_ʺx32ʺ_1.Parsed, _Ⰳx30ⲻ34_1.Parsed, _DIGIT_1.Parsed), _DIGIT_1.Remainder);
                 }
             }
         }
@@ -94,7 +94,7 @@ if (!_Ⰳx30ⲻ35_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._decⲻoctet._ʺx32x35ʺ_Ⰳx30ⲻ35)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._decⲻoctet._ʺx32x35ʺ_Ⰳx30ⲻ35(_ʺx32x35ʺ_1.Parsed,  _Ⰳx30ⲻ35_1.Parsed), _Ⰳx30ⲻ35_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._decⲻoctet._ʺx32x35ʺ_Ⰳx30ⲻ35(_ʺx32x35ʺ_1.Parsed, _Ⰳx30ⲻ35_1.Parsed), _Ⰳx30ⲻ35_1.Remainder);
                 }
             }
         }
@@ -123,15 +123,32 @@ if (!_DIGIT_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._decⲻoctet._Ⰳx31ⲻ39_DIGIT)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._decⲻoctet._Ⰳx31ⲻ39_DIGIT(_Ⰳx31ⲻ39_1.Parsed,  _DIGIT_1.Parsed), _DIGIT_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._decⲻoctet._Ⰳx31ⲻ39_DIGIT(_Ⰳx31ⲻ39_1.Parsed, _DIGIT_1.Parsed), _DIGIT_1.Remainder);
                 }
             }
         }
         
         public static class _DIGITParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._decⲻoctet._DIGIT> Instance { get; } = from _DIGIT_1 in __GeneratedOdataV3.Parsers.Rules._DIGITParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._decⲻoctet._DIGIT(_DIGIT_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._decⲻoctet._DIGIT> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._decⲻoctet._DIGIT>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._decⲻoctet._DIGIT> Parse(IInput<char>? input)
+                {
+                    var _DIGIT_1 = __GeneratedOdataV3.Parsers.Rules._DIGITParser.Instance.Parse(input);
+if (!_DIGIT_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._decⲻoctet._DIGIT)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._decⲻoctet._DIGIT(_DIGIT_1.Parsed), _DIGIT_1.Remainder);
+                }
+            }
         }
     }
     

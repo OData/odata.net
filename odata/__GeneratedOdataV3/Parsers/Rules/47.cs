@@ -26,7 +26,7 @@ if (!_odataIdentifier_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._parameterAlias)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._parameterAlias(_AT_1.Parsed,  _odataIdentifier_1.Parsed), _odataIdentifier_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._parameterAlias(_AT_1.Parsed, _odataIdentifier_1.Parsed), _odataIdentifier_1.Remainder);
             }
         }
     }

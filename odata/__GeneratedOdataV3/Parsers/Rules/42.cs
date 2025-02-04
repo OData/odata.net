@@ -26,7 +26,7 @@ if (!_functionParameters_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._primitiveColFunctionImportCall)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._primitiveColFunctionImportCall(_primitiveColFunctionImport_1.Parsed,  _functionParameters_1.Parsed), _functionParameters_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._primitiveColFunctionImportCall(_primitiveColFunctionImport_1.Parsed, _functionParameters_1.Parsed), _functionParameters_1.Remainder);
             }
         }
     }

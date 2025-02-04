@@ -26,7 +26,7 @@ if (!_lineStringLiteral_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._fullLineStringLiteral)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._fullLineStringLiteral(_sridLiteral_1.Parsed,  _lineStringLiteral_1.Parsed), _lineStringLiteral_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._fullLineStringLiteral(_sridLiteral_1.Parsed, _lineStringLiteral_1.Parsed), _lineStringLiteral_1.Remainder);
             }
         }
     }

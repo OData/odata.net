@@ -32,7 +32,7 @@ if (!_STAR_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._allOperationsInSchema)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._allOperationsInSchema(_namespace_1.Parsed, _ʺx2Eʺ_1.Parsed,  _STAR_1.Parsed), _STAR_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._allOperationsInSchema(_namespace_1.Parsed, _ʺx2Eʺ_1.Parsed, _STAR_1.Parsed), _STAR_1.Remainder);
             }
         }
     }

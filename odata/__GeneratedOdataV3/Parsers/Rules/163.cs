@@ -38,7 +38,7 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._maxDateTimeMethodCallExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._maxDateTimeMethodCallExpr(_ʺx6Dx61x78x64x61x74x65x74x69x6Dx65ʺ_1.Parsed, _OPEN_1.Parsed, _BWS_1.Parsed,  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._maxDateTimeMethodCallExpr(_ʺx6Dx61x78x64x61x74x65x74x69x6Dx65ʺ_1.Parsed, _OPEN_1.Parsed, _BWS_1.Parsed, _CLOSE_1.Parsed), _CLOSE_1.Remainder);
             }
         }
     }

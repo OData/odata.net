@@ -4,8 +4,25 @@ namespace __GeneratedOdataV3.Parsers.Inners
     
     public static class _ⲤCOMMA_entitySetNameↃParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_entitySetNameↃ> Instance { get; } = from _COMMA_entitySetName_1 in __GeneratedOdataV3.Parsers.Inners._COMMA_entitySetNameParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_entitySetNameↃ(_COMMA_entitySetName_1);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_entitySetNameↃ> Instance { get; } = new Parser();
+        
+        private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_entitySetNameↃ>
+        {
+            public Parser()
+            {
+            }
+            
+            public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_entitySetNameↃ> Parse(IInput<char>? input)
+            {
+                var _COMMA_entitySetName_1 = __GeneratedOdataV3.Parsers.Inners._COMMA_entitySetNameParser.Instance.Parse(input);
+if (!_COMMA_entitySetName_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_entitySetNameↃ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ⲤCOMMA_entitySetNameↃ(_COMMA_entitySetName_1.Parsed), _COMMA_entitySetName_1.Remainder);
+            }
+        }
     }
     
 }

@@ -32,7 +32,7 @@ if (!_navigationProperty_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._navigation)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._navigation(_Ⲥʺx2Fʺ_complexProperty_꘡ʺx2Fʺ_qualifiedComplexTypeName꘡Ↄ_1.Parsed, _ʺx2Fʺ_1.Parsed,  _navigationProperty_1.Parsed), _navigationProperty_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._navigation(_Ⲥʺx2Fʺ_complexProperty_꘡ʺx2Fʺ_qualifiedComplexTypeName꘡Ↄ_1.Parsed, _ʺx2Fʺ_1.Parsed, _navigationProperty_1.Parsed), _navigationProperty_1.Remainder);
             }
         }
     }

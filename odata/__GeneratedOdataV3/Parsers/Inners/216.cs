@@ -42,7 +42,7 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆʺx2Fʺ_selectProperty._OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSE)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆʺx2Fʺ_selectProperty._OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSE(_OPEN_1.Parsed, _selectOption_1.Parsed, _ⲤSEMI_selectOptionↃ_1.Parsed,  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆʺx2Fʺ_selectProperty._OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSE(_OPEN_1.Parsed, _selectOption_1.Parsed, _ⲤSEMI_selectOptionↃ_1.Parsed, _CLOSE_1.Parsed), _CLOSE_1.Remainder);
                 }
             }
         }
@@ -71,7 +71,7 @@ if (!_selectProperty_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆʺx2Fʺ_selectProperty._ʺx2Fʺ_selectProperty)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆʺx2Fʺ_selectProperty._ʺx2Fʺ_selectProperty(_ʺx2Fʺ_1.Parsed,  _selectProperty_1.Parsed), _selectProperty_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._OPEN_selectOption_ЖⲤSEMI_selectOptionↃ_CLOSEⳆʺx2Fʺ_selectProperty._ʺx2Fʺ_selectProperty(_ʺx2Fʺ_1.Parsed, _selectProperty_1.Parsed), _selectProperty_1.Remainder);
                 }
             }
         }

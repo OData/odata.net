@@ -32,7 +32,7 @@ if (!_doubleValue_2.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._positionLiteral)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._positionLiteral(_doubleValue_1.Parsed, _SP_1.Parsed,  _doubleValue_2.Parsed), _doubleValue_2.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._positionLiteral(_doubleValue_1.Parsed, _SP_1.Parsed, _doubleValue_2.Parsed), _doubleValue_2.Remainder);
             }
         }
     }

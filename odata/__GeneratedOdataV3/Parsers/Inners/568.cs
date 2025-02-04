@@ -26,7 +26,7 @@ if (!_preference_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._COMMA_preference)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._COMMA_preference(_COMMA_1.Parsed,  _preference_1.Parsed), _preference_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._COMMA_preference(_COMMA_1.Parsed, _preference_1.Parsed), _preference_1.Remainder);
             }
         }
     }

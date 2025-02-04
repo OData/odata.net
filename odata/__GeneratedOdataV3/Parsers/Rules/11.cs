@@ -4,8 +4,25 @@ namespace __GeneratedOdataV3.Parsers.Rules
     
     public static class _keyPropertyValueParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._keyPropertyValue> Instance { get; } = from _primitiveLiteral_1 in __GeneratedOdataV3.Parsers.Rules._primitiveLiteralParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._keyPropertyValue(_primitiveLiteral_1);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._keyPropertyValue> Instance { get; } = new Parser();
+        
+        private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._keyPropertyValue>
+        {
+            public Parser()
+            {
+            }
+            
+            public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._keyPropertyValue> Parse(IInput<char>? input)
+            {
+                var _primitiveLiteral_1 = __GeneratedOdataV3.Parsers.Rules._primitiveLiteralParser.Instance.Parse(input);
+if (!_primitiveLiteral_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._keyPropertyValue)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._keyPropertyValue(_primitiveLiteral_1.Parsed), _primitiveLiteral_1.Remainder);
+            }
+        }
     }
     
 }

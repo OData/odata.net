@@ -26,7 +26,7 @@ if (!_port_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ʺx3Aʺ_port)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx3Aʺ_port(_ʺx3Aʺ_1.Parsed,  _port_1.Parsed), _port_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx3Aʺ_port(_ʺx3Aʺ_1.Parsed, _port_1.Parsed), _port_1.Remainder);
             }
         }
     }

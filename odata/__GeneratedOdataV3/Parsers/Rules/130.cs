@@ -26,7 +26,7 @@ if (!_ʺx2Fʺ_propertyPathExprⳆʺx2Fʺ_boundFunctionExprⳆʺx2Fʺ_annotationE
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._complexPathExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._complexPathExpr(_ʺx2Fʺ_qualifiedComplexTypeName_1.Parsed.GetOrElse(null),  _ʺx2Fʺ_propertyPathExprⳆʺx2Fʺ_boundFunctionExprⳆʺx2Fʺ_annotationExpr_1.Parsed.GetOrElse(null)), _ʺx2Fʺ_propertyPathExprⳆʺx2Fʺ_boundFunctionExprⳆʺx2Fʺ_annotationExpr_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._complexPathExpr(_ʺx2Fʺ_qualifiedComplexTypeName_1.Parsed.GetOrElse(null), _ʺx2Fʺ_propertyPathExprⳆʺx2Fʺ_boundFunctionExprⳆʺx2Fʺ_annotationExpr_1.Parsed.GetOrElse(null)), _ʺx2Fʺ_propertyPathExprⳆʺx2Fʺ_boundFunctionExprⳆʺx2Fʺ_annotationExpr_1.Remainder);
             }
         }
     }

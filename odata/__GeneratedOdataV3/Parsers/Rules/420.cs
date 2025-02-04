@@ -8,14 +8,48 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _Ⰳx41ⲻ5AParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._ALPHA._Ⰳx41ⲻ5A> Instance { get; } = from _Ⰳx41ⲻ5A_1 in __GeneratedOdataV3.Parsers.Inners._Ⰳx41ⲻ5AParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._ALPHA._Ⰳx41ⲻ5A(_Ⰳx41ⲻ5A_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._ALPHA._Ⰳx41ⲻ5A> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._ALPHA._Ⰳx41ⲻ5A>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._ALPHA._Ⰳx41ⲻ5A> Parse(IInput<char>? input)
+                {
+                    var _Ⰳx41ⲻ5A_1 = __GeneratedOdataV3.Parsers.Inners._Ⰳx41ⲻ5AParser.Instance.Parse(input);
+if (!_Ⰳx41ⲻ5A_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._ALPHA._Ⰳx41ⲻ5A)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._ALPHA._Ⰳx41ⲻ5A(_Ⰳx41ⲻ5A_1.Parsed), _Ⰳx41ⲻ5A_1.Remainder);
+                }
+            }
         }
         
         public static class _Ⰳx61ⲻ7AParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A> Instance { get; } = from _Ⰳx61ⲻ7A_1 in __GeneratedOdataV3.Parsers.Inners._Ⰳx61ⲻ7AParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A(_Ⰳx61ⲻ7A_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A> Parse(IInput<char>? input)
+                {
+                    var _Ⰳx61ⲻ7A_1 = __GeneratedOdataV3.Parsers.Inners._Ⰳx61ⲻ7AParser.Instance.Parse(input);
+if (!_Ⰳx61ⲻ7A_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A(_Ⰳx61ⲻ7A_1.Parsed), _Ⰳx61ⲻ7A_1.Remainder);
+                }
+            }
         }
     }
     

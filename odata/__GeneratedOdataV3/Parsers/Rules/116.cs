@@ -32,7 +32,7 @@ if (!_singleNavigationExpr_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._rootExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._rootExpr(_ʺx24x72x6Fx6Fx74x2Fʺ_1.Parsed, _ⲤentitySetName_keyPredicateⳆsingletonEntityↃ_1.Parsed,  _singleNavigationExpr_1.Parsed.GetOrElse(null)), _singleNavigationExpr_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._rootExpr(_ʺx24x72x6Fx6Fx74x2Fʺ_1.Parsed, _ⲤentitySetName_keyPredicateⳆsingletonEntityↃ_1.Parsed, _singleNavigationExpr_1.Parsed.GetOrElse(null)), _singleNavigationExpr_1.Remainder);
             }
         }
     }

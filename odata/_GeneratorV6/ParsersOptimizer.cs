@@ -47,7 +47,7 @@
                     .Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries)
                     .ToList();
 
-                if (lines.Count > 2)
+                if (lines.Count > 1)
                 {
                     var returnType = lines[lines.Count - 1];
                     var selectNewDelimiter = "select new ";
@@ -204,20 +204,25 @@ if (!{{splitLine.Name}}.Success)
 
                     first = false;
 
-                    var getOrElseDelimiter = ".GetOrElse(null";
+                    var getOrElseDelimiter = ".GetOrElse(null)";
                     var commaIndex = line.IndexOf(", ", typeEndIndex + 1);
                     if (commaIndex < 0)
                     {
-                        var parenIndex = line.IndexOf(")", typeEndIndex + 1);
-                        var variable2 = line.Substring(typeEndIndex, parenIndex - typeEndIndex);
+                        var parenIndex = line.LastIndexOf(")");
+                        var variable2 = line.Substring(typeEndIndex + 1, parenIndex - typeEndIndex - 1);
                         if (variable2.EndsWith(getOrElseDelimiter))
                         {
                             result += variable2.Substring(0, variable2.Length - getOrElseDelimiter.Length);
                             result += ".Parsed";
-                            result += getOrElseDelimiter + ")";
+                            result += getOrElseDelimiter;
                         }
                         else
                         {
+                            if (variable2.Contains("HelperRanged"))
+                            {
+                                variable2 = variable2.Substring(0, variable2.Length - 1);
+                            }
+
                             result += variable2;
                             result += ".Parsed";
                         }

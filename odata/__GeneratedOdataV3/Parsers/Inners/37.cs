@@ -8,14 +8,48 @@ namespace __GeneratedOdataV3.Parsers.Inners
         
         public static class _parameterAliasParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._parameterAliasⳆkeyPropertyValue._parameterAlias> Instance { get; } = from _parameterAlias_1 in __GeneratedOdataV3.Parsers.Rules._parameterAliasParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._parameterAliasⳆkeyPropertyValue._parameterAlias(_parameterAlias_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._parameterAliasⳆkeyPropertyValue._parameterAlias> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._parameterAliasⳆkeyPropertyValue._parameterAlias>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._parameterAliasⳆkeyPropertyValue._parameterAlias> Parse(IInput<char>? input)
+                {
+                    var _parameterAlias_1 = __GeneratedOdataV3.Parsers.Rules._parameterAliasParser.Instance.Parse(input);
+if (!_parameterAlias_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._parameterAliasⳆkeyPropertyValue._parameterAlias)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._parameterAliasⳆkeyPropertyValue._parameterAlias(_parameterAlias_1.Parsed), _parameterAlias_1.Remainder);
+                }
+            }
         }
         
         public static class _keyPropertyValueParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._parameterAliasⳆkeyPropertyValue._keyPropertyValue> Instance { get; } = from _keyPropertyValue_1 in __GeneratedOdataV3.Parsers.Rules._keyPropertyValueParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._parameterAliasⳆkeyPropertyValue._keyPropertyValue(_keyPropertyValue_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._parameterAliasⳆkeyPropertyValue._keyPropertyValue> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._parameterAliasⳆkeyPropertyValue._keyPropertyValue>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._parameterAliasⳆkeyPropertyValue._keyPropertyValue> Parse(IInput<char>? input)
+                {
+                    var _keyPropertyValue_1 = __GeneratedOdataV3.Parsers.Rules._keyPropertyValueParser.Instance.Parse(input);
+if (!_keyPropertyValue_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._parameterAliasⳆkeyPropertyValue._keyPropertyValue)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._parameterAliasⳆkeyPropertyValue._keyPropertyValue(_keyPropertyValue_1.Parsed), _keyPropertyValue_1.Remainder);
+                }
+            }
         }
     }
     

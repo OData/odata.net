@@ -26,7 +26,7 @@ if (!_lineStringData_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._lineStringLiteral)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._lineStringLiteral(_ʺx4Cx69x6Ex65x53x74x72x69x6Ex67ʺ_1.Parsed,  _lineStringData_1.Parsed), _lineStringData_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._lineStringLiteral(_ʺx4Cx69x6Ex65x53x74x72x69x6Ex67ʺ_1.Parsed, _lineStringData_1.Parsed), _lineStringData_1.Remainder);
             }
         }
     }

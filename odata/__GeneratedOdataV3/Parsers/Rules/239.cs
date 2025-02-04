@@ -26,7 +26,7 @@ if (!_identifierCharacter_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._odataIdentifier)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._odataIdentifier(_identifierLeadingCharacter_1.Parsed,  new __GeneratedOdataV3.CstNodes.Inners.HelperRangedAtMost127<__GeneratedOdataV3.CstNodes.Rules._identifierCharacter>(_identifierCharacter_1.Parsed)), _identifierCharacter_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._odataIdentifier(_identifierLeadingCharacter_1.Parsed, new __GeneratedOdataV3.CstNodes.Inners.HelperRangedAtMost127<__GeneratedOdataV3.CstNodes.Rules._identifierCharacter>(_identifierCharacter_1.Parsed)), _identifierCharacter_1.Remainder);
             }
         }
     }

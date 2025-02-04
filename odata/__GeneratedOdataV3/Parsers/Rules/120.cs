@@ -26,7 +26,7 @@ if (!_collectionPathExprⳆsingleNavigationExprⳆcomplexPathExprⳆprimitivePat
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._annotationExpr)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._annotationExpr(_annotation_1.Parsed,  _collectionPathExprⳆsingleNavigationExprⳆcomplexPathExprⳆprimitivePathExpr_1.Parsed.GetOrElse(null)), _collectionPathExprⳆsingleNavigationExprⳆcomplexPathExprⳆprimitivePathExpr_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._annotationExpr(_annotation_1.Parsed, _collectionPathExprⳆsingleNavigationExprⳆcomplexPathExprⳆprimitivePathExpr_1.Parsed.GetOrElse(null)), _collectionPathExprⳆsingleNavigationExprⳆcomplexPathExprⳆprimitivePathExpr_1.Remainder);
             }
         }
     }

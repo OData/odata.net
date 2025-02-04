@@ -26,7 +26,7 @@ if (!_ʺx3Aʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._h16_ʺx3Aʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._h16_ʺx3Aʺ(_h16_1.Parsed,  _ʺx3Aʺ_1.Parsed), _ʺx3Aʺ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._h16_ʺx3Aʺ(_h16_1.Parsed, _ʺx3Aʺ_1.Parsed), _ʺx3Aʺ_1.Remainder);
             }
         }
     }

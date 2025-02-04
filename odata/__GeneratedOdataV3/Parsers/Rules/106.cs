@@ -8,26 +8,94 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ> Instance { get; } = from _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺParser.Instance.Parse(input);
+if (!_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ_1.Parsed), _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ_1.Remainder);
+                }
+            }
         }
         
         public static class _ʺx24x72x65x66ʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx24x72x65x66ʺ> Instance { get; } = from _ʺx24x72x65x66ʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx24x72x65x66ʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx24x72x65x66ʺ(_ʺx24x72x65x66ʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx24x72x65x66ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx24x72x65x66ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx24x72x65x66ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx24x72x65x66ʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx24x72x65x66ʺParser.Instance.Parse(input);
+if (!_ʺx24x72x65x66ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx24x72x65x66ʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx24x72x65x66ʺ(_ʺx24x72x65x66ʺ_1.Parsed), _ʺx24x72x65x66ʺ_1.Remainder);
+                }
+            }
         }
         
         public static class _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ> Instance { get; } = from _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺParser.Instance.Parse(input);
+if (!_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ_1.Parsed), _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ_1.Remainder);
+                }
+            }
         }
         
         public static class _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ> Instance { get; } = from _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ_1 in __GeneratedOdataV3.Parsers.Inners._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ_1 = __GeneratedOdataV3.Parsers.Inners._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺParser.Instance.Parse(input);
+if (!_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ_1.Parsed), _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ_1.Remainder);
+                }
+            }
         }
         
         public static class _singletonEntity_꘡navigation_ЖⲤcontainmentNavigationↃ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡꘡_꘡selectList꘡Parser
@@ -60,7 +128,7 @@ if (!_selectList_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._contextFragment._singletonEntity_꘡navigation_ЖⲤcontainmentNavigationↃ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡꘡_꘡selectList꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._contextFragment._singletonEntity_꘡navigation_ЖⲤcontainmentNavigationↃ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡꘡_꘡selectList꘡(_singletonEntity_1.Parsed, _navigation_ЖⲤcontainmentNavigationↃ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡_1.Parsed.GetOrElse(null),  _selectList_1.Parsed.GetOrElse(null)), _selectList_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._contextFragment._singletonEntity_꘡navigation_ЖⲤcontainmentNavigationↃ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡꘡_꘡selectList꘡(_singletonEntity_1.Parsed, _navigation_ЖⲤcontainmentNavigationↃ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡_1.Parsed.GetOrElse(null), _selectList_1.Parsed.GetOrElse(null)), _selectList_1.Remainder);
                 }
             }
         }
@@ -89,7 +157,7 @@ if (!_selectList_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._contextFragment._qualifiedTypeName_꘡selectList꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._contextFragment._qualifiedTypeName_꘡selectList꘡(_qualifiedTypeName_1.Parsed,  _selectList_1.Parsed.GetOrElse(null)), _selectList_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._contextFragment._qualifiedTypeName_꘡selectList꘡(_qualifiedTypeName_1.Parsed, _selectList_1.Parsed.GetOrElse(null)), _selectList_1.Remainder);
                 }
             }
         }
@@ -118,7 +186,7 @@ if (!_Ⲥʺx2Fx24x64x65x6Cx65x74x65x64x45x6Ex74x69x74x79ʺⳆʺx2Fx24x6Cx69x6Ex6
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._contextFragment._entitySet_Ⲥʺx2Fx24x64x65x6Cx65x74x65x64x45x6Ex74x69x74x79ʺⳆʺx2Fx24x6Cx69x6Ex6BʺⳆʺx2Fx24x64x65x6Cx65x74x65x64x4Cx69x6Ex6BʺↃ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._contextFragment._entitySet_Ⲥʺx2Fx24x64x65x6Cx65x74x65x64x45x6Ex74x69x74x79ʺⳆʺx2Fx24x6Cx69x6Ex6BʺⳆʺx2Fx24x64x65x6Cx65x74x65x64x4Cx69x6Ex6BʺↃ(_entitySet_1.Parsed,  _Ⲥʺx2Fx24x64x65x6Cx65x74x65x64x45x6Ex74x69x74x79ʺⳆʺx2Fx24x6Cx69x6Ex6BʺⳆʺx2Fx24x64x65x6Cx65x74x65x64x4Cx69x6Ex6BʺↃ_1.Parsed), _Ⲥʺx2Fx24x64x65x6Cx65x74x65x64x45x6Ex74x69x74x79ʺⳆʺx2Fx24x6Cx69x6Ex6BʺⳆʺx2Fx24x64x65x6Cx65x74x65x64x4Cx69x6Ex6BʺↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._contextFragment._entitySet_Ⲥʺx2Fx24x64x65x6Cx65x74x65x64x45x6Ex74x69x74x79ʺⳆʺx2Fx24x6Cx69x6Ex6BʺⳆʺx2Fx24x64x65x6Cx65x74x65x64x4Cx69x6Ex6BʺↃ(_entitySet_1.Parsed, _Ⲥʺx2Fx24x64x65x6Cx65x74x65x64x45x6Ex74x69x74x79ʺⳆʺx2Fx24x6Cx69x6Ex6BʺⳆʺx2Fx24x64x65x6Cx65x74x65x64x4Cx69x6Ex6BʺↃ_1.Parsed), _Ⲥʺx2Fx24x64x65x6Cx65x74x65x64x45x6Ex74x69x74x79ʺⳆʺx2Fx24x6Cx69x6Ex6BʺⳆʺx2Fx24x64x65x6Cx65x74x65x64x4Cx69x6Ex6BʺↃ_1.Remainder);
                 }
             }
         }
@@ -165,7 +233,7 @@ if (!_selectList_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._contextFragment._entitySet_keyPredicate_ʺx2Fʺ_contextPropertyPath_꘡selectList꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._contextFragment._entitySet_keyPredicate_ʺx2Fʺ_contextPropertyPath_꘡selectList꘡(_entitySet_1.Parsed, _keyPredicate_1.Parsed, _ʺx2Fʺ_1.Parsed, _contextPropertyPath_1.Parsed,  _selectList_1.Parsed.GetOrElse(null)), _selectList_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._contextFragment._entitySet_keyPredicate_ʺx2Fʺ_contextPropertyPath_꘡selectList꘡(_entitySet_1.Parsed, _keyPredicate_1.Parsed, _ʺx2Fʺ_1.Parsed, _contextPropertyPath_1.Parsed, _selectList_1.Parsed.GetOrElse(null)), _selectList_1.Remainder);
                 }
             }
         }
@@ -200,7 +268,7 @@ if (!_ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._contextFragment._entitySet_꘡selectList꘡_꘡ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._contextFragment._entitySet_꘡selectList꘡_꘡ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ꘡(_entitySet_1.Parsed, _selectList_1.Parsed.GetOrElse(null),  _ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ_1.Parsed.GetOrElse(null)), _ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._contextFragment._entitySet_꘡selectList꘡_꘡ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ꘡(_entitySet_1.Parsed, _selectList_1.Parsed.GetOrElse(null), _ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ_1.Parsed.GetOrElse(null)), _ʺx2Fx24x65x6Ex74x69x74x79ʺⳆʺx2Fx24x64x65x6Cx74x61ʺ_1.Remainder);
                 }
             }
         }

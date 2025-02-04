@@ -4,8 +4,25 @@ namespace __GeneratedOdataV3.Parsers.Inners
     
     public static class _ⲤprimitiveKeyPropertyⳆkeyPropertyAliasↃParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤprimitiveKeyPropertyⳆkeyPropertyAliasↃ> Instance { get; } = from _primitiveKeyPropertyⳆkeyPropertyAlias_1 in __GeneratedOdataV3.Parsers.Inners._primitiveKeyPropertyⳆkeyPropertyAliasParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._ⲤprimitiveKeyPropertyⳆkeyPropertyAliasↃ(_primitiveKeyPropertyⳆkeyPropertyAlias_1);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤprimitiveKeyPropertyⳆkeyPropertyAliasↃ> Instance { get; } = new Parser();
+        
+        private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._ⲤprimitiveKeyPropertyⳆkeyPropertyAliasↃ>
+        {
+            public Parser()
+            {
+            }
+            
+            public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._ⲤprimitiveKeyPropertyⳆkeyPropertyAliasↃ> Parse(IInput<char>? input)
+            {
+                var _primitiveKeyPropertyⳆkeyPropertyAlias_1 = __GeneratedOdataV3.Parsers.Inners._primitiveKeyPropertyⳆkeyPropertyAliasParser.Instance.Parse(input);
+if (!_primitiveKeyPropertyⳆkeyPropertyAlias_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ⲤprimitiveKeyPropertyⳆkeyPropertyAliasↃ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ⲤprimitiveKeyPropertyⳆkeyPropertyAliasↃ(_primitiveKeyPropertyⳆkeyPropertyAlias_1.Parsed), _primitiveKeyPropertyⳆkeyPropertyAlias_1.Remainder);
+            }
+        }
     }
     
 }

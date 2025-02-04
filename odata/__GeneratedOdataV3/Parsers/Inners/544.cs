@@ -26,7 +26,7 @@ if (!_ⲤCOMMA_lineStringDataↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._lineStringData_ЖⲤCOMMA_lineStringDataↃ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._lineStringData_ЖⲤCOMMA_lineStringDataↃ(_lineStringData_1.Parsed,  _ⲤCOMMA_lineStringDataↃ_1.Parsed), _ⲤCOMMA_lineStringDataↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._lineStringData_ЖⲤCOMMA_lineStringDataↃ(_lineStringData_1.Parsed, _ⲤCOMMA_lineStringDataↃ_1.Parsed), _ⲤCOMMA_lineStringDataↃ_1.Remainder);
             }
         }
     }

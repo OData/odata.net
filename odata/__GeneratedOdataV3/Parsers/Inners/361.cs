@@ -26,7 +26,7 @@ if (!_Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ(_primitiveLiteralInJSON_1.Parsed,  _Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1.Parsed), _Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ(_primitiveLiteralInJSON_1.Parsed, _Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1.Parsed), _Ⲥvalueⲻseparator_primitiveLiteralInJSONↃ_1.Remainder);
             }
         }
     }

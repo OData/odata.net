@@ -26,7 +26,7 @@ if (!_pointLiteral_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._fullPointLiteral)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._fullPointLiteral(_sridLiteral_1.Parsed,  _pointLiteral_1.Parsed), _pointLiteral_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._fullPointLiteral(_sridLiteral_1.Parsed, _pointLiteral_1.Parsed), _pointLiteral_1.Remainder);
             }
         }
     }

@@ -44,7 +44,7 @@ if (!_CLOSE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._crossjoin)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._crossjoin(_ʺx24x63x72x6Fx73x73x6Ax6Fx69x6Eʺ_1.Parsed, _OPEN_1.Parsed, _entitySetName_1.Parsed, _ⲤCOMMA_entitySetNameↃ_1.Parsed,  _CLOSE_1.Parsed), _CLOSE_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._crossjoin(_ʺx24x63x72x6Fx73x73x6Ax6Fx69x6Eʺ_1.Parsed, _OPEN_1.Parsed, _entitySetName_1.Parsed, _ⲤCOMMA_entitySetNameↃ_1.Parsed, _CLOSE_1.Parsed), _CLOSE_1.Remainder);
             }
         }
     }

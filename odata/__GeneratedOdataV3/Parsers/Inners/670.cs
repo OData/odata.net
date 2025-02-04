@@ -4,8 +4,25 @@ namespace __GeneratedOdataV3.Parsers.Inners
     
     public static class _Ⲥʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻFↃParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⲥʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻFↃ> Instance { get; } = from _ʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻF_1 in __GeneratedOdataV3.Parsers.Inners._ʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻFParser.Instance
-select new __GeneratedOdataV3.CstNodes.Inners._Ⲥʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻFↃ(_ʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻF_1);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⲥʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻFↃ> Instance { get; } = new Parser();
+        
+        private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Inners._Ⲥʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻFↃ>
+        {
+            public Parser()
+            {
+            }
+            
+            public IOutput<char, __GeneratedOdataV3.CstNodes.Inners._Ⲥʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻFↃ> Parse(IInput<char>? input)
+            {
+                var _ʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻF_1 = __GeneratedOdataV3.Parsers.Inners._ʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻFParser.Instance.Parse(input);
+if (!_ʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻF_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._Ⲥʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻFↃ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._Ⲥʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻFↃ(_ʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻF_1.Parsed), _ʺx30ʺⳆʺx31ʺⳆʺx33ʺⳆʺx34ʺⳆʺx35ʺⳆʺx36ʺⳆʺx37ʺⳆʺx38ʺⳆʺx39ʺⳆAⲻtoⲻF_1.Remainder);
+            }
+        }
     }
     
 }

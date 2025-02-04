@@ -38,7 +38,7 @@ if (!_functionParameters_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._boundComplexColFunctionCall)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._boundComplexColFunctionCall(_namespace_1.Parsed, _ʺx2Eʺ_1.Parsed, _complexColFunction_1.Parsed,  _functionParameters_1.Parsed), _functionParameters_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._boundComplexColFunctionCall(_namespace_1.Parsed, _ʺx2Eʺ_1.Parsed, _complexColFunction_1.Parsed, _functionParameters_1.Parsed), _functionParameters_1.Remainder);
             }
         }
     }

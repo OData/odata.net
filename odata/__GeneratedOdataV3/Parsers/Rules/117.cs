@@ -8,8 +8,25 @@ namespace __GeneratedOdataV3.Parsers.Rules
         
         public static class _memberExprParser
         {
-            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._firstMemberExpr._memberExpr> Instance { get; } = from _memberExpr_1 in __GeneratedOdataV3.Parsers.Rules._memberExprParser.Instance
-select new __GeneratedOdataV3.CstNodes.Rules._firstMemberExpr._memberExpr(_memberExpr_1);
+            public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._firstMemberExpr._memberExpr> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._firstMemberExpr._memberExpr>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._firstMemberExpr._memberExpr> Parse(IInput<char>? input)
+                {
+                    var _memberExpr_1 = __GeneratedOdataV3.Parsers.Rules._memberExprParser.Instance.Parse(input);
+if (!_memberExpr_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._firstMemberExpr._memberExpr)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._firstMemberExpr._memberExpr(_memberExpr_1.Parsed), _memberExpr_1.Remainder);
+                }
+            }
         }
         
         public static class _inscopeVariableExpr_꘡ʺx2Fʺ_memberExpr꘡Parser
@@ -36,7 +53,7 @@ if (!_ʺx2Fʺ_memberExpr_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._firstMemberExpr._inscopeVariableExpr_꘡ʺx2Fʺ_memberExpr꘡)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._firstMemberExpr._inscopeVariableExpr_꘡ʺx2Fʺ_memberExpr꘡(_inscopeVariableExpr_1.Parsed,  _ʺx2Fʺ_memberExpr_1.Parsed.GetOrElse(null)), _ʺx2Fʺ_memberExpr_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._firstMemberExpr._inscopeVariableExpr_꘡ʺx2Fʺ_memberExpr꘡(_inscopeVariableExpr_1.Parsed, _ʺx2Fʺ_memberExpr_1.Parsed.GetOrElse(null)), _ʺx2Fʺ_memberExpr_1.Remainder);
                 }
             }
         }

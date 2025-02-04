@@ -32,7 +32,7 @@ if (!_endⲻarray_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._primitiveColInUri)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._primitiveColInUri(_beginⲻarray_1.Parsed, _primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ_1.Parsed.GetOrElse(null),  _endⲻarray_1.Parsed), _endⲻarray_1.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._primitiveColInUri(_beginⲻarray_1.Parsed, _primitiveLiteralInJSON_ЖⲤvalueⲻseparator_primitiveLiteralInJSONↃ_1.Parsed.GetOrElse(null), _endⲻarray_1.Parsed), _endⲻarray_1.Remainder);
             }
         }
     }

@@ -38,7 +38,7 @@ if (!_SQUOTE_2.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._geometryMultiPoint)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._geometryMultiPoint(_geometryPrefix_1.Parsed, _SQUOTE_1.Parsed, _fullMultiPointLiteral_1.Parsed,  _SQUOTE_2.Parsed), _SQUOTE_2.Remainder);
+return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._geometryMultiPoint(_geometryPrefix_1.Parsed, _SQUOTE_1.Parsed, _fullMultiPointLiteral_1.Parsed, _SQUOTE_2.Parsed), _SQUOTE_2.Remainder);
             }
         }
     }
