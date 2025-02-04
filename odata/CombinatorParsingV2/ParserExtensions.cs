@@ -395,11 +395,6 @@
 
         public static IParser<TToken, IOption<TParsed>> Optional<TToken, TParsed>(this IParser<TToken, TParsed> parser)
         {
-            var asdf = 
-                from foo in parser
-                from bar in parser
-                select new object();
-
             return new OptionalParser<TToken, TParsed>(parser);
         }
 
