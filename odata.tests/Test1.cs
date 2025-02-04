@@ -398,7 +398,7 @@
         [TestMethod]
         public void Perf1()
         {
-            //// TODO where did all of your perf go? you're on rules file 114.cs
+            //// TODO where did all of your perf go? you removed ors and success checks, what else are you missing?
             //// TODO does iinput allow for the underlying type to be a stream? (you're thinking of async here)
             //// TODO you need to move on from the perf stuff (don't lose your other branch) and work on syntactic ast + futures
             //// TODO parser classes don't need to be static anymore, they have a nested sinlgeton, the top-level class could just be the singleton
