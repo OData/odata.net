@@ -93,7 +93,7 @@ if (!_ʺx3Aʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx3Aʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx3Aʺ(_ʺx3Aʺ_1.Parsed), _ʺx3Aʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx3Aʺ.Instance, _ʺx3Aʺ_1.Remainder);
                 }
             }
         }
@@ -116,7 +116,7 @@ if (!_ʺx2Fʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx2Fʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx2Fʺ(_ʺx2Fʺ_1.Parsed), _ʺx2Fʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx2Fʺ.Instance, _ʺx2Fʺ_1.Remainder);
                 }
             }
         }
@@ -139,7 +139,7 @@ if (!_ʺx3Fʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx3Fʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx3Fʺ(_ʺx3Fʺ_1.Parsed), _ʺx3Fʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx3Fʺ.Instance, _ʺx3Fʺ_1.Remainder);
                 }
             }
         }
@@ -162,7 +162,7 @@ if (!_ʺx27ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx27ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx27ʺ(_ʺx27ʺ_1.Parsed), _ʺx27ʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx27ʺ.Instance, _ʺx27ʺ_1.Remainder);
                 }
             }
         }

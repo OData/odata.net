@@ -24,7 +24,7 @@ if (!_nullValue_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._primitiveLiteral._nullValue)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._primitiveLiteral._nullValue(_nullValue_1.Parsed), _nullValue_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._primitiveLiteral._nullValue.Instance, _nullValue_1.Remainder);
                 }
             }
         }

@@ -222,7 +222,7 @@
                 }
                 else
                 {
-                    methodBody = TranscribeProperties(duMember.Properties, ruleCstNodesNamespace, innerCstNodesNamespace, "node", "context");
+                    methodBody = TranscribeProperties(duMember.Properties.Where(property => !property.IsStatic), ruleCstNodesNamespace, innerCstNodesNamespace, "node", "context");
                 }
 
                 yield return new MethodDefinition(

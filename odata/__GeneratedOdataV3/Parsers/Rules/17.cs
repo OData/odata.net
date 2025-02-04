@@ -24,7 +24,7 @@ if (!_count_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._primitiveColPath._count)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._primitiveColPath._count(_count_1.Parsed), _count_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._primitiveColPath._count.Instance, _count_1.Remainder);
                 }
             }
         }

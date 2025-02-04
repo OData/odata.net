@@ -21,12 +21,13 @@ namespace __GeneratedOdataV3.CstNodes.Rules
         
         public sealed class _ʺx2Aʺ : _STAR
         {
-            public _ʺx2Aʺ(__GeneratedOdataV3.CstNodes.Inners._ʺx2Aʺ _ʺx2Aʺ_1)
+            private _ʺx2Aʺ()
             {
-                this._ʺx2Aʺ_1 = _ʺx2Aʺ_1;
+                this._ʺx2Aʺ_1 = __GeneratedOdataV3.CstNodes.Inners._ʺx2Aʺ.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Inners._ʺx2Aʺ _ʺx2Aʺ_1 { get; }
+            public static _ʺx2Aʺ Instance { get; } = new _ʺx2Aʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -36,12 +37,13 @@ namespace __GeneratedOdataV3.CstNodes.Rules
         
         public sealed class _ʺx25x32x41ʺ : _STAR
         {
-            public _ʺx25x32x41ʺ(__GeneratedOdataV3.CstNodes.Inners._ʺx25x32x41ʺ _ʺx25x32x41ʺ_1)
+            private _ʺx25x32x41ʺ()
             {
-                this._ʺx25x32x41ʺ_1 = _ʺx25x32x41ʺ_1;
+                this._ʺx25x32x41ʺ_1 = __GeneratedOdataV3.CstNodes.Inners._ʺx25x32x41ʺ.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Inners._ʺx25x32x41ʺ _ʺx25x32x41ʺ_1 { get; }
+            public static _ʺx25x32x41ʺ Instance { get; } = new _ʺx25x32x41ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

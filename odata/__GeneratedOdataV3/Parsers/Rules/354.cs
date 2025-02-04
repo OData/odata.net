@@ -139,7 +139,7 @@ if (!_respondAsyncPreference_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._preference._respondAsyncPreference)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._preference._respondAsyncPreference(_respondAsyncPreference_1.Parsed), _respondAsyncPreference_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._preference._respondAsyncPreference.Instance, _respondAsyncPreference_1.Remainder);
                 }
             }
         }

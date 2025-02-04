@@ -24,7 +24,7 @@ if (!_SP_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._SP)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._SP(_SP_1.Parsed), _SP_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._SP.Instance, _SP_1.Remainder);
                 }
             }
         }
@@ -47,7 +47,7 @@ if (!_ʺx3Aʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx3Aʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx3Aʺ(_ʺx3Aʺ_1.Parsed), _ʺx3Aʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx3Aʺ.Instance, _ʺx3Aʺ_1.Remainder);
                 }
             }
         }
@@ -70,7 +70,7 @@ if (!_ʺx7Bʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx7Bʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx7Bʺ(_ʺx7Bʺ_1.Parsed), _ʺx7Bʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx7Bʺ.Instance, _ʺx7Bʺ_1.Remainder);
                 }
             }
         }
@@ -93,7 +93,7 @@ if (!_ʺx7Dʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx7Dʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx7Dʺ(_ʺx7Dʺ_1.Parsed), _ʺx7Dʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx7Dʺ.Instance, _ʺx7Dʺ_1.Remainder);
                 }
             }
         }
@@ -116,7 +116,7 @@ if (!_ʺx5Bʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx5Bʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx5Bʺ(_ʺx5Bʺ_1.Parsed), _ʺx5Bʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx5Bʺ.Instance, _ʺx5Bʺ_1.Remainder);
                 }
             }
         }
@@ -139,7 +139,7 @@ if (!_ʺx5Dʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx5Dʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx5Dʺ(_ʺx5Dʺ_1.Parsed), _ʺx5Dʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._qcharⲻJSONⲻspecial._ʺx5Dʺ.Instance, _ʺx5Dʺ_1.Remainder);
                 }
             }
         }

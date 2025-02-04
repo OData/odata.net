@@ -21,12 +21,13 @@ namespace __GeneratedOdataV3.CstNodes.Rules
         
         public sealed class _ʺx5Cʺ : _escape
         {
-            public _ʺx5Cʺ(__GeneratedOdataV3.CstNodes.Inners._ʺx5Cʺ _ʺx5Cʺ_1)
+            private _ʺx5Cʺ()
             {
-                this._ʺx5Cʺ_1 = _ʺx5Cʺ_1;
+                this._ʺx5Cʺ_1 = __GeneratedOdataV3.CstNodes.Inners._ʺx5Cʺ.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Inners._ʺx5Cʺ _ʺx5Cʺ_1 { get; }
+            public static _ʺx5Cʺ Instance { get; } = new _ʺx5Cʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -36,12 +37,13 @@ namespace __GeneratedOdataV3.CstNodes.Rules
         
         public sealed class _ʺx25x35x43ʺ : _escape
         {
-            public _ʺx25x35x43ʺ(__GeneratedOdataV3.CstNodes.Inners._ʺx25x35x43ʺ _ʺx25x35x43ʺ_1)
+            private _ʺx25x35x43ʺ()
             {
-                this._ʺx25x35x43ʺ_1 = _ʺx25x35x43ʺ_1;
+                this._ʺx25x35x43ʺ_1 = __GeneratedOdataV3.CstNodes.Inners._ʺx25x35x43ʺ.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Inners._ʺx25x35x43ʺ _ʺx25x35x43ʺ_1 { get; }
+            public static _ʺx25x35x43ʺ Instance { get; } = new _ʺx25x35x43ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

@@ -24,7 +24,7 @@ if (!_ref_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._refⳆOPEN_levels_CLOSE._ref)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._refⳆOPEN_levels_CLOSE._ref(_ref_1.Parsed), _ref_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Inners._refⳆOPEN_levels_CLOSE._ref.Instance, _ref_1.Remainder);
                 }
             }
         }

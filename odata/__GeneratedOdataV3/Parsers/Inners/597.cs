@@ -24,7 +24,7 @@ if (!_SP_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._SP)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._SP(_SP_1.Parsed), _SP_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._SP.Instance, _SP_1.Remainder);
                 }
             }
         }
@@ -47,7 +47,7 @@ if (!_HTAB_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._HTAB)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._HTAB(_HTAB_1.Parsed), _HTAB_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Inners._SPⳆHTAB._HTAB.Instance, _HTAB_1.Remainder);
                 }
             }
         }

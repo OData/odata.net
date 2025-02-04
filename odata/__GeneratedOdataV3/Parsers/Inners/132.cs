@@ -53,7 +53,7 @@ if (!_ʺx6Dx61x78ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._oneToNine_ЖDIGITⳆʺx6Dx61x78ʺ._ʺx6Dx61x78ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._oneToNine_ЖDIGITⳆʺx6Dx61x78ʺ._ʺx6Dx61x78ʺ(_ʺx6Dx61x78ʺ_1.Parsed), _ʺx6Dx61x78ʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Inners._oneToNine_ЖDIGITⳆʺx6Dx61x78ʺ._ʺx6Dx61x78ʺ.Instance, _ʺx6Dx61x78ʺ_1.Remainder);
                 }
             }
         }

@@ -55,12 +55,13 @@ namespace __GeneratedOdataV3.CstNodes.Inners
         
         public sealed class _ref : _ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue
         {
-            public _ref(__GeneratedOdataV3.CstNodes.Rules._ref _ref_1)
+            private _ref()
             {
-                this._ref_1 = _ref_1;
+                this._ref_1 = __GeneratedOdataV3.CstNodes.Rules._ref.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Rules._ref _ref_1 { get; }
+            public static _ref Instance { get; } = new _ref();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -70,12 +71,13 @@ namespace __GeneratedOdataV3.CstNodes.Inners
         
         public sealed class _value : _ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue
         {
-            public _value(__GeneratedOdataV3.CstNodes.Rules._value _value_1)
+            private _value()
             {
-                this._value_1 = _value_1;
+                this._value_1 = __GeneratedOdataV3.CstNodes.Rules._value.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Rules._value _value_1 { get; }
+            public static _value Instance { get; } = new _value();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

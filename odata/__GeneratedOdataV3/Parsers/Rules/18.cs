@@ -24,7 +24,7 @@ if (!_value_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._primitivePath._value)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._primitivePath._value(_value_1.Parsed), _value_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._primitivePath._value.Instance, _value_1.Remainder);
                 }
             }
         }

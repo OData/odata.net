@@ -24,7 +24,7 @@ if (!_ʺx5Cʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._escape._ʺx5Cʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._escape._ʺx5Cʺ(_ʺx5Cʺ_1.Parsed), _ʺx5Cʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._escape._ʺx5Cʺ.Instance, _ʺx5Cʺ_1.Remainder);
                 }
             }
         }
@@ -47,7 +47,7 @@ if (!_ʺx25x35x43ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._escape._ʺx25x35x43ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._escape._ʺx25x35x43ʺ(_ʺx25x35x43ʺ_1.Parsed), _ʺx25x35x43ʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._escape._ʺx25x35x43ʺ.Instance, _ʺx25x35x43ʺ_1.Remainder);
                 }
             }
         }

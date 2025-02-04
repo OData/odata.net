@@ -24,7 +24,7 @@ if (!_ʺx7Dʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ʺx7DʺⳆʺx25x37x44ʺ._ʺx7Dʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx7DʺⳆʺx25x37x44ʺ._ʺx7Dʺ(_ʺx7Dʺ_1.Parsed), _ʺx7Dʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Inners._ʺx7DʺⳆʺx25x37x44ʺ._ʺx7Dʺ.Instance, _ʺx7Dʺ_1.Remainder);
                 }
             }
         }
@@ -47,7 +47,7 @@ if (!_ʺx25x37x44ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._ʺx7DʺⳆʺx25x37x44ʺ._ʺx25x37x44ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._ʺx7DʺⳆʺx25x37x44ʺ._ʺx25x37x44ʺ(_ʺx25x37x44ʺ_1.Parsed), _ʺx25x37x44ʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Inners._ʺx7DʺⳆʺx25x37x44ʺ._ʺx25x37x44ʺ.Instance, _ʺx25x37x44ʺ_1.Remainder);
                 }
             }
         }

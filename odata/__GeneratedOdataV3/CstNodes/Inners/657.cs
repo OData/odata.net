@@ -68,12 +68,13 @@ namespace __GeneratedOdataV3.CstNodes.Inners
         
         public sealed class _ʺx3Aʺ : _unreservedⳆpctⲻencodedⳆsubⲻdelimsⳆʺx3Aʺ
         {
-            public _ʺx3Aʺ(__GeneratedOdataV3.CstNodes.Inners._ʺx3Aʺ _ʺx3Aʺ_1)
+            private _ʺx3Aʺ()
             {
-                this._ʺx3Aʺ_1 = _ʺx3Aʺ_1;
+                this._ʺx3Aʺ_1 = __GeneratedOdataV3.CstNodes.Inners._ʺx3Aʺ.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Inners._ʺx3Aʺ _ʺx3Aʺ_1 { get; }
+            public static _ʺx3Aʺ Instance { get; } = new _ʺx3Aʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

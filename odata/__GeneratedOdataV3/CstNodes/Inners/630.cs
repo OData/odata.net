@@ -23,12 +23,13 @@ namespace __GeneratedOdataV3.CstNodes.Inners
         
         public sealed class _SP : _SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ
         {
-            public _SP(__GeneratedOdataV3.CstNodes.Rules._SP _SP_1)
+            private _SP()
             {
-                this._SP_1 = _SP_1;
+                this._SP_1 = __GeneratedOdataV3.CstNodes.Rules._SP.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Rules._SP _SP_1 { get; }
+            public static _SP Instance { get; } = new _SP();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -38,12 +39,13 @@ namespace __GeneratedOdataV3.CstNodes.Inners
         
         public sealed class _HTAB : _SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ
         {
-            public _HTAB(__GeneratedOdataV3.CstNodes.Rules._HTAB _HTAB_1)
+            private _HTAB()
             {
-                this._HTAB_1 = _HTAB_1;
+                this._HTAB_1 = __GeneratedOdataV3.CstNodes.Rules._HTAB.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Rules._HTAB _HTAB_1 { get; }
+            public static _HTAB Instance { get; } = new _HTAB();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -53,12 +55,13 @@ namespace __GeneratedOdataV3.CstNodes.Inners
         
         public sealed class _ʺx25x32x30ʺ : _SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ
         {
-            public _ʺx25x32x30ʺ(__GeneratedOdataV3.CstNodes.Inners._ʺx25x32x30ʺ _ʺx25x32x30ʺ_1)
+            private _ʺx25x32x30ʺ()
             {
-                this._ʺx25x32x30ʺ_1 = _ʺx25x32x30ʺ_1;
+                this._ʺx25x32x30ʺ_1 = __GeneratedOdataV3.CstNodes.Inners._ʺx25x32x30ʺ.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Inners._ʺx25x32x30ʺ _ʺx25x32x30ʺ_1 { get; }
+            public static _ʺx25x32x30ʺ Instance { get; } = new _ʺx25x32x30ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -68,12 +71,13 @@ namespace __GeneratedOdataV3.CstNodes.Inners
         
         public sealed class _ʺx25x30x39ʺ : _SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ
         {
-            public _ʺx25x30x39ʺ(__GeneratedOdataV3.CstNodes.Inners._ʺx25x30x39ʺ _ʺx25x30x39ʺ_1)
+            private _ʺx25x30x39ʺ()
             {
-                this._ʺx25x30x39ʺ_1 = _ʺx25x30x39ʺ_1;
+                this._ʺx25x30x39ʺ_1 = __GeneratedOdataV3.CstNodes.Inners._ʺx25x30x39ʺ.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Inners._ʺx25x30x39ʺ _ʺx25x30x39ʺ_1 { get; }
+            public static _ʺx25x30x39ʺ Instance { get; } = new _ʺx25x30x39ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

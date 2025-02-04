@@ -134,7 +134,7 @@ if (!_count_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionNavPath._count)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._count(_count_1.Parsed), _count_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._count.Instance, _count_1.Remainder);
                 }
             }
         }
@@ -157,7 +157,7 @@ if (!_ref_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._collectionNavPath._ref)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._ref(_ref_1.Parsed), _ref_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._collectionNavPath._ref.Instance, _ref_1.Remainder);
                 }
             }
         }

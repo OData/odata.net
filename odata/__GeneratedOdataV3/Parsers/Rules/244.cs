@@ -24,7 +24,7 @@ if (!_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_1.Parsed), _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ.Instance, _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Eʺ_1.Remainder);
                 }
             }
         }
@@ -47,7 +47,7 @@ if (!_ʺx4Cx69x6Ex65x53x74x72x69x6Ex67ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx4Cx69x6Ex65x53x74x72x69x6Ex67ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx4Cx69x6Ex65x53x74x72x69x6Ex67ʺ(_ʺx4Cx69x6Ex65x53x74x72x69x6Ex67ʺ_1.Parsed), _ʺx4Cx69x6Ex65x53x74x72x69x6Ex67ʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx4Cx69x6Ex65x53x74x72x69x6Ex67ʺ.Instance, _ʺx4Cx69x6Ex65x53x74x72x69x6Ex67ʺ_1.Remainder);
                 }
             }
         }
@@ -70,7 +70,7 @@ if (!_ʺx4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67ʺ(_ʺx4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67ʺ_1.Parsed), _ʺx4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67ʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67ʺ.Instance, _ʺx4Dx75x6Cx74x69x4Cx69x6Ex65x53x74x72x69x6Ex67ʺ_1.Remainder);
                 }
             }
         }
@@ -93,7 +93,7 @@ if (!_ʺx4Dx75x6Cx74x69x50x6Fx69x6Ex74ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx4Dx75x6Cx74x69x50x6Fx69x6Ex74ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx4Dx75x6Cx74x69x50x6Fx69x6Ex74ʺ(_ʺx4Dx75x6Cx74x69x50x6Fx69x6Ex74ʺ_1.Parsed), _ʺx4Dx75x6Cx74x69x50x6Fx69x6Ex74ʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx4Dx75x6Cx74x69x50x6Fx69x6Ex74ʺ.Instance, _ʺx4Dx75x6Cx74x69x50x6Fx69x6Ex74ʺ_1.Remainder);
                 }
             }
         }
@@ -116,7 +116,7 @@ if (!_ʺx4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Eʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Eʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Eʺ(_ʺx4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Eʺ_1.Parsed), _ʺx4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Eʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Eʺ.Instance, _ʺx4Dx75x6Cx74x69x50x6Fx6Cx79x67x6Fx6Eʺ_1.Remainder);
                 }
             }
         }
@@ -139,7 +139,7 @@ if (!_ʺx50x6Fx69x6Ex74ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx50x6Fx69x6Ex74ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx50x6Fx69x6Ex74ʺ(_ʺx50x6Fx69x6Ex74ʺ_1.Parsed), _ʺx50x6Fx69x6Ex74ʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx50x6Fx69x6Ex74ʺ.Instance, _ʺx50x6Fx69x6Ex74ʺ_1.Remainder);
                 }
             }
         }
@@ -162,7 +162,7 @@ if (!_ʺx50x6Fx6Cx79x67x6Fx6Eʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx50x6Fx6Cx79x67x6Fx6Eʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx50x6Fx6Cx79x67x6Fx6Eʺ(_ʺx50x6Fx6Cx79x67x6Fx6Eʺ_1.Parsed), _ʺx50x6Fx6Cx79x67x6Fx6Eʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._concreteSpatialTypeName._ʺx50x6Fx6Cx79x67x6Fx6Eʺ.Instance, _ʺx50x6Fx6Cx79x67x6Fx6Eʺ_1.Remainder);
                 }
             }
         }

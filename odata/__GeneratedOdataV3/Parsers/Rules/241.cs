@@ -47,7 +47,7 @@ if (!_ʺx5Fʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._identifierCharacter._ʺx5Fʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._identifierCharacter._ʺx5Fʺ(_ʺx5Fʺ_1.Parsed), _ʺx5Fʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._identifierCharacter._ʺx5Fʺ.Instance, _ʺx5Fʺ_1.Remainder);
                 }
             }
         }

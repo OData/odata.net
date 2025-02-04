@@ -21,12 +21,13 @@ namespace __GeneratedOdataV3.CstNodes.Inners
         
         public sealed class _ʺx5Aʺ : _ʺx5AʺⳆSIGN_hour_ʺx3Aʺ_minute
         {
-            public _ʺx5Aʺ(__GeneratedOdataV3.CstNodes.Inners._ʺx5Aʺ _ʺx5Aʺ_1)
+            private _ʺx5Aʺ()
             {
-                this._ʺx5Aʺ_1 = _ʺx5Aʺ_1;
+                this._ʺx5Aʺ_1 = __GeneratedOdataV3.CstNodes.Inners._ʺx5Aʺ.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Inners._ʺx5Aʺ _ʺx5Aʺ_1 { get; }
+            public static _ʺx5Aʺ Instance { get; } = new _ʺx5Aʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

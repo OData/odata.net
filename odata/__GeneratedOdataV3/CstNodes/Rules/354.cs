@@ -103,12 +103,13 @@ namespace __GeneratedOdataV3.CstNodes.Rules
         
         public sealed class _respondAsyncPreference : _preference
         {
-            public _respondAsyncPreference(__GeneratedOdataV3.CstNodes.Rules._respondAsyncPreference _respondAsyncPreference_1)
+            private _respondAsyncPreference()
             {
-                this._respondAsyncPreference_1 = _respondAsyncPreference_1;
+                this._respondAsyncPreference_1 = __GeneratedOdataV3.CstNodes.Rules._respondAsyncPreference.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Rules._respondAsyncPreference _respondAsyncPreference_1 { get; }
+            public static _respondAsyncPreference Instance { get; } = new _respondAsyncPreference();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

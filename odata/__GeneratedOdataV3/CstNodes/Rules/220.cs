@@ -21,12 +21,13 @@ namespace __GeneratedOdataV3.CstNodes.Rules
         
         public sealed class _ʺx30ʺ : _int
         {
-            public _ʺx30ʺ(__GeneratedOdataV3.CstNodes.Inners._ʺx30ʺ _ʺx30ʺ_1)
+            private _ʺx30ʺ()
             {
-                this._ʺx30ʺ_1 = _ʺx30ʺ_1;
+                this._ʺx30ʺ_1 = __GeneratedOdataV3.CstNodes.Inners._ʺx30ʺ.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Inners._ʺx30ʺ _ʺx30ʺ_1 { get; }
+            public static _ʺx30ʺ Instance { get; } = new _ʺx30ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

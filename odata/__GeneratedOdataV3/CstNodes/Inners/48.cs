@@ -21,12 +21,13 @@ namespace __GeneratedOdataV3.CstNodes.Inners
         
         public sealed class _count : _countⳆboundOperation
         {
-            public _count(__GeneratedOdataV3.CstNodes.Rules._count _count_1)
+            private _count()
             {
-                this._count_1 = _count_1;
+                this._count_1 = __GeneratedOdataV3.CstNodes.Rules._count.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Rules._count _count_1 { get; }
+            public static _count Instance { get; } = new _count();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

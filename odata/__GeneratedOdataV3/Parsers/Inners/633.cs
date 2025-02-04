@@ -70,7 +70,7 @@ if (!_ʺx3Aʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._unreservedⳆsubⲻdelimsⳆʺx3Aʺ._ʺx3Aʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._unreservedⳆsubⲻdelimsⳆʺx3Aʺ._ʺx3Aʺ(_ʺx3Aʺ_1.Parsed), _ʺx3Aʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Inners._unreservedⳆsubⲻdelimsⳆʺx3Aʺ._ʺx3Aʺ.Instance, _ʺx3Aʺ_1.Remainder);
                 }
             }
         }

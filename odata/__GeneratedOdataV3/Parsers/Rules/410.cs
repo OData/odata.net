@@ -93,7 +93,7 @@ if (!_ʺx24ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx24ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx24ʺ(_ʺx24ʺ_1.Parsed), _ʺx24ʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx24ʺ.Instance, _ʺx24ʺ_1.Remainder);
                 }
             }
         }
@@ -116,7 +116,7 @@ if (!_ʺx26ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx26ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx26ʺ(_ʺx26ʺ_1.Parsed), _ʺx26ʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx26ʺ.Instance, _ʺx26ʺ_1.Remainder);
                 }
             }
         }
@@ -139,7 +139,7 @@ if (!_ʺx3Dʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx3Dʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx3Dʺ(_ʺx3Dʺ_1.Parsed), _ʺx3Dʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx3Dʺ.Instance, _ʺx3Dʺ_1.Remainder);
                 }
             }
         }
@@ -162,7 +162,7 @@ if (!_ʺx3Aʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx3Aʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx3Aʺ(_ʺx3Aʺ_1.Parsed), _ʺx3Aʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx3Aʺ.Instance, _ʺx3Aʺ_1.Remainder);
                 }
             }
         }
@@ -185,7 +185,7 @@ if (!_ʺx40ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx40ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx40ʺ(_ʺx40ʺ_1.Parsed), _ʺx40ʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx40ʺ.Instance, _ʺx40ʺ_1.Remainder);
                 }
             }
         }

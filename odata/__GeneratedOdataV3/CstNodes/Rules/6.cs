@@ -91,12 +91,13 @@ namespace __GeneratedOdataV3.CstNodes.Rules
         
         public sealed class _count : _collectionNavPath
         {
-            public _count(__GeneratedOdataV3.CstNodes.Rules._count _count_1)
+            private _count()
             {
-                this._count_1 = _count_1;
+                this._count_1 = __GeneratedOdataV3.CstNodes.Rules._count.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Rules._count _count_1 { get; }
+            public static _count Instance { get; } = new _count();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -106,12 +107,13 @@ namespace __GeneratedOdataV3.CstNodes.Rules
         
         public sealed class _ref : _collectionNavPath
         {
-            public _ref(__GeneratedOdataV3.CstNodes.Rules._ref _ref_1)
+            private _ref()
             {
-                this._ref_1 = _ref_1;
+                this._ref_1 = __GeneratedOdataV3.CstNodes.Rules._ref.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Rules._ref _ref_1 { get; }
+            public static _ref Instance { get; } = new _ref();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

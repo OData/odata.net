@@ -24,7 +24,7 @@ if (!_SP_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ._SP)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ._SP(_SP_1.Parsed), _SP_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Inners._SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ._SP.Instance, _SP_1.Remainder);
                 }
             }
         }
@@ -47,7 +47,7 @@ if (!_HTAB_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ._HTAB)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ._HTAB(_HTAB_1.Parsed), _HTAB_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Inners._SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ._HTAB.Instance, _HTAB_1.Remainder);
                 }
             }
         }
@@ -70,7 +70,7 @@ if (!_ʺx25x32x30ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ._ʺx25x32x30ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ._ʺx25x32x30ʺ(_ʺx25x32x30ʺ_1.Parsed), _ʺx25x32x30ʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Inners._SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ._ʺx25x32x30ʺ.Instance, _ʺx25x32x30ʺ_1.Remainder);
                 }
             }
         }
@@ -93,7 +93,7 @@ if (!_ʺx25x30x39ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Inners._SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ._ʺx25x30x39ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Inners._SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ._ʺx25x30x39ʺ(_ʺx25x30x39ʺ_1.Parsed), _ʺx25x30x39ʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Inners._SPⳆHTABⳆʺx25x32x30ʺⳆʺx25x30x39ʺ._ʺx25x30x39ʺ.Instance, _ʺx25x30x39ʺ_1.Remainder);
                 }
             }
         }

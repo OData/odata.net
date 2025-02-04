@@ -21,12 +21,13 @@ namespace __GeneratedOdataV3.CstNodes.Inners
         
         public sealed class _ʺx31ʺ : _ʺx31ʺⳆʺx32ʺ
         {
-            public _ʺx31ʺ(__GeneratedOdataV3.CstNodes.Inners._ʺx31ʺ _ʺx31ʺ_1)
+            private _ʺx31ʺ()
             {
-                this._ʺx31ʺ_1 = _ʺx31ʺ_1;
+                this._ʺx31ʺ_1 = __GeneratedOdataV3.CstNodes.Inners._ʺx31ʺ.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Inners._ʺx31ʺ _ʺx31ʺ_1 { get; }
+            public static _ʺx31ʺ Instance { get; } = new _ʺx31ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -36,12 +37,13 @@ namespace __GeneratedOdataV3.CstNodes.Inners
         
         public sealed class _ʺx32ʺ : _ʺx31ʺⳆʺx32ʺ
         {
-            public _ʺx32ʺ(__GeneratedOdataV3.CstNodes.Inners._ʺx32ʺ _ʺx32ʺ_1)
+            private _ʺx32ʺ()
             {
-                this._ʺx32ʺ_1 = _ʺx32ʺ_1;
+                this._ʺx32ʺ_1 = __GeneratedOdataV3.CstNodes.Inners._ʺx32ʺ.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Inners._ʺx32ʺ _ʺx32ʺ_1 { get; }
+            public static _ʺx32ʺ Instance { get; } = new _ʺx32ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

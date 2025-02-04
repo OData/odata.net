@@ -51,12 +51,13 @@ namespace __GeneratedOdataV3.CstNodes.Rules
         
         public sealed class _nullValue : _primitiveLiteral
         {
-            public _nullValue(__GeneratedOdataV3.CstNodes.Rules._nullValue _nullValue_1)
+            private _nullValue()
             {
-                this._nullValue_1 = _nullValue_1;
+                this._nullValue_1 = __GeneratedOdataV3.CstNodes.Rules._nullValue.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Rules._nullValue _nullValue_1 { get; }
+            public static _nullValue Instance { get; } = new _nullValue();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

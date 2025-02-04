@@ -53,12 +53,13 @@ namespace __GeneratedOdataV3.CstNodes.Rules
         
         public sealed class _ʺx2Dʺ : _base64char
         {
-            public _ʺx2Dʺ(__GeneratedOdataV3.CstNodes.Inners._ʺx2Dʺ _ʺx2Dʺ_1)
+            private _ʺx2Dʺ()
             {
-                this._ʺx2Dʺ_1 = _ʺx2Dʺ_1;
+                this._ʺx2Dʺ_1 = __GeneratedOdataV3.CstNodes.Inners._ʺx2Dʺ.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Inners._ʺx2Dʺ _ʺx2Dʺ_1 { get; }
+            public static _ʺx2Dʺ Instance { get; } = new _ʺx2Dʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -68,12 +69,13 @@ namespace __GeneratedOdataV3.CstNodes.Rules
         
         public sealed class _ʺx5Fʺ : _base64char
         {
-            public _ʺx5Fʺ(__GeneratedOdataV3.CstNodes.Inners._ʺx5Fʺ _ʺx5Fʺ_1)
+            private _ʺx5Fʺ()
             {
-                this._ʺx5Fʺ_1 = _ʺx5Fʺ_1;
+                this._ʺx5Fʺ_1 = __GeneratedOdataV3.CstNodes.Inners._ʺx5Fʺ.Instance;
             }
             
             public __GeneratedOdataV3.CstNodes.Inners._ʺx5Fʺ _ʺx5Fʺ_1 { get; }
+            public static _ʺx5Fʺ Instance { get; } = new _ʺx5Fʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

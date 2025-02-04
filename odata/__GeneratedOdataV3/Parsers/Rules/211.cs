@@ -24,7 +24,7 @@ if (!_DQUOTE_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._quotationⲻmark._DQUOTE)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._quotationⲻmark._DQUOTE(_DQUOTE_1.Parsed), _DQUOTE_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._quotationⲻmark._DQUOTE.Instance, _DQUOTE_1.Remainder);
                 }
             }
         }
@@ -47,7 +47,7 @@ if (!_ʺx25x32x32ʺ_1.Success)
     return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._quotationⲻmark._ʺx25x32x32ʺ)!, input);
 }
 
-return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._quotationⲻmark._ʺx25x32x32ʺ(_ʺx25x32x32ʺ_1.Parsed), _ʺx25x32x32ʺ_1.Remainder);
+return Output.Create(true, __GeneratedOdataV3.CstNodes.Rules._quotationⲻmark._ʺx25x32x32ʺ.Instance, _ʺx25x32x32ʺ_1.Remainder);
                 }
             }
         }

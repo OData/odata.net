@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Transactions;
     using AbnfParserGenerator;
 
@@ -48,46 +49,90 @@
             for (int i = 0; i < toOptimize.Classes.Count; ++i)
             {
                 var cstNode = toOptimize.Classes[i];
-                if (!IsSingleton(cstNode) && cstNode.Properties.Any() && cstNode.Properties.All(property => IsSingleton(property.Type, toOptimize, other)))
+                var optimized = Optimize(cstNode, toOptimize.Name + ".", toOptimize, other);
+                if (optimized != null)
                 {
-                    var optimized = new Class(
-                        cstNode.AccessModifier,
-                        cstNode.ClassModifier,
-                        cstNode.Name,
-                        cstNode.GenericTypeParameters,
-                        cstNode.BaseType,
-                        new[]
-                        {
-                            new ConstructorDefinition(
-                                AccessModifier.Private,
-                                Enumerable.Empty<MethodParameter>(),
-                                cstNode
-                                    .Properties
-                                    .Select(
-                                        property => $"this.{property.Name} = {property.Type}.Instance;")),
-                        },
-                        cstNode.Methods,
-                        cstNode.NestedClasses,
-                        cstNode
-                            .Properties
-                            .Append(
-                                new PropertyDefinition(
-                                    AccessModifier.Public,
-                                    true,
-                                    $"{toOptimize.Name}.{cstNode.Name}",
-                                    "Instance",
-                                    true,
-                                    false,
-                                    $"new {toOptimize.Name}.{cstNode.Name}();"))
-                        );
-
                     toOptimize.Classes[i] = optimized;
-
                     modified = true;
                 }
             }
 
             return modified;
+        }
+
+        private Class? Optimize(Class @class, string namespacePrefix, Namespace first, Namespace second)
+        {
+            var modified = false;
+
+            var optimizedNested = new List<Class>();
+            foreach (var nested in @class.NestedClasses)
+            {
+                if (nested.Name == "Visitor")
+                {
+                    optimizedNested.Add(nested);
+                    continue;
+                }
+
+                var optimized = Optimize(nested, string.Empty, first, second);
+                if (optimized == null)
+                {
+                    optimizedNested.Add(nested);
+                }
+                else
+                {
+                    modified = true;
+                    optimizedNested.Add(optimized);
+                }
+            }
+
+            if (!IsSingleton(@class) && @class.Properties.Any() && @class.Properties.All(property => IsSingleton(property.Type, first, second)))
+            {
+                return new Class(
+                    @class.AccessModifier,
+                    @class.ClassModifier,
+                    @class.Name,
+                    @class.GenericTypeParameters,
+                    @class.BaseType,
+                    new[]
+                    {
+                            new ConstructorDefinition(
+                                AccessModifier.Private,
+                                Enumerable.Empty<MethodParameter>(),
+                                @class
+                                    .Properties
+                                    .Select(
+                                        property => $"this.{property.Name} = {property.Type}.Instance;")),
+                    },
+                    @class.Methods,
+                    optimizedNested,
+                    @class
+                        .Properties
+                        .Append(
+                            new PropertyDefinition(
+                                AccessModifier.Public,
+                                true,
+                                $"{namespacePrefix}{@class.Name}",
+                                "Instance",
+                                true,
+                                false,
+                                $"new {namespacePrefix}{@class.Name}();"))
+                    );
+            }
+            else if (modified)
+            {
+                return new Class(
+                    @class.AccessModifier,
+                    @class.ClassModifier,
+                    @class.Name,
+                    @class.GenericTypeParameters,
+                    @class.BaseType,
+                    @class.Constructors,
+                    @class.Methods,
+                    optimizedNested,
+                    @class.Properties);
+            }
+
+            return null;
         }
 
         private bool IsSingleton(string fullyQualifiedType, Namespace someNodes, Namespace moreNodes)
