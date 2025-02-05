@@ -103,47 +103,40 @@ public class BatchRequestClientTests : EndToEndTestBase<BatchRequestClientTests.
         // Assert
         Assert.Equal(4, response.Count());
 
-        var changeResponses = response.Cast<ChangeOperationResponse>();
+        var changeResponses = response.Cast<ChangeOperationResponse>().ToList();
 
         Assert.All(changeResponses, changeResponse => Assert.True(changeResponse.StatusCode == 200 || changeResponse.StatusCode == 201));
 
-        var accountCreatedResponse = changeResponses.FirstOrDefault(r => r.StatusCode == 201 && r.Descriptor is EntityDescriptor descriptor && descriptor.Entity is Account);
-        var accountUpdatedResponse = changeResponses.FirstOrDefault(r => r.StatusCode == 200 && r.Descriptor is EntityDescriptor descriptor && descriptor.Entity is Account);
-        var paymentInstrumentCreatedResponse = changeResponses.FirstOrDefault(r => r.Descriptor is EntityDescriptor descriptor && descriptor.Entity is PaymentInstrument);
-        var statementCreatedResponse = changeResponses.FirstOrDefault(r => r.Descriptor is EntityDescriptor descriptor && descriptor.Entity is Statement);
-
         // Account 110 is created
+        var accountCreatedResponse = ((EntityDescriptor)changeResponses[0].Descriptor).Entity as Account;
         Assert.NotNull(accountCreatedResponse);
-        var accountCreated = Assert.IsType<Account>((accountCreatedResponse.Descriptor as EntityDescriptor)?.Entity);
-        Assert.NotNull(accountCreated);
-        Assert.Equal(110, accountCreated.AccountID);
-        Assert.Equal("US", accountCreated.CountryRegion);
-        Assert.Null(accountCreated.AccountInfo);
+        Assert.Equal(110, accountCreatedResponse.AccountID);
+        Assert.Equal("US", accountCreatedResponse.CountryRegion);
+        Assert.Null(accountCreatedResponse.AccountInfo);
 
         // Account 107 is updated
+        var accountUpdatedResponse = ((EntityDescriptor)changeResponses[3].Descriptor).Entity as Account;
         Assert.NotNull(accountUpdatedResponse);
-        var accountUpdated = Assert.IsType<Account>((accountUpdatedResponse.Descriptor as EntityDescriptor)?.Entity);
-        Assert.NotNull(accountUpdated);
-        Assert.Equal(107, accountUpdated.AccountID);
-        Assert.Equal("FR", accountUpdated.CountryRegion);
-        Assert.Equal(now, accountUpdated.UpdatedTime);
-        Assert.Equal("John", accountUpdated.AccountInfo.FirstName);
-        Assert.Equal("Doe", accountUpdated.AccountInfo.LastName);
+        Assert.Equal(107, accountUpdatedResponse.AccountID);
+        Assert.Equal("FR", accountUpdatedResponse.CountryRegion);
+        Assert.Equal(now, accountUpdatedResponse.UpdatedTime);
+        Assert.Equal("John", accountUpdatedResponse.AccountInfo.FirstName);
+        Assert.Equal("Doe", accountUpdatedResponse.AccountInfo.LastName);
 
         // PaymentInstrument 102910 is created
+        var paymentInstrumentCreatedResponse = ((EntityDescriptor)changeResponses[1].Descriptor).Entity as PaymentInstrument;
         Assert.NotNull(paymentInstrumentCreatedResponse);
-        var paymentInstrumentCreated = Assert.IsType<PaymentInstrument>((paymentInstrumentCreatedResponse.Descriptor as EntityDescriptor)?.Entity);
-        Assert.NotNull(paymentInstrumentCreated);
-        Assert.Equal(102910, paymentInstrumentCreated.PaymentInstrumentID);
-        Assert.Equal("102 batch new PI", paymentInstrumentCreated.FriendlyName);
+        Assert.NotNull(paymentInstrumentCreatedResponse);
+        Assert.Equal(102910, paymentInstrumentCreatedResponse.PaymentInstrumentID);
+        Assert.Equal("102 batch new PI", paymentInstrumentCreatedResponse.FriendlyName);
 
         // Statement 102910010 is created
+        var statementCreatedResponse = ((EntityDescriptor)changeResponses[2].Descriptor).Entity as Statement;
         Assert.NotNull(statementCreatedResponse);
-        var statementCreated = Assert.IsType<Statement>((statementCreatedResponse.Descriptor as EntityDescriptor)?.Entity);
-        Assert.NotNull(statementCreated);
-        Assert.Equal(102910010, statementCreated.StatementID);
-        Assert.Equal(1000, statementCreated.Amount);
-        Assert.Equal("Digital goods: PC", statementCreated.TransactionDescription);
+        Assert.NotNull(statementCreatedResponse);
+        Assert.Equal(102910010, statementCreatedResponse.StatementID);
+        Assert.Equal(1000, statementCreatedResponse.Amount);
+        Assert.Equal("Digital goods: PC", statementCreatedResponse.TransactionDescription);
     }
 
     [Fact]
@@ -160,35 +153,31 @@ public class BatchRequestClientTests : EndToEndTestBase<BatchRequestClientTests.
         // Act
         var response = await _context.ExecuteBatchAsync(SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.UseRelativeUri, batchRequest);
 
+        var operationResponses = response.ToList();
+
         // Assert
-        foreach (var operationResponse in response)
-        {
-            if (operationResponse is QueryOperationResponse<PaymentInstrument> paymentInstrumentResponse)
-            {
-                Assert.Equal(200, paymentInstrumentResponse.StatusCode);
-                var paymentInstruments = paymentInstrumentResponse.ToList();
-                Assert.Equal(3, paymentInstruments.Count);
-            }
+        var accountResponse = operationResponses[0] as QueryOperationResponse<Account>;
+        Assert.NotNull(accountResponse);
+        Assert.Equal(200, accountResponse.StatusCode);
+        var accounts = accountResponse.ToList();
+        Assert.Single(accounts);
+        Assert.Equal(102, accounts[0].AccountID);
+        Assert.Equal("GB", accounts[0].CountryRegion);
 
-            else if (operationResponse is QueryOperationResponse<Statement> statementResponse)
-            {
-                Assert.Equal(200, statementResponse.StatusCode);
-                var statements = statementResponse.ToList();
-                Assert.Single(statements);
-                Assert.Equal(103901001, statements[0].StatementID);
-                Assert.Equal(100, statements[0].Amount);
-                Assert.Equal("Digital goods: App", statements[0].TransactionDescription);
-            }
+        var paymentInstrumentResponse = operationResponses[1] as QueryOperationResponse<PaymentInstrument>;
+        Assert.NotNull(paymentInstrumentResponse);
+        Assert.Equal(200, paymentInstrumentResponse.StatusCode);
+        var paymentInstruments = paymentInstrumentResponse.ToList();
+        Assert.Equal(3, paymentInstruments.Count);
 
-            else if (operationResponse is QueryOperationResponse<Account> accountResponse)
-            {
-                Assert.Equal(200, accountResponse.StatusCode);
-                var accounts = accountResponse.ToList();
-                Assert.Single(accounts);
-                Assert.Equal(102, accounts[0].AccountID);
-                Assert.Equal("GB", accounts[0].CountryRegion);
-            }
-        }
+        var statementResponse = operationResponses[2] as QueryOperationResponse<Statement>;
+        Assert.NotNull(statementResponse);
+        Assert.Equal(200, statementResponse.StatusCode);
+        var statements = statementResponse.ToList();
+        Assert.Single(statements);
+        Assert.Equal(103901001, statements[0].StatementID);
+        Assert.Equal(100, statements[0].Amount);
+        Assert.Equal("Digital goods: App", statements[0].TransactionDescription);
     }
 
     #region Private methods
