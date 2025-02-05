@@ -242,6 +242,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
         var source = new CancellationTokenSource();
         var car = new Car { VIN = 1000 };
 
+        var mediaEntry = new MemoryStream(new byte[] { 64, 65, 66 });
+
         // Act & Assert
         _context.AddToCars(car);
 
