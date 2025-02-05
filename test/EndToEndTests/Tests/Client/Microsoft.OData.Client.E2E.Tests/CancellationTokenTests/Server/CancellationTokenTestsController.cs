@@ -7,7 +7,6 @@
 
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -40,21 +39,6 @@ public class CancellationTokenTestsController : ODataController
         }
 
         return Ok(customer);
-    }
-
-    [EnableQuery]
-    [HttpGet("odata/Cars({key})/$value")]
-    public IActionResult GetCarValue([FromODataUri] int key, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        var car = _dataSource.Cars?.FirstOrDefault(c => c.VIN == key);
-        if (car == null)
-        {
-            return NotFound();
-        }
-
-        return Ok(car?.Photo);
     }
 
     [HttpPost("odata/Customers")]
@@ -125,14 +109,9 @@ public class CancellationTokenTestsController : ODataController
     }
 
     [HttpPost("odata/Cars")]
-    public IActionResult AddCar([FromBody] Car car, CancellationToken cancellationToken)
+    public async Task<IActionResult> AddCar([FromBody] Car car, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-
-        if(car == null)
-        {
-            car = new Car();
-        }
 
         _dataSource.Cars?.Add(car);
         return Created(car);
@@ -152,21 +131,6 @@ public class CancellationTokenTestsController : ODataController
         var photo = Request.Body;
         car.Photo = photo;
         return Ok();
-    }
-
-    [HttpPatch("odata/Cars({key})")]
-    public IActionResult UpdateCar([FromODataUri] int key, Delta<Car> delta, CancellationToken cancellationToken)
-    {
-        cancellationToken.ThrowIfCancellationRequested();
-
-        var car = _dataSource.Cars?.FirstOrDefault(c => c.VIN == key);
-        if (car == null)
-        {
-            return NotFound();
-        }
-
-        var updated = delta.Patch(car);
-        return Updated(updated);
     }
 
     [HttpPost("odata/cancellationtokentests/Default.ResetDefaultDataSource")]

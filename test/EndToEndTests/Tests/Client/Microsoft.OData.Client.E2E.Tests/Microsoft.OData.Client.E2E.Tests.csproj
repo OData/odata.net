@@ -14,6 +14,7 @@
     <None Remove="Common\Client\Default\DefaultServiceCsdl.xml" />
     <None Remove="Common\Client\EndToEnd\EndToEndServiceCsdl.xml" />
     <None Remove="Common\Client\OpenTypes\OpenTypesODataServiceCsdl.xml" />
+    <None Remove="Common\Client\PrimitiveKeys\PrimitiveKeysODataServiceCsdl.xml" />
 	<None Update="Common\Client\MultipleKeys\MultipleKeysEnumKeyServiceCsdl.xml" />
   </ItemGroup>
 
@@ -33,6 +34,9 @@
 	<EmbeddedResource Include="Common\Client\MultipleKeys\MultipleKeysEnumKeyServiceCsdl.xml">
 		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	  </EmbeddedResource>
+	<EmbeddedResource Include="Common\Client\PrimitiveKeys\PrimitiveKeysODataServiceCsdl.xml">
+	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	</EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
