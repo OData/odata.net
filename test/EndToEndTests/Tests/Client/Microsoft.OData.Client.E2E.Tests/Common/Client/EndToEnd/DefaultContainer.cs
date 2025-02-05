@@ -4225,6 +4225,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
     /// CustomerInfoId
     /// </KeyProperties>
     [global::Microsoft.OData.Client.Key("CustomerInfoId")]
+    [global::Microsoft.OData.Client.HasStream()]
     [global::Microsoft.OData.Client.OriginalNameAttribute("CustomerInfo")]
     public partial class CustomerInfo : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
     {
@@ -5690,6 +5691,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
     /// VIN
     /// </KeyProperties>
     [global::Microsoft.OData.Client.Key("VIN")]
+    [global::Microsoft.OData.Client.HasStream()]
     [global::Microsoft.OData.Client.OriginalNameAttribute("Car")]
     public partial class Car : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
     {
