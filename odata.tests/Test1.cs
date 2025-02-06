@@ -252,6 +252,40 @@
             Assert.AreEqual(url, transcribed);
         }
 
+        private static void Perf4Generator(int iterations)
+        {
+            var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
+            var parser = __GeneratedOdataV4.Parsers.Rules._odataRelativeUriParser.Instance;
+            for (int i = 0; i < iterations; ++i)
+            {
+                if (!parser.TryParse(url, out var urlCst))
+                {
+                    throw new Exception("TODO");
+                }
+            }
+        }
+
+        [TestMethod]
+        public void Perf4()
+        {
+            var iterations = 10000;
+            var stopwatch = Stopwatch.StartNew();
+            Perf4Generator(iterations);
+            Console.WriteLine(stopwatch.ElapsedTicks);
+
+            stopwatch = Stopwatch.StartNew();
+            Perf1Odata(iterations);
+            Console.WriteLine(stopwatch.ElapsedTicks);
+
+            stopwatch = Stopwatch.StartNew();
+            Perf4Generator(iterations);
+            Console.WriteLine(stopwatch.ElapsedTicks);
+
+            stopwatch = Stopwatch.StartNew();
+            Perf1Odata(iterations);
+            Console.WriteLine(stopwatch.ElapsedTicks);
+        }
+
         private static void Perf3Generator(int iterations)
         {
             var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
