@@ -1,6 +1,7 @@
 namespace __GeneratedOdataV4.Parsers.Rules
 {
     using System.Linq;
+    using System.Numerics;
     using __GeneratedOdataV4.CstNodes.Rules;
     using CombinatorParsingV2;
 
@@ -290,7 +291,8 @@ namespace __GeneratedOdataV4.Parsers.Rules
 
             public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Parse(CombinatorParsingV3.StringInput input)
             {
-                for (var more = true; more; input = input.Next(out more))
+                bool more;
+                for (more = true; more; input = input.Next(out more))
                 {
                 }
 
@@ -323,7 +325,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
                 return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, CstNodes.Rules._odataRelativeUri>(
                     true,
                     Node,
-                    false,
+                    more,
                     input);
             }
         }
