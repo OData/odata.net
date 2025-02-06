@@ -288,6 +288,10 @@ namespace __GeneratedOdataV4.Parsers.Rules
 
             public IOutput<char, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Parse(IInput<char>? input)
             {
+                while ((input = input?.Next()) != null)
+                {
+                }
+
                 return Output.Create(
                     true,
                     Node,
