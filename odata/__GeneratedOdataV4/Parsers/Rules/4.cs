@@ -12,6 +12,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
         {
             public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath> Parse(CombinatorParsingV3.StringInput input)
             {
+                //// TODO OR
                 var output = _entitySetName_꘡collectionNavigation꘡Parser.Instance2.Parse(input);
                 if (!output.Success)
                 {
