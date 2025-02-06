@@ -15,7 +15,7 @@ namespace CombinatorParsingV3
     /// 
     /// 5 suprisingly has impact, the most out of 1-5. But 6 has the absolute most impact, barely adding any overhead to not traversing the input string at all.
     /// 
-    /// TODO create a repro for all of these options (across both dimensions of type category + try vs non-try)
+    /// TODO it might be good to create a repro of the 10 different options
     /// </summary>
     public ref struct StringInput : IInput<char, StringInput>
     {
