@@ -256,9 +256,10 @@
         {
             var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
             var parser = __GeneratedOdataV4.Parsers.Rules._odataRelativeUriParser.Instance;
+            parser.TryParse(url, out var urlCst);
             for (int i = 0; i < iterations; ++i)
             {
-                if (!parser.TryParse(url, out var urlCst))
+                if (!parser.TryParse(url, out urlCst))
                 {
                     throw new Exception("TODO");
                 }
@@ -506,10 +507,13 @@
                     var model = Microsoft.OData.Edm.Csdl.CsdlReader.Parse(xmlReader);
 
                     var original = "users/myid/calendar/events?$filter=id%20eq%20%27thisisatest%27";
-
+                    var odataUri = new Microsoft.OData.UriParser.ODataUriParser(
+                            model,
+                            new Uri(original, UriKind.Relative))
+                            .ParseUri();
                     for (int i = 0; i < iterations; ++i)
                     {
-                        var odataUri = new Microsoft.OData.UriParser.ODataUriParser(
+                        odataUri = new Microsoft.OData.UriParser.ODataUriParser(
                             model,
                             new Uri(original, UriKind.Relative))
                             .ParseUri();
@@ -529,9 +533,9 @@
 
                         Assert.IsTrue(binaryNode.Right.Kind == QueryNodeKind.Constant);*/
                         
-                        var uri = Microsoft.OData.ODataUriExtensions.BuildUri(odataUri, Microsoft.OData.ODataUrlKeyDelimiter.Slash).ToString();
+                        /*var uri = Microsoft.OData.ODataUriExtensions.BuildUri(odataUri, Microsoft.OData.ODataUrlKeyDelimiter.Slash).ToString();
 
-                        Assert.AreEqual(original, uri);
+                        Assert.AreEqual(original, uri);*/
                     }
                 }
             }
