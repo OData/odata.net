@@ -13,8 +13,10 @@ namespace CombinatorParsingV3
     /// 6. ref struct with a "trynext" instead of returning a nullable
     /// 
     /// 5 suprisingly has impact, the most out of 1-5. But 6 has the absolute most impact, barely adding any overhead to not traversing the input string at all.
+    /// 
+    /// TODO create a repro for all of these options (across both dimensions of type category + try vs non-try)
     /// </summary>
-    public struct StringInput : IInput<char>
+    public sealed class StringInput : IInput<char>
     {
         private readonly string input;
 
@@ -47,6 +49,18 @@ namespace CombinatorParsingV3
             }
 
             return new StringInput(this.input, this.index + 1);
+        }
+
+        public bool Next(out StringInput output)
+        {
+            if (this.index == this.input.Length - 1)
+            {
+                output = default;
+                return false;
+            }
+
+            output = new StringInput(this.input, this.index + 1);
+            return true;
         }
 
         public StringInput? Next()
