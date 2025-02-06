@@ -26,14 +26,10 @@ namespace __GeneratedOdataV4.Parsers.Rules
                                     __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._65.Instance)),
                             new __GeneratedOdataV4.CstNodes.Rules._identifierCharacter._ALPHA(
                                 new __GeneratedOdataV4.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A(
-                                    __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._72.Instance
-                                        CstNodes.Inners._7.Instance,
-                                        CstNodes.Inners._2.Instance))),
+                                    __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._72.Instance)),
                             new __GeneratedOdataV4.CstNodes.Rules._identifierCharacter._ALPHA(
                                 new __GeneratedOdataV4.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A(
-                                    __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._73.Instance
-                                        CstNodes.Inners._7.Instance,
-                                        CstNodes.Inners._3.Instance))),
+                                    __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._73.Instance)),
                         }));
 
             private static __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_keyPathLiteral MyId =
