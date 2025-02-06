@@ -290,9 +290,31 @@ namespace __GeneratedOdataV4.Parsers.Rules
 
             public CombinatorParsingV3.IOutput<char, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Parse(CombinatorParsingV3.IInput<char>? input)
             {
-                while ((input = input?.Next()) != null)
+                /*while ((input = input?.Next()) != null)
+                {
+                }*/
+
+                var toParse = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
+                /*CombinatorParsingV3.StringInput? input2 = new CombinatorParsingV3.StringInput(toParse);
+                while ((input2 = input2?.Next()) != null)
+                {
+                }*/
+
+                /*CombinatorParsingV3.RefNullable<CombinatorParsingV3.StringInput2> input3 = new CombinatorParsingV3.RefNullable<CombinatorParsingV3.StringInput2>(new CombinatorParsingV3.StringInput2(toParse));
+                while ((input3 = input3.Value.Next()).HasValue)
+                {
+                }*/
+
+                CombinatorParsingV3.StringInput2 input4 = new CombinatorParsingV3.StringInput2(toParse);
+                while ((input4.Next(out input4)))
                 {
                 }
+
+                /*char foo;
+                for (int i = 0; i < toParse.Length; ++i)
+                {
+                    foo = toParse[i];
+                }*/
 
                 return CombinatorParsingV3.Output.Create(
                     true,
