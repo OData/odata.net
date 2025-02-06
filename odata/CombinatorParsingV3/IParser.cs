@@ -1,25 +1,35 @@
-﻿namespace CombinatorParsingV3
+﻿using __GeneratedOdata.CstNodes.Rules;
+
+namespace CombinatorParsingV3
 {
     //// TODO covariance and contravariance
 
-    public interface IParser<TToken, out TParsed>
+    public interface IParser<TToken, TInput, out TParsed, out TOutput> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TToken, TInput, TParsed>, allows ref struct
     {
-        IOutput<TToken, TParsed> Parse(IInput<TToken>? input); //// TODO would it make sense to have a TInput and a IIndex? that way the index can be as small as an int, so there's no trade-off with using a struct? iindex would have a `TToken current(TInput)` method or something
+         TOutput Parse(TInput input);
     }
 
-    public interface IInput<out TToken> //// TODO make a struct an use `in` parameter for `iparser.parse` method?
+    public interface IInput<out TToken, out TInput> where TInput : IInput<TToken, TInput>, allows ref struct
     {
         TToken Current { get; }
 
-        IInput<TToken>? Next();
+        TInput Next(out bool success);
     }
 
-    public interface IOutput<out TToken, out TParsed> //// TODO make a struct and use `in` parameter whereever applicable?
+    /// <summary>
+    /// TODO make this a ref struct next
+    /// </summary>
+    /// <typeparam name="TToken"></typeparam>
+    /// <typeparam name="TInput"></typeparam>
+    /// <typeparam name="TParsed"></typeparam>
+    public interface IOutput<out TToken, out TInput, out TParsed> where TInput : IInput<TToken, TInput>, allows ref struct
     {
         bool Success { get; }
 
-        public TParsed Parsed { get; }
+        TParsed Parsed { get; }
 
-        IInput<TToken>? Remainder { get; }
+        bool HasRemainder { get; }
+
+        TInput Remainder { get; }
     }
 }

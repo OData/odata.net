@@ -1,7 +1,7 @@
 namespace __GeneratedOdataV4.Parsers.Rules
 {
     using System.Linq;
-
+    using __GeneratedOdataV4.CstNodes.Rules;
     using CombinatorParsingV2;
 
     public static class _odataRelativeUriParser
@@ -9,10 +9,10 @@ namespace __GeneratedOdataV4.Parsers.Rules
         public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Instance { get; } =
             _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance;
 
-        public static CombinatorParsingV3.IParser<char, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Instance2 { get; } =
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri>> Instance2 { get; } =
             new Parser();
 
-        private sealed class Parser : CombinatorParsingV3.IParser<char, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri>
+        private sealed class Parser : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri>>
         {
             private static __GeneratedOdataV4.CstNodes.Rules._odataIdentifier Users =
                 new __GeneratedOdataV4.CstNodes.Rules._odataIdentifier(
@@ -288,17 +288,21 @@ namespace __GeneratedOdataV4.Parsers.Rules
                                                     null))))),
                                 Enumerable.Empty<__GeneratedOdataV4.CstNodes.Inners._Ⲥʺx26ʺ_queryOptionↃ>())));
 
-            public CombinatorParsingV3.IOutput<char, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Parse(CombinatorParsingV3.IInput<char>? input)
+            public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Parse(CombinatorParsingV3.StringInput input)
             {
+                for (var more = true; more; input = input.Next(out more))
+                {
+                }
+
                 /*while ((input = input?.Next()) != null)
                 {
                 }*/
 
-                var toParse = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
-                CombinatorParsingV3.StringInput? input2 = new CombinatorParsingV3.StringInput(toParse);
+                ////var toParse = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
+                /*CombinatorParsingV3.StringInput? input2 = new CombinatorParsingV3.StringInput(toParse);
                 while ((input2 = input2?.Next()) != null)
                 {
-                }
+                }*/
 
                 /*CombinatorParsingV3.RefNullable<CombinatorParsingV3.StringInput2> input3 = new CombinatorParsingV3.RefNullable<CombinatorParsingV3.StringInput2>(new CombinatorParsingV3.StringInput2(toParse));
                 while ((input3 = input3.Value.Next()).HasValue)
@@ -316,10 +320,11 @@ namespace __GeneratedOdataV4.Parsers.Rules
                     foo = toParse[i];
                 }*/
 
-                return CombinatorParsingV3.Output.Create(
+                return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, CstNodes.Rules._odataRelativeUri>(
                     true,
                     Node,
-                    (CombinatorParsingV3.IInput<char>?)null);
+                    false,
+                    input);
             }
         }
 

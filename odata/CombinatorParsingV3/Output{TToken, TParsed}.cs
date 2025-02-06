@@ -1,11 +1,12 @@
 ﻿namespace CombinatorParsingV3
 {
-    public sealed class Output<TToken, TParsed> : IOutput<TToken, TParsed>
+    public ref struct Output<TToken, TInput, TParsed> : IOutput<TToken, TInput, TParsed> where TInput : IInput<TToken, TInput>, allows ref struct
     {
-        public Output(bool success, TParsed parsed, IInput<TToken>? remainder)
+        public Output(bool success, TParsed parsed, bool hasRemainder, TInput remainder)
         {
             this.Success = success;
             this.Parsed = parsed;
+            this.HasRemainder = hasRemainder;
             this.Remainder = remainder;
         }
 
@@ -13,6 +14,8 @@
 
         public TParsed Parsed { get; }
 
-        public IInput<TToken>? Remainder { get; }
+        public bool HasRemainder { get; }
+
+        public TInput Remainder { get; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Sprache;
+using System;
 using System.Numerics;
 
 namespace CombinatorParsingV3
@@ -16,7 +17,7 @@ namespace CombinatorParsingV3
     /// 
     /// TODO create a repro for all of these options (across both dimensions of type category + try vs non-try)
     /// </summary>
-    public sealed class StringInput : IInput<char>
+    public ref struct StringInput : IInput<char, StringInput>
     {
         private readonly string input;
 
@@ -41,116 +42,16 @@ namespace CombinatorParsingV3
             }
         }
 
-        IInput<char>? IInput<char>.Next()
+        public StringInput Next(out bool success)
         {
             if (this.index == this.input.Length - 1)
             {
-                return null;
+                success = false;
+                return default;
             }
 
+            success = true;
             return new StringInput(this.input, this.index + 1);
-        }
-
-        public bool Next(out StringInput output)
-        {
-            if (this.index == this.input.Length - 1)
-            {
-                output = default;
-                return false;
-            }
-
-            output = new StringInput(this.input, this.index + 1);
-            return true;
-        }
-
-        public StringInput? Next()
-        {
-            if (this.index == this.input.Length - 1)
-            {
-                return null;
-            }
-
-            return new StringInput(this.input, this.index + 1);
-        }
-    }
-
-    public ref struct StringInput2
-    {
-        private readonly string input;
-
-        private readonly int index;
-
-        public StringInput2(string input)
-            : this(input, 0)
-        {
-        }
-
-        private StringInput2(string input, int index)
-        {
-            this.input = input;
-            this.index = index;
-        }
-
-        public char Current
-        {
-            get
-            {
-                return this.input[this.index]; //// TODO just record this once in the constructor?
-            }
-        }
-
-        public bool Next(out StringInput2 output)
-        {
-            if (this.index == this.input.Length - 1)
-            {
-                output = default;
-                return false;
-            }
-
-            output = new StringInput2(this.input, this.index + 1);
-            return true;
-        }
-
-        public RefNullable<StringInput2> Next()
-        {
-            if (this.index == this.input.Length - 1)
-            {
-                return new RefNullable<StringInput2>();
-            }
-
-            return new RefNullable<StringInput2>(new StringInput2(this.input, this.index + 1));
-        }
-    }
-
-    public ref struct RefNullable<T> where T : allows ref struct
-    {
-        private readonly T value;
-        private bool hasValue;
-
-        public RefNullable()
-        {
-            this.hasValue = false;
-        }
-
-        public RefNullable(T value)
-        {
-            this.value = value;
-            this.hasValue = true;
-        }
-
-        public bool HasValue => this.hasValue;
-
-        public T Value
-        {
-            get
-            {
-                if (!this.hasValue)
-                {
-                    throw new System.Exception("TODO");
-                }
-
-                return this.value;
-            }
         }
     }
 }

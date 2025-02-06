@@ -4,7 +4,7 @@
 
     public static class Parse
     {
-        public static IParser<TToken, TParsed> Token<TToken, TParsed>(TParsed token, IEqualityComparer<TToken> comparer) where TParsed : TToken
+        /*public static IParser<TToken, TParsed> Token<TToken, TParsed>(TParsed token, IEqualityComparer<TToken> comparer) where TParsed : TToken
         {
             return new TokenParser<TToken, TParsed>(token, comparer);
         }
@@ -66,6 +66,6 @@
 
                 return Output.Create(false, default(char), input);
             }
-        }
+        }*/
     }
 }
