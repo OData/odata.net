@@ -15,10 +15,9 @@ namespace __GeneratedOdataV4.Parsers.Rules
 
         private sealed class Parser : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri>>
         {
-            
-
             public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Parse(CombinatorParsingV3.StringInput input)
             {
+                //// TODO OR
                 var output = _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance2.Parse(input);
                 if (!output.Success)
                 {
