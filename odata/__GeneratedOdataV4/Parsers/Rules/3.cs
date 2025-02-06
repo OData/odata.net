@@ -7,10 +7,12 @@ namespace __GeneratedOdataV4.Parsers.Rules
     public static class _odataRelativeUriParser
     {
         public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Instance { get; } =
-            ////_resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance;
+            _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance;
+
+        public static CombinatorParsingV3.IParser<char, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Instance2 { get; } =
             new Parser();
 
-        private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri>
+        private sealed class Parser : CombinatorParsingV3.IParser<char, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri>
         {
             private static __GeneratedOdataV4.CstNodes.Rules._odataIdentifier Users =
                 new __GeneratedOdataV4.CstNodes.Rules._odataIdentifier(
@@ -286,16 +288,16 @@ namespace __GeneratedOdataV4.Parsers.Rules
                                                     null))))),
                                 Enumerable.Empty<__GeneratedOdataV4.CstNodes.Inners._Ⲥʺx26ʺ_queryOptionↃ>())));
 
-            public IOutput<char, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Parse(IInput<char>? input)
+            public CombinatorParsingV3.IOutput<char, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Parse(CombinatorParsingV3.IInput<char>? input)
             {
-                while ((input = input?.Next()) != null)
+                /*while ((input = input?.Next()) != null)
                 {
-                }
+                }*/
 
-                return Output.Create(
+                return CombinatorParsingV3.Output.Create(
                     true,
                     Node,
-                    (IInput<char>?)null);
+                    (CombinatorParsingV3.IInput<char>?)null);
             }
         }
 

@@ -255,11 +255,11 @@
         private static void Perf4Generator(int iterations)
         {
             var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
-            var parser = __GeneratedOdataV4.Parsers.Rules._odataRelativeUriParser.Instance;
-            parser.TryParse(url, out var urlCst);
+            var parser = __GeneratedOdataV4.Parsers.Rules._odataRelativeUriParser.Instance2;
+            CombinatorParsingV3.ParserExtensions.TryParse(parser, url, out var urlCst);
             for (int i = 0; i < iterations; ++i)
             {
-                if (!parser.TryParse(url, out urlCst))
+                if (!CombinatorParsingV3.ParserExtensions.TryParse(parser, url, out urlCst))
                 {
                     throw new Exception("TODO");
                 }
