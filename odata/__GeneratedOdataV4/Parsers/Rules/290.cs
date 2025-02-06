@@ -1,0 +1,34 @@
+namespace __GeneratedOdataV4.Parsers.Rules
+{
+    using CombinatorParsingV2;
+    
+    public static class _SQUOTEⲻinⲻstringParser
+    {
+        public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._SQUOTEⲻinⲻstring> Instance { get; } = new Parser();
+        
+        private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Rules._SQUOTEⲻinⲻstring>
+        {
+            public Parser()
+            {
+            }
+            
+            public IOutput<char, __GeneratedOdataV4.CstNodes.Rules._SQUOTEⲻinⲻstring> Parse(IInput<char>? input)
+            {
+                var _SQUOTE_1 = __GeneratedOdataV4.Parsers.Rules._SQUOTEParser.Instance.Parse(input);
+if (!_SQUOTE_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Rules._SQUOTEⲻinⲻstring)!, input);
+}
+
+var _SQUOTE_2 = __GeneratedOdataV4.Parsers.Rules._SQUOTEParser.Instance.Parse(_SQUOTE_1.Remainder);
+if (!_SQUOTE_2.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Rules._SQUOTEⲻinⲻstring)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._SQUOTEⲻinⲻstring(_SQUOTE_1.Parsed, _SQUOTE_2.Parsed), _SQUOTE_2.Remainder);
+            }
+        }
+    }
+    
+}

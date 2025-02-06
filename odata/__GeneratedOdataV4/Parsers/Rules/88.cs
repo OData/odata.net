@@ -1,0 +1,85 @@
+namespace __GeneratedOdataV4.Parsers.Rules
+{
+    using CombinatorParsingV2;
+    
+    public static class _selectItemParser
+    {
+        public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._selectItem> Instance { get; } = (_STARParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._selectItem>(_allOperationsInSchemaParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._selectItem>(_꘡ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ꘡_ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃParser.Instance);
+        
+        public static class _STARParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._selectItem._STAR> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Rules._selectItem._STAR>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Rules._selectItem._STAR> Parse(IInput<char>? input)
+                {
+                    var _STAR_1 = __GeneratedOdataV4.Parsers.Rules._STARParser.Instance.Parse(input);
+if (!_STAR_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Rules._selectItem._STAR)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._selectItem._STAR(_STAR_1.Parsed), _STAR_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _allOperationsInSchemaParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._selectItem._allOperationsInSchema> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Rules._selectItem._allOperationsInSchema>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Rules._selectItem._allOperationsInSchema> Parse(IInput<char>? input)
+                {
+                    var _allOperationsInSchema_1 = __GeneratedOdataV4.Parsers.Rules._allOperationsInSchemaParser.Instance.Parse(input);
+if (!_allOperationsInSchema_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Rules._selectItem._allOperationsInSchema)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._selectItem._allOperationsInSchema(_allOperationsInSchema_1.Parsed), _allOperationsInSchema_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _꘡ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ꘡_ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._selectItem._꘡ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ꘡_ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Rules._selectItem._꘡ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ꘡_ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Rules._selectItem._꘡ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ꘡_ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ> Parse(IInput<char>? input)
+                {
+                    var _ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ_1 = __GeneratedOdataV4.Parsers.Inners._ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2FʺParser.Instance.Optional().Parse(input);
+if (!_ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Rules._selectItem._꘡ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ꘡_ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ)!, input);
+}
+
+var _ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ_1 = __GeneratedOdataV4.Parsers.Inners._ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃParser.Instance.Parse(_ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ_1.Remainder);
+if (!_ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Rules._selectItem._꘡ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ꘡_ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._selectItem._꘡ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ꘡_ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ(_ⲤqualifiedEntityTypeNameⳆqualifiedComplexTypeNameↃ_ʺx2Fʺ_1.Parsed.GetOrElse(null), _ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ_1.Parsed), _ⲤselectPropertyⳆqualifiedActionNameⳆqualifiedFunctionNameↃ_1.Remainder);
+                }
+            }
+        }
+    }
+    
+}

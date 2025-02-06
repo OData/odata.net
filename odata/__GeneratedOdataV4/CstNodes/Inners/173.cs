@@ -1,0 +1,22 @@
+namespace __GeneratedOdataV4.CstNodes.Inners
+{
+    public sealed class _ʺx63x6Fx75x6Ex74ʺ
+    {
+        private _ʺx63x6Fx75x6Ex74ʺ()
+        {
+            this._x63_1 = __GeneratedOdataV4.CstNodes.Inners._x63.Instance;
+            this._x6F_1 = __GeneratedOdataV4.CstNodes.Inners._x6F.Instance;
+            this._x75_1 = __GeneratedOdataV4.CstNodes.Inners._x75.Instance;
+            this._x6E_1 = __GeneratedOdataV4.CstNodes.Inners._x6E.Instance;
+            this._x74_1 = __GeneratedOdataV4.CstNodes.Inners._x74.Instance;
+        }
+        
+        public __GeneratedOdataV4.CstNodes.Inners._x63 _x63_1 { get; }
+        public __GeneratedOdataV4.CstNodes.Inners._x6F _x6F_1 { get; }
+        public __GeneratedOdataV4.CstNodes.Inners._x75 _x75_1 { get; }
+        public __GeneratedOdataV4.CstNodes.Inners._x6E _x6E_1 { get; }
+        public __GeneratedOdataV4.CstNodes.Inners._x74 _x74_1 { get; }
+        public static __GeneratedOdataV4.CstNodes.Inners._ʺx63x6Fx75x6Ex74ʺ Instance { get; } = new __GeneratedOdataV4.CstNodes.Inners._ʺx63x6Fx75x6Ex74ʺ();
+    }
+    
+}

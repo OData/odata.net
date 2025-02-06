@@ -1,0 +1,19 @@
+namespace __GeneratedOdataV4.Trancsribers.Inners
+{
+    public sealed class _ʺx41x4Ex44ʺ_RWSTranscriber : GeneratorV3.ITranscriber<__GeneratedOdataV4.CstNodes.Inners._ʺx41x4Ex44ʺ_RWS>
+    {
+        private _ʺx41x4Ex44ʺ_RWSTranscriber()
+        {
+        }
+        
+        public static _ʺx41x4Ex44ʺ_RWSTranscriber Instance { get; } = new _ʺx41x4Ex44ʺ_RWSTranscriber();
+        
+        public void Transcribe(__GeneratedOdataV4.CstNodes.Inners._ʺx41x4Ex44ʺ_RWS value, System.Text.StringBuilder builder)
+        {
+            __GeneratedOdataV4.Trancsribers.Inners._ʺx41x4Ex44ʺTranscriber.Instance.Transcribe(value._ʺx41x4Ex44ʺ_1, builder);
+__GeneratedOdataV4.Trancsribers.Rules._RWSTranscriber.Instance.Transcribe(value._RWS_1, builder);
+
+        }
+    }
+    
+}

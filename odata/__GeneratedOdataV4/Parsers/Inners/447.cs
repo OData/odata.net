@@ -1,0 +1,430 @@
+namespace __GeneratedOdataV4.Parsers.Inners
+{
+    using CombinatorParsingV2;
+    
+    public static class _ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡Parser
+    {
+        public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡> Instance { get; } = (_ʺx42x69x6Ex61x72x79ʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx42x6Fx6Fx6Cx65x61x6EʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx42x79x74x65ʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx44x61x74x65ʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx44x65x63x69x6Dx61x6CʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx44x6Fx75x62x6Cx65ʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx44x75x72x61x74x69x6Fx6EʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx47x75x69x64ʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx49x6Ex74x31x36ʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx49x6Ex74x33x32ʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx49x6Ex74x36x34ʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx53x42x79x74x65ʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx53x69x6Ex67x6Cx65ʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx53x74x72x65x61x6DʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx53x74x72x69x6Ex67ʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_ʺx54x69x6Dx65x4Fx66x44x61x79ʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡>(_abstractSpatialTypeName_꘡concreteSpatialTypeName꘡Parser.Instance);
+        
+        public static class _ʺx42x69x6Ex61x72x79ʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x69x6Ex61x72x79ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x69x6Ex61x72x79ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x69x6Ex61x72x79ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx42x69x6Ex61x72x79ʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx42x69x6Ex61x72x79ʺParser.Instance.Parse(input);
+if (!_ʺx42x69x6Ex61x72x79ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x69x6Ex61x72x79ʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x69x6Ex61x72x79ʺ.Instance, _ʺx42x69x6Ex61x72x79ʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx42x6Fx6Fx6Cx65x61x6EʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x6Fx6Fx6Cx65x61x6Eʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x6Fx6Fx6Cx65x61x6Eʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x6Fx6Fx6Cx65x61x6Eʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx42x6Fx6Fx6Cx65x61x6Eʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx42x6Fx6Fx6Cx65x61x6EʺParser.Instance.Parse(input);
+if (!_ʺx42x6Fx6Fx6Cx65x61x6Eʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x6Fx6Fx6Cx65x61x6Eʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x6Fx6Fx6Cx65x61x6Eʺ.Instance, _ʺx42x6Fx6Fx6Cx65x61x6Eʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx42x79x74x65ʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x79x74x65ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x79x74x65ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x79x74x65ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx42x79x74x65ʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx42x79x74x65ʺParser.Instance.Parse(input);
+if (!_ʺx42x79x74x65ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x79x74x65ʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx42x79x74x65ʺ.Instance, _ʺx42x79x74x65ʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx44x61x74x65ʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x61x74x65ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x61x74x65ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x61x74x65ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx44x61x74x65ʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx44x61x74x65ʺParser.Instance.Parse(input);
+if (!_ʺx44x61x74x65ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x61x74x65ʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x61x74x65ʺ.Instance, _ʺx44x61x74x65ʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺParser.Instance.Parse(input);
+if (!_ʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺ.Instance, _ʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx44x65x63x69x6Dx61x6CʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x65x63x69x6Dx61x6Cʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x65x63x69x6Dx61x6Cʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x65x63x69x6Dx61x6Cʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx44x65x63x69x6Dx61x6Cʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx44x65x63x69x6Dx61x6CʺParser.Instance.Parse(input);
+if (!_ʺx44x65x63x69x6Dx61x6Cʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x65x63x69x6Dx61x6Cʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x65x63x69x6Dx61x6Cʺ.Instance, _ʺx44x65x63x69x6Dx61x6Cʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx44x6Fx75x62x6Cx65ʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x6Fx75x62x6Cx65ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x6Fx75x62x6Cx65ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x6Fx75x62x6Cx65ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx44x6Fx75x62x6Cx65ʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx44x6Fx75x62x6Cx65ʺParser.Instance.Parse(input);
+if (!_ʺx44x6Fx75x62x6Cx65ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x6Fx75x62x6Cx65ʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x6Fx75x62x6Cx65ʺ.Instance, _ʺx44x6Fx75x62x6Cx65ʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx44x75x72x61x74x69x6Fx6EʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x75x72x61x74x69x6Fx6Eʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x75x72x61x74x69x6Fx6Eʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x75x72x61x74x69x6Fx6Eʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx44x75x72x61x74x69x6Fx6Eʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx44x75x72x61x74x69x6Fx6EʺParser.Instance.Parse(input);
+if (!_ʺx44x75x72x61x74x69x6Fx6Eʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x75x72x61x74x69x6Fx6Eʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx44x75x72x61x74x69x6Fx6Eʺ.Instance, _ʺx44x75x72x61x74x69x6Fx6Eʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx47x75x69x64ʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx47x75x69x64ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx47x75x69x64ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx47x75x69x64ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx47x75x69x64ʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx47x75x69x64ʺParser.Instance.Parse(input);
+if (!_ʺx47x75x69x64ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx47x75x69x64ʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx47x75x69x64ʺ.Instance, _ʺx47x75x69x64ʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx49x6Ex74x31x36ʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x31x36ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x31x36ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x31x36ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx49x6Ex74x31x36ʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx49x6Ex74x31x36ʺParser.Instance.Parse(input);
+if (!_ʺx49x6Ex74x31x36ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x31x36ʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x31x36ʺ.Instance, _ʺx49x6Ex74x31x36ʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx49x6Ex74x33x32ʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x33x32ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x33x32ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x33x32ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx49x6Ex74x33x32ʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx49x6Ex74x33x32ʺParser.Instance.Parse(input);
+if (!_ʺx49x6Ex74x33x32ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x33x32ʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x33x32ʺ.Instance, _ʺx49x6Ex74x33x32ʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx49x6Ex74x36x34ʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x36x34ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x36x34ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x36x34ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx49x6Ex74x36x34ʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx49x6Ex74x36x34ʺParser.Instance.Parse(input);
+if (!_ʺx49x6Ex74x36x34ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x36x34ʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx49x6Ex74x36x34ʺ.Instance, _ʺx49x6Ex74x36x34ʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx53x42x79x74x65ʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x42x79x74x65ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x42x79x74x65ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x42x79x74x65ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx53x42x79x74x65ʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx53x42x79x74x65ʺParser.Instance.Parse(input);
+if (!_ʺx53x42x79x74x65ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x42x79x74x65ʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x42x79x74x65ʺ.Instance, _ʺx53x42x79x74x65ʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx53x69x6Ex67x6Cx65ʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x69x6Ex67x6Cx65ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x69x6Ex67x6Cx65ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x69x6Ex67x6Cx65ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx53x69x6Ex67x6Cx65ʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx53x69x6Ex67x6Cx65ʺParser.Instance.Parse(input);
+if (!_ʺx53x69x6Ex67x6Cx65ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x69x6Ex67x6Cx65ʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x69x6Ex67x6Cx65ʺ.Instance, _ʺx53x69x6Ex67x6Cx65ʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx53x74x72x65x61x6DʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x74x72x65x61x6Dʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x74x72x65x61x6Dʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x74x72x65x61x6Dʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx53x74x72x65x61x6Dʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx53x74x72x65x61x6DʺParser.Instance.Parse(input);
+if (!_ʺx53x74x72x65x61x6Dʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x74x72x65x61x6Dʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x74x72x65x61x6Dʺ.Instance, _ʺx53x74x72x65x61x6Dʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx53x74x72x69x6Ex67ʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x74x72x69x6Ex67ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x74x72x69x6Ex67ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x74x72x69x6Ex67ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx53x74x72x69x6Ex67ʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx53x74x72x69x6Ex67ʺParser.Instance.Parse(input);
+if (!_ʺx53x74x72x69x6Ex67ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x74x72x69x6Ex67ʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx53x74x72x69x6Ex67ʺ.Instance, _ʺx53x74x72x69x6Ex67ʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _ʺx54x69x6Dx65x4Fx66x44x61x79ʺParser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx54x69x6Dx65x4Fx66x44x61x79ʺ> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx54x69x6Dx65x4Fx66x44x61x79ʺ>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx54x69x6Dx65x4Fx66x44x61x79ʺ> Parse(IInput<char>? input)
+                {
+                    var _ʺx54x69x6Dx65x4Fx66x44x61x79ʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx54x69x6Dx65x4Fx66x44x61x79ʺParser.Instance.Parse(input);
+if (!_ʺx54x69x6Dx65x4Fx66x44x61x79ʺ_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx54x69x6Dx65x4Fx66x44x61x79ʺ)!, input);
+}
+
+return Output.Create(true, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._ʺx54x69x6Dx65x4Fx66x44x61x79ʺ.Instance, _ʺx54x69x6Dx65x4Fx66x44x61x79ʺ_1.Remainder);
+                }
+            }
+        }
+        
+        public static class _abstractSpatialTypeName_꘡concreteSpatialTypeName꘡Parser
+        {
+            public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._abstractSpatialTypeName_꘡concreteSpatialTypeName꘡> Instance { get; } = new Parser();
+            
+            private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._abstractSpatialTypeName_꘡concreteSpatialTypeName꘡>
+            {
+                public Parser()
+                {
+                }
+                
+                public IOutput<char, __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._abstractSpatialTypeName_꘡concreteSpatialTypeName꘡> Parse(IInput<char>? input)
+                {
+                    var _abstractSpatialTypeName_1 = __GeneratedOdataV4.Parsers.Rules._abstractSpatialTypeNameParser.Instance.Parse(input);
+if (!_abstractSpatialTypeName_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._abstractSpatialTypeName_꘡concreteSpatialTypeName꘡)!, input);
+}
+
+var _concreteSpatialTypeName_1 = __GeneratedOdataV4.Parsers.Rules._concreteSpatialTypeNameParser.Instance.Optional().Parse(_abstractSpatialTypeName_1.Remainder);
+if (!_concreteSpatialTypeName_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._abstractSpatialTypeName_꘡concreteSpatialTypeName꘡)!, input);
+}
+
+return Output.Create(true, new __GeneratedOdataV4.CstNodes.Inners._ʺx42x69x6Ex61x72x79ʺⳆʺx42x6Fx6Fx6Cx65x61x6EʺⳆʺx42x79x74x65ʺⳆʺx44x61x74x65ʺⳆʺx44x61x74x65x54x69x6Dx65x4Fx66x66x73x65x74ʺⳆʺx44x65x63x69x6Dx61x6CʺⳆʺx44x6Fx75x62x6Cx65ʺⳆʺx44x75x72x61x74x69x6Fx6EʺⳆʺx47x75x69x64ʺⳆʺx49x6Ex74x31x36ʺⳆʺx49x6Ex74x33x32ʺⳆʺx49x6Ex74x36x34ʺⳆʺx53x42x79x74x65ʺⳆʺx53x69x6Ex67x6Cx65ʺⳆʺx53x74x72x65x61x6DʺⳆʺx53x74x72x69x6Ex67ʺⳆʺx54x69x6Dx65x4Fx66x44x61x79ʺⳆabstractSpatialTypeName_꘡concreteSpatialTypeName꘡._abstractSpatialTypeName_꘡concreteSpatialTypeName꘡(_abstractSpatialTypeName_1.Parsed, _concreteSpatialTypeName_1.Parsed.GetOrElse(null)), _concreteSpatialTypeName_1.Remainder);
+                }
+            }
+        }
+    }
+    
+}

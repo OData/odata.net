@@ -1,0 +1,54 @@
+namespace __GeneratedOdataV4.Trancsribers.Inners
+{
+    public sealed class _complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUriTranscriber : GeneratorV3.ITranscriber<__GeneratedOdataV4.CstNodes.Inners._complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri>
+    {
+        private _complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUriTranscriber()
+        {
+        }
+        
+        public static _complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUriTranscriber Instance { get; } = new _complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUriTranscriber();
+        
+        public void Transcribe(__GeneratedOdataV4.CstNodes.Inners._complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri value, System.Text.StringBuilder builder)
+        {
+            Visitor.Instance.Visit(value, builder);
+        }
+        
+        private sealed class Visitor : __GeneratedOdataV4.CstNodes.Inners._complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri.Visitor<Root.Void, System.Text.StringBuilder>
+        {
+            private Visitor()
+            {
+            }
+            
+            public static Visitor Instance { get; } = new Visitor();
+            
+            protected internal override Root.Void Accept(__GeneratedOdataV4.CstNodes.Inners._complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri._complexInUri node, System.Text.StringBuilder context)
+            {
+                __GeneratedOdataV4.Trancsribers.Rules._complexInUriTranscriber.Instance.Transcribe(node._complexInUri_1, context);
+
+return default;
+            }
+            
+            protected internal override Root.Void Accept(__GeneratedOdataV4.CstNodes.Inners._complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri._complexColInUri node, System.Text.StringBuilder context)
+            {
+                __GeneratedOdataV4.Trancsribers.Rules._complexColInUriTranscriber.Instance.Transcribe(node._complexColInUri_1, context);
+
+return default;
+            }
+            
+            protected internal override Root.Void Accept(__GeneratedOdataV4.CstNodes.Inners._complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri._primitiveLiteralInJSON node, System.Text.StringBuilder context)
+            {
+                __GeneratedOdataV4.Trancsribers.Rules._primitiveLiteralInJSONTranscriber.Instance.Transcribe(node._primitiveLiteralInJSON_1, context);
+
+return default;
+            }
+            
+            protected internal override Root.Void Accept(__GeneratedOdataV4.CstNodes.Inners._complexInUriⳆcomplexColInUriⳆprimitiveLiteralInJSONⳆprimitiveColInUri._primitiveColInUri node, System.Text.StringBuilder context)
+            {
+                __GeneratedOdataV4.Trancsribers.Rules._primitiveColInUriTranscriber.Instance.Transcribe(node._primitiveColInUri_1, context);
+
+return default;
+            }
+        }
+    }
+    
+}

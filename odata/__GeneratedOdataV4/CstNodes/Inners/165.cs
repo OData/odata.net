@@ -1,0 +1,55 @@
+namespace __GeneratedOdataV4.CstNodes.Inners
+{
+    public abstract class _ʺx24x66x6Fx72x6Dx61x74ʺⳆʺx66x6Fx72x6Dx61x74ʺ
+    {
+        private _ʺx24x66x6Fx72x6Dx61x74ʺⳆʺx66x6Fx72x6Dx61x74ʺ()
+        {
+        }
+        
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(_ʺx24x66x6Fx72x6Dx61x74ʺⳆʺx66x6Fx72x6Dx61x74ʺ node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+            
+            protected internal abstract TResult Accept(_ʺx24x66x6Fx72x6Dx61x74ʺⳆʺx66x6Fx72x6Dx61x74ʺ._ʺx24x66x6Fx72x6Dx61x74ʺ node, TContext context);
+            protected internal abstract TResult Accept(_ʺx24x66x6Fx72x6Dx61x74ʺⳆʺx66x6Fx72x6Dx61x74ʺ._ʺx66x6Fx72x6Dx61x74ʺ node, TContext context);
+        }
+        
+        public sealed class _ʺx24x66x6Fx72x6Dx61x74ʺ : _ʺx24x66x6Fx72x6Dx61x74ʺⳆʺx66x6Fx72x6Dx61x74ʺ
+        {
+            private _ʺx24x66x6Fx72x6Dx61x74ʺ()
+            {
+                this._ʺx24x66x6Fx72x6Dx61x74ʺ_1 = __GeneratedOdataV4.CstNodes.Inners._ʺx24x66x6Fx72x6Dx61x74ʺ.Instance;
+            }
+            
+            public __GeneratedOdataV4.CstNodes.Inners._ʺx24x66x6Fx72x6Dx61x74ʺ _ʺx24x66x6Fx72x6Dx61x74ʺ_1 { get; }
+            public static _ʺx24x66x6Fx72x6Dx61x74ʺ Instance { get; } = new _ʺx24x66x6Fx72x6Dx61x74ʺ();
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _ʺx66x6Fx72x6Dx61x74ʺ : _ʺx24x66x6Fx72x6Dx61x74ʺⳆʺx66x6Fx72x6Dx61x74ʺ
+        {
+            private _ʺx66x6Fx72x6Dx61x74ʺ()
+            {
+                this._ʺx66x6Fx72x6Dx61x74ʺ_1 = __GeneratedOdataV4.CstNodes.Inners._ʺx66x6Fx72x6Dx61x74ʺ.Instance;
+            }
+            
+            public __GeneratedOdataV4.CstNodes.Inners._ʺx66x6Fx72x6Dx61x74ʺ _ʺx66x6Fx72x6Dx61x74ʺ_1 { get; }
+            public static _ʺx66x6Fx72x6Dx61x74ʺ Instance { get; } = new _ʺx66x6Fx72x6Dx61x74ʺ();
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+    }
+    
+}
