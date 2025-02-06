@@ -2,6 +2,27 @@
 {
     using System.Collections;
 
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    [TestClass]
+    public sealed class StructTest()
+    {
+        [TestMethod]
+        public void First()
+        {
+            Something a = default;
+            Something b = new Something();
+        }
+
+        public struct Something
+        {
+            public Something()
+            {
+                throw new Exception("TODO");
+            }
+        }
+    }
+
     public ref struct Foo : IDisposable
     {
         public void Dispose()
