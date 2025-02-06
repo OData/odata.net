@@ -6,6 +6,8 @@ namespace CombinatorParsingV3
     //// 1. new node object allocations that were previously singletons
     //// 2. copy semantics of ref struct (`in` mitigated this a bit, `ref` mitigated it as well, but a little worse than in; it's not clear to me that the perf benefits of ref struct will remain as we go deeper in the call stack)
     //// 3. checking for success and remainder (you're removed this for now, but you need to add it back at some point)
+    //// 
+    //// you did try updating `parse` to have `tparsed` as an `out` parameter hoping to reduce the amount of copying needed when creating `output` instances, but it didn't seem to have much impact; it may be worth revisiting this in the future when the call stack is deeper and more instances need to be created; you might also consider having *all* of the values as `out` parameters so that you can always pass something through
 
     //// TODO covariance and contravariance
 
