@@ -290,9 +290,9 @@ namespace __GeneratedOdataV4.Parsers.Rules
 
             public CombinatorParsingV3.IOutput<char, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Parse(CombinatorParsingV3.IInput<char>? input)
             {
-                /*while ((input = input?.Next()) != null)
+                while ((input = input?.Next()) != null)
                 {
-                }*/
+                }
 
                 return CombinatorParsingV3.Output.Create(
                     true,
