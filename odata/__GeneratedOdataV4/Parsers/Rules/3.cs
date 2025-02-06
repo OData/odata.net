@@ -352,6 +352,7 @@ return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._odataRelativeU
                 public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡> Parse(in CombinatorParsingV3.StringInput input)
                 {
                     var _resourcePath = _resourcePathParser.Instance2.Parse(input);
+                    //// TODO SUCCESS
                     /*if (!_resourcePath.Success)
                     {
                         return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>(

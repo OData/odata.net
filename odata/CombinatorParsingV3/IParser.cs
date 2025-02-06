@@ -2,6 +2,11 @@
 
 namespace CombinatorParsingV3
 {
+    //// TODO adding to the call stack increased the runtime; there could be a lot of reasons for this:
+    //// 1. new node object allocations that were previously singletons
+    //// 2. copy semantics of ref struct (`in` mitigated this a bit, `ref` mitigated it as well, but a little worse than in; it's not clear to me that the perf benefits of ref struct will remain as we go deeper in the call stack)
+    //// 3. checking for success and remainder (you're removed this for now, but you need to add it back at some point)
+
     //// TODO covariance and contravariance
 
     public interface IParser<TToken, TInput, out TParsed, out TOutput> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TToken, TInput, TParsed>, allows ref struct
