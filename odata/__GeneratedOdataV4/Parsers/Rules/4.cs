@@ -10,18 +10,18 @@ namespace __GeneratedOdataV4.Parsers.Rules
 
         private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath>>
         {
-            public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath> Parse(CombinatorParsingV3.StringInput input)
+            public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath> Parse(in CombinatorParsingV3.StringInput input)
             {
                 //// TODO OR
                 var output = _entitySetName_꘡collectionNavigation꘡Parser.Instance2.Parse(input);
-                if (!output.Success)
+                /*if (!output.Success)
                 {
                     return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath>(
                         false,
                         default,
                         true,
                         input);
-                }
+                }*/
 
                 return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath>(
                     true,
@@ -172,12 +172,13 @@ namespace __GeneratedOdataV4.Parsers.Rules
                                                             Events),
                                                         null)))))))));
 
-                public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath._entitySetName_꘡collectionNavigation꘡> Parse(CombinatorParsingV3.StringInput input)
+                public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath._entitySetName_꘡collectionNavigation꘡> Parse(in CombinatorParsingV3.StringInput input)
                 {
-                    bool more = false;
-                    for (int i = 0; i < 26; ++i)
+                    CombinatorParsingV3.StringInput remainder = input.Next(out var more);
+
+                    for (int i = 0; i < 25; ++i)
                     {
-                        input = input.Next(out more);
+                        remainder = remainder.Next(out more);
                     }
 
                     return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath._entitySetName_꘡collectionNavigation꘡>(

@@ -6,7 +6,7 @@ namespace CombinatorParsingV3
 
     public interface IParser<TToken, TInput, out TParsed, out TOutput> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TToken, TInput, TParsed>, allows ref struct
     {
-         TOutput Parse(TInput input);
+         TOutput Parse(in TInput input);
     }
 
     public interface IInput<out TToken, out TInput> where TInput : IInput<TToken, TInput>, allows ref struct

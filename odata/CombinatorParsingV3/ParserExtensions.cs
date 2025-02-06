@@ -16,7 +16,7 @@
             where TInput : IInput<TToken, TInput>, allows ref struct
             where TOutput : IOutput<TToken, TInput, TParsed>, allows ref struct
         {
-            var output = parser.Parse(input);
+            var output = parser.Parse(ref input);
             if (!output.Success)
             {
                 parsed = default(TParsed)!;
