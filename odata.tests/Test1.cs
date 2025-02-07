@@ -270,21 +270,12 @@
         [TestMethod]
         public void Perf4()
         {
-            var iterations = 100000;
+            //// var iterations = 100000;
+            //// ODL time: 18762902
+
+            var iterations = 100000000;
             var stopwatch = Stopwatch.StartNew();
             Perf4Generator(iterations);
-            Console.WriteLine(stopwatch.ElapsedTicks);
-
-            stopwatch = Stopwatch.StartNew();
-            Perf1Odata(iterations);
-            Console.WriteLine(stopwatch.ElapsedTicks);
-
-            stopwatch = Stopwatch.StartNew();
-            Perf4Generator(iterations);
-            Console.WriteLine(stopwatch.ElapsedTicks);
-
-            stopwatch = Stopwatch.StartNew();
-            Perf1Odata(iterations);
             Console.WriteLine(stopwatch.ElapsedTicks);
         }
 
