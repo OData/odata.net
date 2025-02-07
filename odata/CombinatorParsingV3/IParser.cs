@@ -19,7 +19,7 @@ namespace CombinatorParsingV3
     public interface IParser<TToken, TInput, TParsed>
         where TInput : IReadOnlyList<TToken> //// TODO use IInput here
     {
-         TParsed Parse(TInput input, out int advancement);
+         TParsed Parse(TInput input, int start, out int advancement);
     }
 
     public interface IInput<out TToken, out TInput> where TInput : IInput<TToken, TInput>, allows ref struct

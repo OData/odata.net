@@ -39,7 +39,7 @@
         public static bool TryParse<TToken, TInput, TParsed>(this IParser<TToken, TInput, TParsed> parser, TInput input, out TParsed parsed)
             where TInput : IReadOnlyList<TToken>
         {
-            parsed = parser.Parse(input, out var advancement);
+            parsed = parser.Parse(input, 0, out var advancement);
             
             if (advancement == 0)
             {
