@@ -290,7 +290,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
                                                     null))))),
                                 Enumerable.Empty<__GeneratedOdataV4.CstNodes.Inners._Ⲥʺx26ʺ_queryOptionↃ>())));
 
-            public __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int advancement)
+            public __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
                 //// TODO OR
                 ////var output = _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance2.Parse(input);
@@ -320,10 +320,10 @@ namespace __GeneratedOdataV4.Parsers.Rules
                     false,
                     input);*/
 
-                advancement = start;
-                for (; advancement < input.Count - start; ++advancement)
+                newStart = start;
+                for (; newStart < input.Count - start; ++newStart)
                 {
-                    var next = input[advancement];
+                    var next = input[newStart];
                 }
 
                 return Node;
@@ -513,9 +513,9 @@ return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._odataRelativeU
 
             public sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>
             {
-                public _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡ Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int advancement)
+                public _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡ Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
                 {
-                    advancement = input.Count;
+                    newStart = input.Count;
                     return default;
                 }
             }
