@@ -44,8 +44,6 @@
                     remainder = remainder.Next(out more);
                 }
 
-                //// TODO add check to tryparse about more
-
                 return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _entitySetName>(
                     true,
                     Node,
