@@ -24,7 +24,7 @@ namespace CombinatorParsingV3
     }
 
     /// <summary>
-    /// TODO make this a ref struct next
+    /// 
     /// </summary>
     /// <typeparam name="TToken"></typeparam>
     /// <typeparam name="TInput"></typeparam>
