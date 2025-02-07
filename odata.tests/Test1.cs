@@ -269,7 +269,7 @@
         [TestMethod]
         public void Perf4()
         {
-            var iterations = 10000;
+            var iterations = 100000;
             var stopwatch = Stopwatch.StartNew();
             Perf4Generator(iterations);
             Console.WriteLine(stopwatch.ElapsedTicks);
