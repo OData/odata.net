@@ -1,9 +1,26 @@
 namespace __GeneratedOdataV4.Parsers.Inners
 {
+    using __GeneratedOdataV4.CstNodes.Inners;
     using CombinatorParsingV2;
     
     public static class _ʺx3FʺParser
     {
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ>> Instance2 { get; } = new Parser2();
+
+        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ>>
+        {
+            public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _ʺx3Fʺ> Parse(in CombinatorParsingV3.StringInput input)
+            {
+                var remainder = input.Next(out var more);
+
+                return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _ʺx3Fʺ>(
+                    true,
+                    __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ.Instance,
+                    more,
+                    remainder);
+            }
+        }
+
         public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ> Instance { get; } = new Parser();
         
         private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ>
