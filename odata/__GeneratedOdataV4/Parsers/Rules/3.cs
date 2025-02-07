@@ -470,8 +470,10 @@ return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._odataRelativeU
             {
                 public _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡ Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
                 {
+                    var _resourcePath = __GeneratedOdataV4.Parsers.Rules._resourcePathParser.Instance2.Parse(input, start, out newStart);
+
                     newStart = start;
-                    for (; newStart < input.Count - start; ++newStart)
+                    for (; newStart < input.Count; ++newStart)
                     {
                         var next = input[newStart];
                     }

@@ -2,47 +2,38 @@ namespace __GeneratedOdataV4.Parsers.Rules
 {
     using __GeneratedOdataV4.CstNodes.Rules;
     using CombinatorParsingV2;
+    using System.Collections.Generic;
 
     public static class _resourcePathParser
     {
-        /*public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath>> Instance2 { get; }
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._resourcePath> Instance2 { get; }
         = new Parser2();
 
-        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath>>
+        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._resourcePath>
         {
-            public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath> Parse(in CombinatorParsingV3.StringInput input)
+            public __GeneratedOdataV4.CstNodes.Rules._resourcePath Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                //// TODO OR
-                var output = _entitySetName_꘡collectionNavigation꘡Parser.Instance2.Parse(input);
-                //// TODO SUCCESS
-                /*if (!output.Success)
+                newStart = start;
+                for (; newStart < start + 26; ++newStart)
                 {
-                    return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath>(
-                        false,
-                        default,
-                        true,
-                        input);
-                }*/
+                    var next = input[newStart];
+                }
 
-                /*return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath>(
-                    true,
-                    default,
-                    output.HasRemainder,
-                    output.Remainder);
+                return default;
             }
-        }*/
+        }
 
         public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._resourcePath> Instance { get; } = (_entitySetName_꘡collectionNavigation꘡Parser.Instance);
 
         public static class _entitySetName_꘡collectionNavigation꘡Parser
         {
-            /*public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡>> Instance2 { get; } = new Parser2();
+            public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡> Instance2 { get; } = new Parser2();
 
-            private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡>>
+            private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡>
             {
-                public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath._entitySetName_꘡collectionNavigation꘡> Parse(in CombinatorParsingV3.StringInput input)
+                public _resourcePath._entitySetName_꘡collectionNavigation꘡ Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
                 {
-                    var _entitySetName = __GeneratedOdataV4.Parsers.Rules._entitySetNameParser.Instance2.Parse(input);
+                    /*var _entitySetName = __GeneratedOdataV4.Parsers.Rules._entitySetNameParser.Instance2.Parse(input);
 
                     var _collectionNavigation = __GeneratedOdataV4.Parsers.Rules._collectionNavigationParser.Instance2.Parse(_entitySetName.Remainder);
                     
@@ -50,9 +41,17 @@ namespace __GeneratedOdataV4.Parsers.Rules
                         true,
                         default,
                         _collectionNavigation.HasRemainder,
-                        _collectionNavigation.Remainder);
+                        _collectionNavigation.Remainder);*/
+
+                    newStart = start;
+                    for (; newStart < start + 27; ++newStart)
+                    {
+                        var next = input[newStart];
+                    }
+
+                    return default;
                 }
-            }*/
+            }
 
             public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡> Instance { get; } = new Parser();
 
