@@ -9,6 +9,9 @@ namespace CombinatorParsingV3
     //// 
     //// you did try updating `parse` to have `tparsed` as an `out` parameter hoping to reduce the amount of copying needed when creating `output` instances, but it didn't seem to have much impact; it may be worth revisiting this in the future when the call stack is deeper and more instances need to be created; you might also consider having *all* of the values as `out` parameters so that you can always pass something through
 
+    //// TODO add success checks back
+    //// TODO add ors back
+
     //// TODO covariance and contravariance
 
     public interface IParser<TToken, TInput, out TParsed, out TOutput> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TToken, TInput, TParsed>, allows ref struct
