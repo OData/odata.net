@@ -17,7 +17,7 @@ namespace CombinatorParsingV3
     /// 
     /// TODO it might be good to create a repro of the 10 different options
     /// </summary>
-    public ref struct StringInput : IInput<char, StringInput>
+    public readonly ref struct StringInput : IInput<char, StringInput>
     {
         private readonly string input;
 
@@ -40,6 +40,19 @@ namespace CombinatorParsingV3
             {
                 return this.input[this.index]; //// TODO just record this once in the constructor?
             }
+        }
+
+        public StringInput Advance(int tokenCount, out bool success)
+        {
+            var newIndex = this.index + tokenCount;
+            if (newIndex >= this.input.Length)
+            {
+                success = false;
+                return default;
+            }
+
+            success = true;
+            return new StringInput(this.input, newIndex);
         }
 
         public StringInput Next(out bool success)
