@@ -293,7 +293,13 @@ namespace __GeneratedOdataV4.Parsers.Rules
             public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Parse(in CombinatorParsingV3.StringInput input)
             {
                 //// TODO OR
-                /*var output = _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance2.Parse(input);
+                ////var output = _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance2.Parse(input);
+
+                Instance3.HoldPlace(input);
+                var output = new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>(
+                    true,
+                    default,
+                    false);
                 if (!output.Success)
                 {
                     return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri>(
@@ -307,14 +313,37 @@ namespace __GeneratedOdataV4.Parsers.Rules
                     true,
                     Node,
                     output.HasRemainder,
-                    output.Remainder);*/
+                    output.Remainder);
 
-                return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri>(
+                /*return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri>(
                     true,
                     Node,
                     false,
-                    input);
+                    input);*/
             }
+
+            public static Placeholder Instance3 = new Placeholder();
+
+            public sealed class Placeholder
+            {
+                public char HoldPlace(in CombinatorParsingV3.StringInput input)
+                {
+                    return input.Next(out var more).Current;
+                }
+            }
+
+            /*public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>> Instance3 { get; } = new Parser2();
+
+            public sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>>
+            {
+                public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡> Parse(in CombinatorParsingV3.StringInput input)
+                {
+                    return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>(
+                        true,
+                        default,
+                        false);
+                }
+            }*/
         }
 
         public static class _ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡Parser
@@ -489,33 +518,20 @@ return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._odataRelativeU
             {
                 public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡> Parse(in CombinatorParsingV3.StringInput input)
                 {
-                    var _resourcePath = _resourcePathParser.Instance2.Parse(input);
-                    //// TODO SUCCESS
-                    /*if (!_resourcePath.Success)
-                    {
-                        return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>(
-                            false,
-                            default,
-                            true,
-                            input);
-                    }
-
-                    if (!_resourcePath.HasRemainder)
-                    {
-                        return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>(
-                            false,
-                            default,
-                            true,
-                            input);
-                    }*/
-
+                    /*var _resourcePath = _resourcePathParser.Instance2.Parse(input);
+                    
                     var queryOptions = __GeneratedOdataV4.Parsers.Inners._ʺx3Fʺ_queryOptionsParser.Instance2.Parse(_resourcePath.Remainder);
 
                     return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>(
                         true,
                         default,
                         queryOptions.HasRemainder,
-                        queryOptions.Remainder);
+                        queryOptions.Remainder);*/
+
+                    return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>(
+                        true,
+                        default,
+                        false);
                 }
             }
         }

@@ -57,46 +57,46 @@
         //            return parser.Between(minimum.Value, maximum.Value);
         //        }
 
-        public static IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>> Or<TToken, TInput, TParsed>(
-            this IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>> first,
-            IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>> second)
-            where TInput : IInput<TToken, TInput>, allows ref struct
-        {
-            return new OrParser<TToken, TInput, TParsed>(first, second);
-        }
+        //public static IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>> Or<TToken, TInput, TParsed>(
+        //    this IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>> first,
+        //    IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>> second)
+        //    where TInput : IInput<TToken, TInput>, allows ref struct
+        //{
+        //    return new OrParser<TToken, TInput, TParsed>(first, second);
+        //}
 
-        private sealed class OrParser<TToken, TInput, TParsed> : IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>>
-            where TInput : IInput<TToken, TInput>, allows ref struct
-        {
-            private readonly IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>> first;
-            private readonly IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>> second;
+        //private sealed class OrParser<TToken, TInput, TParsed> : IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>>
+        //    where TInput : IInput<TToken, TInput>, allows ref struct
+        //{
+        //    private readonly IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>> first;
+        //    private readonly IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>> second;
 
-            public OrParser(IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>> first, IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>> second)
-            {
-                this.first = first;
-                this.second = second;
-            }
+        //    public OrParser(IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>> first, IParser<TToken, TInput, TParsed, Output<TToken, TInput, TParsed>> second)
+        //    {
+        //        this.first = first;
+        //        this.second = second;
+        //    }
 
-            public Output<TToken, TInput, TParsed> Parse(in TInput input)
-            {
-                var firstOutput = this.first.Parse(input);
-                if (firstOutput.Success)
-                {
-                    return firstOutput;
-                }
+        //    public Output<TToken, TInput, TParsed> Parse(in TInput input)
+        //    {
+        //        var firstOutput = this.first.Parse(input);
+        //        if (firstOutput.Success)
+        //        {
+        //            return firstOutput;
+        //        }
 
-                var secondOutput = this.second.Parse(input);
-                if (secondOutput.Success)
-                {
-                    return secondOutput;
-                }
+        //        var secondOutput = this.second.Parse(input);
+        //        if (secondOutput.Success)
+        //        {
+        //            return secondOutput;
+        //        }
 
-                //// TODO differentiate success and failure
-                //// TODO have a way to surface errors
-                //// TODO for this `orparser`, you need to somehow combine the errors surface by each parser
-                return new Output<TToken, TInput, TParsed>(false, default, true, input);
-            }
-        }
+        //        //// TODO differentiate success and failure
+        //        //// TODO have a way to surface errors
+        //        //// TODO for this `orparser`, you need to somehow combine the errors surface by each parser
+        //        return new Output<TToken, TInput, TParsed>(false, default, true, input);
+        //    }
+        //}
 
         //        public static IParser<TToken, IEnumerable<TParsed>> Many<TToken, TParsed>(this IParser<TToken, TParsed> parser)
         //        {

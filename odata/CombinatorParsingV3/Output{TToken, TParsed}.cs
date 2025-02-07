@@ -2,6 +2,13 @@
 {
     public readonly ref struct Output<TToken, TInput, TParsed> : IOutput<TToken, TInput, TParsed> where TInput : IInput<TToken, TInput>, allows ref struct
     {
+        public Output(bool success, TParsed parsed, bool hasRemainder)
+        {
+            this.Success = success;
+            this.Parsed = parsed;
+            this.HasRemainder = hasRemainder;
+        }
+
         public Output(bool success, TParsed parsed, bool hasRemainder, TInput remainder)
         {
             this.Success = success;
