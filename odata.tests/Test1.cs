@@ -257,7 +257,7 @@
             var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
             var adapter = new CombinatorParsingV3. ParserExtensions.StringAdapter(url);
             var parser = __GeneratedOdataV4.Parsers.Rules._odataRelativeUriParser.Instance2;
-            CombinatorParsingV3.ParserExtensions.TryParse(parser, url, out var urlCst);
+            CombinatorParsingV3.ParserExtensions.TryParse(parser, adapter, out var urlCst);
             for (int i = 0; i < iterations; ++i)
             {
                 if (!CombinatorParsingV3.ParserExtensions.TryParse(parser, url, out urlCst))
@@ -273,10 +273,11 @@
             //// var iterations = 100000;
             //// ODL time: 18762902
 
-            var iterations = 100000000;
+            var iterations = 100_000_000;
             var stopwatch = Stopwatch.StartNew();
             Perf4Generator(iterations);
             Console.WriteLine(stopwatch.ElapsedTicks);
+            Console.WriteLine(19000000);
         }
 
         private static void Perf3Generator(int iterations)
