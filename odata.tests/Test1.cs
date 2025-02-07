@@ -273,7 +273,7 @@
             //// var iterations = 100000;
             //// ODL time: 18762902
 
-            var iterations = 100_000_000;
+            var iterations = 1_000_000;
             var stopwatch = Stopwatch.StartNew();
             Perf4Generator(iterations);
             Console.WriteLine(stopwatch.ElapsedTicks);
