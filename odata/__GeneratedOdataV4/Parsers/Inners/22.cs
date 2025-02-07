@@ -15,7 +15,7 @@ namespace __GeneratedOdataV4.Parsers.Inners
 
                 return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _ʺx3Fʺ>(
                     true,
-                    __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ.Instance,
+                    default,
                     more,
                     remainder);
             }

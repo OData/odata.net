@@ -20,9 +20,7 @@ namespace __GeneratedOdataV4.Parsers.Inners
 
                 return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _ʺx3Fʺ_queryOptions>(
                     true,
-                    new _ʺx3Fʺ_queryOptions(
-                        _ʺx3Fʺ.Parsed,
-                        _queryOptions.Parsed),
+                    default,
                     _queryOptions.HasRemainder,
                     _queryOptions.Remainder);
             }

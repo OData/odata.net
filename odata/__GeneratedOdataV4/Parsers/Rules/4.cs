@@ -26,7 +26,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
 
                 return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath>(
                     true,
-                    output.Parsed,
+                    default,
                     output.HasRemainder,
                     output.Remainder);
             }
@@ -48,9 +48,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
                     
                     return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath._entitySetName_꘡collectionNavigation꘡>(
                         true,
-                        new _resourcePath._entitySetName_꘡collectionNavigation꘡(
-                            _entitySetName.Parsed,
-                            _collectionNavigation.Parsed),
+                        default,
                         _collectionNavigation.HasRemainder,
                         _collectionNavigation.Remainder);
                 }

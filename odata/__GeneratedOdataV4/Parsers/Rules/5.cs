@@ -128,7 +128,7 @@
 
                 return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _collectionNavigation>(
                     true,
-                    Node,
+                    default,
                     more,
                     remainder);
             }

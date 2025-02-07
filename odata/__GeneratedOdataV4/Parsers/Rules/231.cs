@@ -46,7 +46,7 @@
 
                 return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _entitySetName>(
                     true,
-                    Node,
+                    default,
                     more,
                     remainder);
             }

@@ -161,7 +161,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
 
                 return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _queryOptions>(
                     true,
-                    Node,
+                    default,
                     more,
                     remainder);
             }
