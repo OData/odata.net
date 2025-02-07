@@ -23,6 +23,11 @@
                 return false;
             }
 
+            if (output.HasRemainder)
+            {
+                throw new Exception("didn't parse full input");
+            }
+
             parsed = output.Parsed;
             return true;
         }

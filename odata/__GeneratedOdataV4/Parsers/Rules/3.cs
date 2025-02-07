@@ -237,7 +237,7 @@ return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._odataRelativeU
                             _resourcePath.Parsed, 
                             queryOptions.Parsed),
                         queryOptions.HasRemainder,
-                        input);
+                        queryOptions.Remainder);
                 }
             }
         }

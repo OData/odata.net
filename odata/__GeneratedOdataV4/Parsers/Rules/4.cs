@@ -167,7 +167,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
                             _entitySetName.Parsed,
                             Node),
                         more,
-                        input);
+                        remainder);
                 }
             }
 

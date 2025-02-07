@@ -241,13 +241,13 @@
         public void OdataTest2()
         {
             var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
-            if (!__GeneratedOdata.Parsers.Rules._odataRelativeUriParser.Instance.TryParse(url, out var urlCst))
+            if (!CombinatorParsingV3.ParserExtensions.TryParse(__GeneratedOdataV4.Parsers.Rules._odataRelativeUriParser.Instance2, url, out var urlCst))
             {
                 throw new Exception("TODO");
             }
 
             var stringBuilder = new StringBuilder();
-            __GeneratedOdata.Trancsribers.Rules._odataRelativeUriTranscriber.Instance.Transcribe(urlCst, stringBuilder);
+            __GeneratedOdataV4.Trancsribers.Rules._odataRelativeUriTranscriber.Instance.Transcribe(urlCst, stringBuilder);
             var transcribed = stringBuilder.ToString();
             Assert.AreEqual(url, transcribed);
         }
