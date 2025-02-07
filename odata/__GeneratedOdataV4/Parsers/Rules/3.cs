@@ -293,7 +293,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
             public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Parse(in CombinatorParsingV3.StringInput input)
             {
                 //// TODO OR
-                var output = _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance2.Parse(input);
+                /*var output = _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance2.Parse(input);
                 if (!output.Success)
                 {
                     return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri>(
@@ -307,7 +307,13 @@ namespace __GeneratedOdataV4.Parsers.Rules
                     true,
                     Node,
                     output.HasRemainder,
-                    output.Remainder);
+                    output.Remainder);*/
+
+                return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri>(
+                    true,
+                    Node,
+                    false,
+                    input);
             }
         }
 
