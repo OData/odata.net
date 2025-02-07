@@ -7,7 +7,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
     
     public static class _queryOptionsParser
     {
-        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._queryOptions, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._queryOptions>> Instance2 { get; } = new Parser2();
+        /*public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._queryOptions, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._queryOptions>> Instance2 { get; } = new Parser2();
 
         private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._queryOptions, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._queryOptions>>
         {
@@ -165,7 +165,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
                     more,
                     remainder);
             }
-        }
+        }*/
 
         public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._queryOptions> Instance { get; } = new Parser();
         

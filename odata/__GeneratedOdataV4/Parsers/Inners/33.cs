@@ -5,7 +5,7 @@ namespace __GeneratedOdataV4.Parsers.Inners
     
     public static class _ʺx3Fʺ_queryOptionsParser
     {
-        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ_queryOptions, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ_queryOptions>> Instance2 { get; } = new Parser2();
+        /*public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ_queryOptions, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ_queryOptions>> Instance2 { get; } = new Parser2();
 
         private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ_queryOptions, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ_queryOptions>>
         {
@@ -24,7 +24,7 @@ namespace __GeneratedOdataV4.Parsers.Inners
                     _queryOptions.HasRemainder,
                     _queryOptions.Remainder);
             }
-        }
+        }*/
 
 
         public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ_queryOptions> Instance { get; } = new Parser();

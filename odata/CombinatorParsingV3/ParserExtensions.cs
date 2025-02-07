@@ -1,34 +1,56 @@
 ﻿namespace CombinatorParsingV3
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
     public static class ParserExtensions
     {
-        public static bool TryParse<TParsed, TOutput>(this IParser<char, StringInput, TParsed, TOutput> parser, string input, out TParsed parsed)
-            where TOutput : IOutput<char, StringInput, TParsed>, allows ref struct
+        public sealed class StringAdapter : IReadOnlyList<char>
         {
-            return parser.TryParse(new StringInput(input), out parsed);
+            private readonly string source;
+
+            public StringAdapter(string source)
+            {
+                this.source = source;
+            }
+
+            public char this[int index] => this.source[index];
+
+            public int Count => this.source.Length;
+
+            public IEnumerator<char> GetEnumerator()
+            {
+                return this.source.GetEnumerator();
+            }
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return this.source.GetEnumerator();
+            }
         }
 
-        public static bool TryParse<TToken, TInput, TParsed, TOutput>(this IParser<TToken, TInput, TParsed, TOutput> parser, TInput input, out TParsed parsed)
-            where TInput : IInput<TToken, TInput>, allows ref struct
-            where TOutput : IOutput<TToken, TInput, TParsed>, allows ref struct
+        public static bool TryParse<TParsed>(this IParser<char, StringAdapter, TParsed> parser, string input, out TParsed parsed)
         {
-            var output = parser.Parse(ref input);
-            if (!output.Success)
+            return parser.TryParse(new StringAdapter(input), out parsed);
+        }
+
+        public static bool TryParse<TToken, TInput, TParsed>(this IParser<TToken, TInput, TParsed> parser, TInput input, out TParsed parsed)
+            where TInput : IReadOnlyList<TToken>
+        {
+            parsed = parser.Parse(input, out var advancement);
+            
+            if (advancement == 0)
             {
-                parsed = default(TParsed)!;
                 return false;
             }
 
-            if (output.HasRemainder)
+            if (advancement < input.Count)
             {
                 throw new Exception("didn't parse full input");
             }
 
-            parsed = output.Parsed;
             return true;
         }
 

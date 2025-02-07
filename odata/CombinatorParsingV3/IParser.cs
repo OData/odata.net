@@ -1,4 +1,5 @@
 ﻿using __GeneratedOdata.CstNodes.Rules;
+using System.Collections.Generic;
 
 namespace CombinatorParsingV3
 {
@@ -15,9 +16,10 @@ namespace CombinatorParsingV3
 
     //// TODO covariance and contravariance
 
-    public interface IParser<TToken, TInput, out TParsed, out TOutput> where TInput : IInput<TToken, TInput>, allows ref struct where TOutput : IOutput<TToken, TInput, TParsed>, allows ref struct
+    public interface IParser<TToken, TInput, TParsed>
+        where TInput : IReadOnlyList<TToken> //// TODO use IInput here
     {
-         TOutput Parse(in TInput input);
+         TParsed Parse(TInput input, out int advancement);
     }
 
     public interface IInput<out TToken, out TInput> where TInput : IInput<TToken, TInput>, allows ref struct

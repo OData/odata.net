@@ -5,7 +5,7 @@
     
     public static class _odataIdentifierParser
     {
-        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataIdentifier, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataIdentifier>> Instance2 { get; } = new Parser2();
+        /*public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataIdentifier, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataIdentifier>> Instance2 { get; } = new Parser2();
 
         private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataIdentifier, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataIdentifier>>
         {
@@ -46,7 +46,7 @@
                     more,
                     remainder);
             }
-        }
+        }*/
 
         public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._odataIdentifier> Instance { get; } = new Parser();
         

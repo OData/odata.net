@@ -5,7 +5,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
 
     public static class _resourcePathParser
     {
-        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath>> Instance2 { get; }
+        /*public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath>> Instance2 { get; }
         = new Parser2();
 
         private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath>>
@@ -24,19 +24,19 @@ namespace __GeneratedOdataV4.Parsers.Rules
                         input);
                 }*/
 
-                return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath>(
+                /*return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath>(
                     true,
                     default,
                     output.HasRemainder,
                     output.Remainder);
             }
-        }
+        }*/
 
         public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._resourcePath> Instance { get; } = (_entitySetName_꘡collectionNavigation꘡Parser.Instance);
 
         public static class _entitySetName_꘡collectionNavigation꘡Parser
         {
-            public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡>> Instance2 { get; } = new Parser2();
+            /*public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡>> Instance2 { get; } = new Parser2();
 
             private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡>>
             {
@@ -52,7 +52,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
                         _collectionNavigation.HasRemainder,
                         _collectionNavigation.Remainder);
                 }
-            }
+            }*/
 
             public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡> Instance { get; } = new Parser();
 

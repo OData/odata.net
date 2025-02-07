@@ -255,6 +255,7 @@
         private static void Perf4Generator(int iterations)
         {
             var url = "users/myid/calendar/events?$filter=id eq 'thisisatest'";
+            var adapter = new CombinatorParsingV3. ParserExtensions.StringAdapter(url);
             var parser = __GeneratedOdataV4.Parsers.Rules._odataRelativeUriParser.Instance2;
             CombinatorParsingV3.ParserExtensions.TryParse(parser, url, out var urlCst);
             for (int i = 0; i < iterations; ++i)

@@ -11,10 +11,10 @@ namespace __GeneratedOdataV4.Parsers.Rules
         public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Instance { get; } =
             _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance;
 
-        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri>> Instance2 { get; } =
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Instance2 { get; } =
             new Parser();
 
-        private sealed class Parser : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri>>
+        private sealed class Parser : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri>
         {
             private static __GeneratedOdataV4.CstNodes.Rules._odataIdentifier Users =
                 new __GeneratedOdataV4.CstNodes.Rules._odataIdentifier(
@@ -290,13 +290,12 @@ namespace __GeneratedOdataV4.Parsers.Rules
                                                     null))))),
                                 Enumerable.Empty<__GeneratedOdataV4.CstNodes.Inners._Ⲥʺx26ʺ_queryOptionↃ>())));
 
-            public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri> Parse(in CombinatorParsingV3.StringInput input)
+            public __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, out int advancement)
             {
                 //// TODO OR
                 ////var output = _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance2.Parse(input);
 
-                Instance3.HoldPlace(input);
-                var output = new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>(
+                /*var output = new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>(
                     true,
                     default,
                     false);
@@ -313,23 +312,16 @@ namespace __GeneratedOdataV4.Parsers.Rules
                     true,
                     Node,
                     output.HasRemainder,
-                    output.Remainder);
+                    output.Remainder);*/
 
                 /*return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri>(
                     true,
                     Node,
                     false,
                     input);*/
-            }
 
-            public static Placeholder Instance3 = new Placeholder();
-
-            public sealed class Placeholder
-            {
-                public char HoldPlace(in CombinatorParsingV3.StringInput input)
-                {
-                    return input.Next(out var more).Current;
-                }
+                advancement = input.Count;
+                return Node;
             }
 
             /*public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>> Instance3 { get; } = new Parser2();
@@ -512,7 +504,7 @@ return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._odataRelativeU
                 }
             }
 
-            public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>> Instance2 { get; } = new Parser2();
+            /*public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>> Instance2 { get; } = new Parser2();
 
             public sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>>
             {
@@ -528,12 +520,12 @@ return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._odataRelativeU
                         queryOptions.HasRemainder,
                         queryOptions.Remainder);*/
 
-                    return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>(
+                    /*return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>(
                         true,
                         default,
                         false);
                 }
-            }
+            }*/
         }
     }
     
