@@ -155,10 +155,8 @@ namespace __GeneratedOdataV4.Parsers.Inners
 
             public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _ʺx3Fʺ_queryOptions> Parse(in CombinatorParsingV3.StringInput input)
             {
-                var remainder = input;
-
-                bool more = false;
-                for (int i = 0; i < 28; ++i)
+                var remainder = input.Next(out var more);
+                for (int i = 0; i < 27; ++i)
                 {
                     remainder = remainder.Next(out more);
                 }
@@ -166,7 +164,7 @@ namespace __GeneratedOdataV4.Parsers.Inners
                 return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _ʺx3Fʺ_queryOptions>(
                     true,
                     Node,
-                    false,
+                    more,
                     remainder);
             }
         }

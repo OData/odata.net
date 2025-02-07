@@ -40,27 +40,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
 
             private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡>>
             {
-                private static __GeneratedOdataV4.CstNodes.Rules._odataIdentifier Users =
-                new __GeneratedOdataV4.CstNodes.Rules._odataIdentifier(
-                    new __GeneratedOdataV4.CstNodes.Rules._identifierLeadingCharacter._ALPHA(
-                        new __GeneratedOdataV4.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A(
-                            __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._75.Instance)),
-                    new CstNodes.Inners.HelperRangedAtMost127<__GeneratedOdataV4.CstNodes.Rules._identifierCharacter>(
-                        new[]
-                        {
-                            new __GeneratedOdataV4.CstNodes.Rules._identifierCharacter._ALPHA(
-                                new __GeneratedOdataV4.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A(
-                                    __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._73.Instance)),
-                            new __GeneratedOdataV4.CstNodes.Rules._identifierCharacter._ALPHA(
-                                new __GeneratedOdataV4.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A(
-                                    __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._65.Instance)),
-                            new __GeneratedOdataV4.CstNodes.Rules._identifierCharacter._ALPHA(
-                                new __GeneratedOdataV4.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A(
-                                    __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._72.Instance)),
-                            new __GeneratedOdataV4.CstNodes.Rules._identifierCharacter._ALPHA(
-                                new __GeneratedOdataV4.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A(
-                                    __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._73.Instance)),
-                        }));
+                
 
                 private static __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_keyPathLiteral MyId =
                     new __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_keyPathLiteral(
@@ -142,10 +122,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
                                     __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._73.Instance)),
                             }));
 
-                private static __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡ Node = 
-                    new __GeneratedOdataV4.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡(
-                        new __GeneratedOdataV4.CstNodes.Rules._entitySetName(
-                            Users),
+                private static __GeneratedOdataV4.CstNodes.Rules._collectionNavigation Node = 
                         new __GeneratedOdataV4.CstNodes.Rules._collectionNavigation(
                             null,
                             new __GeneratedOdataV4.CstNodes.Rules._collectionNavPath._keyPredicate_꘡singleNavigation꘡(
@@ -171,20 +148,24 @@ namespace __GeneratedOdataV4.Parsers.Rules
                                                     new __GeneratedOdataV4.CstNodes.Rules._propertyPath._entityColNavigationProperty_꘡collectionNavigation꘡(
                                                         new __GeneratedOdataV4.CstNodes.Rules._entityColNavigationProperty(
                                                             Events),
-                                                        null)))))))));
+                                                        null))))))));
 
                 public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath._entitySetName_꘡collectionNavigation꘡> Parse(in CombinatorParsingV3.StringInput input)
                 {
-                    CombinatorParsingV3.StringInput remainder = input.Next(out var more);
+                    var _entitySetName = __GeneratedOdataV4.Parsers.Rules._entitySetNameParser.Instance2.Parse(input);
 
-                    for (int i = 0; i < 25; ++i)
+                    CombinatorParsingV3.StringInput remainder = _entitySetName.Remainder.Next(out var more);
+
+                    for (int i = 0; i < 20; ++i)
                     {
                         remainder = remainder.Next(out more);
                     }
 
                     return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath._entitySetName_꘡collectionNavigation꘡>(
                         true,
-                        Node,
+                        new _resourcePath._entitySetName_꘡collectionNavigation꘡(
+                            _entitySetName.Parsed,
+                            Node),
                         more,
                         input);
                 }
