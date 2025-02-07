@@ -293,7 +293,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
             public __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
                 //// TODO OR
-                ////var output = _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance2.Parse(input);
+                var output = _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance2.Parse(input, start, out newStart);
 
                 /*var output = new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>(
                     true,
@@ -321,12 +321,12 @@ namespace __GeneratedOdataV4.Parsers.Rules
                     input);*/
 
 
-                var output = Instance3.Parse(input, start, out newStart);
+                ////var output = Instance3.Parse(input, start, out newStart);
 
                 return Node;
             }
 
-            public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡> Instance3 { get; } = new Parser2();
+            /*public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡> Instance3 { get; } = new Parser2();
 
             public sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡>
             {
@@ -340,7 +340,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
 
                     return default;
                 }
-            }
+            }*/
         }
 
         public static class _ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡Parser
