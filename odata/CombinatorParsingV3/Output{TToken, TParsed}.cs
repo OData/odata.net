@@ -1,6 +1,6 @@
 ﻿namespace CombinatorParsingV3
 {
-    public ref struct Output<TToken, TInput, TParsed> : IOutput<TToken, TInput, TParsed> where TInput : IInput<TToken, TInput>, allows ref struct
+    public readonly ref struct Output<TToken, TInput, TParsed> : IOutput<TToken, TInput, TParsed> where TInput : IInput<TToken, TInput>, allows ref struct
     {
         public Output(bool success, TParsed parsed, bool hasRemainder, TInput remainder)
         {
