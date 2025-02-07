@@ -44,7 +44,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
                         _collectionNavigation.Remainder);*/
 
                     newStart = start;
-                    for (; newStart < start + 27; ++newStart)
+                    for (; newStart < start + 26; ++newStart)
                     {
                         var next = input[newStart];
                     }

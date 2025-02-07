@@ -473,7 +473,7 @@ return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._odataRelativeU
                     var _resourcePath = __GeneratedOdataV4.Parsers.Rules._resourcePathParser.Instance2.Parse(input, start, out newStart);
 
                     newStart = start;
-                    for (; newStart < input.Count; ++newStart)
+                    for (; newStart < start + 54; ++newStart)
                     {
                         var next = input[newStart];
                     }
