@@ -674,15 +674,6 @@ namespace Microsoft.OData.Core {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to $count is not allowed in $select option..
-        /// </summary>
-        internal static string ExpressionToken_DollarCountNotAllowedInSelect {
-            get {
-                return ResourceManager.GetString("ExpressionToken_DollarCountNotAllowedInSelect", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to An identifier was expected at position {0}..
         /// </summary>
         internal static string ExpressionToken_IdentifierExpected {
@@ -6270,6 +6261,42 @@ namespace Microsoft.OData.Core {
         internal static string SelectExpandBinder_InvalidQueryOptionNestedSelection {
             get {
                 return ResourceManager.GetString("SelectExpandBinder_InvalidQueryOptionNestedSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No more segment &apos;{0}&apos; is allowed after &apos;/$count&apos; segment..
+        /// </summary>
+        internal static string SelectExpandBinder_NoSegmentAllowedAfterDollarCount {
+            get {
+                return ResourceManager.GetString("SelectExpandBinder_NoSegmentAllowedAfterDollarCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;/$count&apos; segment is not allowed as first segment..
+        /// </summary>
+        internal static string SelectExpandBinder_NotAllowedDollarCountAsFirstSegment {
+            get {
+                return ResourceManager.GetString("SelectExpandBinder_NotAllowedDollarCountAsFirstSegment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to In $select query option, &apos;/$count&apos; segment is not allowed on the navigation property segment &apos;{0}&apos;..
+        /// </summary>
+        internal static string SelectExpandBinder_NotAllowedDollarCountOnNavigationPropertyInDollarSelect {
+            get {
+                return ResourceManager.GetString("SelectExpandBinder_NotAllowedDollarCountOnNavigationPropertyInDollarSelect", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;/$count&apos; segment is only allowed on the collection type segment..
+        /// </summary>
+        internal static string SelectExpandBinder_NotAllowedDollarCountOnNonCollection {
+            get {
+                return ResourceManager.GetString("SelectExpandBinder_NotAllowedDollarCountOnNonCollection", resourceCulture);
             }
         }
         
