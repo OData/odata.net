@@ -61,10 +61,24 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void SelectPropertiesWithDollarCountOperationThrows()
+        public void SelectPropertiesWithDollarCountOperationDoesNotThrow()
         {
-            Action readResult = () => RunParseSelectExpand("MyLions/$count", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
-            readResult.Throws<ODataException>(SRResources.ExpressionToken_DollarCountNotAllowedInSelect);
+            Action readResult = () => RunParseSelectExpand("RelatedIDs/$count", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            readResult.DoesNotThrow();
+        }
+
+        [Fact]
+        public void SelectPropertiesWithDollarCountAfterNonCollectionPropertyThrows()
+        {
+            Action readResult = () => RunParseSelectExpand("Name/$count", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            readResult.Throws<ODataException>(SRResources.SelectExpandBinder_NotAllowedDollarCountOnNonCollection);
+        }
+
+        [Fact]
+        public void SelectPropertiesWithDollarCountAfterNavigationPropertyThrows()
+        {
+            Action readResult = () => RunParseSelectExpand("MyPaintings/$count", null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            readResult.Throws<ODataException>(Error.Format(SRResources.SelectExpandBinder_NotAllowedDollarCountOnNavigationPropertyInDollarSelect, "MyPaintings"));
         }
 
         [Fact]
@@ -585,6 +599,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             const string expandClauseText = "MyDog/$count/MyPeople";
             Action readResult = () => RunParseSelectExpand(null, expandClauseText, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
             readResult.Throws<ODataException>(SRResources.ExpressionToken_NoPropAllowedAfterDollarCount);
+        }
+
+        [Fact]
+        public void SelectCollectionPropertyWithMoreSegmentAfterDollarCountOperationThrows()
+        {
+            const string selectClauseText = "RelatedIDs/$count/MyPeople";
+            Action readResult = () => RunParseSelectExpand(selectClauseText, null, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            readResult.Throws<ODataException>(Error.Format(SRResources.SelectExpandBinder_NoSegmentAllowedAfterDollarCount, "MyPeople"));
         }
 
         [Fact]
@@ -1652,6 +1674,87 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             Assert.NotNull(pathSelectItem.SkipOption);
             Assert.Equal(2, pathSelectItem.SkipOption);
+        }
+
+        // $select=colProperty/$count
+        [Fact]
+        public void SelectWithCollectionPrimitivePropCountWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "RelatedIDs/$count"}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectExpandClause);
+            PathCountSelectItem selectCountItem = Assert.IsType<PathCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            PropertySegment propertySegment = Assert.IsType<PropertySegment>(Assert.Single(selectCountItem.SelectedPath));
+            Assert.Equal("RelatedIDs", propertySegment.Property.Name);
+
+            Assert.Null(selectCountItem.Filter);
+            Assert.Null(selectCountItem.Search);
+        }
+
+        // $select=colProperty/$count($filter=...)
+        [Fact]
+        public void SelectWithCollectionPrimitivePropCountWithFilterOptionWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "RelatedIDs/$count($filter=$this lt 42)"}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            PathCountSelectItem selectCountItem = Assert.IsType<PathCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            PropertySegment propertySegment = Assert.IsType<PropertySegment>(Assert.Single(selectCountItem.SelectedPath));
+            Assert.Equal("RelatedIDs", propertySegment.Property.Name);
+
+            Assert.NotNull(selectCountItem.Filter);
+            BinaryOperatorNode binaryNode = Assert.IsType<BinaryOperatorNode>(selectCountItem.Filter.Expression);
+            Assert.Equal(BinaryOperatorKind.LessThan, binaryNode.OperatorKind);
+            NonResourceRangeVariableReferenceNode leftNode = Assert.IsType<NonResourceRangeVariableReferenceNode>(binaryNode.Left);
+            Assert.Equal("$this", leftNode.Name);
+
+            ConstantNode rightNode = Assert.IsType<ConstantNode>(binaryNode.Right);
+            Assert.Equal(42, rightNode.Value);
+
+            Assert.Null(selectCountItem.Search);
+        }
+
+        // $select=colProperty/$count($search=...)
+        [Fact]
+        public void SelectWithCollectionPrimitivePropCountWithSearchOptionWorks()
+        {
+            // Arrange
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$select", "RelatedIDs/$count($search=abc)"}
+                });
+
+            // Act
+            var selectExpandClause = odataQueryOptionParser.ParseSelectAndExpand();
+
+            // Assert
+            PathCountSelectItem selectCountItem = Assert.IsType<PathCountSelectItem>(Assert.Single(selectExpandClause.SelectedItems));
+            PropertySegment propertySegment = Assert.IsType<PropertySegment>(Assert.Single(selectCountItem.SelectedPath));
+            Assert.Equal("RelatedIDs", propertySegment.Property.Name);
+
+            Assert.Null(selectCountItem.Filter);
+            Assert.NotNull(selectCountItem.Search);
         }
 
         // $expand=navProp/$count
