@@ -5,26 +5,26 @@ namespace __GeneratedOdataV4.Parsers.Inners
     
     public static class _ʺx3Fʺ_queryOptionsParser
     {
-        /*public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ_queryOptions, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ_queryOptions>> Instance2 { get; } = new Parser2();
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ_queryOptions> Instance2 { get; } = new Parser2();
 
-        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ_queryOptions, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ_queryOptions>>
+        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ_queryOptions>
         {
-            public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _ʺx3Fʺ_queryOptions> Parse(in CombinatorParsingV3.StringInput input)
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+            public _ʺx3Fʺ_queryOptions Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                //// TODO try returning defaults from all of the parsers to see if it's the node allocations
+                /*var _ʺx3Fʺ = __GeneratedOdataV4.Parsers.Inners._ʺx3FʺParser.Instance2.Parse(input);
 
-                var _ʺx3Fʺ = __GeneratedOdataV4.Parsers.Inners._ʺx3FʺParser.Instance2.Parse(input);
+                var _queryOptions = __GeneratedOdataV4.Parsers.Rules._queryOptionsParser.Instance2.Parse(_ʺx3Fʺ.Remainder);*/
 
-                var _queryOptions = __GeneratedOdataV4.Parsers.Rules._queryOptionsParser.Instance2.Parse(_ʺx3Fʺ.Remainder);
+                newStart = start;
+                for (; newStart < start + 28; ++newStart)
+                {
+                    var next = input[newStart];
+                }
 
-
-                return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _ʺx3Fʺ_queryOptions>(
-                    true,
-                    default,
-                    _queryOptions.HasRemainder,
-                    _queryOptions.Remainder);
+                return default;
             }
-        }*/
+        }
 
 
         public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ_queryOptions> Instance { get; } = new Parser();

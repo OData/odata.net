@@ -474,10 +474,7 @@ return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._odataRelativeU
                 {
                     var _resourcePath = __GeneratedOdataV4.Parsers.Rules._resourcePathParser.Instance2.Parse(input, start, out newStart);
 
-                    for (; newStart < start + 54; ++newStart)
-                    {
-                        var next = input[newStart];
-                    }
+                    var _ʺx3Fʺ_queryOptions = __GeneratedOdataV4.Parsers.Inners._ʺx3Fʺ_queryOptionsParser.Instance2.Parse(input, newStart, out newStart);
 
                     return default;
                 }
