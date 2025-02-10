@@ -4,6 +4,23 @@ namespace __GeneratedOdataV4.Parsers.Rules
     
     public static class _ALPHAParser
     {
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._ALPHA> Instance2 { get; } = new Parser2();
+
+        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._ALPHA>
+        {
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+            public __GeneratedOdataV4.CstNodes.Rules._ALPHA Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
+            {
+                newStart = start;
+                for (; newStart < start + 1; ++newStart)
+                {
+                    var next = input[newStart];
+                }
+
+                return default;
+            }
+        }
+
         public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._ALPHA> Instance { get; } = (_Ⰳx41ⲻ5AParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._ALPHA>(_Ⰳx61ⲻ7AParser.Instance);
         
         public static class _Ⰳx41ⲻ5AParser
