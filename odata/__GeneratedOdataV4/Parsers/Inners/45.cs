@@ -28,7 +28,8 @@ namespace __GeneratedOdataV4.Parsers.Inners
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
                 public __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue._ʺx2Fʺ_propertyPath Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
                 {
-                    newStart = start;
+                    var _ʺx2Fʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx2FʺParser.Instance2.Parse(input, start, out newStart);
+
                     for (; newStart < start + 16; ++newStart)
                     {
                         var next = input[newStart];
