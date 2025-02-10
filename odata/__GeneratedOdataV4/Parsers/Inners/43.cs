@@ -4,6 +4,23 @@ namespace __GeneratedOdataV4.Parsers.Inners
     
     public static class _ʺx2Fʺ_keyPathLiteralParser
     {
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_keyPathLiteral> Instance2 { get; } = new Parser2();
+
+        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_keyPathLiteral>
+        {
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+            public __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_keyPathLiteral Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
+            {
+                newStart = start;
+                for (; newStart < start + 5; ++newStart)
+                {
+                    var next = input[newStart];
+                }
+
+                return default;
+            }
+        }
+
         public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_keyPathLiteral> Instance { get; } = new Parser();
         
         private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_keyPathLiteral>
