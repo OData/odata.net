@@ -34,38 +34,42 @@
 
                 return Output.Create(false, default(TParsed)!, input);
             }
-        }
+        }*/
 
-        public static IParser<char, char> Char(char @char)
+        [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+        public static IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, char> Char(char @char)
         {
-            ////return Parse.Token(@char, EqualityComparer<char>.Default);
-            //// PERF
             return new CharParser(@char);
         }
 
-        private sealed class CharParser : IParser<char, char>
+        private sealed class CharParser : IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, char>
         {
             private readonly char @char;
 
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public CharParser(char @char)
             {
                 this.@char = @char;
             }
 
-            public IOutput<char, char> Parse(IInput<char>? input)
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+            public char Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                if (input == null)
+                if (start >= input.Count)
                 {
-                    return Output.Create(false, default(char), input);
+                    newStart = start;
+                    return default;
                 }
 
-                if (input.Current == this.@char)
+                if (input[start] == this.@char)
                 {
-                    return Output.Create(true, this.@char, input.Next());
+                    newStart = start + 1;
+                    return this.@char;
                 }
 
-                return Output.Create(false, default(char), input);
+                newStart = start;
+                return default;
             }
-        }*/
+        }
     }
 }

@@ -11,12 +11,14 @@
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public __GeneratedOdataV4.CstNodes.Inners._x3F Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                newStart = start;
+                CombinatorParsingV3.Parse.Char((char)0x3F).Parse(input, start, out newStart);
+
+                /*newStart = start;
 
                 for (; newStart < start + 1; ++newStart)
                 {
                     var next = input[newStart];
-                }
+                }*/
 
                 return default;
             }
