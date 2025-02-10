@@ -37,12 +37,12 @@
         }*/
 
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-        public static IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, char> Char(char @char)
+        public static CharParser Char(char @char)
         {
             return new CharParser(@char);
         }
 
-        private sealed class CharParser : IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, char>
+        public readonly ref struct CharParser : IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, char>
         {
             private readonly char @char;
 
