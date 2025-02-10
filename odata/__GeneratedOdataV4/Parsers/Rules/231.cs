@@ -9,6 +9,7 @@
 
         private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._entitySetName>
         {
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public _entitySetName Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
                 /*var _odataIdentifier = __GeneratedOdataV4.Parsers.Rules._odataIdentifierParser.Instance2.Parse(input);

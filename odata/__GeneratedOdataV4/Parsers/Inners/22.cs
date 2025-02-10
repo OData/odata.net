@@ -5,21 +5,23 @@ namespace __GeneratedOdataV4.Parsers.Inners
     
     public static class _ʺx3FʺParser
     {
-        /*public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ>> Instance2 { get; } = new Parser2();
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ> Instance2 { get; } = new Parser2();
 
-        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ, CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ>>
+        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ>
         {
-            public CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _ʺx3Fʺ> Parse(in CombinatorParsingV3.StringInput input)
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+            public _ʺx3Fʺ Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                var remainder = input.Next(out var more);
+                newStart = start;
 
-                return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _ʺx3Fʺ>(
-                    true,
-                    default,
-                    more,
-                    remainder);
+                for (; newStart < start + 1; ++newStart)
+                {
+                    var next = input[newStart];
+                }
+
+                return default;
             }
-        }*/
+        }
 
         public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx3Fʺ> Instance { get; } = new Parser();
         
