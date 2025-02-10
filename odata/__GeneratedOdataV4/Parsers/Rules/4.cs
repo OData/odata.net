@@ -33,19 +33,8 @@ namespace __GeneratedOdataV4.Parsers.Rules
                 {
                     var _entitySetName = __GeneratedOdataV4.Parsers.Rules._entitySetNameParser.Instance2.Parse(input, start, out newStart);
 
-                    /*var _collectionNavigation = __GeneratedOdataV4.Parsers.Rules._collectionNavigationParser.Instance2.Parse(_entitySetName.Remainder);
+                    var _collectionNavigation = __GeneratedOdataV4.Parsers.Rules._collectionNavigationParser.Instance2.Parse(input, newStart, out newStart);
                     
-                    return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _resourcePath._entitySetName_꘡collectionNavigation꘡>(
-                        true,
-                        default,
-                        _collectionNavigation.HasRemainder,
-                        _collectionNavigation.Remainder);*/
-
-                    for (; newStart < start + 26; ++newStart)
-                    {
-                        var next = input[newStart];
-                    }
-
                     return default;
                 }
             }
