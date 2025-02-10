@@ -28,11 +28,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
                 public __GeneratedOdataV4.CstNodes.Rules._pchar._unreserved Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
                 {
-                    newStart = start;
-                    for (; newStart < start + 1; ++newStart)
-                    {
-                        var next = input[newStart];
-                    }
+                    var _unreserved_1 = __GeneratedOdataV4.Parsers.Rules._unreservedParser.Instance2.Parse(input, start, out newStart);
 
                     return default;
                 }

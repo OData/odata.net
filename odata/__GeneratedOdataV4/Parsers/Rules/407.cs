@@ -4,10 +4,36 @@ namespace __GeneratedOdataV4.Parsers.Rules
     
     public static class _unreservedParser
     {
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._unreserved> Instance2 { get; } = new Parser2();
+
+        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._unreserved>
+        {
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+            public __GeneratedOdataV4.CstNodes.Rules._unreserved Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
+            {
+                _ALPHAParser.Instance2.Parse(input, start, out newStart);
+
+                return default;
+            }
+        }
+
         public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._unreserved> Instance { get; } = (_ALPHAParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._unreserved>(_DIGITParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._unreserved>(_ʺx2DʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._unreserved>(_ʺx2EʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._unreserved>(_ʺx5FʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._unreserved>(_ʺx7EʺParser.Instance);
         
         public static class _ALPHAParser
         {
+            public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._unreserved._ALPHA> Instance2 { get; } = new Parser2();
+
+            private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._unreserved._ALPHA>
+            {
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+                public __GeneratedOdataV4.CstNodes.Rules._unreserved._ALPHA Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
+                {
+                    var _ALPHA_1 = __GeneratedOdataV4.Parsers.Rules._ALPHAParser.Instance2.Parse(input, start, out newStart);
+
+                    return default;
+                }
+            }
+
             public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._unreserved._ALPHA> Instance { get; } = new Parser();
             
             private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Rules._unreserved._ALPHA>
