@@ -31,6 +31,8 @@ namespace __GeneratedOdataV4.Parsers.Rules
                 {
                     var _keyPredicate_1 = __GeneratedOdataV4.Parsers.Rules._keyPredicateParser.Instance2.Parse(input, start, out newStart);
 
+                    var _singleNavigation = __GeneratedOdataV4.Parsers.Rules._singleNavigationParser.Instance2.Parse(input, newStart, out newStart);
+
                     return default;
                 }
             }

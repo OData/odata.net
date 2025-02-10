@@ -12,7 +12,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
             public __GeneratedOdataV4.CstNodes.Rules._keyPathSegments Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
                 newStart = start;
-                for (; newStart < start + 21; ++newStart)
+                for (; newStart < start + 5; ++newStart)
                 {
                     var next = input[newStart];
                 }
