@@ -11,11 +11,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public __GeneratedOdataV4.CstNodes.Rules._keyPathSegments Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                newStart = start;
-                for (; newStart < start + 5; ++newStart)
-                {
-                    var next = input[newStart];
-                }
+                var _Ⲥʺx2Fʺ_keyPathLiteralↃ_1 = __GeneratedOdataV4.Parsers.Inners._Ⲥʺx2Fʺ_keyPathLiteralↃParser.Instance2.Parse(input, start, out newStart);
 
                 return default;
             }
