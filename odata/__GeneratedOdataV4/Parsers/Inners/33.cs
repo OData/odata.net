@@ -14,13 +14,7 @@ namespace __GeneratedOdataV4.Parsers.Inners
             {
                 var _ʺx3Fʺ = __GeneratedOdataV4.Parsers.Inners._ʺx3FʺParser.Instance2.Parse(input, start, out newStart);
 
-                /*var _queryOptions = __GeneratedOdataV4.Parsers.Rules._queryOptionsParser.Instance2.Parse(_ʺx3Fʺ.Remainder);*/
-
-                newStart = start;
-                for (; newStart < start + 28; ++newStart)
-                {
-                    var next = input[newStart];
-                }
+                var _queryOptions = __GeneratedOdataV4.Parsers.Rules._queryOptionsParser.Instance2.Parse(input, newStart, out newStart);
 
                 return default;
             }
