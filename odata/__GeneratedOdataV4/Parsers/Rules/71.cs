@@ -15,10 +15,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
 
                 var _EQ_1 = __GeneratedOdataV4.Parsers.Rules._EQParser.Instance2.Parse(input, newStart, out newStart);
 
-                for (; newStart < start + 27; ++newStart)
-                {
-                    var next = input[newStart];
-                }
+                var _boolCommonExpr_1 = __GeneratedOdataV4.Parsers.Rules._boolCommonExprParser.Instance2.Parse(input, newStart, out newStart);
 
                 return default;
             }
