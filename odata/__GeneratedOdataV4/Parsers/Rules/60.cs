@@ -97,11 +97,7 @@ return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._systemQueryOpt
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
                 public __GeneratedOdataV4.CstNodes.Rules._systemQueryOption._filter Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
                 {
-                    newStart = start;
-                    for (; newStart < start + 27; ++newStart)
-                    {
-                        var next = input[newStart];
-                    }
+                    var _filter_1 = __GeneratedOdataV4.Parsers.Rules._filterParser.Instance2.Parse(input, start, out newStart);
 
                     return default;
                 }
