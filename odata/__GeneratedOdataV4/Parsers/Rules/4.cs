@@ -13,7 +13,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
         {
             public __GeneratedOdataV4.CstNodes.Rules._resourcePath Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                //// TODO set up time to get clement's helps
+                //// TODO set up time to get clement's help
                 //// TODO use noinline attribute
 
                 newStart = start;
