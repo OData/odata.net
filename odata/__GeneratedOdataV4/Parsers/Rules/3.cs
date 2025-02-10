@@ -290,9 +290,16 @@ namespace __GeneratedOdataV4.Parsers.Rules
                                                     null))))),
                                 Enumerable.Empty<__GeneratedOdataV4.CstNodes.Inners._Ⲥʺx26ʺ_queryOptionↃ>())));
 
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public __GeneratedOdataV4.CstNodes.Rules._odataRelativeUri Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                var output = _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance2.Parse(input, start, out newStart);
+                ////var output = _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance2.Parse(input, start, out newStart);
+
+                newStart = start;
+                for (; newStart < start + 54; ++newStart)
+                {
+                    var next = input[newStart];
+                }
 
                 return Node;
             }

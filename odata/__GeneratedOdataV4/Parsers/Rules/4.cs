@@ -14,7 +14,6 @@ namespace __GeneratedOdataV4.Parsers.Rules
             public __GeneratedOdataV4.CstNodes.Rules._resourcePath Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
                 //// TODO set up time to get clement's help
-                //// TODO use noinline attribute
 
                 _entitySetName_꘡collectionNavigation꘡Parser.Instance2.Parse(input, start, out newStart);
 
