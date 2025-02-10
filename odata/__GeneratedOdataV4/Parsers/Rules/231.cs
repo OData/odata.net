@@ -12,19 +12,7 @@
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public _entitySetName Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                /*var _odataIdentifier = __GeneratedOdataV4.Parsers.Rules._odataIdentifierParser.Instance2.Parse(input);
-
-                return new CombinatorParsingV3.Output<char, CombinatorParsingV3.StringInput, _entitySetName>(
-                    true,
-                    default,
-                    _odataIdentifier.HasRemainder,
-                    _odataIdentifier.Remainder);*/
-
-                newStart = start;
-                for (; newStart < start + 5; ++newStart)
-                {
-                    var next = input[newStart];
-                }
+                var _odataIdentifier = __GeneratedOdataV4.Parsers.Rules._odataIdentifierParser.Instance2.Parse(input, start, out newStart);
 
                 return default;
             }
