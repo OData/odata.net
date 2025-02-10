@@ -4,6 +4,19 @@ namespace __GeneratedOdataV4.Parsers.Inners
     
     public static class _x72Parser
     {
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._x72> Instance2 { get; } = new Parser2();
+
+        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._x72>
+        {
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+            public __GeneratedOdataV4.CstNodes.Inners._x72 Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
+            {
+                var _x24 = CombinatorParsingV3.Parse.Char((char)0x72).Parse(input, start, out newStart);
+
+                return default;
+            }
+        }
+
         public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._x72> Instance { get; } = new Parser();
         
         private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._x72>
