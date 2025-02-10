@@ -4,18 +4,14 @@ namespace __GeneratedOdataV4.Parsers.Inners
     
     public static class _ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalueParser
     {
-        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._singleNavigation> Instance2 { get; } = new Parser2();
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue> Instance2 { get; } = new Parser2();
 
-        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._singleNavigation>
+        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue>
         {
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
-            public __GeneratedOdataV4.CstNodes.Rules._singleNavigation Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
+            public __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                newStart = start;
-                for (; newStart < start + 16; ++newStart)
-                {
-                    var next = input[newStart];
-                }
+                _ʺx2Fʺ_propertyPathParser.Instance2.Parse(input, start, out newStart);
 
                 return default;
             }
@@ -25,6 +21,23 @@ namespace __GeneratedOdataV4.Parsers.Inners
         
         public static class _ʺx2Fʺ_propertyPathParser
         {
+            public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue._ʺx2Fʺ_propertyPath> Instance2 { get; } = new Parser2();
+
+            private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue._ʺx2Fʺ_propertyPath>
+            {
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+                public __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue._ʺx2Fʺ_propertyPath Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
+                {
+                    newStart = start;
+                    for (; newStart < start + 16; ++newStart)
+                    {
+                        var next = input[newStart];
+                    }
+
+                    return default;
+                }
+            }
+
             public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue._ʺx2Fʺ_propertyPath> Instance { get; } = new Parser();
             
             private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue._ʺx2Fʺ_propertyPath>
