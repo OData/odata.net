@@ -11,7 +11,7 @@ namespace __GeneratedOdataV4.Parsers.Inners
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                var _61 = CombinatorParsingV3.Parse.Char((char)0x61).Parse(input, start, out newStart);
+                var _61 = _61Parser.Instance2.Parse(input, start, out newStart);
 
                 return default;
             }
@@ -21,6 +21,19 @@ namespace __GeneratedOdataV4.Parsers.Inners
         
         public static class _61Parser
         {
+            public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._61> Instance2 { get; } = new Parser2();
+
+            private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._61>
+            {
+                [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+                public __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._61 Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
+                {
+                    var _61 = CombinatorParsingV3.Parse.Char((char)0x61).Parse(input, start, out newStart);
+
+                    return default;
+                }
+            }
+
             public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._61> Instance { get; } = new Parser();
             
             private sealed class Parser : IParser<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A._61>
