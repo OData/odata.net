@@ -16,11 +16,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
                 //// TODO set up time to get clement's help
                 //// TODO use noinline attribute
 
-                newStart = start;
-                for (; newStart < start + 26; ++newStart)
-                {
-                    var next = input[newStart];
-                }
+                _entitySetName_꘡collectionNavigation꘡Parser.Instance2.Parse(input, start, out newStart);
 
                 return default;
             }
