@@ -11,11 +11,8 @@ namespace __GeneratedOdataV4.Parsers.Inners
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public __GeneratedOdataV4.CstNodes.Rules._commonExpr Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                newStart = start;
-                for (; newStart < start + 2; ++newStart)
-                {
-                    var next = input[newStart];
-                }
+
+                var _primitiveLiteralⳆarrayOrObjectⳆrootExprⳆfirstMemberExprⳆfunctionExprⳆnegateExprⳆmethodCallExprⳆparenExprⳆlistExprⳆcastExprⳆisofExprⳆnotExpr_1 = __GeneratedOdataV4.Parsers.Inners._primitiveLiteralⳆarrayOrObjectⳆrootExprⳆfirstMemberExprⳆfunctionExprⳆnegateExprⳆmethodCallExprⳆparenExprⳆlistExprⳆcastExprⳆisofExprⳆnotExprParser.Instance2.Parse(input, start, out newStart);
 
                 return default;
             }
