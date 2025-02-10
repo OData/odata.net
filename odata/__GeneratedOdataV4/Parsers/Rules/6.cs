@@ -1,9 +1,27 @@
 namespace __GeneratedOdataV4.Parsers.Rules
 {
+    using __GeneratedOdataV4.CstNodes.Rules;
     using CombinatorParsingV2;
     
     public static class _collectionNavPathParser
     {
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._collectionNavPath> Instance2 { get; } = new Parser2();
+
+        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._collectionNavPath>
+        {
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+            public _collectionNavPath Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
+            {
+                newStart = start;
+                for (; newStart < start + 21; ++newStart)
+                {
+                    var next = input[newStart];
+                }
+
+                return default;
+            }
+        }
+
         public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._collectionNavPath> Instance { get; } = (_keyPredicate_꘡singleNavigation꘡Parser.Instance);
         
         public static class _keyPredicate_꘡singleNavigation꘡Parser

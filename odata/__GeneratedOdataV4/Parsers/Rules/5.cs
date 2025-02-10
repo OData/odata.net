@@ -12,11 +12,7 @@
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public _collectionNavigation Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                newStart = start;
-                for (; newStart < start + 21; ++newStart)
-                {
-                    var next = input[newStart];
-                }
+                __GeneratedOdataV4.Parsers.Rules._collectionNavPathParser.Instance2.Parse(input, start, out newStart);
 
                 return default;
             }
