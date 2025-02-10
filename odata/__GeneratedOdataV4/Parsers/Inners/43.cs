@@ -11,11 +11,9 @@ namespace __GeneratedOdataV4.Parsers.Inners
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public __GeneratedOdataV4.CstNodes.Inners._ʺx2Fʺ_keyPathLiteral Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                newStart = start;
-                for (; newStart < start + 5; ++newStart)
-                {
-                    var next = input[newStart];
-                }
+                var _ʺx2Fʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx2FʺParser.Instance2.Parse(input, start, out newStart);
+
+                var _keyPathLiteral_1 = __GeneratedOdataV4.Parsers.Rules._keyPathLiteralParser.Instance2.Parse(input, newStart, out newStart);
 
                 return default;
             }
