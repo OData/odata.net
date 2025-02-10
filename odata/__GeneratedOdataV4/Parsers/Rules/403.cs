@@ -4,6 +4,23 @@ namespace __GeneratedOdataV4.Parsers.Rules
     
     public static class _pcharParser
     {
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._pchar> Instance2 { get; } = new Parser2();
+
+        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._pchar>
+        {
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+            public __GeneratedOdataV4.CstNodes.Rules._pchar Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
+            {
+                newStart = start;
+                for (; newStart < start + 1; ++newStart)
+                {
+                    var next = input[newStart];
+                }
+
+                return default;
+            }
+        }
+
         public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._pchar> Instance { get; } = (_unreservedParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._pchar>(_pctⲻencodedParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._pchar>(_subⲻdelimsParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._pchar>(_ʺx3AʺParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._pchar>(_ʺx40ʺParser.Instance);
         
         public static class _unreservedParser

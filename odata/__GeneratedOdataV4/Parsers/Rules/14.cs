@@ -11,10 +11,10 @@
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public __GeneratedOdataV4.CstNodes.Rules._keyPathLiteral Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                newStart = start;
-                for (; newStart < start + 4; ++newStart)
+                var _pchar_1 = __GeneratedOdataV4.Parsers.Rules._pcharParser.Instance2.Parse(input, start, out newStart);
+                for (int i = 0; i < 3; ++i)
                 {
-                    var next = input[newStart];
+                    _pchar_1 = __GeneratedOdataV4.Parsers.Rules._pcharParser.Instance2.Parse(input, newStart, out newStart);
                 }
 
                 return default;
