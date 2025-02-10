@@ -8,15 +8,37 @@ namespace __GeneratedOdataV4.Parsers.Inners
 
         private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._primitiveLiteralⳆarrayOrObjectⳆrootExprⳆfirstMemberExprⳆfunctionExprⳆnegateExprⳆmethodCallExprⳆparenExprⳆlistExprⳆcastExprⳆisofExprⳆnotExpr>
         {
+            private static int CallCount = 0;
+
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public __GeneratedOdataV4.CstNodes.Inners._primitiveLiteralⳆarrayOrObjectⳆrootExprⳆfirstMemberExprⳆfunctionExprⳆnegateExprⳆmethodCallExprⳆparenExprⳆlistExprⳆcastExprⳆisofExprⳆnotExpr Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                newStart = start;
-                for (; newStart < start + 2; ++newStart)
+                if (CallCount % 2 == 0)
                 {
-                    var next = input[newStart];
+                    ++CallCount;
+
+                    newStart = start;
+                    for (; newStart < start + 2; ++newStart)
+                    {
+                        var next = input[newStart];
+                    }
+
+                    return default;
+                }
+                else if (CallCount % 2 == 1)
+                {
+                    ++CallCount;
+
+                    newStart = start;
+                    for (; newStart < start + 13; ++newStart)
+                    {
+                        var next = input[newStart];
+                    }
+
+                    return default;
                 }
 
+                newStart = start;
                 return default;
             }
         }
