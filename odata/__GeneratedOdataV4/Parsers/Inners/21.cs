@@ -8,10 +8,12 @@
 
         private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._x3F>
         {
+            private static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, char> Parser { get; } = CombinatorParsingV3.Parse.Char((char)0x3F);
+
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public __GeneratedOdataV4.CstNodes.Inners._x3F Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                CombinatorParsingV3.Parse.Char((char)0x3F).Parse(input, start, out newStart);
+                Parser.Parse(input, start, out newStart);
 
                 /*newStart = start;
 

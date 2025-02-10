@@ -55,7 +55,7 @@
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public char Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                if (start >= input.Count)
+                /*if (start >= input.Count)
                 {
                     newStart = start;
                     return default;
@@ -65,9 +65,9 @@
                 {
                     newStart = start + 1;
                     return this.@char;
-                }
+                }*/
 
-                newStart = start;
+                newStart = start + 1;
                 return default;
             }
         }
