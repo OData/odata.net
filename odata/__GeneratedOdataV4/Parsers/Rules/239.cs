@@ -12,6 +12,14 @@
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public _odataIdentifier Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
+                var _identifierLeadingCharacter_1 = __GeneratedOdataV4.Parsers.Rules._identifierLeadingCharacterParser.Instance2.Parse(input, start, out newStart);
+
+                /*var _identifierCharacter_1 = __GeneratedOdataV4.Parsers.Rules._identifierCharacterParser.Instance2.Parse(input, newStart, out newStart);
+                for (int i = 0; i < 3; ++i)
+                {
+                    _identifierCharacter_1 = __GeneratedOdataV4.Parsers.Rules._identifierCharacterParser.Instance2.Parse(input, newStart, out newStart);
+                }*/
+
                 newStart = start;
                 for (; newStart < start + 5; ++newStart)
                 {

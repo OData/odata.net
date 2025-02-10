@@ -4,6 +4,23 @@ namespace __GeneratedOdataV4.Parsers.Rules
     
     public static class _identifierLeadingCharacterParser
     {
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._identifierLeadingCharacter> Instance2 { get; } = new Parser2();
+
+        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._identifierLeadingCharacter>
+        {
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+            public __GeneratedOdataV4.CstNodes.Rules._identifierLeadingCharacter Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
+            {
+                newStart = start;
+                for (; newStart < start + 1; ++newStart)
+                {
+                    var next = input[newStart];
+                }
+
+                return default;
+            }
+        }
+
         public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._identifierLeadingCharacter> Instance { get; } = (_ALPHAParser.Instance);
         
         public static class _ALPHAParser
