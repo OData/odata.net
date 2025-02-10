@@ -14,15 +14,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
             [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
             public __GeneratedOdataV4.CstNodes.Rules._resourcePath Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
             {
-                //// TODO set up time to get clement's help
-
                 _entitySetName_꘡collectionNavigation꘡Parser.Instance2.Parse(input, start, out newStart);
-
-                /*newStart = start;
-                for (; newStart < start + 26; ++newStart)
-                {
-                    var next = input[newStart];
-                }*/
 
                 return default;
             }
