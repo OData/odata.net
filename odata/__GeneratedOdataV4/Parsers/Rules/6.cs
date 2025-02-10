@@ -29,11 +29,7 @@ namespace __GeneratedOdataV4.Parsers.Rules
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
                 public _collectionNavPath._keyPredicate_꘡singleNavigation꘡ Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
                 {
-                    newStart = start;
-                    for (; newStart < start + 21; ++newStart)
-                    {
-                        var next = input[newStart];
-                    }
+                    var _keyPredicate_1 = __GeneratedOdataV4.Parsers.Rules._keyPredicateParser.Instance2.Parse(input, start, out newStart);
 
                     return default;
                 }
