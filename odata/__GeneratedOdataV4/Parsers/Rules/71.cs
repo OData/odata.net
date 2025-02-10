@@ -13,6 +13,8 @@ namespace __GeneratedOdataV4.Parsers.Rules
             {
                 var _Ⲥʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺↃ_1 = __GeneratedOdataV4.Parsers.Inners._Ⲥʺx24x66x69x6Cx74x65x72ʺⳆʺx66x69x6Cx74x65x72ʺↃParser.Instance2.Parse(input, start, out newStart);
 
+                var _EQ_1 = __GeneratedOdataV4.Parsers.Rules._EQParser.Instance2.Parse(input, newStart, out newStart);
+
                 for (; newStart < start + 27; ++newStart)
                 {
                     var next = input[newStart];
