@@ -4,6 +4,19 @@ namespace __GeneratedOdataV4.Parsers.Inners
     
     public static class _Ⰳx61ⲻ7AParser
     {
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A> Instance2 { get; } = new Parser2();
+
+        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>
+        {
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+            public __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
+            {
+                var _61 = CombinatorParsingV3.Parse.Char((char)0x61).Parse(input, start, out newStart);
+
+                return default;
+            }
+        }
+
         public static IParser<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A> Instance { get; } = (_61Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_62Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_63Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_64Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_65Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_66Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_67Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_68Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_69Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_6AParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_6BParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_6CParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_6DParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_6EParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_6FParser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_70Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_71Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_72Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_73Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_74Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_75Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_76Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_77Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_78Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_79Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Inners._Ⰳx61ⲻ7A>(_7AParser.Instance);
         
         public static class _61Parser

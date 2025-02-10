@@ -51,11 +51,7 @@ return Output.Create(true, new __GeneratedOdataV4.CstNodes.Rules._ALPHA._Ⰳx41�
                 [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
                 public __GeneratedOdataV4.CstNodes.Rules._ALPHA._Ⰳx61ⲻ7A Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
                 {
-                    newStart = start;
-                    for (; newStart < start + 1; ++newStart)
-                    {
-                        var next = input[newStart];
-                    }
+                    var _Ⰳx61ⲻ7A_1 = __GeneratedOdataV4.Parsers.Inners._Ⰳx61ⲻ7AParser.Instance2.Parse(input, start, out newStart);
 
                     return default;
                 }
