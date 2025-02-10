@@ -30,10 +30,7 @@ namespace __GeneratedOdataV4.Parsers.Inners
                 {
                     var _ʺx2Fʺ_1 = __GeneratedOdataV4.Parsers.Inners._ʺx2FʺParser.Instance2.Parse(input, start, out newStart);
 
-                    for (; newStart < start + 16; ++newStart)
-                    {
-                        var next = input[newStart];
-                    }
+                    var _propertyPath_1 = __GeneratedOdataV4.Parsers.Rules._propertyPathParser.Instance2.Parse(input, newStart, out newStart);
 
                     return default;
                 }

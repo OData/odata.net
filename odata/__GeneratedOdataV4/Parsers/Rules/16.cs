@@ -4,6 +4,23 @@ namespace __GeneratedOdataV4.Parsers.Rules
     
     public static class _propertyPathParser
     {
+        public static CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._propertyPath> Instance2 { get; } = new Parser2();
+
+        private sealed class Parser2 : CombinatorParsingV3.IParser<char, CombinatorParsingV3.ParserExtensions.StringAdapter, __GeneratedOdataV4.CstNodes.Rules._propertyPath>
+        {
+            [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining)]
+            public __GeneratedOdataV4.CstNodes.Rules._propertyPath Parse(CombinatorParsingV3.ParserExtensions.StringAdapter input, int start, out int newStart)
+            {
+                newStart = start;
+                for (; newStart < start + 15; ++newStart)
+                {
+                    var next = input[newStart];
+                }
+
+                return default;
+            }
+        }
+
         public static IParser<char, __GeneratedOdataV4.CstNodes.Rules._propertyPath> Instance { get; } = (_entityColNavigationProperty_꘡collectionNavigation꘡Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._propertyPath>(_entityNavigationProperty_꘡singleNavigation꘡Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._propertyPath>(_complexColProperty_꘡complexColPath꘡Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._propertyPath>(_complexProperty_꘡complexPath꘡Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._propertyPath>(_primitiveColProperty_꘡primitiveColPath꘡Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._propertyPath>(_primitiveProperty_꘡primitivePath꘡Parser.Instance).Or<char, __GeneratedOdataV4.CstNodes.Rules._propertyPath>(_streamProperty_꘡boundOperation꘡Parser.Instance);
         
         public static class _entityColNavigationProperty_꘡collectionNavigation꘡Parser
