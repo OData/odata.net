@@ -1,0 +1,110 @@
+﻿<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+	<edmx:DataServices>
+		<Schema Namespace="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+			<EntityType Name="EdmBinary">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.Binary" Nullable="false" />
+			</EntityType>
+			<EntityType Name="EdmBoolean">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.Boolean" Nullable="false" />
+			</EntityType>
+			<EntityType Name="EdmByte">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.Byte" Nullable="false" />
+			</EntityType>
+			<EntityType Name="EdmDecimal">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.Decimal" Nullable="false" />
+			</EntityType>
+			<EntityType Name="EdmDouble">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.Double" Nullable="false" />
+			</EntityType>
+			<EntityType Name="EdmSingle">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.Single" Nullable="false" />
+			</EntityType>
+			<EntityType Name="EdmGuid">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.Guid" Nullable="false" />
+			</EntityType>
+			<EntityType Name="EdmInt16">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.Int16" Nullable="false" />
+			</EntityType>
+			<EntityType Name="EdmInt32">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.Int32" Nullable="false" />
+			</EntityType>
+			<EntityType Name="EdmInt64">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.Int64" Nullable="false" />
+			</EntityType>
+			<EntityType Name="EdmString">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.String" Nullable="false" />
+			</EntityType>
+			<EntityType Name="EdmTime">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.Duration" Nullable="false" />
+			</EntityType>
+			<EntityType Name="EdmDateTimeOffset">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.DateTimeOffset" Nullable="false" />
+			</EntityType>
+			<EntityType Name="Folder">
+				<Key>
+					<PropertyRef Name="Id" />
+				</Key>
+				<Property Name="Id" Type="Edm.Int32" Nullable="false" />
+				<Property Name="Name" Type="Edm.String" />
+				<NavigationProperty Name="Parent" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.Folder" Partner="Parent" />
+			</EntityType>
+			<EntityContainer Name="Container">
+				<EntitySet Name="EdmBinarySet" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.EdmBinary" />
+				<EntitySet Name="EdmBooleanSet" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.EdmBoolean" />
+				<EntitySet Name="EdmByteSet" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.EdmByte" />
+				<EntitySet Name="EdmDecimalSet" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.EdmDecimal" />
+				<EntitySet Name="EdmDoubleSet" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.EdmDouble" />
+				<EntitySet Name="EdmSingleSet" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.EdmSingle" />
+				<EntitySet Name="EdmGuidSet" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.EdmGuid" />
+				<EntitySet Name="EdmInt16Set" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.EdmInt16" />
+				<EntitySet Name="EdmInt32Set" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.EdmInt32" />
+				<EntitySet Name="EdmInt64Set" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.EdmInt64" />
+				<EntitySet Name="EdmStringSet" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.EdmString" />
+				<EntitySet Name="EdmTimeSet" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.EdmTime" />
+				<EntitySet Name="EdmDateTimeOffsetSet" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.EdmDateTimeOffset" />
+				<EntitySet Name="Folders" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.PrimitiveKeys.Folder">
+					<NavigationPropertyBinding Path="Parent" Target="Folders" />
+				</EntitySet>
+			</EntityContainer>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>
