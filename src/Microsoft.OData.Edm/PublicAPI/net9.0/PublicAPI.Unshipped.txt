@@ -1,3 +1,25 @@
+Microsoft.OData.Edm.EdmCoreModel.FindDeclaredBoundOperations(System.ReadOnlyMemory<char> qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.EdmCoreModel.FindDeclaredBoundOperations(System.ReadOnlySpan<char> qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.EdmCoreModel.FindDeclaredOperations(System.ReadOnlyMemory<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.EdmCoreModel.FindDeclaredOperations(System.ReadOnlySpan<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.EdmCoreModel.FindDeclaredTerm(System.ReadOnlyMemory<char> qualifiedName) -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
+Microsoft.OData.Edm.EdmCoreModel.FindDeclaredTerm(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
+Microsoft.OData.Edm.EdmCoreModel.FindDeclaredType(System.ReadOnlyMemory<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
+Microsoft.OData.Edm.EdmCoreModel.FindDeclaredType(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
+Microsoft.OData.Edm.EdmModelBase.FindDeclaredOperations(System.ReadOnlyMemory<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.EdmModelBase.FindDeclaredOperations(System.ReadOnlySpan<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.EdmModelBase.FindDeclaredTerm(System.ReadOnlyMemory<char> qualifiedName) -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
+Microsoft.OData.Edm.EdmModelBase.FindDeclaredTerm(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
+Microsoft.OData.Edm.EdmModelBase.FindDeclaredType(System.ReadOnlyMemory<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
+Microsoft.OData.Edm.EdmModelBase.FindDeclaredType(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
+Microsoft.OData.Edm.IEdmModel.FindDeclaredBoundOperations(System.ReadOnlyMemory<char> qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.IEdmModel.FindDeclaredBoundOperations(System.ReadOnlySpan<char> qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.IEdmModel.FindDeclaredOperations(System.ReadOnlyMemory<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.IEdmModel.FindDeclaredOperations(System.ReadOnlySpan<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+Microsoft.OData.Edm.IEdmModel.FindDeclaredTerm(System.ReadOnlyMemory<char> qualifiedName) -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
+Microsoft.OData.Edm.IEdmModel.FindDeclaredTerm(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
+Microsoft.OData.Edm.IEdmModel.FindDeclaredType(System.ReadOnlyMemory<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
+Microsoft.OData.Edm.IEdmModel.FindDeclaredType(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
 static Microsoft.OData.Edm.Date.implicit operator Microsoft.OData.Edm.Date(System.DateOnly operand) -> Microsoft.OData.Edm.Date
 static Microsoft.OData.Edm.Date.implicit operator System.DateOnly(Microsoft.OData.Edm.Date operand) -> System.DateOnly
 static Microsoft.OData.Edm.TimeOfDay.implicit operator Microsoft.OData.Edm.TimeOfDay(System.TimeOnly timeOnly) -> Microsoft.OData.Edm.TimeOfDay
@@ -1966,6 +1988,8 @@ virtual Microsoft.OData.Edm.EdmEntityType.DeclaredKey.get -> System.Collections.
 virtual Microsoft.OData.Edm.EdmEnumType.Members.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmEnumMember>
 virtual Microsoft.OData.Edm.EdmModelBase.FindDeclaredBoundOperations(Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
 virtual Microsoft.OData.Edm.EdmModelBase.FindDeclaredBoundOperations(string qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+virtual Microsoft.OData.Edm.EdmModelBase.FindDeclaredBoundOperations(System.ReadOnlyMemory<char> qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
+virtual Microsoft.OData.Edm.EdmModelBase.FindDeclaredBoundOperations(System.ReadOnlySpan<char> qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
 virtual Microsoft.OData.Edm.EdmModelBase.FindDeclaredVocabularyAnnotations(Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable element) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>
 virtual Microsoft.OData.Edm.EdmModelBase.VocabularyAnnotations.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>
 virtual Microsoft.OData.Edm.EdmNavigationSource.FindNavigationPropertyBindings(Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmNavigationPropertyBinding>

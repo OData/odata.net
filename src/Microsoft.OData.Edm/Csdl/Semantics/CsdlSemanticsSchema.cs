@@ -126,6 +126,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return modelFinder(this.model, namespaceQualifiedName);
         }
 
+
         public string UnresolvedName(string qualifiedName)
         {
             if (qualifiedName == null)

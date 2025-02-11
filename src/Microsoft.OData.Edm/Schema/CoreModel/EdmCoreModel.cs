@@ -31,7 +31,12 @@ namespace Microsoft.OData.Edm
 
         private readonly IList<IEdmSchemaElement> coreSchemaElements = new List<IEdmSchemaElement>();
 
-        private readonly IDictionary<string, IEdmSchemaType> coreSchemaTypes = new Dictionary<string, IEdmSchemaType>();
+        private readonly Dictionary<string, IEdmSchemaType> coreSchemaTypes = new Dictionary<string, IEdmSchemaType>();
+
+#if NET9_0
+        private readonly Dictionary<string, IEdmSchemaType>.AlternateLookup<ReadOnlySpan<char>> coreSchemaTypesSpanLookup;
+        private readonly Dictionary<string, IEdmSchemaType>.AlternateLookup<ReadOnlyMemory<char>> coreSchemaTypesMemoryLookup;
+#endif
 
         private readonly EdmCoreModelComplexType complexType = EdmCoreModelComplexType.Instance;
         private readonly EdmCoreModelEntityType entityType = EdmCoreModelEntityType.Instance;
@@ -121,6 +126,9 @@ namespace Microsoft.OData.Edm
 
                 coreSchemaElements.Add(pathType);
             }
+#if NET9_0
+            coreSchemaTypesSpanLookup = coreSchemaTypes.GetAlternateLookup<ReadOnlySpan<char>>();
+#endif
         }
 
         /// <summary>
@@ -799,5 +807,66 @@ namespace Microsoft.OData.Edm
             EdmCoreModelPrimitiveType definition;
             return primitiveTypesByKind.TryGetValue(kind, out definition) ? definition : null;
         }
+
+#if NET9_0
+        /// <inheritdoc/>
+        public IEdmSchemaType FindDeclaredType(ReadOnlyMemory<char> qualifiedName)
+        {
+            IEdmSchemaType element;
+            if (coreSchemaTypesMemoryLookup.TryGetValue(qualifiedName, out element))
+            {
+                return element;
+            }
+            return null;
+        }
+
+        /// <inheritdoc/>
+        public IEdmSchemaType FindDeclaredType(ReadOnlySpan<char> qualifiedName)
+        {
+            IEdmSchemaType element;
+            if (coreSchemaTypesSpanLookup.TryGetValue(qualifiedName, out element))
+            {
+                return element;
+            }
+            return null;
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<IEdmOperation> FindDeclaredBoundOperations(ReadOnlyMemory<char> qualifiedName, IEdmType bindingType)
+        {
+            return Enumerable.Empty<IEdmOperation>();
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<IEdmOperation> FindDeclaredOperations(ReadOnlyMemory<char> qualifiedName)
+        {
+            return Enumerable.Empty<IEdmOperation>();
+        }
+
+        /// <inheritdoc/>
+        public IEdmTerm FindDeclaredTerm(ReadOnlyMemory<char> qualifiedName)
+        {
+            return null;
+        }
+
+
+        /// <inheritdoc/>
+        public IEnumerable<IEdmOperation> FindDeclaredBoundOperations(ReadOnlySpan<char> qualifiedName, IEdmType bindingType)
+        {
+            return Enumerable.Empty<IEdmOperation>();
+        }
+
+        /// <inheritdoc/>
+        public IEnumerable<IEdmOperation> FindDeclaredOperations(ReadOnlySpan<char> qualifiedName)
+        {
+            return Enumerable.Empty<IEdmOperation>();
+        }
+
+        /// <inheritdoc/>
+        public IEdmTerm FindDeclaredTerm(ReadOnlySpan<char> qualifiedName)
+        {
+            return null;
+        }
+#endif
     }
 }

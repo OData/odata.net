@@ -40,7 +40,7 @@ namespace Microsoft.OData.Edm
         private readonly Dictionary<string, IEdmSchemaType>.AlternateLookup<ReadOnlyMemory<char>> schemaTypeDictionaryReadOnlyMemoryLookup;
         private readonly Dictionary<string, IEdmTerm>.AlternateLookup<ReadOnlyMemory<char>> termDictionaryReadOnlyMemoryLookup;
         private readonly Dictionary<string, IList<IEdmOperation>>.AlternateLookup<ReadOnlyMemory<char>> functionDictionaryReadOnlyMemoryLookup;
-        
+
         // ReadOnlySpan lookups are currently in preview
         private readonly Dictionary<string, IEdmEntityContainer>.AlternateLookup<ReadOnlySpan<char>> containersDictionaryReadOnlySpanLookup;
         private readonly Dictionary<string, IEdmSchemaType>.AlternateLookup<ReadOnlySpan<char>> schemaTypeDictionaryReadOnlySpanLookup;
@@ -309,7 +309,7 @@ namespace Microsoft.OData.Edm
 
                 this.bindableOperationsCache.TryAdd(bindingTypeName, bindableOperations);
             }
-            
+
             return bindableOperations;
         }
 
@@ -323,9 +323,9 @@ namespace Microsoft.OData.Edm
         /// </returns>
         public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(string qualifiedName, IEdmType bindingType)
         {
-            IEnumerable<IEdmOperation> enumerable = this.FindDeclaredBoundOperations(bindingType);  
+            IEnumerable<IEdmOperation> enumerable = this.FindDeclaredBoundOperations(bindingType);
 
-            if(enumerable == null)
+            if (enumerable == null)
             {
                 return Enumerable.Empty<IEdmOperation>();
             }
@@ -346,7 +346,7 @@ namespace Microsoft.OData.Edm
             }
             else
             {
-                foreach(IEdmOperation operation in enumerable)
+                foreach (IEdmOperation operation in enumerable)
                 {
                     if (string.Equals(operation.FullName(), qualifiedName, System.StringComparison.Ordinal))
                     {
@@ -357,6 +357,98 @@ namespace Microsoft.OData.Edm
 
             return matchedOperations;
         }
+
+#if NET9_0
+        /// <summary>
+        /// Searches for bound operations based on the qualified name and binding type, returns an empty enumerable if no operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation.</param>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>
+        /// A set of operations that share the name and binding type or empty enumerable if no such operation exists.
+        /// </returns>
+        public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(ReadOnlyMemory<char> qualifiedName, IEdmType bindingType)
+        {
+            IEnumerable<IEdmOperation> enumerable = this.FindDeclaredBoundOperations(bindingType);
+
+            if (enumerable == null)
+            {
+                return Enumerable.Empty<IEdmOperation>();
+            }
+
+            IList<IEdmOperation> matchedOperations = new List<IEdmOperation>();
+
+            IList<IEdmOperation> operations = enumerable as IList<IEdmOperation>;
+
+            if (operations != null)
+            {
+                for (int i = 0; i < operations.Count; i++)
+                {
+                    if (operations[i].FullName().AsMemory().Equals( qualifiedName))
+                    {
+                        matchedOperations.Add(operations[i]);
+                    }
+                }
+            }
+            else
+            {
+                foreach (IEdmOperation operation in enumerable)
+                {
+                    if (operation.FullName().AsMemory().Equals(qualifiedName))
+                    {
+                        matchedOperations.Add(operation);
+                    }
+                }
+            }
+
+            return matchedOperations;
+        }
+
+        /// <summary>
+        /// Searches for bound operations based on the qualified name and binding type, returns an empty enumerable if no operation exists.
+        /// </summary>
+        /// <param name="qualifiedName">The qualified name of the operation.</param>
+        /// <param name="bindingType">Type of the binding.</param>
+        /// <returns>
+        /// A set of operations that share the name and binding type or empty enumerable if no such operation exists.
+        /// </returns>
+        public virtual IEnumerable<IEdmOperation> FindDeclaredBoundOperations(ReadOnlySpan<char> qualifiedName, IEdmType bindingType)
+        {
+            IEnumerable<IEdmOperation> enumerable = this.FindDeclaredBoundOperations(bindingType);
+
+            if (enumerable == null)
+            {
+                return Enumerable.Empty<IEdmOperation>();
+            }
+
+            IList<IEdmOperation> matchedOperations = new List<IEdmOperation>();
+
+            IList<IEdmOperation> operations = enumerable as IList<IEdmOperation>;
+
+            if (operations != null)
+            {
+                for (int i = 0; i < operations.Count; i++)
+                {
+                    if (operations[i].FullName().AsSpan().SequenceEqual(qualifiedName))
+                    {
+                        matchedOperations.Add(operations[i]);
+                    }
+                }
+            }
+            else
+            {
+                foreach (IEdmOperation operation in enumerable)
+                {
+                    if (operation.FullName().AsSpan().SequenceEqual( qualifiedName))
+                    {
+                        matchedOperations.Add(operation);
+                    }
+                }
+            }
+
+            return matchedOperations;
+        }
+#endif
 
         /// <summary>
         /// Searches for vocabulary annotations specified by this model or a referenced model for a given element.

@@ -32,19 +32,22 @@ namespace Microsoft.OData.Edm
 
         private static readonly IEnumerable<IEdmStructuralProperty> EmptyStructuralProperties = Enumerable.Empty<IEdmStructuralProperty>();
         private static readonly IEnumerable<IEdmNavigationProperty> EmptyNavigationProperties = Enumerable.Empty<IEdmNavigationProperty>();
-        
+
         #region IEdmModel
 
+
+        private static readonly Func<IEnumerable<IEdmOperation>, IEnumerable<IEdmOperation>, IEnumerable<IEdmOperation>> mergeFunctions = (f1, f2) => Enumerable.Concat(f1, f2);
+
+#if NET9_0
+        private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEdmSchemaType> findType = (model, qualifiedName) => model.FindDeclaredType(qualifiedName);
+        private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEdmTerm> findTerm = (model, qualifiedName) => model.FindDeclaredTerm(qualifiedName);
+        private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEnumerable<IEdmOperation>> findOperations = (model, qualifiedName) => model.FindDeclaredOperations(qualifiedName);
+        private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEdmEntityContainer> findEntityContainer = (model, qualifiedName) => { return model.ExistsContainer(qualifiedName.ToString()) ? model.EntityContainer : null; };
+#else
         private static readonly Func<IEdmModel, string, IEdmSchemaType> findType = (model, qualifiedName) => model.FindDeclaredType(qualifiedName);
         private static readonly Func<IEdmModel, string, IEdmTerm> findTerm = (model, qualifiedName) => model.FindDeclaredTerm(qualifiedName);
         private static readonly Func<IEdmModel, string, IEnumerable<IEdmOperation>> findOperations = (model, qualifiedName) => model.FindDeclaredOperations(qualifiedName);
         private static readonly Func<IEdmModel, string, IEdmEntityContainer> findEntityContainer = (model, qualifiedName) => { return model.ExistsContainer(qualifiedName) ? model.EntityContainer : null; };
-        private static readonly Func<IEnumerable<IEdmOperation>, IEnumerable<IEdmOperation>, IEnumerable<IEdmOperation>> mergeFunctions = (f1, f2) => Enumerable.Concat(f1, f2);
-
-#if NET9_0
-        private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEdmSchemaType> findTypeReadOnlySpan = (model, qualifiedName) => model.FindDeclaredType(qualifiedName);
-        private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEdmTerm> findTermReadOnlySpan = (model, qualifiedName) => model.FindDeclaredTerm(qualifiedName);
-        private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEnumerable<IEdmOperation>> findOperationsReadOnlySpan = (model, qualifiedName) => model.FindDeclaredOperations(qualifiedName);
 #endif
         /// <summary>
         /// Gets the value for the EDM version of the <paramref name="model"/>.
@@ -81,14 +84,21 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
             string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
-
-            // search built-in EdmCoreModel and CoreVocabularyModel.
+#if NET9_0
+            return FindAcrossModels(
+                model,
+                fullyQualifiedName.AsSpan(),
+                findType,
+                (first, second) => RegistrationHelper.CreateAmbiguousTypeBinding(first, second));
+#else
             return FindAcrossModels(
                 model,
                 fullyQualifiedName,
                 findType,
                 (first, second) => RegistrationHelper.CreateAmbiguousTypeBinding(first, second));
+#endif
         }
+
 
         /// <summary>
         /// Searches for bound operations based on the binding type, returns an empty enumerable if no operation exists.
@@ -100,7 +110,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(bindingType, "bindingType");
-       
+
             IList<IEdmOperation> bindableOperations = new List<IEdmOperation>();
 
             foreach (IEdmOperation operation in model.FindDeclaredBoundOperations(bindingType))
@@ -161,12 +171,19 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
             string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
-
+#if NET9_0
+            return FindAcrossModels(
+                model,
+                fullyQualifiedName.AsSpan(),
+                findTerm,
+                (first, second) => RegistrationHelper.CreateAmbiguousTermBinding(first, second));
+#else
             return FindAcrossModels(
                 model,
                 fullyQualifiedName,
                 findTerm,
                 (first, second) => RegistrationHelper.CreateAmbiguousTermBinding(first, second));
+#endif
         }
 
         /// <summary>
@@ -179,8 +196,13 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
+#if NET9_0
 
+            return FindAcrossModels(model, qualifiedName.AsSpan(), findOperations, mergeFunctions);
+#else
             return FindAcrossModels(model, qualifiedName, findOperations, mergeFunctions);
+
+#endif
         }
         #endregion
 
@@ -219,11 +241,19 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
+#if NET9_0
+            return FindAcrossModels(
+                model,
+                qualifiedName.AsSpan(),
+                findEntityContainer,
+                (first, second) => RegistrationHelper.CreateAmbiguousEntityContainerBinding(first, second));
+#else
             return FindAcrossModels(
                 model,
                 qualifiedName,
                 findEntityContainer,
                 (first, second) => RegistrationHelper.CreateAmbiguousEntityContainerBinding(first, second));
+#endif
         }
 
         /// <summary>
@@ -1260,7 +1290,7 @@ namespace Microsoft.OData.Edm
             return cache;
         }
 
-        #endregion
+#endregion
 
         #region EdmModel
 
@@ -1723,12 +1753,12 @@ namespace Microsoft.OData.Edm
 
             IEnumerable<IEdmEntityContainerElement> elements = container.AllElements();
 
-            foreach(IEdmEntityContainerElement element in elements)
+            foreach (IEdmEntityContainerElement element in elements)
             {
                 switch (element)
                 {
                     case IEdmEntitySet entitySet:
-                        foreach(IEdmNavigationPropertyBinding binding in entitySet.NavigationPropertyBindings)
+                        foreach (IEdmNavigationPropertyBinding binding in entitySet.NavigationPropertyBindings)
                         {
                             yield return Tuple.Create<IEdmEntityContainerElement, IEdmNavigationPropertyBinding>(entitySet, binding);
                         }
@@ -1736,7 +1766,7 @@ namespace Microsoft.OData.Edm
                     case IEdmSingleton singleton:
                         foreach (IEdmNavigationPropertyBinding binding in singleton.NavigationPropertyBindings)
                         {
-                            yield return Tuple.Create< IEdmEntityContainerElement, IEdmNavigationPropertyBinding>(singleton, binding);
+                            yield return Tuple.Create<IEdmEntityContainerElement, IEdmNavigationPropertyBinding>(singleton, binding);
                         }
                         break;
                     default:
@@ -1825,7 +1855,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Reference to the calling object.</param>
         /// <returns>The element type of this references definition.</returns>
         public static IEdmType AsElementType(this IEdmType type)
-        {   
+        {
             if (type == null)
             {
                 return type;
@@ -1912,9 +1942,9 @@ namespace Microsoft.OData.Edm
         public static IEnumerable<IEdmStructuralProperty> StructuralProperties(this IEdmStructuredType type)
         {
             EdmUtil.CheckArgumentNull(type, "type");
-            foreach(IEdmProperty property in type.Properties())
+            foreach (IEdmProperty property in type.Properties())
             {
-                if(property.PropertyKind == EdmPropertyKind.Structural)
+                if (property.PropertyKind == EdmPropertyKind.Structural)
                 {
                     yield return property as IEdmStructuralProperty;
                 }
@@ -2954,13 +2984,19 @@ namespace Microsoft.OData.Edm
         /// <returns>The namespace qualified name of the element.</returns>
         internal static string ReplaceAlias(this IEdmModel model, string name)
         {
+            return model.ReplaceAlias(name.AsSpan());
+        }
+
+        internal static string ReplaceAlias(this IEdmModel model, ReadOnlySpan<char> name)
+        {
             VersioningDictionary<string, string> mappings = model.GetNamespaceAliases();
             VersioningList<string> list = model.GetUsedNamespacesHavingAlias();
-            int idx = name.IndexOf('.', StringComparison.Ordinal);
+
+            int idx = name.IndexOf('.');
 
             if (list != null && mappings != null && idx > 0)
             {
-                var typeAlias = name.Substring(0, idx);
+                var typeAlias = name.Slice(0, idx).ToString();
                 // this runs in a hot path, hence the use of for-loop instead of LINQ
                 string ns = null;
                 for (int i = 0; i < list.Count; i++)
@@ -2972,11 +3008,13 @@ namespace Microsoft.OData.Edm
                     }
                 }
 
-                return (ns != null) ? string.Format(CultureInfo.InvariantCulture, "{0}{1}", ns, name.Substring(idx)) : name;
+                return (ns != null) ? string.Format(CultureInfo.InvariantCulture, "{0}{1}", ns, name.Slice(idx).ToString()) : name.ToString();
             }
 
-            return name;
+            return name.ToString();
         }
+
+
 
         #region IEdmTargetPath extensions
 
@@ -3032,7 +3070,12 @@ namespace Microsoft.OData.Edm
 
         internal static IEnumerable<IEdmOperation> FindOperationsInModelTree(this CsdlSemanticsModel model, string name)
         {
+#if NET9_0
+            return model.FindInModelTree(findOperations, name.AsSpan(), mergeFunctions);
+#else
             return model.FindInModelTree(findOperations, name, mergeFunctions);
+
+#endif
         }
 
         /// <summary>
@@ -3043,7 +3086,11 @@ namespace Microsoft.OData.Edm
         /// <returns>The found emd type or null.</returns>
         internal static IEdmSchemaType FindTypeInModelTree(this CsdlSemanticsModel model, string name)
         {
+#if NET9_0
+            return model.FindInModelTree(findType, name.AsSpan(), RegistrationHelper.CreateAmbiguousTypeBinding);
+#else
             return model.FindInModelTree(findType, name, RegistrationHelper.CreateAmbiguousTypeBinding);
+#endif
         }
 
         /// <summary>
@@ -3056,11 +3103,17 @@ namespace Microsoft.OData.Edm
         /// <param name="ambiguousCreator">The func to combine results when more than one is found.</param>
         /// <remarks>when searching, will ignore built-in types in EdmCoreModel and CoreVocabularyModel.</remarks>
         /// <returns>The requested type, or null if no such type exists.</returns>
+#if NET9_0
+        internal static T FindInModelTree<T>(this CsdlSemanticsModel model, Func<IEdmModel, ReadOnlySpan<char>, T> finderFunc, ReadOnlySpan<char> qualifiedName, Func<T, T, T> ambiguousCreator)
+#else
         internal static T FindInModelTree<T>(this CsdlSemanticsModel model, Func<IEdmModel, string, T> finderFunc, string qualifiedName, Func<T, T, T> ambiguousCreator)
+#endif
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(finderFunc, "finderFunc");
+#if !NET9_0
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
+#endif
             EdmUtil.CheckArgumentNull(ambiguousCreator, "ambiguousCreator");
 
             // find type in current model only
@@ -3103,7 +3156,7 @@ namespace Microsoft.OData.Edm
 
             return result;
         }
-        #endregion
+#endregion
 
         #region UrlEscape
         /// <summary>
@@ -3179,7 +3232,7 @@ namespace Microsoft.OData.Edm
             }
 
             bool foundRelativePath = true;
-                        
+
             if (parameter.Name != bindingParameterName)
             {
                 foundErrors.Add(
@@ -3614,7 +3667,12 @@ namespace Microsoft.OData.Edm
             return null;
         }
 
-        private static T FindAcrossModels<T, TInput>(this IEdmModel model, TInput qualifiedName, Func<IEdmModel, TInput, T> finder, Func<T, T, T> ambiguousCreator)
+#if NET9_0
+        private static T FindAcrossModels<T>(this IEdmModel model, ReadOnlySpan<char> qualifiedName, Func<IEdmModel, ReadOnlySpan<char>, T> finder, Func<T, T, T> ambiguousCreator)
+#else
+        private static T FindAcrossModels<T>(this IEdmModel model, string qualifiedName, Func<IEdmModel, string, T> finder, Func<T, T, T> ambiguousCreator)
+        
+#endif
         {
             T candidate = finder(model, qualifiedName);
 
