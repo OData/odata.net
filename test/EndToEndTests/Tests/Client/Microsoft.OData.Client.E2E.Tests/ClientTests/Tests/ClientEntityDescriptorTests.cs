@@ -8,13 +8,14 @@
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
 using Microsoft.OData.Client.E2E.Tests.ClientTests.Server;
-using Microsoft.OData.Client.E2E.Tests.Common.Client.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
 using Microsoft.OData.Edm;
 using Xunit;
+using ClientDefaultModel = Microsoft.OData.E2E.TestCommon.Common.Client.Default;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
 {
@@ -79,7 +80,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             var person = _context.People.Take(1);
             Assert.Equal("http://localhost/odata/People?$top=1", person.ToString());
 
-            var topPerson = (await ((DataServiceQuery<Common.Client.Default.Person>)person).ExecuteAsync()).Single();
+            var topPerson = (await ((DataServiceQuery<ClientDefaultModel.Person>)person).ExecuteAsync()).Single();
 
             Assert.Equal("Bob", topPerson.FirstName);
         }
@@ -89,7 +90,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         {
             var allPeople = (await _context.People.ExecuteAsync()).ToList();
             var skipFirstPersonQuery = _context.People.Skip(1);
-            var peopleAfterSkippingFirstPerson = (await ((DataServiceQuery<Common.Client.Default.Person>)skipFirstPersonQuery).ExecuteAsync()).ToList();
+            var peopleAfterSkippingFirstPerson = (await ((DataServiceQuery<ClientDefaultModel.Person>)skipFirstPersonQuery).ExecuteAsync()).ToList();
 
             Assert.Equal("http://localhost/odata/People?$skip=1", skipFirstPersonQuery.ToString());
             Assert.Equal(5, allPeople.Count);
@@ -99,13 +100,13 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         [Fact]
         public async Task OrderByOption_ExecutesSuccessfully()
         {
-            var orderByQuery = from p in _context.People 
-                         orderby p.FirstName 
-                         select p;
+            var orderByQuery = from p in _context.People
+                               orderby p.FirstName
+                               select p;
 
             Assert.Equal("http://localhost/odata/People?$orderby=FirstName", orderByQuery.ToString());
 
-            var peopleList = (await ((DataServiceQuery<Common.Client.Default.Person>)orderByQuery).ExecuteAsync()).ToList();
+            var peopleList = (await ((DataServiceQuery<ClientDefaultModel.Person>)orderByQuery).ExecuteAsync()).ToList();
 
             var firstPerson = peopleList.First();
             Assert.Equal("Bob", firstPerson.FirstName);
@@ -118,12 +119,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         public async Task OrderByDescendingOption_ExecutesSuccessfully()
         {
             var orderByDescQuery = from p in _context.People
-                         orderby p.FirstName descending
-                         select p;
+                                   orderby p.FirstName descending
+                                   select p;
 
             Assert.Equal("http://localhost/odata/People?$orderby=FirstName desc", orderByDescQuery.ToString());
 
-            var peopleList = (await ((DataServiceQuery<Common.Client.Default.Person>)orderByDescQuery).ExecuteAsync()).ToList();
+            var peopleList = (await ((DataServiceQuery<ClientDefaultModel.Person>)orderByDescQuery).ExecuteAsync()).ToList();
             var firstPerson = peopleList.First();
 
             Assert.Equal("Peter", firstPerson.FirstName);
@@ -137,12 +138,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         public async Task FilterByBooleanProperty_ExecutesSuccessfully()
         {
             var filterByBoolQuery = from product in _context.Products
-                                       where product.Discontinued
-                                       select product;
+                                    where product.Discontinued
+                                    select product;
 
             Assert.Equal("http://localhost/odata/Products?$filter=Discontinued", filterByBoolQuery.ToString());
 
-            var discontinuedProducts = (await ((DataServiceQuery<Common.Client.Default.Product>)filterByBoolQuery).ExecuteAsync()).ToList();
+            var discontinuedProducts = (await ((DataServiceQuery<ClientDefaultModel.Product>)filterByBoolQuery).ExecuteAsync()).ToList();
 
             Assert.Single(discontinuedProducts);
             Assert.True(discontinuedProducts.Single().Discontinued);
@@ -157,7 +158,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
 
             Assert.Equal("http://localhost/odata/Products?$filter=not Discontinued", filterByBoolQuery.ToString());
 
-            var productsInCirculation = (await ((DataServiceQuery<Common.Client.Default.Product>)filterByBoolQuery).ExecuteAsync()).ToList();
+            var productsInCirculation = (await ((DataServiceQuery<ClientDefaultModel.Product>)filterByBoolQuery).ExecuteAsync()).ToList();
 
             Assert.Equal(4, productsInCirculation.Count);
 
@@ -172,12 +173,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         {
             var dateTimeType = new DateTime?(DateTime.Now).GetType();
             var filterByDateTimeQuery = from order in _context.Orders
-                                     where order.OrderDate.Day == 29 && order.OrderDate.Month == 5
-                                     select order;
+                                        where order.OrderDate.Day == 29 && order.OrderDate.Month == 5
+                                        select order;
 
             Assert.Equal("http://localhost/odata/Orders?$filter=day(OrderDate) eq 29 and month(OrderDate) eq 5", filterByDateTimeQuery.ToString());
 
-            var ordersOnMyBirthday = (await ((DataServiceQuery<Common.Client.Default.Order>)filterByDateTimeQuery).ExecuteAsync()).ToList();
+            var ordersOnMyBirthday = (await ((DataServiceQuery<ClientDefaultModel.Order>)filterByDateTimeQuery).ExecuteAsync()).ToList();
 
             Assert.Single(ordersOnMyBirthday);
             Assert.Equal("5/29/2011 12:00:00 AM", ordersOnMyBirthday.Single().OrderDate.Date.ToString());
@@ -187,12 +188,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         public async Task FilterByStringProperty_ExecutesSuccessfully()
         {
             var filterByStringQuery = from customer in _context.Customers
-                                    where customer.City == "London"
-                                    select customer;
+                                      where customer.City == "London"
+                                      select customer;
 
             Assert.Equal("http://localhost/odata/Customers?$filter=City eq 'London'", filterByStringQuery.ToString());
 
-            var customersInLondon = (await ((DataServiceQuery<Common.Client.Default.Customer>)filterByStringQuery).ExecuteAsync()).ToList();
+            var customersInLondon = (await ((DataServiceQuery<ClientDefaultModel.Customer>)filterByStringQuery).ExecuteAsync()).ToList();
 
             Assert.Single(customersInLondon);
             Assert.Equal("London", customersInLondon.Single().City);
@@ -201,11 +202,11 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         [Fact]
         public async Task FilterByKeyProperty_UsingWhereClause_ExecutesSuccessfully()
         {
-            IQueryable<Common.Client.Default.Customer> filterByWhereClauseQuery = _context.Customers.Where(c => c.PersonID == 1);
+            IQueryable<ClientDefaultModel.Customer> filterByWhereClauseQuery = _context.Customers.Where(c => c.PersonID == 1);
 
             Assert.Equal("http://localhost/odata/Customers?$filter=PersonID eq 1", filterByWhereClauseQuery.ToString());
 
-            var customer = (await ((DataServiceQuery<Common.Client.Default.Customer>)filterByWhereClauseQuery).ExecuteAsync()).Single();
+            var customer = (await ((DataServiceQuery<ClientDefaultModel.Customer>)filterByWhereClauseQuery).ExecuteAsync()).Single();
 
             Assert.Equal("Bob", customer.FirstName);
         }
@@ -224,11 +225,11 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         [Fact]
         public async Task FilterByCompositeKey_UsingWhereClause_ExecutesSuccessfully()
         {
-            IQueryable<Common.Client.Default.OrderDetail> filterByWhereClauseQuery = _context.OrderDetails.Where(c => c.OrderID == 7 && c.ProductID == 5);
+            IQueryable<ClientDefaultModel.OrderDetail> filterByWhereClauseQuery = _context.OrderDetails.Where(c => c.OrderID == 7 && c.ProductID == 5);
 
             Assert.Equal("http://localhost/odata/OrderDetails?$filter=OrderID eq 7 and ProductID eq 5", filterByWhereClauseQuery.ToString());
 
-            var orderDetail = (await ((DataServiceQuery<Common.Client.Default.OrderDetail>)filterByWhereClauseQuery).ExecuteAsync()).Single();
+            var orderDetail = (await ((DataServiceQuery<ClientDefaultModel.OrderDetail>)filterByWhereClauseQuery).ExecuteAsync()).Single();
             Assert.Equal(7, orderDetail.OrderID);
             Assert.Equal(5, orderDetail.ProductID);
         }
