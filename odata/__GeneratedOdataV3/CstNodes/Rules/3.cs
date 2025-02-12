@@ -44,14 +44,24 @@ namespace __GeneratedOdataV3.CstNodes.Rules
 
         public sealed class _ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡2 : _odataRelativeUri
         {
-            private readonly IFuture<Output2<char, _ʺx24x62x61x74x63x68ʺ>> ;
+            private readonly IFuture<Output2<char, _ʺx24x62x61x74x63x68ʺ>> __ʺx24x62x61x74x63x68ʺ_1;
+            private readonly IFuture<Output2<char, _ʺx3Fʺ_batchOptions?>> __ʺx3Fʺ_batchOptions_1;
 
             public _ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡2(CombinatorParsingV2.IFuture<CombinatorParsingV2.Output2<char,  __GeneratedOdataV3.CstNodes.Inners._ʺx24x62x61x74x63x68ʺ>> _ʺx24x62x61x74x63x68ʺ_1, CombinatorParsingV2.IFuture<CombinatorParsingV2.Output2<char, __GeneratedOdataV3.CstNodes.Inners._ʺx3Fʺ_batchOptions?>> _ʺx3Fʺ_batchOptions_1)
             {
-                 = _ʺx24x62x61x74x63x68ʺ_1;
+                 this.__ʺx24x62x61x74x63x68ʺ_1 = _ʺx24x62x61x74x63x68ʺ_1;
+                 this.__ʺx3Fʺ_batchOptions_1 = _ʺx3Fʺ_batchOptions_1;
             }
 
-            public __GeneratedOdataV3.CstNodes.Inners._ʺx24x62x61x74x63x68ʺ _ʺx24x62x61x74x63x68ʺ_1 { get; }
+            public __GeneratedOdataV3.CstNodes.Inners._ʺx24x62x61x74x63x68ʺ _ʺx24x62x61x74x63x68ʺ_1
+            {
+                get
+                {
+                    //// TODO the caller either wants it as an output, or it wants it as a set of output properties 
+                    return this.__ʺx24x62x61x74x63x68ʺ_1.Value.Parsed;
+                }
+            }
+
             public __GeneratedOdataV3.CstNodes.Inners._ʺx3Fʺ_batchOptions? _ʺx3Fʺ_batchOptions_1 { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
