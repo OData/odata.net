@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
 
 namespace Microsoft.OData.Client.E2E.Tests.SingletonTests.Server;
 
@@ -372,7 +372,7 @@ public class SingletonClientTestsController : ODataController
     }
 
     [EnableQuery]
-    [HttpGet("odata/Boss/Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Customer")]
+    [HttpGet("odata/Boss/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer")]
     public IActionResult GetBossFromDerivedType()
     {
         var result = _dataSource.Boss;
@@ -386,7 +386,7 @@ public class SingletonClientTestsController : ODataController
     }
 
     [EnableQuery]
-    [HttpGet("odata/Boss/Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Customer/City")]
+    [HttpGet("odata/Boss/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer/City")]
     public IActionResult GetBossCityFromDerivedType()
     {
         var result = _dataSource.Boss;
@@ -475,7 +475,7 @@ public class SingletonClientTestsController : ODataController
     }
 
     [EnableQuery]
-    [HttpGet("odata/PublicCompany/Microsoft.OData.Client.E2E.Tests.Common.Server.Default.PublicCompany/StockExchange")]
+    [HttpGet("odata/PublicCompany/Microsoft.OData.E2E.TestCommon.Common.Server.Default.PublicCompany/StockExchange")]
     public IActionResult GetPublicCompanyStockExchange()
     {
         var result = _dataSource.PublicCompany;
@@ -484,7 +484,7 @@ public class SingletonClientTestsController : ODataController
     }
 
     [EnableQuery]
-    [HttpGet("odata/PublicCompany/Microsoft.OData.Client.E2E.Tests.Common.Server.Default.PublicCompany/Assets")]
+    [HttpGet("odata/PublicCompany/Microsoft.OData.E2E.TestCommon.Common.Server.Default.PublicCompany/Assets")]
     public IActionResult GetPublicCompanyAssets()
     {
         var result = _dataSource.PublicCompany;
@@ -493,7 +493,7 @@ public class SingletonClientTestsController : ODataController
     }
 
     [EnableQuery]
-    [HttpGet("odata/PublicCompany/Microsoft.OData.Client.E2E.Tests.Common.Server.Default.PublicCompany/Club")]
+    [HttpGet("odata/PublicCompany/Microsoft.OData.E2E.TestCommon.Common.Server.Default.PublicCompany/Club")]
     public IActionResult GetPublicCompanyClub()
     {
         var result = _dataSource.PublicCompany;
@@ -502,7 +502,7 @@ public class SingletonClientTestsController : ODataController
     }
 
     [EnableQuery]
-    [HttpGet("odata/PublicCompany/Microsoft.OData.Client.E2E.Tests.Common.Server.Default.PublicCompany/LabourUnion")]
+    [HttpGet("odata/PublicCompany/Microsoft.OData.E2E.TestCommon.Common.Server.Default.PublicCompany/LabourUnion")]
     public IActionResult GetPublicCompanyLabourUnion()
     {
         var result = _dataSource.PublicCompany;
@@ -510,7 +510,7 @@ public class SingletonClientTestsController : ODataController
         return Ok(result?.LabourUnion);
     }
 
-    [HttpPost("odata/PublicCompany/Microsoft.OData.Client.E2E.Tests.Common.Server.Default.PublicCompany/Assets")]
+    [HttpPost("odata/PublicCompany/Microsoft.OData.E2E.TestCommon.Common.Server.Default.PublicCompany/Assets")]
     public IActionResult AddAssetToPublicCompanyAssets([FromBody] Asset asset)
     {
         var result = _dataSource.PublicCompany;
@@ -525,7 +525,7 @@ public class SingletonClientTestsController : ODataController
         return Created(asset);
     }
 
-    [HttpPut("odata/PublicCompany/Microsoft.OData.Client.E2E.Tests.Common.Server.Default.PublicCompany")]
+    [HttpPut("odata/PublicCompany/Microsoft.OData.E2E.TestCommon.Common.Server.Default.PublicCompany")]
     public IActionResult UpdatePublicCompany([FromBody] PublicCompany company)
     {
         var companyToUpdate = _dataSource.PublicCompany;
@@ -552,7 +552,7 @@ public class SingletonClientTestsController : ODataController
         return Updated(companyToUpdate);
     }
 
-    [HttpPatch("odata/PublicCompany/Microsoft.OData.Client.E2E.Tests.Common.Server.Default.PublicCompany/Club")]
+    [HttpPatch("odata/PublicCompany/Microsoft.OData.E2E.TestCommon.Common.Server.Default.PublicCompany/Club")]
     public IActionResult PatchPublicCompanyClub([FromBody] Delta<Club> delta)
     {
         var club = _dataSource.PublicCompany?.Club;
@@ -578,7 +578,7 @@ public class SingletonClientTestsController : ODataController
         return Updated(updatedResult);
     }
 
-    [HttpDelete("odata/PublicCompany/Microsoft.OData.Client.E2E.Tests.Common.Server.Default.PublicCompany/Assets({key})")]
+    [HttpDelete("odata/PublicCompany/Microsoft.OData.E2E.TestCommon.Common.Server.Default.PublicCompany/Assets({key})")]
     public IActionResult RemoveAssetFromPublicCompanyAssets([FromRoute] int key)
     {
         var result = _dataSource.PublicCompany;

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 
 namespace Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Server;
 
@@ -93,7 +93,7 @@ public class LiteralFormatTestsController : ODataController
             return NotFound();
         }
 
-        customer.Logins?.Add(login); 
+        customer.Logins?.Add(login);
 
         return Ok(login);
     }

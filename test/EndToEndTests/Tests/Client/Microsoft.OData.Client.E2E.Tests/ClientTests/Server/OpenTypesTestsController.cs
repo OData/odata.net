@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes;
+using Microsoft.OData.E2E.TestCommon.Common.Server.OpenTypes;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
 {

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 
 namespace Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Server;
 
@@ -25,7 +25,7 @@ public class KeyAsSegmentTestsController : ODataController
     }
 
     [EnableQuery]
-    [HttpGet("odata/People/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee")]
+    [HttpGet("odata/People/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee")]
     public IActionResult GetPeopleOfTypeEmployee()
     {
         var people = _dataSource.People?.OfType<Employee>();
@@ -69,7 +69,7 @@ public class KeyAsSegmentTestsController : ODataController
     }
 
     [EnableQuery]
-    [HttpGet("odata/Products/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct/{key}/RelatedProducts/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct/{relatedKey}/Photos")]
+    [HttpGet("odata/Products/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct/{key}/RelatedProducts/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct/{relatedKey}/Photos")]
     public IActionResult GetProductRelatedPhotos([FromRoute] int key, [FromRoute] int relatedKey)
     {
         var product = _dataSource.Products?.SingleOrDefault(a => a.ProductId == key);
