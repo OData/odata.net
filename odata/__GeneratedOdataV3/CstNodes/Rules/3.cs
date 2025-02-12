@@ -1,3 +1,6 @@
+using __GeneratedOdataV3.CstNodes.Inners;
+using CombinatorParsingV2;
+
 namespace __GeneratedOdataV3.CstNodes.Rules
 {
     public abstract class _odataRelativeUri
@@ -38,7 +41,26 @@ namespace __GeneratedOdataV3.CstNodes.Rules
                 return visitor.Accept(this, context);
             }
         }
-        
+
+        public sealed class _ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡2 : _odataRelativeUri
+        {
+            private readonly IFuture<Output2<char, _ʺx24x62x61x74x63x68ʺ>> ;
+
+            public _ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡2(CombinatorParsingV2.IFuture<CombinatorParsingV2.Output2<char,  __GeneratedOdataV3.CstNodes.Inners._ʺx24x62x61x74x63x68ʺ>> _ʺx24x62x61x74x63x68ʺ_1, CombinatorParsingV2.IFuture<CombinatorParsingV2.Output2<char, __GeneratedOdataV3.CstNodes.Inners._ʺx3Fʺ_batchOptions?>> _ʺx3Fʺ_batchOptions_1)
+            {
+                 = _ʺx24x62x61x74x63x68ʺ_1;
+            }
+
+            public __GeneratedOdataV3.CstNodes.Inners._ʺx24x62x61x74x63x68ʺ _ʺx24x62x61x74x63x68ʺ_1 { get; }
+            public __GeneratedOdataV3.CstNodes.Inners._ʺx3Fʺ_batchOptions? _ʺx3Fʺ_batchOptions_1 { get; }
+
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                ////return visitor.Accept(this, context);
+                throw new System.Exception("TODO");
+            }
+        }
+
         public sealed class _ʺx24x65x6Ex74x69x74x79ʺ_ʺx3Fʺ_entityOptions : _odataRelativeUri
         {
             public _ʺx24x65x6Ex74x69x74x79ʺ_ʺx3Fʺ_entityOptions(__GeneratedOdataV3.CstNodes.Inners._ʺx24x65x6Ex74x69x74x79ʺ _ʺx24x65x6Ex74x69x74x79ʺ_1, __GeneratedOdataV3.CstNodes.Inners._ʺx3Fʺ _ʺx3Fʺ_1, __GeneratedOdataV3.CstNodes.Rules._entityOptions _entityOptions_1)

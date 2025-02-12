@@ -1,5 +1,6 @@
 namespace __GeneratedOdataV3.Parsers.Rules
 {
+    using __GeneratedOdataV3.CstNodes.Rules;
     using CombinatorParsingV2;
     
     public static class _odataRelativeUriParser
@@ -10,7 +11,7 @@ namespace __GeneratedOdataV3.Parsers.Rules
         {
             public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._odataRelativeUri._ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡> Instance { get; } = new Parser();
             
-            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._odataRelativeUri._ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡>
+            private sealed class Parser : IParser<char, __GeneratedOdataV3.CstNodes.Rules._odataRelativeUri._ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡>, IParser2<char, __GeneratedOdataV3.CstNodes.Rules._odataRelativeUri._ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡>
             {
                 public Parser()
                 {
@@ -31,6 +32,24 @@ if (!_ʺx3Fʺ_batchOptions_1.Success)
 }
 
 return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._odataRelativeUri._ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡(_ʺx24x62x61x74x63x68ʺ_1.Parsed, _ʺx3Fʺ_batchOptions_1.Parsed.GetOrElse(null)), _ʺx3Fʺ_batchOptions_1.Remainder);
+                }
+
+                public Output2<char, _odataRelativeUri._ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡> Parse2(IInput<char>? input)
+                {
+                    IParser2<char, __GeneratedOdataV3.CstNodes.Inners._ʺx24x62x61x74x63x68ʺ> _ʺx24x62x61x74x63x68ʺParser = default!;
+                    IParser2<char, __GeneratedOdataV3.CstNodes.Inners._ʺx3Fʺ_batchOptions> _ʺx3Fʺ_batchOptionsParser = default!;
+
+                    var futureInput = new Future<Nothing, IInput<char>?>(input);
+                    var _ʺx24x62x61x74x63x68ʺ_1 = futureInput.ContinueWith(output => _ʺx24x62x61x74x63x68ʺParser.Parse2(input));
+                    var _ʺx3Fʺ_batchOptions_1 = _ʺx24x62x61x74x63x68ʺ_1.ContinueWith(
+                        output => 
+                            output.Success ?
+                            _ʺx3Fʺ_batchOptionsParser.Parse2(output.Remainder) : 
+                            new Output2<char, __GeneratedOdataV3.CstNodes.Inners._ʺx3Fʺ_batchOptions>(false, default, input)); //// TODO is there a way to keep passing the original input through?
+
+                    return new Output2<char, _odataRelativeUri._ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡>()
+
+                    throw new System.NotImplementedException();
                 }
             }
         }

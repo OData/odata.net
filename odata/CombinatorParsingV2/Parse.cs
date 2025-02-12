@@ -67,5 +67,41 @@
                 return Output.Create(false, default(char), input);
             }
         }
+
+        public static IParser2<char, char> Char2(char @char)
+        {
+            return new CharParser2(@char);
+        }
+
+        private sealed class CharParser2 : IParser2<char, char>
+        {
+            private readonly char @char;
+
+            public CharParser2(char @char)
+            {
+                this.@char = @char;
+            }
+
+            public Future<Output2<char, char>> Parse2(IInput<char>? input)
+            {
+                //// TODO i think you probably want continuewith and to take the output of the previous as the input of the current...
+                return new Future<Output2<char, char>>(() => this.Parse(input), Future.Empty);
+            }
+
+            private Output2<char, char> Parse(IInput<char>? input)
+            {
+                if (input == null)
+                {
+                    return new Output2<char, char>(false, default, input);
+                }
+
+                if (input.Current == this.@char)
+                {
+                    return new Output2<char, char>(true, this.@char, input.Next());
+                }
+
+                return new Output2<char, char>(false, default, input);
+            }
+        }
     }
 }
