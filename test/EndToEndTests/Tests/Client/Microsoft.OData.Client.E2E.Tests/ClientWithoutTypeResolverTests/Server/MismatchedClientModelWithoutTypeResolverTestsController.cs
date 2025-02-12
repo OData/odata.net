@@ -8,7 +8,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server
 {
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server
         [HttpGet("odata/Messages(FromUserName={FromUserName},MessageId={MessageId})/Attachments")]
         public IActionResult GetMessageAttachments([FromRoute] string FromUserName, [FromRoute] int MessageId)
         {
-            var message = _dataSource.Messages.SingleOrDefault(a=>a.FromUsername == FromUserName && a.MessageId == MessageId);
+            var message = _dataSource.Messages.SingleOrDefault(a => a.FromUsername == FromUserName && a.MessageId == MessageId);
 
             if (message == null)
             {

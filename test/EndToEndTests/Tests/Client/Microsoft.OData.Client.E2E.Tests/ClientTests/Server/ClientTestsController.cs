@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
 {
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         public IActionResult GetOrderDetail([FromODataUri] int orderId, [FromODataUri] int productId)
         {
             var orderDetail = _dataSource.OrderDetails.SingleOrDefault(a => a.OrderID == orderId && a.ProductID == productId);
-            
+
             if (orderDetail == null)
             {
                 return NotFound();

@@ -8,11 +8,12 @@
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
 using Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 using Xunit;
+using ClientEndToEndModel = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
 {
@@ -46,28 +47,28 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
         [Fact]
         public async Task DerivedTypeFeedQuery_Executes_Successfully()
         {
-            var productPageViews = (await _context.ExecuteAsync<Common.Clients.EndToEnd.PageView>(new Uri(_baseUri.OriginalString + "PageViews/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ProductPageView"))).ToArray();
-            var discontinuedProducts = (await _context.ExecuteAsync<Common.Clients.EndToEnd.DiscontinuedProduct>(new Uri(_baseUri.OriginalString + "Products/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct"))).ToArray();
+            var productPageViews = (await _context.ExecuteAsync<ClientEndToEndModel.PageView>(new Uri(_baseUri.OriginalString + "PageViews/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ProductPageView"))).ToArray();
+            var discontinuedProducts = (await _context.ExecuteAsync<ClientEndToEndModel.DiscontinuedProduct>(new Uri(_baseUri.OriginalString + "Products/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct"))).ToArray();
 
             Assert.Equal(5, productPageViews.Length);
 
             foreach (var productPageView in productPageViews)
             {
-                Assert.IsAssignableFrom<Common.Clients.EndToEnd.PageView>(productPageView);
+                Assert.IsAssignableFrom<ClientEndToEndModel.PageView>(productPageView);
             }
 
             Assert.Equal(5, discontinuedProducts.Length);
 
             foreach (var discontinuedProduct in discontinuedProducts)
             {
-                Assert.IsAssignableFrom<Common.Clients.EndToEnd.Product>(discontinuedProduct);
+                Assert.IsAssignableFrom<ClientEndToEndModel.Product>(discontinuedProduct);
             }
         }
 
         [Fact]
         public async Task SelectQuery_Executes_Successfully()
         {
-            var queryResults = (await _context.ExecuteAsync<Common.Clients.EndToEnd.Customer>(new Uri(_baseUri.OriginalString + "Customers(-9)?$select=Name,PrimaryContactInfo"))).Single();
+            var queryResults = (await _context.ExecuteAsync<ClientEndToEndModel.Customer>(new Uri(_baseUri.OriginalString + "Customers(-9)?$select=Name,PrimaryContactInfo"))).Single();
 
             Assert.Equal("enumeratetrademarkexecutionbrfalsenesteddupoverflowspacebarseekietfbeforeobservedstart", queryResults.Name);
             Assert.NotNull(queryResults.PrimaryContactInfo);
@@ -76,7 +77,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
         [Fact]
         public async Task ExpandEntryQuery_ExecutesSuccessfully()
         {
-            var queryResults = (await _context.ExecuteAsync<Common.Clients.EndToEnd.Customer>(new Uri(_baseUri.OriginalString + "Customers(-9)?$expand=Info"))).Single();
+            var queryResults = (await _context.ExecuteAsync<ClientEndToEndModel.Customer>(new Uri(_baseUri.OriginalString + "Customers(-9)?$expand=Info"))).Single();
 
             Assert.Equal(-9, queryResults.CustomerId);
             Assert.NotNull(queryResults.Info);
@@ -85,19 +86,19 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
         [Fact]
         public async Task ExpandEntryQueryWithNestedSelect_WorksCorrectly()
         {
-            var queryResults = (await _context.ExecuteAsync<Common.Clients.EndToEnd.Customer>(new Uri(_baseUri.OriginalString + "Customers(-9)?$expand=Info($select=Information)"))).Single();
+            var queryResults = (await _context.ExecuteAsync<ClientEndToEndModel.Customer>(new Uri(_baseUri.OriginalString + "Customers(-9)?$expand=Info($select=Information)"))).Single();
 
             Assert.Equal(-9, queryResults.CustomerId);
             Assert.NotNull(queryResults.Info);
-            
+
             Assert.Equal("frubhbngipuuveyneosslslbtrßqjujnssgcxuuzdbeußeaductgqbvhpussktbzzfuqvkxajzckmkzluthcjsku", queryResults.Info.Information);
         }
 
         [Fact]
         public async Task DerivedTypeExpandWithProjectionFeedQuery_ExecutesSuccessfully()
         {
-            var queryUri = new Uri(_baseUri.OriginalString + "Products/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct?$expand=RelatedProducts($select=*),Detail($select=*),Reviews($select=*),Photos($select=*)");
-            var queryResults = (await _context.ExecuteAsync<Common.Clients.EndToEnd.DiscontinuedProduct>(queryUri)).ToArray();
+            var queryUri = new Uri(_baseUri.OriginalString + "Products/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct?$expand=RelatedProducts($select=*),Detail($select=*),Reviews($select=*),Photos($select=*)");
+            var queryResults = (await _context.ExecuteAsync<ClientEndToEndModel.DiscontinuedProduct>(queryUri)).ToArray();
 
             //Get one of the products and check the expanded navigation props are not null. 
             var productWithId9 = queryResults.Single(a => a.ProductId == -9);
@@ -111,7 +112,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
         [Fact]
         public async Task QueryDerivedTypeProductId_ReturnsExpectedProductId()
         {
-            var queryResults = (await _context.ExecuteAsync<int>(new Uri(_baseUri.OriginalString + "Products(-9)/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct/ProductId"))).Single();
+            var queryResults = (await _context.ExecuteAsync<int>(new Uri(_baseUri.OriginalString + "Products(-9)/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct/ProductId"))).Single();
 
             // Assert that the queryResults matches the expected ProductId
             Assert.Equal(-9, queryResults);
@@ -120,8 +121,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
         [Fact]
         public async Task ComplexPropertyQuery_ReturnsExpectedContactDetails()
         {
-            var queryResults = (await _context.ExecuteAsync<Common.Clients.EndToEnd.ContactDetails>(new Uri(_baseUri.OriginalString + "Customers(-10)/PrimaryContactInfo"))).Single();
-            
+            var queryResults = (await _context.ExecuteAsync<ClientEndToEndModel.ContactDetails>(new Uri(_baseUri.OriginalString + "Customers(-10)/PrimaryContactInfo"))).Single();
+
             Assert.NotNull(queryResults);
             Assert.NotNull(queryResults.HomePhone);
         }
@@ -129,10 +130,10 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
         [Fact]
         public async Task NestedComplexPropertyQuery_ReturnsExpectedResults()
         {
-            var queryResults1 = (await _context.ExecuteAsync<Common.Clients.EndToEnd.Phone>(new Uri(_baseUri.OriginalString + "Customers(-10)/PrimaryContactInfo/MobilePhoneBag"))).ToArray();
-            var queryResults2 = (await _context.ExecuteAsync<Common.Clients.EndToEnd.Aliases>(new Uri(_baseUri.OriginalString + "Customers(-10)/PrimaryContactInfo/ContactAlias"))).ToArray();
+            var queryResults1 = (await _context.ExecuteAsync<ClientEndToEndModel.Phone>(new Uri(_baseUri.OriginalString + "Customers(-10)/PrimaryContactInfo/MobilePhoneBag"))).ToArray();
+            var queryResults2 = (await _context.ExecuteAsync<ClientEndToEndModel.Aliases>(new Uri(_baseUri.OriginalString + "Customers(-10)/PrimaryContactInfo/ContactAlias"))).ToArray();
             var queryResults3 = (await _context.ExecuteAsync<ICollection<string>>(new Uri(_baseUri.OriginalString + "Customers(-10)/PrimaryContactInfo/ContactAlias/AlternativeNames"))).ToArray();
-            var queryResults4 = (await _context.ExecuteAsync<ICollection<string>>(new Uri(_baseUri.OriginalString + "Customers(-10)/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Customer/PrimaryContactInfo/ContactAlias/AlternativeNames"))).ToArray();
+            var queryResults4 = (await _context.ExecuteAsync<ICollection<string>>(new Uri(_baseUri.OriginalString + "Customers(-10)/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Customer/PrimaryContactInfo/ContactAlias/AlternativeNames"))).ToArray();
 
             Assert.Equal(10, queryResults1.Length);
 
@@ -151,7 +152,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
         [Fact]
         public async Task CollectionOfComplexPropertyQuery_ExecutesSuccessfully()
         {
-            var queryResults = (await _context.ExecuteAsync<Common.Clients.EndToEnd.Phone>(new Uri(_baseUri.OriginalString + "Customers(-10)/PrimaryContactInfo/MobilePhoneBag"))).ToArray();
+            var queryResults = (await _context.ExecuteAsync<ClientEndToEndModel.Phone>(new Uri(_baseUri.OriginalString + "Customers(-10)/PrimaryContactInfo/MobilePhoneBag"))).ToArray();
 
             Assert.Equal(10, queryResults.Length);
         }

@@ -5,14 +5,14 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
+using System.Text.RegularExpressions;
 
-namespace Microsoft.OData.Client.E2E.Tests.DeltaTests.Server;
+namespace Microsoft.OData.Client.E2E.Tests.CancellationTokenTests.Server;
 
 public class CancellationTokenTestsController : ODataController
 {

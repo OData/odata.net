@@ -9,11 +9,12 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
 using Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.OpenTypes.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.OpenTypes;
 using Xunit;
+using ClientOpenTypesModel = Microsoft.OData.E2E.TestCommon.Common.Client.OpenTypes;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
 {
@@ -43,14 +44,14 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
             _context.AddObject("Rows", row1);
             _context.AddObject("Rows", row2);
 
-            this.typeNameResolver = _context.ResolveName;
+            typeNameResolver = _context.ResolveName;
 
-            _context.ResolveName = this.typeNameResolver;
+            _context.ResolveName = typeNameResolver;
 
-            var rowIndex = new Common.Clients.OpenTypes.RowIndex
+            var rowIndex = new ClientOpenTypesModel.RowIndex
             {
                 Id = TestRowIndexId,
-                Rows = new DataServiceCollection<Common.Clients.OpenTypes.IndexedRow>(_context),
+                Rows = new DataServiceCollection<ClientOpenTypesModel.IndexedRow>(_context),
                 DynamicProperties = new Dictionary<string, object>()
                 {
                     { "IndexComments", "This is a test"}
@@ -61,7 +62,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
         }
 
         #region Test Data
-        private Common.Clients.OpenTypes.Row row1 = new Common.Clients.OpenTypes.Row
+        private ClientOpenTypesModel.Row row1 = new ClientOpenTypesModel.Row
         {
             Id = Guid.NewGuid(),
             DynamicProperties = new Dictionary<string, object>
@@ -72,14 +73,14 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
                 { "OpenDouble", double.NaN },
                 { "OpenFloat", float.PositiveInfinity },
                 { "OpenGuid", Guid.NewGuid() },
-                { "OpenInt16", Int16.MaxValue },
-                { "OpenInt64", Int64.MaxValue },
+                { "OpenInt16", short.MaxValue },
+                { "OpenInt64", long.MaxValue },
                 { "OpenString","hello world" },
                 { "OpenTime", TimeSpan.MaxValue }
             }
         };
 
-        private Common.Clients.OpenTypes.Row row2 = new Common.Clients.OpenTypes.Row
+        private ClientOpenTypesModel.Row row2 = new ClientOpenTypesModel.Row
         {
             Id = Guid.NewGuid(),
             DynamicProperties = new Dictionary<string, object>
@@ -97,7 +98,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
             }
         };
 
-        private Common.Clients.OpenTypes.IndexedRow row3 = new Common.Clients.OpenTypes.IndexedRow
+        private ClientOpenTypesModel.IndexedRow row3 = new ClientOpenTypesModel.IndexedRow
         {
             Id = Guid.NewGuid(),
             DynamicProperties = new Dictionary<string, object>()
@@ -113,7 +114,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
         [Fact]
         public async Task ExpandQuery_OnOpenType_WorksCorrectly()
         {
-            var query = _context.CreateQuery<Common.Clients.OpenTypes.RowIndex>("RowIndices").Expand(i => i.Rows);
+            var query = _context.CreateQuery<ClientOpenTypesModel.RowIndex>("RowIndices").Expand(i => i.Rows);
             Assert.Equal("http://localhost/odata/RowIndices?$expand=Rows", query.ToString());
 
             var results = await query.ExecuteAsync();
@@ -126,7 +127,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
         [Fact]
         public void SelectQuery_OnOpenTypes_WorksCorrectly()
         {
-            var query = _context.CreateQuery<Common.Clients.OpenTypes.Row>("Rows").Select(r => new { r.Id });
+            var query = _context.CreateQuery<ClientOpenTypesModel.Row>("Rows").Select(r => new { r.Id });
             var results = query.ToList();
 
             Assert.Equal(12, results.Count);
@@ -136,49 +137,49 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
         [Fact]
         public async Task DerivedTypesQuery_OnOpenTypes_WorksCorrectly()
         {
-            var query = _context.Rows.OfType<Common.Clients.OpenTypes.IndexedRow>();
-            var results = (await ((DataServiceQuery<Common.Clients.OpenTypes.IndexedRow>)query).ExecuteAsync()).ToArray();
+            var query = _context.Rows.OfType<ClientOpenTypesModel.IndexedRow>();
+            var results = (await ((DataServiceQuery<ClientOpenTypesModel.IndexedRow>)query).ExecuteAsync()).ToArray();
 
             // Ensure all results are of the correct type
             foreach (var result in results)
             {
-                Assert.IsType<Common.Clients.OpenTypes.IndexedRow>(result);
+                Assert.IsType<ClientOpenTypesModel.IndexedRow>(result);
             }
         }
 
         [Fact]
         public async Task BaseTypeQuery_Returns_ADerivedTypeObject()
         {
-            var derivedQuery = _context.Rows.OfType<Common.Clients.OpenTypes.IndexedRow>().Take(1);
-            var indexedRow = (await ((DataServiceQuery<Common.Clients.OpenTypes.IndexedRow>)derivedQuery).ExecuteAsync()).Single();
+            var derivedQuery = _context.Rows.OfType<ClientOpenTypesModel.IndexedRow>().Take(1);
+            var indexedRow = (await ((DataServiceQuery<ClientOpenTypesModel.IndexedRow>)derivedQuery).ExecuteAsync()).Single();
 
-            var baseQuery = (await _context.ExecuteAsync<Common.Clients.OpenTypes.Row>(new Uri(_baseUri.OriginalString + "Rows(" + indexedRow.Id.ToString() + ")"))).ToList();
+            var baseQuery = (await _context.ExecuteAsync<ClientOpenTypesModel.Row>(new Uri(_baseUri.OriginalString + "Rows(" + indexedRow.Id.ToString() + ")"))).ToList();
             var row = baseQuery.Single();
 
-            Assert.True(row is Common.Clients.OpenTypes.IndexedRow);
+            Assert.True(row is ClientOpenTypesModel.IndexedRow);
         }
 
         [Fact]
         public async Task Updating_OpenProperties_UpdatesSuccessfully()
         {
             // Restore the type name resolver since we will be writing open complex properties.
-            _context.ResolveName = this.typeNameResolver;
+            _context.ResolveName = typeNameResolver;
 
             // Act - Fetch the row and update its dynamic properties
-            var updateRow = (await ((DataServiceQuery<Common.Clients.OpenTypes.Row>)_context.Rows.Where(r => r.Id == row2.Id)).ExecuteAsync()).Single();
+            var updateRow = (await ((DataServiceQuery<ClientOpenTypesModel.Row>)_context.Rows.Where(r => r.Id == row2.Id)).ExecuteAsync()).Single();
             var openBooleanBeforeUpdate = updateRow.DynamicProperties.SingleOrDefault(a => a.Key.Equals("OpenBoolean"));
             Assert.Null(openBooleanBeforeUpdate.Value);
 
             // Update dynamic properties
             updateRow.DynamicProperties = new Dictionary<string, object>()
             {
-                { 
-                    "OpenComplex", new ContactDetails 
+                {
+                    "OpenComplex", new ContactDetails
                     {
                         Byte = byte.MinValue,
                         Contacted = DateTimeOffset.Now,
                         Double = double.MaxValue,
-                        FirstContacted = new byte[] { byte.MaxValue, byte.MinValue, (byte)0 },
+                        FirstContacted = new byte[] { byte.MaxValue, byte.MinValue, 0 },
                         GUID = Guid.NewGuid(),
                         LastContacted = DateTimeOffset.Now,
                         PreferedContactTime = TimeSpan.FromMilliseconds(1234D),
@@ -195,14 +196,14 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
             _context.SaveChanges();
 
             // Act - Fetch the row again to verify updates
-            var updatedRow = (await ((DataServiceQuery<Common.Clients.OpenTypes.Row>)_context.Rows.Where(r => r.Id == this.row2.Id)).ExecuteAsync()).Single();
+            var updatedRow = (await ((DataServiceQuery<ClientOpenTypesModel.Row>)_context.Rows.Where(r => r.Id == row2.Id)).ExecuteAsync()).Single();
 
             // Assert - Verify each dynamic property was updated correctly
             var openComplexAfterUpdate = updatedRow.DynamicProperties.SingleOrDefault(a => a.Key.Equals("OpenComplex"));
             var complexValue = Assert.IsType<ContactDetails>(openComplexAfterUpdate.Value);
             Assert.Equal(byte.MinValue, complexValue.Byte);
             Assert.Equal(double.MaxValue, complexValue.Double);
-            Assert.Equal(new byte[] { byte.MaxValue, byte.MinValue, (byte)0 }, complexValue.FirstContacted);
+            Assert.Equal(new byte[] { byte.MaxValue, byte.MinValue, 0 }, complexValue.FirstContacted);
             Assert.NotEqual(Guid.Empty, complexValue.GUID);
             Assert.Equal(TimeSpan.FromMilliseconds(1234D), complexValue.PreferedContactTime);
             Assert.Equal(short.MinValue, complexValue.Short);

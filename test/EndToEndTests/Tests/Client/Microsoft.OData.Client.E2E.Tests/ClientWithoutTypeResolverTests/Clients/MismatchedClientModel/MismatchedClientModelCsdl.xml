@@ -1,6 +1,6 @@
 ﻿<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
-    <Schema Namespace="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+    <Schema Namespace="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd" xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <EntityType Name="Product">
         <Key>
           <PropertyRef Name="ProductId" />
@@ -8,14 +8,14 @@
         <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
         <Property Name="Picture" Type="Edm.Binary" />
         <Property Name="Description" Type="Edm.String" />
-        <Property Name="Dimensions" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Dimensions" />
+        <Property Name="Dimensions" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Dimensions" />
         <Property Name="BaseConcurrency" Type="Edm.String" />
-        <Property Name="ComplexConcurrency" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ConcurrencyInfo" />
-        <Property Name="NestedComplexConcurrency" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.AuditInfo" />
-        <NavigationProperty Name="RelatedProducts" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Product)" />
-        <NavigationProperty Name="Detail" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ProductDetail" />
-        <NavigationProperty Name="Reviews" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ProductReview)" />
-        <NavigationProperty Name="Photos" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ProductPhoto)" />
+        <Property Name="ComplexConcurrency" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ConcurrencyInfo" />
+        <Property Name="NestedComplexConcurrency" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.AuditInfo" />
+        <NavigationProperty Name="RelatedProducts" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Product)" />
+        <NavigationProperty Name="Detail" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ProductDetail" />
+        <NavigationProperty Name="Reviews" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ProductReview)" />
+        <NavigationProperty Name="Photos" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ProductPhoto)" />
       </EntityType>
       <EntityType Name="OrderLine">
         <Key>
@@ -27,10 +27,10 @@
         <Property Name="OrderLineStream" Type="Edm.Stream" />
         <Property Name="Quantity" Type="Edm.Int32" Nullable="false" />
         <Property Name="ConcurrencyToken" Type="Edm.String" />
-        <NavigationProperty Name="Order" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Order">
+        <NavigationProperty Name="Order" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Order">
           <ReferentialConstraint Property="OrderId" ReferencedProperty="OrderId" />
         </NavigationProperty>
-        <NavigationProperty Name="Product" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Product">
+        <NavigationProperty Name="Product" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Product">
           <ReferentialConstraint Property="ProductId" ReferencedProperty="ProductId" />
         </NavigationProperty>
       </EntityType>
@@ -40,7 +40,7 @@
         </Key>
         <Property Name="PersonId" Type="Edm.Int32" Nullable="false" />
         <Property Name="Name" Type="Edm.String" />
-        <NavigationProperty Name="PersonMetadata" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.PersonMetadata)" />
+        <NavigationProperty Name="PersonMetadata" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.PersonMetadata)" />
       </EntityType>
       <EntityType Name="PersonMetadata">
         <Key>
@@ -50,7 +50,7 @@
         <Property Name="PersonId" Type="Edm.Int32" />
         <Property Name="PropertyName" Type="Edm.String" />
         <Property Name="PropertyValue" Type="Edm.String" />
-        <NavigationProperty Name="Person" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Person">
+        <NavigationProperty Name="Person" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Person">
           <ReferentialConstraint Property="PersonId" ReferencedProperty="PersonId" />
         </NavigationProperty>
       </EntityType>
@@ -90,18 +90,18 @@
         <Property Name="Thumbnail" Type="Edm.Stream" />
         <Property Name="Video" Type="Edm.Stream" />
         <Property Name="Name" Type="Edm.String" />
-        <Property Name="PrimaryContactInfo" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ContactDetails" />
-        <Property Name="BackupContactInfo" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ContactDetails)" Nullable="false" />
-        <Property Name="Auditing" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.AuditInfo" />
-        <NavigationProperty Name="Orders" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Order)" />
-        <NavigationProperty Name="Logins" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Login)" />
-        <NavigationProperty Name="Husband" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Customer">
+        <Property Name="PrimaryContactInfo" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ContactDetails" />
+        <Property Name="BackupContactInfo" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ContactDetails)" Nullable="false" />
+        <Property Name="Auditing" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.AuditInfo" />
+        <NavigationProperty Name="Orders" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Order)" />
+        <NavigationProperty Name="Logins" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Login)" />
+        <NavigationProperty Name="Husband" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Customer">
           <ReferentialConstraint Property="CustomerId" ReferencedProperty="CustomerId" />
         </NavigationProperty>
-        <NavigationProperty Name="Wife" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Customer">
+        <NavigationProperty Name="Wife" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Customer">
           <ReferentialConstraint Property="CustomerId" ReferencedProperty="CustomerId" />
         </NavigationProperty>
-        <NavigationProperty Name="Info" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.CustomerInfo" />
+        <NavigationProperty Name="Info" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.CustomerInfo" />
       </EntityType>
       <EntityType Name="Login">
         <Key>
@@ -109,13 +109,13 @@
         </Key>
         <Property Name="Username" Type="Edm.String" Nullable="false" />
         <Property Name="CustomerId" Type="Edm.Int32" />
-        <NavigationProperty Name="Customer" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Customer">
+        <NavigationProperty Name="Customer" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Customer">
           <ReferentialConstraint Property="CustomerId" ReferencedProperty="CustomerId" />
         </NavigationProperty>
-        <NavigationProperty Name="LastLogin" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.LastLogin" />
-        <NavigationProperty Name="SentMessages" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Message)" />
-        <NavigationProperty Name="ReceivedMessages" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Message)" />
-        <NavigationProperty Name="Orders" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Order)" />
+        <NavigationProperty Name="LastLogin" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.LastLogin" />
+        <NavigationProperty Name="SentMessages" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Message)" />
+        <NavigationProperty Name="ReceivedMessages" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Message)" />
+        <NavigationProperty Name="Orders" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Order)" />
       </EntityType>
       <EntityType Name="RSAToken">
         <Key>
@@ -123,7 +123,7 @@
         </Key>
         <Property Name="Serial" Type="Edm.String" Nullable="false" />
         <Property Name="Issued" Type="Edm.DateTimeOffset" Nullable="false" />
-        <NavigationProperty Name="Login" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Login" />
+        <NavigationProperty Name="Login" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Login" />
       </EntityType>
       <EntityType Name="PageView">
         <Key>
@@ -134,7 +134,7 @@
         <Property Name="Viewed" Type="Edm.DateTimeOffset" Nullable="false" />
         <Property Name="TimeSpentOnPage" Type="Edm.Duration" Nullable="false" />
         <Property Name="PageUrl" Type="Edm.String" />
-        <NavigationProperty Name="Login" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Login" />
+        <NavigationProperty Name="Login" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Login" />
       </EntityType>
       <EntityType Name="LastLogin">
         <Key>
@@ -144,7 +144,7 @@
         <Property Name="LoggedIn" Type="Edm.DateTimeOffset" Nullable="false" />
         <Property Name="LoggedOut" Type="Edm.DateTimeOffset" />
         <Property Name="Duration" Type="Edm.Duration" Nullable="false" />
-        <NavigationProperty Name="Login" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Login" />
+        <NavigationProperty Name="Login" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Login" />
       </EntityType>
       <EntityType Name="Message">
         <Key>
@@ -158,9 +158,9 @@
         <Property Name="Subject" Type="Edm.String" />
         <Property Name="Body" Type="Edm.String" />
         <Property Name="IsRead" Type="Edm.Boolean" Nullable="false" />
-        <NavigationProperty Name="Sender" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Login" />
-        <NavigationProperty Name="Recipient" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Login" />
-        <NavigationProperty Name="Attachments" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.MessageAttachment)" />
+        <NavigationProperty Name="Sender" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Login" />
+        <NavigationProperty Name="Recipient" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Login" />
+        <NavigationProperty Name="Attachments" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.MessageAttachment)" />
       </EntityType>
       <EntityType Name="MessageAttachment">
         <Key>
@@ -168,7 +168,7 @@
         </Key>
         <Property Name="AttachmentId" Type="Edm.Guid" Nullable="false" />
         <Property Name="Attachment" Type="Edm.Binary" />
-        <NavigationProperty Name="Messages" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Message)" />
+        <NavigationProperty Name="Messages" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Message)" />
       </EntityType>
       <EntityType Name="Order">
         <Key>
@@ -176,9 +176,9 @@
         </Key>
         <Property Name="OrderId" Type="Edm.Int32" Nullable="false" />
         <Property Name="CustomerId" Type="Edm.Int32" />
-        <Property Name="Concurrency" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ConcurrencyInfo" />
-        <NavigationProperty Name="Login" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Login" />
-        <NavigationProperty Name="Customer" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Customer">
+        <Property Name="Concurrency" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ConcurrencyInfo" />
+        <NavigationProperty Name="Login" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Login" />
+        <NavigationProperty Name="Customer" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Customer">
           <ReferentialConstraint Property="CustomerId" ReferencedProperty="CustomerId" />
         </NavigationProperty>
       </EntityType>
@@ -188,7 +188,7 @@
         </Key>
         <Property Name="ProductId" Type="Edm.Int32" />
         <Property Name="Details" Type="Edm.String" />
-        <NavigationProperty Name="Product" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Product">
+        <NavigationProperty Name="Product" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Product">
           <ReferentialConstraint Property="ProductId" ReferencedProperty="ProductId" />
         </NavigationProperty>
       </EntityType>
@@ -202,7 +202,7 @@
         <Property Name="ReviewId" Type="Edm.Int32" Nullable="false" />
         <Property Name="Review" Type="Edm.String" />
         <Property Name="RevisionId" Type="Edm.String" Nullable="false" />
-        <NavigationProperty Name="Product" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Product">
+        <NavigationProperty Name="Product" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Product">
           <ReferentialConstraint Property="ProductId" ReferencedProperty="ProductId" />
         </NavigationProperty>
       </EntityType>
@@ -228,7 +228,7 @@
         </Key>
         <Property Name="ComputerId" Type="Edm.Int32" Nullable="false" />
         <Property Name="Name" Type="Edm.String" />
-        <NavigationProperty Name="ComputerDetail" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ComputerDetail" />
+        <NavigationProperty Name="ComputerDetail" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ComputerDetail" />
       </EntityType>
       <EntityType Name="ComputerDetail">
         <Key>
@@ -240,8 +240,8 @@
         <Property Name="Serial" Type="Edm.String" />
         <Property Name="SpecificationsBag" Type="Collection(Edm.String)" />
         <Property Name="PurchaseDate" Type="Edm.DateTimeOffset" Nullable="false" />
-        <Property Name="Dimensions" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Dimensions" />
-        <NavigationProperty Name="Computer" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Computer" />
+        <Property Name="Dimensions" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Dimensions" />
+        <NavigationProperty Name="Computer" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Computer" />
       </EntityType>
       <EntityType Name="Driver">
         <Key>
@@ -249,7 +249,7 @@
         </Key>
         <Property Name="Name" Type="Edm.String" Nullable="false" />
         <Property Name="BirthDate" Type="Edm.DateTimeOffset" Nullable="false" />
-        <NavigationProperty Name="License" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.License" />
+        <NavigationProperty Name="License" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.License" />
       </EntityType>
       <EntityType Name="License">
         <Key>
@@ -260,7 +260,7 @@
         <Property Name="LicenseClass" Type="Edm.String" />
         <Property Name="Restrictions" Type="Edm.String" />
         <Property Name="ExpirationDate" Type="Edm.DateTimeOffset" Nullable="false" />
-        <NavigationProperty Name="Driver" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Driver" />
+        <NavigationProperty Name="Driver" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Driver" />
       </EntityType>
       <EntityType Name="MappedEntityType">
         <Key>
@@ -283,9 +283,9 @@
         <Property Name="BagOfInt64s" Type="Collection(Edm.Int64)" Nullable="false" />
         <Property Name="BagOfGuids" Type="Collection(Edm.Guid)" Nullable="false" />
         <Property Name="BagOfDateTimeOffset" Type="Collection(Edm.DateTimeOffset)" Nullable="false" />
-        <Property Name="BagOfComplexToCategories" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ComplexToCategory)" />
-        <Property Name="ComplexPhone" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Phone" />
-        <Property Name="ComplexContactDetails" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ContactDetails" />
+        <Property Name="BagOfComplexToCategories" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ComplexToCategory)" />
+        <Property Name="ComplexPhone" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Phone" />
+        <Property Name="ComplexContactDetails" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ContactDetails" />
       </EntityType>
       <EntityType Name="Car">
         <Key>
@@ -296,19 +296,19 @@
         <Property Name="Video" Type="Edm.Stream" />
         <Property Name="Description" Type="Edm.String" />
       </EntityType>
-      <EntityType Name="Employee" BaseType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Person">
+      <EntityType Name="Employee" BaseType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Person">
         <Property Name="ManagersPersonId" Type="Edm.Int32" Nullable="false" />
         <Property Name="Salary" Type="Edm.Int32" Nullable="false" />
         <Property Name="Title" Type="Edm.String" />
-        <NavigationProperty Name="Manager" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee" />
+        <NavigationProperty Name="Manager" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee" />
       </EntityType>
-      <EntityType Name="SpecialEmployee" BaseType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee">
+      <EntityType Name="SpecialEmployee" BaseType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee">
         <Property Name="CarsVIN" Type="Edm.Int32" Nullable="false" />
         <Property Name="Bonus" Type="Edm.Int32" Nullable="false" />
         <Property Name="IsFullyVested" Type="Edm.Boolean" Nullable="false" />
-        <NavigationProperty Name="Car" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Car" />
+        <NavigationProperty Name="Car" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Car" />
       </EntityType>
-      <EntityType Name="Contractor" BaseType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Person">
+      <EntityType Name="Contractor" BaseType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Person">
         <Property Name="ContratorCompanyId" Type="Edm.Int32" Nullable="false" />
         <Property Name="BillingRate" Type="Edm.Int32" Nullable="false" />
         <Property Name="TeamContactPersonId" Type="Edm.Int32" Nullable="false" />
@@ -317,15 +317,15 @@
       <ComplexType Name="AuditInfo">
         <Property Name="ModifiedDate" Type="Edm.DateTimeOffset" Nullable="false" />
         <Property Name="ModifiedBy" Type="Edm.String" />
-        <Property Name="Concurrency" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ConcurrencyInfo" />
+        <Property Name="Concurrency" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ConcurrencyInfo" />
       </ComplexType>
       <ComplexType Name="ContactDetails">
         <Property Name="EmailBag" Type="Collection(Edm.String)" />
         <Property Name="AlternativeNames" Type="Collection(Edm.String)" />
-        <Property Name="ContactAlias" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Aliases" />
-        <Property Name="HomePhone" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Phone" />
-        <Property Name="WorkPhone" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Phone" />
-        <Property Name="MobilePhoneBag" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Phone)" />
+        <Property Name="ContactAlias" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Aliases" />
+        <Property Name="HomePhone" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Phone" />
+        <Property Name="WorkPhone" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Phone" />
+        <Property Name="MobilePhoneBag" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Phone)" />
       </ComplexType>
       <ComplexType Name="Dimensions">
         <Property Name="Width" Type="Edm.Decimal" Nullable="false" Scale="variable" />
@@ -336,10 +336,10 @@
         <Property Name="Token" Type="Edm.String" />
         <Property Name="QueriedDateTime" Type="Edm.DateTimeOffset" />
       </ComplexType>
-      <EntityType Name="DiscontinuedProduct" BaseType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Product">
+      <EntityType Name="DiscontinuedProduct" BaseType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Product">
         <Property Name="Discontinued" Type="Edm.DateTimeOffset" Nullable="false" />
         <Property Name="ReplacementProductId" Type="Edm.Int32" />
-        <Property Name="DiscontinuedPhone" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Phone" />
+        <Property Name="DiscontinuedPhone" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Phone" />
         <Property Name="ChildConcurrencyToken" Type="Edm.String" />
       </EntityType>
       <ComplexType Name="Phone">
@@ -349,9 +349,9 @@
       <ComplexType Name="Aliases">
         <Property Name="AlternativeNames" Type="Collection(Edm.String)" />
       </ComplexType>
-      <EntityType Name="BackOrderLine" BaseType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.OrderLine" />
-      <EntityType Name="BackOrderLine2" BaseType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.BackOrderLine" />
-      <EntityType Name="AllSpatialCollectionTypes_Simple" BaseType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.AllSpatialCollectionTypes">
+      <EntityType Name="BackOrderLine" BaseType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.OrderLine" />
+      <EntityType Name="BackOrderLine2" BaseType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.BackOrderLine" />
+      <EntityType Name="AllSpatialCollectionTypes_Simple" BaseType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.AllSpatialCollectionTypes">
         <Property Name="ManyGeogPoint" Type="Collection(Edm.GeographyPoint)" />
         <Property Name="ManyGeogLine" Type="Collection(Edm.GeographyLineString)" />
         <Property Name="ManyGeogPolygon" Type="Collection(Edm.GeographyPolygon)" />
@@ -359,7 +359,7 @@
         <Property Name="ManyGeomLine" Type="Collection(Edm.GeometryLineString)" />
         <Property Name="ManyGeomPolygon" Type="Collection(Edm.GeometryPolygon)" />
       </EntityType>
-      <EntityType Name="ProductPageView" BaseType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.PageView">
+      <EntityType Name="ProductPageView" BaseType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.PageView">
         <Property Name="ProductId" Type="Edm.Int32" Nullable="false" />
         <Property Name="ConcurrencyToken" Type="Edm.String" />
       </EntityType>
@@ -374,52 +374,52 @@
         <ReturnType Type="Edm.Int32" Nullable="false" />
       </Action>
       <Action Name="RetrieveProduct" IsBound="true">
-        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Product" />
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Product" />
         <ReturnType Type="Edm.Int32" Nullable="false" />
       </Action>
       <Action Name="RetrieveProduct" IsBound="true">
-        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.OrderLine" />
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.OrderLine" />
         <ReturnType Type="Edm.Int32" Nullable="false" />
       </Action>
       <Action Name="UpdatePersonInfo" />
       <Action Name="UpdatePersonInfo" IsBound="true">
-        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Person" />
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Person" />
       </Action>
       <Action Name="UpdatePersonInfo" IsBound="true">
-        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee" />
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee" />
       </Action>
       <Action Name="UpdatePersonInfo" IsBound="true">
-        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee" />
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.SpecialEmployee" />
       </Action>
       <Action Name="UpdatePersonInfo" IsBound="true">
-        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Contractor" />
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Contractor" />
       </Action>
       <Action Name="IncreaseEmployeeSalary" IsBound="true">
-        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee" />
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.SpecialEmployee" />
         <ReturnType Type="Edm.Int32" Nullable="false" />
       </Action>
       <Action Name="IncreaseEmployeeSalary" IsBound="true">
-        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee" />
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee" />
         <Parameter Name="n" Type="Edm.Int32" Nullable="false" />
         <ReturnType Type="Edm.Boolean" Nullable="false" />
       </Action>
       <Action Name="IncreaseSalaries" IsBound="true">
-        <Parameter Name="bindingParameter" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee)" />
+        <Parameter Name="bindingParameter" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee)" />
         <Parameter Name="n" Type="Edm.Int32" Nullable="false" />
       </Action>
       <Action Name="IncreaseSalaries" IsBound="true">
-        <Parameter Name="bindingParameter" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee)" />
+        <Parameter Name="bindingParameter" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.SpecialEmployee)" />
         <Parameter Name="n" Type="Edm.Int32" Nullable="false" />
       </Action>
       <Action Name="Sack" IsBound="true">
-        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee" />
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee" />
       </Action>
       <Action Name="ChangeCustomerAuditInfo" IsBound="true">
-        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Customer" />
-        <Parameter Name="auditInfo" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.AuditInfo" />
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Customer" />
+        <Parameter Name="auditInfo" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.AuditInfo" />
       </Action>
       <Action Name="ResetComputerDetailsSpecifications" IsBound="true">
-        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ComputerDetail" />
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ComputerDetail" />
         <Parameter Name="specifications" Type="Collection(Edm.String)" />
         <Parameter Name="purchaseTime" Type="Edm.DateTimeOffset" Nullable="false" />
       </Action>
@@ -428,7 +428,7 @@
       </Function>
       <Function Name="GetSpecificCustomer">
         <Parameter Name="Name" Type="Edm.String" />
-        <ReturnType Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Customer)" />
+        <ReturnType Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Customer)" />
       </Function>
       <Function Name="GetCustomerCount">
         <ReturnType Type="Edm.Int32" Nullable="false" />
@@ -438,89 +438,89 @@
         <ReturnType Type="Edm.Int32" Nullable="false" />
       </Function>
       <Function Name="EntityProjectionReturnsCollectionOfComplexTypes">
-        <ReturnType Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ContactDetails)" />
+        <ReturnType Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ContactDetails)" />
       </Function>
       <Function Name="InStreamErrorGetCustomer">
-        <ReturnType Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Customer)" />
+        <ReturnType Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Customer)" />
       </Function>
       <EntityContainer Name="Container">
-        <EntitySet Name="Products" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Product">
+        <EntitySet Name="Products" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Product">
           <NavigationPropertyBinding Path="Detail" Target="ProductDetails" />
           <NavigationPropertyBinding Path="Photos" Target="ProductPhotos" />
           <NavigationPropertyBinding Path="RelatedProducts" Target="Products" />
           <NavigationPropertyBinding Path="Reviews" Target="ProductReviews" />
         </EntitySet>
-        <EntitySet Name="OrderLines" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.OrderLine">
+        <EntitySet Name="OrderLines" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.OrderLine">
           <NavigationPropertyBinding Path="Order" Target="Orders" />
           <NavigationPropertyBinding Path="Product" Target="Products" />
         </EntitySet>
-        <EntitySet Name="People" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Person">
-          <NavigationPropertyBinding Path="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/Manager" Target="People" />
-          <NavigationPropertyBinding Path="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee/Car" Target="Cars" />
+        <EntitySet Name="People" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Person">
+          <NavigationPropertyBinding Path="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/Manager" Target="People" />
+          <NavigationPropertyBinding Path="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.SpecialEmployee/Car" Target="Cars" />
           <NavigationPropertyBinding Path="PersonMetadata" Target="PersonsMetadata" />
         </EntitySet>
-        <EntitySet Name="PersonsMetadata" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.PersonMetadata">
+        <EntitySet Name="PersonsMetadata" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.PersonMetadata">
           <NavigationPropertyBinding Path="Person" Target="People" />
         </EntitySet>
-        <EntitySet Name="AllGeoTypesSet" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.AllSpatialTypes" />
-        <EntitySet Name="AllGeoCollectionTypesSet" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.AllSpatialCollectionTypes" />
-        <EntitySet Name="Customers" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Customer">
+        <EntitySet Name="AllGeoTypesSet" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.AllSpatialTypes" />
+        <EntitySet Name="AllGeoCollectionTypesSet" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.AllSpatialCollectionTypes" />
+        <EntitySet Name="Customers" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Customer">
           <NavigationPropertyBinding Path="Husband" Target="Customers" />
           <NavigationPropertyBinding Path="Info" Target="CustomerInfos" />
           <NavigationPropertyBinding Path="Logins" Target="Login" />
           <NavigationPropertyBinding Path="Orders" Target="Orders" />
           <NavigationPropertyBinding Path="Wife" Target="Customers" />
         </EntitySet>
-        <EntitySet Name="Login" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Login">
+        <EntitySet Name="Login" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Login">
           <NavigationPropertyBinding Path="Customer" Target="Customers" />
           <NavigationPropertyBinding Path="LastLogin" Target="LastLogins" />
           <NavigationPropertyBinding Path="Orders" Target="Orders" />
           <NavigationPropertyBinding Path="ReceivedMessages" Target="Messages" />
           <NavigationPropertyBinding Path="SentMessages" Target="Messages" />
         </EntitySet>
-        <EntitySet Name="RSATokens" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.RSAToken">
+        <EntitySet Name="RSATokens" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.RSAToken">
           <NavigationPropertyBinding Path="Login" Target="Login" />
         </EntitySet>
-        <EntitySet Name="PageViews" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.PageView">
+        <EntitySet Name="PageViews" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.PageView">
           <NavigationPropertyBinding Path="Login" Target="Login" />
         </EntitySet>
-        <EntitySet Name="LastLogins" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.LastLogin">
+        <EntitySet Name="LastLogins" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.LastLogin">
           <NavigationPropertyBinding Path="Login" Target="Login" />
         </EntitySet>
-        <EntitySet Name="Messages" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Message">
+        <EntitySet Name="Messages" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Message">
           <NavigationPropertyBinding Path="Attachments" Target="MessageAttachments" />
           <NavigationPropertyBinding Path="Recipient" Target="Login" />
           <NavigationPropertyBinding Path="Sender" Target="Login" />
         </EntitySet>
-        <EntitySet Name="MessageAttachments" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.MessageAttachment">
+        <EntitySet Name="MessageAttachments" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.MessageAttachment">
           <NavigationPropertyBinding Path="Messages" Target="Messages" />
         </EntitySet>
-        <EntitySet Name="Orders" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Order">
+        <EntitySet Name="Orders" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Order">
           <NavigationPropertyBinding Path="Customer" Target="Customers" />
           <NavigationPropertyBinding Path="Login" Target="Login" />
         </EntitySet>
-        <EntitySet Name="ProductDetails" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ProductDetail">
+        <EntitySet Name="ProductDetails" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ProductDetail">
           <NavigationPropertyBinding Path="Product" Target="Products" />
         </EntitySet>
-        <EntitySet Name="ProductReviews" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ProductReview">
+        <EntitySet Name="ProductReviews" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ProductReview">
           <NavigationPropertyBinding Path="Product" Target="Products" />
         </EntitySet>
-        <EntitySet Name="ProductPhotos" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ProductPhoto" />
-        <EntitySet Name="CustomerInfos" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.CustomerInfo" />
-        <EntitySet Name="Computers" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Computer">
+        <EntitySet Name="ProductPhotos" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ProductPhoto" />
+        <EntitySet Name="CustomerInfos" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.CustomerInfo" />
+        <EntitySet Name="Computers" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Computer">
           <NavigationPropertyBinding Path="ComputerDetail" Target="ComputerDetails" />
         </EntitySet>
-        <EntitySet Name="ComputerDetails" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ComputerDetail">
+        <EntitySet Name="ComputerDetails" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ComputerDetail">
           <NavigationPropertyBinding Path="Computer" Target="Computers" />
         </EntitySet>
-        <EntitySet Name="Drivers" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Driver">
+        <EntitySet Name="Drivers" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Driver">
           <NavigationPropertyBinding Path="License" Target="Licenses" />
         </EntitySet>
-        <EntitySet Name="Licenses" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.License">
+        <EntitySet Name="Licenses" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.License">
           <NavigationPropertyBinding Path="Driver" Target="Drivers" />
         </EntitySet>
-        <EntitySet Name="MappedEntityTypes" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.MappedEntityType" />
-        <EntitySet Name="Cars" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Car" />
+        <EntitySet Name="MappedEntityTypes" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.MappedEntityType" />
+        <EntitySet Name="Cars" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Car" />
         <ActionImport Name="RetrieveProduct" Action="Default.RetrieveProduct" />
         <ActionImport Name="UpdatePersonInfo" Action="Default.UpdatePersonInfo" />
         <FunctionImport Name="GetPrimitiveString" Function="Default.GetPrimitiveString" IncludeInServiceDocument="true" />

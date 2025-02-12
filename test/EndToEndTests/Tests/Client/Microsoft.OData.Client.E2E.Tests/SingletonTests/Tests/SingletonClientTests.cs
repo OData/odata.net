@@ -7,17 +7,17 @@
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
-using Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
 using Microsoft.OData.Client.E2E.Tests.SingletonTests.Server;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
 using Xunit;
-using Asset = Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Asset;
-using Company = Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Company;
-using CompanyCategory = Microsoft.OData.Client.E2E.Tests.Common.Client.Default.CompanyCategory;
-using Customer = Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Customer;
-using Department = Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Department;
-using PublicCompany = Microsoft.OData.Client.E2E.Tests.Common.Client.Default.PublicCompany;
+using Asset = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Asset;
+using Company = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Company;
+using CompanyCategory = Microsoft.OData.E2E.TestCommon.Common.Client.Default.CompanyCategory;
+using Customer = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Customer;
+using Department = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Department;
+using PublicCompany = Microsoft.OData.E2E.TestCommon.Common.Client.Default.PublicCompany;
 
 namespace Microsoft.OData.Client.E2E.Tests.SingletonTests.Tests;
 
@@ -203,8 +203,8 @@ public class SingletonClientTests : EndToEndTestBase<SingletonClientTests.TestsS
         await _context.SaveChangesAsync();
         company = await _context.Company.Select(c => new Company { CompanyID = c.CompanyID, VipCustomer = c.VipCustomer }).GetValueAsync();
         Assert.NotNull(company);
-        Assert.NotNull(company.VipCustomer); 
-        
+        Assert.NotNull(company.VipCustomer);
+
         ResetDefaultDataSource();
     }
 
@@ -386,7 +386,7 @@ public class SingletonClientTests : EndToEndTestBase<SingletonClientTests.TestsS
         Assert.Equal("Updated StockExchange", stockExchange);
 
         // Projection with properties - Select
-        publicCompany = _context.PublicCompany.Select(c => 
+        publicCompany = _context.PublicCompany.Select(c =>
             new PublicCompany { CompanyID = c.CompanyID, Name = c.Name, StockExchange = (c as PublicCompany).StockExchange }).GetValue();
         Assert.NotNull(publicCompany);
         Assert.Equal("UpdatedName", publicCompany.Name);
@@ -489,12 +489,12 @@ public class SingletonClientTests : EndToEndTestBase<SingletonClientTests.TestsS
         var company = _context.Company.GetValue();
         _context.LoadProperty(company, "Revenue");
 
-        var newValue = _context.Execute<Int64>(
+        var newValue = _context.Execute<long>(
             new Uri(_baseUri.AbsoluteUri + "Company/Default.IncreaseRevenue"), "POST", true, new BodyOperationParameter("IncreaseValue", 20000));
         Assert.Equal(newValue.Single(), company.Revenue + 20000);
 
         OperationDescriptor descriptor = _context.GetEntityDescriptor(company).OperationDescriptors.Single(e => e.Title == "Default.IncreaseRevenue");
-        newValue = _context.Execute<Int64>(descriptor.Target, "POST", new BodyOperationParameter("IncreaseValue", 40000));
+        newValue = _context.Execute<long>(descriptor.Target, "POST", new BodyOperationParameter("IncreaseValue", 40000));
         Assert.Equal(newValue.Single(), company.Revenue + 60000);
     }
 

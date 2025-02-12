@@ -7,11 +7,12 @@
 
 using Microsoft.AspNetCore.OData;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
 using Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 using Xunit;
+using ClientEndToEndModel = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd;
 
 namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 {
@@ -53,11 +54,11 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             var serviceOperationUri = new Uri(_baseUri + "RetrieveProduct", UriKind.Absolute);
 
             // Act
-            var product = _context.Execute<Common.Clients.EndToEnd.Product>(productUri).Single();
+            var product = _context.Execute<ClientEndToEndModel.Product>(productUri).Single();
             var productOperationDescriptor = _context.GetEntityDescriptor(product).OperationDescriptors
                 .Single(op => op.Target.AbsoluteUri == expectedProductTargetUri);
 
-            var orderLine = _context.Execute<Common.Clients.EndToEnd.OrderLine>(orderLineUri).Single();
+            var orderLine = _context.Execute<ClientEndToEndModel.OrderLine>(orderLineUri).Single();
             var orderLineOperationDescriptor = _context.GetEntityDescriptor(orderLine).OperationDescriptors
                 .Single(op => op.Target.AbsoluteUri == expectedOrderLineTargetUri);
 
@@ -90,12 +91,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             var expectedPersonNameAfterAction = expectedPersonNameBeforeAction + "[UpdataPersonName]";
 
             // Act
-            var person = _context.Execute<Common.Clients.EndToEnd.Person>(personUri).Single();
+            var person = _context.Execute<ClientEndToEndModel.Person>(personUri).Single();
             Assert.Equal(expectedPersonNameBeforeAction, person.Name); // Verify initial state
 
             _context.Execute(actionUri, "POST");  // Perform the action
 
-            var personAfterAction = _context.Execute<Common.Clients.EndToEnd.Person>(personUri).Single();  // Get the person after action
+            var personAfterAction = _context.Execute<ClientEndToEndModel.Person>(personUri).Single();  // Get the person after action
 
             // Assert
             Assert.Equal(expectedPersonNameAfterAction, personAfterAction.Name);  // Verify the result of the action
@@ -114,18 +115,18 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             _context.MergeOption = MergeOption.OverwriteChanges;
 
             // Retrieve a special employee with PersonId -7 and verify their initial salary
-            Common.Clients.EndToEnd.SpecialEmployee specialEmployee = (Common.Clients.EndToEnd.SpecialEmployee)_context.People.Where(p => p.PersonId == -7).Single();
+            ClientEndToEndModel.SpecialEmployee specialEmployee = (ClientEndToEndModel.SpecialEmployee)_context.People.Where(p => p.PersonId == -7).Single();
             Assert.Equal(2016141256, specialEmployee.Salary);
 
             // Create a DataServiceQuerySingle instance for the special employee and increase their salary
-            var singleSpecialEmployee = new DataServiceQuerySingle<Common.Clients.EndToEnd.SpecialEmployee>(_context, "People(-7)/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee");
+            var singleSpecialEmployee = new DataServiceQuerySingle<ClientEndToEndModel.SpecialEmployee>(_context, "People(-7)/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.SpecialEmployee");
 
             int salary = singleSpecialEmployee.IncreaseEmployeeSalary().GetValue();
             Assert.Equal(2016141257, salary);
 
             // Increase the special employee's salary again and verify the updated salary
             singleSpecialEmployee.IncreaseEmployeeSalary().GetValue();
-            specialEmployee = (Common.Clients.EndToEnd.SpecialEmployee)_context.People.Where(p => p.PersonId == -7).Single();
+            specialEmployee = (ClientEndToEndModel.SpecialEmployee)_context.People.Where(p => p.PersonId == -7).Single();
             Assert.Equal(2016141258, specialEmployee.Salary);
         }
 
@@ -140,7 +141,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 
             // Action bound with person instance
             var peopleUri = new Uri(_baseUri + "People(-1)", UriKind.Absolute);
-            var people = _context.Execute<Common.Clients.EndToEnd.Person>(peopleUri).Single();
+            var people = _context.Execute<ClientEndToEndModel.Person>(peopleUri).Single();
             var peopleDescriptors = _context.GetEntityDescriptor(people).OperationDescriptors
                 .Where(od => od.Metadata.AbsoluteUri.EndsWith(actionName));
             var expectedPeopleLinks = new Dictionary<string, string>
@@ -154,13 +155,13 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 
             // Action bound with employee instance
             var employeeUri = new Uri(_baseUri + "People(0)", UriKind.Absolute);
-            var employee = _context.Execute<Common.Clients.EndToEnd.Employee>(employeeUri).Single();
+            var employee = _context.Execute<ClientEndToEndModel.Employee>(employeeUri).Single();
             var employeeDescriptors = _context.GetEntityDescriptor(employee).OperationDescriptors
                 .Where(od => od.Title.Equals(actionTitle));
             var expectedEmployeeLinks = new List<(string, string)>
             {
-                (metadataPrefix + actionName, "People(0)/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Person/" + actionTitle),
-                (metadataPrefix + actionName, "People(0)/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/" + actionTitle)
+                (metadataPrefix + actionName, "People(0)/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Person/" + actionTitle),
+                (metadataPrefix + actionName, "People(0)/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/" + actionTitle)
             };
 
             // Verify and execute actions for employee
@@ -169,14 +170,14 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 
             // Action bound with special employee instance
             var specialEmployeeUri = new Uri(_baseUri + "People(-7)", UriKind.Absolute);
-            var specialEmployee = _context.Execute<Common.Clients.EndToEnd.SpecialEmployee>(specialEmployeeUri).Single();
+            var specialEmployee = _context.Execute<ClientEndToEndModel.SpecialEmployee>(specialEmployeeUri).Single();
             var specialEmployeeDescriptors = _context.GetEntityDescriptor(specialEmployee).OperationDescriptors
                 .Where(od => od.Title.Equals(actionTitle));
             var expectedSpecialEmployeeLinks = new List<(string, string)>
             {
-                (metadataPrefix + actionName, "People(-7)/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Person/" + actionTitle),
-                (metadataPrefix + actionName, "People(-7)/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/" + actionTitle),
-                (metadataPrefix + actionName, "People(-7)/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee/" + actionTitle),
+                (metadataPrefix + actionName, "People(-7)/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Person/" + actionTitle),
+                (metadataPrefix + actionName, "People(-7)/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/" + actionTitle),
+                (metadataPrefix + actionName, "People(-7)/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.SpecialEmployee/" + actionTitle),
             };
 
             // Verify and execute actions for special employee
@@ -185,12 +186,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 
             // Action bound with contractor instance
             var contractorUri = new Uri(_baseUri + "People(1)", UriKind.Absolute);
-            var contractor = _context.Execute<Common.Clients.EndToEnd.Contractor>(contractorUri).Single();
+            var contractor = _context.Execute<ClientEndToEndModel.Contractor>(contractorUri).Single();
             var contractorDescriptors = _context.GetEntityDescriptor(contractor).OperationDescriptors
                 .Where(od => od.Title.Equals(actionTitle));
             var expectedContractorLinks = new List<(string, string)>
             {
-                (metadataPrefix + actionName, "People(1)/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Person/" + actionTitle),
+                (metadataPrefix + actionName, "People(1)/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Person/" + actionTitle),
             };
 
             // Verify and execute actions for contractor
@@ -209,7 +210,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 
             // Action bound with a regular employee instance
             var employeeUri = new Uri(_baseUri + "People(0)", UriKind.Absolute);
-            Common.Clients.EndToEnd.Employee employee = _context.Execute<Common.Clients.EndToEnd.Employee>(employeeUri).Single();
+            ClientEndToEndModel.Employee employee = _context.Execute<ClientEndToEndModel.Employee>(employeeUri).Single();
             Assert.Equal(85, employee.Salary);
 
             var employeeDescriptors = _context
@@ -219,7 +220,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 
             var expectedLinkValues = new Dictionary<string, string>
             {
-                { metadataPrefix + actionName, "People(0)/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/" + actionTitle },
+                { metadataPrefix + actionName, "People(0)/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/" + actionTitle },
             };
 
             VerifyLinks(expectedLinkValues, employeeDescriptors);
@@ -228,12 +229,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             _context.Execute<bool>(employeeDescriptors.Single().Target, "POST", true, new BodyOperationParameter("n", 123)).Single();
 
             // Verify salary after action
-            Common.Clients.EndToEnd.Employee employeeAfterAction = _context.Execute<Common.Clients.EndToEnd.Employee>(employeeUri).Single();
+            ClientEndToEndModel.Employee employeeAfterAction = _context.Execute<ClientEndToEndModel.Employee>(employeeUri).Single();
             Assert.Equal(208, employeeAfterAction.Salary);
 
             // Action bound with a special employee instance
             var specialEmployeeUri = new Uri(_baseUri + "People(-7)", UriKind.Absolute);
-            Common.Clients.EndToEnd.SpecialEmployee specialEmployee = _context.Execute<Common.Clients.EndToEnd.SpecialEmployee>(specialEmployeeUri).Single();
+            ClientEndToEndModel.SpecialEmployee specialEmployee = _context.Execute<ClientEndToEndModel.SpecialEmployee>(specialEmployeeUri).Single();
             Assert.Equal(2016141256, specialEmployee.Salary);
 
             var specialEmployeeDescriptors = _context
@@ -243,8 +244,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 
             var expectedLinkValuesList = new List<(string, string)>
             {
-                (metadataPrefix + actionName, "People(-7)/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/" + actionTitle),
-                (metadataPrefix + actionName, "People(-7)/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee/" + actionTitle),
+                (metadataPrefix + actionName, "People(-7)/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/" + actionTitle),
+                (metadataPrefix + actionName, "People(-7)/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.SpecialEmployee/" + actionTitle),
             };
 
             VerifyLinks(expectedLinkValuesList, specialEmployeeDescriptors);
@@ -256,7 +257,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
                 new BodyOperationParameter("n", 123)
             ).Single();
 
-            Common.Clients.EndToEnd.SpecialEmployee specialEmployeeAfterActionWithParam = _context.Execute<Common.Clients.EndToEnd.SpecialEmployee>(specialEmployeeUri).Single();
+            ClientEndToEndModel.SpecialEmployee specialEmployeeAfterActionWithParam = _context.Execute<ClientEndToEndModel.SpecialEmployee>(specialEmployeeUri).Single();
             Assert.Equal(2016141379, specialEmployeeAfterActionWithParam.Salary);
 
             _context.Execute<int>(
@@ -265,7 +266,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
                 true
             ).Single();
 
-            Common.Clients.EndToEnd.SpecialEmployee specialEmployeeAfterActionWithoutParam = _context.Execute<Common.Clients.EndToEnd.SpecialEmployee>(specialEmployeeUri).Single();
+            ClientEndToEndModel.SpecialEmployee specialEmployeeAfterActionWithoutParam = _context.Execute<ClientEndToEndModel.SpecialEmployee>(specialEmployeeUri).Single();
             Assert.Equal(2016141380, specialEmployeeAfterActionWithoutParam.Salary);
         }
 
@@ -279,19 +280,19 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             var actionParameter = new BodyOperationParameter("n", 3);
 
             // Define URIs for the IncreaseSalaries action for both employees and special employees
-            var employeesUri = new Uri($"{_baseUri}People/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/Default.IncreaseSalaries", UriKind.Absolute);
-            var specialEmployeesUri = new Uri($"{_baseUri}People/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee/Default.IncreaseSalaries", UriKind.Absolute);
+            var employeesUri = new Uri($"{_baseUri}People/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/Default.IncreaseSalaries", UriKind.Absolute);
+            var specialEmployeesUri = new Uri($"{_baseUri}People/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.SpecialEmployee/Default.IncreaseSalaries", UriKind.Absolute);
 
             // Define URIs to fetch specific employee and special employee data
             var employeeUri = new Uri($"{_baseUri}People(-3)", UriKind.Absolute);
             var specialEmployeeUri = new Uri($"{_baseUri}People(-10)", UriKind.Absolute);
 
             // Fetch the initial salary of the employee
-            var employee = _context.Execute<Common.Clients.EndToEnd.Employee>(employeeUri).Single();
+            var employee = _context.Execute<ClientEndToEndModel.Employee>(employeeUri).Single();
             Assert.Equal(0, employee.Salary); // Verify initial salary is 0
 
             // Fetch the initial salary of the special employee
-            var specialEmployee = _context.Execute<Common.Clients.EndToEnd.SpecialEmployee>(specialEmployeeUri).Single();
+            var specialEmployee = _context.Execute<ClientEndToEndModel.SpecialEmployee>(specialEmployeeUri).Single();
             Assert.Equal(4091, specialEmployee.Salary); // Verify initial salary is 4094
 
             // Execute the IncreaseSalaries action for employees ~ This will increase salaries for all employees
@@ -299,11 +300,11 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             _context.Execute(employeesUri, "POST", actionParameter);
 
             // Fetch and verify the employee's salary after the action
-            var employeeAfterAction = _context.Execute<Common.Clients.EndToEnd.Employee>(employeeUri).Single();
+            var employeeAfterAction = _context.Execute<ClientEndToEndModel.Employee>(employeeUri).Single();
             Assert.Equal(3, employeeAfterAction.Salary); // Verify the salary increased by 3
 
             // Fetch and verify the special employee's salary after the action
-            var specialEmployeeAfterAction = _context.Execute<Common.Clients.EndToEnd.SpecialEmployee>(specialEmployeeUri).Single();
+            var specialEmployeeAfterAction = _context.Execute<ClientEndToEndModel.SpecialEmployee>(specialEmployeeUri).Single();
             Assert.Equal(4094, specialEmployeeAfterAction.Salary); // Verify the salary increased by 3
         }
 
@@ -311,12 +312,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
         [Fact]
         public void OverloadedActionsProjection()
         {
-            Common.Clients.EndToEnd.Product product = _context.Execute<Common.Clients.EndToEnd.Product>(new Uri(_baseUri + "Products(-10)?$select=Default.*", UriKind.Absolute)).Single();
+            ClientEndToEndModel.Product product = _context.Execute<ClientEndToEndModel.Product>(new Uri(_baseUri + "Products(-10)?$select=Default.*", UriKind.Absolute)).Single();
             OperationDescriptor productOperationDescriptor = _context.GetEntityDescriptor(product).OperationDescriptors.Single();
             Assert.Equal(_baseUri + "$metadata#Default.RetrieveProduct", productOperationDescriptor.Metadata.AbsoluteUri, true);
             Assert.Equal(_baseUri + "Products(-10)/Default.RetrieveProduct", productOperationDescriptor.Target.AbsoluteUri, true);
 
-            Common.Clients.EndToEnd.OrderLine orderLine = _context.Execute<Common.Clients.EndToEnd.OrderLine>(new Uri(_baseUri + "OrderLines(OrderId=-10,ProductId=-10)?$select=*")).Single();
+            ClientEndToEndModel.OrderLine orderLine = _context.Execute<ClientEndToEndModel.OrderLine>(new Uri(_baseUri + "OrderLines(OrderId=-10,ProductId=-10)?$select=*")).Single();
             Assert.Empty(_context.GetEntityDescriptor(orderLine).OperationDescriptors);
         }
 

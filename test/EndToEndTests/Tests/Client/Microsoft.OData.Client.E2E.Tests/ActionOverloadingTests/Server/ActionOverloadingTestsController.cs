@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 
 namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
 {
@@ -70,7 +70,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
             return Ok();
         }
 
-        [HttpPost("odata/People({key})/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Person/Default.UpdatePersonInfo")]
+        [HttpPost("odata/People({key})/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Person/Default.UpdatePersonInfo")]
         public IActionResult UpdateInfo([FromODataUri] int key)
         {
             var person = _dataSource.People.SingleOrDefault(a => a.PersonId == key);
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
             return Ok();
         }
 
-        [HttpPost("odata/People({key})/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/Default.UpdatePersonInfo")]
+        [HttpPost("odata/People({key})/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/Default.UpdatePersonInfo")]
         public IActionResult UpdateEmployeeeInfo([FromODataUri] int key)
         {
             var person = _dataSource.People.SingleOrDefault(a => a.PersonId == key);
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
             return Ok();
         }
 
-        [HttpPost("odata/People({key})/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee/Default.UpdatePersonInfo")]
+        [HttpPost("odata/People({key})/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.SpecialEmployee/Default.UpdatePersonInfo")]
         public IActionResult UpdateSpecialEmployeeeInfo([FromODataUri] int key)
         {
             var person = _dataSource.People.SingleOrDefault(a => a.PersonId == key);
@@ -115,7 +115,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
             return Ok();
         }
 
-        [HttpPost("odata/People({key})/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Contractor/Default.UpdatePersonInfo")]
+        [HttpPost("odata/People({key})/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Contractor/Default.UpdatePersonInfo")]
         public IActionResult UpdateContractorInfo([FromODataUri] int key)
         {
             var person = _dataSource.People.SingleOrDefault(a => a.PersonId == key);
@@ -130,7 +130,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
             return Ok();
         }
 
-        [HttpPost("odata/People({key})/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee/Default.IncreaseEmployeeSalary")]
+        [HttpPost("odata/People({key})/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.SpecialEmployee/Default.IncreaseEmployeeSalary")]
         public IActionResult IncreaseSpecialEmployeeSalary([FromODataUri] int key, ODataActionParameters parameters)
         {
             var person = _dataSource.People.First(a => a.PersonId == key);
@@ -149,7 +149,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
             }
         }
 
-        [HttpPost("odata/People({key})/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/Default.IncreaseEmployeeSalary")]
+        [HttpPost("odata/People({key})/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/Default.IncreaseEmployeeSalary")]
         public IActionResult IncreaseEmployeeSalary([FromODataUri] int key, ODataActionParameters parameters)
         {
             var person = _dataSource.People.First(a => a.PersonId == key);
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
             }
         }
 
-        [HttpPost("odata/People/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/Default.IncreaseSalaries")]
+        [HttpPost("odata/People/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/Default.IncreaseSalaries")]
         public IActionResult IncreaseSalaries(ODataActionParameters parameters)
         {
             var employees = _dataSource.People.OfType<Employee>();
@@ -181,7 +181,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
             return Ok();
         }
 
-        [HttpPost("odata/People/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee/Default.IncreaseSalaries")]
+        [HttpPost("odata/People/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.SpecialEmployee/Default.IncreaseSalaries")]
         public IActionResult IncreaseSpecialEmployeesSalaries(ODataActionParameters parameters)
         {
             var employees = _dataSource.People.OfType<SpecialEmployee>();

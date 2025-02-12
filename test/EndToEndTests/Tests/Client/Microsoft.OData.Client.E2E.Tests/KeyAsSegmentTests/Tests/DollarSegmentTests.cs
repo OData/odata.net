@@ -7,15 +7,15 @@
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
-using Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Server;
+using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon;
 using Microsoft.OData.Edm;
 using Xunit;
-using DiscontinuedProduct = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProduct;
-using Employee = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee;
-using Login = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login;
+using DiscontinuedProduct = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.DiscontinuedProduct;
+using Employee = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Employee;
+using Login = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Login;
+using Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Server;
 
 namespace Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Tests;
 
@@ -79,7 +79,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
     {
         // Arrange
         _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
-        var requestUri = new Uri(_baseUri + "Products/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct");
+        var requestUri = new Uri(_baseUri + "Products/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct");
 
         // Act
         var discontinuedProductQuery = _context.Execute<DiscontinuedProduct>(requestUri).ToArray();
@@ -97,7 +97,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
     {
         // Arrange
         _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
-        var requestUri = new Uri(_baseUri + "Products/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct/$");
+        var requestUri = new Uri(_baseUri + "Products/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct/$");
 
         // Act
         var discontinuedProductQuery = _context.Execute<DiscontinuedProduct>(requestUri).ToArray();
@@ -115,7 +115,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
     {
         // Arrange
         _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
-        var requestUri = new Uri(_baseUri + "Products/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct?$select=Discontinued");
+        var requestUri = new Uri(_baseUri + "Products/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct?$select=Discontinued");
 
         // Act
         var discontinuedProductDatesQuery = _context.Execute<DiscontinuedProduct>(requestUri).ToArray();
@@ -130,7 +130,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
     {
         // Arrange
         _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
-        var requestUri = new Uri(_baseUri + "Products/$/$/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct?$select=Discontinued");
+        var requestUri = new Uri(_baseUri + "Products/$/$/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct?$select=Discontinued");
 
         // Act
         var discontinuedProductDatesQuery = _context.Execute<DiscontinuedProduct>(requestUri).ToArray();
@@ -147,7 +147,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
         _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
         long salaryBeforeIncrementForEmployee_6 = 2147483647;
 
-        var requestUri = new Uri(_baseUri + "People/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/$/Default.IncreaseSalaries");
+        var requestUri = new Uri(_baseUri + "People/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/$/Default.IncreaseSalaries");
 
         // Act
         var response = _context.Execute(
@@ -160,7 +160,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
 
         // Assert
         Assert.Equal(200, response.StatusCode);
-        var salaryAfterIncrement = _context.Execute<int>(new Uri(_baseUri + "People/-6/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/$/Salary"));
+        var salaryAfterIncrement = _context.Execute<int>(new Uri(_baseUri + "People/-6/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/$/Salary"));
         Assert.Equal(salaryBeforeIncrementForEmployee_6, salaryAfterIncrement.Single() - 200);
 
         ResetDefaultDataSource();
@@ -172,7 +172,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
         // Arrange
         _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
         var totalEmployeesBeforeSack = 7;
-        var requestUri = new Uri(_baseUri + "People/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/-10/$/Default.Sack");
+        var requestUri = new Uri(_baseUri + "People/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/-10/$/Default.Sack");
 
         // Act
         var response = _context.Execute(
@@ -183,7 +183,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
         // Assert
         Assert.Equal(204, response.StatusCode);
 
-        var totalEmployeesAfterSack = _context.Execute<Employee>(new Uri(_baseUri + "People/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee")).Count();
+        var totalEmployeesAfterSack = _context.Execute<Employee>(new Uri(_baseUri + "People/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee")).Count();
         Assert.Equal(totalEmployeesBeforeSack, totalEmployeesAfterSack + 1);
 
         ResetDefaultDataSource();
@@ -195,7 +195,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
         // Arrange
         _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
         long salaryBeforeIncrementForEmployee_6 = 2147483647;
-        var requestUri = new Uri(_baseUri + "People/$/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/$/$/Default.IncreaseSalaries");
+        var requestUri = new Uri(_baseUri + "People/$/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/$/$/Default.IncreaseSalaries");
 
         // Act
         var response = _context.Execute(
@@ -208,7 +208,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
 
         // Assert
         Assert.Equal(200, response.StatusCode);
-        var salaryAfterIncrement = _context.Execute<int>(new Uri(_baseUri + "People/-6/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/$/Salary"));
+        var salaryAfterIncrement = _context.Execute<int>(new Uri(_baseUri + "People/-6/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/$/Salary"));
         Assert.Equal(salaryBeforeIncrementForEmployee_6, salaryAfterIncrement.Single() + 200);
 
         ResetDefaultDataSource();
@@ -220,7 +220,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
         // Arrange
         _context.UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash;
         long salaryBeforeIncrementForEmployee_6 = 2147483647;
-        var requestUri = new Uri(_baseUri + "People/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/$/Default.IncreaseSalaries/$");
+        var requestUri = new Uri(_baseUri + "People/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/$/Default.IncreaseSalaries/$");
 
         // Act
         // Actions must be leaf segments, we do not allow anything to follow them
@@ -234,7 +234,7 @@ public class DollarSegmentTests : EndToEndTestBase<DollarSegmentTests.TestsStart
 
         // Assert
         Assert.Equal(200, response.StatusCode);
-        var salaryAfterIncrement = _context.Execute<int>(new Uri(_baseUri + "People/-6/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/$/Salary"));
+        var salaryAfterIncrement = _context.Execute<int>(new Uri(_baseUri + "People/-6/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee/$/Salary"));
         Assert.Equal(salaryBeforeIncrementForEmployee_6, salaryAfterIncrement.Single() + 200);
 
         ResetDefaultDataSource();

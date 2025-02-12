@@ -8,12 +8,13 @@
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
 using Microsoft.OData.Client.E2E.Tests.ClientTests.Server;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd;
+using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 using Xunit;
+using ClientEndToEndModel = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
 {
@@ -57,7 +58,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         public async Task DollarFilter_UsingContains_ExecutesSuccessfully(string query, int expectedCount)
         {
             // Act
-            var result = (await _context.ExecuteAsync<Common.Clients.EndToEnd.Person>(new Uri(_baseUri.OriginalString + query))).ToArray();
+            var result = (await _context.ExecuteAsync<ClientEndToEndModel.Person>(new Uri(_baseUri.OriginalString + query))).ToArray();
 
             // Assert
             Assert.Equal(expectedCount, result.Length);
@@ -88,7 +89,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         public async Task DollarFilter_WithCollectionWithEmptyString_ExecutesSuccessfully(string query)
         {
             // Act
-            var response = await _context.ExecuteAsync<Common.Clients.EndToEnd.Person>(new Uri(_baseUri.OriginalString + query));
+            var response = await _context.ExecuteAsync<ClientEndToEndModel.Person>(new Uri(_baseUri.OriginalString + query));
 
             // Assert
             Assert.Empty(response.ToArray());
@@ -99,12 +100,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         {
             var result = (from c in _context.People
                           where c.Name.Contains("m")
-                          select new Common.Clients.EndToEnd.Person() { Name = c.Name }) as DataServiceQuery<Common.Clients.EndToEnd.Person>;
+                          select new ClientEndToEndModel.Person() { Name = c.Name }) as DataServiceQuery<ClientEndToEndModel.Person>;
 
             Assert.Equal("http://localhost/odata/People?$filter=contains(Name,'m')&$select=Name", result.ToString());
             Assert.Equal(10, (await result.ExecuteAsync()).Count());
 
-            result = (DataServiceQuery<Common.Clients.EndToEnd.Person>)_context.People.Where(c => c.Name.Contains("m"));
+            result = (DataServiceQuery<ClientEndToEndModel.Person>)_context.People.Where(c => c.Name.Contains("m"));
 
             Assert.Equal("http://localhost/odata/People?$filter=contains(Name,'m')", result.ToString());
             Assert.Equal(10, (await result.ExecuteAsync()).Count());
@@ -117,17 +118,17 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
 
             //GET http://localhost/odata/People?$filter=cast(cast(PersonId,Edm.Byte),Edm.Int32) gt 0 HTTP/1.1
             //all the IDs in [-10, 2] except 0 are counted in.
-            var result = _context.People.Where(c => (Byte)c.PersonId > 0);
+            var result = _context.People.Where(c => (byte)c.PersonId > 0);
             var stringOfQuery = result.ToString();
             Assert.Equal("http://localhost/odata/People?$filter=cast(cast(PersonId,Edm.Byte),Edm.Int32) gt 0", stringOfQuery);
             Assert.Contains(stringOfCast, stringOfQuery);
-            Assert.Equal(12, (await ((DataServiceQuery<Common.Clients.EndToEnd.Person>)result).ExecuteAsync()).Count());
+            Assert.Equal(12, (await ((DataServiceQuery<ClientEndToEndModel.Person>)result).ExecuteAsync()).Count());
 
             //GET http://localhost/odata/People?$filter=PersonId gt 0 HTTP/1.1
             //all the IDs in [1, 2] are counted in.
             result = _context.People.Where(c => c.PersonId > 0);
             Assert.Equal("http://localhost/odata/People?$filter=PersonId gt 0", result.ToString());
-            Assert.Equal(2, (await ((DataServiceQuery<Common.Clients.EndToEnd.Person>)result).ExecuteAsync()).Count());
+            Assert.Equal(2, (await ((DataServiceQuery<ClientEndToEndModel.Person>)result).ExecuteAsync()).Count());
         }
 
         [Theory]
@@ -138,7 +139,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         {
             // Act & Assert
             var exception = await Assert.ThrowsAsync<DataServiceQueryException>(async () =>
-                await _context.ExecuteAsync<Common.Clients.EndToEnd.Person>(new Uri(_baseUri.OriginalString + errorUrl))
+                await _context.ExecuteAsync<ClientEndToEndModel.Person>(new Uri(_baseUri.OriginalString + errorUrl))
             );
 
             // Verify that the exception contains a 400 status code
@@ -205,7 +206,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             _context.SendingRequest2 += sendRequestEvent;
 
             // Act
-            int resultCount = (await ((DataServiceQuery<Common.Clients.EndToEnd.Customer>)_context.Customers.Where(c => c.CustomerId > -5)).ExecuteAsync()).Count();
+            int resultCount = (await ((DataServiceQuery<ClientEndToEndModel.Customer>)_context.Customers.Where(c => c.CustomerId > -5)).ExecuteAsync()).Count();
 
             // Assert
             Assert.Equal(expectedCount, resultCount);
@@ -239,7 +240,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             _context.SendingRequest2 += sendRequestEvent;
 
             // Act
-            int resultCount = ((DataServiceQuery<Common.Clients.EndToEnd.Customer>)_context.Customers.Select(c => new Common.Clients.EndToEnd.Customer() { CustomerId = c.CustomerId, Name = c.Name })).GetAllPages().Count();
+            int resultCount = ((DataServiceQuery<ClientEndToEndModel.Customer>)_context.Customers.Select(c => new ClientEndToEndModel.Customer() { CustomerId = c.CustomerId, Name = c.Name })).GetAllPages().Count();
 
             // Assert
             Assert.Equal(expectedCount, resultCount);
@@ -307,7 +308,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             _context.SendingRequest2 += sendRequestEvent;
 
             // Act
-            int resultCount = ((DataServiceQuery<Common.Clients.EndToEnd.Customer>)_context.Customers.Take(4)).GetAllPages().Count();
+            int resultCount = ((DataServiceQuery<ClientEndToEndModel.Customer>)_context.Customers.Take(4)).GetAllPages().Count();
 
             // Assert
             Assert.Equal(expectedCount, resultCount);
@@ -341,7 +342,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             _context.SendingRequest2 += sendRequestEvent;
 
             // Act
-            int resultCount = ((DataServiceQuery<Common.Clients.EndToEnd.Customer>)_context.Customers.OrderBy(c => c.Name)).GetAllPages().Count();
+            int resultCount = ((DataServiceQuery<ClientEndToEndModel.Customer>)_context.Customers.OrderBy(c => c.Name)).GetAllPages().Count();
 
             // Assert
             Assert.Equal(expectedCount, resultCount);
@@ -375,7 +376,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             _context.SendingRequest2 += sendRequestEvent;
 
             // Act
-            int resultCount = ((DataServiceQuery<Common.Clients.EndToEnd.Customer>)_context.Customers.Skip(4)).GetAllPages().Count();
+            int resultCount = ((DataServiceQuery<ClientEndToEndModel.Customer>)_context.Customers.Skip(4)).GetAllPages().Count();
 
             // Assert
             Assert.Equal(expectedCount, resultCount);
@@ -418,7 +419,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             // Assert that a DataServiceQueryException is thrown for duplicate OData query options.
             var exception = Assert.Throws<DataServiceQueryException>(() =>
             {
-                _context.Execute<Common.Clients.EndToEnd.Person>(
+                _context.Execute<ClientEndToEndModel.Person>(
                     new Uri(_baseUri.OriginalString + "People?$orderby=PersonId&$orderby=PersonId")
                 );
             });
@@ -427,7 +428,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             Assert.Equal(400, exception.Response.StatusCode);
 
             // Execute a valid query with non-OData query options and verify the result.
-            var entryResults = _context.Execute<Common.Clients.EndToEnd.Person>(
+            var entryResults = _context.Execute<ClientEndToEndModel.Person>(
                 new Uri(_baseUri.OriginalString + "People?nonODataQuery=foo&$filter=PersonId%20eq%200&nonODataQuery=bar")
             );
 

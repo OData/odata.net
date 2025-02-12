@@ -7,14 +7,14 @@
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
 using Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Server;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 using Microsoft.OData.Edm;
 using Xunit;
-using Login = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login;
-using Customer = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer;
+using Customer = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Customer;
+using Login = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Login;
 
 namespace Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Tests;
 

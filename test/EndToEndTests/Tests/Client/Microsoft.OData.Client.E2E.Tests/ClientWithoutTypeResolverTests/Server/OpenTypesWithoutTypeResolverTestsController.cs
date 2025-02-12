@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes;
+using Microsoft.OData.E2E.TestCommon.Common.Server.OpenTypes;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server
 {
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server
         [HttpGet("odata/Rows({key})")]
         public IActionResult GetRow([FromRoute] Guid key)
         {
-            var row = _dataSource.Rows.SingleOrDefault(a=>a.Id == key);
+            var row = _dataSource.Rows.SingleOrDefault(a => a.Id == key);
 
             if (row == null)
             {
@@ -55,14 +55,14 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server
         }
 
         [EnableQuery]
-        [HttpGet("odata/Rows/Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes.IndexedRow")]
+        [HttpGet("odata/Rows/Microsoft.OData.E2E.TestCommon.Common.Server.OpenTypes.IndexedRow")]
         public IActionResult GetIndexedRows()
         {
             return Ok(_dataSource.Rows.OfType<IndexedRow>().ToList());
         }
 
         [HttpPatch("odata/Rows({key})")]
-        public IActionResult PatchRow([FromRoute]Guid key, [FromBody] Delta<Row> delta)
+        public IActionResult PatchRow([FromRoute] Guid key, [FromBody] Delta<Row> delta)
         {
             var r = _dataSource.Rows.SingleOrDefault(a => a.Id == key);
 

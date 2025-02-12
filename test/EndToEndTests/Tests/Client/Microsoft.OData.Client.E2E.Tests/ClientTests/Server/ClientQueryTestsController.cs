@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
 {
@@ -63,7 +63,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         public IActionResult GetLogin(string key)
         {
             var login = _dataSource.Logins?.FirstOrDefault(a => a.Username == key);
-            
+
             if (login == null)
             {
                 return NotFound();
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         public IActionResult GetCar(int key)
         {
             var car = _dataSource.Cars?.FirstOrDefault(a => a.VIN == key);
-            
+
             if (car == null)
             {
                 return NotFound();
@@ -148,7 +148,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         public IActionResult GetCustomerOrders(int key)
         {
             var customer = _dataSource.Customers.SingleOrDefault(a => a.CustomerId == key);
-            
+
             if (customer == null)
             {
                 return NotFound();

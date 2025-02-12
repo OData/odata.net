@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 
 namespace Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Server;
 
@@ -26,7 +26,7 @@ public class UpdateTestsController : ODataController
     }
 
     [EnableQuery]
-    [HttpGet("odata/People/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee")]
+    [HttpGet("odata/People/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee")]
     public IActionResult GetPeopleOfTypeEmployee()
     {
         var people = _dataSource.People?.OfType<Employee>();
@@ -123,7 +123,7 @@ public class UpdateTestsController : ODataController
 
         // Extract the ID from the URI
         var lastSegment = orderUri.Segments.Last();
-        int startIndex = lastSegment.IndexOf('(') + 1; 
+        int startIndex = lastSegment.IndexOf('(') + 1;
         int endIndex = lastSegment.IndexOf(')') - 1;
         var orderId = int.Parse(Uri.UnescapeDataString(lastSegment.Substring(startIndex, endIndex - startIndex + 1)));
 
@@ -146,7 +146,7 @@ public class UpdateTestsController : ODataController
         return Ok(customer);
     }
 
-    [HttpPut("odata/People({key})/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee/Manager/$ref")]
+    [HttpPut("odata/People({key})/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.SpecialEmployee/Manager/$ref")]
     public IActionResult UpdateEmployeeManager([FromODataUri] int key, [FromBody] Uri managerUri)
     {
         if (managerUri == null)
@@ -191,7 +191,7 @@ public class UpdateTestsController : ODataController
         return Updated(person);
     }
 
-    [HttpDelete("odata/People({key})/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee")]
+    [HttpDelete("odata/People({key})/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.SpecialEmployee")]
     public IActionResult DeleteSpecialEmployee([FromRoute] int key)
     {
         var person = _dataSource.People?.SingleOrDefault(a => a.PersonId == key);
