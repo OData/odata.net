@@ -9,13 +9,13 @@ namespace __GeneratedOdataV2.Parsers.Rules
         public static class _ʺx3AʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._COLON._ʺx3Aʺ> Instance { get; } = from _ʺx3Aʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx3AʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._COLON._ʺx3Aʺ(_ʺx3Aʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._COLON._ʺx3Aʺ.Instance;
         }
         
         public static class _ʺx25x33x41ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._COLON._ʺx25x33x41ʺ> Instance { get; } = from _ʺx25x33x41ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx25x33x41ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._COLON._ʺx25x33x41ʺ(_ʺx25x33x41ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._COLON._ʺx25x33x41ʺ.Instance;
         }
     }
     

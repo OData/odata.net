@@ -9,25 +9,25 @@ namespace __GeneratedOdataV2.Parsers.Rules
         public static class _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ> Instance { get; } = from _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x24x72x65x66x29ʺ.Instance;
         }
         
         public static class _ʺx24x72x65x66ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._contextFragment._ʺx24x72x65x66ʺ> Instance { get; } = from _ʺx24x72x65x66ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx24x72x65x66ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._contextFragment._ʺx24x72x65x66ʺ(_ʺx24x72x65x66ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._contextFragment._ʺx24x72x65x66ʺ.Instance;
         }
         
         public static class _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ> Instance { get; } = from _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex45x6Ex74x69x74x79x54x79x70x65x29ʺ.Instance;
         }
         
         public static class _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ> Instance { get; } = from _ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ(_ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._contextFragment._ʺx43x6Fx6Cx6Cx65x63x74x69x6Fx6Ex28x45x64x6Dx2Ex43x6Fx6Dx70x6Cx65x78x54x79x70x65x29ʺ.Instance;
         }
         
         public static class _singletonEntity_꘡navigation_ЖⲤcontainmentNavigationↃ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡꘡_꘡selectList꘡Parser

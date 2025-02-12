@@ -36,13 +36,13 @@ select new __GeneratedOdataV2.CstNodes.Rules._collectionNavPath._boundOperation(
         public static class _countParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._collectionNavPath._count> Instance { get; } = from _count_1 in __GeneratedOdataV2.Parsers.Rules._countParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._collectionNavPath._count(_count_1);
+select __GeneratedOdataV2.CstNodes.Rules._collectionNavPath._count.Instance;
         }
         
         public static class _refParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._collectionNavPath._ref> Instance { get; } = from _ref_1 in __GeneratedOdataV2.Parsers.Rules._refParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._collectionNavPath._ref(_ref_1);
+select __GeneratedOdataV2.CstNodes.Rules._collectionNavPath._ref.Instance;
         }
     }
     

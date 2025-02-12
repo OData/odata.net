@@ -8,132 +8,132 @@ namespace __GeneratedOdataV2.Parsers.Inners
         
         public static class _61Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._61> Instance { get; } = from _61 in Parse.Char((char)0x61) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._61(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._1.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._61> Instance { get; } = from _61 in Parse.Char((char)0x61) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._61.Instance;
         }
         
         public static class _62Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._62> Instance { get; } = from _62 in Parse.Char((char)0x62) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._62(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._2.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._62> Instance { get; } = from _62 in Parse.Char((char)0x62) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._62.Instance;
         }
         
         public static class _63Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._63> Instance { get; } = from _63 in Parse.Char((char)0x63) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._63(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._3.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._63> Instance { get; } = from _63 in Parse.Char((char)0x63) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._63.Instance;
         }
         
         public static class _64Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._64> Instance { get; } = from _64 in Parse.Char((char)0x64) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._64(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._4.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._64> Instance { get; } = from _64 in Parse.Char((char)0x64) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._64.Instance;
         }
         
         public static class _65Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._65> Instance { get; } = from _65 in Parse.Char((char)0x65) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._65(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._5.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._65> Instance { get; } = from _65 in Parse.Char((char)0x65) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._65.Instance;
         }
         
         public static class _66Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._66> Instance { get; } = from _66 in Parse.Char((char)0x66) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._66(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._6.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._66> Instance { get; } = from _66 in Parse.Char((char)0x66) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._66.Instance;
         }
         
         public static class _67Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._67> Instance { get; } = from _67 in Parse.Char((char)0x67) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._67(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._7.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._67> Instance { get; } = from _67 in Parse.Char((char)0x67) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._67.Instance;
         }
         
         public static class _68Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._68> Instance { get; } = from _68 in Parse.Char((char)0x68) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._68(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._8.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._68> Instance { get; } = from _68 in Parse.Char((char)0x68) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._68.Instance;
         }
         
         public static class _69Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._69> Instance { get; } = from _69 in Parse.Char((char)0x69) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._69(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._9.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._69> Instance { get; } = from _69 in Parse.Char((char)0x69) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._69.Instance;
         }
         
         public static class _6AParser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6A> Instance { get; } = from _6A in Parse.Char((char)0x6A) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6A(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._A.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6A> Instance { get; } = from _6A in Parse.Char((char)0x6A) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6A.Instance;
         }
         
         public static class _6BParser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6B> Instance { get; } = from _6B in Parse.Char((char)0x6B) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6B(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._B.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6B> Instance { get; } = from _6B in Parse.Char((char)0x6B) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6B.Instance;
         }
         
         public static class _6CParser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6C> Instance { get; } = from _6C in Parse.Char((char)0x6C) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6C(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._C.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6C> Instance { get; } = from _6C in Parse.Char((char)0x6C) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6C.Instance;
         }
         
         public static class _6DParser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6D> Instance { get; } = from _6D in Parse.Char((char)0x6D) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6D(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._D.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6D> Instance { get; } = from _6D in Parse.Char((char)0x6D) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6D.Instance;
         }
         
         public static class _6EParser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6E> Instance { get; } = from _6E in Parse.Char((char)0x6E) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6E(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._E.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6E> Instance { get; } = from _6E in Parse.Char((char)0x6E) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6E.Instance;
         }
         
         public static class _6FParser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6F> Instance { get; } = from _6F in Parse.Char((char)0x6F) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6F(__GeneratedOdataV2.CstNodes.Inners._6.Instance, __GeneratedOdataV2.CstNodes.Inners._F.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6F> Instance { get; } = from _6F in Parse.Char((char)0x6F) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._6F.Instance;
         }
         
         public static class _70Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._70> Instance { get; } = from _70 in Parse.Char((char)0x70) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._70(__GeneratedOdataV2.CstNodes.Inners._7.Instance, __GeneratedOdataV2.CstNodes.Inners._0.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._70> Instance { get; } = from _70 in Parse.Char((char)0x70) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._70.Instance;
         }
         
         public static class _71Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._71> Instance { get; } = from _71 in Parse.Char((char)0x71) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._71(__GeneratedOdataV2.CstNodes.Inners._7.Instance, __GeneratedOdataV2.CstNodes.Inners._1.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._71> Instance { get; } = from _71 in Parse.Char((char)0x71) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._71.Instance;
         }
         
         public static class _72Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._72> Instance { get; } = from _72 in Parse.Char((char)0x72) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._72(__GeneratedOdataV2.CstNodes.Inners._7.Instance, __GeneratedOdataV2.CstNodes.Inners._2.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._72> Instance { get; } = from _72 in Parse.Char((char)0x72) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._72.Instance;
         }
         
         public static class _73Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._73> Instance { get; } = from _73 in Parse.Char((char)0x73) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._73(__GeneratedOdataV2.CstNodes.Inners._7.Instance, __GeneratedOdataV2.CstNodes.Inners._3.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._73> Instance { get; } = from _73 in Parse.Char((char)0x73) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._73.Instance;
         }
         
         public static class _74Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._74> Instance { get; } = from _74 in Parse.Char((char)0x74) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._74(__GeneratedOdataV2.CstNodes.Inners._7.Instance, __GeneratedOdataV2.CstNodes.Inners._4.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._74> Instance { get; } = from _74 in Parse.Char((char)0x74) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._74.Instance;
         }
         
         public static class _75Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._75> Instance { get; } = from _75 in Parse.Char((char)0x75) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._75(__GeneratedOdataV2.CstNodes.Inners._7.Instance, __GeneratedOdataV2.CstNodes.Inners._5.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._75> Instance { get; } = from _75 in Parse.Char((char)0x75) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._75.Instance;
         }
         
         public static class _76Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._76> Instance { get; } = from _76 in Parse.Char((char)0x76) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._76(__GeneratedOdataV2.CstNodes.Inners._7.Instance, __GeneratedOdataV2.CstNodes.Inners._6.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._76> Instance { get; } = from _76 in Parse.Char((char)0x76) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._76.Instance;
         }
         
         public static class _77Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._77> Instance { get; } = from _77 in Parse.Char((char)0x77) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._77(__GeneratedOdataV2.CstNodes.Inners._7.Instance, __GeneratedOdataV2.CstNodes.Inners._7.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._77> Instance { get; } = from _77 in Parse.Char((char)0x77) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._77.Instance;
         }
         
         public static class _78Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._78> Instance { get; } = from _78 in Parse.Char((char)0x78) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._78(__GeneratedOdataV2.CstNodes.Inners._7.Instance, __GeneratedOdataV2.CstNodes.Inners._8.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._78> Instance { get; } = from _78 in Parse.Char((char)0x78) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._78.Instance;
         }
         
         public static class _79Parser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._79> Instance { get; } = from _79 in Parse.Char((char)0x79) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._79(__GeneratedOdataV2.CstNodes.Inners._7.Instance, __GeneratedOdataV2.CstNodes.Inners._9.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._79> Instance { get; } = from _79 in Parse.Char((char)0x79) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._79.Instance;
         }
         
         public static class _7AParser
         {
-            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._7A> Instance { get; } = from _7A in Parse.Char((char)0x7A) select new __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._7A(__GeneratedOdataV2.CstNodes.Inners._7.Instance, __GeneratedOdataV2.CstNodes.Inners._A.Instance);
+            public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._7A> Instance { get; } = from _7A in Parse.Char((char)0x7A) select __GeneratedOdataV2.CstNodes.Inners._Ⰳx61ⲻ7A._7A.Instance;
         }
     }
     

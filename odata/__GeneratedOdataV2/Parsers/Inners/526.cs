@@ -9,19 +9,19 @@ namespace __GeneratedOdataV2.Parsers.Inners
         public static class _ʺx30ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._ʺx30ʺⳆʺx31ʺⳆʺx32ʺ._ʺx30ʺ> Instance { get; } = from _ʺx30ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx30ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Inners._ʺx30ʺⳆʺx31ʺⳆʺx32ʺ._ʺx30ʺ(_ʺx30ʺ_1);
+select __GeneratedOdataV2.CstNodes.Inners._ʺx30ʺⳆʺx31ʺⳆʺx32ʺ._ʺx30ʺ.Instance;
         }
         
         public static class _ʺx31ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._ʺx30ʺⳆʺx31ʺⳆʺx32ʺ._ʺx31ʺ> Instance { get; } = from _ʺx31ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx31ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Inners._ʺx30ʺⳆʺx31ʺⳆʺx32ʺ._ʺx31ʺ(_ʺx31ʺ_1);
+select __GeneratedOdataV2.CstNodes.Inners._ʺx30ʺⳆʺx31ʺⳆʺx32ʺ._ʺx31ʺ.Instance;
         }
         
         public static class _ʺx32ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._ʺx30ʺⳆʺx31ʺⳆʺx32ʺ._ʺx32ʺ> Instance { get; } = from _ʺx32ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx32ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Inners._ʺx30ʺⳆʺx31ʺⳆʺx32ʺ._ʺx32ʺ(_ʺx32ʺ_1);
+select __GeneratedOdataV2.CstNodes.Inners._ʺx30ʺⳆʺx31ʺⳆʺx32ʺ._ʺx32ʺ.Instance;
         }
     }
     

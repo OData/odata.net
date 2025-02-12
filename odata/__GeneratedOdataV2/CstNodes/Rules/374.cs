@@ -21,12 +21,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx3Aʺ : _COLON
         {
-            public _ʺx3Aʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx3Aʺ _ʺx3Aʺ_1)
+            private _ʺx3Aʺ()
             {
-                this._ʺx3Aʺ_1 = _ʺx3Aʺ_1;
+                this._ʺx3Aʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx3Aʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx3Aʺ _ʺx3Aʺ_1 { get; }
+            public static _ʺx3Aʺ Instance { get; } = new _ʺx3Aʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -36,12 +37,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx25x33x41ʺ : _COLON
         {
-            public _ʺx25x33x41ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx25x33x41ʺ _ʺx25x33x41ʺ_1)
+            private _ʺx25x33x41ʺ()
             {
-                this._ʺx25x33x41ʺ_1 = _ʺx25x33x41ʺ_1;
+                this._ʺx25x33x41ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx25x33x41ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx25x33x41ʺ _ʺx25x33x41ʺ_1 { get; }
+            public static _ʺx25x33x41ʺ Instance { get; } = new _ʺx25x33x41ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

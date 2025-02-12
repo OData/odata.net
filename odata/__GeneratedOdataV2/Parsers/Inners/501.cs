@@ -9,7 +9,7 @@ namespace __GeneratedOdataV2.Parsers.Inners
         public static class _ʺx5AʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._ʺx5AʺⳆSIGN_hour_ʺx3Aʺ_minute._ʺx5Aʺ> Instance { get; } = from _ʺx5Aʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx5AʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Inners._ʺx5AʺⳆSIGN_hour_ʺx3Aʺ_minute._ʺx5Aʺ(_ʺx5Aʺ_1);
+select __GeneratedOdataV2.CstNodes.Inners._ʺx5AʺⳆSIGN_hour_ʺx3Aʺ_minute._ʺx5Aʺ.Instance;
         }
         
         public static class _SIGN_hour_ʺx3Aʺ_minuteParser

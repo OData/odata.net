@@ -22,13 +22,13 @@ select new __GeneratedOdataV2.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOpera
         public static class _refParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue._ref> Instance { get; } = from _ref_1 in __GeneratedOdataV2.Parsers.Rules._refParser.Instance
-select new __GeneratedOdataV2.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue._ref(_ref_1);
+select __GeneratedOdataV2.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue._ref.Instance;
         }
         
         public static class _valueParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue._value> Instance { get; } = from _value_1 in __GeneratedOdataV2.Parsers.Rules._valueParser.Instance
-select new __GeneratedOdataV2.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue._value(_value_1);
+select __GeneratedOdataV2.CstNodes.Inners._ʺx2Fʺ_propertyPathⳆboundOperationⳆrefⳆvalue._value.Instance;
         }
     }
     

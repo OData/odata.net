@@ -15,13 +15,13 @@ select new __GeneratedOdataV2.CstNodes.Inners._pcharⳆʺx2FʺⳆʺx3Fʺ._pchar(
         public static class _ʺx2FʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._pcharⳆʺx2FʺⳆʺx3Fʺ._ʺx2Fʺ> Instance { get; } = from _ʺx2Fʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx2FʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Inners._pcharⳆʺx2FʺⳆʺx3Fʺ._ʺx2Fʺ(_ʺx2Fʺ_1);
+select __GeneratedOdataV2.CstNodes.Inners._pcharⳆʺx2FʺⳆʺx3Fʺ._ʺx2Fʺ.Instance;
         }
         
         public static class _ʺx3FʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._pcharⳆʺx2FʺⳆʺx3Fʺ._ʺx3Fʺ> Instance { get; } = from _ʺx3Fʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx3FʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Inners._pcharⳆʺx2FʺⳆʺx3Fʺ._ʺx3Fʺ(_ʺx3Fʺ_1);
+select __GeneratedOdataV2.CstNodes.Inners._pcharⳆʺx2FʺⳆʺx3Fʺ._ʺx3Fʺ.Instance;
         }
     }
     

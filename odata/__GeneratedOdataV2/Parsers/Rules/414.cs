@@ -27,25 +27,25 @@ select new __GeneratedOdataV2.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLA
         public static class _ʺx3AʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx3Aʺ> Instance { get; } = from _ʺx3Aʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx3AʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx3Aʺ(_ʺx3Aʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx3Aʺ.Instance;
         }
         
         public static class _ʺx2FʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx2Fʺ> Instance { get; } = from _ʺx2Fʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx2FʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx2Fʺ(_ʺx2Fʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx2Fʺ.Instance;
         }
         
         public static class _ʺx3FʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx3Fʺ> Instance { get; } = from _ʺx3Fʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx3FʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx3Fʺ(_ʺx3Fʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx3Fʺ.Instance;
         }
         
         public static class _ʺx27ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx27ʺ> Instance { get; } = from _ʺx27ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx27ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx27ʺ(_ʺx27ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._qcharⲻnoⲻAMPⲻEQⲻATⲻDOLLAR._ʺx27ʺ.Instance;
         }
     }
     

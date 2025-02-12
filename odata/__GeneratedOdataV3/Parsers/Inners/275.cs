@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Inners
     
     public static class _keyPredicate_꘡singleNavigationExpr꘡ⳆcollectionPathExprParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._keyPredicate_꘡singleNavigationExpr꘡ⳆcollectionPathExpr> Instance { get; } = (_keyPredicate_꘡singleNavigationExpr꘡Parser.Instance);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Inners._keyPredicate_꘡singleNavigationExpr꘡ⳆcollectionPathExpr> Instance { get; } = (_keyPredicate_꘡singleNavigationExpr꘡Parser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Inners._keyPredicate_꘡singleNavigationExpr꘡ⳆcollectionPathExpr>(_collectionPathExprParser.Instance);
         
         public static class _keyPredicate_꘡singleNavigationExpr꘡Parser
         {

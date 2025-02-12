@@ -21,12 +21,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx47x65x6Fx67x72x61x70x68x79ʺ : _abstractSpatialTypeName
         {
-            public _ʺx47x65x6Fx67x72x61x70x68x79ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx47x65x6Fx67x72x61x70x68x79ʺ _ʺx47x65x6Fx67x72x61x70x68x79ʺ_1)
+            private _ʺx47x65x6Fx67x72x61x70x68x79ʺ()
             {
-                this._ʺx47x65x6Fx67x72x61x70x68x79ʺ_1 = _ʺx47x65x6Fx67x72x61x70x68x79ʺ_1;
+                this._ʺx47x65x6Fx67x72x61x70x68x79ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx47x65x6Fx67x72x61x70x68x79ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx47x65x6Fx67x72x61x70x68x79ʺ _ʺx47x65x6Fx67x72x61x70x68x79ʺ_1 { get; }
+            public static _ʺx47x65x6Fx67x72x61x70x68x79ʺ Instance { get; } = new _ʺx47x65x6Fx67x72x61x70x68x79ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -36,12 +37,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx47x65x6Fx6Dx65x74x72x79ʺ : _abstractSpatialTypeName
         {
-            public _ʺx47x65x6Fx6Dx65x74x72x79ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx47x65x6Fx6Dx65x74x72x79ʺ _ʺx47x65x6Fx6Dx65x74x72x79ʺ_1)
+            private _ʺx47x65x6Fx6Dx65x74x72x79ʺ()
             {
-                this._ʺx47x65x6Fx6Dx65x74x72x79ʺ_1 = _ʺx47x65x6Fx6Dx65x74x72x79ʺ_1;
+                this._ʺx47x65x6Fx6Dx65x74x72x79ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx47x65x6Fx6Dx65x74x72x79ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx47x65x6Fx6Dx65x74x72x79ʺ _ʺx47x65x6Fx6Dx65x74x72x79ʺ_1 { get; }
+            public static _ʺx47x65x6Fx6Dx65x74x72x79ʺ Instance { get; } = new _ʺx47x65x6Fx6Dx65x74x72x79ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

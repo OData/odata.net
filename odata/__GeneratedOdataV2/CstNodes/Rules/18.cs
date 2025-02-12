@@ -21,12 +21,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _value : _primitivePath
         {
-            public _value(__GeneratedOdataV2.CstNodes.Rules._value _value_1)
+            private _value()
             {
-                this._value_1 = _value_1;
+                this._value_1 = __GeneratedOdataV2.CstNodes.Rules._value.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Rules._value _value_1 { get; }
+            public static _value Instance { get; } = new _value();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

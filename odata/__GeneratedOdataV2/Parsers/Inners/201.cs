@@ -27,7 +27,7 @@ select new __GeneratedOdataV2.CstNodes.Inners._ALPHAⳆDIGITⳆCOMMAⳆʺx2Eʺ�
         public static class _ʺx2EʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._ALPHAⳆDIGITⳆCOMMAⳆʺx2EʺⳆpctⲻencoded._ʺx2Eʺ> Instance { get; } = from _ʺx2Eʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx2EʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Inners._ALPHAⳆDIGITⳆCOMMAⳆʺx2EʺⳆpctⲻencoded._ʺx2Eʺ(_ʺx2Eʺ_1);
+select __GeneratedOdataV2.CstNodes.Inners._ALPHAⳆDIGITⳆCOMMAⳆʺx2EʺⳆpctⲻencoded._ʺx2Eʺ.Instance;
         }
         
         public static class _pctⲻencodedParser

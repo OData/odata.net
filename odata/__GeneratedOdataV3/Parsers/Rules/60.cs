@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Rules
     
     public static class _systemQueryOptionParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption> Instance { get; } = _filterParser.Instance;
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption> Instance { get; } = (_computeParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_deltatokenParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_expandParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_filterParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_formatParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_idParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_inlinecountParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_orderbyParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_schemaversionParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_searchParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_selectParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_skipParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_skiptokenParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_topParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption>(_indexParser.Instance);
         
         public static class _computeParser
         {
@@ -88,6 +88,10 @@ return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._systemQueryOpt
                 public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._systemQueryOption._filter> Parse(IInput<char>? input)
                 {
                     var _filter_1 = __GeneratedOdataV3.Parsers.Rules._filterParser.Instance.Parse(input);
+if (!_filter_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._systemQueryOption._filter)!, input);
+}
 
 return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._systemQueryOption._filter(_filter_1.Parsed), _filter_1.Remainder);
                 }

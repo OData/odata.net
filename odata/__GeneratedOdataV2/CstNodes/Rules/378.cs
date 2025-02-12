@@ -21,12 +21,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx3Bʺ : _SEMI
         {
-            public _ʺx3Bʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx3Bʺ _ʺx3Bʺ_1)
+            private _ʺx3Bʺ()
             {
-                this._ʺx3Bʺ_1 = _ʺx3Bʺ_1;
+                this._ʺx3Bʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx3Bʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx3Bʺ _ʺx3Bʺ_1 { get; }
+            public static _ʺx3Bʺ Instance { get; } = new _ʺx3Bʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -36,12 +37,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx25x33x42ʺ : _SEMI
         {
-            public _ʺx25x33x42ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx25x33x42ʺ _ʺx25x33x42ʺ_1)
+            private _ʺx25x33x42ʺ()
             {
-                this._ʺx25x33x42ʺ_1 = _ʺx25x33x42ʺ_1;
+                this._ʺx25x33x42ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx25x33x42ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx25x33x42ʺ _ʺx25x33x42ʺ_1 { get; }
+            public static _ʺx25x33x42ʺ Instance { get; } = new _ʺx25x33x42ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

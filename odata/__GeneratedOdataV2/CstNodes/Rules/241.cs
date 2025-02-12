@@ -37,12 +37,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx5Fʺ : _identifierCharacter
         {
-            public _ʺx5Fʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx5Fʺ _ʺx5Fʺ_1)
+            private _ʺx5Fʺ()
             {
-                this._ʺx5Fʺ_1 = _ʺx5Fʺ_1;
+                this._ʺx5Fʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx5Fʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx5Fʺ _ʺx5Fʺ_1 { get; }
+            public static _ʺx5Fʺ Instance { get; } = new _ʺx5Fʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

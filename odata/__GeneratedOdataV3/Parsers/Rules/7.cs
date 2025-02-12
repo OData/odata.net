@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Rules
     
     public static class _keyPredicateParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._keyPredicate> Instance { get; } = _keyPathSegmentsParser.Instance;
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._keyPredicate> Instance { get; } = (_simpleKeyParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._keyPredicate>(_compoundKeyParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._keyPredicate>(_keyPathSegmentsParser.Instance);
         
         public static class _simpleKeyParser
         {

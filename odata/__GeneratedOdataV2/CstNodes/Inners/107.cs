@@ -21,12 +21,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _ref : _refⳆOPEN_levels_CLOSE
         {
-            public _ref(__GeneratedOdataV2.CstNodes.Rules._ref _ref_1)
+            private _ref()
             {
-                this._ref_1 = _ref_1;
+                this._ref_1 = __GeneratedOdataV2.CstNodes.Rules._ref.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Rules._ref _ref_1 { get; }
+            public static _ref Instance { get; } = new _ref();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

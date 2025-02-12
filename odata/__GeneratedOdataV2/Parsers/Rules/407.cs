@@ -21,25 +21,25 @@ select new __GeneratedOdataV2.CstNodes.Rules._unreserved._DIGIT(_DIGIT_1);
         public static class _ʺx2DʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._unreserved._ʺx2Dʺ> Instance { get; } = from _ʺx2Dʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx2DʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._unreserved._ʺx2Dʺ(_ʺx2Dʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._unreserved._ʺx2Dʺ.Instance;
         }
         
         public static class _ʺx2EʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._unreserved._ʺx2Eʺ> Instance { get; } = from _ʺx2Eʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx2EʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._unreserved._ʺx2Eʺ(_ʺx2Eʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._unreserved._ʺx2Eʺ.Instance;
         }
         
         public static class _ʺx5FʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._unreserved._ʺx5Fʺ> Instance { get; } = from _ʺx5Fʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx5FʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._unreserved._ʺx5Fʺ(_ʺx5Fʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._unreserved._ʺx5Fʺ.Instance;
         }
         
         public static class _ʺx7EʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._unreserved._ʺx7Eʺ> Instance { get; } = from _ʺx7Eʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx7EʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._unreserved._ʺx7Eʺ(_ʺx7Eʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._unreserved._ʺx7Eʺ.Instance;
         }
     }
     

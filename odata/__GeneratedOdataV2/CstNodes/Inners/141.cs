@@ -21,12 +21,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _ʺx24x6Fx72x64x65x72x62x79ʺ : _ʺx24x6Fx72x64x65x72x62x79ʺⳆʺx6Fx72x64x65x72x62x79ʺ
         {
-            public _ʺx24x6Fx72x64x65x72x62x79ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx24x6Fx72x64x65x72x62x79ʺ _ʺx24x6Fx72x64x65x72x62x79ʺ_1)
+            private _ʺx24x6Fx72x64x65x72x62x79ʺ()
             {
-                this._ʺx24x6Fx72x64x65x72x62x79ʺ_1 = _ʺx24x6Fx72x64x65x72x62x79ʺ_1;
+                this._ʺx24x6Fx72x64x65x72x62x79ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx24x6Fx72x64x65x72x62x79ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx24x6Fx72x64x65x72x62x79ʺ _ʺx24x6Fx72x64x65x72x62x79ʺ_1 { get; }
+            public static _ʺx24x6Fx72x64x65x72x62x79ʺ Instance { get; } = new _ʺx24x6Fx72x64x65x72x62x79ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -36,12 +37,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _ʺx6Fx72x64x65x72x62x79ʺ : _ʺx24x6Fx72x64x65x72x62x79ʺⳆʺx6Fx72x64x65x72x62x79ʺ
         {
-            public _ʺx6Fx72x64x65x72x62x79ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx6Fx72x64x65x72x62x79ʺ _ʺx6Fx72x64x65x72x62x79ʺ_1)
+            private _ʺx6Fx72x64x65x72x62x79ʺ()
             {
-                this._ʺx6Fx72x64x65x72x62x79ʺ_1 = _ʺx6Fx72x64x65x72x62x79ʺ_1;
+                this._ʺx6Fx72x64x65x72x62x79ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx6Fx72x64x65x72x62x79ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx6Fx72x64x65x72x62x79ʺ _ʺx6Fx72x64x65x72x62x79ʺ_1 { get; }
+            public static _ʺx6Fx72x64x65x72x62x79ʺ Instance { get; } = new _ʺx6Fx72x64x65x72x62x79ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

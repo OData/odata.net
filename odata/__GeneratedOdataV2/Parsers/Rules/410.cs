@@ -27,31 +27,31 @@ select new __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._otherⲻdelim
         public static class _ʺx24ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx24ʺ> Instance { get; } = from _ʺx24ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx24ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx24ʺ(_ʺx24ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx24ʺ.Instance;
         }
         
         public static class _ʺx26ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx26ʺ> Instance { get; } = from _ʺx26ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx26ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx26ʺ(_ʺx26ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx26ʺ.Instance;
         }
         
         public static class _ʺx3DʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx3Dʺ> Instance { get; } = from _ʺx3Dʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx3DʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx3Dʺ(_ʺx3Dʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx3Dʺ.Instance;
         }
         
         public static class _ʺx3AʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx3Aʺ> Instance { get; } = from _ʺx3Aʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx3AʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx3Aʺ(_ʺx3Aʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx3Aʺ.Instance;
         }
         
         public static class _ʺx40ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx40ʺ> Instance { get; } = from _ʺx40ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx40ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx40ʺ(_ʺx40ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._pcharⲻnoⲻSQUOTE._ʺx40ʺ.Instance;
         }
     }
     

@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Rules
     
     public static class _resourcePathParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath> Instance { get; } = (_entitySetName_꘡collectionNavigation꘡Parser.Instance);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath> Instance { get; } = (_entitySetName_꘡collectionNavigation꘡Parser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath>(_singletonEntity_꘡singleNavigation꘡Parser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath>(_actionImportCallParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath>(_entityColFunctionImportCall_꘡collectionNavigation꘡Parser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath>(_entityFunctionImportCall_꘡singleNavigation꘡Parser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath>(_complexColFunctionImportCall_꘡complexColPath꘡Parser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath>(_complexFunctionImportCall_꘡complexPath꘡Parser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath>(_primitiveColFunctionImportCall_꘡primitiveColPath꘡Parser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath>(_primitiveFunctionImportCall_꘡primitivePath꘡Parser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath>(_functionImportCallNoParensParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath>(_crossjoinParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath>(_ʺx24x61x6Cx6Cʺ_꘡ʺx2Fʺ_qualifiedEntityTypeName꘡Parser.Instance);
         
         public static class _entitySetName_꘡collectionNavigation꘡Parser
         {
@@ -19,8 +19,16 @@ namespace __GeneratedOdataV3.Parsers.Rules
                 public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡> Parse(IInput<char>? input)
                 {
                     var _entitySetName_1 = __GeneratedOdataV3.Parsers.Rules._entitySetNameParser.Instance.Parse(input);
+if (!_entitySetName_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡)!, input);
+}
 
 var _collectionNavigation_1 = __GeneratedOdataV3.Parsers.Rules._collectionNavigationParser.Instance.Optional().Parse(_entitySetName_1.Remainder);
+if (!_collectionNavigation_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡)!, input);
+}
 
 return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._resourcePath._entitySetName_꘡collectionNavigation꘡(_entitySetName_1.Parsed, _collectionNavigation_1.Parsed.GetOrElse(null)), _collectionNavigation_1.Remainder);
                 }

@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Rules
     
     public static class _odataRelativeUriParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._odataRelativeUri> Instance { get; } = _resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance;
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._odataRelativeUri> Instance { get; } = (_ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡Parser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._odataRelativeUri>(_ʺx24x65x6Ex74x69x74x79ʺ_ʺx3Fʺ_entityOptionsParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._odataRelativeUri>(_ʺx24x65x6Ex74x69x74x79ʺ_ʺx2Fʺ_qualifiedEntityTypeName_ʺx3Fʺ_entityCastOptionsParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._odataRelativeUri>(_ʺx24x6Dx65x74x61x64x61x74x61ʺ_꘡ʺx3Fʺ_metadataOptions꘡_꘡context꘡Parser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._odataRelativeUri>(_resourcePath_꘡ʺx3Fʺ_queryOptions꘡Parser.Instance);
         
         public static class _ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡Parser
         {
@@ -165,8 +165,16 @@ return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._odataRelativeU
                 public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡> Parse(IInput<char>? input)
                 {
                     var _resourcePath_1 = __GeneratedOdataV3.Parsers.Rules._resourcePathParser.Instance.Parse(input);
+if (!_resourcePath_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡)!, input);
+}
 
 var _ʺx3Fʺ_queryOptions_1 = __GeneratedOdataV3.Parsers.Inners._ʺx3Fʺ_queryOptionsParser.Instance.Optional().Parse(_resourcePath_1.Remainder);
+if (!_ʺx3Fʺ_queryOptions_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡)!, input);
+}
 
 return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._odataRelativeUri._resourcePath_꘡ʺx3Fʺ_queryOptions꘡(_resourcePath_1.Parsed, _ʺx3Fʺ_queryOptions_1.Parsed.GetOrElse(null)), _ʺx3Fʺ_queryOptions_1.Remainder);
                 }

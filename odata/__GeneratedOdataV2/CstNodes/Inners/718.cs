@@ -45,14 +45,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _61 : _Ⰳx61ⲻ7A
         {
-            public _61(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._1 _1_1)
+            private _61()
             {
-                this._6_1 = _6_1;
-                this._1_1 = _1_1;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._1_1 = __GeneratedOdataV2.CstNodes.Inners._1.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._1 _1_1 { get; }
+            public static _61 Instance { get; } = new _61();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -62,14 +63,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _62 : _Ⰳx61ⲻ7A
         {
-            public _62(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._2 _2_1)
+            private _62()
             {
-                this._6_1 = _6_1;
-                this._2_1 = _2_1;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._2_1 = __GeneratedOdataV2.CstNodes.Inners._2.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._2 _2_1 { get; }
+            public static _62 Instance { get; } = new _62();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -79,14 +81,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _63 : _Ⰳx61ⲻ7A
         {
-            public _63(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._3 _3_1)
+            private _63()
             {
-                this._6_1 = _6_1;
-                this._3_1 = _3_1;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._3_1 = __GeneratedOdataV2.CstNodes.Inners._3.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._3 _3_1 { get; }
+            public static _63 Instance { get; } = new _63();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -96,14 +99,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _64 : _Ⰳx61ⲻ7A
         {
-            public _64(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._4 _4_1)
+            private _64()
             {
-                this._6_1 = _6_1;
-                this._4_1 = _4_1;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._4_1 = __GeneratedOdataV2.CstNodes.Inners._4.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._4 _4_1 { get; }
+            public static _64 Instance { get; } = new _64();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -113,14 +117,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _65 : _Ⰳx61ⲻ7A
         {
-            public _65(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._5 _5_1)
+            private _65()
             {
-                this._6_1 = _6_1;
-                this._5_1 = _5_1;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._5_1 = __GeneratedOdataV2.CstNodes.Inners._5.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._5 _5_1 { get; }
+            public static _65 Instance { get; } = new _65();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -130,14 +135,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _66 : _Ⰳx61ⲻ7A
         {
-            public _66(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._6 _6_2)
+            private _66()
             {
-                this._6_1 = _6_1;
-                this._6_2 = _6_2;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._6_2 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_2 { get; }
+            public static _66 Instance { get; } = new _66();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -147,14 +153,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _67 : _Ⰳx61ⲻ7A
         {
-            public _67(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._7 _7_1)
+            private _67()
             {
-                this._6_1 = _6_1;
-                this._7_1 = _7_1;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._7_1 = __GeneratedOdataV2.CstNodes.Inners._7.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._7 _7_1 { get; }
+            public static _67 Instance { get; } = new _67();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -164,14 +171,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _68 : _Ⰳx61ⲻ7A
         {
-            public _68(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._8 _8_1)
+            private _68()
             {
-                this._6_1 = _6_1;
-                this._8_1 = _8_1;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._8_1 = __GeneratedOdataV2.CstNodes.Inners._8.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._8 _8_1 { get; }
+            public static _68 Instance { get; } = new _68();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -181,14 +189,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _69 : _Ⰳx61ⲻ7A
         {
-            public _69(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._9 _9_1)
+            private _69()
             {
-                this._6_1 = _6_1;
-                this._9_1 = _9_1;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._9_1 = __GeneratedOdataV2.CstNodes.Inners._9.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._9 _9_1 { get; }
+            public static _69 Instance { get; } = new _69();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -198,14 +207,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _6A : _Ⰳx61ⲻ7A
         {
-            public _6A(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._A _A_1)
+            private _6A()
             {
-                this._6_1 = _6_1;
-                this._A_1 = _A_1;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._A_1 = __GeneratedOdataV2.CstNodes.Inners._A.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._A _A_1 { get; }
+            public static _6A Instance { get; } = new _6A();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -215,14 +225,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _6B : _Ⰳx61ⲻ7A
         {
-            public _6B(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._B _B_1)
+            private _6B()
             {
-                this._6_1 = _6_1;
-                this._B_1 = _B_1;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._B_1 = __GeneratedOdataV2.CstNodes.Inners._B.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._B _B_1 { get; }
+            public static _6B Instance { get; } = new _6B();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -232,14 +243,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _6C : _Ⰳx61ⲻ7A
         {
-            public _6C(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._C _C_1)
+            private _6C()
             {
-                this._6_1 = _6_1;
-                this._C_1 = _C_1;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._C_1 = __GeneratedOdataV2.CstNodes.Inners._C.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._C _C_1 { get; }
+            public static _6C Instance { get; } = new _6C();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -249,14 +261,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _6D : _Ⰳx61ⲻ7A
         {
-            public _6D(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._D _D_1)
+            private _6D()
             {
-                this._6_1 = _6_1;
-                this._D_1 = _D_1;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._D_1 = __GeneratedOdataV2.CstNodes.Inners._D.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._D _D_1 { get; }
+            public static _6D Instance { get; } = new _6D();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -266,14 +279,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _6E : _Ⰳx61ⲻ7A
         {
-            public _6E(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._E _E_1)
+            private _6E()
             {
-                this._6_1 = _6_1;
-                this._E_1 = _E_1;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._E_1 = __GeneratedOdataV2.CstNodes.Inners._E.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._E _E_1 { get; }
+            public static _6E Instance { get; } = new _6E();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -283,14 +297,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _6F : _Ⰳx61ⲻ7A
         {
-            public _6F(__GeneratedOdataV2.CstNodes.Inners._6 _6_1, __GeneratedOdataV2.CstNodes.Inners._F _F_1)
+            private _6F()
             {
-                this._6_1 = _6_1;
-                this._F_1 = _F_1;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
+                this._F_1 = __GeneratedOdataV2.CstNodes.Inners._F.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._F _F_1 { get; }
+            public static _6F Instance { get; } = new _6F();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -300,14 +315,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _70 : _Ⰳx61ⲻ7A
         {
-            public _70(__GeneratedOdataV2.CstNodes.Inners._7 _7_1, __GeneratedOdataV2.CstNodes.Inners._0 _0_1)
+            private _70()
             {
-                this._7_1 = _7_1;
-                this._0_1 = _0_1;
+                this._7_1 = __GeneratedOdataV2.CstNodes.Inners._7.Instance;
+                this._0_1 = __GeneratedOdataV2.CstNodes.Inners._0.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._0 _0_1 { get; }
+            public static _70 Instance { get; } = new _70();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -317,14 +333,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _71 : _Ⰳx61ⲻ7A
         {
-            public _71(__GeneratedOdataV2.CstNodes.Inners._7 _7_1, __GeneratedOdataV2.CstNodes.Inners._1 _1_1)
+            private _71()
             {
-                this._7_1 = _7_1;
-                this._1_1 = _1_1;
+                this._7_1 = __GeneratedOdataV2.CstNodes.Inners._7.Instance;
+                this._1_1 = __GeneratedOdataV2.CstNodes.Inners._1.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._1 _1_1 { get; }
+            public static _71 Instance { get; } = new _71();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -334,14 +351,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _72 : _Ⰳx61ⲻ7A
         {
-            public _72(__GeneratedOdataV2.CstNodes.Inners._7 _7_1, __GeneratedOdataV2.CstNodes.Inners._2 _2_1)
+            private _72()
             {
-                this._7_1 = _7_1;
-                this._2_1 = _2_1;
+                this._7_1 = __GeneratedOdataV2.CstNodes.Inners._7.Instance;
+                this._2_1 = __GeneratedOdataV2.CstNodes.Inners._2.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._2 _2_1 { get; }
+            public static _72 Instance { get; } = new _72();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -351,14 +369,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _73 : _Ⰳx61ⲻ7A
         {
-            public _73(__GeneratedOdataV2.CstNodes.Inners._7 _7_1, __GeneratedOdataV2.CstNodes.Inners._3 _3_1)
+            private _73()
             {
-                this._7_1 = _7_1;
-                this._3_1 = _3_1;
+                this._7_1 = __GeneratedOdataV2.CstNodes.Inners._7.Instance;
+                this._3_1 = __GeneratedOdataV2.CstNodes.Inners._3.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._3 _3_1 { get; }
+            public static _73 Instance { get; } = new _73();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -368,14 +387,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _74 : _Ⰳx61ⲻ7A
         {
-            public _74(__GeneratedOdataV2.CstNodes.Inners._7 _7_1, __GeneratedOdataV2.CstNodes.Inners._4 _4_1)
+            private _74()
             {
-                this._7_1 = _7_1;
-                this._4_1 = _4_1;
+                this._7_1 = __GeneratedOdataV2.CstNodes.Inners._7.Instance;
+                this._4_1 = __GeneratedOdataV2.CstNodes.Inners._4.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._4 _4_1 { get; }
+            public static _74 Instance { get; } = new _74();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -385,14 +405,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _75 : _Ⰳx61ⲻ7A
         {
-            public _75(__GeneratedOdataV2.CstNodes.Inners._7 _7_1, __GeneratedOdataV2.CstNodes.Inners._5 _5_1)
+            private _75()
             {
-                this._7_1 = _7_1;
-                this._5_1 = _5_1;
+                this._7_1 = __GeneratedOdataV2.CstNodes.Inners._7.Instance;
+                this._5_1 = __GeneratedOdataV2.CstNodes.Inners._5.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._5 _5_1 { get; }
+            public static _75 Instance { get; } = new _75();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -402,14 +423,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _76 : _Ⰳx61ⲻ7A
         {
-            public _76(__GeneratedOdataV2.CstNodes.Inners._7 _7_1, __GeneratedOdataV2.CstNodes.Inners._6 _6_1)
+            private _76()
             {
-                this._7_1 = _7_1;
-                this._6_1 = _6_1;
+                this._7_1 = __GeneratedOdataV2.CstNodes.Inners._7.Instance;
+                this._6_1 = __GeneratedOdataV2.CstNodes.Inners._6.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._6 _6_1 { get; }
+            public static _76 Instance { get; } = new _76();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -419,14 +441,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _77 : _Ⰳx61ⲻ7A
         {
-            public _77(__GeneratedOdataV2.CstNodes.Inners._7 _7_1, __GeneratedOdataV2.CstNodes.Inners._7 _7_2)
+            private _77()
             {
-                this._7_1 = _7_1;
-                this._7_2 = _7_2;
+                this._7_1 = __GeneratedOdataV2.CstNodes.Inners._7.Instance;
+                this._7_2 = __GeneratedOdataV2.CstNodes.Inners._7.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._7 _7_2 { get; }
+            public static _77 Instance { get; } = new _77();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -436,14 +459,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _78 : _Ⰳx61ⲻ7A
         {
-            public _78(__GeneratedOdataV2.CstNodes.Inners._7 _7_1, __GeneratedOdataV2.CstNodes.Inners._8 _8_1)
+            private _78()
             {
-                this._7_1 = _7_1;
-                this._8_1 = _8_1;
+                this._7_1 = __GeneratedOdataV2.CstNodes.Inners._7.Instance;
+                this._8_1 = __GeneratedOdataV2.CstNodes.Inners._8.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._8 _8_1 { get; }
+            public static _78 Instance { get; } = new _78();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -453,14 +477,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _79 : _Ⰳx61ⲻ7A
         {
-            public _79(__GeneratedOdataV2.CstNodes.Inners._7 _7_1, __GeneratedOdataV2.CstNodes.Inners._9 _9_1)
+            private _79()
             {
-                this._7_1 = _7_1;
-                this._9_1 = _9_1;
+                this._7_1 = __GeneratedOdataV2.CstNodes.Inners._7.Instance;
+                this._9_1 = __GeneratedOdataV2.CstNodes.Inners._9.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._9 _9_1 { get; }
+            public static _79 Instance { get; } = new _79();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -470,14 +495,15 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _7A : _Ⰳx61ⲻ7A
         {
-            public _7A(__GeneratedOdataV2.CstNodes.Inners._7 _7_1, __GeneratedOdataV2.CstNodes.Inners._A _A_1)
+            private _7A()
             {
-                this._7_1 = _7_1;
-                this._A_1 = _A_1;
+                this._7_1 = __GeneratedOdataV2.CstNodes.Inners._7.Instance;
+                this._A_1 = __GeneratedOdataV2.CstNodes.Inners._A.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedOdataV2.CstNodes.Inners._A _A_1 { get; }
+            public static _7A Instance { get; } = new _7A();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

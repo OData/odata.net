@@ -55,12 +55,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx2Dʺ : _unreserved
         {
-            public _ʺx2Dʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx2Dʺ _ʺx2Dʺ_1)
+            private _ʺx2Dʺ()
             {
-                this._ʺx2Dʺ_1 = _ʺx2Dʺ_1;
+                this._ʺx2Dʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx2Dʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx2Dʺ _ʺx2Dʺ_1 { get; }
+            public static _ʺx2Dʺ Instance { get; } = new _ʺx2Dʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -70,12 +71,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx2Eʺ : _unreserved
         {
-            public _ʺx2Eʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx2Eʺ _ʺx2Eʺ_1)
+            private _ʺx2Eʺ()
             {
-                this._ʺx2Eʺ_1 = _ʺx2Eʺ_1;
+                this._ʺx2Eʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx2Eʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
+            public static _ʺx2Eʺ Instance { get; } = new _ʺx2Eʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -85,12 +87,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx5Fʺ : _unreserved
         {
-            public _ʺx5Fʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx5Fʺ _ʺx5Fʺ_1)
+            private _ʺx5Fʺ()
             {
-                this._ʺx5Fʺ_1 = _ʺx5Fʺ_1;
+                this._ʺx5Fʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx5Fʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx5Fʺ _ʺx5Fʺ_1 { get; }
+            public static _ʺx5Fʺ Instance { get; } = new _ʺx5Fʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -100,12 +103,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx7Eʺ : _unreserved
         {
-            public _ʺx7Eʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx7Eʺ _ʺx7Eʺ_1)
+            private _ʺx7Eʺ()
             {
-                this._ʺx7Eʺ_1 = _ʺx7Eʺ_1;
+                this._ʺx7Eʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx7Eʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx7Eʺ _ʺx7Eʺ_1 { get; }
+            public static _ʺx7Eʺ Instance { get; } = new _ʺx7Eʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

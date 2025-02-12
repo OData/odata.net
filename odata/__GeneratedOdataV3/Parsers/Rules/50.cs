@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Rules
     
     public static class _queryOptionParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._queryOption> Instance { get; } = (_systemQueryOptionParser.Instance);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._queryOption> Instance { get; } = (_systemQueryOptionParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._queryOption>(_aliasAndValueParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._queryOption>(_nameAndValueParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._queryOption>(_customQueryOptionParser.Instance);
         
         public static class _systemQueryOptionParser
         {
@@ -19,6 +19,10 @@ namespace __GeneratedOdataV3.Parsers.Rules
                 public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._queryOption._systemQueryOption> Parse(IInput<char>? input)
                 {
                     var _systemQueryOption_1 = __GeneratedOdataV3.Parsers.Rules._systemQueryOptionParser.Instance.Parse(input);
+if (!_systemQueryOption_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._queryOption._systemQueryOption)!, input);
+}
 
 return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._queryOption._systemQueryOption(_systemQueryOption_1.Parsed), _systemQueryOption_1.Remainder);
                 }

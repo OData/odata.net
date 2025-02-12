@@ -40,12 +40,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _ʺx41ʺ : _DIGITⳆʺx41ʺⳆʺx42ʺⳆʺx44ʺⳆʺx45ʺⳆʺx46ʺ
         {
-            public _ʺx41ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx41ʺ _ʺx41ʺ_1)
+            private _ʺx41ʺ()
             {
-                this._ʺx41ʺ_1 = _ʺx41ʺ_1;
+                this._ʺx41ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx41ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx41ʺ _ʺx41ʺ_1 { get; }
+            public static _ʺx41ʺ Instance { get; } = new _ʺx41ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -55,12 +56,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _ʺx42ʺ : _DIGITⳆʺx41ʺⳆʺx42ʺⳆʺx44ʺⳆʺx45ʺⳆʺx46ʺ
         {
-            public _ʺx42ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx42ʺ _ʺx42ʺ_1)
+            private _ʺx42ʺ()
             {
-                this._ʺx42ʺ_1 = _ʺx42ʺ_1;
+                this._ʺx42ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx42ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx42ʺ _ʺx42ʺ_1 { get; }
+            public static _ʺx42ʺ Instance { get; } = new _ʺx42ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -70,12 +72,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _ʺx44ʺ : _DIGITⳆʺx41ʺⳆʺx42ʺⳆʺx44ʺⳆʺx45ʺⳆʺx46ʺ
         {
-            public _ʺx44ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx44ʺ _ʺx44ʺ_1)
+            private _ʺx44ʺ()
             {
-                this._ʺx44ʺ_1 = _ʺx44ʺ_1;
+                this._ʺx44ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx44ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx44ʺ _ʺx44ʺ_1 { get; }
+            public static _ʺx44ʺ Instance { get; } = new _ʺx44ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -85,12 +88,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _ʺx45ʺ : _DIGITⳆʺx41ʺⳆʺx42ʺⳆʺx44ʺⳆʺx45ʺⳆʺx46ʺ
         {
-            public _ʺx45ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx45ʺ _ʺx45ʺ_1)
+            private _ʺx45ʺ()
             {
-                this._ʺx45ʺ_1 = _ʺx45ʺ_1;
+                this._ʺx45ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx45ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx45ʺ _ʺx45ʺ_1 { get; }
+            public static _ʺx45ʺ Instance { get; } = new _ʺx45ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -100,12 +104,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _ʺx46ʺ : _DIGITⳆʺx41ʺⳆʺx42ʺⳆʺx44ʺⳆʺx45ʺⳆʺx46ʺ
         {
-            public _ʺx46ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx46ʺ _ʺx46ʺ_1)
+            private _ʺx46ʺ()
             {
-                this._ʺx46ʺ_1 = _ʺx46ʺ_1;
+                this._ʺx46ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx46ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx46ʺ _ʺx46ʺ_1 { get; }
+            public static _ʺx46ʺ Instance { get; } = new _ʺx46ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

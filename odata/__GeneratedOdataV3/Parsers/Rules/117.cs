@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Rules
     
     public static class _firstMemberExprParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._firstMemberExpr> Instance { get; } = (_memberExprParser.Instance);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._firstMemberExpr> Instance { get; } = (_memberExprParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._firstMemberExpr>(_inscopeVariableExpr_꘡ʺx2Fʺ_memberExpr꘡Parser.Instance);
         
         public static class _memberExprParser
         {
@@ -19,6 +19,10 @@ namespace __GeneratedOdataV3.Parsers.Rules
                 public IOutput<char, __GeneratedOdataV3.CstNodes.Rules._firstMemberExpr._memberExpr> Parse(IInput<char>? input)
                 {
                     var _memberExpr_1 = __GeneratedOdataV3.Parsers.Rules._memberExprParser.Instance.Parse(input);
+if (!_memberExpr_1.Success)
+{
+    return Output.Create(false, default(__GeneratedOdataV3.CstNodes.Rules._firstMemberExpr._memberExpr)!, input);
+}
 
 return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._firstMemberExpr._memberExpr(_memberExpr_1.Parsed), _memberExpr_1.Remainder);
                 }

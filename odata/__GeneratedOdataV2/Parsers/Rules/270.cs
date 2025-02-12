@@ -9,7 +9,7 @@ namespace __GeneratedOdataV2.Parsers.Rules
         public static class _nullValueParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._primitiveLiteral._nullValue> Instance { get; } = from _nullValue_1 in __GeneratedOdataV2.Parsers.Rules._nullValueParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._primitiveLiteral._nullValue(_nullValue_1);
+select __GeneratedOdataV2.CstNodes.Rules._primitiveLiteral._nullValue.Instance;
         }
         
         public static class _booleanValueParser

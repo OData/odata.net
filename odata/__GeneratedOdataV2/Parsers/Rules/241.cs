@@ -15,7 +15,7 @@ select new __GeneratedOdataV2.CstNodes.Rules._identifierCharacter._ALPHA(_ALPHA_
         public static class _ʺx5FʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._identifierCharacter._ʺx5Fʺ> Instance { get; } = from _ʺx5Fʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx5FʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._identifierCharacter._ʺx5Fʺ(_ʺx5Fʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._identifierCharacter._ʺx5Fʺ.Instance;
         }
         
         public static class _DIGITParser

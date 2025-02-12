@@ -38,12 +38,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _ʺx6Dx61x78ʺ : _oneToNine_ЖDIGITⳆʺx6Dx61x78ʺ
         {
-            public _ʺx6Dx61x78ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx6Dx61x78ʺ _ʺx6Dx61x78ʺ_1)
+            private _ʺx6Dx61x78ʺ()
             {
-                this._ʺx6Dx61x78ʺ_1 = _ʺx6Dx61x78ʺ_1;
+                this._ʺx6Dx61x78ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx6Dx61x78ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx6Dx61x78ʺ _ʺx6Dx61x78ʺ_1 { get; }
+            public static _ʺx6Dx61x78ʺ Instance { get; } = new _ʺx6Dx61x78ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

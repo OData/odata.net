@@ -9,7 +9,7 @@ namespace __GeneratedOdataV2.Parsers.Inners
         public static class _refParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._refⳆOPEN_levels_CLOSE._ref> Instance { get; } = from _ref_1 in __GeneratedOdataV2.Parsers.Rules._refParser.Instance
-select new __GeneratedOdataV2.CstNodes.Inners._refⳆOPEN_levels_CLOSE._ref(_ref_1);
+select __GeneratedOdataV2.CstNodes.Inners._refⳆOPEN_levels_CLOSE._ref.Instance;
         }
         
         public static class _OPEN_levels_CLOSEParser

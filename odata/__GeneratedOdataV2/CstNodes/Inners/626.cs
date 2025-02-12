@@ -21,12 +21,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _SP : _SPⳆHTAB
         {
-            public _SP(__GeneratedOdataV2.CstNodes.Rules._SP _SP_1)
+            private _SP()
             {
-                this._SP_1 = _SP_1;
+                this._SP_1 = __GeneratedOdataV2.CstNodes.Rules._SP.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Rules._SP _SP_1 { get; }
+            public static _SP Instance { get; } = new _SP();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -36,12 +37,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _HTAB : _SPⳆHTAB
         {
-            public _HTAB(__GeneratedOdataV2.CstNodes.Rules._HTAB _HTAB_1)
+            private _HTAB()
             {
-                this._HTAB_1 = _HTAB_1;
+                this._HTAB_1 = __GeneratedOdataV2.CstNodes.Rules._HTAB.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Rules._HTAB _HTAB_1 { get; }
+            public static _HTAB Instance { get; } = new _HTAB();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

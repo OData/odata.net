@@ -16,7 +16,7 @@ select new __GeneratedOdataV2.CstNodes.Inners._oneToNine_ЖDIGITⳆʺx6Dx61x78ʺ
         public static class _ʺx6Dx61x78ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._oneToNine_ЖDIGITⳆʺx6Dx61x78ʺ._ʺx6Dx61x78ʺ> Instance { get; } = from _ʺx6Dx61x78ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx6Dx61x78ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Inners._oneToNine_ЖDIGITⳆʺx6Dx61x78ʺ._ʺx6Dx61x78ʺ(_ʺx6Dx61x78ʺ_1);
+select __GeneratedOdataV2.CstNodes.Inners._oneToNine_ЖDIGITⳆʺx6Dx61x78ʺ._ʺx6Dx61x78ʺ.Instance;
         }
     }
     

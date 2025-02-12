@@ -21,12 +21,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx29ʺ : _CLOSE
         {
-            public _ʺx29ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx29ʺ _ʺx29ʺ_1)
+            private _ʺx29ʺ()
             {
-                this._ʺx29ʺ_1 = _ʺx29ʺ_1;
+                this._ʺx29ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx29ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx29ʺ _ʺx29ʺ_1 { get; }
+            public static _ʺx29ʺ Instance { get; } = new _ʺx29ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -36,12 +37,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx25x32x39ʺ : _CLOSE
         {
-            public _ʺx25x32x39ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx25x32x39ʺ _ʺx25x32x39ʺ_1)
+            private _ʺx25x32x39ʺ()
             {
-                this._ʺx25x32x39ʺ_1 = _ʺx25x32x39ʺ_1;
+                this._ʺx25x32x39ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx25x32x39ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx25x32x39ʺ _ʺx25x32x39ʺ_1 { get; }
+            public static _ʺx25x32x39ʺ Instance { get; } = new _ʺx25x32x39ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

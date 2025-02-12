@@ -21,12 +21,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx2Cʺ : _COMMA
         {
-            public _ʺx2Cʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx2Cʺ _ʺx2Cʺ_1)
+            private _ʺx2Cʺ()
             {
-                this._ʺx2Cʺ_1 = _ʺx2Cʺ_1;
+                this._ʺx2Cʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx2Cʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx2Cʺ _ʺx2Cʺ_1 { get; }
+            public static _ʺx2Cʺ Instance { get; } = new _ʺx2Cʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -36,12 +37,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx25x32x43ʺ : _COMMA
         {
-            public _ʺx25x32x43ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx25x32x43ʺ _ʺx25x32x43ʺ_1)
+            private _ʺx25x32x43ʺ()
             {
-                this._ʺx25x32x43ʺ_1 = _ʺx25x32x43ʺ_1;
+                this._ʺx25x32x43ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx25x32x43ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx25x32x43ʺ _ʺx25x32x43ʺ_1 { get; }
+            public static _ʺx25x32x43ʺ Instance { get; } = new _ʺx25x32x43ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

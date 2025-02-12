@@ -9,7 +9,7 @@ namespace __GeneratedOdataV2.Parsers.Inners
         public static class _countParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._countⳆboundOperation._count> Instance { get; } = from _count_1 in __GeneratedOdataV2.Parsers.Rules._countParser.Instance
-select new __GeneratedOdataV2.CstNodes.Inners._countⳆboundOperation._count(_count_1);
+select __GeneratedOdataV2.CstNodes.Inners._countⳆboundOperation._count.Instance;
         }
         
         public static class _boundOperationParser

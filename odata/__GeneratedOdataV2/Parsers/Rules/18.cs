@@ -9,7 +9,7 @@ namespace __GeneratedOdataV2.Parsers.Rules
         public static class _valueParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._primitivePath._value> Instance { get; } = from _value_1 in __GeneratedOdataV2.Parsers.Rules._valueParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._primitivePath._value(_value_1);
+select __GeneratedOdataV2.CstNodes.Rules._primitivePath._value.Instance;
         }
         
         public static class _boundOperationParser

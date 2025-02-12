@@ -69,12 +69,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _ʺx2Eʺ : _ALPHAⳆDIGITⳆCOMMAⳆʺx2EʺⳆpctⲻencoded
         {
-            public _ʺx2Eʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx2Eʺ _ʺx2Eʺ_1)
+            private _ʺx2Eʺ()
             {
-                this._ʺx2Eʺ_1 = _ʺx2Eʺ_1;
+                this._ʺx2Eʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx2Eʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
+            public static _ʺx2Eʺ Instance { get; } = new _ʺx2Eʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

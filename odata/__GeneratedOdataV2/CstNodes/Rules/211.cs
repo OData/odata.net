@@ -21,12 +21,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _DQUOTE : _quotationⲻmark
         {
-            public _DQUOTE(__GeneratedOdataV2.CstNodes.Rules._DQUOTE _DQUOTE_1)
+            private _DQUOTE()
             {
-                this._DQUOTE_1 = _DQUOTE_1;
+                this._DQUOTE_1 = __GeneratedOdataV2.CstNodes.Rules._DQUOTE.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Rules._DQUOTE _DQUOTE_1 { get; }
+            public static _DQUOTE Instance { get; } = new _DQUOTE();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -36,12 +37,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx25x32x32ʺ : _quotationⲻmark
         {
-            public _ʺx25x32x32ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx25x32x32ʺ _ʺx25x32x32ʺ_1)
+            private _ʺx25x32x32ʺ()
             {
-                this._ʺx25x32x32ʺ_1 = _ʺx25x32x32ʺ_1;
+                this._ʺx25x32x32ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx25x32x32ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx25x32x32ʺ _ʺx25x32x32ʺ_1 { get; }
+            public static _ʺx25x32x32ʺ Instance { get; } = new _ʺx25x32x32ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

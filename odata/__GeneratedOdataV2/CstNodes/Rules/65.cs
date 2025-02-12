@@ -39,12 +39,13 @@ namespace __GeneratedOdataV2.CstNodes.Rules
         
         public sealed class _ʺx24x76x61x6Cx75x65ʺ : _expandItem
         {
-            public _ʺx24x76x61x6Cx75x65ʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx24x76x61x6Cx75x65ʺ _ʺx24x76x61x6Cx75x65ʺ_1)
+            private _ʺx24x76x61x6Cx75x65ʺ()
             {
-                this._ʺx24x76x61x6Cx75x65ʺ_1 = _ʺx24x76x61x6Cx75x65ʺ_1;
+                this._ʺx24x76x61x6Cx75x65ʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx24x76x61x6Cx75x65ʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx24x76x61x6Cx75x65ʺ _ʺx24x76x61x6Cx75x65ʺ_1 { get; }
+            public static _ʺx24x76x61x6Cx75x65ʺ Instance { get; } = new _ʺx24x76x61x6Cx75x65ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

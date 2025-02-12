@@ -9,7 +9,7 @@ namespace __GeneratedOdataV2.Parsers.Rules
         public static class _ʺx30ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._int._ʺx30ʺ> Instance { get; } = from _ʺx30ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx30ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._int._ʺx30ʺ(_ʺx30ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._int._ʺx30ʺ.Instance;
         }
         
         public static class _ⲤoneToNine_ЖDIGITↃParser

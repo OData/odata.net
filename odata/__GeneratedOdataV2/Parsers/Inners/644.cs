@@ -27,7 +27,7 @@ select new __GeneratedOdataV2.CstNodes.Inners._unreservedⳆpctⲻencodedⳆsub�
         public static class _ʺx3AʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Inners._unreservedⳆpctⲻencodedⳆsubⲻdelimsⳆʺx3Aʺ._ʺx3Aʺ> Instance { get; } = from _ʺx3Aʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx3AʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Inners._unreservedⳆpctⲻencodedⳆsubⲻdelimsⳆʺx3Aʺ._ʺx3Aʺ(_ʺx3Aʺ_1);
+select __GeneratedOdataV2.CstNodes.Inners._unreservedⳆpctⲻencodedⳆsubⲻdelimsⳆʺx3Aʺ._ʺx3Aʺ.Instance;
         }
     }
     

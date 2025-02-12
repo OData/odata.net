@@ -9,13 +9,13 @@ namespace __GeneratedOdataV2.Parsers.Rules
         public static class _ʺx24x69x74ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._implicitVariableExpr._ʺx24x69x74ʺ> Instance { get; } = from _ʺx24x69x74ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx24x69x74ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._implicitVariableExpr._ʺx24x69x74ʺ(_ʺx24x69x74ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._implicitVariableExpr._ʺx24x69x74ʺ.Instance;
         }
         
         public static class _ʺx24x74x68x69x73ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._implicitVariableExpr._ʺx24x74x68x69x73ʺ> Instance { get; } = from _ʺx24x74x68x69x73ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx24x74x68x69x73ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._implicitVariableExpr._ʺx24x74x68x69x73ʺ(_ʺx24x74x68x69x73ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._implicitVariableExpr._ʺx24x74x68x69x73ʺ.Instance;
         }
     }
     

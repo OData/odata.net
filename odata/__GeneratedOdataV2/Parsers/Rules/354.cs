@@ -39,7 +39,7 @@ select new __GeneratedOdataV2.CstNodes.Rules._preference._maxpagesizePreference(
         public static class _respondAsyncPreferenceParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._preference._respondAsyncPreference> Instance { get; } = from _respondAsyncPreference_1 in __GeneratedOdataV2.Parsers.Rules._respondAsyncPreferenceParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._preference._respondAsyncPreference(_respondAsyncPreference_1);
+select __GeneratedOdataV2.CstNodes.Rules._preference._respondAsyncPreference.Instance;
         }
         
         public static class _returnPreferenceParser

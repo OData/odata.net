@@ -27,13 +27,13 @@ select new __GeneratedOdataV2.CstNodes.Rules._pchar._subⲻdelims(_subⲻdelims_
         public static class _ʺx3AʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._pchar._ʺx3Aʺ> Instance { get; } = from _ʺx3Aʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx3AʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._pchar._ʺx3Aʺ(_ʺx3Aʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._pchar._ʺx3Aʺ.Instance;
         }
         
         public static class _ʺx40ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._pchar._ʺx40ʺ> Instance { get; } = from _ʺx40ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx40ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._pchar._ʺx40ʺ(_ʺx40ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._pchar._ʺx40ʺ.Instance;
         }
     }
     

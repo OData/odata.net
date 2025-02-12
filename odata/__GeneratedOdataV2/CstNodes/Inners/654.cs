@@ -54,12 +54,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _ʺx2Bʺ : _ALPHAⳆDIGITⳆʺx2BʺⳆʺx2DʺⳆʺx2Eʺ
         {
-            public _ʺx2Bʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx2Bʺ _ʺx2Bʺ_1)
+            private _ʺx2Bʺ()
             {
-                this._ʺx2Bʺ_1 = _ʺx2Bʺ_1;
+                this._ʺx2Bʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx2Bʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx2Bʺ _ʺx2Bʺ_1 { get; }
+            public static _ʺx2Bʺ Instance { get; } = new _ʺx2Bʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -69,12 +70,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _ʺx2Dʺ : _ALPHAⳆDIGITⳆʺx2BʺⳆʺx2DʺⳆʺx2Eʺ
         {
-            public _ʺx2Dʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx2Dʺ _ʺx2Dʺ_1)
+            private _ʺx2Dʺ()
             {
-                this._ʺx2Dʺ_1 = _ʺx2Dʺ_1;
+                this._ʺx2Dʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx2Dʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx2Dʺ _ʺx2Dʺ_1 { get; }
+            public static _ʺx2Dʺ Instance { get; } = new _ʺx2Dʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -84,12 +86,13 @@ namespace __GeneratedOdataV2.CstNodes.Inners
         
         public sealed class _ʺx2Eʺ : _ALPHAⳆDIGITⳆʺx2BʺⳆʺx2DʺⳆʺx2Eʺ
         {
-            public _ʺx2Eʺ(__GeneratedOdataV2.CstNodes.Inners._ʺx2Eʺ _ʺx2Eʺ_1)
+            private _ʺx2Eʺ()
             {
-                this._ʺx2Eʺ_1 = _ʺx2Eʺ_1;
+                this._ʺx2Eʺ_1 = __GeneratedOdataV2.CstNodes.Inners._ʺx2Eʺ.Instance;
             }
             
             public __GeneratedOdataV2.CstNodes.Inners._ʺx2Eʺ _ʺx2Eʺ_1 { get; }
+            public static _ʺx2Eʺ Instance { get; } = new _ʺx2Eʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

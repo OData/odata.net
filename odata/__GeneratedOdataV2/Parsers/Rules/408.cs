@@ -9,25 +9,25 @@ namespace __GeneratedOdataV2.Parsers.Rules
         public static class _ʺx24ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._subⲻdelims._ʺx24ʺ> Instance { get; } = from _ʺx24ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx24ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._subⲻdelims._ʺx24ʺ(_ʺx24ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._subⲻdelims._ʺx24ʺ.Instance;
         }
         
         public static class _ʺx26ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._subⲻdelims._ʺx26ʺ> Instance { get; } = from _ʺx26ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx26ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._subⲻdelims._ʺx26ʺ(_ʺx26ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._subⲻdelims._ʺx26ʺ.Instance;
         }
         
         public static class _ʺx27ʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._subⲻdelims._ʺx27ʺ> Instance { get; } = from _ʺx27ʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx27ʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._subⲻdelims._ʺx27ʺ(_ʺx27ʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._subⲻdelims._ʺx27ʺ.Instance;
         }
         
         public static class _ʺx3DʺParser
         {
             public static IParser<char, __GeneratedOdataV2.CstNodes.Rules._subⲻdelims._ʺx3Dʺ> Instance { get; } = from _ʺx3Dʺ_1 in __GeneratedOdataV2.Parsers.Inners._ʺx3DʺParser.Instance
-select new __GeneratedOdataV2.CstNodes.Rules._subⲻdelims._ʺx3Dʺ(_ʺx3Dʺ_1);
+select __GeneratedOdataV2.CstNodes.Rules._subⲻdelims._ʺx3Dʺ.Instance;
         }
         
         public static class _otherⲻdelimsParser
