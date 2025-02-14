@@ -1,25 +1,30 @@
-﻿namespace CombinatorParsingV3
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
+
+namespace CombinatorParsingV3
 {
-    public interface IDeferredParser<TToken, TOutput, TNode> where TNode : IDeferredAstNode<TOutput>
+    public interface IDeferredParser<TToken, TRealizedAstNode, TDefferedAstNode> where TDefferedAstNode : IDeferredAstNode<TRealizedAstNode>
     {
-        TNode Parse(IInput<TToken> input);
+        TDefferedAstNode Parse(IInput<TToken> input);
     }
 
-    public interface IDeferredAstNode<TOutput>
+    public interface IDeferredAstNode<TRealizedAstNode>
     {
-        IDeferredOutput<TOutput> Realize();
+        IDeferredOutput<TRealizedAstNode> Realize();
     }
 
-    public interface IDeferredOutput<TOutput>
+    public interface IDeferredOutput<TRealizedAstNode>
     {
         bool Success { get; }
 
-        TOutput Parsed { get; }
+        TRealizedAstNode Parsed { get; }
+
+        List<RegexParseError>
     }
 
-    public sealed class DeferredOutput<TOutput> : IDeferredOutput<TOutput>
+    public sealed class DeferredOutput<TRealizedAstNode> : IDeferredOutput<TRealizedAstNode>
     {
-        public DeferredOutput(bool success, TOutput parsed)
+        public DeferredOutput(bool success, TRealizedAstNode parsed)
         {
             Success = success;
             Parsed = parsed;
@@ -27,6 +32,6 @@
 
         public bool Success { get; }
 
-        public TOutput Parsed { get; }
+        public TRealizedAstNode Parsed { get; }
     }
 }

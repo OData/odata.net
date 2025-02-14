@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
+    using System;
 
     public static partial class V3ParserPlayground
     {
@@ -248,23 +248,72 @@
             }
         }
 
-        public sealed class OdataUri : IDeferredAstNode<OdataUri>
+        public class OdataUri : DeferredOdataUri
         {
             public OdataUri(IEnumerable<Segment> segments, QuestionMark questionMark, IEnumerable<QueryOption> queryOptions)
+                :base(new Lazy<IEnumerable<Segment>>(segments), new Lazy<QuestionMark>(questionMark), new Lazy<IEnumerable<QueryOption>>(queryOptions))
             {
-                Segments = segments;
-                QuestionMark = questionMark;
-                QueryOptions = queryOptions;
+            }
+        }
+
+        public class DeferredOdataUri : IDeferredAstNode<OdataUri>
+        {
+            private readonly Lazy<CombinatorParsingV3.IOutput<char, IEnumerable<Segment>>> segments;
+
+            protected DeferredOdataUri(Lazy<IOutput<char, IEnumerable<Segment>>> segments, Lazy<QuestionMark> questionMark, Lazy<IEnumerable<QueryOption>> queryOptions)
+            {
+                this.segments = segments;
             }
 
-            public IEnumerable<Segment> Segments { get; }
+            public DeferredOdataUri(IInput<char> input)
+                : this(input, SegmentParser.Instance)
+            {
+            }
+
+            public DeferredOdataUri(IInput<char> input, IParser<char, IEnumerable<Segment>> segmentParser, /**/)
+                : this(new Lazy<IEnumerable<Segment>>(() => segmentParser.Parse(input)))
+            {
+            }
+
+            public IEnumerable<Segment> Segments
+            {
+                get
+                {
+                    if (segments.Value.Success)
+                    {
+                        return segments.Value.Parsed;
+                    }
+                    else
+                    {
+                        throw new Exception("TODO");
+                    }
+                }
+            }
+
             public QuestionMark QuestionMark { get; }
             public IEnumerable<QueryOption> QueryOptions { get; }
 
             public IDeferredOutput<OdataUri> Realize()
             {
-                throw new System.NotImplementedException();
+                var finalSegments = segments.Value.Parsed;
+                if (!segments.Value.Success)
+                {
+                    return new DeferredOutput<OdataUri>(false, default);
+                }
+
+                // 
+
+                return new DeferredOutput<OdataUri>(true, new OdataUri(finalSegments, ));
             }
         }
+
+        /*public class UriParserV2 : IDeferredParser<char, OdataUri, DeferredOdataUri>
+        {
+            public DeferredOdataUri Parse(IInput<char> input)
+            {
+                return new DeferredOdataUri(
+                    );
+            }
+        }*/
     }
 }

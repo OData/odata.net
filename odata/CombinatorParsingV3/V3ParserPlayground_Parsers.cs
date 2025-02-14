@@ -182,7 +182,10 @@
                     return new Output<char, QueryOption>(false, default, input);
                 }
 
-                return new Output<char, QueryOption>(true, new QueryOption(optionName.Parsed, equalsSign.Parsed, optionValue.Parsed), optionValue.Remainder);
+                return new Output<char, QueryOption>(
+                    true, 
+                    new QueryOption(optionName.Parsed, equalsSign.Parsed, optionValue.Parsed), 
+                    optionValue.Remainder);
             }
         }
 

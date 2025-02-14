@@ -1,4 +1,8 @@
-﻿namespace CombinatorParsingV3
+﻿using CombinatorParsingV1;
+using System.Collections.Generic;
+using System.Text.RegularExpressions;
+
+namespace CombinatorParsingV3
 {
     public interface IParser<TToken, TOutput>
     {
@@ -12,6 +16,8 @@
         TOutput Parsed { get; }
 
         IInput<TToken> Remainder { get; }
+
+        List<RegexParseError>
     }
 
     public sealed class Output<TToken, TOutput> : IOutput<TToken, TOutput>
