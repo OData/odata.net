@@ -1,12 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <AssemblyName>Microsoft.OData.Core.E2E.Tests</AssemblyName>
+    <RootNamespace>Microsoft.OData.Core.E2E.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>C:\2025ODATA\odata.net\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>True</DelaySign>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,6 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
     <ProjectReference Include="..\..\..\Common\Microsoft.OData.E2E.TestCommon\Microsoft.OData.E2E.TestCommon.csproj" />
   </ItemGroup>
 
