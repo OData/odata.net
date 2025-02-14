@@ -78,15 +78,26 @@
             public OptionValue OptionValue { get; }
         }
 
+        public sealed class QuestionMark
+        {
+            private QuestionMark()
+            {
+            }
+
+            public static QuestionMark Instance { get; } = new QuestionMark();
+        }
+
         public sealed class OdataUri
         {
-            public OdataUri(IEnumerable<Segment> segments, IEnumerable<QueryOption> queryOptions)
+            public OdataUri(IEnumerable<Segment> segments, QuestionMark questionMark, IEnumerable<QueryOption> queryOptions)
             {
                 Segments = segments;
+                QuestionMark = questionMark;
                 QueryOptions = queryOptions;
             }
 
             public IEnumerable<Segment> Segments { get; }
+            public QuestionMark QuestionMark { get; }
             public IEnumerable<QueryOption> QueryOptions { get; }
         }
     }
