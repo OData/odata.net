@@ -89,6 +89,11 @@
 
             private bool deferred;
 
+            public Segment(IInput<char> input)
+                : this(SegmentParser.Instance, input)
+            {
+            }
+
             public Segment(IParser<char, Segment> parser, IInput<char> input)
             {
                 this.parser = parser;
@@ -125,6 +130,8 @@
                     if (this.deferred)
                     {
                         throw new System.Exception("TODO not parsed yet");
+                        // TODO ideferredoutput should probably just be ioutput so that you can get this remainder
+                        // return new Characters(CharactersParser.Instance, this.Slash.Realize().Remainder)
                     }
 
                     return this.characters;
@@ -133,6 +140,7 @@
 
             public IDeferredOutput<Segment> Realize()
             {
+                //// TODO you should cache the deferredoutput instance
                 if (this.deferred)
                 {
                     var output = this.parser.Parse(this.input);
@@ -165,6 +173,8 @@
 
                     this.slash = slashOutput.Parsed;
                     this.characters = charactersOutput.Select(_ => _.Parsed);
+
+                    //// TODO this method basically just mimics the parser implementations; should you actually just put all of the parsing here?
 
                     return new DeferredOutput<Segment>(true, this);
                 }
