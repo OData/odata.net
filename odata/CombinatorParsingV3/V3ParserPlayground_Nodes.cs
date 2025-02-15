@@ -128,42 +128,37 @@
 
         public sealed class Many<T> : IDeferredAstNode<char, IEnumerable<T>> where T : IDeferredAstNode<char, T>
         {
-            private IInput<char> input;
+            ////private IInput<char> input;
             private readonly Func<IInput<char>, T> nodeFactory;
 
-            private readonly Func<IDeferredOutput2<char>>? future;
+            private readonly Func<IDeferredOutput2<char>> future;
 
-            public Many(IInput<char> input, Func<IInput<char>, T> nodeFactory)
+            /*public Many(IInput<char> input, Func<IInput<char>, T> nodeFactory)
             {
                 this.input = input;
                 this.nodeFactory = nodeFactory;
 
                 this.future = null;
-            }
+            }*/
 
             public Many(Func<IDeferredOutput2<char>> future, Func<IInput<char>, T> nodeFactory)
             {
-                this.future = future;
+                this.future = future; //// TODO this should be of type `future`
                 this.nodeFactory = nodeFactory;
             }
 
             public IOutput<char, IEnumerable<T>> Realize() //// TODO the other ones all have the second type as themselves...maybe you need an ienumerable property instead?
             {
-                if (this.future != null)
+                var output2 = this.future();
+                if (!output2.Success)
                 {
-                    var output2 = this.future();
-                    if (!output2.Success)
-                    {
-                        return new Output<char, IEnumerable<T>>(false, default, output2.Remainder);
-                    }
-                    else
-                    {
-                        this.input = output2.Remainder;
-                    }
+                    return new Output<char, IEnumerable<T>>(false, default, output2.Remainder);
                 }
 
+                var input = output2.Remainder;
+
                 var sequence = new List<T>();
-                var node = this.nodeFactory(this.input);
+                var node = this.nodeFactory(input);
                 var output = node.Realize();
                 while (output.Success)
                 {
@@ -295,45 +290,91 @@
 
         public sealed class EqualsSign : IDeferredAstNode<char, EqualsSign>
         {
-            private EqualsSign()
-            {
-            }
+            private readonly IInput<char> input;
 
-            public static EqualsSign Instance { get; } = new EqualsSign();
+            public EqualsSign(IInput<char> input)
+            {
+                this.input = input;
+            }
 
             public IOutput<char, EqualsSign> Realize()
             {
-                throw new System.NotImplementedException();
+                if (this.input.Current == '=')
+                {
+                    return new Output<char, EqualsSign>(true, this, this.input.Next());
+                }
+                else
+                {
+                    return new Output<char, EqualsSign>(false, default, this.input);
+                }
             }
         }
 
         public sealed class OptionName : IDeferredAstNode<char, OptionName>
         {
-            public OptionName(IEnumerable<AlphaNumeric> characters)
+            private readonly IInput<char> input;
+
+            /*public OptionName(IEnumerable<AlphaNumeric> characters)
+{
+Characters = characters;
+}*/
+
+            public OptionName(IInput<char> input)
             {
-                Characters = characters;
+                this.input = input;
             }
 
-            public IEnumerable<AlphaNumeric> Characters { get; }
+            public Many<AlphaNumeric> Characters
+            {
+                get
+                {
+                    return new Many<AlphaNumeric>(() => DeferredOutput2.FromValue(this.input), input => new AlphaNumeric.A(input));
+                }
+            }
 
             public IOutput<char, OptionName> Realize()
             {
-                throw new System.NotImplementedException();
+                var charactersOutput = this.Characters.Realize();
+                if (!charactersOutput.Success)
+                {
+                    return new Output<char, OptionName>(false, default, this.input);
+                }
+
+                return new Output<char, OptionName>(true, this, charactersOutput.Remainder);
             }
         }
 
         public sealed class OptionValue : IDeferredAstNode<char, OptionValue>
         {
-            public OptionValue(IEnumerable<AlphaNumeric> characters)
+            private readonly IInput<char> input;
+
+            public OptionValue(IInput<char> input)
             {
-                Characters = characters;
+                this.input = input;
             }
 
-            public IEnumerable<AlphaNumeric> Characters { get; }
+            /*public OptionValue(IEnumerable<AlphaNumeric> characters)
+            {
+                Characters = characters;
+            }*/
+
+            public Many<AlphaNumeric> Characters
+            {
+                get
+                {
+                    return new Many<AlphaNumeric>(() => DeferredOutput2.FromValue(this.input), input => new AlphaNumeric.A(input));
+                }
+            }
 
             public IOutput<char, OptionValue> Realize()
             {
-                throw new System.NotImplementedException();
+                var charactersOutput = this.Characters.Realize();
+                if (!charactersOutput.Success)
+                {
+                    return new Output<char, OptionValue>(false, default, this.input);
+                }
+
+                return new Output<char, OptionValue>(true, this, charactersOutput.Remainder);
             }
         }
 

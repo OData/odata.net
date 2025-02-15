@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text.RegularExpressions;
 
 namespace CombinatorParsingV3
@@ -51,5 +52,13 @@ namespace CombinatorParsingV3
         public bool Success { get; }
 
         public IInput<TToken> Remainder { get; }
+    }
+
+    public static class DeferredOutput2
+    {
+        public static DeferredOutput2<TToken> FromValue<TToken>(this IInput<TToken> input)
+        {
+            return new DeferredOutput2<TToken>(true, input);
+        }
     }
 }
