@@ -3,14 +3,14 @@ using System.Text.RegularExpressions;
 
 namespace CombinatorParsingV3
 {
-    public interface IDeferredParser<TToken, TRealizedAstNode, TDefferedAstNode> where TDefferedAstNode : IDeferredAstNode<TRealizedAstNode>
+    public interface IDeferredParser<TToken, TRealizedAstNode, TDefferedAstNode> where TDefferedAstNode : IDeferredAstNode<TToken, TRealizedAstNode>
     {
         TDefferedAstNode Parse(IInput<TToken> input);
     }
 
-    public interface IDeferredAstNode<TRealizedAstNode>
+    public interface IDeferredAstNode<TToken, TRealizedAstNode>
     {
-        IDeferredOutput<TRealizedAstNode> Realize();
+        IOutput<TToken, TRealizedAstNode> Realize();
     }
 
     public interface IDeferredOutput<TRealizedAstNode>
@@ -18,8 +18,6 @@ namespace CombinatorParsingV3
         bool Success { get; }
 
         TRealizedAstNode Parsed { get; }
-
-        List<RegexParseError>
     }
 
     public sealed class DeferredOutput<TRealizedAstNode> : IDeferredOutput<TRealizedAstNode>
@@ -33,5 +31,12 @@ namespace CombinatorParsingV3
         public bool Success { get; }
 
         public TRealizedAstNode Parsed { get; }
+    }
+
+    public interface IDeferredOutput2<TToken>
+    {
+        bool Success { get; }
+
+        IInput<TToken> Remainder { get; }
     }
 }

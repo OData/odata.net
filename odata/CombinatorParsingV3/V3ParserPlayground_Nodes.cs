@@ -3,38 +3,76 @@
     using System.Collections.Generic;
     using System.Linq;
     using System;
+    using System.Collections;
 
     public static partial class V3ParserPlayground
     {
-        public sealed class Slash : IDeferredAstNode<Slash>
+        public sealed class Slash : IDeferredAstNode<char, Slash>
         {
-            private Slash()
+            private readonly IInput<char> input;
+
+            public Slash(IInput<char> input)
             {
+                this.input = input;
             }
 
-            public static Slash Instance { get; } = new Slash();
-
-            public IDeferredOutput<Slash> Realize()
+            public IOutput<char, Slash> Realize()
             {
-                throw new System.NotImplementedException();
+                if (this.input.Current == '/')
+                {
+                    return new Output<char, Slash>(true, this, this.input.Next());
+                }
+                else
+                {
+                    return new Output<char, Slash>(false, default, this.input);
+                }
             }
         }
 
-        public sealed class AlphaNumeric : IDeferredAstNode<AlphaNumeric>
+        public abstract class AlphaNumeric
+        {
+            private AlphaNumeric()
+            {
+            }
+
+            public sealed class A : AlphaNumeric, IDeferredAstNode<char, A>
+            {
+                private readonly IInput<char> input;
+
+                public A(IInput<char> input)
+                {
+                    this.input = input;
+                }
+
+                public IOutput<char, A> Realize()
+                {
+                    if (this.input.Current == 'A')
+                    {
+                        return new Output<char, A>(true, this, this.input.Next());
+                    }
+                    else
+                    {
+                        return new Output<char, A>(false, default, this.input);
+                    }
+                }
+            }
+        }
+
+        /*public sealed class AlphaNumeric : IDeferredAstNode<char, AlphaNumeric>
         {
             private readonly IParser<char, AlphaNumeric> parser;
             private readonly IInput<char> input;
 
-            private char @char;
+            //// private char @char;
 
-            private bool deferred;
+            //// private bool deferred;
 
             public AlphaNumeric(IParser<char, AlphaNumeric> parser, IInput<char> input)
             {
                 this.parser = parser;
                 this.input = input;
 
-                this.deferred = true;
+                //// this.deferred = true;
             }
 
             public AlphaNumeric(char @char)
@@ -48,53 +86,99 @@
             {
                 get
                 {
-                    if (this.deferred)
-                    {
-                        throw new System.Exception("TODO not parsed yet");
-                    }
 
-                    return this.@char;
                 }
             }
 
-            public IDeferredOutput<AlphaNumeric> Realize()
+            public IOutput<char, AlphaNumeric> Realize()
             {
                 if (this.deferred)
                 {
-                    var output = this.parser.Parse(input);
-                    if (output.Success)
+                    var _char_1 = this.parser.Parse(input);
+                    if (_char_1.Success)
                     {
-                        this.@char = output.Parsed.@char;
+                        this.@char = _char_1.Parsed.@char;
                         this.deferred = false;
-                        return new DeferredOutput<AlphaNumeric>(true, this);
+                        return new Output<char, AlphaNumeric>(true, this, _char_1.Remainder);
                     }
                     else
                     {
-                        return new DeferredOutput<AlphaNumeric>(false, default);
+                        return new Output<char, AlphaNumeric>(false, default, this.input);
                     }
                 }
                 else
                 {
-                    return new DeferredOutput<AlphaNumeric>(true, this);
+                    //// TODO where do you get the remainder from for the case where this instance was constructed with the char already? //// TODO maybe that constructor overload shouldn't exist?
+                    return new Output<char, AlphaNumeric>(true, this, null);
                 }
+            }
+        }*/
+
+        public sealed class Many<T> : IDeferredAstNode<char, IEnumerable<T>> where T : IDeferredAstNode<char, T>
+        {
+            private IInput<char> input;
+            private readonly Func<IInput<char>, T> nodeFactory;
+
+            private readonly Func<IDeferredOutput2<char>>? promise;
+
+            public Many(IInput<char> input, Func<IInput<char>, T> nodeFactory)
+            {
+                this.input = input;
+                this.nodeFactory = nodeFactory;
+
+                this.promise = null;
+            }
+
+            public Many(Func<IDeferredOutput2<char>> promise, Func<IInput<char>, T> nodeFactory)
+            {
+                this.promise = promise;
+                this.nodeFactory = nodeFactory;
+            }
+
+            public IOutput<char, IEnumerable<T>> Realize() //// TODO the other ones all have the second type as themselves...maybe you need an ienumerable property instead?
+            {
+                if (this.promise != null)
+                {
+                    var future = this.promise();
+                    if (!future.Success)
+                    {
+                        return new Output<char, IEnumerable<T>>(false, default, future.Remainder);
+                    }
+                    else
+                    {
+                        this.input = future.Remainder;
+                    }
+                }
+
+                var sequence = new List<T>();
+                var node = this.nodeFactory(this.input);
+                var output = node.Realize();
+                while (output.Success)
+                {
+                    sequence.Add(output.Parsed);
+                    node = this.nodeFactory(output.Remainder);
+                }
+
+                return new Output<char, IEnumerable<T>>(true, sequence, output.Remainder);
             }
         }
 
-        public sealed class Segment : IDeferredAstNode<Segment>
+        public sealed class Segment : IDeferredAstNode<char, Segment>
         {
-            private readonly IParser<char, Segment> parser;
+            ////private readonly IParser<char, Segment> parser;
             private readonly IInput<char> input;
-            private Slash slash;
-            private IEnumerable<AlphaNumeric> characters;
+            ////private Slash slash;
+            ////private IEnumerable<AlphaNumeric> characters;
 
-            private bool deferred;
+            ////private bool deferred;
 
             public Segment(IInput<char> input)
-                : this(SegmentParser.Instance, input)
+               //// : this(SegmentParser.Instance, input)
             {
+                this.input = input;
             }
 
-            public Segment(IParser<char, Segment> parser, IInput<char> input)
+            /*public Segment(IParser<char, Segment> parser, IInput<char> input)
             {
                 this.parser = parser;
                 this.input = input;
@@ -108,37 +192,39 @@
                 this.characters = characters;
 
                 this.deferred = false;
-            }
+            }*/
 
             public Slash Slash
             {
                 get
                 {
-                    if (this.deferred)
-                    {
-                        throw new System.Exception("TODO not parsed yet");
-                    }
-
-                    return this.slash;
+                    return new Slash(this.input);
                 }
             }
 
-            public IEnumerable<AlphaNumeric> Characters
+            public Many<AlphaNumeric> Characters
             {
                 get
                 {
-                    if (this.deferred)
+                    var slashOutput = this.Slash.Realize();
+                    if (!slashOutput.Success)
+                    {
+                    }
+
+                    return new Many<AlphaNumeric>(
+
+                    /*if (this.deferred)
                     {
                         throw new System.Exception("TODO not parsed yet");
                         // TODO ideferredoutput should probably just be ioutput so that you can get this remainder
                         // return new Characters(CharactersParser.Instance, this.Slash.Realize().Remainder)
                     }
 
-                    return this.characters;
+                    return this.characters;*/
                 }
             }
 
-            public IDeferredOutput<Segment> Realize()
+            public IOutput<char, Segment> Realize()
             {
                 //// TODO you should cache the deferredoutput instance
                 if (this.deferred)
@@ -181,7 +267,7 @@
             }
         }
 
-        public sealed class EqualsSign : IDeferredAstNode<EqualsSign>
+        public sealed class EqualsSign : IDeferredAstNode<char, EqualsSign>
         {
             private EqualsSign()
             {
@@ -189,13 +275,13 @@
 
             public static EqualsSign Instance { get; } = new EqualsSign();
 
-            public IDeferredOutput<EqualsSign> Realize()
+            public IOutput<char, EqualsSign> Realize()
             {
                 throw new System.NotImplementedException();
             }
         }
 
-        public sealed class OptionName : IDeferredAstNode<OptionName>
+        public sealed class OptionName : IDeferredAstNode<char, OptionName>
         {
             public OptionName(IEnumerable<AlphaNumeric> characters)
             {
@@ -204,13 +290,13 @@
 
             public IEnumerable<AlphaNumeric> Characters { get; }
 
-            public IDeferredOutput<OptionName> Realize()
+            public IOutput<char, OptionName> Realize()
             {
                 throw new System.NotImplementedException();
             }
         }
 
-        public sealed class OptionValue : IDeferredAstNode<OptionValue>
+        public sealed class OptionValue : IDeferredAstNode<char, OptionValue>
         {
             public OptionValue(IEnumerable<AlphaNumeric> characters)
             {
@@ -219,13 +305,13 @@
 
             public IEnumerable<AlphaNumeric> Characters { get; }
 
-            public IDeferredOutput<OptionValue> Realize()
+            public IOutput<char, OptionValue> Realize()
             {
                 throw new System.NotImplementedException();
             }
         }
 
-        public sealed class QueryOption : IDeferredAstNode<QueryOption>
+        public sealed class QueryOption : IDeferredAstNode<char, QueryOption>
         {
             public QueryOption(OptionName name, EqualsSign equalsSign, OptionValue optionValue)
             {
@@ -238,13 +324,13 @@
             public EqualsSign EqualsSign { get; }
             public OptionValue OptionValue { get; }
 
-            public IDeferredOutput<QueryOption> Realize()
+            public IOutput<char, QueryOption> Realize()
             {
                 throw new System.NotImplementedException();
             }
         }
 
-        public sealed class QuestionMark : IDeferredAstNode<QuestionMark>
+        public sealed class QuestionMark : IDeferredAstNode<char, QuestionMark>
         {
             private QuestionMark()
             {
@@ -252,7 +338,7 @@
 
             public static QuestionMark Instance { get; } = new QuestionMark();
 
-            public IDeferredOutput<QuestionMark> Realize()
+            public IOutput<char, QuestionMark> Realize()
             {
                 throw new System.NotImplementedException();
             }
@@ -266,7 +352,7 @@
             }
         }
 
-        public class DeferredOdataUri : IDeferredAstNode<OdataUri>
+        public class DeferredOdataUri : IDeferredAstNode<char, OdataUri>
         {
             private readonly Lazy<CombinatorParsingV3.IOutput<char, IEnumerable<Segment>>> segments;
 
@@ -303,7 +389,7 @@
             public QuestionMark QuestionMark { get; }
             public IEnumerable<QueryOption> QueryOptions { get; }
 
-            public IDeferredOutput<OdataUri> Realize()
+            public IOutput<char, OdataUri> Realize()
             {
                 var finalSegments = segments.Value.Parsed;
                 if (!segments.Value.Success)
