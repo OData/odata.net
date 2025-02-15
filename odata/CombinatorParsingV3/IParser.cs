@@ -12,7 +12,7 @@ namespace CombinatorParsingV3
         IOutput<TToken, TOutput> Parse(IInput<TToken> input);
     }
 
-    public interface IOutput<TToken, TOutput>
+    public interface IOutput<TToken, out TOutput>
     {
         bool Success { get; }
 

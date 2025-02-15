@@ -39,4 +39,17 @@ namespace CombinatorParsingV3
 
         IInput<TToken> Remainder { get; }
     }
+
+    public sealed class DeferredOutput2<TToken> : IDeferredOutput2<TToken>
+    {
+        public DeferredOutput2(bool success, IInput<TToken> remainder)
+        {
+            Success = success;
+            Remainder = remainder;
+        }
+
+        public bool Success { get; }
+
+        public IInput<TToken> Remainder { get; }
+    }
 }

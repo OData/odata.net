@@ -29,11 +29,18 @@
             }
         }
 
-        public abstract class AlphaNumeric
+        public abstract class AlphaNumeric : IDeferredAstNode<char, AlphaNumeric>
         {
             private AlphaNumeric()
             {
             }
+
+            public IOutput<char, AlphaNumeric> Realize()
+            {
+                return this.RealizeImpl();
+            }
+
+            protected abstract IOutput<char, AlphaNumeric> RealizeImpl();
 
             public sealed class A : AlphaNumeric, IDeferredAstNode<char, A>
             {
@@ -44,7 +51,7 @@
                     this.input = input;
                 }
 
-                public IOutput<char, A> Realize()
+                public new IOutput<char, A> Realize()
                 {
                     if (this.input.Current == 'A')
                     {
@@ -54,6 +61,11 @@
                     {
                         return new Output<char, A>(false, default, this.input);
                     }
+                }
+
+                protected override IOutput<char, AlphaNumeric> RealizeImpl()
+                {
+                    return this.Realize();
                 }
             }
         }
@@ -119,34 +131,34 @@
             private IInput<char> input;
             private readonly Func<IInput<char>, T> nodeFactory;
 
-            private readonly Func<IDeferredOutput2<char>>? promise;
+            private readonly Func<IDeferredOutput2<char>>? future;
 
             public Many(IInput<char> input, Func<IInput<char>, T> nodeFactory)
             {
                 this.input = input;
                 this.nodeFactory = nodeFactory;
 
-                this.promise = null;
+                this.future = null;
             }
 
-            public Many(Func<IDeferredOutput2<char>> promise, Func<IInput<char>, T> nodeFactory)
+            public Many(Func<IDeferredOutput2<char>> future, Func<IInput<char>, T> nodeFactory)
             {
-                this.promise = promise;
+                this.future = future;
                 this.nodeFactory = nodeFactory;
             }
 
             public IOutput<char, IEnumerable<T>> Realize() //// TODO the other ones all have the second type as themselves...maybe you need an ienumerable property instead?
             {
-                if (this.promise != null)
+                if (this.future != null)
                 {
-                    var future = this.promise();
-                    if (!future.Success)
+                    var output2 = this.future();
+                    if (!output2.Success)
                     {
-                        return new Output<char, IEnumerable<T>>(false, default, future.Remainder);
+                        return new Output<char, IEnumerable<T>>(false, default, output2.Remainder);
                     }
                     else
                     {
-                        this.input = future.Remainder;
+                        this.input = output2.Remainder;
                     }
                 }
 
@@ -206,12 +218,12 @@
             {
                 get
                 {
-                    var slashOutput = this.Slash.Realize();
-                    if (!slashOutput.Success)
+                    return new Many<AlphaNumeric>(() =>
                     {
-                    }
-
-                    return new Many<AlphaNumeric>(
+                        var output = this.Slash.Realize();
+                        return new DeferredOutput2<char>(output.Success, output.Remainder);
+                    },
+                    input => new AlphaNumeric.A(input)); //// TODO what would a discriminated union actually look like here?
 
                     /*if (this.deferred)
                     {
@@ -226,8 +238,22 @@
 
             public IOutput<char, Segment> Realize()
             {
+                var slashOutput = this.Slash.Realize();
+                if (!slashOutput.Success)
+                {
+                    return new Output<char, Segment>(false, default, this.input);
+                }
+
+                var charactersOutput = this.Characters.Realize();
+                if (!charactersOutput.Success)
+                {
+                    return new Output<char, Segment>(false, default, this.input);
+                }
+
+                return new Output<char, Segment>(true, this, charactersOutput.Remainder);
+
                 //// TODO you should cache the deferredoutput instance
-                if (this.deferred)
+                /*if (this.deferred)
                 {
                     var output = this.parser.Parse(this.input);
                     if (output.Success)
@@ -263,7 +289,7 @@
                     //// TODO this method basically just mimics the parser implementations; should you actually just put all of the parsing here?
 
                     return new DeferredOutput<Segment>(true, this);
-                }
+                }*/
             }
         }
 
