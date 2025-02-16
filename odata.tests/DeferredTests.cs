@@ -13,7 +13,7 @@ namespace odata.tests
         [TestMethod]
         public void Test1()
         {
-            var url = "/aa/a/aaa?aaaa=aaaaa";
+            var url = "/AA/A/AAA?AAAA=AAAAA";
 
             var input = new CombinatorParsingV3.StringInput(url);
 
