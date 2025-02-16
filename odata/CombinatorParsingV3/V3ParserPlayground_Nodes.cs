@@ -813,7 +813,7 @@ public static QuestionMark Instance { get; } = new QuestionMark();*/
             {
                 get
                 {
-                    return new Many<Segment>(this.future, input => new Segment(input));
+                    return new AtLeastOne<Segment>(this.future, input => new Segment(input));
                 }
             }
 
