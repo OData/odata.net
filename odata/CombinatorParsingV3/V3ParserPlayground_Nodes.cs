@@ -5,6 +5,7 @@
     using System;
     using System.Collections;
     using System.Threading;
+    using static CombinatorParsingV3.V3ParserPlayground;
 
     public static partial class V3ParserPlayground
     {
@@ -226,7 +227,7 @@
             private readonly Func<IDeferredOutput2<char>> future;
             private readonly Func<Func<IDeferredOutput2<char>>, T> nodeFactory;
 
-            public SequenceNode(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, T> nodeFactory) //// TODO use a DU for the terminal node?
+            public SequenceNode(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, T> nodeFactory)
             {
                 this.future = future;
                 this.nodeFactory = nodeFactory;
@@ -237,10 +238,11 @@
                 get
                 {
                     return this.nodeFactory(this.future);
+                    ////return new OptionalNode<T>(this.future, this.nodeFactory);
                 }
             }
 
-            public OptionalNode<SequenceNode<T>> Next
+            /*public OptionalNode<SequenceNode<T>> Next
             {
                 get
                 {
@@ -260,25 +262,48 @@
                     // TODO this branch can't really get hit; is that ok?
                     return new Output<char, SequenceNode<T>>(false, default, output.Remainder);
                 }
+            }*/
+
+            public OptionalNode<SequenceNode<T>> Next
+            {
+                get
+                {
+                    return new OptionalNode<SequenceNode<T>>(DeferredOutput2.ToPromise(this.Value.Realize), input => new SequenceNode<T>(input, this.nodeFactory));
+                    //// return new SequenceNode<T>(DeferredOutput2.ToPromise(this.Value.Realize), this.nodeFactory);
+                }
+            }
+
+            public IOutput<char, SequenceNode<T>> Realize()
+            {
+                var output = this.Next.Realize();
+                if (output.Success)
+                {
+                    return new Output<char, SequenceNode<T>>(true, this, output.Remainder);
+                }
+                else
+                {
+                    // TODO this branch can't really get hit; is that ok?
+                    return new Output<char, SequenceNode<T>>(false, default, output.Remainder);
+                }
             }
         }
 
-        public sealed class OptionalNode<T> : IDeferredAstNode<char, OptionalNode<T>> where T : IDeferredAstNode<char, T>
+        public sealed class OptionalNode<T> : IDeferredAstNode<char, RealNullable<T>> where T : IDeferredAstNode<char, T>
         {
             private readonly Func<IDeferredOutput2<char>> future;
-            private readonly Func<Func<IDeferredOutput2<char>>, T?> nodeFactory;
+            private readonly Func<Func<IDeferredOutput2<char>>, T> nodeFactory;
 
-            public OptionalNode(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, T?> nodeFactory)
+            public OptionalNode(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, T> nodeFactory)
             {
                 this.future = future;
                 this.nodeFactory = nodeFactory;
             }
 
-            public T? Value
+            public T Value
             {
                 get
                 {
-                    return Get().Parsed;
+                    return this.nodeFactory(this.future);
                 }
             }
 
@@ -286,20 +311,57 @@
             {
                 IDeferredOutput2<char> output = null;
                 var node = this.nodeFactory(() => output = this.future());
+
                 if (node == null)
                 {
                     return new Output<char, T?>(true, node, output.Remainder);
                 }
                 else
                 {
-                    return new Output<char, T?>(true, node, output.Remainder);
+                    var output2 = node.Realize();
+                    return new Output<char, T?>(true, node, output2.Remainder);
                 }
             }
 
-            public IOutput<char, OptionalNode<T>> Realize()
+            public IOutput<char, RealNullable<T>> Realize()
             {
-                var output = Get();
-                return new Output<char, OptionalNode<T>>(true, this, output.Remainder);
+                var deferredOutput = this.future();
+                var output = this.Value.Realize();
+                if (output.Success)
+                {
+                    return new Output<char, RealNullable<T>>(true, new RealNullable<T>(output.Parsed), output.Remainder);
+                }
+                else
+                {
+                    return new Output<char, RealNullable<T>>(true, new RealNullable<T>(), deferredOutput.Remainder);
+                }
+            }
+        }
+
+        public readonly struct RealNullable<T>
+        {
+            private readonly T value;
+
+            public RealNullable(T value)
+            {
+                this.value = value;
+
+                this.HasValue = true;
+            }
+
+            public bool HasValue { get; }
+
+            public T Value
+            {
+                get
+                {
+                    if (!this.HasValue)
+                    {
+                        throw new InvalidOperationException("TODO");
+                    }
+
+                    return this.value;
+                }
             }
         }
 
