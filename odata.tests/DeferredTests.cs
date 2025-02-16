@@ -10,6 +10,8 @@ namespace odata.tests
     [TestClass]
     public sealed class DeferredTests
     {
+        //// TODO use a strongly typed, heterogeneous linked list in order to make clear the dependencies between each property of a given AST node?
+
         [TestMethod]
         public void Test1()
         {
