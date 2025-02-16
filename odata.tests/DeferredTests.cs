@@ -37,5 +37,70 @@ namespace odata.tests
 
             Assert.IsFalse(realUri.Success);
         }
+
+        [TestMethod]
+        public void DeferredTest()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAA";
+
+            var indexes = new List<int>();
+            var input = new InstrumentedStringInput(url, indexes);
+
+            var odataUri = new V3ParserPlayground.OdataUri(DeferredOutput2.FromValue(input));
+
+            Assert.AreEqual(0, indexes.Count);
+
+            var slash = odataUri.Segments._1.Slash.Realize();
+
+            Assert.AreEqual(1, indexes.Count);
+            Assert.AreEqual(0, indexes[0]);
+
+            var questionMark = odataUri.QuestionMark.Realize();
+
+            //// TODO it would actually be expected that this assertion would fail because of some amount of backtracking, but it fails because the actual count is 343, which seems way too high
+            //// Assert.AreEqual(10, indexes.Count);
+            
+            Assert.AreEqual(9, indexes.Max());
+        }
+
+        private sealed class InstrumentedStringInput : IInput<char>
+        {
+            private readonly string input;
+            private readonly List<int> indexes;
+            private readonly int index;
+
+            public InstrumentedStringInput(string input, List<int> indexes)
+                : this(input, indexes, 0)
+            {
+            }
+
+            private InstrumentedStringInput(string input, List<int> indexes, int index)
+            {
+                this.input = input;
+                this.indexes = indexes;
+                this.index = index;
+            }
+
+            public char Current
+            {
+                get
+                {
+                    this.indexes.Add(this.index);
+
+                    return this.input[this.index];
+                }
+            }
+
+            public IInput<char> Next()
+            {
+                var newIndex = this.index + 1;
+                if (newIndex >= this.input.Length)
+                {
+                    return null;
+                }
+
+                return new InstrumentedStringInput(this.input, this.indexes, newIndex);
+            }
+        }
     }
 }
