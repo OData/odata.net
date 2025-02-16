@@ -192,6 +192,77 @@
             }
         }*/
 
+        public sealed class AtLeastOne<T> : IDeferredAstNode<char, AtLeastOne<T>> where T : IDeferredAstNode<char, T>
+        {
+            private readonly Func<Func<IDeferredOutput2<char>>, T> nodeFactory;
+
+            private readonly Func<IDeferredOutput2<char>> future;
+
+            public AtLeastOne(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, T> nodeFactory)
+            {
+                this.future = future; //// TODO this should be of type `future`
+                this.nodeFactory = nodeFactory;
+            }
+
+            /*public SequenceNode<T> Element
+            {
+                get
+                {
+                    return new SequenceNode<T>(this.future, this.nodeFactory);
+                }
+            }
+
+            public IOutput<char, Many<T>> Realize()
+            {
+                var output = this.Element.Realize();
+                if (output.Success)
+                {
+                    return new Output<char, Many<T>>(true, this, output.Remainder);
+                }
+                else
+                {
+                    return new Output<char, Many<T>>(false, default, output.Remainder);
+                }
+            }*/
+
+            public T _1
+            {
+                get
+                {
+                    return this.nodeFactory(this.future);
+                }
+            }
+
+            public OptionalNode<T> _2
+            {
+                get
+                {
+                    return new OptionalNode<T>(DeferredOutput2.ToPromise(this._1.Realize), this.nodeFactory);
+                }
+            }
+
+            public OptionalNode<T> _3
+            {
+                get
+                {
+                    return new OptionalNode<T>(DeferredOutput2.ToPromise(this._2.Realize), this.nodeFactory);
+                }
+            }
+
+            public IOutput<char, AtLeastOne<T>> Realize()
+            {
+                var output = this._3.Realize();
+                if (output.Success)
+                {
+                    return new Output<char, AtLeastOne<T>>(true, this, output.Remainder);
+                }
+                else
+                {
+                    return new Output<char, AtLeastOne<T>>(true, this, output.Remainder);
+                }
+            }
+        }
+
         public sealed class Many<T> : IDeferredAstNode<char, Many<T>> where T : IDeferredAstNode<char, T>
         {
             private readonly Func<Func<IDeferredOutput2<char>>, T> nodeFactory;
@@ -446,11 +517,11 @@
                 }
             }
 
-            public Many<AlphaNumeric> Characters
+            public AtLeastOne<AlphaNumeric> Characters
             {
                 get
                 {
-                    return new Many<AlphaNumeric>(
+                    return new AtLeastOne<AlphaNumeric>(
                         DeferredOutput2.ToPromise(this.Slash.Realize),
                         input => new AlphaNumeric.A(input)); //// TODO what would a discriminated union actually look like here?
 
@@ -573,11 +644,11 @@ Characters = characters;
                 this.future = future;
             }
 
-            public Many<AlphaNumeric> Characters
+            public AtLeastOne<AlphaNumeric> Characters
             {
                 get
                 {
-                    return new Many<AlphaNumeric>(future, input => new AlphaNumeric.A(input));
+                    return new AtLeastOne<AlphaNumeric>(future, input => new AlphaNumeric.A(input));
                 }
             }
 
@@ -738,7 +809,7 @@ public static QuestionMark Instance { get; } = new QuestionMark();*/
                 this.future = future;
             }
 
-            public Many<Segment> Segments //// TODO implement "at least one"
+            public AtLeastOne<Segment> Segments //// TODO implement "at least one"
             {
                 get
                 {
