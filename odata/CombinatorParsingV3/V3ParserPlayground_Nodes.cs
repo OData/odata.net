@@ -258,7 +258,7 @@
                 }
                 else
                 {
-                    return new Output<char, AtLeastOne<T>>(true, this, output.Remainder);
+                    return new Output<char, AtLeastOne<T>>(false, this, output.Remainder);
                 }
             }
         }
