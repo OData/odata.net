@@ -325,7 +325,7 @@
 
             public IOutput<char, RealNullable<T>> Realize()
             {
-                var deferredOutput = this.future();
+                //// TODO you *must* add this back var deferredOutput = this.future();
                 var output = this.Value.Realize();
                 if (output.Success)
                 {
