@@ -437,7 +437,12 @@
 
             public IOutput<char, RealNullable<T>> Realize()
             {
-                //// TODO you *must* add this back var deferredOutput = this.future();
+                var deferredOutput = this.future();
+                if (!deferredOutput.Success)
+                {
+                    return new Output<char, RealNullable<T>>(false, default, deferredOutput.Remainder);
+                }
+
                 var output = this.Value.Realize();
                 if (output.Success)
                 {

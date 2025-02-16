@@ -59,7 +59,8 @@ namespace CombinatorParsingV3
     {
         public static Func<DeferredOutput2<TToken>> FromValue<TToken>(this IInput<TToken> input)
         {
-            return () => new DeferredOutput2<TToken>(true, input);
+            return () => 
+                new DeferredOutput2<TToken>(true, input);
         }
 
         public static Func<DeferredOutput2<TToken>> ToPromise<TToken, TParsed>(Func<IOutput<TToken, TParsed>> realize)
