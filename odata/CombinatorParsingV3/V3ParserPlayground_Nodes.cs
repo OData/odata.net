@@ -329,7 +329,8 @@
                 }
                 else
                 {
-                    return new Output<char, Many<T>>(true, this, output.Remainder);
+                    // if the optional failed to parse, it means that its dependencies failed to parse
+                    return new Output<char, Many<T>>(false, default, output.Remainder);
                 }
             }
         }

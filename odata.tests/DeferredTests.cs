@@ -34,6 +34,8 @@ namespace odata.tests
             var odataUri = new V3ParserPlayground.OdataUri(DeferredOutput2.FromValue(input));
 
             var realUri = odataUri.Realize();
+
+            Assert.IsFalse(realUri.Success);
         }
     }
 }
