@@ -143,28 +143,26 @@
             }
         }*/
 
-        public sealed class Many<T> : IDeferredAstNode<char, IEnumerable<T>> where T : IDeferredAstNode<char, T>
+        /*public sealed class Many<T> : IDeferredAstNode<char, IEnumerable<T>> where T : IDeferredAstNode<char, T>
         {
             ////private IInput<char> input;
             private readonly Func<Func<IDeferredOutput2<char>>, T> nodeFactory;
 
             private readonly Func<IDeferredOutput2<char>> future;
 
-            /*public Many(IInput<char> input, Func<IInput<char>, T> nodeFactory)
-            {
-                this.input = input;
-                this.nodeFactory = nodeFactory;
+            //public Many(IInput<char> input, Func<IInput<char>, T> nodeFactory)
+            //{
+            //    this.input = input;
+            //    this.nodeFactory = nodeFactory;
 
-                this.future = null;
-            }*/
+            //    this.future = null;
+            //}
 
             public Many(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, T> nodeFactory)
             {
                 this.future = future; //// TODO this should be of type `future`
                 this.nodeFactory = nodeFactory;
             }
-
-            
 
             public IOutput<char, IEnumerable<T>> Realize() //// TODO the other ones all have the second type as themselves...maybe you need an ienumerable property instead?
             {
@@ -186,6 +184,82 @@
                 }
 
                 return new Output<char, IEnumerable<T>>(true, sequence, input);
+            }
+        }*/
+
+        public sealed class Many<T> : IDeferredAstNode<char, Many<T>> where T : IDeferredAstNode<char, T>
+        {
+            private readonly Func<Func<IDeferredOutput2<char>>, T> nodeFactory;
+
+            private readonly Func<IDeferredOutput2<char>> future;
+
+            public Many(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, T> nodeFactory)
+            {
+                this.future = future; //// TODO this should be of type `future`
+                this.nodeFactory = nodeFactory;
+            }
+
+            public SequenceNode<T> Element
+            {
+                get
+                {
+                    return new SequenceNode<T>(this.future, this.nodeFactory);
+                }
+            }
+
+            public IOutput<char, Many<T>> Realize()
+            {
+                var output = this.Element.Realize();
+                if (output.Success)
+                {
+                    return new Output<char, Many<T>>(true, this, output.Remainder);
+                }
+                else
+                {
+                    return new Output<char, Many<T>>(false, default, output.Remainder);
+                }
+            }
+        }
+
+        public sealed class SequenceNode<T> : IDeferredAstNode<char, SequenceNode<T>> where T : IDeferredAstNode<char, T>
+        {
+            private readonly Func<IDeferredOutput2<char>> future;
+            private readonly Func<Func<IDeferredOutput2<char>>, T> nodeFactory;
+
+            public SequenceNode(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, T> nodeFactory) //// TODO use a DU for the terminal node?
+            {
+                this.future = future;
+                this.nodeFactory = nodeFactory;
+            }
+
+            public T Value
+            {
+                get
+                {
+                    return this.nodeFactory(this.future);
+                }
+            }
+
+            public OptionalNode<SequenceNode<T>> Next
+            {
+                get
+                {
+                    return new OptionalNode<SequenceNode<T>>(DeferredOutput2.ToPromise(this.Value.Realize), input => new SequenceNode<T>(input, this.nodeFactory));
+                }
+            }
+
+            public IOutput<char, SequenceNode<T>> Realize()
+            {
+                var output = this.Next.Realize();
+                if (output.Success)
+                {
+                    return new Output<char, SequenceNode<T>>(true, this, output.Remainder);
+                }
+                else
+                {
+                    // TODO this branch can't really get hit; is that ok?
+                    return new Output<char, SequenceNode<T>>(false, default, output.Remainder);
+                }
             }
         }
 
@@ -226,47 +300,6 @@
             {
                 var output = Get();
                 return new Output<char, OptionalNode<T>>(true, this, output.Remainder);
-            }
-        }
-
-        public sealed class SequenceNode<T> : IDeferredAstNode<char, SequenceNode<T>> where T : IDeferredAstNode<char, T>
-        {
-            private readonly Func<IDeferredOutput2<char>> future;
-            private readonly Func<Func<IDeferredOutput2<char>>, T> nodeFactory;
-
-            public SequenceNode(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, T> nodeFactory) //// TODO use a DU for the terminal node?
-            {
-                this.future = future;
-                this.nodeFactory = nodeFactory;
-            }
-
-            public T Value
-            {
-                get
-                {
-                    return this.nodeFactory(this.future);
-                }
-            }
-
-            public OptionalNode<SequenceNode<T>> Next
-            {
-                get
-                {
-                    return new OptionalNode<SequenceNode<T>>(DeferredOutput2.ToPromise(this.Value.Realize), input => new SequenceNode<T>(input, this.nodeFactory));
-                }
-            }
-
-            public IOutput<char, SequenceNode<T>> Realize()
-            {
-                var output = this.Value.Realize();
-                if (output.Success)
-                {
-                    return new Output<char, SequenceNode<T>>(true, this, output.Remainder);
-                }
-                else
-                {
-                    return new Output<char, SequenceNode<T>>(false, default, output.Remainder);
-                }
             }
         }
 
