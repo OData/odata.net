@@ -4,27 +4,36 @@
     using System.Linq;
     using System;
     using System.Collections;
+    using System.Threading;
 
     public static partial class V3ParserPlayground
     {
         public sealed class Slash : IDeferredAstNode<char, Slash>
         {
-            private readonly IInput<char> input;
+            private readonly Func<IDeferredOutput2<char>> future;
 
-            public Slash(IInput<char> input)
+            public Slash(Func<IDeferredOutput2<char>> future)
             {
-                this.input = input;
+                this.future = future;
             }
 
             public IOutput<char, Slash> Realize()
             {
-                if (this.input.Current == '/')
+                var output = this.future();
+                if (!output.Success)
                 {
-                    return new Output<char, Slash>(true, this, this.input.Next());
+                    return new Output<char, Slash>(false, default, output.Remainder);
+                }
+
+                var input = output.Remainder;
+
+                if (input.Current == '/')
+                {
+                    return new Output<char, Slash>(true, this, input.Next());
                 }
                 else
                 {
-                    return new Output<char, Slash>(false, default, this.input);
+                    return new Output<char, Slash>(false, default, input);
                 }
             }
         }
@@ -44,22 +53,30 @@
 
             public sealed class A : AlphaNumeric, IDeferredAstNode<char, A>
             {
-                private readonly IInput<char> input;
+                private readonly Func<IDeferredOutput2<char>> future;
 
-                public A(IInput<char> input)
+                public A(Func<IDeferredOutput2<char>> future)
                 {
-                    this.input = input;
+                    this.future = future;
                 }
 
                 public new IOutput<char, A> Realize()
                 {
-                    if (this.input.Current == 'A')
+                    var output = this.future();
+                    if (!output.Success)
                     {
-                        return new Output<char, A>(true, this, this.input.Next());
+                        return new Output<char, A>(false, default, output.Remainder);
+                    }
+
+                    var input = output.Remainder;
+
+                    if (input.Current == 'A')
+                    {
+                        return new Output<char, A>(true, this, input.Next());
                     }
                     else
                     {
-                        return new Output<char, A>(false, default, this.input);
+                        return new Output<char, A>(false, default, input);
                     }
                 }
 
@@ -129,7 +146,7 @@
         public sealed class Many<T> : IDeferredAstNode<char, IEnumerable<T>> where T : IDeferredAstNode<char, T>
         {
             ////private IInput<char> input;
-            private readonly Func<IInput<char>, T> nodeFactory;
+            private readonly Func<Func<IDeferredOutput2<char>>, T> nodeFactory;
 
             private readonly Func<IDeferredOutput2<char>> future;
 
@@ -141,7 +158,7 @@
                 this.future = null;
             }*/
 
-            public Many(Func<IDeferredOutput2<char>> future, Func<IInput<char>, T> nodeFactory)
+            public Many(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, T> nodeFactory)
             {
                 this.future = future; //// TODO this should be of type `future`
                 this.nodeFactory = nodeFactory;
@@ -158,31 +175,32 @@
                 var input = output2.Remainder;
 
                 var sequence = new List<T>();
-                var node = this.nodeFactory(input);
+                var node = this.nodeFactory(DeferredOutput2.FromValue(input));
                 var output = node.Realize();
                 while (output.Success)
                 {
                     sequence.Add(output.Parsed);
-                    node = this.nodeFactory(output.Remainder);
+                    node = this.nodeFactory(DeferredOutput2.FromValue(output.Remainder));
                 }
 
-                return new Output<char, IEnumerable<T>>(true, sequence, output.Remainder);
+                return new Output<char, IEnumerable<T>>(true, sequence, input);
             }
         }
 
         public sealed class Segment : IDeferredAstNode<char, Segment>
         {
             ////private readonly IParser<char, Segment> parser;
-            private readonly IInput<char> input;
+            private readonly Func<IDeferredOutput2<char>> future;
+
             ////private Slash slash;
             ////private IEnumerable<AlphaNumeric> characters;
 
             ////private bool deferred;
 
-            public Segment(IInput<char> input)
-               //// : this(SegmentParser.Instance, input)
+            public Segment(Func<IDeferredOutput2<char>> future)
+            //// : this(SegmentParser.Instance, input)
             {
-                this.input = input;
+                this.future = future;
             }
 
             /*public Segment(IParser<char, Segment> parser, IInput<char> input)
@@ -205,7 +223,7 @@
             {
                 get
                 {
-                    return new Slash(this.input);
+                    return new Slash(this.future);
                 }
             }
 
@@ -213,12 +231,9 @@
             {
                 get
                 {
-                    return new Many<AlphaNumeric>(() =>
-                    {
-                        var output = this.Slash.Realize();
-                        return new DeferredOutput2<char>(output.Success, output.Remainder);
-                    },
-                    input => new AlphaNumeric.A(input)); //// TODO what would a discriminated union actually look like here?
+                    return new Many<AlphaNumeric>(
+                        DeferredOutput2.ToPromise(this.Slash.Realize),
+                        input => new AlphaNumeric.A(input)); //// TODO what would a discriminated union actually look like here?
 
                     /*if (this.deferred)
                     {
@@ -233,19 +248,15 @@
 
             public IOutput<char, Segment> Realize()
             {
-                var slashOutput = this.Slash.Realize();
-                if (!slashOutput.Success)
+                var output = this.Characters.Realize();
+                if (output.Success)
                 {
-                    return new Output<char, Segment>(false, default, this.input);
+                    return new Output<char, Segment>(true, this, output.Remainder);
                 }
-
-                var charactersOutput = this.Characters.Realize();
-                if (!charactersOutput.Success)
+                else
                 {
-                    return new Output<char, Segment>(false, default, this.input);
+                    return new Output<char, Segment>(false, default, output.Remainder);
                 }
-
-                return new Output<char, Segment>(true, this, charactersOutput.Remainder);
 
                 //// TODO you should cache the deferredoutput instance
                 /*if (this.deferred)
@@ -349,13 +360,15 @@ Characters = characters;
 
             public IOutput<char, OptionName> Realize()
             {
-                var charactersOutput = this.Characters.Realize();
-                if (!charactersOutput.Success)
+                var output = this.Characters.Realize();
+                if (output.Success)
                 {
-                    return new Output<char, OptionName>(false, default, charactersOutput.Remainder);
+                    return new Output<char, OptionName>(true, this, output.Remainder);
                 }
-
-                return new Output<char, OptionName>(true, this, charactersOutput.Remainder);
+                else
+                {
+                    return new Output<char, OptionName>(false, default, output.Remainder);
+                }
             }
         }
 
@@ -390,13 +403,16 @@ this.input = input;
 
             public IOutput<char, OptionValue> Realize()
             {
-                var charactersOutput = this.Characters.Realize();
-                if (!charactersOutput.Success)
+                var output = this.Characters.Realize();
+                if (output.Success)
                 {
-                    return new Output<char, OptionValue>(false, default, charactersOutput.Remainder);
+                    return new Output<char, OptionValue>(true, this, output.Remainder);
+                }
+                else
+                {
+                    return new Output<char, OptionValue>(false, default, output.Remainder);
                 }
 
-                return new Output<char, OptionValue>(true, this, charactersOutput.Remainder);
             }
         }
 
@@ -442,25 +458,15 @@ this.input = input;
 
             public IOutput<char, QueryOption> Realize()
             {
-                var nameOutput = this.Name.Realize();
-                if (!nameOutput.Success)
+                var output = this.OptionValue.Realize();
+                if (output.Success)
                 {
-                    return new Output<char, QueryOption>(false, default, nameOutput.Remainder);
+                    return new Output<char, QueryOption>(true, this, output.Remainder);
                 }
-
-                var equalsSignOutput = this.EqualsSign.Realize();
-                if (!equalsSignOutput.Success)
+                else
                 {
-                    return new Output<char, QueryOption>(false, default, equalsSignOutput.Remainder);
+                    return new Output<char, QueryOption>(false, default, output.Remainder);
                 }
-
-                var optionValueOutput = this.OptionValue.Realize();
-                if (!optionValueOutput.Success)
-                {
-                    return new Output<char, QueryOption>(false, default, optionValueOutput.Remainder);
-                }
-
-                return new Output<char, QueryOption>(true, this, optionValueOutput.Remainder);
             }
         }
 
