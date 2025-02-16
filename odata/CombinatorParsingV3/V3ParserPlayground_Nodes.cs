@@ -70,6 +70,10 @@
                     }
 
                     var input = output.Remainder;
+                    if (input == null)
+                    {
+                        return new Output<char, A>(false, default, input);
+                    }
 
                     if (input.Current == 'A')
                     {
@@ -200,7 +204,7 @@
                 this.nodeFactory = nodeFactory;
             }
 
-            public SequenceNode<T> Element
+            /*public SequenceNode<T> Element
             {
                 get
                 {
@@ -218,6 +222,43 @@
                 else
                 {
                     return new Output<char, Many<T>>(false, default, output.Remainder);
+                }
+            }*/
+
+            public OptionalNode<T> _1
+            {
+                get
+                {
+                    return new OptionalNode<T>(this.future, this.nodeFactory);
+                }
+            }
+
+            public OptionalNode<T> _2
+            {
+                get
+                {
+                    return new OptionalNode<T>(DeferredOutput2.ToPromise(this._1.Realize), this.nodeFactory);
+                }
+            }
+
+            public OptionalNode<T> _3
+            {
+                get
+                {
+                    return new OptionalNode<T>(DeferredOutput2.ToPromise(this._2.Realize), this.nodeFactory);
+                }
+            }
+
+            public IOutput<char, Many<T>> Realize()
+            {
+                var output = this._3.Realize();
+                if (output.Success)
+                {
+                    return new Output<char, Many<T>>(true, this, output.Remainder);
+                }
+                else
+                {
+                    return new Output<char, Many<T>>(true, this, output.Remainder);
                 }
             }
         }
@@ -333,7 +374,7 @@
                 }
                 else
                 {
-                    return new Output<char, RealNullable<T>>(true, new RealNullable<T>(), deferredOutput.Remainder);
+                    return new Output<char, RealNullable<T>>(true, new RealNullable<T>(), output.Remainder); //// deferredOutput.Remainder);
                 }
             }
         }
@@ -502,6 +543,10 @@
                 }
 
                 var input = output.Remainder;
+                if (input == null)
+                {
+                    return new Output<char, EqualsSign>(false, default, input);
+                }
 
                 if (input.Current == '=')
                 {
