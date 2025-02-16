@@ -290,45 +290,60 @@
 
         public sealed class EqualsSign : IDeferredAstNode<char, EqualsSign>
         {
-            private readonly IInput<char> input;
+            ////private readonly IInput<char> input;
+            private readonly Func<IDeferredOutput2<char>> future;
 
-            public EqualsSign(IInput<char> input)
+            /*public EqualsSign(IInput<char> input)
             {
                 this.input = input;
+            }*/
+
+            public EqualsSign(Func<IDeferredOutput2<char>> future)
+            {
+                //// TODO create the `future` type and then follow this single constructor pattern everywhere
+                this.future = future;
             }
 
             public IOutput<char, EqualsSign> Realize()
             {
-                if (this.input.Current == '=')
+                var output = this.future();
+                if (!output.Success)
                 {
-                    return new Output<char, EqualsSign>(true, this, this.input.Next());
+                    return new Output<char, EqualsSign>(false, default, output.Remainder);
+                }
+
+                var input = output.Remainder;
+
+                if (input.Current == '=')
+                {
+                    return new Output<char, EqualsSign>(true, this, input.Next());
                 }
                 else
                 {
-                    return new Output<char, EqualsSign>(false, default, this.input);
+                    return new Output<char, EqualsSign>(false, default, input);
                 }
             }
         }
 
         public sealed class OptionName : IDeferredAstNode<char, OptionName>
         {
-            private readonly IInput<char> input;
+            private readonly Func<IDeferredOutput2<char>> future;
 
             /*public OptionName(IEnumerable<AlphaNumeric> characters)
 {
 Characters = characters;
 }*/
 
-            public OptionName(IInput<char> input)
+            public OptionName(Func<IDeferredOutput2<char>> future)
             {
-                this.input = input;
+                this.future = future;
             }
 
             public Many<AlphaNumeric> Characters
             {
                 get
                 {
-                    return new Many<AlphaNumeric>(() => DeferredOutput2.FromValue(this.input), input => new AlphaNumeric.A(input));
+                    return new Many<AlphaNumeric>(future, input => new AlphaNumeric.A(input));
                 }
             }
 
@@ -337,7 +352,7 @@ Characters = characters;
                 var charactersOutput = this.Characters.Realize();
                 if (!charactersOutput.Success)
                 {
-                    return new Output<char, OptionName>(false, default, this.input);
+                    return new Output<char, OptionName>(false, default, charactersOutput.Remainder);
                 }
 
                 return new Output<char, OptionName>(true, this, charactersOutput.Remainder);
@@ -346,23 +361,30 @@ Characters = characters;
 
         public sealed class OptionValue : IDeferredAstNode<char, OptionValue>
         {
-            private readonly IInput<char> input;
+            private readonly Func<IDeferredOutput2<char>> future;
 
-            public OptionValue(IInput<char> input)
-            {
-                this.input = input;
-            }
+            /*private readonly IInput<char> input;
+
+public OptionValue(IInput<char> input)
+{
+this.input = input;
+}*/
 
             /*public OptionValue(IEnumerable<AlphaNumeric> characters)
             {
                 Characters = characters;
             }*/
 
+            public OptionValue(Func<IDeferredOutput2<char>> future)
+            {
+                this.future = future;
+            }
+
             public Many<AlphaNumeric> Characters
             {
                 get
                 {
-                    return new Many<AlphaNumeric>(() => DeferredOutput2.FromValue(this.input), input => new AlphaNumeric.A(input));
+                    return new Many<AlphaNumeric>(this.future, input => new AlphaNumeric.A(input));
                 }
             }
 
@@ -371,7 +393,7 @@ Characters = characters;
                 var charactersOutput = this.Characters.Realize();
                 if (!charactersOutput.Success)
                 {
-                    return new Output<char, OptionValue>(false, default, this.input);
+                    return new Output<char, OptionValue>(false, default, charactersOutput.Remainder);
                 }
 
                 return new Output<char, OptionValue>(true, this, charactersOutput.Remainder);
@@ -380,38 +402,152 @@ Characters = characters;
 
         public sealed class QueryOption : IDeferredAstNode<char, QueryOption>
         {
-            public QueryOption(OptionName name, EqualsSign equalsSign, OptionValue optionValue)
+            private readonly Func<IDeferredOutput2<char>> future;
+
+            public QueryOption(Func<IDeferredOutput2<char>> future)
+            {
+                this.future = future;
+            }
+
+            /*public QueryOption(OptionName name, EqualsSign equalsSign, OptionValue optionValue)
             {
                 Name = name;
                 EqualsSign = equalsSign;
                 OptionValue = optionValue;
+            }*/
+
+            public OptionName Name
+            {
+                get
+                {
+                    return new OptionName(this.future);
+                }
             }
 
-            public OptionName Name { get; }
-            public EqualsSign EqualsSign { get; }
-            public OptionValue OptionValue { get; }
+            public EqualsSign EqualsSign
+            {
+                get
+                {
+                    return new EqualsSign(DeferredOutput2.ToPromise(this.Name.Realize));
+                }
+            }
+
+            public OptionValue OptionValue
+            {
+                get
+                {
+                    return new OptionValue(DeferredOutput2.ToPromise(this.EqualsSign.Realize));
+                }
+            }
 
             public IOutput<char, QueryOption> Realize()
             {
-                throw new System.NotImplementedException();
+                var nameOutput = this.Name.Realize();
+                if (!nameOutput.Success)
+                {
+                    return new Output<char, QueryOption>(false, default, nameOutput.Remainder);
+                }
+
+                var equalsSignOutput = this.EqualsSign.Realize();
+                if (!equalsSignOutput.Success)
+                {
+                    return new Output<char, QueryOption>(false, default, equalsSignOutput.Remainder);
+                }
+
+                var optionValueOutput = this.OptionValue.Realize();
+                if (!optionValueOutput.Success)
+                {
+                    return new Output<char, QueryOption>(false, default, optionValueOutput.Remainder);
+                }
+
+                return new Output<char, QueryOption>(true, this, optionValueOutput.Remainder);
             }
         }
 
         public sealed class QuestionMark : IDeferredAstNode<char, QuestionMark>
         {
-            private QuestionMark()
-            {
-            }
+            private readonly Func<IDeferredOutput2<char>> future;
 
-            public static QuestionMark Instance { get; } = new QuestionMark();
+            /*private QuestionMark()
+{
+}
+
+public static QuestionMark Instance { get; } = new QuestionMark();*/
+
+            public QuestionMark(Func<IDeferredOutput2<char>> future)
+            {
+                this.future = future;
+            }
 
             public IOutput<char, QuestionMark> Realize()
             {
-                throw new System.NotImplementedException();
+                var output = this.future();
+                if (!output.Success)
+                {
+                    return new Output<char, QuestionMark>(false, default, output.Remainder);
+                }
+
+                var input = output.Remainder;
+
+                if (input.Current == '?')
+                {
+                    return new Output<char, QuestionMark>(true, this, input.Next());
+                }
+                else
+                {
+                    return new Output<char, QuestionMark>(false, default, input);
+                }
             }
         }
 
-        public class OdataUri : DeferredOdataUri
+        public sealed class OdataUri : IDeferredAstNode<char, OdataUri>
+        {
+            private readonly Func<IDeferredOutput2<char>> future;
+
+            public OdataUri(Func<IDeferredOutput2<char>> future)
+            {
+                this.future = future;
+            }
+
+            public Many<Segment> Segments //// TODO implement "at least one"
+            {
+                get
+                {
+                    return new Many<Segment>(this.future, input => new Segment(input));
+                }
+            }
+
+            public QuestionMark QuestionMark
+            {
+                get
+                {
+                    return new QuestionMark(DeferredOutput2.ToPromise(this.Segments.Realize));
+                }
+            }
+
+            public Many<QueryOption> QueryOptions
+            {
+                get
+                {
+                    return new Many<QueryOption>(DeferredOutput2.ToPromise(this.QueryOptions.Realize), input => new QueryOption(() => DeferredOutput2.FromValue(input)));
+                }
+            }
+
+            public IOutput<char, OdataUri> Realize()
+            {
+                var output = this.QueryOptions.Realize();
+                if (output.Success)
+                {
+                    return new Output<char, OdataUri>(true, this, output.Remainder);
+                }
+                else
+                {
+                    return new Output<char, OdataUri>(false, default, output.Remainder);
+                }
+            }
+        }
+
+        /*public class OdataUri : DeferredOdataUri
         {
             public OdataUri(IEnumerable<Segment> segments, QuestionMark questionMark, IEnumerable<QueryOption> queryOptions)
                 :base(new Lazy<IEnumerable<Segment>>(segments), new Lazy<QuestionMark>(questionMark), new Lazy<IEnumerable<QueryOption>>(queryOptions))
@@ -433,7 +569,7 @@ Characters = characters;
             {
             }
 
-            public DeferredOdataUri(IInput<char> input, IParser<char, IEnumerable<Segment>> segmentParser, /**/)
+            public DeferredOdataUri(IInput<char> input, IParser<char, IEnumerable<Segment>> segmentParser, )
                 : this(new Lazy<IEnumerable<Segment>>(() => segmentParser.Parse(input)))
             {
             }
@@ -468,7 +604,7 @@ Characters = characters;
 
                 return new DeferredOutput<OdataUri>(true, new OdataUri(finalSegments, ));
             }
-        }
+        }*/
 
         /*public class UriParserV2 : IDeferredParser<char, OdataUri, DeferredOdataUri>
         {

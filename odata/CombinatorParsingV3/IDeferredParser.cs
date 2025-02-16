@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices.Marshalling;
 using System.Text.RegularExpressions;
 
@@ -59,6 +60,15 @@ namespace CombinatorParsingV3
         public static DeferredOutput2<TToken> FromValue<TToken>(this IInput<TToken> input)
         {
             return new DeferredOutput2<TToken>(true, input);
+        }
+
+        public static Func<DeferredOutput2<TToken>> ToPromise<TToken, TParsed>(Func<IOutput<TToken, TParsed>> realize)
+        {
+            return () =>
+            {
+                var output = realize();
+                return new DeferredOutput2<TToken>(output.Success, output.Remainder);
+            };
         }
     }
 }
