@@ -4,7 +4,7 @@ namespace CombinatorParsingV3
 {
     public static partial class V3ParserPlayground
     {
-        public sealed class SlashDeferredParser : IDeferredParser<char, Slash, Slash>
+        /*public sealed class SlashDeferredParser : IDeferredParser<char, Slash, Slash>
         {
             private SlashDeferredParser()
             {
@@ -222,6 +222,6 @@ namespace CombinatorParsingV3
 
                 return new Output<char, OdataUri>(true, new OdataUri(segments, questionMark.Parsed, queryOptions), queryOptionOutput.Remainder);
             }
-        }
+        }*/
     }
 }

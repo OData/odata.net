@@ -2,7 +2,7 @@
 {
     public static class DeferredParse
     {
-        public sealed class PossibleChar : IDeferredAstNode<char>
+        /*public sealed class PossibleChar : IDeferredAstNode<char>
         {
             private readonly IParser<char, char> parser;
             private readonly IInput<char> input;
@@ -39,6 +39,6 @@
             {
                 return new PossibleChar(CombinatorParsingV3.Parse.Char(this.@char), input);
             }
-        }
+        }*/
     }
 }

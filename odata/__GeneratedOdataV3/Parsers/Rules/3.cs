@@ -47,7 +47,7 @@ return Output.Create(true, new __GeneratedOdataV3.CstNodes.Rules._odataRelativeU
                             _ʺx3Fʺ_batchOptionsParser.Parse2(output.Remainder) : 
                             new Output2<char, __GeneratedOdataV3.CstNodes.Inners._ʺx3Fʺ_batchOptions>(false, default, input)); //// TODO is there a way to keep passing the original input through?
 
-                    return new Output2<char, _odataRelativeUri._ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡>()
+                    ////return new Output2<char, _odataRelativeUri._ʺx24x62x61x74x63x68ʺ_꘡ʺx3Fʺ_batchOptions꘡>()
 
                     throw new System.NotImplementedException();
                 }

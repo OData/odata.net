@@ -3,6 +3,7 @@ using CombinatorParsingV1;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.Marshalling;
 using System.Text.RegularExpressions;
 
 namespace CombinatorParsingV3
@@ -44,6 +45,41 @@ namespace CombinatorParsingV3
         IInput<TToken> Next();
     }
 
+    public sealed class StringInput : IInput<char>
+    {
+        private readonly string input;
+        private readonly int index;
+
+        public StringInput(string input)
+            : this(input, 0)
+        {
+        }
+
+        private StringInput(string input, int index)
+        {
+            this.input = input;
+            this.index = index;
+        }
+
+        public char Current
+        {
+            get
+            {
+                return this.input[this.index];
+            }
+        }
+
+        public IInput<char> Next()
+        {
+            var newIndex = this.index + 1;
+            if (newIndex >= this.input.Length)
+            {
+                return null;
+            }
+
+            return new StringInput(this.input, newIndex);
+        }
+    }
 
 
     public static class RefEnumerablePlayground

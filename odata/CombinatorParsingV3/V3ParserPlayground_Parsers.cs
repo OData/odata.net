@@ -4,7 +4,7 @@
 
     public static partial class V3ParserPlayground
     {
-        public sealed class SlashParser : IParser<char, Slash>
+        /*public sealed class SlashParser : IParser<char, Slash>
         {
             private SlashParser()
             {
@@ -253,6 +253,6 @@
 
                 return new Output<char, OdataUri>(true, new OdataUri(segments, questionMark.Parsed, queryOptions), queryOptionOutput.Remainder);
             }
-        }
+        }*/
     }
 }

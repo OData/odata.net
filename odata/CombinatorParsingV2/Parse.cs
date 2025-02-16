@@ -68,7 +68,7 @@
             }
         }
 
-        public static IParser2<char, char> Char2(char @char)
+        /*public static IParser2<char, char> Char2(char @char)
         {
             return new CharParser2(@char);
         }
@@ -102,6 +102,6 @@
 
                 return new Output2<char, char>(false, default, input);
             }
-        }
+        }*/
     }
 }

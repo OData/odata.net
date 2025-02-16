@@ -651,7 +651,7 @@ public static QuestionMark Instance { get; } = new QuestionMark();*/
             {
                 get
                 {
-                    return new Many<QueryOption>(DeferredOutput2.ToPromise(this.QueryOptions.Realize), input => new QueryOption(input));
+                    return new Many<QueryOption>(DeferredOutput2.ToPromise(this.QuestionMark.Realize), input => new QueryOption(input));
                 }
             }
 
