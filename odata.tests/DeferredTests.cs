@@ -19,7 +19,7 @@ namespace odata.tests
 
             var input = new CombinatorParsingV3.StringInput(url);
 
-            var odataUri = new V3ParserPlayground.OdataUri(DeferredOutput2.FromValue(input));
+            var odataUri = new V3ParserPlayground.OdataUri<ParseMode.Deferred>(DeferredOutput2.FromValue(input));
 
             var realUri = odataUri.Realize();
 
@@ -33,7 +33,7 @@ namespace odata.tests
 
             var input = new CombinatorParsingV3.StringInput(url);
 
-            var odataUri = new V3ParserPlayground.OdataUri(DeferredOutput2.FromValue(input));
+            var odataUri = new V3ParserPlayground.OdataUri<ParseMode.Deferred>(DeferredOutput2.FromValue(input));
 
             var realUri = odataUri.Realize();
 
@@ -48,7 +48,7 @@ namespace odata.tests
             var indexes = new List<int>();
             var input = new InstrumentedStringInput(url, indexes);
 
-            var odataUri = new V3ParserPlayground.OdataUri(DeferredOutput2.FromValue(input));
+            var odataUri = new V3ParserPlayground.OdataUri<ParseMode.Deferred>(DeferredOutput2.FromValue(input));
 
             Assert.AreEqual(0, indexes.Count);
 
