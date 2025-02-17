@@ -586,7 +586,7 @@
                         true, 
                         new Segment<ParseMode.Realized>(
                             this.Slash.Realize().Parsed,
-                            this.Characters.Realize().Parsed as AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>), //// TODO this is the hackiest part of the whole parsemode thing; see if you can address it
+                            this.Characters.Realize().Parsed as AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>), //// TODO this is the hackiest part of the whole parsemode thing so far; see if you can address it
                         output.Remainder);
                 }
                 else
