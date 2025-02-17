@@ -7,7 +7,7 @@ namespace CombinatorParsingV3
 {
     public interface IDeferredParser<TToken, TRealizedAstNode, TDefferedAstNode> where TDefferedAstNode : IDeferredAstNode<TToken, TRealizedAstNode>
     {
-        TDefferedAstNode Parse(IInput<TToken> input);
+        TDefferedAstNode Parse(IInput<TToken> input); //// maybe this should returned a name delegate instead? it *is* just a kernel
     }
 
     public interface IDeferredAstNode<TToken, TRealizedAstNode>
