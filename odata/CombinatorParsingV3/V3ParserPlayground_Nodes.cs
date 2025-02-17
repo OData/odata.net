@@ -735,7 +735,7 @@ Characters = characters;
             }
         }
 
-        public sealed class OptionValue : IDeferredAstNode<char, OptionValue>
+        public sealed class OptionValue<TMode> : IDeferredAstNode<char, OptionValue<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Func<IDeferredOutput2<char>> future;
 
@@ -756,24 +756,31 @@ this.input = input;
                 this.future = future;
             }
 
-            public Many<AlphaNumeric> Characters
+            private OptionValue(Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized> characters)
+            {
+            }
+
+            public Many<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode> Characters
             {
                 get
                 {
-                    return new Many<AlphaNumeric>(this.future, input => new AlphaNumeric.A(input));
+                    return new Many<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>(this.future, input => new AlphaNumeric<TMode>.A(input));
                 }
             }
 
-            public IOutput<char, OptionValue> Realize()
+            public IOutput<char, OptionValue<ParseMode.Realized>> Realize()
             {
                 var output = this.Characters.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, OptionValue>(true, this, output.Remainder);
+                    return new Output<char, OptionValue<ParseMode.Realized>>(
+                        true,
+                        new OptionValue<ParseMode.Realized>(this.Characters.Realize().Parsed as Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>),
+                        output.Remainder);
                 }
                 else
                 {
-                    return new Output<char, OptionValue>(false, default, output.Remainder);
+                    return new Output<char, OptionValue<ParseMode.Realized>>(false, default, output.Remainder);
                 }
 
             }
