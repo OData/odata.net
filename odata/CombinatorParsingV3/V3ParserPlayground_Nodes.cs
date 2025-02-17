@@ -1027,7 +1027,7 @@ public static QuestionMark Instance { get; } = new QuestionMark();*/
 
             public OdataUri(Func<IDeferredOutput2<char>> future)
             {
-                //// TODO add the type parameter check
+                //// TODO add the type parameter check or hvae a static factory method that only returns the deferred type
 
                 this.future = future;
 
