@@ -11,10 +11,14 @@
 
   <ItemGroup>
     <None Remove="ClientWithoutTypeResolverTests\Clients\MismatchedClientModel\MismatchedClientModelCsdl.xml" />
+    <None Remove="PayloadValueConverterTests\Client\PayloadValueConverterCsdl.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="ClientWithoutTypeResolverTests\Clients\MismatchedClientModel\MismatchedClientModelCsdl.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PayloadValueConverterTests\Client\PayloadValueConverterCsdl.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
