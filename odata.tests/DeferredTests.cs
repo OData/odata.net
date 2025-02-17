@@ -21,9 +21,18 @@ namespace odata.tests
 
             var odataUri = new V3ParserPlayground.OdataUri<ParseMode.Deferred>(DeferredOutput2.FromValue(input));
 
+            var segOutput = odataUri.Segments.Realize();
+            if (segOutput.Success)
+            {
+                var segments = segOutput.Parsed;
+            }
+
             var realUri = odataUri.Realize();
 
             Assert.IsTrue(realUri.Success);
+            /*Assert.IsTrue(realUri.Parsed.Segments._1.Characters._1 is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+            Assert.IsTrue(realUri.Parsed.Segments._1.Characters._2 is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+            Assert.IsFalse(realUri.Parsed.Segments._1.Characters._3 is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);*/
         }
 
         [TestMethod]
