@@ -256,7 +256,7 @@
             {
                 get
                 {
-                    //// TODO you could actually just set this in the constructor...
+                    //// TODO i think you could actually just set this in the constructor...
                     return new OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>(DeferredOutput2.ToPromise(this._1.Realize), this.nodeFactory);
                 }
             }
