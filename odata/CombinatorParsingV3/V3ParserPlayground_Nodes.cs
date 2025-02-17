@@ -371,71 +371,71 @@
             }
         }
 
-        public sealed class SequenceNode<T> : IDeferredAstNode<char, SequenceNode<T>> where T : IDeferredAstNode<char, T>
-        {
-            private readonly Func<IDeferredOutput2<char>> future;
-            private readonly Func<Func<IDeferredOutput2<char>>, T> nodeFactory;
+        //public sealed class SequenceNode<T> : IDeferredAstNode<char, SequenceNode<T>> where T : IDeferredAstNode<char, T>
+        //{
+        //    private readonly Func<IDeferredOutput2<char>> future;
+        //    private readonly Func<Func<IDeferredOutput2<char>>, T> nodeFactory;
 
-            public SequenceNode(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, T> nodeFactory)
-            {
-                this.future = future;
-                this.nodeFactory = nodeFactory;
-            }
+        //    public SequenceNode(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, T> nodeFactory)
+        //    {
+        //        this.future = future;
+        //        this.nodeFactory = nodeFactory;
+        //    }
 
-            public T Value
-            {
-                get
-                {
-                    return this.nodeFactory(this.future);
-                    ////return new OptionalNode<T>(this.future, this.nodeFactory);
-                }
-            }
+        //    public T Value
+        //    {
+        //        get
+        //        {
+        //            return this.nodeFactory(this.future);
+        //            ////return new OptionalNode<T>(this.future, this.nodeFactory);
+        //        }
+        //    }
 
-            /*public OptionalNode<SequenceNode<T>> Next
-            {
-                get
-                {
-                    return new OptionalNode<SequenceNode<T>>(DeferredOutput2.ToPromise(this.Value.Realize), input => new SequenceNode<T>(input, this.nodeFactory));
-                }
-            }
+        //    /*public OptionalNode<SequenceNode<T>> Next
+        //    {
+        //        get
+        //        {
+        //            return new OptionalNode<SequenceNode<T>>(DeferredOutput2.ToPromise(this.Value.Realize), input => new SequenceNode<T>(input, this.nodeFactory));
+        //        }
+        //    }
 
-            public IOutput<char, SequenceNode<T>> Realize()
-            {
-                var output = this.Next.Realize();
-                if (output.Success)
-                {
-                    return new Output<char, SequenceNode<T>>(true, this, output.Remainder);
-                }
-                else
-                {
-                    // TODO this branch can't really get hit; is that ok?
-                    return new Output<char, SequenceNode<T>>(false, default, output.Remainder);
-                }
-            }*/
+        //    public IOutput<char, SequenceNode<T>> Realize()
+        //    {
+        //        var output = this.Next.Realize();
+        //        if (output.Success)
+        //        {
+        //            return new Output<char, SequenceNode<T>>(true, this, output.Remainder);
+        //        }
+        //        else
+        //        {
+        //            // TODO this branch can't really get hit; is that ok?
+        //            return new Output<char, SequenceNode<T>>(false, default, output.Remainder);
+        //        }
+        //    }*/
 
-            public OptionalNode<SequenceNode<T>> Next
-            {
-                get
-                {
-                    return new OptionalNode<SequenceNode<T>>(DeferredOutput2.ToPromise(this.Value.Realize), input => new SequenceNode<T>(input, this.nodeFactory));
-                    //// return new SequenceNode<T>(DeferredOutput2.ToPromise(this.Value.Realize), this.nodeFactory);
-                }
-            }
+        //    public OptionalNode<SequenceNode<T>> Next
+        //    {
+        //        get
+        //        {
+        //            return new OptionalNode<SequenceNode<T>>(DeferredOutput2.ToPromise(this.Value.Realize), input => new SequenceNode<T>(input, this.nodeFactory));
+        //            //// return new SequenceNode<T>(DeferredOutput2.ToPromise(this.Value.Realize), this.nodeFactory);
+        //        }
+        //    }
 
-            public IOutput<char, SequenceNode<T>> Realize()
-            {
-                var output = this.Next.Realize();
-                if (output.Success)
-                {
-                    return new Output<char, SequenceNode<T>>(true, this, output.Remainder);
-                }
-                else
-                {
-                    // TODO this branch can't really get hit; is that ok?
-                    return new Output<char, SequenceNode<T>>(false, default, output.Remainder);
-                }
-            }
-        }
+        //    public IOutput<char, SequenceNode<T>> Realize()
+        //    {
+        //        var output = this.Next.Realize();
+        //        if (output.Success)
+        //        {
+        //            return new Output<char, SequenceNode<T>>(true, this, output.Remainder);
+        //        }
+        //        else
+        //        {
+        //            // TODO this branch can't really get hit; is that ok?
+        //            return new Output<char, SequenceNode<T>>(false, default, output.Remainder);
+        //        }
+        //    }
+        //}
 
         public sealed class OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, RealNullable<TRealizedAstNode>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
@@ -645,7 +645,7 @@
             }
         }
 
-        public sealed class EqualsSign : IDeferredAstNode<char, EqualsSign>
+        public sealed class EqualsSign<TMode> : IDeferredAstNode<char, EqualsSign<ParseMode.Realized>> where TMode : ParseMode
         {
             ////private readonly IInput<char> input;
             private readonly Func<IDeferredOutput2<char>> future;
@@ -661,32 +661,38 @@
                 this.future = future;
             }
 
-            public IOutput<char, EqualsSign> Realize()
+            private EqualsSign()
+            {
+            }
+
+            public static EqualsSign<ParseMode.Realized> Realized { get; } = new EqualsSign<ParseMode.Realized>();
+
+            public IOutput<char, EqualsSign<ParseMode.Realized>> Realize()
             {
                 var output = this.future();
                 if (!output.Success)
                 {
-                    return new Output<char, EqualsSign>(false, default, output.Remainder);
+                    return new Output<char, EqualsSign<ParseMode.Realized>>(false, default, output.Remainder);
                 }
 
                 var input = output.Remainder;
                 if (input == null)
                 {
-                    return new Output<char, EqualsSign>(false, default, input);
+                    return new Output<char, EqualsSign<ParseMode.Realized>>(false, default, input);
                 }
 
                 if (input.Current == '=')
                 {
-                    return new Output<char, EqualsSign>(true, this, input.Next());
+                    return new Output<char, EqualsSign<ParseMode.Realized>>(true, EqualsSign<ParseMode.Realized>.Realized, input.Next());
                 }
                 else
                 {
-                    return new Output<char, EqualsSign>(false, default, input);
+                    return new Output<char, EqualsSign<ParseMode.Realized>>(false, default, input);
                 }
             }
         }
 
-        public sealed class OptionName : IDeferredAstNode<char, OptionName>
+        public sealed class OptionName<TMode> : IDeferredAstNode<char, OptionName<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Func<IDeferredOutput2<char>> future;
 
@@ -700,24 +706,31 @@ Characters = characters;
                 this.future = future;
             }
 
-            public AtLeastOne<AlphaNumeric> Characters
+            private OptionName(AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized> characters)
+            {
+            }
+
+            public AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode> Characters
             {
                 get
                 {
-                    return new AtLeastOne<AlphaNumeric>(future, input => new AlphaNumeric.A(input));
+                    return new AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>(future, input => new AlphaNumeric<TMode>.A(input));
                 }
             }
 
-            public IOutput<char, OptionName> Realize()
+            public IOutput<char, OptionName<ParseMode.Realized>> Realize()
             {
                 var output = this.Characters.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, OptionName>(true, this, output.Remainder);
+                    return new Output<char, OptionName<ParseMode.Realized>>(
+                        true, 
+                        new OptionName<ParseMode.Realized>(this.Characters.Realize().Parsed as AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>),
+                        output.Remainder);
                 }
                 else
                 {
-                    return new Output<char, OptionName>(false, default, output.Remainder);
+                    return new Output<char, OptionName<ParseMode.Realized>>(false, default, output.Remainder);
                 }
             }
         }
