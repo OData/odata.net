@@ -890,7 +890,7 @@ public static QuestionMark Instance { get; } = new QuestionMark();*/
             }
         }
 
-        public sealed class OdataUri : IDeferredAstNode<char, OdataUri>
+        public sealed class OdataUri<TMode> : IDeferredAstNode<char, OdataUri<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Func<IDeferredOutput2<char>> future;
 
@@ -899,40 +899,53 @@ public static QuestionMark Instance { get; } = new QuestionMark();*/
                 this.future = future;
             }
 
-            public AtLeastOne<Segment> Segments //// TODO implement "at least one"
+            private OdataUri(
+                AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, ParseMode.Realized> segments,
+                QuestionMark<ParseMode.Realized> questionMark,
+                Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, ParseMode.Realized> queryOptions)
+            {
+            }
+
+            public AtLeastOne<Segment<TMode>, Segment<ParseMode.Realized>, TMode> Segments //// TODO implement "at least one"
             {
                 get
                 {
-                    return new AtLeastOne<Segment>(this.future, input => new Segment(input));
+                    return new AtLeastOne<Segment<TMode>, Segment<ParseMode.Realized>, TMode>(this.future, input => new Segment<TMode>(input));
                 }
             }
 
-            public QuestionMark QuestionMark
+            public QuestionMark<TMode> QuestionMark
             {
                 get
                 {
-                    return new QuestionMark(DeferredOutput2.ToPromise(this.Segments.Realize));
+                    return new QuestionMark<TMode>(DeferredOutput2.ToPromise(this.Segments.Realize));
                 }
             }
 
-            public Many<QueryOption> QueryOptions
+            public Many<QueryOption<TMode>, QueryOption<ParseMode.Realized>, TMode> QueryOptions
             {
                 get
                 {
-                    return new Many<QueryOption>(DeferredOutput2.ToPromise(this.QuestionMark.Realize), input => new QueryOption(input));
+                    return new Many<QueryOption<TMode>, QueryOption<ParseMode.Realized>, TMode>(DeferredOutput2.ToPromise(this.QuestionMark.Realize), input => new QueryOption<TMode>(input));
                 }
             }
 
-            public IOutput<char, OdataUri> Realize()
+            public IOutput<char, OdataUri<ParseMode.Realized>> Realize()
             {
                 var output = this.QueryOptions.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, OdataUri>(true, this, output.Remainder);
+                    return new Output<char, OdataUri<ParseMode.Realized>>(
+                        true,
+                        new OdataUri<ParseMode.Realized>(
+                            this.Segments.Realize().Parsed as AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, ParseMode.Realized>,
+                            this.QuestionMark.Realize().Parsed,
+                            this.QueryOptions.Realize().Parsed as Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, ParseMode.Realized>),
+                        output.Remainder);
                 }
                 else
                 {
-                    return new Output<char, OdataUri>(false, default, output.Remainder);
+                    return new Output<char, OdataUri<ParseMode.Realized>>(false, default, output.Remainder);
                 }
             }
         }
