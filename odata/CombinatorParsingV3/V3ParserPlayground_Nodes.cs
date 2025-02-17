@@ -278,8 +278,8 @@
                         true,
                         new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
                             this._1.Realize().Parsed,
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._2.Realize().Parsed.Value),
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._3.Realize().Parsed.Value)),
+                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._2.Realize().Parsed),
+                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._3.Realize().Parsed)),
                         output.Remainder);
                 }
                 else
@@ -358,9 +358,9 @@
                     return new Output<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true, 
                         new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._1.Realize().Parsed.Value),
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._2.Realize().Parsed.Value),
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._3.Realize().Parsed.Value)),
+                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._1.Realize().Parsed),
+                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._2.Realize().Parsed),
+                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._3.Realize().Parsed)),
                         output.Remainder);
                 }
                 else
@@ -448,7 +448,7 @@
                 this.nodeFactory = nodeFactory;
             }
 
-            internal OptionalNode(TRealizedAstNode value)
+            internal OptionalNode(RealNullable<TRealizedAstNode> value)
             {
                 //// TODO only let this be called if `TMode` is `Realized`
             }
