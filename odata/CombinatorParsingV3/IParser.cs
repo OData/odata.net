@@ -42,7 +42,7 @@ namespace CombinatorParsingV3
     {
         TToken Current { get; }
 
-        IInput<TToken> Next();
+        IInput<TToken> Next(); //// TODO oops, this should be nullable
     }
 
     public sealed class StringInput : IInput<char>
