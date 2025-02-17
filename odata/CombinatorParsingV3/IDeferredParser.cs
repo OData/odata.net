@@ -72,4 +72,25 @@ namespace CombinatorParsingV3
             };
         }
     }
+
+    public abstract class ParseMode
+    {
+        private ParseMode()
+        {
+        }
+
+        public abstract class Deferred : ParseMode
+        {
+            private Deferred()
+            {
+            }
+        }
+
+        public abstract class Realized : ParseMode
+        {
+            private Realized()
+            {
+            }
+        }
+    }
 }
