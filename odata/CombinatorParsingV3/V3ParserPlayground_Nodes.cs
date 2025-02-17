@@ -848,7 +848,7 @@ this.input = input;
             }
         }
 
-        public sealed class QuestionMark : IDeferredAstNode<char, QuestionMark>
+        public sealed class QuestionMark<TMode> : IDeferredAstNode<char, QuestionMark<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Func<IDeferredOutput2<char>> future;
 
@@ -863,23 +863,29 @@ public static QuestionMark Instance { get; } = new QuestionMark();*/
                 this.future = future;
             }
 
-            public IOutput<char, QuestionMark> Realize()
+            private QuestionMark()
+            {
+            }
+
+            public static QuestionMark<ParseMode.Realized> Realized { get; } = new QuestionMark<ParseMode.Realized>();
+
+            public IOutput<char, QuestionMark<ParseMode.Realized>> Realize()
             {
                 var output = this.future();
                 if (!output.Success)
                 {
-                    return new Output<char, QuestionMark>(false, default, output.Remainder);
+                    return new Output<char, QuestionMark<ParseMode.Realized>>(false, default, output.Remainder);
                 }
 
                 var input = output.Remainder;
 
                 if (input.Current == '?')
                 {
-                    return new Output<char, QuestionMark>(true, this, input.Next());
+                    return new Output<char, QuestionMark<ParseMode.Realized>>(true, QuestionMark<TMode>.Realized, input.Next());
                 }
                 else
                 {
-                    return new Output<char, QuestionMark>(false, default, input);
+                    return new Output<char, QuestionMark<ParseMode.Realized>>(false, default, input);
                 }
             }
         }
