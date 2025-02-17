@@ -65,6 +65,7 @@ namespace odata.tests
             Assert.AreEqual(9, indexes.Max());
 
             //// TODO give each of the nodes a generic type parameter that is a DU of "deferred" and "realized" and have each of the "realize" methods return with the generic of "deferred"
+            //// TODO write a transcriber just to make sure things still make sense from that perspective
         }
 
         private sealed class InstrumentedStringInput : IInput<char>
