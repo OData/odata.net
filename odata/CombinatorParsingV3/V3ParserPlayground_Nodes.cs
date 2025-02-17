@@ -546,7 +546,7 @@
                 if (output.Success)
                 {
                     this.cachedOutput = new Output<char, RealNullable<TRealizedAstNode>>(true, new RealNullable<TRealizedAstNode>(output.Parsed), output.Remainder);
-                    return this.cachedOutput
+                    return this.cachedOutput;
                 }
                 else
                 {
