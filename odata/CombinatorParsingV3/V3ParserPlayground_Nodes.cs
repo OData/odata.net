@@ -786,7 +786,7 @@ this.input = input;
             }
         }
 
-        public sealed class QueryOption : IDeferredAstNode<char, QueryOption>
+        public sealed class QueryOption<TMode> : IDeferredAstNode<char, QueryOption<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Func<IDeferredOutput2<char>> future;
 
@@ -802,40 +802,48 @@ this.input = input;
                 OptionValue = optionValue;
             }*/
 
-            public OptionName Name
+            private QueryOption(OptionName<ParseMode.Realized> name, EqualsSign<ParseMode.Realized> equalsSign, OptionValue<ParseMode.Realized> optionValue)
+            {
+            }
+
+            public OptionName<TMode> Name
             {
                 get
                 {
-                    return new OptionName(this.future);
+                    return new OptionName<TMode>(this.future);
                 }
             }
 
-            public EqualsSign EqualsSign
+            public EqualsSign<TMode> EqualsSign
             {
                 get
                 {
-                    return new EqualsSign(DeferredOutput2.ToPromise(this.Name.Realize));
+                    return new EqualsSign<TMode>(DeferredOutput2.ToPromise(this.Name.Realize));
                 }
             }
 
-            public OptionValue OptionValue
+            public OptionValue<TMode> OptionValue
             {
                 get
                 {
-                    return new OptionValue(DeferredOutput2.ToPromise(this.EqualsSign.Realize));
+                    return new OptionValue<TMode>(DeferredOutput2.ToPromise(this.EqualsSign.Realize));
                 }
             }
 
-            public IOutput<char, QueryOption> Realize()
+            public IOutput<char, QueryOption<ParseMode.Realized>> Realize()
             {
                 var output = this.OptionValue.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, QueryOption>(true, this, output.Remainder);
+                    return new Output<char, QueryOption<ParseMode.Realized>>(
+                        
+                        true, 
+                        new QueryOption<ParseMode.Realized>(this.Name.Realize().Parsed, this.EqualsSign.Realize().Parsed, this.OptionValue.Realize().Parsed),
+                        output.Remainder);
                 }
                 else
                 {
-                    return new Output<char, QueryOption>(false, default, output.Remainder);
+                    return new Output<char, QueryOption<ParseMode.Realized>>(false, default, output.Remainder);
                 }
             }
         }
