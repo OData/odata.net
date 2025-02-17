@@ -289,16 +289,20 @@
             }
         }
 
-        public sealed class Many<T> : IDeferredAstNode<char, Many<T>> where T : IDeferredAstNode<char, T>
+        public sealed class Many<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
-            private readonly Func<Func<IDeferredOutput2<char>>, T> nodeFactory;
+            private readonly Func<Func<IDeferredOutput2<char>>, TDeferredAstNode> nodeFactory;
 
             private readonly Func<IDeferredOutput2<char>> future;
 
-            public Many(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, T> nodeFactory)
+            public Many(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, TDeferredAstNode> nodeFactory)
             {
                 this.future = future; //// TODO this should be of type `future`
                 this.nodeFactory = nodeFactory;
+            }
+
+            private Many(OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> _1, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> _2, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> _3)
+            {
             }
 
             /*public SequenceNode<T> Element
@@ -322,41 +326,47 @@
                 }
             }*/
 
-            public OptionalNode<T> _1
+            public OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> _1
             {
                 get
                 {
-                    return new OptionalNode<T>(this.future, this.nodeFactory);
+                    return new OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>(this.future, this.nodeFactory);
                 }
             }
 
-            public OptionalNode<T> _2
+            public OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> _2
             {
                 get
                 {
-                    return new OptionalNode<T>(DeferredOutput2.ToPromise(this._1.Realize), this.nodeFactory);
+                    return new OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>(DeferredOutput2.ToPromise(this._1.Realize), this.nodeFactory);
                 }
             }
 
-            public OptionalNode<T> _3
+            public OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> _3
             {
                 get
                 {
-                    return new OptionalNode<T>(DeferredOutput2.ToPromise(this._2.Realize), this.nodeFactory);
+                    return new OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>(DeferredOutput2.ToPromise(this._2.Realize), this.nodeFactory);
                 }
             }
 
-            public IOutput<char, Many<T>> Realize()
+            public IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
             {
                 var output = this._3.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, Many<T>>(true, this, output.Remainder);
+                    return new Output<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                        true, 
+                        new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._1.Realize().Parsed.Value),
+                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._2.Realize().Parsed.Value),
+                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._3.Realize().Parsed.Value)),
+                        output.Remainder);
                 }
                 else
                 {
                     // if the optional failed to parse, it means that its dependencies failed to parse
-                    return new Output<char, Many<T>>(false, default, output.Remainder);
+                    return new Output<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(false, default, output.Remainder);
                 }
             }
         }
