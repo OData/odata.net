@@ -1027,6 +1027,8 @@ public static QuestionMark Instance { get; } = new QuestionMark();*/
 
             public OdataUri(Func<IDeferredOutput2<char>> future)
             {
+                //// TODO add the type parameter check
+
                 this.future = future;
 
                 this.cachedOutput = null;
