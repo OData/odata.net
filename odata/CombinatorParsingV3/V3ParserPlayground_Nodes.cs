@@ -1073,7 +1073,7 @@ public static QuestionMark Instance { get; } = new QuestionMark();*/
                 var output = this.QueryOptions.Realize();
                 if (output.Success)
                 {
-                    this.cachedOutput =new Output<char, OdataUri<ParseMode.Realized>>(
+                    this.cachedOutput = new Output<char, OdataUri<ParseMode.Realized>>(
                         true,
                         new OdataUri<ParseMode.Realized>(
                             this.Segments.Realize().Parsed as AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, ParseMode.Realized>,
