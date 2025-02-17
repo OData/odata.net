@@ -546,7 +546,9 @@
                 this.deferred = false;
             }*/
 
-            private Segment(Slash<ParseMode.Realized> slash)
+            private Segment(Slash<ParseMode.Realized> slash, AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized> characters)
+            {
+            }
 
             public Slash<TMode> Slash
             {
@@ -556,11 +558,11 @@
                 }
             }
 
-            public AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>> Characters
+            public AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode> Characters
             {
                 get
                 {
-                    return new AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>>(
+                    return new AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>(
                         DeferredOutput2.ToPromise(this.Slash.Realize),
                         input => new AlphaNumeric<TMode>.A(input)); //// TODO what would a discriminated union actually look like here?
 
@@ -580,7 +582,12 @@
                 var output = this.Characters.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, Segment<ParseMode.Realized>>(true, this, output.Remainder);
+                    return new Output<char, Segment<ParseMode.Realized>>(
+                        true, 
+                        new Segment<ParseMode.Realized>(
+                            this.Slash.Realize().Parsed,
+                            this.Characters.Realize().Parsed as AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>), //// TODO this is the hackiest part of the whole parsemode thing; see if you can address it
+                        output.Remainder);
                 }
                 else
                 {
