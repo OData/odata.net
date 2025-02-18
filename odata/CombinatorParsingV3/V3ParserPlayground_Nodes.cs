@@ -269,7 +269,7 @@
                 }
             }*/
 
-            private AtLeastOne(TRealizedAstNode _1, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> _2, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> _3)
+            private AtLeastOne(TRealizedAstNode _1, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> node)
             {
             }
             
@@ -281,7 +281,7 @@
                 }
             }
 
-            public OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> _2
+            /*public OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> _2
             {
                 get
                 {
@@ -296,6 +296,14 @@
                 {
                     return new OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>(DeferredOutput2.ToPromise(this._2.Realize), this.nodeFactory);
                 }
+            }*/
+
+            public ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> Node
+            {
+                get
+                {
+                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(DeferredOutput2.ToPromise(this._1.Realize), this.nodeFactory);
+                }
             }
 
             public IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
@@ -305,15 +313,14 @@
                     return this.cachedOutput;
                 }
 
-                var output = this._3.Realize();
+                var output = this.Node.Realize();
                 if (output.Success)
                 {
                     this.cachedOutput = new Output<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
                             this._1.Realize().Parsed,
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._2.Realize().Parsed),
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._3.Realize().Parsed)),
+                            output.Parsed),
                         output.Remainder);
                     return this.cachedOutput;
                 }
