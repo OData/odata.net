@@ -21,7 +21,7 @@
       inputs:
         ConnectedServiceName: 'ESRP CodeSigning - OData'
         AppRegistrationClientId: 'ce6e119c-a8c2-4744-9699-cd5389102d0d'
-        AppRegistationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
+        AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
         AuthAKVName: ODataESRPKeyVault
         AuthCertName: ODataCodeSignAuth-AutoRotate
         AuthSignCertName: ODataCodeSigningCert2024
@@ -157,7 +157,7 @@
       inputs:
         ConnectedServiceName: 'ESRP CodeSigning - OData'
         AppRegistrationClientId: 'ce6e119c-a8c2-4744-9699-cd5389102d0d'
-        AppRegistationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
+        AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
         AuthAKVName: ODataESRPKeyVault
         AuthCertName: ODataCodeSignAuth-AutoRotate
         AuthSignCertName: ODataCodeSigningCert2024
