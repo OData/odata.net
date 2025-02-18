@@ -341,9 +341,13 @@
                 this.cachedOutput = null;
             }
 
-            private Many(OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> _1, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> _2, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> _3)
+            private Many(ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> node)
             {
             }
+
+            /*private Many(OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> _1, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> _2, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> _3)
+            {
+            }*/
 
             /*public SequenceNode<T> Element
             {
@@ -366,7 +370,7 @@
                 }
             }*/
 
-            public OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> _1
+            /*public OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> _1
             {
                 get
                 {
@@ -388,6 +392,14 @@
                 {
                     return new OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>(DeferredOutput2.ToPromise(this._2.Realize), this.nodeFactory);
                 }
+            }*/
+
+            public ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> Node
+            {
+                get
+                {
+                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(this.future, this.nodeFactory);
+                }
             }
 
             public IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
@@ -397,15 +409,13 @@
                     return this.cachedOutput;
                 }
 
-                var output = this._3.Realize();
+                var output = this.Node.Realize();
                 if (output.Success)
                 {
                     this.cachedOutput = new Output<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true, 
                         new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._1.Realize().Parsed),
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._2.Realize().Parsed),
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(this._3.Realize().Parsed)),
+                            output.Parsed),
                         output.Remainder);
                     return this.cachedOutput;
                 }
