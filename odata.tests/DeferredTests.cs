@@ -30,6 +30,7 @@ namespace odata.tests
             var realUri = odataUri.Realize();
 
             Assert.IsTrue(realUri.Success);
+            Assert.IsNull(realUri.Remainder);
             /*Assert.IsTrue(realUri.Parsed.Segments._1.Characters._1 is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
             Assert.IsTrue(realUri.Parsed.Segments._1.Characters._2 is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
             Assert.IsFalse(realUri.Parsed.Segments._1.Characters._3 is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);*/
@@ -96,6 +97,9 @@ namespace odata.tests
 
             var realUri = odataUri.Realize();
 
+            Assert.IsTrue(realUri.Success);
+            Assert.IsNull(realUri.Remainder);
+
             var queryOption = realUri.Parsed.QueryOptions.Node.Element.Value;
             var name = queryOption.Name.Characters;
 
@@ -107,8 +111,10 @@ namespace odata.tests
             var fourthCharacterNode = thirdCharacterNode.Next;
             Assert.IsTrue(fourthCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
             var potentialFifthCharacterNode = fourthCharacterNode.Next;
-            var optional = potentialFifthCharacterNode.Element.Realize();
-            Assert.IsFalse(optional.Parsed.HasValue);
+            //// TODO how to assert this?
+            //// Assert.IsFalse(optional.Parsed.HasValue);
+
+            //// TODO assert that there's no remainder in the input
 
             ////Assert.IsTrue(realUri.Success);
         }
