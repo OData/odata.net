@@ -79,6 +79,40 @@ namespace odata.tests
             //// TODO clean up some of this new deferred code
         }
 
+        [TestMethod]
+        public void Test3()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAAB";
+
+            var input = new CombinatorParsingV3.StringInput(url);
+
+            var odataUri = new V3ParserPlayground.OdataUri<ParseMode.Deferred>(DeferredOutput2.FromValue(input));
+
+            var segOutput = odataUri.Segments.Realize();
+            if (segOutput.Success)
+            {
+                var segments = segOutput.Parsed;
+            }
+
+            var realUri = odataUri.Realize();
+
+            var queryOption = realUri.Parsed.QueryOptions.Node.Element.Value;
+            var name = queryOption.Name.Characters;
+
+            Assert.IsTrue(name._1 is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+            var secondCharacterNode = name.Node;
+            Assert.IsTrue(secondCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+            var thirdCharacterNode = secondCharacterNode.Next;
+            Assert.IsTrue(thirdCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+            var fourthCharacterNode = thirdCharacterNode.Next;
+            Assert.IsTrue(fourthCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+            var potentialFifthCharacterNode = fourthCharacterNode.Next;
+            var optional = potentialFifthCharacterNode.Element.Realize();
+            Assert.IsFalse(optional.Parsed.HasValue);
+
+            ////Assert.IsTrue(realUri.Success);
+        }
+
         private sealed class InstrumentedStringInput : IInput<char>
         {
             private readonly string input;
