@@ -589,6 +589,8 @@
             private readonly Func<IDeferredOutput2<char>> future;
             private readonly Func<Func<IDeferredOutput2<char>>, TDeferredAstNode> nodeFactory;
 
+            private readonly RealNullable<TRealizedAstNode>? value;
+
             private Output<char, RealNullable<TRealizedAstNode>>? cachedOutput;
 
             public OptionalNode(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, TDeferredAstNode> nodeFactory)
@@ -601,6 +603,7 @@
 
             internal OptionalNode(RealNullable<TRealizedAstNode> value)
             {
+                this.value = value;
                 //// TODO only let this be called if `TMode` is `Realized`
             }
 
@@ -632,6 +635,12 @@
             {
                 if (this.cachedOutput != null)
                 {
+                    return this.cachedOutput;
+                }
+
+                if (this.value != null)
+                {
+                    this.cachedOutput = new Output<char, RealNullable<TRealizedAstNode>>(true, this.value.Value, null);
                     return this.cachedOutput;
                 }
 
