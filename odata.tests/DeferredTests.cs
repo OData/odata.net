@@ -99,7 +99,8 @@ namespace odata.tests
             var realUri = odataUri.Realize();
 
             Assert.IsTrue(realUri.Success);
-            ////Assert.IsNull(realUri.Remainder);
+            // not a successful parse: //// TODO we should really have a convenience method for this
+            Assert.IsNotNull(realUri.Remainder);
 
             var queryOption = realUri.Parsed.QueryOptions.Node.Element.Value;
             var name = queryOption.Name.Characters;
