@@ -22,8 +22,8 @@
   <PropertyGroup>
     <VersionFullSemantic>$(VersionMajor).$(VersionMinor).$(VersionBuildNumber)</VersionFullSemantic>
     <VersionFull>$(VersionFullSemantic).$(VersionRevision)</VersionFull>
-	<VersionFullNumber>$(VersionMajor)$(VersionMinor)$(VersionBuildNumber)</VersionFullNumber>
-	<VersionFullNumberRelease>odatalib-$(VersionMajor)x#odatalib-$(VersionFullNumber)-release</VersionFullNumberRelease>	
+    <VersionFullNumber>$(VersionMajor)$(VersionMinor)$(VersionBuildNumber)</VersionFullNumber>
+    <VersionFullNumberRelease>odatalib-$(VersionMajor)x#$(VersionFullNumber)</VersionFullNumberRelease> <!-- e.g., odatalib-8x#802 -->
   </PropertyGroup>
 
   <!-- For ADO.NET Provider -->
