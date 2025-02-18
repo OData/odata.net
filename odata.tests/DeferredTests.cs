@@ -112,6 +112,8 @@ namespace odata.tests
             Assert.IsTrue(thirdCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
             var fourthCharacterNode = thirdCharacterNode.Next;
             Assert.IsTrue(fourthCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+
+            //// TODO get these assertions working
             var potentialFifthCharacterNode = fourthCharacterNode.Next;
             var realizedfifth = potentialFifthCharacterNode.Element.Realize();
             Assert.IsTrue(realizedfifth.Success);
@@ -121,16 +123,6 @@ namespace odata.tests
             var realizedsixth = potentialSixthCharacterNode.Element.Realize();
             Assert.IsTrue(realizedsixth.Success);
             Assert.IsFalse(realizedsixth.Parsed.HasValue);
-
-
-            //// TODO this should not be true...
-            //// Assert.IsTrue(potentialFifthCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
-            //// TODO how to assert this?
-            //// Assert.IsFalse(optional.Parsed.HasValue);
-
-            //// TODO assert that there's no remainder in the input
-
-            ////Assert.IsTrue(realUri.Success);
         }
 
         [TestMethod]
