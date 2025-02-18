@@ -418,6 +418,89 @@
             }
         }
 
+        public sealed class ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
+        {
+            private readonly Func<IDeferredOutput2<char>> future;
+            private readonly Func<Func<IDeferredOutput2<char>>, TDeferredAstNode> nodeFactory;
+
+            private Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> cachedOutput;
+
+            public ManyNode(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, TDeferredAstNode> nodeFactory)
+            {
+                this.future = future;
+                this.nodeFactory = nodeFactory;
+
+                this.cachedOutput = null;
+            }
+
+            private static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetTerminalRealizedNode()
+            {
+                return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(new RealNullable<TRealizedAstNode>()), GetTerminalRealizedNode);
+            }
+
+            private ManyNode(OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> element, Func<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next)
+            {
+            }
+
+            public OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> Element
+            {
+                get
+                {
+                    return new OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>(this.future, this.nodeFactory);
+                }
+            }
+
+            /// <summary>
+            /// TODO realize should only be called on this if <see cref="Element"/> has a value
+            /// </summary>
+            public ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> Next
+            {
+                get
+                {
+                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(DeferredOutput2.ToPromise(this.Element.Realize), this.nodeFactory);
+                }
+            }
+
+            public IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
+            {
+                if (this.cachedOutput != null)
+                {
+                    return this.cachedOutput;
+                }
+
+                var realizedElement = this.Element.Realize();
+                if (!realizedElement.Success)
+                {
+                    // this means that the nullable parsing *didn't succeed*, which only happens if its dependencies couldn't be parsed; this means that we also can't succeed in parsing
+                    this.cachedOutput = new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(false, default, realizedElement.Remainder);
+                    return this.cachedOutput;
+                }
+
+                if (realizedElement.Parsed.HasValue)
+                {
+                    var realizedNext = this.Next.Realize();
+                    // *this* instance is the "dependency" for `next`, so we can only have success cases
+                    this.cachedOutput = new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                        true,
+                        new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(realizedElement.Parsed),
+                            () => realizedNext.Parsed),
+                        realizedNext.Remainder);
+                    return this.cachedOutput;
+                }
+                else
+                {
+                    this.cachedOutput = new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                        true,
+                        new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(realizedElement.Parsed),
+                            GetTerminalRealizedNode),
+                        realizedElement.Remainder);
+                    return this.cachedOutput;
+                }
+            }
+        }
+
         //public sealed class SequenceNode<T> : IDeferredAstNode<char, SequenceNode<T>> where T : IDeferredAstNode<char, T>
         //{
         //    private readonly Func<IDeferredOutput2<char>> future;
