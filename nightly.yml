@@ -1,5 +1,3 @@
-  variables:
-    - group: OData-ESRP-CodeSigning
 
   steps:
     - template: buildandtest.yml
