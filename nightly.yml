@@ -20,7 +20,7 @@
         ConnectedServiceName: $(ODataEsrpConnectionServiceName)
         AppRegistrationClientId: '$(ODataEsrpAppRegistrationClientId)'
         AppRegistrationTenantId: '$(ODataEsrpAppRegistrationTenantId)'
-        AuthAKVName: $(ODataEsrpAuthKVName)
+        AuthAKVName: $(ODataEsrpAuthAKVName)
         AuthCertName: $(ODataEsrpAuthCertName)
         AuthSignCertName: $(ODataEsrpAuthSignCertName)
         ServiceEndpointUrl: '$(ODataEsrpServiceEndpointUrl)'
@@ -156,7 +156,7 @@
         ConnectedServiceName: $(ODataEsrpConnectionServiceName)
         AppRegistrationClientId: '$(ODataEsrpAppRegistrationClientId)'
         AppRegistrationTenantId: '$(ODataEsrpAppRegistrationTenantId)'
-        AuthAKVName: $(ODataEsrpAuthKVName)
+        AuthAKVName: $(ODataEsrpAuthAKVName)
         AuthCertName: $(ODataEsrpAuthCertName)
         AuthSignCertName: $(ODataEsrpAuthSignCertName)
         ServiceEndpointUrl: '$(ODataEsrpServiceEndpointUrl)'
