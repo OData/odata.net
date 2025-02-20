@@ -1,3 +1,6 @@
+  variables:
+    - group: OData-ESRP-CodeSigning
+
   steps:
     - template: buildandtest.yml
 
@@ -19,13 +22,13 @@
     - task: EsrpCodeSigning@5
       displayName: 'ESRP CodeSign - OData'
       inputs:
-        ConnectedServiceName: 'ESRP CodeSigning - OData'
-        AppRegistrationClientId: 'ce6e119c-a8c2-4744-9699-cd5389102d0d'
-        AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
-        AuthAKVName: ODataESRPKeyVault
-        AuthCertName: ODataCodeSignAuth-AutoRotate
-        AuthSignCertName: ODataCodeSigningCert2024
-        ServiceEndpointUrl: 'https://api.esrp.microsoft.com/api/v2'
+        ConnectedServiceName: $(ODataEsrpConnectionServiceName)
+        AppRegistrationClientId: '$(ODataEsrpAppRegistrationClientId)'
+        AppRegistrationTenantId: '$(ODataEsrpAppRegistrationTenantId)'
+        AuthAKVName: $(ODataEsrpAuthKVName)
+        AuthCertName: $(ODataEsrpAuthCertName)
+        AuthSignCertName: $(ODataEsrpAuthSignCertName)
+        ServiceEndpointUrl: '$(ODataEsrpServiceEndpointUrl)'
         FolderPath: '$(Build.SourcesDirectory)\src'
         Pattern: 'Microsoft.Spatial.dll,Microsoft.OData.Edm.dll,Microsoft.OData.Core.dll,Microsoft.OData.Client.dll'
         signConfigType: inlineSignParams
@@ -155,13 +158,13 @@
     - task: EsrpCodeSigning@5
       displayName: 'ESRP CodeSigning Nuget Packages'
       inputs:
-        ConnectedServiceName: 'ESRP CodeSigning - OData'
-        AppRegistrationClientId: 'ce6e119c-a8c2-4744-9699-cd5389102d0d'
-        AppRegistrationTenantId: '33e01921-4d64-4f8c-a055-5bdaffd5e33d'
-        AuthAKVName: ODataESRPKeyVault
-        AuthCertName: ODataCodeSignAuth-AutoRotate
-        AuthSignCertName: ODataCodeSigningCert2024
-        ServiceEndpointUrl: 'https://api.esrp.microsoft.com/api/v2'
+        ConnectedServiceName: $(ODataEsrpConnectionServiceName)
+        AppRegistrationClientId: '$(ODataEsrpAppRegistrationClientId)'
+        AppRegistrationTenantId: '$(ODataEsrpAppRegistrationTenantId)'
+        AuthAKVName: $(ODataEsrpAuthKVName)
+        AuthCertName: $(ODataEsrpAuthCertName)
+        AuthSignCertName: $(ODataEsrpAuthSignCertName)
+        ServiceEndpointUrl: '$(ODataEsrpServiceEndpointUrl)'
         FolderPath: '$(Build.ArtifactStagingDirectory)\$(nugetArtifactsDir)'
         Pattern: '*.nupkg'
         signConfigType: inlineSignParams
