@@ -574,7 +574,8 @@
                 this.future = future;
                 this.nodeFactory = nodeFactory;
 
-                this.__1 = this.future.Lift(this.nodeFactory);
+                //// TODO you are here
+                this.__1 = 
 
                 this.cachedOutput = new Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(() => this.RealizeImpl());
             }
