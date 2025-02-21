@@ -431,55 +431,56 @@
                     }
                 }
             }
-
-            //// TODO probably other options
         }
 
         public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>> where TMode : ParseMode
         {
-            private readonly Future<IDeferredOutput<char>> future;
+            private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
 
-            private Output<char, Slash<ParseMode.Realized>>? cachedOutput;
+            private Future<IOutput<char, Slash<ParseMode.Realized>>> cachedOutput;
 
-            public Slash(Future<IDeferredOutput<char>> future) //// TODO should this be called "promise"?
+            public Slash(Future<IDeferredOutput<char>> previouslyParsedOutput)
             {
-                this.future = future;
+                if (typeof(TMode) != typeof(ParseMode.Deferred))
+                {
+                    throw new ArgumentException("TODO");
+                }
 
-                this.cachedOutput = null;
+                this.previouslyParsedOutput = previouslyParsedOutput;
+
+                this.cachedOutput = new Future<IOutput<char, Slash<ParseMode.Realized>>>(() => this.RealizeImpl());
             }
 
-            private Slash()
+            private Slash(Future<IOutput<char, Slash<ParseMode.Realized>>> output)
             {
-                //// TODO actually assign fields to make the `realize` method not throw on subsequent calls
+                this.cachedOutput = output;
             }
-
-            public static Slash<ParseMode.Realized> Realized { get; } = new Slash<ParseMode.Realized>(); //// TODO it's not a great experience to have to call `Slash<TMode>.Realized`; the `tmode` part never matters
 
             public IOutput<char, Slash<ParseMode.Realized>> Realize()
             {
-                if (this.cachedOutput != null)
-                {
-                    return this.cachedOutput;
-                }
+                return cachedOutput.Value;
+            }
 
-                var output = this.future.Value;
+            private IOutput<char, Slash<ParseMode.Realized>> RealizeImpl()
+            {
+                var output = this.previouslyParsedOutput.Value;
                 if (!output.Success)
                 {
-                    this.cachedOutput = new Output<char, Slash<ParseMode.Realized>>(false, default, output.Remainder);
-                    return this.cachedOutput;
+                    return new Output<char, Slash<ParseMode.Realized>>(false, default, output.Remainder);
                 }
 
                 var input = output.Remainder;
 
                 if (input.Current == '/')
                 {
-                    this.cachedOutput = new Output<char, Slash<ParseMode.Realized>>(true, Slash<TMode>.Realized, input.Next());
-                    return this.cachedOutput;
+                    return new Output<char, Slash<ParseMode.Realized>>(
+                        true,
+                        new Slash<ParseMode.Realized>(this.cachedOutput),
+                        input.Next());
                 }
                 else
                 {
-                    this.cachedOutput = new Output<char, Slash<ParseMode.Realized>>(false, default, input);
-                    return this.cachedOutput;
+                    return new Output<char, Slash<ParseMode.Realized>>(false, default, input);
                 }
             }
         }
