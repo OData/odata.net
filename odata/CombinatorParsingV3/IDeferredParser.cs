@@ -78,7 +78,7 @@ public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realiz
         {
             private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
 
-            private Future<IOutput<char, Slash<ParseMode.Realized>>> cachedOutput;
+            private readonly Future<IOutput<char, Slash<ParseMode.Realized>>> cachedOutput;
 
             public Slash(Future<IDeferredOutput<char>> previouslyParsedOutput)
             {

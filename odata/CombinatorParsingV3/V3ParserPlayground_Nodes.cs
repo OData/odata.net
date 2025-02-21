@@ -51,7 +51,7 @@
 
     public static class Func
     {
-        public static Func<TOutput> Lift<TInput, TOutput>(this Func<TInput> inner, Func<TInput, TOutput> outer)
+        public static Func<TOutput> Lift<TInput, TOutput>(Func<TInput> inner, Func<TInput, TOutput> outer)
         {
             //// TODO i don't know if this is actually a lift
             return () => outer(inner());
@@ -519,7 +519,6 @@
                 private A(Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>> cachedOutput)
                 {
                     this.cachedOutput = cachedOutput;
-                    //// TODO actually assign fields to make the `realize` method not throw on subsequent calls
                 }
 
                 public new IOutput<char, AlphaNumeric<ParseMode.Realized>.A> Realize()
@@ -558,144 +557,32 @@
             }
         }
 
-        /*public sealed class AlphaNumeric : IDeferredAstNode<char, AlphaNumeric>
-        {
-            private readonly IParser<char, AlphaNumeric> parser;
-            private readonly IInput<char> input;
-
-            //// private char @char;
-
-            //// private bool deferred;
-
-            public AlphaNumeric(IParser<char, AlphaNumeric> parser, IInput<char> input)
-            {
-                this.parser = parser;
-                this.input = input;
-
-                //// this.deferred = true;
-            }
-
-            public AlphaNumeric(char @char)
-            {
-                this.@char = @char;
-
-                this.deferred = false;
-            }
-
-            public char Char
-            {
-                get
-                {
-
-                }
-            }
-
-            public IOutput<char, AlphaNumeric> Realize()
-            {
-                if (this.deferred)
-                {
-                    var _char_1 = this.parser.Parse(input);
-                    if (_char_1.Success)
-                    {
-                        this.@char = _char_1.Parsed.@char;
-                        this.deferred = false;
-                        return new Output<char, AlphaNumeric>(true, this, _char_1.Remainder);
-                    }
-                    else
-                    {
-                        return new Output<char, AlphaNumeric>(false, default, this.input);
-                    }
-                }
-                else
-                {
-                    //// TODO where do you get the remainder from for the case where this instance was constructed with the char already? //// TODO maybe that constructor overload shouldn't exist?
-                    return new Output<char, AlphaNumeric>(true, this, null);
-                }
-            }
-        }*/
-
-        /*public sealed class Many<T> : IDeferredAstNode<char, IEnumerable<T>> where T : IDeferredAstNode<char, T>
-        {
-            ////private IInput<char> input;
-            private readonly Func<Func<IDeferredOutput2<char>>, T> nodeFactory;
-
-            private readonly Func<IDeferredOutput2<char>> future;
-
-            //public Many(IInput<char> input, Func<IInput<char>, T> nodeFactory)
-            //{
-            //    this.input = input;
-            //    this.nodeFactory = nodeFactory;
-
-            //    this.future = null;
-            //}
-
-            public Many(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, T> nodeFactory)
-            {
-                this.future = future; //// TODO this should be of type `future`
-                this.nodeFactory = nodeFactory;
-            }
-
-            public IOutput<char, IEnumerable<T>> Realize() //// TODO the other ones all have the second type as themselves...maybe you need an ienumerable property instead?
-            {
-                var output2 = this.future();
-                if (!output2.Success)
-                {
-                    return new Output<char, IEnumerable<T>>(false, default, output2.Remainder);
-                }
-
-                var input = output2.Remainder;
-
-                var sequence = new List<T>();
-                var node = this.nodeFactory(DeferredOutput2.FromValue(input));
-                var output = node.Realize();
-                while (output.Success)
-                {
-                    sequence.Add(output.Parsed);
-                    node = this.nodeFactory(DeferredOutput2.FromValue(output.Remainder));
-                }
-
-                return new Output<char, IEnumerable<T>>(true, sequence, input);
-            }
-        }*/
-
         public sealed class AtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
-            private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
-
             private readonly Future<IDeferredOutput<char>> future;
 
-            private Output<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>? cachedOutput;
+            private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
-            public AtLeastOne(Future<IDeferredOutput<char>> future, Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
+            private readonly Future<TDeferredAstNode> __1;
+
+            private readonly Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
+
+            public AtLeastOne(
+                Future<IDeferredOutput<char>> future, 
+                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
             {
-                this.future = future; //// TODO this should be of type `future`
+                this.future = future;
                 this.nodeFactory = nodeFactory;
 
-                this.cachedOutput = null;
+                this.__1 = this.future.Lift(this.nodeFactory);
+
+                this.cachedOutput = new Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(() => this.RealizeImpl());
             }
 
-            /*public SequenceNode<T> Element
-            {
-                get
-                {
-                    return new SequenceNode<T>(this.future, this.nodeFactory);
-                }
-            }
-
-            public IOutput<char, Many<T>> Realize()
-            {
-                var output = this.Element.Realize();
-                if (output.Success)
-                {
-                    return new Output<char, Many<T>>(true, this, output.Remainder);
-                }
-                else
-                {
-                    return new Output<char, Many<T>>(false, default, output.Remainder);
-                }
-            }*/
-
-            private AtLeastOne(TRealizedAstNode _1, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> node)
+            private AtLeastOne(
+                TRealizedAstNode _1, 
+                ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> node,
+                Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
             }
             
@@ -730,6 +617,10 @@
                 {
                     return new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(Func.Lift(this._1.Realize, DeferredOutput.Create)/*() => DeferredOutput.Create(this._1.Realize())*/, this.nodeFactory);
                 }
+            }
+
+            private IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
+            {
             }
 
             public IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
