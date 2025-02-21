@@ -19,12 +19,12 @@ namespace CombinatorParsingV3
 
         TOutput Parsed { get; }
 
-        IInput<TToken> Remainder { get; }
+        IInput<TToken>? Remainder { get; }
     }
 
     public sealed class Output<TToken, TOutput> : IOutput<TToken, TOutput>
     {
-        public Output(bool success, TOutput parsed, IInput<TToken> remainder)
+        public Output(bool success, TOutput parsed, IInput<TToken>? remainder)
         {
             Success = success;
             Parsed = parsed;
@@ -35,7 +35,7 @@ namespace CombinatorParsingV3
 
         public TOutput Parsed { get; }
 
-        public IInput<TToken> Remainder { get; }
+        public IInput<TToken>? Remainder { get; }
     }
 
     public interface IInput<TToken>

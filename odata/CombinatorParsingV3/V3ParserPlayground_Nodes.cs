@@ -79,7 +79,7 @@
         }
     }
 
-    public readonly struct RealNullable<T>
+    public readonly struct RealNullable<T> //// TODO should you have a class variant so that no boxing occurs in those cases?
     {
         private readonly T value;
 
@@ -437,7 +437,7 @@
         {
             private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
 
-            private Future<IOutput<char, Slash<ParseMode.Realized>>> cachedOutput;
+            private readonly Future<IOutput<char, Slash<ParseMode.Realized>>> cachedOutput;
 
             public Slash(Future<IDeferredOutput<char>> previouslyParsedOutput)
             {
@@ -493,65 +493,65 @@
 
             public IOutput<char, AlphaNumeric<ParseMode.Realized>> Realize()
             {
-                return this.RealizeImpl();
+                return this.DerivedRealize();
             }
 
-            protected abstract IOutput<char, AlphaNumeric<ParseMode.Realized>> RealizeImpl();
+            protected abstract IOutput<char, AlphaNumeric<ParseMode.Realized>> DerivedRealize();
 
             public sealed class A : AlphaNumeric<TMode>, IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>.A>
             {
                 private readonly Future<IDeferredOutput<char>> future;
 
-                private Output<char, AlphaNumeric<ParseMode.Realized>.A>? cachedOutput;
+                private readonly Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>> cachedOutput;
 
                 public A(Future<IDeferredOutput<char>> future)
                 {
+                    if (typeof(TMode) != typeof(ParseMode.Deferred))
+                    {
+                        throw new ArgumentException("tODO");
+                    }
+
                     this.future = future;
 
-                    this.cachedOutput = null;
+                    this.cachedOutput = new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>>(() => this.RealizeImpl());
                 }
 
-                private A()
+                private A(Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>> cachedOutput)
                 {
+                    this.cachedOutput = cachedOutput;
                     //// TODO actually assign fields to make the `realize` method not throw on subsequent calls
                 }
 
-                public static AlphaNumeric<ParseMode.Realized>.A Realized { get; } = new AlphaNumeric<ParseMode.Realized>.A();
-
                 public new IOutput<char, AlphaNumeric<ParseMode.Realized>.A> Realize()
                 {
-                    if (this.cachedOutput != null)
-                    {
-                        return this.cachedOutput;
-                    }
+                    return this.cachedOutput.Value;
+                }
 
+                private IOutput<char, AlphaNumeric<ParseMode.Realized>.A> RealizeImpl()
+                {
                     var output = this.future.Value;
                     if (!output.Success)
                     {
-                        this.cachedOutput = new Output<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, output.Remainder);
-                        return this.cachedOutput;
+                        return new Output<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, output.Remainder);
                     }
 
                     var input = output.Remainder;
                     if (input == null)
                     {
-                        this.cachedOutput = new Output<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, input);
-                        return this.cachedOutput;
+                        return new Output<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, input);
                     }
 
                     if (input.Current == 'A')
                     {
-                        this.cachedOutput = new Output<char, AlphaNumeric<ParseMode.Realized>.A>(true, AlphaNumeric<ParseMode.Realized>.A.Realized, input.Next());
-                        return this.cachedOutput;
+                        return new Output<char, AlphaNumeric<ParseMode.Realized>.A>(true, new AlphaNumeric<ParseMode.Realized>.A(this.cachedOutput), input.Next());
                     }
                     else
                     {
-                        this.cachedOutput = new Output<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, input);
-                        return this.cachedOutput;
+                        return new Output<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, input);
                     }
                 }
 
-                protected override IOutput<char, AlphaNumeric<ParseMode.Realized>> RealizeImpl()
+                protected override IOutput<char, AlphaNumeric<ParseMode.Realized>> DerivedRealize()
                 {
                     return this.Realize();
                 }
