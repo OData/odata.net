@@ -89,9 +89,107 @@
 
     public static partial class V3ParserPlayground
     {
+        public static class ModelingOptionss
+        {
+            public static class Option1
+            {
+                /// <summary>
+                /// ISSUES:
+                /// 
+                /// runtime check that it's not initialied with `TMode` = `ParseMode.Realized`
+                /// realized versions have the `realize` method defined on them, so callers can still call `realize` even if it's a no-op
+                /// </summary>
+                /// <typeparam name="TMode"></typeparam>
+                public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>> where TMode : ParseMode
+                {
+                    private readonly Future<IDeferredOutput<char>> future;
+
+                    private Future<IOutput<char, Slash<ParseMode.Realized>>> cachedOutput;
+
+                    public Slash(Future<IDeferredOutput<char>> future)
+                    {
+                        if (typeof(TMode) != typeof(ParseMode.Deferred))
+                        {
+                            throw new ArgumentException("TODO");
+                        }
+
+                        this.future = future;
+
+                        this.cachedOutput = new Future<IOutput<char, Slash<ParseMode.Realized>>>(() => this.RealizeImpl());
+                    }
+
+                    private Slash(Future<IOutput<char, Slash<ParseMode.Realized>>> output)
+                    {
+                        this.cachedOutput = output;
+                    }
+
+                    public IOutput<char, Slash<ParseMode.Realized>> Realize()
+                    {
+                        return cachedOutput.Value;
+                    }
+
+                    private IOutput<char, Slash<ParseMode.Realized>> RealizeImpl()
+                    {
+                        var output = this.future.Value;
+                        if (!output.Success)
+                        {
+                            return new Output<char, Slash<ParseMode.Realized>>(false, default, output.Remainder);
+                        }
+
+                        var input = output.Remainder;
+
+                        if (input.Current == '/')
+                        {
+                            return new Output<char, Slash<ParseMode.Realized>>(
+                                true, 
+                                new Slash<ParseMode.Realized>(this.cachedOutput), 
+                                input.Next());
+                        }
+                        else
+                        {
+                            return new Output<char, Slash<ParseMode.Realized>>(false, default, input);
+                        }
+                    }
+                }
+            }
+
+            public static class Option2
+            {
+                public static class Slash
+                {
+                    public static Slash<ParseMode.Realized> Realized { get; } = Slash<ParseMode.Realized>.Realized;
+
+                    public static Slash<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> future)
+                    {
+                        //// TODO static factories 
+                        //// TODO separate nodes
+                        //// TODO node type nested in static factory class
+                        //// TODO probably other options
+                    }
+                }
+
+                public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>> where TMode : ParseMode
+                {
+                    internal Slash()
+
+                    private Slash()
+                    {
+                    }
+
+                    public static Slash<ParseMode.Realized> Realized { get; } = new Slash<ParseMode.Realized>();
+
+                    public IOutput<char, Slash<ParseMode.Realized>> Realize()
+                    {
+                        throw new NotImplementedException();
+                    }
+                }
+            }
+        }
+
         public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
+
             private Output<char, Slash<ParseMode.Realized>>? cachedOutput;
 
             public Slash(Future<IDeferredOutput<char>> future) //// TODO should this be called "promise"?
