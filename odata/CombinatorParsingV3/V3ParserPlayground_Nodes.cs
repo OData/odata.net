@@ -61,6 +61,22 @@
         {
             return () => value;
         }
+
+        public readonly struct Closure<T>
+        {
+            private readonly T value;
+
+            public Closure(T value)
+            {
+                //// TODO do you want something like this for better memory management in the `close` method?
+                this.value = value;
+            }
+
+            public static implicit operator Func<T>(Closure<T> closure)
+            {
+                return () => closure.value;
+            }
+        }
     }
 
     public readonly struct RealNullable<T>
@@ -91,29 +107,30 @@
     {
         public static class ModelingOptionss
         {
+            /// <summary>
+            /// ISSUES:
+            /// 
+            /// runtime check that it's not initialied with `TMode` = `ParseMode.Realized`
+            /// realized versions have the `realize` method defined on them, so callers can still call `realize` even if it's a no-op
+            /// there's nothing that stops the use of `slash<parsemode.realized>` in cases where no instance is needed
+            /// can't use singletons for realized nodes that are really singletons
+            /// </summary>
             public static class Option1
             {
-                /// <summary>
-                /// ISSUES:
-                /// 
-                /// runtime check that it's not initialied with `TMode` = `ParseMode.Realized`
-                /// realized versions have the `realize` method defined on them, so callers can still call `realize` even if it's a no-op
-                /// </summary>
-                /// <typeparam name="TMode"></typeparam>
                 public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>> where TMode : ParseMode
                 {
-                    private readonly Future<IDeferredOutput<char>> future;
+                    private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
 
                     private Future<IOutput<char, Slash<ParseMode.Realized>>> cachedOutput;
 
-                    public Slash(Future<IDeferredOutput<char>> future)
+                    public Slash(Future<IDeferredOutput<char>> previouslyParsedOutput)
                     {
                         if (typeof(TMode) != typeof(ParseMode.Deferred))
                         {
                             throw new ArgumentException("TODO");
                         }
 
-                        this.future = future;
+                        this.previouslyParsedOutput = previouslyParsedOutput;
 
                         this.cachedOutput = new Future<IOutput<char, Slash<ParseMode.Realized>>>(() => this.RealizeImpl());
                     }
@@ -130,7 +147,7 @@
 
                     private IOutput<char, Slash<ParseMode.Realized>> RealizeImpl()
                     {
-                        var output = this.future.Value;
+                        var output = this.previouslyParsedOutput.Value;
                         if (!output.Success)
                         {
                             return new Output<char, Slash<ParseMode.Realized>>(false, default, output.Remainder);
@@ -153,37 +170,136 @@
                 }
             }
 
+            /// <summary>
+            /// ISSUES: 
+            /// 
+            /// realized versions have the `realize` method defined on them, so callers can still call `realize` even if it's a no-op
+            /// there's nothing that stops the use of `slash<parsemode.realized>` in cases where no instance is needed
+            /// `deferred` vs `realized` is handled by the static class, which requires an `internal` constructor; this means that we may accidentally create within our own code a realized node when it's actually deferred or a deferred node when it's actually realized
+            /// requires two classes for every AST node, one that represents the node, and the other that guarantees that the wrong `parsemode` is not used
+            /// can't use singletons for realized nodes that are really singletons
+            /// </summary>
             public static class Option2
             {
                 public static class Slash
                 {
-                    public static Slash<ParseMode.Realized> Realized { get; } = Slash<ParseMode.Realized>.Realized;
-
-                    public static Slash<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> future)
+                    public static Slash<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
                     {
-                        //// TODO static factories 
-                        //// TODO separate nodes
-                        //// TODO node type nested in static factory class
-                        //// TODO probably other options
+                        return new Slash<ParseMode.Deferred>(previouslyParsedOutput);
                     }
                 }
 
                 public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>> where TMode : ParseMode
                 {
-                    internal Slash()
+                    private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
 
-                    private Slash()
+                    private Future<IOutput<char, Slash<ParseMode.Realized>>> cachedOutput;
+
+                    internal Slash(Future<IDeferredOutput<char>> previouslyParsedOutput)
                     {
+                        System.Diagnostics.Debug.Assert(typeof(TMode) == typeof(ParseMode.Deferred));
+
+                        this.previouslyParsedOutput = previouslyParsedOutput;
+
+                        this.cachedOutput = new Future<IOutput<char, Slash<ParseMode.Realized>>>(() => this.RealizeImpl());
                     }
 
-                    public static Slash<ParseMode.Realized> Realized { get; } = new Slash<ParseMode.Realized>();
+                    private Slash(Future<IOutput<char, Slash<ParseMode.Realized>>> output)
+                    {
+                        this.cachedOutput = output;
+                    }
 
                     public IOutput<char, Slash<ParseMode.Realized>> Realize()
                     {
-                        throw new NotImplementedException();
+                        return cachedOutput.Value;
+                    }
+
+                    private IOutput<char, Slash<ParseMode.Realized>> RealizeImpl()
+                    {
+                        var output = this.previouslyParsedOutput.Value;
+                        if (!output.Success)
+                        {
+                            return new Output<char, Slash<ParseMode.Realized>>(false, default, output.Remainder);
+                        }
+
+                        var input = output.Remainder;
+
+                        if (input.Current == '/')
+                        {
+                            return new Output<char, Slash<ParseMode.Realized>>(
+                                true,
+                                new Slash<ParseMode.Realized>(this.cachedOutput),
+                                input.Next());
+                        }
+                        else
+                        {
+                            return new Output<char, Slash<ParseMode.Realized>>(false, default, input);
+                        }
                     }
                 }
             }
+
+            /// <summary>
+            /// ISSUES:
+            /// 
+            /// requies two classes per AST node, and the two classes both need to have consistent structure throughout the entire tree
+            /// </summary>
+            public static class Option3
+            {
+                public sealed class DeferredSlash : IDeferredAstNode<char, RealizedSlash>
+                {
+                    private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
+
+                    private Future<IOutput<char, RealizedSlash>> cachedOutput;
+
+                    public DeferredSlash(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                    {
+                        this.previouslyParsedOutput = previouslyParsedOutput;
+
+                        this.cachedOutput = new Future<IOutput<char, RealizedSlash>>(() => this.RealizeImpl());
+                    }
+
+                    public IOutput<char, RealizedSlash> Realize()
+                    {
+                        return cachedOutput.Value;
+                    }
+
+                    private IOutput<char, RealizedSlash> RealizeImpl()
+                    {
+                        var output = this.previouslyParsedOutput.Value;
+                        if (!output.Success)
+                        {
+                            return new Output<char, RealizedSlash>(false, default, output.Remainder);
+                        }
+
+                        var input = output.Remainder;
+
+                        if (input.Current == '/')
+                        {
+                            return new Output<char, RealizedSlash>(
+                                true,
+                                RealizedSlash.Instance,
+                                input.Next());
+                        }
+                        else
+                        {
+                            return new Output<char, RealizedSlash>(false, default, input);
+                        }
+                    }
+                }
+
+                public sealed class RealizedSlash
+                {
+                    private RealizedSlash()
+                    {
+                    }
+
+                    public static RealizedSlash Instance { get; } = new RealizedSlash();
+                }
+            }
+
+            //// TODO node type nested in static factory class
+            //// TODO probably other options
         }
 
         public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>> where TMode : ParseMode
