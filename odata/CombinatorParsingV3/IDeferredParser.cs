@@ -5,46 +5,21 @@ using System.Text.RegularExpressions;
 
 namespace CombinatorParsingV3
 {
-    public interface IDeferredParser<TToken, TRealizedAstNode, TDefferedAstNode> where TDefferedAstNode : IDeferredAstNode<TToken, TRealizedAstNode>
-    {
-        TDefferedAstNode Parse(IInput<TToken> input); //// maybe this should returned a name delegate instead? it *is* just a kernel
-    }
-
     public interface IDeferredAstNode<TToken, TRealizedAstNode>
     {
         IOutput<TToken, TRealizedAstNode> Realize();
     }
 
-    public interface IDeferredOutput<TRealizedAstNode>
-    {
-        bool Success { get; }
-
-        TRealizedAstNode Parsed { get; }
-    }
-
-    public sealed class DeferredOutput<TRealizedAstNode> : IDeferredOutput<TRealizedAstNode>
-    {
-        public DeferredOutput(bool success, TRealizedAstNode parsed)
-        {
-            Success = success;
-            Parsed = parsed;
-        }
-
-        public bool Success { get; }
-
-        public TRealizedAstNode Parsed { get; }
-    }
-
-    public interface IDeferredOutput2<TToken>
+    public interface IDeferredOutput<TToken>
     {
         bool Success { get; }
 
         IInput<TToken> Remainder { get; }
     }
 
-    public sealed class DeferredOutput2<TToken> : IDeferredOutput2<TToken>
+    public sealed class DeferredOutput<TToken> : IDeferredOutput<TToken>
     {
-        public DeferredOutput2(bool success, IInput<TToken> remainder)
+        public DeferredOutput(bool success, IInput<TToken> remainder)
         {
             Success = success;
             Remainder = remainder;
@@ -55,20 +30,24 @@ namespace CombinatorParsingV3
         public IInput<TToken> Remainder { get; }
     }
 
-    public static class DeferredOutput2
+    public static class DeferredOutput
     {
-        public static Func<DeferredOutput2<TToken>> FromValue<TToken>(this IInput<TToken> input)
+        public static DeferredOutput<TToken> Create<TToken>(IInput<TToken> input)
         {
-            return () => 
-                new DeferredOutput2<TToken>(true, input);
+            return new DeferredOutput<TToken>(true, input);
         }
 
-        public static Func<DeferredOutput2<TToken>> ToPromise<TToken, TParsed>(Func<IOutput<TToken, TParsed>> realize)
+        public static DeferredOutput<TToken> Create<TToken, TParsed>(IOutput<TToken, TParsed> output)
+        {
+            return new DeferredOutput<TToken>(output.Success, output.Remainder);
+        }
+
+        public static Func<DeferredOutput<TToken>> ToPromise<TToken, TParsed>(Func<IOutput<TToken, TParsed>> realize)
         {
             return () =>
             {
                 var output = realize();
-                return new DeferredOutput2<TToken>(output.Success, output.Remainder);
+                return new DeferredOutput<TToken>(output.Success, output.Remainder);
             };
         }
     }
@@ -79,14 +58,14 @@ namespace CombinatorParsingV3
         {
         }
 
-        public abstract class Deferred : ParseMode
+        public sealed class Deferred : ParseMode
         {
             private Deferred()
             {
             }
         }
 
-        public abstract class Realized : ParseMode
+        public sealed class Realized : ParseMode
         {
             private Realized()
             {

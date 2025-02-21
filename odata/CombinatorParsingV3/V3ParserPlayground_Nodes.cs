@@ -7,16 +7,94 @@
     using System.Threading;
     using static CombinatorParsingV3.V3ParserPlayground;
     using CombinatorParsingV1;
+    using System.Runtime.CompilerServices;
+
+    public sealed class Future<T>
+    {
+        private readonly Func<T> promise;
+
+        private RealNullable2<T> value;
+
+        public Future(Func<T> promise)
+        {
+            this.promise = promise;
+
+            this.value = default;
+        }
+
+        public T Value
+        {
+            get
+            {
+                if (!this.value.TryGetValue(out var value))
+                {
+                    value = this.promise();
+
+                    this.value = value;
+                }
+
+                return value;
+            }
+        }
+
+        public static implicit operator T(Future<T> future)
+        {
+            //// TODO is this implicit conversion a good idea?
+            return future.Value;
+        }
+
+        public static implicit operator Future<T>(Func<T> promise)
+        {
+            return new Future<T>(promise);
+        }
+    }
+
+    public static class Func
+    {
+        public static Func<TOutput> Lift<TInput, TOutput>(this Func<TInput> inner, Func<TInput, TOutput> outer)
+        {
+            //// TODO i don't know if this is actually a lift
+            return () => outer(inner());
+        }
+
+        public static Func<T> Close<T>(T value)
+        {
+            return () => value;
+        }
+    }
+
+    public readonly struct RealNullable2<T>
+    {
+        private readonly T value;
+
+        private readonly bool hasValue;
+
+        public RealNullable2(T value)
+        {
+            this.value = value;
+            this.hasValue = true;
+        }
+
+        public bool TryGetValue([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out T value)
+        {
+            value = this.value;
+            return this.hasValue;
+        }
+
+        public static implicit operator RealNullable2<T>(T value)
+        {
+            return new RealNullable2<T>(value);
+        }
+    }
 
     public static partial class V3ParserPlayground
     {
         public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>> where TMode : ParseMode
         {
-            private readonly Func<IDeferredOutput2<char>> future;
-
+            private readonly Future<IDeferredOutput<char>> future;
             private Output<char, Slash<ParseMode.Realized>>? cachedOutput;
 
-            public Slash(Func<IDeferredOutput2<char>> future)
+            public Slash(Future<IDeferredOutput<char>> future) //// TODO should this be called "promise"?
             {
                 this.future = future;
 
@@ -37,7 +115,7 @@
                     return this.cachedOutput;
                 }
 
-                var output = this.future();
+                var output = this.future.Value;
                 if (!output.Success)
                 {
                     this.cachedOutput = new Output<char, Slash<ParseMode.Realized>>(false, default, output.Remainder);
@@ -74,11 +152,11 @@
 
             public sealed class A : AlphaNumeric<TMode>, IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>.A>
             {
-                private readonly Func<IDeferredOutput2<char>> future;
+                private readonly Future<IDeferredOutput<char>> future;
 
                 private Output<char, AlphaNumeric<ParseMode.Realized>.A>? cachedOutput;
 
-                public A(Func<IDeferredOutput2<char>> future)
+                public A(Future<IDeferredOutput<char>> future)
                 {
                     this.future = future;
 
@@ -99,7 +177,7 @@
                         return this.cachedOutput;
                     }
 
-                    var output = this.future();
+                    var output = this.future.Value;
                     if (!output.Success)
                     {
                         this.cachedOutput = new Output<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, output.Remainder);
@@ -234,13 +312,13 @@
 
         public sealed class AtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
-            private readonly Func<Func<IDeferredOutput2<char>>, TDeferredAstNode> nodeFactory;
+            private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
-            private readonly Func<IDeferredOutput2<char>> future;
+            private readonly Future<IDeferredOutput<char>> future;
 
             private Output<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>? cachedOutput;
 
-            public AtLeastOne(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, TDeferredAstNode> nodeFactory)
+            public AtLeastOne(Future<IDeferredOutput<char>> future, Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
             {
                 this.future = future; //// TODO this should be of type `future`
                 this.nodeFactory = nodeFactory;
@@ -302,7 +380,7 @@
             {
                 get
                 {
-                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(DeferredOutput2.ToPromise(this._1.Realize), this.nodeFactory);
+                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(Func.Lift(this._1.Realize, DeferredOutput.Create)/*() => DeferredOutput.Create(this._1.Realize())*/, this.nodeFactory);
                 }
             }
 
@@ -334,13 +412,13 @@
 
         public sealed class Many<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
-            private readonly Func<Func<IDeferredOutput2<char>>, TDeferredAstNode> nodeFactory;
+            private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
-            private readonly Func<IDeferredOutput2<char>> future;
+            private readonly Future<IDeferredOutput<char>> future;
 
             private Output<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>? cachedOutput;
 
-            public Many(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, TDeferredAstNode> nodeFactory)
+            public Many(Future<IDeferredOutput<char>> future, Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
             {
                 this.future = future; //// TODO this should be of type `future`
                 this.nodeFactory = nodeFactory;
@@ -437,12 +515,12 @@
 
         public sealed class ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
-            private readonly Func<IDeferredOutput2<char>> future;
-            private readonly Func<Func<IDeferredOutput2<char>>, TDeferredAstNode> nodeFactory;
+            private readonly Future<IDeferredOutput<char>> future;
+            private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
-            private Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> cachedOutput;
+            private Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>? cachedOutput;
 
-            public ManyNode(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, TDeferredAstNode> nodeFactory)
+            public ManyNode(Future<IDeferredOutput<char>> future, Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
             {
                 this.future = future;
                 this.nodeFactory = nodeFactory;
@@ -452,7 +530,7 @@
 
             private static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetTerminalRealizedNode()
             {
-                return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(new RealNullable<TRealizedAstNode>()), GetTerminalRealizedNode);
+                return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(new RealNullable2<TRealizedAstNode>()), GetTerminalRealizedNode);
             }
 
             private ManyNode(OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> element, Func<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next)
@@ -474,7 +552,7 @@
             {
                 get
                 {
-                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(DeferredOutput2.ToPromise(this.Element.Realize), this.nodeFactory);
+                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(Func.Lift(this.Element.Realize, DeferredOutput.Create), this.nodeFactory);
                 }
             }
 
@@ -493,14 +571,14 @@
                     return this.cachedOutput;
                 }
 
-                if (realizedElement.Parsed.HasValue)
+                if (realizedElement.Parsed.TryGetValue(out var parsed))
                 {
                     var realizedNext = this.Next.Realize();
                     // *this* instance is the "dependency" for `next`, so we can only have success cases
                     this.cachedOutput = new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(realizedElement.Parsed),
+                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(parsed),
                             () => realizedNext.Parsed),
                         realizedNext.Remainder);
                     return this.cachedOutput;
@@ -584,16 +662,16 @@
         //    }
         //}
 
-        public sealed class OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, RealNullable<TRealizedAstNode>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
+        public sealed class OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, RealNullable2<TRealizedAstNode>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
-            private readonly Func<IDeferredOutput2<char>> future;
-            private readonly Func<Func<IDeferredOutput2<char>>, TDeferredAstNode> nodeFactory;
+            private readonly Future<IDeferredOutput<char>> future;
+            private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
-            private readonly RealNullable<TRealizedAstNode>? value;
+            private readonly RealNullable2<RealNullable2<TRealizedAstNode>> value;
 
-            private Output<char, RealNullable<TRealizedAstNode>>? cachedOutput;
+            private Output<char, RealNullable2<TRealizedAstNode>>? cachedOutput;
 
-            public OptionalNode(Func<IDeferredOutput2<char>> future, Func<Func<IDeferredOutput2<char>>, TDeferredAstNode> nodeFactory)
+            public OptionalNode(Future<IDeferredOutput<char>> future, Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
             {
                 this.future = future;
                 this.nodeFactory = nodeFactory;
@@ -601,7 +679,7 @@
                 this.cachedOutput = null;
             }
 
-            internal OptionalNode(RealNullable<TRealizedAstNode> value)
+            internal OptionalNode(RealNullable2<TRealizedAstNode> value)
             {
                 this.value = value;
                 //// TODO only let this be called if `TMode` is `Realized`
@@ -617,8 +695,8 @@
 
             private IOutput<char, TDeferredAstNode?> Get()
             {
-                IDeferredOutput2<char> output = null;
-                var node = this.nodeFactory(() => output = this.future());
+                IDeferredOutput<char> output = null;
+                var node = this.nodeFactory(new Future<IDeferredOutput<char>>(() => output = this.future.Value));
 
                 if (node == null)
                 {
@@ -631,63 +709,36 @@
                 }
             }
 
-            public IOutput<char, RealNullable<TRealizedAstNode>> Realize()
+            public IOutput<char, RealNullable2<TRealizedAstNode>> Realize()
             {
                 if (this.cachedOutput != null)
                 {
                     return this.cachedOutput;
                 }
 
-                if (this.value != null)
+                if (this.value.TryGetValue(out var value))
                 {
-                    this.cachedOutput = new Output<char, RealNullable<TRealizedAstNode>>(true, this.value.Value, null);
+                    this.cachedOutput = new Output<char, RealNullable2<TRealizedAstNode>>(true, value, null);
                     return this.cachedOutput;
                 }
 
-                var deferredOutput = this.future();
+                var deferredOutput = this.future.Value;
                 if (!deferredOutput.Success)
                 {
-                    this.cachedOutput = new Output<char, RealNullable<TRealizedAstNode>>(false, default, deferredOutput.Remainder);
+                    this.cachedOutput = new Output<char, RealNullable2<TRealizedAstNode>>(false, default, deferredOutput.Remainder);
                     return this.cachedOutput;
                 }
 
                 var output = this.Value.Realize();
                 if (output.Success)
                 {
-                    this.cachedOutput = new Output<char, RealNullable<TRealizedAstNode>>(true, new RealNullable<TRealizedAstNode>(output.Parsed), output.Remainder);
+                    this.cachedOutput = new Output<char, RealNullable2<TRealizedAstNode>>(true, new RealNullable2<TRealizedAstNode>(output.Parsed), output.Remainder);
                     return this.cachedOutput;
                 }
                 else
                 {
-                    this.cachedOutput = new Output<char, RealNullable<TRealizedAstNode>>(true, new RealNullable<TRealizedAstNode>(), output.Remainder); //// deferredOutput.Remainder);
+                    this.cachedOutput = new Output<char, RealNullable2<TRealizedAstNode>>(true, new RealNullable2<TRealizedAstNode>(), output.Remainder); //// deferredOutput.Remainder);
                     return this.cachedOutput;
-                }
-            }
-        }
-
-        public readonly struct RealNullable<T>
-        {
-            private readonly T value;
-
-            public RealNullable(T value)
-            {
-                this.value = value;
-
-                this.HasValue = true;
-            }
-
-            public bool HasValue { get; }
-
-            public T Value
-            {
-                get
-                {
-                    if (!this.HasValue)
-                    {
-                        throw new InvalidOperationException("TODO");
-                    }
-
-                    return this.value;
                 }
             }
         }
@@ -695,7 +746,7 @@
         public sealed class Segment<TMode> : IDeferredAstNode<char, Segment<ParseMode.Realized>> where TMode : ParseMode
         {
             ////private readonly IParser<char, Segment> parser;
-            private readonly Func<IDeferredOutput2<char>> future;
+            private readonly Future<IDeferredOutput<char>> future;
 
             ////private Slash slash;
             ////private IEnumerable<AlphaNumeric> characters;
@@ -704,7 +755,7 @@
 
             private Output<char, Segment<ParseMode.Realized>>? cachedOutput;
 
-            public Segment(Func<IDeferredOutput2<char>> future)
+            public Segment(Future<IDeferredOutput<char>> future)
             //// : this(SegmentParser.Instance, input)
             {
                 this.future = future;
@@ -745,7 +796,7 @@
                 get
                 {
                     return new AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>(
-                        DeferredOutput2.ToPromise(this.Slash.Realize),
+                        Func.Lift(this.Slash.Realize, DeferredOutput.Create),
                         input => new AlphaNumeric<TMode>.A(input)); //// TODO what would a discriminated union actually look like here?
 
                     /*if (this.deferred)
@@ -827,7 +878,7 @@
         public sealed class EqualsSign<TMode> : IDeferredAstNode<char, EqualsSign<ParseMode.Realized>> where TMode : ParseMode
         {
             ////private readonly IInput<char> input;
-            private readonly Func<IDeferredOutput2<char>> future;
+            private readonly Future<IDeferredOutput<char>> future;
 
             private Output<char, EqualsSign<ParseMode.Realized>>? cachedOutput;
 
@@ -836,7 +887,7 @@
                 this.input = input;
             }*/
 
-            public EqualsSign(Func<IDeferredOutput2<char>> future)
+            public EqualsSign(Future<IDeferredOutput<char>> future)
             {
                 //// TODO create the `future` type and then follow this single constructor pattern everywhere
                 this.future = future;
@@ -857,7 +908,7 @@
                     return this.cachedOutput;
                 }
 
-                var output = this.future();
+                var output = this.future.Value;
                 if (!output.Success)
                 {
                     this.cachedOutput = new Output<char, EqualsSign<ParseMode.Realized>>(false, default, output.Remainder);
@@ -886,7 +937,7 @@
 
         public sealed class OptionName<TMode> : IDeferredAstNode<char, OptionName<ParseMode.Realized>> where TMode : ParseMode
         {
-            private readonly Func<IDeferredOutput2<char>> future;
+            private readonly Future<IDeferredOutput<char>> future;
 
             private Output<char, OptionName<ParseMode.Realized>>? cachedOutput;
 
@@ -895,7 +946,7 @@
 Characters = characters;
 }*/
 
-            public OptionName(Func<IDeferredOutput2<char>> future)
+            public OptionName(Future<IDeferredOutput<char>> future)
             {
                 this.future = future;
 
@@ -940,7 +991,7 @@ Characters = characters;
 
         public sealed class OptionValue<TMode> : IDeferredAstNode<char, OptionValue<ParseMode.Realized>> where TMode : ParseMode
         {
-            private readonly Func<IDeferredOutput2<char>> future;
+            private readonly Future<IDeferredOutput<char>> future;
 
             private Output<char, OptionValue<ParseMode.Realized>>? cachedOutput;
 
@@ -956,7 +1007,7 @@ this.input = input;
                 Characters = characters;
             }*/
 
-            public OptionValue(Func<IDeferredOutput2<char>> future)
+            public OptionValue(Future<IDeferredOutput<char>> future)
             {
                 this.future = future;
 
@@ -1002,11 +1053,11 @@ this.input = input;
 
         public sealed class QueryOption<TMode> : IDeferredAstNode<char, QueryOption<ParseMode.Realized>> where TMode : ParseMode
         {
-            private readonly Func<IDeferredOutput2<char>> future;
+            private readonly Future<IDeferredOutput<char>> future;
 
             private Output<char, QueryOption<ParseMode.Realized>>? cachedOutput;
 
-            public QueryOption(Func<IDeferredOutput2<char>> future)
+            public QueryOption(Future<IDeferredOutput<char>> future)
             {
                 this.future = future;
 
@@ -1036,7 +1087,7 @@ this.input = input;
             {
                 get
                 {
-                    return new EqualsSign<TMode>(DeferredOutput2.ToPromise(this.Name.Realize));
+                    return new EqualsSign<TMode>(Func.Lift(this.Name.Realize, DeferredOutput.Create));
                 }
             }
 
@@ -1044,7 +1095,7 @@ this.input = input;
             {
                 get
                 {
-                    return new OptionValue<TMode>(DeferredOutput2.ToPromise(this.EqualsSign.Realize));
+                    return new OptionValue<TMode>(DeferredOutput.ToPromise(this.EqualsSign.Realize));
                 }
             }
 
@@ -1076,7 +1127,7 @@ this.input = input;
 
         public sealed class QuestionMark<TMode> : IDeferredAstNode<char, QuestionMark<ParseMode.Realized>> where TMode : ParseMode
         {
-            private readonly Func<IDeferredOutput2<char>> future;
+            private readonly Future<IDeferredOutput<char>> future;
 
             private Output<char, QuestionMark<ParseMode.Realized>>? cachedOutput;
 
@@ -1086,7 +1137,7 @@ this.input = input;
 
 public static QuestionMark Instance { get; } = new QuestionMark();*/
 
-            public QuestionMark(Func<IDeferredOutput2<char>> future)
+            public QuestionMark(Future<IDeferredOutput<char>> future)
             {
                 this.future = future;
 
@@ -1106,7 +1157,7 @@ public static QuestionMark Instance { get; } = new QuestionMark();*/
                     return this.cachedOutput;
                 }
 
-                var output = this.future();
+                var output = this.future.Value;
                 if (!output.Success)
                 {
                     this.cachedOutput = new Output<char, QuestionMark<ParseMode.Realized>>(false, default, output.Remainder);
@@ -1130,11 +1181,11 @@ public static QuestionMark Instance { get; } = new QuestionMark();*/
 
         public sealed class OdataUri<TMode> : IDeferredAstNode<char, OdataUri<ParseMode.Realized>> where TMode : ParseMode
         {
-            private readonly Func<IDeferredOutput2<char>> future;
+            private readonly Future<IDeferredOutput<char>> future;
 
             private Output<char, OdataUri<ParseMode.Realized>>? cachedOutput;
 
-            public OdataUri(Func<IDeferredOutput2<char>> future)
+            public OdataUri(Future<IDeferredOutput<char>> future)
             {
                 //// TODO add the type parameter check or hvae a static factory method that only returns the deferred type
 
@@ -1162,7 +1213,7 @@ public static QuestionMark Instance { get; } = new QuestionMark();*/
             {
                 get
                 {
-                    return new QuestionMark<TMode>(DeferredOutput2.ToPromise(this.Segments.Realize));
+                    return new QuestionMark<TMode>(DeferredOutput.ToPromise(this.Segments.Realize));
                 }
             }
 
@@ -1170,7 +1221,7 @@ public static QuestionMark Instance { get; } = new QuestionMark();*/
             {
                 get
                 {
-                    return new Many<QueryOption<TMode>, QueryOption<ParseMode.Realized>, TMode>(DeferredOutput2.ToPromise(this.QuestionMark.Realize), input => new QueryOption<TMode>(input));
+                    return new Many<QueryOption<TMode>, QueryOption<ParseMode.Realized>, TMode>(DeferredOutput.ToPromise(this.QuestionMark.Realize), input => new QueryOption<TMode>(input));
                 }
             }
 
