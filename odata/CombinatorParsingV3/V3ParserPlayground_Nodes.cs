@@ -13,7 +13,7 @@
     {
         private readonly Func<T> promise;
 
-        private RealNullable2<T> value;
+        private RealNullable<T> value;
 
         public Future(Func<T> promise)
         {
@@ -63,13 +63,13 @@
         }
     }
 
-    public readonly struct RealNullable2<T>
+    public readonly struct RealNullable<T>
     {
         private readonly T value;
 
         private readonly bool hasValue;
 
-        public RealNullable2(T value)
+        public RealNullable(T value)
         {
             this.value = value;
             this.hasValue = true;
@@ -81,9 +81,9 @@
             return this.hasValue;
         }
 
-        public static implicit operator RealNullable2<T>(T value)
+        public static implicit operator RealNullable<T>(T value)
         {
-            return new RealNullable2<T>(value);
+            return new RealNullable<T>(value);
         }
     }
 
@@ -530,7 +530,7 @@
 
             private static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetTerminalRealizedNode()
             {
-                return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(new RealNullable2<TRealizedAstNode>()), GetTerminalRealizedNode);
+                return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(new RealNullable<TRealizedAstNode>()), GetTerminalRealizedNode);
             }
 
             private ManyNode(OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> element, Func<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next)
@@ -662,14 +662,14 @@
         //    }
         //}
 
-        public sealed class OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, RealNullable2<TRealizedAstNode>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
+        public sealed class OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, RealNullable<TRealizedAstNode>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
             private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
-            private readonly RealNullable2<RealNullable2<TRealizedAstNode>> value;
+            private readonly RealNullable<RealNullable<TRealizedAstNode>> value;
 
-            private Output<char, RealNullable2<TRealizedAstNode>>? cachedOutput;
+            private Output<char, RealNullable<TRealizedAstNode>>? cachedOutput;
 
             public OptionalNode(Future<IDeferredOutput<char>> future, Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
             {
@@ -679,7 +679,7 @@
                 this.cachedOutput = null;
             }
 
-            internal OptionalNode(RealNullable2<TRealizedAstNode> value)
+            internal OptionalNode(RealNullable<TRealizedAstNode> value)
             {
                 this.value = value;
                 //// TODO only let this be called if `TMode` is `Realized`
@@ -709,7 +709,7 @@
                 }
             }
 
-            public IOutput<char, RealNullable2<TRealizedAstNode>> Realize()
+            public IOutput<char, RealNullable<TRealizedAstNode>> Realize()
             {
                 if (this.cachedOutput != null)
                 {
@@ -718,26 +718,26 @@
 
                 if (this.value.TryGetValue(out var value))
                 {
-                    this.cachedOutput = new Output<char, RealNullable2<TRealizedAstNode>>(true, value, null);
+                    this.cachedOutput = new Output<char, RealNullable<TRealizedAstNode>>(true, value, null);
                     return this.cachedOutput;
                 }
 
                 var deferredOutput = this.future.Value;
                 if (!deferredOutput.Success)
                 {
-                    this.cachedOutput = new Output<char, RealNullable2<TRealizedAstNode>>(false, default, deferredOutput.Remainder);
+                    this.cachedOutput = new Output<char, RealNullable<TRealizedAstNode>>(false, default, deferredOutput.Remainder);
                     return this.cachedOutput;
                 }
 
                 var output = this.Value.Realize();
                 if (output.Success)
                 {
-                    this.cachedOutput = new Output<char, RealNullable2<TRealizedAstNode>>(true, new RealNullable2<TRealizedAstNode>(output.Parsed), output.Remainder);
+                    this.cachedOutput = new Output<char, RealNullable<TRealizedAstNode>>(true, new RealNullable<TRealizedAstNode>(output.Parsed), output.Remainder);
                     return this.cachedOutput;
                 }
                 else
                 {
-                    this.cachedOutput = new Output<char, RealNullable2<TRealizedAstNode>>(true, new RealNullable2<TRealizedAstNode>(), output.Remainder); //// deferredOutput.Remainder);
+                    this.cachedOutput = new Output<char, RealNullable<TRealizedAstNode>>(true, new RealNullable<TRealizedAstNode>(), output.Remainder); //// deferredOutput.Remainder);
                     return this.cachedOutput;
                 }
             }
