@@ -298,7 +298,70 @@
                 }
             }
 
-            //// TODO node type nested in static factory class
+            /// <summary>
+            /// ISSUES: 
+            /// 
+            /// realized versions have the `realize` method defined on them, so callers can still call `realize` even if it's a no-op
+            /// there's nothing that stops the use of `slash<parsemode.realized>` in cases where no instance is needed
+            /// can't use singletons for realized nodes that are really singletons
+            /// it's weird that you can say `Slash<ParseMode.Realized>.Create(...)` and you'll get a deferred node
+            /// </summary>
+            public static class Option4
+            {
+                public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>> where TMode : ParseMode
+                {
+                    public static Slash<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                    {
+                        return new Slash<ParseMode.Deferred>(previouslyParsedOutput);
+                    }
+
+                    private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
+
+                    private Future<IOutput<char, Slash<ParseMode.Realized>>> cachedOutput;
+
+                    private Slash(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                    {
+                        this.previouslyParsedOutput = previouslyParsedOutput;
+
+                        this.cachedOutput = new Future<IOutput<char, Slash<ParseMode.Realized>>>(() => this.RealizeImpl());
+                    }
+
+                    private Slash(Future<IOutput<char, Slash<ParseMode.Realized>>> output)
+                    {
+                        this.cachedOutput = output;
+                    }
+
+                    public IOutput<char, Slash<ParseMode.Realized>> Realize()
+                    {
+                        return cachedOutput.Value;
+                    }
+
+                    private IOutput<char, Slash<ParseMode.Realized>> RealizeImpl()
+                    {
+                        var output = this.previouslyParsedOutput.Value;
+                        if (!output.Success)
+                        {
+                            return new Output<char, Slash<ParseMode.Realized>>(false, default, output.Remainder);
+                        }
+
+                        var input = output.Remainder;
+
+                        if (input.Current == '/')
+                        {
+                            return new Output<char, Slash<ParseMode.Realized>>(
+                                true,
+                                new Slash<ParseMode.Realized>(this.cachedOutput),
+                                input.Next());
+                        }
+                        else
+                        {
+                            return new Output<char, Slash<ParseMode.Realized>>(false, default, input);
+                        }
+                    }
+                }
+            }
+
+            
             //// TODO probably other options
         }
 
