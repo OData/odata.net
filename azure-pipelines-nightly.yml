@@ -30,6 +30,7 @@ variables:
   value: none
 - name: runCodesignValidationInjection
   value: false
+- group: OData-ESRP-CodeSigning
 
 extends:
   template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
