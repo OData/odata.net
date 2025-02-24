@@ -41,9 +41,11 @@ steps:
 
 - task: DotNetCoreCLI@2
   condition: eq(variables.buildConfiguration, 'Release')
-  displayName: 'Test - Microsoft.OData.Client.E2E.Tests'
+  displayName: 'Test - E2E Tests'
   inputs:
     command: 'test'
     arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --collect "Code Coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Microsoft.OData.Client.E2E.Tests\Microsoft.OData.Client.E2E.Tests.csproj
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Core\Microsoft.OData.Core.E2E.Tests\Microsoft.OData.Core.E2E.Tests.csproj
+     $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Edm\Microsoft.OData.Edm.E2E.Tests\Microsoft.OData.Edm.E2E.Tests.csproj

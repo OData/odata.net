@@ -9,19 +9,19 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
-using Microsoft.OData.Client.E2E.Tests.DeltaTests.Server;
+using Microsoft.OData.Client.E2E.Tests.CancellationTokenTests.Server;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd;
+using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 using Microsoft.OData.Edm;
 using Xunit;
-using AuditInfo = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AuditInfo;
-using Car = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Car;
-using Customer = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer;
-using Order = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order;
+using AuditInfo = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.AuditInfo;
+using Car = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Car;
+using Customer = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Customer;
+using Order = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Order;
 
-namespace Microsoft.OData.Client.E2E.Tests.DeltaTests.Tests;
+namespace Microsoft.OData.Client.E2E.Tests.CancellationTokenTests.Tests;
 
 
 /// <summary>
@@ -134,10 +134,10 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
         Assert.Equal("The operation was canceled.", exception.Message);
 
         // ExecuteAsync by continuation
-        var customers = (await _context.Customers.ExecuteAsync()) as QueryOperationResponse<Customer>;
+        var customers = await _context.Customers.ExecuteAsync() as QueryOperationResponse<Customer>;
         // continuation is only available when the result has been enumerated. Hence we call Count()
         Assert.NotNull(customers);
-        var count = customers.Count(); 
+        var count = customers.Count();
         var continuation = customers.GetContinuation();
 
         Task response2() => _context.ExecuteAsync(continuation, source.Token);
@@ -146,10 +146,10 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
         Assert.Equal("The operation was canceled.", exception2.Message);
 
         // ExecuteAsync by nextLink
-        var customers2 = (await _context.Customers.ExecuteAsync()) as QueryOperationResponse<Customer>;
+        var customers2 = await _context.Customers.ExecuteAsync() as QueryOperationResponse<Customer>;
         // continuation is only available when the result has been enumerated. Hence we call Count()
         Assert.NotNull(customers2);
-        var count2 = customers2.Count(); 
+        var count2 = customers2.Count();
         var continuation2 = customers2.GetContinuation();
 
         Task response3() => _context.ExecuteAsync<Customer>(continuation2.NextLinkUri, source.Token);
@@ -214,7 +214,7 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
         //Get Entity by DataServiceQuery.ExecuteAsync
         var query = _context.Customers.Expand(c => c.Orders).Where(c => c.CustomerId == 11) as DataServiceQuery<Customer>;
         Assert.NotNull(query);
-        var resp = (await query.ExecuteAsync()) as QueryOperationResponse<Customer>;
+        var resp = await query.ExecuteAsync() as QueryOperationResponse<Customer>;
         Assert.NotNull(resp);
         var customer = resp.First();
 
@@ -235,7 +235,7 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
 
     #region ReadStreamAsync with CancellationToken
 
-     //[Fact] // Failing - to be fixed in a different PR
+    //[Fact] // Failing - to be fixed in a different PR
     public async Task GetReadStreamAsyncCancellationTokenTest()
     {
         // Arrange
@@ -286,8 +286,8 @@ public class CancellationTokenTests : EndToEndTestBase<CancellationTokenTests.Te
             source.Token,
             new DataServiceRequest[]
             {
-                    new DataServiceRequest<Customer>(((_context.Customers.Where(c => c.CustomerId == 11)) as DataServiceQuery<Customer>)?.RequestUri),
-                    new DataServiceRequest<Customer>(((_context.Customers.Where(c => c.CustomerId == 22)) as DataServiceQuery<Customer>)?.RequestUri)
+                    new DataServiceRequest<Customer>((_context.Customers.Where(c => c.CustomerId == 11) as DataServiceQuery<Customer>)?.RequestUri),
+                    new DataServiceRequest<Customer>((_context.Customers.Where(c => c.CustomerId == 22) as DataServiceQuery<Customer>)?.RequestUri)
             });
 
         source.Cancel();

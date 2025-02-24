@@ -8,11 +8,12 @@
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
+using Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server;
 using Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients;
 using Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Default;
-using Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 using Xunit;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
@@ -111,7 +112,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
             foreach (var messageIdResult in messageIdResults)
             {
                 // Message.MessageId is string on client and int32 on server
-                Assert.True(Int32.TryParse(messageIdResult.MessageId, out _), "Failed to parse message.messageid as int32");
+                Assert.True(int.TryParse(messageIdResult.MessageId, out _), "Failed to parse message.messageid as int32");
             }
 
             var messageIsReadResults = _context.Messages.Select(m => new { m.IsRead }).ToArray();

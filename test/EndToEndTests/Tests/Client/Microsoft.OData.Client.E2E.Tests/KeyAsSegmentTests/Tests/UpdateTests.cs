@@ -8,18 +8,18 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
 using Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Server;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd;
+using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 using Microsoft.OData.Edm;
 using Xunit;
-using Customer = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer;
-using Employee = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee;
-using Order = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order;
-using Person = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person;
-using SpecialEmployee = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee;
+using Customer = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Customer;
+using Employee = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Employee;
+using Order = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Order;
+using Person = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Person;
+using SpecialEmployee = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.SpecialEmployee;
 
 namespace Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Tests;
 
@@ -88,13 +88,13 @@ public class UpdateTests : EndToEndTestBase<UpdateTests.TestsStartup>
         var specialEmployee = new SpecialEmployee { PersonId = -10 };
         _context.AttachTo("People", specialEmployee);
 
-        specialEmployee.Bonus = Int32.MaxValue;
+        specialEmployee.Bonus = int.MaxValue;
         _context.UpdateObject(specialEmployee);
         _context.SaveChanges();
 
         var retrievedPerson = _context.People.ByKey(specialEmployee.PersonId).GetValue();
         var retrievedBonus = (retrievedPerson as SpecialEmployee)?.Bonus;
-        Assert.Equal(Int32.MaxValue, retrievedBonus);
+        Assert.Equal(int.MaxValue, retrievedBonus);
     }
 
     [Fact]
