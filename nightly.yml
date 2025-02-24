@@ -1,3 +1,4 @@
+
   steps:
     - template: buildandtest.yml
 
@@ -16,10 +17,16 @@
       inputs:
         version: '2.1.x'
     # CodeSign
-    - task: EsrpCodeSigning@1
+    - task: EsrpCodeSigning@5
       displayName: 'ESRP CodeSign - OData'
       inputs:
-        ConnectedServiceName: 'ESRP CodeSigning - OData'
+        ConnectedServiceName: $(ODataEsrpConnectionServiceName)
+        AppRegistrationClientId: '$(ODataEsrpAppRegistrationClientId)'
+        AppRegistrationTenantId: '$(ODataEsrpAppRegistrationTenantId)'
+        AuthAKVName: $(ODataEsrpAuthAKVName)
+        AuthCertName: $(ODataEsrpAuthCertName)
+        AuthSignCertName: $(ODataEsrpAuthSignCertName)
+        ServiceEndpointUrl: '$(ODataEsrpServiceEndpointUrl)'
         FolderPath: '$(Build.SourcesDirectory)\src'
         Pattern: 'Microsoft.Spatial.dll,Microsoft.OData.Edm.dll,Microsoft.OData.Core.dll,Microsoft.OData.Client.dll'
         signConfigType: inlineSignParams
@@ -146,10 +153,16 @@
         feedsToUse: config
         arguments: 'pack $(Build.SourcesDirectory)\src\Microsoft.OData.Client\Build.NuGet\Microsoft.OData.Client.Release.nuspec -NonInteractive -OutputDirectory $(Build.ArtifactStagingDirectory)\$(nugetArtifactsDir) -Properties Configuration=$(buildConfiguration);ProductRoot=$(productBinPathClient)\**;SourcesRoot=$(Build.SourcesDirectory);VersionFullSemantic=$(VersionFullSemantic);VersionNuGetSemantic=$(VersionNuGetSemantic) -Verbosity Detailed -Symbols -SymbolPackageFormat snupkg'
 
-    - task: EsrpCodeSigning@1
+    - task: EsrpCodeSigning@5
       displayName: 'ESRP CodeSigning Nuget Packages'
       inputs:
-        ConnectedServiceName: 'ESRP CodeSigning - OData'
+        ConnectedServiceName: $(ODataEsrpConnectionServiceName)
+        AppRegistrationClientId: '$(ODataEsrpAppRegistrationClientId)'
+        AppRegistrationTenantId: '$(ODataEsrpAppRegistrationTenantId)'
+        AuthAKVName: $(ODataEsrpAuthAKVName)
+        AuthCertName: $(ODataEsrpAuthCertName)
+        AuthSignCertName: $(ODataEsrpAuthSignCertName)
+        ServiceEndpointUrl: '$(ODataEsrpServiceEndpointUrl)'
         FolderPath: '$(Build.ArtifactStagingDirectory)\$(nugetArtifactsDir)'
         Pattern: '*.nupkg'
         signConfigType: inlineSignParams
