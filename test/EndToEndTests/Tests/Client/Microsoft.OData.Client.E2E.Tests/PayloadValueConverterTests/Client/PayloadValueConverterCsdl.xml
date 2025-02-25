@@ -1,0 +1,48 @@
+﻿<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Microsoft.OData.Client.E2E.Tests.PayloadValueConverterTests.Server" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Person">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Picture" Type="Edm.Binary" Nullable="false" />
+        <Property Name="Numbers" Type="Collection(Edm.Int32)" Nullable="false" />
+        <Property Name="BusinessCard" Type="Microsoft.OData.Client.E2E.Tests.PayloadValueConverterTests.Server.ContactInfo" Nullable="false" />
+        <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
+      </EntityType>
+      <EntityType Name="Product">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" Nullable="false" />
+        <Property Name="Info" Type="Microsoft.OData.Client.E2E.Tests.PayloadValueConverterTests.Server.ProductInfo" Nullable="false" />
+        <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
+      </EntityType>
+      <ComplexType Name="ContactInfo" OpenType="true">
+        <Property Name="N" Type="Edm.String" Nullable="false" />
+        <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="ProductInfo">
+        <Property Name="Site" Type="Edm.String" Nullable="false" />
+        <Property Name="Serial" Type="Edm.Int64" Nullable="false" />
+        <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
+      </ComplexType>
+    </Schema>
+    <Schema Namespace="Default" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Action Name="AddProduct" IsBound="true">
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.PayloadValueConverterTests.Server.Product" />
+        <Parameter Name="Set" Type="Collection(Microsoft.OData.Client.E2E.Tests.PayloadValueConverterTests.Server.Product)" />
+        <Parameter Name="Value" Type="Microsoft.OData.Client.E2E.Tests.PayloadValueConverterTests.Server.Product" />
+        <Parameter Name="Override" Type="Edm.Boolean" Nullable="false" />
+      </Action>
+      <Action Name="ResetDataSource" />
+      <EntityContainer Name="Container">
+        <EntitySet Name="People" EntityType="Microsoft.OData.Client.E2E.Tests.PayloadValueConverterTests.Server.Person" />
+        <EntitySet Name="Products" EntityType="Microsoft.OData.Client.E2E.Tests.PayloadValueConverterTests.Server.Product" />
+        <ActionImport Name="ResetDataSource" Action="Default.ResetDataSource" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
