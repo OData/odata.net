@@ -7,19 +7,19 @@
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
 using Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Server;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd;
+using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 using Xunit;
-using Customer = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer;
-using Employee = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee;
-using Person = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person;
-using SpecialEmployee = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee;
-using DiscontinuedProduct = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProduct;
-using ProductPhoto = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto;
-using Order = Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order;
+using Customer = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Customer;
+using DiscontinuedProduct = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.DiscontinuedProduct;
+using Employee = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Employee;
+using Order = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Order;
+using Person = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Person;
+using ProductPhoto = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.ProductPhoto;
+using SpecialEmployee = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.SpecialEmployee;
 
 namespace Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Tests;
 
@@ -60,7 +60,7 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
     public void ClientChangesUrlConventionsBetweenQueries()
     {
         // Arrange & Act & Assert
-        var contextWrapper = this.CreateWrappedContext();
+        var contextWrapper = CreateWrappedContext();
 
         var query = contextWrapper.CreateQuery<Customer>("Customers").OrderBy(c => c.CustomerId).ToList();
         Assert.Equal(10, query.Count);
@@ -80,7 +80,7 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
     public void GetSingleEntityWithKeyAsSegment()
     {
         // Arrange & Act
-        var contextWrapper = this.CreateWrappedContext();
+        var contextWrapper = CreateWrappedContext();
 
         var queryByKey = contextWrapper.CreateQuery<Person>("People").ByKey(-10);
         var personByKey = queryByKey.GetValue();
@@ -102,7 +102,7 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
     public void LinqQueryWithKeyUsingMethodSyntax()
     {
         // Arrange & Act
-        var contextWrapper = this.CreateWrappedContext();
+        var contextWrapper = CreateWrappedContext();
 
         var queryByKey = contextWrapper.People.ByKey(-10);
         var personByKey = queryByKey.GetValue();
@@ -124,7 +124,7 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
     public void LinqQueryWithNullStringInKey()
     {
         // Arrange
-        var contextWrapper = this.CreateWrappedContext();
+        var contextWrapper = CreateWrappedContext();
 
         var query =
             from p in contextWrapper.People
@@ -143,7 +143,7 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
     public void LinqQueryWithKey()
     {
         // Arrange
-        var contextWrapper = this.CreateWrappedContext();
+        var contextWrapper = CreateWrappedContext();
 
         var query =
             from p in contextWrapper.People
@@ -166,7 +166,7 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
     public void LinqQueryWithKeyAndOfType()
     {
         // Arrange
-        var contextWrapper = this.CreateWrappedContext();
+        var contextWrapper = CreateWrappedContext();
 
         var query = (
             from p in contextWrapper.People.OfType<Employee>()
@@ -178,7 +178,7 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
 
         // Assert
         Assert.IsType<Employee>(employee);
-        Assert.EndsWith("odata/People/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee?$filter=PersonId eq -6", query?.ToString());
+        Assert.EndsWith("odata/People/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Employee?$filter=PersonId eq -6", query?.ToString());
         Assert.NotNull(employee);
         Assert.Equal("vnqfkvpolnxvurgxpfbfquqrqxqxknjykkuapsqcmbeuslhkqufultvr", employee.Name);
         Assert.Equal(2147483647, employee.Salary);
@@ -188,7 +188,7 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
     public void MultipleNavigationAndOfTypeInQuery()
     {
         // Arrange
-        var contextWrapper = this.CreateWrappedContext();
+        var contextWrapper = CreateWrappedContext();
 
         var query = (
             from product in contextWrapper.Products.OfType<DiscontinuedProduct>()
@@ -207,7 +207,7 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
 
         // Assert
         Assert.EndsWith(
-            "odata/Products/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct/-9/RelatedProducts/$/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct/-9/Photos?$filter=PhotoId eq -4 and ProductId eq -4",
+            "odata/Products/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct/-9/RelatedProducts/$/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct/-9/Photos?$filter=PhotoId eq -4 and ProductId eq -4",
             query?.ToString());
 
         Assert.NotNull(photoResult);
@@ -219,7 +219,7 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
     public void AttachToWithKeyAsSegment()
     {
         // Arrange
-        var contextWrapper = this.CreateWrappedContext();
+        var contextWrapper = CreateWrappedContext();
 
         var person = new Person { PersonId = -10 };
 
@@ -235,7 +235,7 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
     public void AttachToAndLoadPropertyWithKeyAsSegment()
     {
         // Arrange
-        var contextWrapper = this.CreateWrappedContext();
+        var contextWrapper = CreateWrappedContext();
 
         var person = new Person { PersonId = -10 };
 
@@ -254,7 +254,7 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
     public void LoadPropertyWithNextLink()
     {
         // Arrange
-        var contextWrapper = this.CreateWrappedContext();
+        var contextWrapper = CreateWrappedContext();
 
         var response = contextWrapper.Customers.Expand(c => c.Orders).Execute() as QueryOperationResponse<Customer>;
         DataServiceQueryContinuation<Customer>? customerContinuation = null;
@@ -263,7 +263,7 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
         {
             if (customerContinuation != null)
             {
-                response = contextWrapper.Execute<Customer>(customerContinuation);
+                response = contextWrapper.Execute(customerContinuation);
             }
 
             foreach (var customer in response)
@@ -285,7 +285,7 @@ public class ClientKeyAsSegmentTests : EndToEndTestBase<ClientKeyAsSegmentTests.
     public void ClientWithKeyAsSegmentSendsRequestsToServerWithoutKeyAsSegment()
     {
         // Arrange
-        var contextWrapper = this.CreateWrappedContext();
+        var contextWrapper = CreateWrappedContext();
 
         // Act
         var queryable = contextWrapper.Orders.ByKey(0);
