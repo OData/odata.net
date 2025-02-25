@@ -189,13 +189,10 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="enumType">The enum type.</param>
         /// <returns>True if the underlying type of enum type is integer type.</returns>
-        internal static bool IsEnumIntegerType(IEdmEnumType enumType)
-        {
-            return enumType.UnderlyingType.PrimitiveKind == EdmPrimitiveTypeKind.Byte ||
+        internal static bool IsEnumIntegerType(IEdmEnumType enumType) => enumType.UnderlyingType.PrimitiveKind == EdmPrimitiveTypeKind.Byte ||
                    enumType.UnderlyingType.PrimitiveKind == EdmPrimitiveTypeKind.SByte ||
                    enumType.UnderlyingType.PrimitiveKind == EdmPrimitiveTypeKind.Int16 ||
                    enumType.UnderlyingType.PrimitiveKind == EdmPrimitiveTypeKind.Int32 ||
                    enumType.UnderlyingType.PrimitiveKind == EdmPrimitiveTypeKind.Int64;
-        }
     }
 }

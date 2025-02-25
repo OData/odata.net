@@ -59,9 +59,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.name; }
         }
 
-        private IEdmExpression ComputeExpression()
-        {
-            return CsdlSemanticsModel.WrapExpression(this.sourceElement, this.BindingContext, this.schema);
-        }
+        private IEdmExpression ComputeExpression() => CsdlSemanticsModel.WrapExpression(this.sourceElement, this.BindingContext, this.schema);
     }
 }

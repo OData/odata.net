@@ -65,20 +65,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes the reference element end.
         /// </summary>
         /// <param name="reference">edmx:reference element</param>
-        internal override void WriteReferenceElementEnd(IEdmReference reference)
-        {
-            this.xmlWriter.WriteEndElement();
-        }
+        internal override void WriteReferenceElementEnd(IEdmReference reference) => this.xmlWriter.WriteEndElement();
 
         /// <summary>
         /// Asynchronously writes the reference element end.
         /// </summary>
         /// <param name="reference">edmx:reference element</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteReferenceElementEndAsync(IEdmReference reference)
-        {
-            return this.xmlWriter.WriteEndElementAsync();
-        }
+        internal override Task WriteReferenceElementEndAsync(IEdmReference reference) => this.xmlWriter.WriteEndElementAsync();
 
         /// <summary>
         /// Writes the Include element header.
@@ -109,20 +103,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes the IncludeAnnotations end.
         /// </summary>
         /// <param name="include">The Edm Include information.</param>
-        internal override void WriteIncludeElementEnd(IEdmInclude include)
-        {
-            this.xmlWriter.WriteEndElement();
-        }
+        internal override void WriteIncludeElementEnd(IEdmInclude include) => this.xmlWriter.WriteEndElement();
 
         /// <summary>
         /// Asynchronously writes the IncludeAnnotations end.
         /// </summary>
         /// <param name="include">The Edm Include information.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteIncludeElementEndAsync(IEdmInclude include)
-        {
-            return this.xmlWriter.WriteEndElementAsync();
-        }
+        internal override Task WriteIncludeElementEndAsync(IEdmInclude include) => this.xmlWriter.WriteEndElementAsync();
 
         /// <summary>
         /// Writes the IncludeAnnotations element.
@@ -253,20 +241,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes the EnumContainer element end.
         /// </summary>
         /// <param name="enumType">The Edm enumaration type.</param>
-        internal override void WriteEnumTypeElementEnd(IEdmEnumType enumType)
-        {
-            this.WriteEndElement();
-        }
+        internal override void WriteEnumTypeElementEnd(IEdmEnumType enumType) => this.WriteEndElement();
 
         /// <summary>
         /// Asynchronously writes the EnumContainer element end.
         /// </summary>
         /// <param name="enumType">The Edm enumaration type.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteEnumTypeElementEndAsync(IEdmEnumType enumType)
-        {
-            return this.WriteEndElementAsync();
-        }
+        internal override Task WriteEnumTypeElementEndAsync(IEdmEnumType enumType) => this.WriteEndElementAsync();
 
         /// <summary>
         /// Writes the EntityContainer element header.
@@ -383,19 +365,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously writes the key properties element header.
         /// </summary>
-        internal override void WriteDeclaredKeyPropertiesElementHeader()
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_Key);
-        }
+        internal override void WriteDeclaredKeyPropertiesElementHeader() => this.xmlWriter.WriteStartElement(CsdlConstants.Element_Key);
 
         /// <summary>
         /// Asynchronously writes the key properties element header.
         /// </summary>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteDeclaredKeyPropertiesElementHeaderAsync()
-        {
-            return this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_Key, null);
-        }
+        internal override Task WriteDeclaredKeyPropertiesElementHeaderAsync() => this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_Key, null);
 
         /// <summary>
         /// Writes the PropertyRef element.
@@ -625,39 +601,27 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes enumeration member element end.
         /// </summary>
         /// <param name="member">The Edm enumeration member.</param>
-        internal override void WriteEnumMemberElementEnd(IEdmEnumMember member)
-        {
-            this.xmlWriter.WriteEndElement();
-        }
+        internal override void WriteEnumMemberElementEnd(IEdmEnumMember member) => this.xmlWriter.WriteEndElement();
 
         /// <summary>
         /// Asynchronously writes EnumMember element end.
         /// </summary>
         /// <param name="member">The Edm enumeration member.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteEnumMemberElementEndAsync(IEdmEnumMember member)
-        {
-            return this.xmlWriter.WriteEndElementAsync();
-        }
+        internal override Task WriteEnumMemberElementEndAsync(IEdmEnumMember member) => this.xmlWriter.WriteEndElementAsync();
 
         /// <summary>
         /// Writes Nullable attribute.
         /// </summary>
         /// <param name="reference">The Edm type reference.</param>
-        internal override void WriteNullableAttribute(IEdmTypeReference reference)
-        {
-            this.WriteOptionalAttribute(CsdlConstants.Attribute_Nullable, reference.IsNullable, CsdlConstants.Default_Nullable, EdmValueWriter.BooleanAsXml);
-        }
+        internal override void WriteNullableAttribute(IEdmTypeReference reference) => this.WriteOptionalAttribute(CsdlConstants.Attribute_Nullable, reference.IsNullable, CsdlConstants.Default_Nullable, EdmValueWriter.BooleanAsXml);
 
         /// <summary>
         /// Asynchronously writes Nullable attribute.
         /// </summary>
         /// <param name="reference">The Edm type reference.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteNullableAttributeAsync(IEdmTypeReference reference)
-        {
-            return this.WriteOptionalAttributeAsync(CsdlConstants.Attribute_Nullable, reference.IsNullable, CsdlConstants.Default_Nullable, EdmValueWriter.BooleanAsXml);
-        }
+        internal override Task WriteNullableAttributeAsync(IEdmTypeReference reference) => this.WriteOptionalAttributeAsync(CsdlConstants.Attribute_Nullable, reference.IsNullable, CsdlConstants.Default_Nullable, EdmValueWriter.BooleanAsXml);
 
         /// <summary>
         /// Writes TypeDefinition attributes.
@@ -1038,39 +1002,27 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes ReturnType element header.
         /// </summary>
         /// <param name="operationReturn">The Edm Operation return.</param>
-        internal override void WriteReturnTypeElementHeader(IEdmOperationReturn operationReturn)
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_ReturnType);
-        }
+        internal override void WriteReturnTypeElementHeader(IEdmOperationReturn operationReturn) => this.xmlWriter.WriteStartElement(CsdlConstants.Element_ReturnType);
 
         /// <summary>
         /// Asynchronously writes ReturnType element header.
         /// </summary>
         /// <param name="operationReturn">The Edm Operation return.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteReturnTypeElementHeaderAsync(IEdmOperationReturn operationReturn)
-        {
-            return this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_ReturnType, null);
-        }
+        internal override Task WriteReturnTypeElementHeaderAsync(IEdmOperationReturn operationReturn) => this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_ReturnType, null);
 
         /// <summary>
         /// Writes Type attribute.
         /// </summary>
         /// <param name="typeReference">The Edm type reference.</param>
-        internal override void WriteTypeAttribute(IEdmTypeReference typeReference)
-        {
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Type, typeReference, this.TypeReferenceAsXml);
-        }
+        internal override void WriteTypeAttribute(IEdmTypeReference typeReference) => this.WriteRequiredAttribute(CsdlConstants.Attribute_Type, typeReference, this.TypeReferenceAsXml);
 
         /// <summary>
         /// Asynchronously writes Type attribute.
         /// </summary>
         /// <param name="typeReference">The Edm type reference.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteTypeAttributeAsync(IEdmTypeReference typeReference)
-        {
-            return this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Type, typeReference, this.TypeReferenceAsXml);
-        }
+        internal override Task WriteTypeAttributeAsync(IEdmTypeReference typeReference) => this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Type, typeReference, this.TypeReferenceAsXml);
 
         /// <summary>
         /// Writes ActionImport element header.
@@ -1344,20 +1296,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes PropertyConstructor element end.
         /// </summary>
         /// <param name="constructor">The Edm property constructor.</param>
-        internal override void WritePropertyConstructorElementEnd(IEdmPropertyConstructor constructor)
-        {
-            this.WriteEndElement();
-        }
+        internal override void WritePropertyConstructorElementEnd(IEdmPropertyConstructor constructor) => this.WriteEndElement();
 
         /// <summary>
         /// Asynchronously writes PropertyConstructor element end.
         /// </summary>
         /// <param name="constructor">The Edm property constructor.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WritePropertyConstructorElementEndAsync(IEdmPropertyConstructor constructor)
-        {
-            return this.WriteEndElementAsync();
-        }
+        internal override Task WritePropertyConstructorElementEndAsync(IEdmPropertyConstructor constructor) => this.WriteEndElementAsync();
 
         /// <summary>
         /// Writes VocabularyAnnotation element header.
@@ -1401,10 +1347,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <param name="annotation">The Edm vocabulary annotation.</param>
         /// <param name="isInline">Is inline type or not.</param>
-        internal override void WriteVocabularyAnnotationElementEnd(IEdmVocabularyAnnotation annotation, bool isInline)
-        {
-            WriteEndElement();
-        }
+        internal override void WriteVocabularyAnnotationElementEnd(IEdmVocabularyAnnotation annotation, bool isInline) => WriteEndElement();
 
         /// <summary>
         /// Asynchronously writes VocabularyAnnotation element end.
@@ -1412,10 +1355,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="annotation">The Edm vocabulary annotation.</param>
         /// <param name="isInline">Is inline type or not.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteVocabularyAnnotationElementEndAsync(IEdmVocabularyAnnotation annotation, bool isInline)
-        {
-            return WriteEndElementAsync();
-        }
+        internal override Task WriteVocabularyAnnotationElementEndAsync(IEdmVocabularyAnnotation annotation, bool isInline) => WriteEndElementAsync();
 
         /// <summary>
         /// Writes PropertyValue element header.
@@ -1732,20 +1672,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes FunctionApplication element end.
         /// </summary>
         /// <param name="expression">The Edm Apply expression.</param>
-        internal override void WriteFunctionApplicationElementEnd(IEdmApplyExpression expression)
-        {
-            this.WriteEndElement();
-        }
+        internal override void WriteFunctionApplicationElementEnd(IEdmApplyExpression expression) => this.WriteEndElement();
 
         /// <summary>
         /// Asynchronously writes FunctionApplication element end.
         /// </summary>
         /// <param name="expression">The Edm Apply expression.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteFunctionApplicationElementEndAsync(IEdmApplyExpression expression)
-        {
-            return this.WriteEndElementAsync();
-        }
+        internal override Task WriteFunctionApplicationElementEndAsync(IEdmApplyExpression expression) => this.WriteEndElementAsync();
 
         /// <summary>
         /// Writes GuidConstantExpression element.
@@ -1890,77 +1824,53 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes If Expression element header.
         /// </summary>
         /// <param name="expression">EDM if Expression</param>
-        internal override void WriteIfExpressionElementHeader(IEdmIfExpression expression)
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_If);
-        }
+        internal override void WriteIfExpressionElementHeader(IEdmIfExpression expression) => this.xmlWriter.WriteStartElement(CsdlConstants.Element_If);
 
         /// <summary>
         /// Asynchronously writes If Expression element header.
         /// </summary>
         /// <param name="expression">EDM if Expression</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteIfExpressionElementHeaderAsync(IEdmIfExpression expression)
-        {
-            return this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_If, null);
-        }
+        internal override Task WriteIfExpressionElementHeaderAsync(IEdmIfExpression expression) => this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_If, null);
 
         /// <summary>
         /// Writes If Expression element end.
         /// </summary>
         /// <param name="expression">EDM if Expression</param>
-        internal override void WriteIfExpressionElementEnd(IEdmIfExpression expression)
-        {
-            this.WriteEndElement();
-        }
+        internal override void WriteIfExpressionElementEnd(IEdmIfExpression expression) => this.WriteEndElement();
 
         /// <summary>
         /// Asynchronously writes If Expression element end.
         /// </summary>
         /// <param name="expression">EDM if Expression</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteIfExpressionElementEndAsync(IEdmIfExpression expression)
-        {
-            return this.WriteEndElementAsync();
-        }
+        internal override Task WriteIfExpressionElementEndAsync(IEdmIfExpression expression) => this.WriteEndElementAsync();
 
         /// <summary>
         /// Writes Collection Expression element header.
         /// </summary>
         /// <param name="expression">The Edm collection expression.</param>
-        internal override void WriteCollectionExpressionElementHeader(IEdmCollectionExpression expression)
-        {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_Collection);
-        }
+        internal override void WriteCollectionExpressionElementHeader(IEdmCollectionExpression expression) => this.xmlWriter.WriteStartElement(CsdlConstants.Element_Collection);
 
         /// <summary>
         /// Asynchronously writes Collection Expression element header.
         /// </summary>
         /// <param name="expression">The Edm collection expression.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteCollectionExpressionElementHeaderAsync(IEdmCollectionExpression expression)
-        {
-            return this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_Collection, null);
-        }
+        internal override Task WriteCollectionExpressionElementHeaderAsync(IEdmCollectionExpression expression) => this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_Collection, null);
 
         /// <summary>
         /// Writes Collection Expression element end.
         /// </summary>
         /// <param name="expression">The Edm collection expression.</param>
-        internal override void WriteCollectionExpressionElementEnd(IEdmCollectionExpression expression)
-        {
-            this.WriteEndElement();
-        }
+        internal override void WriteCollectionExpressionElementEnd(IEdmCollectionExpression expression) => this.WriteEndElement();
 
         /// <summary>
         /// Asynchronously writes Collection Expression element end.
         /// </summary>
         /// <param name="expression">The Edm collection expression.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteCollectionExpressionElementEndAsync(IEdmCollectionExpression expression)
-        {
-            return this.WriteEndElementAsync();
-        }
+        internal override Task WriteCollectionExpressionElementEndAsync(IEdmCollectionExpression expression) => this.WriteEndElementAsync();
 
         /// <summary>
         /// Writes LabeledElement header.
@@ -2093,10 +2003,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <param name="expression">The Edm Cast expression.</param>
         /// <param name="inlineType">Is inline type or not.</param>
-        internal override void WriteCastExpressionElementEnd(IEdmCastExpression expression, bool inlineType)
-        {
-            this.WriteEndElement();
-        }
+        internal override void WriteCastExpressionElementEnd(IEdmCastExpression expression, bool inlineType) => this.WriteEndElement();
 
         /// <summary>
         /// Asynchronously writes Cast Expression end.
@@ -2104,10 +2011,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="expression">The Edm Cast expression.</param>
         /// <param name="inlineType">Is inline type or not.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteCastExpressionElementEndAsync(IEdmCastExpression expression, bool inlineType)
-        {
-            return this.WriteEndElementAsync();
-        }
+        internal override Task WriteCastExpressionElementEndAsync(IEdmCastExpression expression, bool inlineType) => this.WriteEndElementAsync();
 
         /// <summary>
         /// Writes EnumMember Expression element.
@@ -2159,35 +2063,23 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes End Element.
         /// </summary>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override void WriteEndElement()
-        {
-            this.xmlWriter.WriteEndElement();
-        }
+        internal override void WriteEndElement() => this.xmlWriter.WriteEndElement();
 
         /// <summary>
         /// Asynchronously writes End Element.
         /// </summary>
-        internal override Task WriteEndElementAsync()
-        {
-            return this.xmlWriter.WriteEndElementAsync();
-        }
+        internal override Task WriteEndElementAsync() => this.xmlWriter.WriteEndElementAsync();
 
         /// <summary>
         /// Writes Array End Element.
         /// </summary>
-        internal override void WriteArrayEndElement()
-        {
-            this.xmlWriter.WriteEndElement();
-        }
+        internal override void WriteArrayEndElement() => this.xmlWriter.WriteEndElement();
 
         /// <summary>
         /// Asynchronously writes Array End Element.
         /// </summary>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteArrayEndElementAsync()
-        {
-            return this.xmlWriter.WriteEndElementAsync();
-        }
+        internal override Task WriteArrayEndElementAsync() => this.xmlWriter.WriteEndElementAsync();
 
         /// <summary>
         /// Writes Optional attribute.
@@ -2261,10 +2153,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="attribute">The attribute name.</param>
         /// <param name="value">The attribute value.</param>
         /// <param name="toXml">Value to xml function.</param>
-        internal void WriteRequiredAttribute<T>(string attribute, T value, Func<T, string> toXml)
-        {
-            this.xmlWriter.WriteAttributeString(attribute, toXml(value));
-        }
+        internal void WriteRequiredAttribute<T>(string attribute, T value, Func<T, string> toXml) => this.xmlWriter.WriteAttributeString(attribute, toXml(value));
 
         /// <summary>
         /// Asynchronously writes Required attribute.
@@ -2274,10 +2163,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="value">The attribute value.</param>
         /// <param name="toXml">Value to xml function.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal Task WriteRequiredAttributeAsync<T>(string attribute, T value, Func<T, string> toXml)
-        {
-            return this.xmlWriter.WriteAttributeStringAsync(null, attribute, null, toXml(value));
-        }
+        internal Task WriteRequiredAttributeAsync<T>(string attribute, T value, Func<T, string> toXml) => this.xmlWriter.WriteAttributeStringAsync(null, attribute, null, toXml(value));
 
         /// <summary>
         /// Writes Operation element attributes.
@@ -2490,15 +2376,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             return this.SerializationName((IEdmSchemaElement)type.Definition);
         }
 
-        private string TypeDefinitionAsXml(IEdmSchemaType type)
-        {
-            return this.SerializationName(type);
-        }
+        private string TypeDefinitionAsXml(IEdmSchemaType type) => this.SerializationName(type);
 
-        private string FunctionAsXml(IEdmOperation operation)
-        {
-            return this.SerializationName(operation);
-        }
+        private string FunctionAsXml(IEdmOperation operation) => this.SerializationName(operation);
 
         private string TermAsXml(IEdmTerm term)
         {

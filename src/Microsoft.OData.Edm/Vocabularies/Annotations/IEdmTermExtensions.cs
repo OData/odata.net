@@ -20,10 +20,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <param name="term">Term bound by the annotation.</param>
         /// <param name="target">Element the annotation applies to.</param>
         /// <returns>The <see cref="IEdmVocabularyAnnotation"/> built.</returns>
-        public static IEdmVocabularyAnnotation CreateVocabularyAnnotation(this IEdmTerm term, IEdmVocabularyAnnotatable target)
-        {
-            return term.CreateVocabularyAnnotation(target, null);
-        }
+        public static IEdmVocabularyAnnotation CreateVocabularyAnnotation(this IEdmTerm term, IEdmVocabularyAnnotatable target) => term.CreateVocabularyAnnotation(target, null);
 
         /// <summary>
         /// Creates <see cref="IEdmVocabularyAnnotation"/> using the <see cref="IEdmTerm"/> and its default value.

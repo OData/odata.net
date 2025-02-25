@@ -31,10 +31,7 @@ namespace Microsoft.OData.Edm
             }
         }
 
-        public static VersioningList<TElement> Create()
-        {
-            return new EmptyVersioningList();
-        }
+        public static VersioningList<TElement> Create() => new EmptyVersioningList();
 
         public abstract VersioningList<TElement> Add(TElement value);
 
@@ -50,10 +47,7 @@ namespace Microsoft.OData.Edm
 
         public abstract IEnumerator<TElement> GetEnumerator();
 
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => this.GetEnumerator();
 
         protected abstract TElement IndexedElement(int index);
 
@@ -66,25 +60,13 @@ namespace Microsoft.OData.Edm
                 get { return 0; }
             }
 
-            public override VersioningList<TElement> Add(TElement value)
-            {
-                return new ArrayVersioningList(this, value);
-            }
+            public override VersioningList<TElement> Add(TElement value) => new ArrayVersioningList(this, value);
 
-            public override IEnumerator<TElement> GetEnumerator()
-            {
-                return new EmptyListEnumerator();
-            }
+            public override IEnumerator<TElement> GetEnumerator() => new EmptyListEnumerator();
 
-            protected override TElement IndexedElement(int index)
-            {
-                throw new IndexOutOfRangeException();
-            }
+            protected override TElement IndexedElement(int index) => throw new IndexOutOfRangeException();
 
-            protected override VersioningList<TElement> RemoveIndexedElement(int index)
-            {
-                throw new IndexOutOfRangeException();
-            }
+            protected override VersioningList<TElement> RemoveIndexedElement(int index) => throw new IndexOutOfRangeException();
         }
 
         internal sealed class EmptyListEnumerator : IEnumerator<TElement>
@@ -103,10 +85,7 @@ namespace Microsoft.OData.Edm
             {
             }
 
-            public bool MoveNext()
-            {
-                return false;
-            }
+            public bool MoveNext() => false;
 
             public void Reset()
             {
@@ -138,25 +117,13 @@ namespace Microsoft.OData.Edm
                 get { return this.elements.Length; }
             }
 
-            public TElement ElementAt(int index)
-            {
-                return this.elements[index];
-            }
+            public TElement ElementAt(int index) => this.elements[index];
 
-            public override VersioningList<TElement> Add(TElement value)
-            {
-                return new ArrayVersioningList(this, value);
-            }
+            public override VersioningList<TElement> Add(TElement value) => new ArrayVersioningList(this, value);
 
-            public override IEnumerator<TElement> GetEnumerator()
-            {
-                return new ArrayListEnumerator(this);
-            }
+            public override IEnumerator<TElement> GetEnumerator() => new ArrayListEnumerator(this);
 
-            protected override TElement IndexedElement(int index)
-            {
-                return this.elements[index];
-            }
+            protected override TElement IndexedElement(int index) => this.elements[index];
 
             protected override VersioningList<TElement> RemoveIndexedElement(int index)
             {
@@ -222,10 +189,7 @@ namespace Microsoft.OData.Edm
                 return this.index <= count;
             }
 
-            public void Reset()
-            {
-                this.index = 0;
-            }
+            public void Reset() => this.index = 0;
         }
     }
 }

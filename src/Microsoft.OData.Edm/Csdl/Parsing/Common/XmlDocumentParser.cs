@@ -186,15 +186,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         protected abstract bool TryGetRootElementParser(Version artifactVersion, XmlElementInfo rootElement, out XmlElementParser parser);
 
-        protected virtual bool IsOwnedNamespace(string namespaceName)
-        {
-            return this.DocumentNamespace.EqualsOrdinal(namespaceName);
-        }
+        protected virtual bool IsOwnedNamespace(string namespaceName) => this.DocumentNamespace.EqualsOrdinal(namespaceName);
 
-        protected virtual XmlElementParser<TResult> Element<TResult>(string elementName, Func<XmlElementInfo, XmlElementValueCollection, TResult> parserFunc, params XmlElementParser[] childParsers)
-        {
-            return XmlElementParser.Create(elementName, parserFunc, childParsers, null);
-        }
+        protected virtual XmlElementParser<TResult> Element<TResult>(string elementName, Func<XmlElementInfo, XmlElementValueCollection, TResult> parserFunc, params XmlElementParser[] childParsers) => XmlElementParser.Create(elementName, parserFunc, childParsers, null);
 
         private void Parse()
         {
@@ -514,15 +508,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             this.ReportError(elementLocation, EdmErrorCode.UnexpectedXmlElement, Error.Format(SRResources.XmlParser_UnexpectedRootElement, elementName, CsdlConstants.Element_Schema));
         }
 
-        private void ReportUnexpectedAttribute(CsdlLocation errorLocation, string attributeName)
-        {
-            this.ReportError(errorLocation, EdmErrorCode.UnexpectedXmlAttribute, Error.Format(SRResources.XmlParser_UnexpectedAttribute, attributeName));
-        }
+        private void ReportUnexpectedAttribute(CsdlLocation errorLocation, string attributeName) => this.ReportError(errorLocation, EdmErrorCode.UnexpectedXmlAttribute, Error.Format(SRResources.XmlParser_UnexpectedAttribute, attributeName));
 
-        private void ReportUnexpectedNodeType(XmlNodeType nodeType)
-        {
-            this.ReportError(this.Location, EdmErrorCode.UnexpectedXmlNodeType, Error.Format(SRResources.XmlParser_UnexpectedNodeType, nodeType));
-        }
+        private void ReportUnexpectedNodeType(XmlNodeType nodeType) => this.ReportError(this.Location, EdmErrorCode.UnexpectedXmlNodeType, Error.Format(SRResources.XmlParser_UnexpectedNodeType, nodeType));
 
         private void ReportUnexpectedElement(CsdlLocation errorLocation, string elementName)
         {
@@ -533,15 +521,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             }
         }
 
-        private void ReportUnusedElement(CsdlLocation errorLocation, string elementName)
-        {
-            this.ReportError(errorLocation, EdmErrorCode.UnexpectedXmlElement, Error.Format(SRResources.XmlParser_UnusedElement, elementName));
-        }
+        private void ReportUnusedElement(CsdlLocation errorLocation, string elementName) => this.ReportError(errorLocation, EdmErrorCode.UnexpectedXmlElement, Error.Format(SRResources.XmlParser_UnusedElement, elementName));
 
-        private void ReportTextNotAllowed(CsdlLocation errorLocation, string textValue)
-        {
-            this.ReportError(errorLocation, EdmErrorCode.TextNotAllowed, Error.Format(SRResources.XmlParser_TextNotAllowed, textValue));
-        }
+        private void ReportTextNotAllowed(CsdlLocation errorLocation, string textValue) => this.ReportError(errorLocation, EdmErrorCode.TextNotAllowed, Error.Format(SRResources.XmlParser_TextNotAllowed, textValue));
 
         #endregion
 

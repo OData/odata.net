@@ -87,7 +87,7 @@ namespace Microsoft.OData.Edm
         /// <returns>The requested term, or null if no such term exists.</returns>
         IEdmTerm FindDeclaredTerm(string qualifiedName);
 
-#if NET9_0
+#if NET9_0_OR_GREATER
         /// <summary>
         /// Searches for a type with the given name in this model only and returns null if no such type exists.
         /// </summary>

@@ -140,10 +140,7 @@ namespace Microsoft.OData.Edm
         /// <param name="name">The name of the parameter being added.</param>
         /// <param name="type">The type of the parameter being added.</param>
         /// <returns>Created parameter.</returns>
-        public EdmOptionalParameter AddOptionalParameter(string name, IEdmTypeReference type)
-        {
-            return AddOptionalParameter(name, type, null);
-        }
+        public EdmOptionalParameter AddOptionalParameter(string name, IEdmTypeReference type) => AddOptionalParameter(name, type, null);
 
         /// <summary>
         /// Creates and adds an optional parameter to this operation (as the last parameter).

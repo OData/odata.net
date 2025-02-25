@@ -279,10 +279,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="other">The object to compare to the current instance</param>
         /// <returns>True for equal, false for non-equal.</returns>
-        public bool Equals(TimeOfDay other)
-        {
-            return timeSpan.Equals(other.timeSpan);
-        }
+        public bool Equals(TimeOfDay other) => timeSpan.Equals(other.timeSpan);
 
         /// <summary>
         /// Compares the value of this instance to a specified object value
@@ -305,19 +302,13 @@ namespace Microsoft.OData.Edm
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode()
-        {
-            return timeSpan.GetHashCode();
-        }
+        public override int GetHashCode() => timeSpan.GetHashCode();
 
         /// <summary>
         /// Convert TimeOfDay to String. The precision will 100ns (7 digits).
         /// </summary>
         /// <returns>string value of timeofday</returns>
-        public override string ToString()
-        {
-            return this.timeSpan.ToString(@"hh\:mm\:ss\.fffffff", CultureInfo.InvariantCulture);
-        }
+        public override string ToString() => this.timeSpan.ToString(@"hh\:mm\:ss\.fffffff", CultureInfo.InvariantCulture);
 
         /// <summary>
         /// Compares the value of this instance to a object value
@@ -350,20 +341,14 @@ namespace Microsoft.OData.Edm
         /// <returns>Value Description Less than zero This instance is earlier than value.
         /// Zero This instance is the same as value.
         /// Greater than zero This instance is later than value.</returns>
-        public int CompareTo(TimeOfDay other)
-        {
-            return this.timeSpan.CompareTo(other.timeSpan);
-        }
+        public int CompareTo(TimeOfDay other) => this.timeSpan.CompareTo(other.timeSpan);
 
         /// <summary>
         /// Converts a specified string representation of a date to <see cref="Microsoft.OData.Edm.TimeOfDay"/> with CurrentCulture format.
         /// </summary>
         /// <param name="text">A string that represent a timeofday to convert.</param>
         /// <returns>The <see cref="Microsoft.OData.Edm.TimeOfDay"/> instance represented by text</returns>
-        public static TimeOfDay Parse(string text)
-        {
-            return Parse(text, CultureInfo.CurrentCulture);
-        }
+        public static TimeOfDay Parse(string text) => Parse(text, CultureInfo.CurrentCulture);
 
         /// <summary>
         /// Converts a specified string representation of a date to <see cref="Microsoft.OData.Edm.TimeOfDay"/>.
@@ -391,10 +376,7 @@ namespace Microsoft.OData.Edm
         /// <param name="result">A <see cref="Microsoft.OData.Edm.TimeOfDay"/> object equivalent to the date input, if the conversion succeeded
         /// or <see cref="Microsoft.OData.Edm.TimeOfDay.MinValue"/>, if the conversion failed.</param>
         /// <returns>True if the input parameter is successfully converted; otherwise, false.</returns>
-        public static bool TryParse(string text, out TimeOfDay result)
-        {
-            return TryParse(text, CultureInfo.CurrentCulture, out result);
-        }
+        public static bool TryParse(string text, out TimeOfDay result) => TryParse(text, CultureInfo.CurrentCulture, out result);
 
         /// <summary>
         /// Try converts a specified string representation of a timeofday to <see cref="Microsoft.OData.Edm.TimeOfDay"/>.

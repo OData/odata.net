@@ -50,9 +50,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.Expression.Path; }
         }
 
-        private IEnumerable<string> ComputePath()
-        {
-            return this.Expression.Path.Split(new char[] { '/' }, StringSplitOptions.None);
-        }
+        private IEnumerable<string> ComputePath() => this.Expression.Path.Split(new char[] { '/' }, StringSplitOptions.None);
     }
 }

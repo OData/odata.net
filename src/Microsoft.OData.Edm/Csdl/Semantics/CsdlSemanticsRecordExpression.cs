@@ -69,9 +69,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return properties;
         }
 
-        private IEdmStructuredTypeReference ComputeDeclaredType()
-        {
-            return this.expression.Type != null ? CsdlSemanticsModel.WrapTypeReference(this.Schema, this.expression.Type).AsStructured() : null;
-        }
+        private IEdmStructuredTypeReference ComputeDeclaredType() => this.expression.Type != null ? CsdlSemanticsModel.WrapTypeReference(this.Schema, this.expression.Type).AsStructured() : null;
     }
 }

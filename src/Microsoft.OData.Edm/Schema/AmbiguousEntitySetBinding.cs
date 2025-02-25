@@ -67,19 +67,10 @@ namespace Microsoft.OData.Edm
             get { return Enumerable.Empty<IEdmNavigationPropertyBinding>(); }
         }
 
-        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty property)
-        {
-            return null;
-        }
+        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty property) => null;
 
-        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
-        {
-            return null;
-        }
+        public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath) => null;
 
-        public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
-        {
-            return null;
-        }
+        public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty) => null;
     }
 }

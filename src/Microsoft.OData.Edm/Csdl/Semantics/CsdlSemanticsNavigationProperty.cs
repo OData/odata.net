@@ -150,10 +150,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                    : null;
         }
 
-        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
-        {
-            return this.Model.WrapInlineVocabularyAnnotations(this, this.declaringType.Context);
-        }
+        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations() => this.Model.WrapInlineVocabularyAnnotations(this, this.declaringType.Context);
 
         private IEdmEntityType ComputeTargetEntityType()
         {

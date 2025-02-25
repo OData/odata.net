@@ -110,10 +110,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return (schemaBaseType != null) ? schemaBaseType.FullName() : baseTypeName;
         }
 
-        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
-        {
-            return this.Model.WrapInlineVocabularyAnnotations(this, this.context);
-        }
+        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations() => this.Model.WrapInlineVocabularyAnnotations(this, this.context);
 
         private IDictionary<string, IEdmProperty> ComputePropertiesDictionary()
         {

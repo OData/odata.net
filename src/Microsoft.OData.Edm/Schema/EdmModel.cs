@@ -68,10 +68,7 @@ namespace Microsoft.OData.Edm
         /// Adds a model reference to this model.
         /// </summary>
         /// <param name="model">The model to be referenced.</param>
-        public new void AddReferencedModel(IEdmModel model)
-        {
-            base.AddReferencedModel(model);
-        }
+        public new void AddReferencedModel(IEdmModel model) => base.AddReferencedModel(model);
 
         /// <summary>
         /// Adds a schema element to this model.

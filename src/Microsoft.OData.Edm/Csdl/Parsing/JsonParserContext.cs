@@ -119,10 +119,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// Gets current CsdlLocation.
         /// </summary>
         /// <returns>The built CsdlLocation.</returns>
-        public CsdlLocation Location()
-        {
-            return new CsdlLocation(BuildJsonPath());
-        }
+        public CsdlLocation Location() => new CsdlLocation(BuildJsonPath());
         #endregion
 
         #region EdmError
@@ -137,19 +134,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// </summary>
         /// <param name="errorCode">The Edm Error Code.</param>
         /// <param name="errorMessage">The Error message.</param>
-        public void ReportError(EdmErrorCode errorCode, string errorMessage)
-        {
-            Errors.Add(new EdmError(Location(), errorCode, errorMessage));
-        }
+        public void ReportError(EdmErrorCode errorCode, string errorMessage) => Errors.Add(new EdmError(Location(), errorCode, errorMessage));
 
         /// <summary>
         /// Check parsing status.
         /// </summary>
         /// <returns>True/false</returns>
-        public bool IsSucceeded()
-        {
-            return Errors.Count == 0;
-        }
+        public bool IsSucceeded() => Errors.Count == 0;
 
         /// <summary>
         /// Determine if there is any error that could not be ignored.
@@ -169,10 +160,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// Add a range of errors.
         /// </summary>
         /// <param name="errors">The input errors.</param>
-        public void AddRange(IList<EdmError> errors)
-        {
-            Errors.AddRange(errors);
-        }
+        public void AddRange(IList<EdmError> errors) => Errors.AddRange(errors);
         #endregion
 
         /// <summary>

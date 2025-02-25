@@ -40,9 +40,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.declaringType; }
         }
 
-        private static IEdmEnumMemberValue ComputeValue()
-        {
-            return new EdmEnumMemberValue(0);
-        }
+        private static IEdmEnumMemberValue ComputeValue() => new EdmEnumMemberValue(0);
     }
 }

@@ -63,9 +63,6 @@ namespace Microsoft.OData.Edm
         /// Operations the name of the argument null parameter.
         /// </summary>
         /// <returns>Returns the name of the operation from this import.</returns>
-        protected override string OperationArgumentNullParameterName()
-        {
-            return FunctionArgumentNullParameterName;
-        }
+        protected override string OperationArgumentNullParameterName() => FunctionArgumentNullParameterName;
     }
 }

@@ -74,10 +74,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        public void AddEntityContainer(IEdmEntityContainer container)
-        {
-            this.entityContainers.Add(container);
-        }
+        public void AddEntityContainer(IEdmEntityContainer container) => this.entityContainers.Add(container);
 
         public void AddNamespaceUsing(string usedNamespace)
         {

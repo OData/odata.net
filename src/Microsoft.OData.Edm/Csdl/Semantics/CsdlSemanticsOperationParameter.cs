@@ -54,14 +54,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.declaringOperation; }
         }
 
-        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
-        {
-            return this.Model.WrapInlineVocabularyAnnotations(this, this.declaringOperation.Context);
-        }
+        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations() => this.Model.WrapInlineVocabularyAnnotations(this, this.declaringOperation.Context);
 
-        private IEdmTypeReference ComputeType()
-        {
-            return CsdlSemanticsModel.WrapTypeReference(this.declaringOperation.Context, this.parameter.Type);
-        }
+        private IEdmTypeReference ComputeType() => CsdlSemanticsModel.WrapTypeReference(this.declaringOperation.Context, this.parameter.Type);
     }
 }

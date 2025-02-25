@@ -130,10 +130,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return list;
         }
 
-        protected virtual IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
-        {
-            return this.Model.WrapInlineVocabularyAnnotations(this, null);
-        }
+        protected virtual IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations() => this.Model.WrapInlineVocabularyAnnotations(this, null);
 
         protected IEnumerable<IEdmDirectValueAnnotation> ComputeDirectValueAnnotations()
         {

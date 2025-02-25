@@ -51,9 +51,6 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="parseErrors">The parse errors.</param>
         /// <returns>The exception message.</returns>
-        private static string ConstructMessage(IEnumerable<EdmError> parseErrors)
-        {
-            return Error.Format(SRResources.EdmParseException_ErrorsEncounteredInEdmx, string.Join(Environment.NewLine, parseErrors.Select(p => p.ToString()).ToArray()));
-        }
+        private static string ConstructMessage(IEnumerable<EdmError> parseErrors) => Error.Format(SRResources.EdmParseException_ErrorsEncounteredInEdmx, string.Join(Environment.NewLine, parseErrors.Select(p => p.ToString()).ToArray()));
     }
 }

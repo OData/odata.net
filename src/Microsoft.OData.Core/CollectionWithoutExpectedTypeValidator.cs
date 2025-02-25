@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using System;
     #region Namespaces
     using System.Diagnostics;
     using Microsoft.OData.Core;
@@ -146,6 +147,7 @@ namespace Microsoft.OData
         /// <param name="typeName">The type name to compute the type kind from.</param>
         /// <param name="primitiveItemType">The primitive type for the specified type name or null if the type name is not a valid primitive type.</param>
         /// <returns>The <see cref="EdmTypeKind"/> of the type with the specified <paramref name="typeName"/>.</returns>
+
         private static EdmTypeKind ComputeExpectedTypeKind(string typeName, out IEdmPrimitiveType primitiveItemType)
         {
             IEdmSchemaType knownType = EdmCoreModel.Instance.FindDeclaredType(typeName);
@@ -168,6 +170,7 @@ namespace Microsoft.OData
         private static string GetItemTypeFullName(string typeName)
         {
             IEdmSchemaType knownType = EdmCoreModel.Instance.FindDeclaredType(typeName);
+
             if (knownType != null)
             {
                 return knownType.FullName();

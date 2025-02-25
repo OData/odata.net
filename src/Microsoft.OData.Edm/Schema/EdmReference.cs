@@ -64,18 +64,12 @@ namespace Microsoft.OData.Edm
         /// Add include information.
         /// </summary>
         /// <param name="edmInclude">The IEdmInclude.</param>
-        public void AddInclude(IEdmInclude edmInclude)
-        {
-            this.includes.Add(edmInclude);
-        }
+        public void AddInclude(IEdmInclude edmInclude) => this.includes.Add(edmInclude);
 
         /// <summary>
         /// Add IncludeAnnotations information.
         /// </summary>
         /// <param name="edmIncludeAnnotations">The IEdmIncludeAnnotations.</param>
-        public void AddIncludeAnnotations(IEdmIncludeAnnotations edmIncludeAnnotations)
-        {
-            this.includeAnnotations.Add(edmIncludeAnnotations);
-        }
+        public void AddIncludeAnnotations(IEdmIncludeAnnotations edmIncludeAnnotations) => this.includeAnnotations.Add(edmIncludeAnnotations);
     }
 }

@@ -163,10 +163,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// </summary>
         /// <param name="element">The element in question.</param>
         /// <returns>The annotations that are directly attached to an element (outside the control of the manager).</returns>
-        protected virtual IEnumerable<IEdmDirectValueAnnotation> GetAttachedAnnotations(IEdmElement element)
-        {
-            return null;
-        }
+        protected virtual IEnumerable<IEdmDirectValueAnnotation> GetAttachedAnnotations(IEdmElement element) => null;
 
         private static void SetAnnotation(IEnumerable<IEdmDirectValueAnnotation> immutableAnnotations, ref VersioningList<IEdmDirectValueAnnotation> transientAnnotations, string namespaceName, string localName, object value)
         {
@@ -271,10 +268,7 @@ namespace Microsoft.OData.Edm.Vocabularies
             }
         }
 
-        private static bool IsDead(string namespaceName, string localName, VersioningList<IEdmDirectValueAnnotation> transientAnnotations)
-        {
-            return FindTransientAnnotation(transientAnnotations, namespaceName, localName) != null;
-        }
+        private static bool IsDead(string namespaceName, string localName, VersioningList<IEdmDirectValueAnnotation> transientAnnotations) => FindTransientAnnotation(transientAnnotations, namespaceName, localName) != null;
 
         /// <summary>
         /// Retrieves the transient annotations for an EDM element.

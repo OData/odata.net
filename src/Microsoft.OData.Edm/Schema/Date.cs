@@ -254,10 +254,7 @@ namespace Microsoft.OData.Edm
         /// Convert Date to String
         /// </summary>
         /// <returns>string value of Date</returns>
-        public override string ToString()
-        {
-            return this.dateTime.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-        }
+        public override string ToString() => this.dateTime.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
         /// <summary>
         /// Compares the value of this instance to a object value
@@ -290,10 +287,7 @@ namespace Microsoft.OData.Edm
         /// <returns>Value Description Less than zero This instance is earlier than value.
         /// Zero This instance is the same as value.
         /// Greater than zero This instance is later than value.</returns>
-        public int CompareTo(Date other)
-        {
-            return this.dateTime.CompareTo(other.dateTime);
-        }
+        public int CompareTo(Date other) => this.dateTime.CompareTo(other.dateTime);
 
         /// <summary>
         /// Compares the value of this instance to a specified Date value
@@ -301,10 +295,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="other">The object to compare to the current instance</param>
         /// <returns>True for equal, false for non-equal.</returns>
-        public bool Equals(Date other)
-        {
-            return this.dateTime.Equals(other.dateTime);
-        }
+        public bool Equals(Date other) => this.dateTime.Equals(other.dateTime);
 
         /// <summary>
         /// Compares the value of this instance to a specified object value
@@ -327,20 +318,14 @@ namespace Microsoft.OData.Edm
         /// Returns the hash code for this instance.
         /// </summary>
         /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode()
-        {
-            return this.dateTime.GetHashCode();
-        }
+        public override int GetHashCode() => this.dateTime.GetHashCode();
 
         /// <summary>
         /// Converts a specified string representation of a date to <see cref="Microsoft.OData.Edm.Date"/> with CurrentCulture format.
         /// </summary>
         /// <param name="text">A string that represent a date to convert.</param>
         /// <returns>The <see cref="Microsoft.OData.Edm.Date"/> instance represented by text </returns>
-        public static Date Parse(string text)
-        {
-            return Parse(text, CultureInfo.CurrentCulture);
-        }
+        public static Date Parse(string text) => Parse(text, CultureInfo.CurrentCulture);
 
         /// <summary>
         /// Converts a specified string representation of a date to <see cref="Microsoft.OData.Edm.Date"/>.
@@ -368,10 +353,7 @@ namespace Microsoft.OData.Edm
         /// <param name="result">A <see cref="Microsoft.OData.Edm.Date"/> object equivalent to the date input, if the conversion succeeded
         /// or <see cref="Microsoft.OData.Edm.Date.MinValue"/>, if the conversion failed.</param>
         /// <returns>True if the input parameter is successfully converted; otherwise, false.</returns>
-        public static bool TryParse(string text, out Date result)
-        {
-            return TryParse(text, CultureInfo.CurrentCulture, out result);
-        }
+        public static bool TryParse(string text, out Date result) => TryParse(text, CultureInfo.CurrentCulture, out result);
 
         /// <summary>
         /// Try converts a specified string representation of a date to <see cref="Microsoft.OData.Edm.Date"/>

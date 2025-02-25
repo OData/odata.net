@@ -61,19 +61,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.ifFalseCache.GetValue(this, ComputeIfFalseFunc, null); }
         }
 
-        private IEdmExpression ComputeTest()
-        {
-            return CsdlSemanticsModel.WrapExpression(this.expression.Test, this.BindingContext, this.Schema);
-        }
+        private IEdmExpression ComputeTest() => CsdlSemanticsModel.WrapExpression(this.expression.Test, this.BindingContext, this.Schema);
 
-        private IEdmExpression ComputeIfTrue()
-        {
-            return CsdlSemanticsModel.WrapExpression(this.expression.IfTrue, this.BindingContext, this.Schema);
-        }
+        private IEdmExpression ComputeIfTrue() => CsdlSemanticsModel.WrapExpression(this.expression.IfTrue, this.BindingContext, this.Schema);
 
-        private IEdmExpression ComputeIfFalse()
-        {
-            return CsdlSemanticsModel.WrapExpression(this.expression.IfFalse, this.BindingContext, this.Schema);
-        }
+        private IEdmExpression ComputeIfFalse() => CsdlSemanticsModel.WrapExpression(this.expression.IfFalse, this.BindingContext, this.Schema);
     }
 }

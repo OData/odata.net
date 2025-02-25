@@ -40,9 +40,6 @@ namespace Microsoft.OData.Edm
             get { return false; }
         }
 
-        public IEdmProperty FindProperty(string name)
-        {
-            return null;
-        }
+        public IEdmProperty FindProperty(string name) => null;
     }
 }

@@ -141,10 +141,7 @@ namespace Microsoft.OData.Edm
         /// Adds a new member to this enum type.
         /// </summary>
         /// <param name="member">The member to add.</param>
-        public void AddMember(IEdmEnumMember member)
-        {
-            this.members.Add(member);
-        }
+        public void AddMember(IEdmEnumMember member) => this.members.Add(member);
 
         /// <summary>
         /// Creates and adds a new member to this enum type.

@@ -309,14 +309,8 @@ namespace Microsoft.OData.Edm.Csdl
 
         #endregion
 
-        internal static bool IsInline(this IEdmVocabularyAnnotation annotation, IEdmModel model)
-        {
-            return annotation.GetSerializationLocation(model) == EdmVocabularyAnnotationSerializationLocation.Inline || annotation.TargetString() == null;
-        }
+        internal static bool IsInline(this IEdmVocabularyAnnotation annotation, IEdmModel model) => annotation.GetSerializationLocation(model) == EdmVocabularyAnnotationSerializationLocation.Inline || annotation.TargetString() == null;
 
-        internal static string TargetString(this IEdmVocabularyAnnotation annotation)
-        {
-            return EdmUtil.FullyQualifiedName(annotation.Target);
-        }
+        internal static string TargetString(this IEdmVocabularyAnnotation annotation) => EdmUtil.FullyQualifiedName(annotation.Target);
     }
 }

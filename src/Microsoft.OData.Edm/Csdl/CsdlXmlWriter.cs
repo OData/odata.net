@@ -151,29 +151,17 @@ namespace Microsoft.OData.Edm.Csdl
             await this.writer.WriteAttributeStringAsync(null, CsdlConstants.Attribute_Version, null, GetVersionString(this.edmxVersion)).ConfigureAwait(false);
         }
 
-        private void WriteRuntimeElement()
-        {
-            this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Runtime, this.edmxNamespace);
-        }
+        private void WriteRuntimeElement() => this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Runtime, this.edmxNamespace);
 
-        private Task WriteRuntimeElementAsync()
-        {
-            return this.writer.WriteStartElementAsync(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Runtime, this.edmxNamespace);
-        }
+        private Task WriteRuntimeElementAsync() => this.writer.WriteStartElementAsync(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Runtime, this.edmxNamespace);
 
-        private void WriteConceptualModelsElement()
-        {
-            this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_ConceptualModels, this.edmxNamespace);
-        }
+        private void WriteConceptualModelsElement() => this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_ConceptualModels, this.edmxNamespace);
 
         /// <summary>
         /// Asynchronously write the ConceptualModels element.
         /// </summary>
         /// <returns>The task represents the asynchronous operation.</returns>
-        private Task WriteConceptualModelsElementAsync()
-        {
-            return this.writer.WriteStartElementAsync(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_ConceptualModels, this.edmxNamespace);
-        }
+        private Task WriteConceptualModelsElementAsync() => this.writer.WriteStartElementAsync(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_ConceptualModels, this.edmxNamespace);
 
         private void WriteReferenceElements()
         {
@@ -233,15 +221,9 @@ namespace Microsoft.OData.Edm.Csdl
             }
         }
 
-        private void WriteDataServicesElement()
-        {
-            this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_DataServices, this.edmxNamespace);
-        }
+        private void WriteDataServicesElement() => this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_DataServices, this.edmxNamespace);
 
-        private Task WriteDataServicesElementAsync()
-        {
-            return this.writer.WriteStartElementAsync(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_DataServices, this.edmxNamespace);
-        }
+        private Task WriteDataServicesElementAsync() => this.writer.WriteStartElementAsync(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_DataServices, this.edmxNamespace);
 
         private void WriteSchemas()
         {
@@ -269,14 +251,8 @@ namespace Microsoft.OData.Edm.Csdl
             }
         }
 
-        private void EndElement()
-        {
-            this.writer.WriteEndElement();
-        }
+        private void EndElement() => this.writer.WriteEndElement();
 
-        private Task EndElementAsync()
-        {
-            return this.writer.WriteEndElementAsync();
-        }
+        private Task EndElementAsync() => this.writer.WriteEndElementAsync();
     }
 }

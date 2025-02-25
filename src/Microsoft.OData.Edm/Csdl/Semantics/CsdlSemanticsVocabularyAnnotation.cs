@@ -127,10 +127,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.Annotation.Expression == null; }
         }
 
-        protected IEdmTerm ComputeTerm()
-        {
-            return this.model.FindTerm(this.Annotation.Term) ?? new UnresolvedVocabularyTerm(this.model.ReplaceAlias(this.Annotation.Term));
-        }
+        protected IEdmTerm ComputeTerm() => this.model.FindTerm(this.Annotation.Term) ?? new UnresolvedVocabularyTerm(this.model.ReplaceAlias(this.Annotation.Term));
 
         private IEdmExpression ComputeValue()
         {
@@ -201,10 +198,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return expression;
         }
 
-        private static CsdlExpressionBase BuildEnumExpression(IEdmEnumType enumType, CsdlConstantExpression expression)
-        {
-            return new CsdlEnumMemberExpression(expression.Value, enumType, expression.Location as CsdlLocation);
-        }
+        private static CsdlExpressionBase BuildEnumExpression(IEdmEnumType enumType, CsdlConstantExpression expression) => new CsdlEnumMemberExpression(expression.Value, enumType, expression.Location as CsdlLocation);
 
         private static CsdlConstantExpression BuildPrimitiveExpression(IEdmPrimitiveTypeReference primitiveTypeReference, CsdlConstantExpression expression)
         {

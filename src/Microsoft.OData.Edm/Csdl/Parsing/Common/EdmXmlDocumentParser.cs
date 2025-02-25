@@ -26,10 +26,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
 
         internal abstract IEnumerable<KeyValuePair<Version, string>> SupportedVersions { get; }
 
-        internal static XmlAttributeInfo GetOptionalAttribute(XmlElementInfo element, string attributeName)
-        {
-            return element.Attributes[attributeName];
-        }
+        internal static XmlAttributeInfo GetOptionalAttribute(XmlElementInfo element, string attributeName) => element.Attributes[attributeName];
 
         internal XmlAttributeInfo GetRequiredAttribute(XmlElementInfo element, string attributeName)
         {
@@ -68,17 +65,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             return version != null;
         }
 
-        protected override bool IsOwnedNamespace(string namespaceName)
-        {
-            return this.IsEdmNamespace(namespaceName);
-        }
+        protected override bool IsOwnedNamespace(string namespaceName) => this.IsEdmNamespace(namespaceName);
 
         #region Utility Methods for derived document parsers
 
         protected XmlElementParser<TItem> CsdlElement<TItem>(string elementName, Func<XmlElementInfo, XmlElementValueCollection, TItem> initializer, params XmlElementParser[] childParsers)
-           where TItem : class
-        {
-            return Element<TItem>(
+           where TItem : class => Element<TItem>(
                 elementName,
                 (element, childValues) =>
                 {
@@ -90,7 +82,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                     return result;
                 },
                 childParsers);
-        }
 
         protected void BeginItem(XmlElementInfo element)
         {

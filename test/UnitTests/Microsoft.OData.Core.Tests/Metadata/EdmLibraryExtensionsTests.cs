@@ -287,8 +287,8 @@ namespace Microsoft.OData.Tests.Metadata
         [Fact]
         public void ResolveEntitySetFromModelShouldReturnNullWhenEntitySetNameIsNullOrEmpty()
         {
-            Assert.Null(this.model.EntityContainer.FindEntitySet(null));
-            Assert.Null(this.model.EntityContainer.FindEntitySet(null));
+            Assert.Null(this.model.EntityContainer.FindEntitySet((string)null));
+            Assert.Null(this.model.EntityContainer.FindEntitySet((string)null));
         }
 
         [Fact]

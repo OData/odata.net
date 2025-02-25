@@ -157,17 +157,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return null;
         }
 
-        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
-        {
-            return this.Model.WrapInlineVocabularyAnnotations(this, this.container.Context);
-        }
+        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations() => this.Model.WrapInlineVocabularyAnnotations(this, this.container.Context);
 
         protected abstract IEdmEntityType ComputeElementType();
 
-        private IEnumerable<IEdmNavigationPropertyBinding> ComputeNavigationTargets()
-        {
-            return this.navigationSource.NavigationPropertyBindings.Select(this.CreateSemanticMappingForBinding);
-        }
+        private IEnumerable<IEdmNavigationPropertyBinding> ComputeNavigationTargets() => this.navigationSource.NavigationPropertyBindings.Select(this.CreateSemanticMappingForBinding);
 
         private IEdmNavigationPropertyBinding CreateSemanticMappingForBinding(CsdlNavigationPropertyBinding binding)
         {

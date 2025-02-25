@@ -19,20 +19,14 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="schemaType">Reference to the calling object.</param>
         /// <returns>The text representation of the current object.</returns>
-        public static string ToTraceString(this IEdmSchemaType schemaType)
-        {
-            return ((IEdmSchemaElement)schemaType).ToTraceString();
-        }
+        public static string ToTraceString(this IEdmSchemaType schemaType) => ((IEdmSchemaElement)schemaType).ToTraceString();
 
         /// <summary>
         /// Returns the text representation of the current object.
         /// </summary>
         /// <param name="schemaElement">Reference to the calling object.</param>
         /// <returns>The text representation of the current object.</returns>
-        public static string ToTraceString(this IEdmSchemaElement schemaElement)
-        {
-            return schemaElement.FullName();
-        }
+        public static string ToTraceString(this IEdmSchemaElement schemaElement) => schemaElement.FullName();
 
         /// <summary>
         /// Returns the text representation of the current object.
@@ -89,15 +83,9 @@ namespace Microsoft.OData.Edm
             return (property.Name != null ? property.Name : "") + ":" + (property.Type != null ? property.Type.ToTraceString() : "");
         }
 
-        private static string ToTraceString(this IEdmEntityReferenceType type)
-        {
-            return EdmTypeKind.EntityReference.ToString() + '(' + (type.EntityType != null ? type.EntityType.ToTraceString() : "") + ')';
-        }
+        private static string ToTraceString(this IEdmEntityReferenceType type) => EdmTypeKind.EntityReference.ToString() + '(' + (type.EntityType != null ? type.EntityType.ToTraceString() : "") + ')';
 
-        private static string ToTraceString(this IEdmCollectionType type)
-        {
-            return EdmTypeKind.Collection.ToString() + '(' + (type.ElementType != null ? type.ElementType.ToTraceString() : "") + ')';
-        }
+        private static string ToTraceString(this IEdmCollectionType type) => EdmTypeKind.Collection.ToString() + '(' + (type.ElementType != null ? type.ElementType.ToTraceString() : "") + ')';
 
         private static void AppendFacets(this StringBuilder sb, IEdmPrimitiveTypeReference type)
         {
@@ -179,10 +167,7 @@ namespace Microsoft.OData.Edm
             }
         }
 
-        private static void AppendSpatialFacets(this StringBuilder sb, IEdmSpatialTypeReference type)
-        {
-            sb.AppendKeyValue(EdmConstants.FacetName_Srid, type.SpatialReferenceIdentifier != null ? string.Format(CultureInfo.InvariantCulture, $"{type.SpatialReferenceIdentifier}") : EdmConstants.Value_SridVariable);
-        }
+        private static void AppendSpatialFacets(this StringBuilder sb, IEdmSpatialTypeReference type) => sb.AppendKeyValue(EdmConstants.FacetName_Srid, type.SpatialReferenceIdentifier != null ? string.Format(CultureInfo.InvariantCulture, $"{type.SpatialReferenceIdentifier}") : EdmConstants.Value_SridVariable);
 
         private static void AppendKeyValue(this StringBuilder sb, string key, string value)
         {

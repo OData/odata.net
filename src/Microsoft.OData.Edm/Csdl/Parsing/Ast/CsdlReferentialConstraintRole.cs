@@ -33,9 +33,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             get { return this.properties; }
         }
 
-        public int IndexOf(CsdlPropertyReference reference)
-        {
-            return this.properties.IndexOf(reference);
-        }
+        public int IndexOf(CsdlPropertyReference reference) => this.properties.IndexOf(reference);
     }
 }

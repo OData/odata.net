@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm.Validation;
@@ -57,19 +58,23 @@ namespace Microsoft.OData.Edm
             get { return EdmSchemaElementKind.EntityContainer; }
         }
 
-        public IEdmEntitySet FindEntitySet(string setName)
-        {
-            return null;
-        }
+        public IEdmEntitySet FindEntitySet(string setName) => null;
 
-        public IEdmSingleton FindSingleton(string singletonName)
-        {
-            return null;
-        }
+        public IEdmSingleton FindSingleton(string singletonName) => null;
 
-        public IEnumerable<IEdmOperationImport> FindOperationImports(string operationName)
-        {
-            return null;
-        }
+        public IEnumerable<IEdmOperationImport> FindOperationImports(string operationName) => null;
+#if NET9_0_OR_GREATER
+        public IEdmEntitySet FindEntitySet(ReadOnlyMemory<char> setName) => null;
+
+        public IEdmSingleton FindSingleton(ReadOnlyMemory<char> singletonName) => null;
+
+        public IEnumerable<IEdmOperationImport> FindOperationImports(ReadOnlyMemory<char> operationName) => null;
+
+        public IEdmEntitySet FindEntitySet(ReadOnlySpan<char> setName) => null;
+
+        public IEdmSingleton FindSingleton(ReadOnlySpan<char> singletonName) => null;
+
+        public IEnumerable<IEdmOperationImport> FindOperationImports(ReadOnlySpan<char> operationName) => null;
+#endif
     }
 }

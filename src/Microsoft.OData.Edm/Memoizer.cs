@@ -138,28 +138,16 @@ namespace Microsoft.OData.Edm
             private object readerWriterLock = new object();
 
             /// <summary>Enters a reader lock. Writers will also be blocked.</summary>
-            internal void EnterReadLock()
-            {
-                Monitor.Enter(this.readerWriterLock);
-            }
+            internal void EnterReadLock() => Monitor.Enter(this.readerWriterLock);
 
             /// <summary>Enters a writer lock. Readers will also be blocked.</summary>
-            internal void EnterWriteLock()
-            {
-                Monitor.Enter(this.readerWriterLock);
-            }
+            internal void EnterWriteLock() => Monitor.Enter(this.readerWriterLock);
 
             /// <summary>Exits a reader lock.</summary>
-            internal void ExitReadLock()
-            {
-                Monitor.Exit(this.readerWriterLock);
-            }
+            internal void ExitReadLock() => Monitor.Exit(this.readerWriterLock);
 
             /// <summary>Exits a writer lock.</summary>
-            internal void ExitWriteLock()
-            {
-                Monitor.Exit(this.readerWriterLock);
-            }
+            internal void ExitWriteLock() => Monitor.Exit(this.readerWriterLock);
         }
     }
 }

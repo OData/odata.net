@@ -48,14 +48,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.typeCache.GetValue(this, ComputeTypeFunc, null); }
         }
 
-        private IEdmExpression ComputeOperand()
-        {
-            return CsdlSemanticsModel.WrapExpression(this.expression.Operand, this.bindingContext, this.Schema);
-        }
+        private IEdmExpression ComputeOperand() => CsdlSemanticsModel.WrapExpression(this.expression.Operand, this.bindingContext, this.Schema);
 
-        private IEdmTypeReference ComputeType()
-        {
-            return CsdlSemanticsModel.WrapTypeReference(this.Schema, this.expression.Type);
-        }
+        private IEdmTypeReference ComputeType() => CsdlSemanticsModel.WrapTypeReference(this.Schema, this.expression.Type);
     }
 }

@@ -22,9 +22,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public virtual EdmSchemaElementKind SchemaElementKind => EdmSchemaElementKind.TypeDefinition;
 
-        public override string ToString()
-        {
-            return this.ToTraceString();
-        }
+        public override string ToString() => this.ToTraceString();
     }
 }

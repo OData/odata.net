@@ -77,10 +77,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="s">The value to convert.</param>
         /// <returns>The value to convert.</returns>
-        internal static string StringAsXml(string s)
-        {
-            return s;
-        }
+        internal static string StringAsXml(string s) => s;
 
         /// <summary>
         /// Converts the Byte[] to a String.
@@ -104,10 +101,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="b">The value to convert.</param>
         /// <returns>A string representation of the Boolean, that is, "true" or "false".</returns>
-        internal static string BooleanAsXml(bool b)
-        {
-            return XmlConvert.ToString(b);
-        }
+        internal static string BooleanAsXml(bool b) => XmlConvert.ToString(b);
 
         /// <summary>
         /// Converts the Boolean? to a String.
@@ -125,10 +119,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="i">The value to convert</param>
         /// <returns>A string representation of the Int32.</returns>
-        internal static string IntAsXml(int i)
-        {
-            return XmlConvert.ToString(i);
-        }
+        internal static string IntAsXml(int i) => XmlConvert.ToString(i);
 
         /// <summary>
         /// Converts the Int32? to a String.
@@ -146,40 +137,28 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="l">The value to convert.</param>
         /// <returns>A string representation of the Int64.</returns>
-        internal static string LongAsXml(long l)
-        {
-            return XmlConvert.ToString(l);
-        }
+        internal static string LongAsXml(long l) => XmlConvert.ToString(l);
 
         /// <summary>
         /// Converts the Double to a String.
         /// </summary>
         /// <param name="f">The value to convert.</param>
         /// <returns>A string representation of the Double.</returns>
-        internal static string FloatAsXml(double f)
-        {
-            return XmlConvert.ToString(f);
-        }
+        internal static string FloatAsXml(double f) => XmlConvert.ToString(f);
 
         /// <summary>
         /// Converts the Decimal to a String.
         /// </summary>
         /// <param name="d">The value to convert.</param>
         /// <returns>A string representation of the Decimal.</returns>
-        internal static string DecimalAsXml(decimal d)
-        {
-            return XmlConvert.ToString(d);
-        }
+        internal static string DecimalAsXml(decimal d) => XmlConvert.ToString(d);
 
         /// <summary>
         /// Converts the TimeSpan to a String.
         /// </summary>
         /// <param name="d">The value to convert.</param>
         /// <returns>A string representation of the TimeSpan.</returns>
-        internal static string DurationAsXml(TimeSpan d)
-        {
-            return XmlConvert.ToString(d);
-        }
+        internal static string DurationAsXml(TimeSpan d) => XmlConvert.ToString(d);
 
         /// <summary>
         /// Converts the DateTimeOffset to a String.
@@ -220,10 +199,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         /// <param name="g">The value to convert.</param>
         /// <returns>A string representation of the Guid.</returns>
-        internal static string GuidAsXml(Guid g)
-        {
-            return XmlConvert.ToString(g);
-        }
+        internal static string GuidAsXml(Guid g) => XmlConvert.ToString(g);
 
         /// <summary>
         /// Converts the Uri to a String.

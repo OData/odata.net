@@ -25,7 +25,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// Contains extension methods for <see cref="IEdmModel"/> interfaces.
     /// </summary>
-    public static class ExtensionMethods
+    public static partial class ExtensionMethods
     {
         private const int ContainerExtendsMaxDepth = 100;
         private const string CollectionTypeFormat = EdmConstants.Type_Collection + "({0})";
@@ -38,7 +38,7 @@ namespace Microsoft.OData.Edm
 
         private static readonly Func<IEnumerable<IEdmOperation>, IEnumerable<IEdmOperation>, IEnumerable<IEdmOperation>> mergeFunctions = (f1, f2) => Enumerable.Concat(f1, f2);
 
-#if NET9_0
+#if NET9_0_OR_GREATER
         private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEdmSchemaType> findType = (model, qualifiedName) => model.FindDeclaredType(qualifiedName);
         private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEdmTerm> findTerm = (model, qualifiedName) => model.FindDeclaredTerm(qualifiedName);
         private static readonly Func<IEdmModel, ReadOnlySpan<char>, IEnumerable<IEdmOperation>> findOperations = (model, qualifiedName) => model.FindDeclaredOperations(qualifiedName);
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
             string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
-#if NET9_0
+#if NET9_0_OR_GREATER
             return FindAcrossModels(
                 model,
                 fullyQualifiedName.AsSpan(),
@@ -142,8 +142,11 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
             EdmUtil.CheckArgumentNull(bindingType, "bindingType");
 
+#if NET9_0_OR_GREATER
+            ReadOnlySpan<char> fullyQualifiedName = model.ReplaceAlias(qualifiedName).AsSpan();
+#else
             string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
-
+#endif
             // the below is a copy of FindAcrossModels method but Func<IEdmModel, TInput, T> finder is replaced by FindDeclaredBoundOperations.
             IEnumerable<IEdmOperation> candidate = model.FindDeclaredBoundOperations(fullyQualifiedName, bindingType);
 
@@ -171,7 +174,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
             string fullyQualifiedName = model.ReplaceAlias(qualifiedName);
-#if NET9_0
+#if NET9_0_OR_GREATER
             return FindAcrossModels(
                 model,
                 fullyQualifiedName.AsSpan(),
@@ -196,12 +199,10 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
-#if NET9_0
-
+#if NET9_0_OR_GREATER
             return FindAcrossModels(model, qualifiedName.AsSpan(), findOperations, mergeFunctions);
 #else
             return FindAcrossModels(model, qualifiedName, findOperations, mergeFunctions);
-
 #endif
         }
         #endregion
@@ -241,7 +242,7 @@ namespace Microsoft.OData.Edm
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 
-#if NET9_0
+#if NET9_0_OR_GREATER
             return FindAcrossModels(
                 model,
                 qualifiedName.AsSpan(),
@@ -1290,7 +1291,7 @@ namespace Microsoft.OData.Edm
             return cache;
         }
 
-#endregion
+        #endregion
 
         #region EdmModel
 
@@ -1301,10 +1302,7 @@ namespace Microsoft.OData.Edm
         /// <param name="namespaceName">The namespace this type belongs to.</param>
         /// <param name="name">The name of this type within its namespace.</param>
         /// <returns>The complex type created.</returns>
-        public static EdmComplexType AddComplexType(this EdmModel model, string namespaceName, string name)
-        {
-            return model.AddComplexType(namespaceName, name, null, false);
-        }
+        public static EdmComplexType AddComplexType(this EdmModel model, string namespaceName, string name) => model.AddComplexType(namespaceName, name, null, false);
 
         /// <summary>
         /// Creates and adds a complex type to the model.
@@ -1314,10 +1312,7 @@ namespace Microsoft.OData.Edm
         /// <param name="name">The name of this type within its namespace.</param>
         /// <param name="baseType">The base type of this complex type.</param>
         /// <returns>The complex type created.</returns>
-        public static EdmComplexType AddComplexType(this EdmModel model, string namespaceName, string name, IEdmComplexType baseType)
-        {
-            return model.AddComplexType(namespaceName, name, baseType, false, false);
-        }
+        public static EdmComplexType AddComplexType(this EdmModel model, string namespaceName, string name, IEdmComplexType baseType) => model.AddComplexType(namespaceName, name, baseType, false, false);
 
         /// <summary>
         /// Creates and adds a complex type to the model.
@@ -1328,10 +1323,7 @@ namespace Microsoft.OData.Edm
         /// <param name="baseType">The base type of this complex type.</param>
         /// <param name="isAbstract">Denotes whether this complex type is abstract.</param>
         /// <returns>The complex type created.</returns>
-        public static EdmComplexType AddComplexType(this EdmModel model, string namespaceName, string name, IEdmComplexType baseType, bool isAbstract)
-        {
-            return model.AddComplexType(namespaceName, name, baseType, isAbstract, false);
-        }
+        public static EdmComplexType AddComplexType(this EdmModel model, string namespaceName, string name, IEdmComplexType baseType, bool isAbstract) => model.AddComplexType(namespaceName, name, baseType, isAbstract, false);
 
         /// <summary>
         /// Creates and adds a complex type to the model.
@@ -1357,10 +1349,7 @@ namespace Microsoft.OData.Edm
         /// <param name="namespaceName">Namespace the entity belongs to.</param>
         /// <param name="name">Name of the entity.</param>
         /// <returns>The entity type created.</returns>
-        public static EdmEntityType AddEntityType(this EdmModel model, string namespaceName, string name)
-        {
-            return model.AddEntityType(namespaceName, name, null, false, false);
-        }
+        public static EdmEntityType AddEntityType(this EdmModel model, string namespaceName, string name) => model.AddEntityType(namespaceName, name, null, false, false);
 
         /// <summary>
         /// Creates and adds an entity type to the model.
@@ -1370,10 +1359,7 @@ namespace Microsoft.OData.Edm
         /// <param name="name">Name of the entity.</param>
         /// <param name="baseType">The base type of this entity type.</param>
         /// <returns>The entity type created.</returns>
-        public static EdmEntityType AddEntityType(this EdmModel model, string namespaceName, string name, IEdmEntityType baseType)
-        {
-            return model.AddEntityType(namespaceName, name, baseType, false, false);
-        }
+        public static EdmEntityType AddEntityType(this EdmModel model, string namespaceName, string name, IEdmEntityType baseType) => model.AddEntityType(namespaceName, name, baseType, false, false);
 
         /// <summary>
         /// Creates and adds an entity type to the model.
@@ -1385,10 +1371,7 @@ namespace Microsoft.OData.Edm
         /// <param name="isAbstract">Denotes an entity that cannot be instantiated.</param>
         /// <param name="isOpen">Denotes if the type is open.</param>
         /// <returns>The entity type created.</returns>
-        public static EdmEntityType AddEntityType(this EdmModel model, string namespaceName, string name, IEdmEntityType baseType, bool isAbstract, bool isOpen)
-        {
-            return model.AddEntityType(namespaceName, name, baseType, isAbstract, isOpen, false);
-        }
+        public static EdmEntityType AddEntityType(this EdmModel model, string namespaceName, string name, IEdmEntityType baseType, bool isAbstract, bool isOpen) => model.AddEntityType(namespaceName, name, baseType, isAbstract, isOpen, false);
 
         /// <summary>
         /// Creates and adds an entity type to the model.
@@ -1445,10 +1428,7 @@ namespace Microsoft.OData.Edm
         /// <param name="name">The name of the newly created term</param>
         /// <param name="type">The type of the term.</param>
         /// <returns>The created term.</returns>
-        public static EdmTerm AddTerm(this EdmModel model, string namespaceName, string name, IEdmTypeReference type)
-        {
-            return model.AddTerm(namespaceName, name, type, null, null);
-        }
+        public static EdmTerm AddTerm(this EdmModel model, string namespaceName, string name, IEdmTypeReference type) => model.AddTerm(namespaceName, name, type, null, null);
 
         /// <summary>
         /// Creates and adds a new instance of the <see cref="EdmTerm"/> class from a type reference.
@@ -1528,10 +1508,7 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The model referenced to.</param>
         /// <param name="target">The target entity container to set the inline annotation.</param>
         /// <param name="isSupported">This entity set supports the odata.track-changes preference.</param>
-        public static void SetChangeTrackingAnnotation(this EdmModel model, IEdmEntityContainer target, bool isSupported)
-        {
-            model.SetChangeTrackingAnnotationImplementation(target, isSupported, null, null);
-        }
+        public static void SetChangeTrackingAnnotation(this EdmModel model, IEdmEntityContainer target, bool isSupported) => model.SetChangeTrackingAnnotationImplementation(target, isSupported, null, null);
 
         /// <summary>
         /// Set Org.OData.Capabilities.V1.ChangeTracking to target.
@@ -1541,10 +1518,7 @@ namespace Microsoft.OData.Edm
         /// <param name="isSupported">This entity set supports the odata.track-changes preference.</param>
         /// <param name="filterableProperties">Change tracking supports filters on these properties.</param>
         /// <param name="expandableProperties">Change tracking supports these properties expanded.</param>
-        public static void SetChangeTrackingAnnotation(this EdmModel model, IEdmEntitySet target, bool isSupported, IEnumerable<IEdmStructuralProperty> filterableProperties, IEnumerable<IEdmNavigationProperty> expandableProperties)
-        {
-            model.SetChangeTrackingAnnotationImplementation(target, isSupported, filterableProperties, expandableProperties);
-        }
+        public static void SetChangeTrackingAnnotation(this EdmModel model, IEdmEntitySet target, bool isSupported, IEnumerable<IEdmStructuralProperty> filterableProperties, IEnumerable<IEdmNavigationProperty> expandableProperties) => model.SetChangeTrackingAnnotationImplementation(target, isSupported, filterableProperties, expandableProperties);
 
         /// <summary>
         /// Get type reference to the default UInt16 type definition.
@@ -1555,14 +1529,11 @@ namespace Microsoft.OData.Edm
         /// <param name="namespaceName">The name of the namespace where the type definition resides.</param>
         /// <param name="isNullable">Indicate if the type definition reference is nullable.</param>
         /// <returns>The nullable type reference to UInt16 type definition.</returns>
-        public static IEdmTypeDefinitionReference GetUInt16(this EdmModel model, string namespaceName, bool isNullable)
-        {
-            return model.GetUIntImplementation(
+        public static IEdmTypeDefinitionReference GetUInt16(this EdmModel model, string namespaceName, bool isNullable) => model.GetUIntImplementation(
                 namespaceName,
                 PrimitiveValueConverterConstants.UInt16TypeName,
                 PrimitiveValueConverterConstants.DefaultUInt16UnderlyingType,
                 isNullable);
-        }
 
         /// <summary>
         /// Get type reference to the default UInt32 type definition.
@@ -1573,14 +1544,11 @@ namespace Microsoft.OData.Edm
         /// <param name="namespaceName">The name of the namespace where the type definition resides.</param>
         /// <param name="isNullable">Indicate if the type definition reference is nullable.</param>
         /// <returns>The nullable type reference to UInt32 type definition.</returns>
-        public static IEdmTypeDefinitionReference GetUInt32(this EdmModel model, string namespaceName, bool isNullable)
-        {
-            return model.GetUIntImplementation(
+        public static IEdmTypeDefinitionReference GetUInt32(this EdmModel model, string namespaceName, bool isNullable) => model.GetUIntImplementation(
                 namespaceName,
                 PrimitiveValueConverterConstants.UInt32TypeName,
                 PrimitiveValueConverterConstants.DefaultUInt32UnderlyingType,
                 isNullable);
-        }
 
         /// <summary>
         /// Get type reference to the default UInt64 type definition.
@@ -1591,14 +1559,11 @@ namespace Microsoft.OData.Edm
         /// <param name="namespaceName">The name of the namespace where the type definition resides.</param>
         /// <param name="isNullable">Indicate if the type definition reference is nullable.</param>
         /// <returns>The nullable type reference to UInt64 type definition.</returns>
-        public static IEdmTypeDefinitionReference GetUInt64(this EdmModel model, string namespaceName, bool isNullable)
-        {
-            return model.GetUIntImplementation(
+        public static IEdmTypeDefinitionReference GetUInt64(this EdmModel model, string namespaceName, bool isNullable) => model.GetUIntImplementation(
                 namespaceName,
                 PrimitiveValueConverterConstants.UInt64TypeName,
                 PrimitiveValueConverterConstants.DefaultUInt64UnderlyingType,
                 isNullable);
-        }
 
         /// <summary>
         /// Returns an <see cref="IEdmTargetPath"/> given a target path string.
@@ -2527,10 +2492,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="property">Reference to the calling object.</param>
         /// <returns>The entity type targeted by this navigation property.</returns>
-        public static IEdmEntityType ToEntityType(this IEdmNavigationProperty property)
-        {
-            return property.Type.Definition.AsElementType() as IEdmEntityType;
-        }
+        public static IEdmEntityType ToEntityType(this IEdmNavigationProperty property) => property.Type.Definition.AsElementType() as IEdmEntityType;
 
         /// <summary>
         /// Gets the structured type targeted by this structural property type reference.
@@ -2553,40 +2515,28 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="property">Reference to the calling object.</param>
         /// <returns>The entity type that declares this navigation property.</returns>
-        public static IEdmEntityType DeclaringEntityType(this IEdmNavigationProperty property)
-        {
-            return (IEdmEntityType)property.DeclaringType;
-        }
+        public static IEdmEntityType DeclaringEntityType(this IEdmNavigationProperty property) => (IEdmEntityType)property.DeclaringType;
 
         /// <summary>
         /// Gets whether this navigation property originates at the principal end of an association.
         /// </summary>
         /// <param name="navigationProperty">The navigation property.</param>
         /// <returns>Whether this navigation property originates at the principal end of an association.</returns>
-        public static bool IsPrincipal(this IEdmNavigationProperty navigationProperty)
-        {
-            return navigationProperty.ReferentialConstraint == null && navigationProperty.Partner != null && navigationProperty.Partner.ReferentialConstraint != null;
-        }
+        public static bool IsPrincipal(this IEdmNavigationProperty navigationProperty) => navigationProperty.ReferentialConstraint == null && navigationProperty.Partner != null && navigationProperty.Partner.ReferentialConstraint != null;
 
         /// <summary>
         /// Gets the dependent properties of this navigation property, returning null if this is the principal entity or if there is no referential constraint.
         /// </summary>
         /// <param name="navigationProperty">The navigation property.</param>
         /// <returns>The dependent properties of this navigation property, returning null if this is the principal entity or if there is no referential constraint.</returns>
-        public static IEnumerable<IEdmStructuralProperty> DependentProperties(this IEdmNavigationProperty navigationProperty)
-        {
-            return navigationProperty.ReferentialConstraint == null ? null : navigationProperty.ReferentialConstraint.PropertyPairs.Select(p => p.DependentProperty);
-        }
+        public static IEnumerable<IEdmStructuralProperty> DependentProperties(this IEdmNavigationProperty navigationProperty) => navigationProperty.ReferentialConstraint == null ? null : navigationProperty.ReferentialConstraint.PropertyPairs.Select(p => p.DependentProperty);
 
         /// <summary>
         /// Gets the principal properties of this navigation property, returning null if this is the principal entity or if there is no referential constraint.
         /// </summary>
         /// <param name="navigationProperty">The navigation property.</param>
         /// <returns>The principal properties of this navigation property, returning null if this is the principal entity or if there is no referential constraint.</returns>
-        public static IEnumerable<IEdmStructuralProperty> PrincipalProperties(this IEdmNavigationProperty navigationProperty)
-        {
-            return navigationProperty.ReferentialConstraint == null ? null : navigationProperty.ReferentialConstraint.PropertyPairs.Select(p => p.PrincipalProperty);
-        }
+        public static IEnumerable<IEdmStructuralProperty> PrincipalProperties(this IEdmNavigationProperty navigationProperty) => navigationProperty.ReferentialConstraint == null ? null : navigationProperty.ReferentialConstraint.PropertyPairs.Select(p => p.PrincipalProperty);
 
         #endregion
 
@@ -2651,10 +2601,7 @@ namespace Microsoft.OData.Edm
         /// <returns>
         ///   <c>true</c> if [is action import] [the specified operation import]; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsActionImport(this IEdmOperationImport operationImport)
-        {
-            return operationImport.ContainerElementKind == EdmContainerElementKind.ActionImport;
-        }
+        public static bool IsActionImport(this IEdmOperationImport operationImport) => operationImport.ContainerElementKind == EdmContainerElementKind.ActionImport;
 
         /// <summary>
         /// Determines whether [is function import] [the specified operation import].
@@ -2663,10 +2610,7 @@ namespace Microsoft.OData.Edm
         /// <returns>
         ///   <c>true</c> if [is function import] [the specified operation import]; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsFunctionImport(this IEdmOperationImport operationImport)
-        {
-            return operationImport.ContainerElementKind == EdmContainerElementKind.FunctionImport;
-        }
+        public static bool IsFunctionImport(this IEdmOperationImport operationImport) => operationImport.ContainerElementKind == EdmContainerElementKind.FunctionImport;
 
         /// <summary>
         /// Analyzes <see cref="IEdmOperationImport"/>.EntitySet expression and returns a static <see cref="IEdmEntitySet"/> reference if available.
@@ -2732,10 +2676,7 @@ namespace Microsoft.OData.Edm
         /// <returns>
         ///   <c>true</c> if the specified operation is action; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsAction(this IEdmOperation operation)
-        {
-            return operation.SchemaElementKind == EdmSchemaElementKind.Action;
-        }
+        public static bool IsAction(this IEdmOperation operation) => operation.SchemaElementKind == EdmSchemaElementKind.Action;
 
         /// <summary>
         /// Determines whether the specified operation is function.
@@ -2744,10 +2685,7 @@ namespace Microsoft.OData.Edm
         /// <returns>
         ///   <c>true</c> if the specified operation is function; otherwise, <c>false</c>.
         /// </returns>
-        public static bool IsFunction(this IEdmOperation operation)
-        {
-            return operation.SchemaElementKind == EdmSchemaElementKind.Function;
-        }
+        public static bool IsFunction(this IEdmOperation operation) => operation.SchemaElementKind == EdmSchemaElementKind.Function;
 
         /// <summary>
         /// Gets the <see cref="IEdmOperationReturn"/> from the specified operation.
@@ -2918,10 +2856,7 @@ namespace Microsoft.OData.Edm
         /// <returns>The entity type of the navigation source.</returns>
         /// <remarks>This extension method is obsolete and will be dropped in the 9.x release. Use <see cref"IEdmNavigationSource.EntityType"> property.</remarks>
         [Obsolete("This will be dropped in the 9.x release. Use IEdmNavigationSource.EntityType property.")]
-        public static IEdmEntityType EntityType(this IEdmNavigationSource navigationSource)
-        {
-            return navigationSource?.Type.AsElementType() as IEdmEntityType;
-        }
+        public static IEdmEntityType EntityType(this IEdmNavigationSource navigationSource) => navigationSource?.Type.AsElementType() as IEdmEntityType;
 
         #endregion
 
@@ -2982,10 +2917,7 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The model containing the element.</param>
         /// <param name="name">The alias- or namespace- qualified name of the element.</param>
         /// <returns>The namespace qualified name of the element.</returns>
-        internal static string ReplaceAlias(this IEdmModel model, string name)
-        {
-            return model.ReplaceAlias(name.AsSpan());
-        }
+        internal static string ReplaceAlias(this IEdmModel model, string name) => model.ReplaceAlias(name.AsSpan());
 
         internal static string ReplaceAlias(this IEdmModel model, ReadOnlySpan<char> name)
         {
@@ -2996,7 +2928,7 @@ namespace Microsoft.OData.Edm
 
             if (list != null && mappings != null && idx > 0)
             {
-                var typeAlias = name.Slice(0, idx).ToString();
+                var typeAlias = name[..idx];
                 // this runs in a hot path, hence the use of for-loop instead of LINQ
                 string ns = null;
                 for (int i = 0; i < list.Count; i++)
@@ -3068,15 +3000,13 @@ namespace Microsoft.OData.Edm
 
         #region methods for finding elements in CsdlSemanticsModel
 
-        internal static IEnumerable<IEdmOperation> FindOperationsInModelTree(this CsdlSemanticsModel model, string name)
-        {
-#if NET9_0
-            return model.FindInModelTree(findOperations, name.AsSpan(), mergeFunctions);
+        internal static IEnumerable<IEdmOperation> FindOperationsInModelTree(this CsdlSemanticsModel model, string name) =>
+#if NET9_0_OR_GREATER
+            model.FindInModelTree(findOperations, name.AsSpan(), mergeFunctions);
 #else
-            return model.FindInModelTree(findOperations, name, mergeFunctions);
-
+             model.FindInModelTree(findOperations, name, mergeFunctions);
 #endif
-        }
+
 
         /// <summary>
         /// Find types in CsdlSemanticsModel tree.
@@ -3084,14 +3014,13 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The CsdlSemanticsModel.</param>
         /// <param name="name">The name by which to search.</param>
         /// <returns>The found emd type or null.</returns>
-        internal static IEdmSchemaType FindTypeInModelTree(this CsdlSemanticsModel model, string name)
-        {
-#if NET9_0
-            return model.FindInModelTree(findType, name.AsSpan(), RegistrationHelper.CreateAmbiguousTypeBinding);
+        internal static IEdmSchemaType FindTypeInModelTree(this CsdlSemanticsModel model, string name) =>
+#if NET9_0_OR_GREATER
+            model.FindInModelTree(findType, name.AsSpan(), RegistrationHelper.CreateAmbiguousTypeBinding);
 #else
-            return model.FindInModelTree(findType, name, RegistrationHelper.CreateAmbiguousTypeBinding);
+            model.FindInModelTree(findType, name, RegistrationHelper.CreateAmbiguousTypeBinding);
 #endif
-        }
+
 
         /// <summary>
         /// Searches for a type with the given name in the model and its main/sibling/referenced models, returns null if no such type exists.
@@ -3103,7 +3032,7 @@ namespace Microsoft.OData.Edm
         /// <param name="ambiguousCreator">The func to combine results when more than one is found.</param>
         /// <remarks>when searching, will ignore built-in types in EdmCoreModel and CoreVocabularyModel.</remarks>
         /// <returns>The requested type, or null if no such type exists.</returns>
-#if NET9_0
+#if NET9_0_OR_GREATER
         internal static T FindInModelTree<T>(this CsdlSemanticsModel model, Func<IEdmModel, ReadOnlySpan<char>, T> finderFunc, ReadOnlySpan<char> qualifiedName, Func<T, T, T> ambiguousCreator)
 #else
         internal static T FindInModelTree<T>(this CsdlSemanticsModel model, Func<IEdmModel, string, T> finderFunc, string qualifiedName, Func<T, T, T> ambiguousCreator)
@@ -3111,7 +3040,7 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(finderFunc, "finderFunc");
-#if !NET9_0
+#if !NET9_0_OR_GREATER
             EdmUtil.CheckArgumentNull(qualifiedName, "qualifiedName");
 #endif
             EdmUtil.CheckArgumentNull(ambiguousCreator, "ambiguousCreator");
@@ -3156,7 +3085,7 @@ namespace Microsoft.OData.Edm
 
             return result;
         }
-#endregion
+        #endregion
 
         #region UrlEscape
         /// <summary>
@@ -3356,10 +3285,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="segmentType">The type of the segment.</param>
         /// <returns>Non-null entity type that may be bad.</returns>
-        internal static IEdmEntityType GetPathSegmentEntityType(IEdmTypeReference segmentType)
-        {
-            return (segmentType.IsCollection() ? segmentType.AsCollection().ElementType() : segmentType).AsEntity().EntityDefinition();
-        }
+        internal static IEdmEntityType GetPathSegmentEntityType(IEdmTypeReference segmentType) => (segmentType.IsCollection() ? segmentType.AsCollection().ElementType() : segmentType).AsEntity().EntityDefinition();
 
         public static IEnumerable<IEdmEntityContainerElement> AllElements(this IEdmEntityContainer container, int depth = ContainerExtendsMaxDepth)
         {
@@ -3377,28 +3303,28 @@ namespace Microsoft.OData.Edm
             return container.Elements.Concat(semanticsEntityContainer.Extends.AllElements(depth - 1));
         }
 
+#if NET9_0_OR_GREATER
         /// <summary>
         /// Searches for entity set by the given name that may be container qualified in default container and .Extends containers.
         /// </summary>
         /// <param name="container">The container to search.</param>
         /// <param name="qualifiedName">The name which might be container qualified. If no container name is provided, then default container will be searched.</param>
         /// <returns>The entity set found or empty if none found.</returns>
-        internal static IEdmEntitySet FindEntitySetExtended(this IEdmEntityContainer container, string qualifiedName)
-        {
-            return FindInContainerAndExtendsRecursively(container, qualifiedName, (c, n) => c.FindEntitySet(n), ContainerExtendsMaxDepth);
-        }
-
+        internal static IEdmEntitySet FindEntitySetExtended(this IEdmEntityContainer container, ReadOnlySpan<char> qualifiedName) => FindInContainerAndExtendsRecursively(container, qualifiedName, (c, n) => c.FindEntitySet(n), ContainerExtendsMaxDepth);
+#else
+        internal static IEdmEntitySet FindEntitySetExtended(this IEdmEntityContainer container, string qualifiedName) => FindInContainerAndExtendsRecursively(container, qualifiedName, (c, n) => c.FindEntitySet(n), ContainerExtendsMaxDepth);
+#endif
         /// <summary>
         /// Searches for an entity set or contained navigation property according to the specified path that may be container qualified in default container and .Extends containers.
         /// </summary>
         /// <param name="container">The container to search.</param>
         /// <param name="path">The name which might be container qualified. If no container name is provided, then default container will be searched.</param>
         /// <returns>The entity set found or empty if none found.</returns>
-        internal static IEdmNavigationSource FindNavigationSourceExtended(this IEdmEntityContainer container, string path)
-        {
-            return FindInContainerAndExtendsRecursively(container, path, (c, n) => c.FindNavigationSource(n), ContainerExtendsMaxDepth);
-        }
-
+#if NET9_0_OR_GREATER
+        internal static IEdmNavigationSource FindNavigationSourceExtended(this IEdmEntityContainer container, ReadOnlySpan<char> path) => FindInContainerAndExtendsRecursively(container, path, (c, n) => c.FindNavigationSource(n), ContainerExtendsMaxDepth);
+#else
+        internal static IEdmNavigationSource FindNavigationSourceExtended(this IEdmEntityContainer container, string path) => FindInContainerAndExtendsRecursively(container, path, (c, n) => c.FindNavigationSource(n), ContainerExtendsMaxDepth);
+#endif
         /// <summary>
         /// Searches for an entity set or contained navigation property according to the specified path that may be container qualified in default container and .Extends containers.
         /// </summary>
@@ -3415,9 +3341,10 @@ namespace Microsoft.OData.Edm
             // "NS.Default/Customers/ContainedOrders" (for top-level entity set in the Default entity container) or
             // "Customers" (unqualified)
             // "Customers/ContainedOrders" (unqualified)
-            string[] pathSegments = path.Split('/');
 
+            string[] pathSegments = path.Split('/');
             string firstElementName = pathSegments[0];
+
             int nextIndex = 1;
             if (firstElementName.Contains(".", StringComparison.Ordinal))
             {
@@ -3473,10 +3400,7 @@ namespace Microsoft.OData.Edm
         /// <param name="container">The container to search.</param>
         /// <param name="qualifiedName">The name which might be container qualified. If no container name is provided, then default container will be searched.</param>
         /// <returns>The singleton found or empty if none found.</returns>
-        internal static IEdmSingleton FindSingletonExtended(this IEdmEntityContainer container, string qualifiedName)
-        {
-            return FindInContainerAndExtendsRecursively(container, qualifiedName, (c, n) => c.FindSingleton(n), ContainerExtendsMaxDepth);
-        }
+        internal static IEdmSingleton FindSingletonExtended(this IEdmEntityContainer container, string qualifiedName) => FindInContainerAndExtendsRecursively(container, qualifiedName, (c, n) => c.FindSingleton(n), ContainerExtendsMaxDepth);
 
         /// <summary>
         /// Searches for the operation imports by the specified name in default container and .Extends containers, returns an empty enumerable if no operation import exists.
@@ -3484,10 +3408,7 @@ namespace Microsoft.OData.Edm
         /// <param name="container">The container to search.</param>
         /// <param name="qualifiedName">The qualified name of the operation import which may or may not include the container name.</param>
         /// <returns>All operation imports that can be found by the specified name, returns an empty enumerable if no operation import exists.</returns>
-        internal static IEnumerable<IEdmOperationImport> FindOperationImportsExtended(this IEdmEntityContainer container, string qualifiedName)
-        {
-            return FindInContainerAndExtendsRecursively(container, qualifiedName, (c, n) => c.FindOperationImports(n), ContainerExtendsMaxDepth);
-        }
+        internal static IEnumerable<IEdmOperationImport> FindOperationImportsExtended(this IEdmEntityContainer container, string qualifiedName) => FindInContainerAndExtendsRecursively(container, qualifiedName, (c, n) => c.FindOperationImports(n), ContainerExtendsMaxDepth);
 
         /// <summary>
         /// Get the primitive value converter for the given type definition in the model.
@@ -3667,7 +3588,7 @@ namespace Microsoft.OData.Edm
             return null;
         }
 
-#if NET9_0
+#if NET9_0_OR_GREATER
         private static T FindAcrossModels<T>(this IEdmModel model, ReadOnlySpan<char> qualifiedName, Func<IEdmModel, ReadOnlySpan<char>, T> finder, Func<T, T, T> ambiguousCreator)
 #else
         private static T FindAcrossModels<T>(this IEdmModel model, string qualifiedName, Func<IEdmModel, string, T> finder, Func<T, T, T> ambiguousCreator)
@@ -3747,7 +3668,11 @@ namespace Microsoft.OData.Edm
         /// <param name="finderFunc">The func to do the search within container.</param>
         /// <param name="depth">The recursive depth of .Extends containers to search.</param>
         /// <returns>The found entity set or singleton or operation import.</returns>
+#if NET9_0_OR_GREATER
+        private static T FindInContainerAndExtendsRecursively<T>(IEdmEntityContainer container, ReadOnlySpan<char> simpleName, Func<IEdmEntityContainer, ReadOnlySpan<char>, T> finderFunc, int depth)
+#else
         private static T FindInContainerAndExtendsRecursively<T>(IEdmEntityContainer container, string simpleName, Func<IEdmEntityContainer, string, T> finderFunc, int depth)
+#endif
         {
             Debug.Assert(finderFunc != null, "finderFunc!=null");
             EdmUtil.CheckArgumentNull(container, "container");

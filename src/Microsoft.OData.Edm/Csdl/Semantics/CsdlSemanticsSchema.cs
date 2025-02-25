@@ -100,25 +100,13 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.labeledExpressionsCache.GetValue(this, ComputeLabeledExpressionsFunc, null); }
         }
 
-        public IEnumerable<IEdmOperation> FindOperations(string name)
-        {
-            return FindSchemaElement<IEnumerable<IEdmOperation>>(name, ExtensionMethods.FindOperationsInModelTree);
-        }
+        public IEnumerable<IEdmOperation> FindOperations(string name) => FindSchemaElement<IEnumerable<IEdmOperation>>(name, ExtensionMethods.FindOperationsInModelTree);
 
-        public IEdmSchemaType FindType(string name)
-        {
-            return FindSchemaElement<IEdmSchemaType>(name, ExtensionMethods.FindTypeInModelTree);
-        }
+        public IEdmSchemaType FindType(string name) => FindSchemaElement<IEdmSchemaType>(name, ExtensionMethods.FindTypeInModelTree);
 
-        public IEdmTerm FindTerm(string name)
-        {
-            return FindSchemaElement<IEdmTerm>(name, FindTerm);
-        }
+        public IEdmTerm FindTerm(string name) => FindSchemaElement<IEdmTerm>(name, FindTerm);
 
-        public IEdmEntityContainer FindEntityContainer(string name)
-        {
-            return FindSchemaElement<IEdmEntityContainer>(name, FindEntityContainer);
-        }
+        public IEdmEntityContainer FindEntityContainer(string name) => FindSchemaElement<IEdmEntityContainer>(name, FindEntityContainer);
 
         public T FindSchemaElement<T>(string name, Func<CsdlSemanticsModel, string, T> modelFinder)
         {
@@ -168,20 +156,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return result;
         }
 
-        internal string ReplaceAlias(string name)
-        {
-            return this.model.ReplaceAlias(name);
-        }
+        internal string ReplaceAlias(string name) => this.model.ReplaceAlias(name);
 
-        private static IEdmTerm FindTerm(IEdmModel model, string name)
-        {
-            return model.FindTerm(name);
-        }
+        private static IEdmTerm FindTerm(IEdmModel model, string name) => model.FindTerm(name);
 
-        private static IEdmEntityContainer FindEntityContainer(IEdmModel model, string name)
-        {
-            return model.FindEntityContainer(name);
-        }
+        private static IEdmEntityContainer FindEntityContainer(IEdmModel model, string name) => model.FindEntityContainer(name);
 
         private static void AddLabeledExpressions(CsdlExpressionBase expression, Dictionary<string, object> result)
         {

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
@@ -43,9 +44,15 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private static readonly Func<CsdlSemanticsEntityContainer, IEdmEntityContainer> ComputeExtendsFunc = (me) => me.ComputeExtends();
         private static readonly Func<CsdlSemanticsEntityContainer, IEdmEntityContainer> OnCycleExtendsFunc = (me) => new CyclicEntityContainer(me.entityContainer.Extends, me.Location);
 
-#if NET9_0
+#if NET9_0_OR_GREATER
         private readonly Cache<CsdlSemanticsEntityContainer, Dictionary<string, IEdmEntitySet>.AlternateLookup<ReadOnlyMemory<char>>> entitySetDictionaryReadonlyMemoryCache = new();
         private readonly Cache<CsdlSemanticsEntityContainer, Dictionary<string, IEdmEntitySet>.AlternateLookup<ReadOnlySpan<char>>> entitySetReadonlySpanCache = new();
+
+        private readonly Cache<CsdlSemanticsEntityContainer, Dictionary<string, IEdmSingleton>.AlternateLookup<ReadOnlyMemory<char>>> singletonDictionaryReadonlyMemoryCache = new();
+        private readonly Cache<CsdlSemanticsEntityContainer, Dictionary<string, IEdmSingleton>.AlternateLookup<ReadOnlySpan<char>>> singletonReadonlySpanCache = new();
+
+        private readonly Cache<CsdlSemanticsEntityContainer, Dictionary<string, object>.AlternateLookup<ReadOnlyMemory<char>>> operationImportsDictionaryCacheReadOnlyMemoryCache = new();
+        private readonly Cache<CsdlSemanticsEntityContainer, Dictionary<string, object>.AlternateLookup<ReadOnlySpan<char>>> operationImportsDictionaryCacheReadOnlySpanCache = new();
 #endif
         public CsdlSemanticsEntityContainer(CsdlSemanticsSchema context, CsdlEntityContainer entityContainer)
             : base(entityContainer)
@@ -113,13 +120,30 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.entitySetDictionaryCache.GetValue(this, ComputeEntitySetDictionaryFunc, null); }
         }
 
-#if NET9_0
-        private Dictionary<string, IEdmEntitySet>.AlternateLookup<ReadOnlyMemory<char>> EntitySetReadOnlyMemoryAlternateLookup 
+        private Dictionary<string, object> OperationImportsDictionary
+        {
+            get { return this.operationImportsDictionaryCache.GetValue(this, ComputeOperationImportsDictionaryFunc, null); }
+        }
+
+#if NET9_0_OR_GREATER
+        private Dictionary<string, IEdmEntitySet>.AlternateLookup<ReadOnlyMemory<char>> EntitySetReadOnlyMemoryAlternateLookup
             => this.entitySetDictionaryReadonlyMemoryCache.GetValue(this, static (me) => me.EntitySetDictionary.GetAlternateLookup<ReadOnlyMemory<char>>(), null);
 
-        [Experimental(diagnosticId: "ODataNet9ExperimentalFeatures")]
         private Dictionary<string, IEdmEntitySet>.AlternateLookup<ReadOnlySpan<char>> EntitySetReadOnlySpanAlternateLookup
             => this.entitySetReadonlySpanCache.GetValue(this, static (me) => me.EntitySetDictionary.GetAlternateLookup<ReadOnlySpan<char>>(), null);
+
+        private Dictionary<string, IEdmSingleton>.AlternateLookup<ReadOnlyMemory<char>> SingletonReadOnlyMemoryAlternateLookup
+            => this.singletonDictionaryReadonlyMemoryCache.GetValue(this, static (me) => me.SingletonDictionary.GetAlternateLookup<ReadOnlyMemory<char>>(), null);
+
+        private Dictionary<string, IEdmSingleton>.AlternateLookup<ReadOnlySpan<char>> SingletonReadOnlySpanAlternateLookup
+            => this.singletonReadonlySpanCache.GetValue(this, static (me) => me.SingletonDictionary.GetAlternateLookup<ReadOnlySpan<char>>(), null);
+
+        private Dictionary<string, object>.AlternateLookup<ReadOnlyMemory<char>> OperationImportsDictionaryReadOnlyMemoryLookup
+             => this.operationImportsDictionaryCacheReadOnlyMemoryCache.GetValue(this, static (me) => me.OperationImportsDictionary.GetAlternateLookup<ReadOnlyMemory<char>>(), null);     
+        
+        private Dictionary<string, object>.AlternateLookup<ReadOnlySpan<char>> OperationImportsDictionaryReadOnlySpanLookup
+             => this.operationImportsDictionaryCacheReadOnlySpanCache.GetValue(this, static (me) => me.OperationImportsDictionary.GetAlternateLookup<ReadOnlySpan<char>>(), null);
+
 #endif
 
         private Dictionary<string, IEdmSingleton> SingletonDictionary
@@ -127,25 +151,21 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.singletonDictionaryCache.GetValue(this, ComputeSingletonDictionaryFunc, null); }
         }
 
-        private Dictionary<string, object> OperationImportsDictionary
-        {
-            get { return this.operationImportsDictionaryCache.GetValue(this, ComputeOperationImportsDictionaryFunc, null); }
-        }
+
 
         public IEdmEntitySet FindEntitySet(string name)
         {
             IEdmEntitySet element;
             return this.EntitySetDictionary.TryGetValue(name, out element) ? element : null;
         }
-#if NET9_0
+
+#if NET9_0_OR_GREATER
         public IEdmEntitySet FindEntitySet(ReadOnlyMemory<char> name)
         {
             IEdmEntitySet element;
             return this.EntitySetReadOnlyMemoryAlternateLookup.TryGetValue(name, out element) ? element : null;
         }
 
-
-        [Experimental(diagnosticId: "ODataNet9ExperimentalFeatures")]
         public IEdmEntitySet FindEntitySet(ReadOnlySpan<char> name)
         {
             IEdmEntitySet element;
@@ -175,10 +195,55 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return Enumerable.Empty<IEdmOperationImport>();
         }
 
-        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
+#if NET9_0_OR_GREATER
+        public IEdmSingleton FindSingleton(ReadOnlyMemory<char> singletonName)
         {
-            return this.Model.WrapInlineVocabularyAnnotations(this, this.Context);
+            IEdmSingleton element;
+            return this.SingletonReadOnlyMemoryAlternateLookup.TryGetValue(singletonName, out element) ? element : null;
         }
+
+        public IEnumerable<IEdmOperationImport> FindOperationImports(ReadOnlyMemory<char> operationName)
+        {
+            object element;
+            if (this.OperationImportsDictionaryReadOnlyMemoryLookup.TryGetValue(operationName, out element))
+            {
+                List<IEdmOperationImport> listElement = element as List<IEdmOperationImport>;
+                if (listElement != null)
+                {
+                    return listElement;
+                }
+
+                return new IEdmOperationImport[] { (IEdmOperationImport)element };
+            }
+
+            return Enumerable.Empty<IEdmOperationImport>();
+        }
+
+        public IEdmSingleton FindSingleton(ReadOnlySpan<char> singletonName)
+        {
+            IEdmSingleton element;
+            return this.SingletonReadOnlySpanAlternateLookup.TryGetValue(singletonName, out element) ? element : null;
+        }
+
+        public IEnumerable<IEdmOperationImport> FindOperationImports(ReadOnlySpan<char> operationName)
+        {
+            object element;
+            if (this.OperationImportsDictionaryReadOnlySpanLookup.TryGetValue(operationName, out element))
+            {
+                List<IEdmOperationImport> listElement = element as List<IEdmOperationImport>;
+                if (listElement != null)
+                {
+                    return listElement;
+                }
+
+                return new IEdmOperationImport[] { (IEdmOperationImport)element };
+            }
+
+            return Enumerable.Empty<IEdmOperationImport>();
+        }
+
+#endif
+        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations() => this.Model.WrapInlineVocabularyAnnotations(this, this.Context);
 
         private IEnumerable<IEdmEntityContainerElement> ComputeElements()
         {

@@ -434,65 +434,29 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return new CsdlConstantExpression(kind, text != null ? text.TextValue : string.Empty, location);
         }
 
-        private static CsdlConstantExpression OnIntConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            return ConstantExpression(EdmValueKind.Integer, childValues, element.Location);
-        }
+        private static CsdlConstantExpression OnIntConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues) => ConstantExpression(EdmValueKind.Integer, childValues, element.Location);
 
-        private static CsdlConstantExpression OnStringConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            return ConstantExpression(EdmValueKind.String, childValues, element.Location);
-        }
+        private static CsdlConstantExpression OnStringConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues) => ConstantExpression(EdmValueKind.String, childValues, element.Location);
 
-        private static CsdlConstantExpression OnBinaryConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            return ConstantExpression(EdmValueKind.Binary, childValues, element.Location);
-        }
+        private static CsdlConstantExpression OnBinaryConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues) => ConstantExpression(EdmValueKind.Binary, childValues, element.Location);
 
-        private static CsdlConstantExpression OnFloatConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            return ConstantExpression(EdmValueKind.Floating, childValues, element.Location);
-        }
+        private static CsdlConstantExpression OnFloatConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues) => ConstantExpression(EdmValueKind.Floating, childValues, element.Location);
 
-        private static CsdlConstantExpression OnGuidConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            return ConstantExpression(EdmValueKind.Guid, childValues, element.Location);
-        }
+        private static CsdlConstantExpression OnGuidConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues) => ConstantExpression(EdmValueKind.Guid, childValues, element.Location);
 
-        private static CsdlConstantExpression OnDecimalConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            return ConstantExpression(EdmValueKind.Decimal, childValues, element.Location);
-        }
+        private static CsdlConstantExpression OnDecimalConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues) => ConstantExpression(EdmValueKind.Decimal, childValues, element.Location);
 
-        private static CsdlConstantExpression OnBoolConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            return ConstantExpression(EdmValueKind.Boolean, childValues, element.Location);
-        }
+        private static CsdlConstantExpression OnBoolConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues) => ConstantExpression(EdmValueKind.Boolean, childValues, element.Location);
 
-        private static CsdlConstantExpression OnDurationConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            return ConstantExpression(EdmValueKind.Duration, childValues, element.Location);
-        }
+        private static CsdlConstantExpression OnDurationConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues) => ConstantExpression(EdmValueKind.Duration, childValues, element.Location);
 
-        private static CsdlConstantExpression OnDateConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            return ConstantExpression(EdmValueKind.Date, childValues, element.Location);
-        }
+        private static CsdlConstantExpression OnDateConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues) => ConstantExpression(EdmValueKind.Date, childValues, element.Location);
 
-        private static CsdlConstantExpression OnDateTimeOffsetConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            return ConstantExpression(EdmValueKind.DateTimeOffset, childValues, element.Location);
-        }
+        private static CsdlConstantExpression OnDateTimeOffsetConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues) => ConstantExpression(EdmValueKind.DateTimeOffset, childValues, element.Location);
 
-        private static CsdlConstantExpression OnTimeOfDayConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            return ConstantExpression(EdmValueKind.TimeOfDay, childValues, element.Location);
-        }
+        private static CsdlConstantExpression OnTimeOfDayConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues) => ConstantExpression(EdmValueKind.TimeOfDay, childValues, element.Location);
 
-        private static CsdlConstantExpression OnNullConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            return ConstantExpression(EdmValueKind.Null, childValues, element.Location);
-        }
+        private static CsdlConstantExpression OnNullConstantExpression(XmlElementInfo element, XmlElementValueCollection childValues) => ConstantExpression(EdmValueKind.Null, childValues, element.Location);
 
         private static CsdlPathExpression OnPathExpression(XmlElementInfo element, XmlElementValueCollection childValues)
         {
@@ -721,10 +685,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             }
         }
 
-        private void ParseBinaryFacets(out bool Unbounded, out int? maxLength)
-        {
-            this.ParseMaxLength(out Unbounded, out maxLength);
-        }
+        private void ParseBinaryFacets(out bool Unbounded, out int? maxLength) => this.ParseMaxLength(out Unbounded, out maxLength);
 
         private void ParseDecimalFacets(out int? precision, out int? scale)
         {
@@ -738,15 +699,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             unicode = OptionalBoolean(CsdlConstants.Attribute_Unicode) ?? CsdlConstants.Default_IsUnicode;
         }
 
-        private void ParseTemporalFacets(out int? precision)
-        {
-            precision = OptionalInteger(CsdlConstants.Attribute_Precision) ?? CsdlConstants.Default_TemporalPrecision;
-        }
+        private void ParseTemporalFacets(out int? precision) => precision = OptionalInteger(CsdlConstants.Attribute_Precision) ?? CsdlConstants.Default_TemporalPrecision;
 
-        private void ParseSpatialFacets(out int? srid, int defaultSrid)
-        {
-            srid = OptionalSrid(CsdlConstants.Attribute_Srid, defaultSrid);
-        }
+        private void ParseSpatialFacets(out int? srid, int defaultSrid) => srid = OptionalSrid(CsdlConstants.Attribute_Srid, defaultSrid);
 
         private void ParseTypeDefinitionFacets(
             out bool isUnbounded,

@@ -10,7 +10,7 @@ using System.Linq;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 
-#if NET9_0
+#if NET9_0_OR_GREATER
 using System;
 using System.Diagnostics.CodeAnalysis;
 #endif
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Edm
         private readonly ConcurrentDictionary<string, IList<IEdmOperation>> bindableOperationsCache;
 
 
-#if NET9_0
+#if NET9_0_OR_GREATER
         private readonly Dictionary<string, IEdmEntityContainer>.AlternateLookup<ReadOnlyMemory<char>> containersDictionaryReadOnlyMemoryLookup;
         private readonly Dictionary<string, IEdmSchemaType>.AlternateLookup<ReadOnlyMemory<char>> schemaTypeDictionaryReadOnlyMemoryLookup;
         private readonly Dictionary<string, IEdmTerm>.AlternateLookup<ReadOnlyMemory<char>> termDictionaryReadOnlyMemoryLookup;
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Edm
 
             this.annotationsManager = annotationsManager;
 
-#if NET9_0
+#if NET9_0_OR_GREATER
             this.containersDictionaryReadOnlyMemoryLookup = this.containersDictionary.GetAlternateLookup<ReadOnlyMemory<char>>();
             this.schemaTypeDictionaryReadOnlyMemoryLookup = this.schemaTypeDictionary.GetAlternateLookup<ReadOnlyMemory<char>>();
             this.termDictionaryReadOnlyMemoryLookup = this.termDictionary.GetAlternateLookup<ReadOnlyMemory<char>>();
@@ -158,7 +158,7 @@ namespace Microsoft.OData.Edm
             return result;
         }
 
-#if NET9_0
+#if NET9_0_OR_GREATER
         /// <summary>
         /// Searches for a type with the given name in this model only and returns null if no such type exists.
         /// </summary>
@@ -176,7 +176,6 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="qualifiedName">The qualified name of the type being found.</param>
         /// <returns>The requested type, or null if no such type exists.</returns>
-        [Experimental("ODataNet9PreviewFeatures")]
         public IEdmSchemaType FindDeclaredType(ReadOnlySpan<char> qualifiedName)
         {
             IEdmSchemaType result;
@@ -216,7 +215,6 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="qualifiedName">The qualified name of the term being found.</param>
         /// <returns>The requested term, or null if no such term exists.</returns>
-        [Experimental("ODataNet9PreviewFeatures")]
         public IEdmTerm FindDeclaredTerm(ReadOnlySpan<char> qualifiedName)
         {
             IEdmTerm result;
@@ -241,7 +239,7 @@ namespace Microsoft.OData.Edm
             return Enumerable.Empty<IEdmOperation>();
         }
 
-#if NET9_0
+#if NET9_0_OR_GREATER
         /// <summary>
         /// Searches for a operation with the given name in this model and returns null if no such operation exists.
         /// </summary>
@@ -263,7 +261,6 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="qualifiedName">The qualified name of the operation being found.</param>
         /// <returns>A group of operations sharing the specified qualified name, or an empty enumerable if no such operation exists.</returns>
-        [Experimental("ODataNet9PreviewFeatures")]
         public IEnumerable<IEdmOperation> FindDeclaredOperations(ReadOnlySpan<char> qualifiedName)
         {
             IList<IEdmOperation> elements;
@@ -358,7 +355,7 @@ namespace Microsoft.OData.Edm
             return matchedOperations;
         }
 
-#if NET9_0
+#if NET9_0_OR_GREATER
         /// <summary>
         /// Searches for bound operations based on the qualified name and binding type, returns an empty enumerable if no operation exists.
         /// </summary>
@@ -455,10 +452,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="element">The annotated element.</param>
         /// <returns>The vocabulary annotations for the element.</returns>
-        public virtual IEnumerable<IEdmVocabularyAnnotation> FindDeclaredVocabularyAnnotations(IEdmVocabularyAnnotatable element)
-        {
-            return Enumerable.Empty<IEdmVocabularyAnnotation>();
-        }
+        public virtual IEnumerable<IEdmVocabularyAnnotation> FindDeclaredVocabularyAnnotations(IEdmVocabularyAnnotatable element) => Enumerable.Empty<IEdmVocabularyAnnotation>();
 
         /// <summary>
         /// Finds a list of types that derive directly from the supplied type.

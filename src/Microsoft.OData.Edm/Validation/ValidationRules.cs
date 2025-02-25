@@ -2850,10 +2850,7 @@ namespace Microsoft.OData.Edm.Validation
 
         internal class EdmTypeReferenceComparer : IEqualityComparer<IEdmTypeReference>
         {
-            public bool Equals(IEdmTypeReference x, IEdmTypeReference y)
-            {
-                return x.IsEquivalentTo(y);
-            }
+            public bool Equals(IEdmTypeReference x, IEdmTypeReference y) => x.IsEquivalentTo(y);
 
             public int GetHashCode(IEdmTypeReference obj)
             {

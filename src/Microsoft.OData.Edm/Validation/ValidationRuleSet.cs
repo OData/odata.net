@@ -190,10 +190,7 @@ namespace Microsoft.OData.Edm.Validation
         /// Gets all of the rules in this ruleset.
         /// </summary>
         /// <returns>All of the rules in this ruleset.</returns>
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return this.GetEnumerator();
-        }
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => this.GetEnumerator();
 
         internal IEnumerable<ValidationRule> GetRules(Type t)
         {

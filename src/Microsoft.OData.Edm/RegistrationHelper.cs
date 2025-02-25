@@ -46,10 +46,7 @@ namespace Microsoft.OData.Edm
             }
         }
 
-        internal static void RegisterProperty(IEdmProperty element, string name, Dictionary<string, IEdmProperty> dictionary)
-        {
-            AddElement(element, name, dictionary, CreateAmbiguousPropertyBinding);
-        }
+        internal static void RegisterProperty(IEdmProperty element, string name, Dictionary<string, IEdmProperty> dictionary) => AddElement(element, name, dictionary, CreateAmbiguousPropertyBinding);
 
         internal static void AddElement<T>(T element, string name, Dictionary<string, T> elementDictionary, Func<T, T, T> ambiguityCreator) where T : class, IEdmElement
         {

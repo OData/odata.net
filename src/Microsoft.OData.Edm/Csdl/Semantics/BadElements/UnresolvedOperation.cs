@@ -71,9 +71,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return EdmSchemaElementKind.None; }
         }
 
-        public IEdmOperationParameter FindParameter(string name)
-        {
-            return null;
-        }
+        public IEdmOperationParameter FindParameter(string name) => null;
     }
 }

@@ -125,21 +125,15 @@ namespace Microsoft.OData.Edm.Validation
             return visitors;
         }
 
-        private static EdmError CreatePropertyMustNotBeNullError<T>(T item, string propertyName)
-        {
-            return new EdmError(
+        private static EdmError CreatePropertyMustNotBeNullError<T>(T item, string propertyName) => new EdmError(
                 GetLocation(item),
                 EdmErrorCode.InterfaceCriticalPropertyValueMustNotBeNull,
                 Error.Format(SRResources.EdmModel_Validator_Syntactic_PropertyMustNotBeNull, typeof(T).Name, propertyName));
-        }
 
-        private static EdmError CreateEnumPropertyOutOfRangeError<T, E>(T item, E enumValue, string propertyName)
-        {
-            return new EdmError(
+        private static EdmError CreateEnumPropertyOutOfRangeError<T, E>(T item, E enumValue, string propertyName) => new EdmError(
                 GetLocation(item),
                 EdmErrorCode.InterfaceCriticalEnumPropertyValueOutOfRange,
                 Error.Format(SRResources.EdmModel_Validator_Syntactic_EnumPropertyValueOutOfRange, typeof(T).Name, propertyName, typeof(E).Name, enumValue));
-        }
 
         private static EdmError CheckForInterfaceKindValueMismatchError<T, K, I>(T item, K kind, string propertyName)
         {
@@ -155,13 +149,10 @@ namespace Microsoft.OData.Edm.Validation
                 Error.Format(SRResources.EdmModel_Validator_Syntactic_InterfaceKindValueMismatch, kind, typeof(T).Name, propertyName, typeof(I).Name));
         }
 
-        private static EdmError CreateInterfaceKindValueUnexpectedError<T, K>(T item, K kind, string propertyName)
-        {
-            return new EdmError(
+        private static EdmError CreateInterfaceKindValueUnexpectedError<T, K>(T item, K kind, string propertyName) => new EdmError(
                 GetLocation(item),
                 EdmErrorCode.InterfaceCriticalKindValueUnexpected,
                 Error.Format(SRResources.EdmModel_Validator_Syntactic_InterfaceKindValueUnexpected, kind, typeof(T).Name, propertyName));
-        }
 
         private static EdmError CreateTypeRefInterfaceTypeKindValueMismatchError<T>(T item) where T : IEdmTypeReference
         {
@@ -371,10 +362,7 @@ namespace Microsoft.OData.Edm.Validation
 
         private abstract class VisitorOfT<T> : VisitorBase
         {
-            public override IEnumerable<EdmError> Visit(object item, List<object> followup, List<object> references)
-            {
-                return this.VisitT((T)item, followup, references);
-            }
+            public override IEnumerable<EdmError> Visit(object item, List<object> followup, List<object> references) => this.VisitT((T)item, followup, references);
 
             protected abstract IEnumerable<EdmError> VisitT(T item, List<object> followup, List<object> references);
         }
@@ -394,26 +382,17 @@ namespace Microsoft.OData.Edm.Validation
 
         private sealed class VisitorOfIEdmElement : VisitorOfT<IEdmElement>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmElement element, List<object> followup, List<object> references)
-            {
-                return null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmElement element, List<object> followup, List<object> references) => null;
         }
 
         private sealed class VisitorOfIEdmFullNamedElement : VisitorOfT<IEdmFullNamedElement>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmFullNamedElement element, List<object> followup, List<object> references)
-            {
-                return element.Name != null ? null : new EdmError[] { CreatePropertyMustNotBeNullError(element, "Name") };
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmFullNamedElement element, List<object> followup, List<object> references) => element.Name != null ? null : new EdmError[] { CreatePropertyMustNotBeNullError(element, "Name") };
         }
 
         private sealed class VisitorOfIEdmNamedElement : VisitorOfT<IEdmNamedElement>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmNamedElement element, List<object> followup, List<object> references)
-            {
-                return element.Name != null ? null : new EdmError[] { CreatePropertyMustNotBeNullError(element, "Name") };
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmNamedElement element, List<object> followup, List<object> references) => element.Name != null ? null : new EdmError[] { CreatePropertyMustNotBeNullError(element, "Name") };
         }
 
         private sealed class VisitorOfIEdmSchemaElement : VisitorOfT<IEdmSchemaElement>
@@ -752,18 +731,12 @@ namespace Microsoft.OData.Edm.Validation
 
         private sealed class VisitorOfIEdmUntypedType : VisitorOfT<IEdmUntypedType>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmUntypedType type, List<object> followup, List<object> references)
-            {
-                return null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmUntypedType type, List<object> followup, List<object> references) => null;
         }
 
         private sealed class VisitorOfIEdmPathType : VisitorOfT<IEdmPathType>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmPathType type, List<object> followup, List<object> references)
-            {
-                return null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmPathType type, List<object> followup, List<object> references) => null;
         }
 
         private sealed class VisitorOfIEdmEnumType : VisitorOfT<IEdmEnumType>
@@ -889,10 +862,7 @@ namespace Microsoft.OData.Edm.Validation
 
         private sealed class VisitorOfIEdmStructuralProperty : VisitorOfT<IEdmStructuralProperty>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmStructuralProperty property, List<object> followup, List<object> references)
-            {
-                return null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmStructuralProperty property, List<object> followup, List<object> references) => null;
         }
 
         private sealed class VisitorOfIEdmNavigationProperty : VisitorOfT<IEdmNavigationProperty>
@@ -1015,18 +985,12 @@ namespace Microsoft.OData.Edm.Validation
 
         private sealed class VisitorOfIEdmAction : VisitorOfT<IEdmAction>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmAction operation, List<object> followup, List<object> references)
-            {
-                return null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmAction operation, List<object> followup, List<object> references) => null;
         }
 
         private sealed class VisitorOfIEdmFunction : VisitorOfT<IEdmFunction>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmFunction operation, List<object> followup, List<object> references)
-            {
-                return null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmFunction operation, List<object> followup, List<object> references) => null;
         }
 
         private sealed class VisitorOfIEdmOperationImport : VisitorOfT<IEdmOperationImport>
@@ -1046,18 +1010,12 @@ namespace Microsoft.OData.Edm.Validation
 
         private sealed class VisitorOfIEdmActionImport : VisitorOfT<IEdmActionImport>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmActionImport actionImport, List<object> followup, List<object> references)
-            {
-                return null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmActionImport actionImport, List<object> followup, List<object> references) => null;
         }
 
         private sealed class VisitorOfIEdmFunctionImport : VisitorOfT<IEdmFunctionImport>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmFunctionImport functionImport, List<object> followup, List<object> references)
-            {
-                return null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmFunctionImport functionImport, List<object> followup, List<object> references) => null;
         }
 
         private sealed class VisitorOfIEdmOperationParameter : VisitorOfT<IEdmOperationParameter>
@@ -1091,10 +1049,7 @@ namespace Microsoft.OData.Edm.Validation
 
         private sealed class VisitorOfIEdmOptionalParameter : VisitorOfT<IEdmOptionalParameter>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmOptionalParameter parameter, List<object> followup, List<object> references)
-            {
-                return null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmOptionalParameter parameter, List<object> followup, List<object> references) => null;
         }
 
         private sealed class VisitorOfIEdmOperationReturn : VisitorOfT<IEdmOperationReturn>
@@ -1127,90 +1082,60 @@ namespace Microsoft.OData.Edm.Validation
 
         private sealed class VisitorOfIEdmCollectionTypeReference : VisitorOfT<IEdmCollectionTypeReference>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmCollectionTypeReference typeRef, List<object> followup, List<object> references)
-            {
-                return typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Collection ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmCollectionTypeReference typeRef, List<object> followup, List<object> references) => typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Collection ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
         }
 
         private sealed class VisitorOfIEdmEntityReferenceTypeReference : VisitorOfT<IEdmEntityReferenceTypeReference>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmEntityReferenceTypeReference typeRef, List<object> followup, List<object> references)
-            {
-                return typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.EntityReference ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmEntityReferenceTypeReference typeRef, List<object> followup, List<object> references) => typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.EntityReference ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
         }
 
         private sealed class VisitorOfIEdmStructuredTypeReference : VisitorOfT<IEdmStructuredTypeReference>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmStructuredTypeReference typeRef, List<object> followup, List<object> references)
-            {
-                return typeRef.Definition != null && !typeRef.Definition.TypeKind.IsStructured() ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmStructuredTypeReference typeRef, List<object> followup, List<object> references) => typeRef.Definition != null && !typeRef.Definition.TypeKind.IsStructured() ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
         }
 
         private sealed class VisitorOfIEdmEntityTypeReference : VisitorOfT<IEdmEntityTypeReference>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmEntityTypeReference typeRef, List<object> followup, List<object> references)
-            {
-                return typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Entity ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmEntityTypeReference typeRef, List<object> followup, List<object> references) => typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Entity ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
         }
 
         private sealed class VisitorOfIEdmComplexTypeReference : VisitorOfT<IEdmComplexTypeReference>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmComplexTypeReference typeRef, List<object> followup, List<object> references)
-            {
-                return typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Complex ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmComplexTypeReference typeRef, List<object> followup, List<object> references) => typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Complex ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
         }
 
         private sealed class VisitorOfIEdmUntypedTypeReference : VisitorOfT<IEdmUntypedTypeReference>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmUntypedTypeReference typeRef, List<object> followup, List<object> references)
-            {
-                return (typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Untyped)
+            protected override IEnumerable<EdmError> VisitT(IEdmUntypedTypeReference typeRef, List<object> followup, List<object> references) => (typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Untyped)
                     ?
                     new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) }
                     :
                     null;
-            }
         }
 
         private sealed class VisitorOfIEdmPathTypeReference : VisitorOfT<IEdmPathTypeReference>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmPathTypeReference typeRef, List<object> followup, List<object> references)
-            {
-                return (typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Path)
+            protected override IEnumerable<EdmError> VisitT(IEdmPathTypeReference typeRef, List<object> followup, List<object> references) => (typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Path)
                     ?
                     new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) }
                     :
                     null;
-            }
         }
 
         private sealed class VisitorOfIEdmEnumTypeReference : VisitorOfT<IEdmEnumTypeReference>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmEnumTypeReference typeRef, List<object> followup, List<object> references)
-            {
-                return typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Enum ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmEnumTypeReference typeRef, List<object> followup, List<object> references) => typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Enum ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
         }
 
         private sealed class VisitorOfIEdmTypeDefinitionReference : VisitorOfT<IEdmTypeDefinitionReference>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmTypeDefinitionReference typeRef, List<object> followup, List<object> references)
-            {
-                return typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.TypeDefinition ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmTypeDefinitionReference typeRef, List<object> followup, List<object> references) => typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.TypeDefinition ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
         }
 
         private sealed class VisitorOfIEdmPrimitiveTypeReference : VisitorOfT<IEdmPrimitiveTypeReference>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmPrimitiveTypeReference typeRef, List<object> followup, List<object> references)
-            {
-                return typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Primitive ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmPrimitiveTypeReference typeRef, List<object> followup, List<object> references) => typeRef.Definition != null && typeRef.Definition.TypeKind != EdmTypeKind.Primitive ? new EdmError[] { CreateTypeRefInterfaceTypeKindValueMismatchError(typeRef) } : null;
         }
 
         private sealed class VisitorOfIEdmBinaryTypeReference : VisitorOfT<IEdmBinaryTypeReference>
@@ -1260,26 +1185,17 @@ namespace Microsoft.OData.Edm.Validation
 
         private sealed class VisitorOfIEdmReference : VisitorOfT<IEdmReference>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmReference edmReference, List<object> followup, List<object> references)
-            {
-                return !edmReference.Includes.Any() && edmReference.IncludeAnnotations.Any() ? new EdmError[] { CreatePropertyMustNotBeNullError(edmReference, "Includes/IncludeAnnotations") } : null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmReference edmReference, List<object> followup, List<object> references) => !edmReference.Includes.Any() && edmReference.IncludeAnnotations.Any() ? new EdmError[] { CreatePropertyMustNotBeNullError(edmReference, "Includes/IncludeAnnotations") } : null;
         }
 
         private sealed class VisitorOfIEdmInclude : VisitorOfT<IEdmInclude>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmInclude edmInclude, List<object> followup, List<object> references)
-            {
-                return string.IsNullOrEmpty(edmInclude.Namespace) ? new EdmError[] { CreatePropertyMustNotBeNullError(edmInclude, "Namespace") } : null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmInclude edmInclude, List<object> followup, List<object> references) => string.IsNullOrEmpty(edmInclude.Namespace) ? new EdmError[] { CreatePropertyMustNotBeNullError(edmInclude, "Namespace") } : null;
         }
 
         private sealed class VisitorOfIEdmIncludeAnnotations : VisitorOfT<IEdmIncludeAnnotations>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmIncludeAnnotations edmIncludeAnnotations, List<object> followup, List<object> references)
-            {
-                return string.IsNullOrEmpty(edmIncludeAnnotations.TermNamespace) ? new EdmError[] { CreatePropertyMustNotBeNullError(edmIncludeAnnotations, "TermNamespace") } : null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmIncludeAnnotations edmIncludeAnnotations, List<object> followup, List<object> references) => string.IsNullOrEmpty(edmIncludeAnnotations.TermNamespace) ? new EdmError[] { CreatePropertyMustNotBeNullError(edmIncludeAnnotations, "TermNamespace") } : null;
         }
         #endregion
 
@@ -1736,10 +1652,7 @@ namespace Microsoft.OData.Edm.Validation
 
         private sealed class VisitorOfIEdmPropertyValue : VisitorOfT<IEdmPropertyValue>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmPropertyValue value, List<object> followup, List<object> references)
-            {
-                return value.Name == null ? new EdmError[] { CreatePropertyMustNotBeNullError(value, "Name") } : null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmPropertyValue value, List<object> followup, List<object> references) => value.Name == null ? new EdmError[] { CreatePropertyMustNotBeNullError(value, "Name") } : null;
         }
 
         private sealed class VisitorOfIEdmEnumValue : VisitorOfT<IEdmEnumValue>
@@ -1780,18 +1693,12 @@ namespace Microsoft.OData.Edm.Validation
 
         private sealed class VisitorOfIEdmBinaryValue : VisitorOfT<IEdmBinaryValue>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmBinaryValue value, List<object> followup, List<object> references)
-            {
-                return value.Value == null ? new EdmError[] { CreatePropertyMustNotBeNullError(value, "Value") } : null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmBinaryValue value, List<object> followup, List<object> references) => value.Value == null ? new EdmError[] { CreatePropertyMustNotBeNullError(value, "Value") } : null;
         }
 
         private sealed class VisitorOfIEdmStringValue : VisitorOfT<IEdmStringValue>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmStringValue value, List<object> followup, List<object> references)
-            {
-                return value.Value == null ? new EdmError[] { CreatePropertyMustNotBeNullError(value, "Value") } : null;
-            }
+            protected override IEnumerable<EdmError> VisitT(IEdmStringValue value, List<object> followup, List<object> references) => value.Value == null ? new EdmError[] { CreatePropertyMustNotBeNullError(value, "Value") } : null;
         }
 
         #endregion

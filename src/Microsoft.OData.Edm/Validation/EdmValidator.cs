@@ -22,10 +22,7 @@ namespace Microsoft.OData.Edm.Validation
         /// <param name="root">The root of the model to be validated.</param>
         /// <param name="errors">Errors encountered while validating the model.</param>
         /// <returns>True if model is valid, otherwise false.</returns>
-        public static bool Validate(this IEdmModel root, out IEnumerable<EdmError> errors)
-        {
-            return Validate(root, root.GetEdmVersion() ?? EdmConstants.EdmVersionDefault, out errors);
-        }
+        public static bool Validate(this IEdmModel root, out IEnumerable<EdmError> errors) => Validate(root, root.GetEdmVersion() ?? EdmConstants.EdmVersionDefault, out errors);
 
         /// <summary>
         /// Validate the <see cref="IEdmModel"/> and all of its properties given certain version.
@@ -34,10 +31,7 @@ namespace Microsoft.OData.Edm.Validation
         /// <param name="version">Version of Edm to validate against.</param>
         /// <param name="errors">Errors encountered while validating the model.</param>
         /// <returns>True if model is valid, otherwise false.</returns>
-        public static bool Validate(this IEdmModel root, Version version, out IEnumerable<EdmError> errors)
-        {
-            return Validate(root, ValidationRuleSet.GetEdmModelRuleSet(version), out errors);
-        }
+        public static bool Validate(this IEdmModel root, Version version, out IEnumerable<EdmError> errors) => Validate(root, ValidationRuleSet.GetEdmModelRuleSet(version), out errors);
 
         /// <summary>
         /// Validate the <see cref="IEdmModel"/> and all of its properties given certain version.

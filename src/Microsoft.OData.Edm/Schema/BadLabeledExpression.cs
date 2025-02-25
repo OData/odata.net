@@ -42,9 +42,6 @@ namespace Microsoft.OData.Edm
             get { return this.expressionCache.GetValue(this, ComputeExpressionFunc, null); }
         }
 
-        private static IEdmExpression ComputeExpression()
-        {
-            return EdmNullExpression.Instance;
-        }
+        private static IEdmExpression ComputeExpression() => EdmNullExpression.Instance;
     }
 }

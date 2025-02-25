@@ -28,7 +28,7 @@ namespace Microsoft.OData.Client
     /// <summary>
     /// EdmModel describing the client metadata
     /// </summary>
-    internal sealed class ClientEdmModel : EdmElement, IEdmModel
+    internal sealed partial class ClientEdmModel : EdmElement, IEdmModel
     {
         /// <summary>A cache that maps a client Clr type to it corresponding Edm type.</summary>
         private readonly Dictionary<Type, EdmTypeCacheValue> clrToEdmTypeCache = new Dictionary<Type, EdmTypeCacheValue>(EqualityComparer<Type>.Default);

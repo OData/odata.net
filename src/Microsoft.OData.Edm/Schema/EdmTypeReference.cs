@@ -47,9 +47,6 @@ namespace Microsoft.OData.Edm
         /// Returns the text representation of the current object.
         /// </summary>
         /// <returns>The text representation of the current object.</returns>
-        public override string ToString()
-        {
-            return this.ToTraceString();
-        }
+        public override string ToString() => this.ToTraceString();
     }
 }

@@ -52,18 +52,15 @@ namespace Microsoft.OData.Edm
         /// Clones this object.
         /// </summary>
         /// <returns>A copy of this object.</returns>
-        public EdmNavigationPropertyInfo Clone()
+        public EdmNavigationPropertyInfo Clone() => new EdmNavigationPropertyInfo()
         {
-            return new EdmNavigationPropertyInfo()
-            {
-                Name = this.Name,
-                Target = this.Target,
-                TargetMultiplicity = this.TargetMultiplicity,
-                DependentProperties = this.DependentProperties,
-                PrincipalProperties = this.PrincipalProperties,
-                ContainsTarget = this.ContainsTarget,
-                OnDelete = this.OnDelete
-            };
-        }
+            Name = this.Name,
+            Target = this.Target,
+            TargetMultiplicity = this.TargetMultiplicity,
+            DependentProperties = this.DependentProperties,
+            PrincipalProperties = this.PrincipalProperties,
+            ContainsTarget = this.ContainsTarget,
+            OnDelete = this.OnDelete
+        };
     }
 }

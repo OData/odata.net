@@ -137,10 +137,7 @@ namespace Microsoft.OData.Edm
         /// Adds the <paramref name="keyProperties"/> to the key of this entity type.
         /// </summary>
         /// <param name="keyProperties">The key properties.</param>
-        public void AddKeys(params IEdmStructuralProperty[] keyProperties)
-        {
-            this.AddKeys((IEnumerable<IEdmStructuralProperty>)keyProperties);
-        }
+        public void AddKeys(params IEdmStructuralProperty[] keyProperties) => this.AddKeys((IEnumerable<IEdmStructuralProperty>)keyProperties);
 
         /// <summary>
         /// Adds the <paramref name="keyProperties"/> to the key of this entity type.

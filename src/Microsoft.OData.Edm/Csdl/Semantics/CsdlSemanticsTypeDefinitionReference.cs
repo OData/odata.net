@@ -68,20 +68,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return (CsdlNamedTypeReference)this.Element; }
         }
 
-        private bool ComputeIsUnbounded()
-        {
-            return this.UnderlyingType().CanSpecifyMaxLength() && this.Reference.IsUnbounded;
-        }
+        private bool ComputeIsUnbounded() => this.UnderlyingType().CanSpecifyMaxLength() && this.Reference.IsUnbounded;
 
-        private int? ComputeMaxLength()
-        {
-            return this.UnderlyingType().CanSpecifyMaxLength() ? this.Reference.MaxLength : null;
-        }
+        private int? ComputeMaxLength() => this.UnderlyingType().CanSpecifyMaxLength() ? this.Reference.MaxLength : null;
 
-        private bool? ComputeIsUnicode()
-        {
-            return this.UnderlyingType().IsString() ? this.Reference.IsUnicode : null;
-        }
+        private bool? ComputeIsUnicode() => this.UnderlyingType().IsString() ? this.Reference.IsUnicode : null;
 
         private int? ComputePrecision()
         {
@@ -98,10 +89,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return null;
         }
 
-        private int? ComputeScale()
-        {
-            return this.UnderlyingType().IsDecimal() ? this.Reference.Scale : null;
-        }
+        private int? ComputeScale() => this.UnderlyingType().IsDecimal() ? this.Reference.Scale : null;
 
         private int? ComputeSrid()
         {

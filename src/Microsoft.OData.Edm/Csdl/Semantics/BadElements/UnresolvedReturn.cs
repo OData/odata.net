@@ -28,9 +28,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public IEdmOperation DeclaringOperation { get; private set; }
 
-        private IEdmTypeReference ComputeType()
-        {
-            return new BadTypeReference(new BadType(Errors), true);
-        }
+        private IEdmTypeReference ComputeType() => new BadTypeReference(new BadType(Errors), true);
     }
 }

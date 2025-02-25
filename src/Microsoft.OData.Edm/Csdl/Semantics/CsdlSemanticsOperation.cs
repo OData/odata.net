@@ -106,10 +106,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public CsdlSemanticsSchema Context { get; private set; }
 
-        public IEdmOperationParameter FindParameter(string name)
-        {
-            return this.Parameters.SingleOrDefault(p => p.Name == name);
-        }
+        public IEdmOperationParameter FindParameter(string name) => this.Parameters.SingleOrDefault(p => p.Name == name);
 
         internal static string ParameterizedTargetName(IList<IEdmOperationParameter> parameters)
         {
@@ -149,10 +146,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return sb.ToString();
         }
 
-        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
-        {
-            return this.Model.WrapInlineVocabularyAnnotations(this, this.Context);
-        }
+        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations() => this.Model.WrapInlineVocabularyAnnotations(this, this.Context);
 
         private IEdmPathExpression ComputeEntitySetPath()
         {

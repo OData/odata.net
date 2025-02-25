@@ -6,12 +6,24 @@ Microsoft.OData.Edm.EdmCoreModel.FindDeclaredTerm(System.ReadOnlyMemory<char> qu
 Microsoft.OData.Edm.EdmCoreModel.FindDeclaredTerm(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
 Microsoft.OData.Edm.EdmCoreModel.FindDeclaredType(System.ReadOnlyMemory<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
 Microsoft.OData.Edm.EdmCoreModel.FindDeclaredType(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
+Microsoft.OData.Edm.EdmEntityContainer.FindEntitySet(System.ReadOnlyMemory<char> setName) -> Microsoft.OData.Edm.IEdmEntitySet
+Microsoft.OData.Edm.EdmEntityContainer.FindEntitySet(System.ReadOnlySpan<char> setName) -> Microsoft.OData.Edm.IEdmEntitySet
+Microsoft.OData.Edm.EdmEntityContainer.FindOperationImports(System.ReadOnlyMemory<char> operationName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperationImport>
+Microsoft.OData.Edm.EdmEntityContainer.FindOperationImports(System.ReadOnlySpan<char> operationName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperationImport>
+Microsoft.OData.Edm.EdmEntityContainer.FindSingleton(System.ReadOnlyMemory<char> singletonName) -> Microsoft.OData.Edm.IEdmSingleton
+Microsoft.OData.Edm.EdmEntityContainer.FindSingleton(System.ReadOnlySpan<char> singletonName) -> Microsoft.OData.Edm.IEdmSingleton
 Microsoft.OData.Edm.EdmModelBase.FindDeclaredOperations(System.ReadOnlyMemory<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
 Microsoft.OData.Edm.EdmModelBase.FindDeclaredOperations(System.ReadOnlySpan<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
 Microsoft.OData.Edm.EdmModelBase.FindDeclaredTerm(System.ReadOnlyMemory<char> qualifiedName) -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
 Microsoft.OData.Edm.EdmModelBase.FindDeclaredTerm(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
 Microsoft.OData.Edm.EdmModelBase.FindDeclaredType(System.ReadOnlyMemory<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
 Microsoft.OData.Edm.EdmModelBase.FindDeclaredType(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
+Microsoft.OData.Edm.IEdmEntityContainer.FindEntitySet(System.ReadOnlyMemory<char> setName) -> Microsoft.OData.Edm.IEdmEntitySet
+Microsoft.OData.Edm.IEdmEntityContainer.FindEntitySet(System.ReadOnlySpan<char> setName) -> Microsoft.OData.Edm.IEdmEntitySet
+Microsoft.OData.Edm.IEdmEntityContainer.FindOperationImports(System.ReadOnlyMemory<char> operationName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperationImport>
+Microsoft.OData.Edm.IEdmEntityContainer.FindOperationImports(System.ReadOnlySpan<char> operationName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperationImport>
+Microsoft.OData.Edm.IEdmEntityContainer.FindSingleton(System.ReadOnlyMemory<char> singletonName) -> Microsoft.OData.Edm.IEdmSingleton
+Microsoft.OData.Edm.IEdmEntityContainer.FindSingleton(System.ReadOnlySpan<char> singletonName) -> Microsoft.OData.Edm.IEdmSingleton
 Microsoft.OData.Edm.IEdmModel.FindDeclaredBoundOperations(System.ReadOnlyMemory<char> qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
 Microsoft.OData.Edm.IEdmModel.FindDeclaredBoundOperations(System.ReadOnlySpan<char> qualifiedName, Microsoft.OData.Edm.IEdmType bindingType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
 Microsoft.OData.Edm.IEdmModel.FindDeclaredOperations(System.ReadOnlyMemory<char> qualifiedName) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmOperation>
@@ -22,6 +34,8 @@ Microsoft.OData.Edm.IEdmModel.FindDeclaredType(System.ReadOnlyMemory<char> quali
 Microsoft.OData.Edm.IEdmModel.FindDeclaredType(System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmSchemaType
 static Microsoft.OData.Edm.Date.implicit operator Microsoft.OData.Edm.Date(System.DateOnly operand) -> Microsoft.OData.Edm.Date
 static Microsoft.OData.Edm.Date.implicit operator System.DateOnly(Microsoft.OData.Edm.Date operand) -> System.DateOnly
+static Microsoft.OData.Edm.ExtensionMethods.FindDeclaredEntitySet(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> qualifiedName) -> Microsoft.OData.Edm.IEdmEntitySet
+static Microsoft.OData.Edm.ExtensionMethods.TryFindContainerQualifiedEntitySet(this Microsoft.OData.Edm.IEdmModel model, System.ReadOnlySpan<char> containerQualifiedEntitySetName, out Microsoft.OData.Edm.IEdmEntitySet entitySet) -> bool
 static Microsoft.OData.Edm.TimeOfDay.implicit operator Microsoft.OData.Edm.TimeOfDay(System.TimeOnly timeOnly) -> Microsoft.OData.Edm.TimeOfDay
 static Microsoft.OData.Edm.TimeOfDay.implicit operator System.TimeOnly(Microsoft.OData.Edm.TimeOfDay time) -> System.TimeOnly
 abstract Microsoft.OData.Edm.EdmModelBase.DeclaredNamespaces.get -> System.Collections.Generic.IEnumerable<string>

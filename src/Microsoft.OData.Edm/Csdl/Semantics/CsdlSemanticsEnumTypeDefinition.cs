@@ -89,10 +89,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             private set;
         }
 
-        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
-        {
-            return this.Model.WrapInlineVocabularyAnnotations(this, this.Context);
-        }
+        protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations() => this.Model.WrapInlineVocabularyAnnotations(this, this.Context);
 
         private IEdmPrimitiveType ComputeUnderlyingType()
         {

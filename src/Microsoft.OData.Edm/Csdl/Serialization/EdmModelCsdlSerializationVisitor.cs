@@ -337,89 +337,53 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             await this.EndElementAsync(element).ConfigureAwait(false);
         }
 
-        protected override void ProcessTypeDefinitionReference(IEdmTypeDefinitionReference element)
-        {
-            this.schemaWriter.WriteTypeDefinitionAttributes(element);
-        }
+        protected override void ProcessTypeDefinitionReference(IEdmTypeDefinitionReference element) => this.schemaWriter.WriteTypeDefinitionAttributes(element);
 
         /// <summary>
         /// Asynchronously processes the type definition reference.
         /// </summary>
         /// <param name="element">The Edm Type definition reference.</param>
-        protected override Task ProcessTypeDefinitionReferenceAsync(IEdmTypeDefinitionReference element)
-        {
-            return this.schemaWriter.WriteTypeDefinitionAttributesAsync(element);
-        }
+        protected override Task ProcessTypeDefinitionReferenceAsync(IEdmTypeDefinitionReference element) => this.schemaWriter.WriteTypeDefinitionAttributesAsync(element);
 
-        protected override void ProcessBinaryTypeReference(IEdmBinaryTypeReference element)
-        {
-            this.schemaWriter.WriteBinaryTypeAttributes(element);
-        }
+        protected override void ProcessBinaryTypeReference(IEdmBinaryTypeReference element) => this.schemaWriter.WriteBinaryTypeAttributes(element);
 
         /// <summary>
         /// Asynchronously processes the binary type reference.
         /// </summary>
         /// <param name="element">The Edm binary type reference.</param>
-        protected override Task ProcessBinaryTypeReferenceAsync(IEdmBinaryTypeReference element)
-        {
-            return this.schemaWriter.WriteBinaryTypeAttributesAsync(element);
-        }
+        protected override Task ProcessBinaryTypeReferenceAsync(IEdmBinaryTypeReference element) => this.schemaWriter.WriteBinaryTypeAttributesAsync(element);
 
-        protected override void ProcessDecimalTypeReference(IEdmDecimalTypeReference element)
-        {
-            this.schemaWriter.WriteDecimalTypeAttributes(element);
-        }
+        protected override void ProcessDecimalTypeReference(IEdmDecimalTypeReference element) => this.schemaWriter.WriteDecimalTypeAttributes(element);
 
         /// <summary>
         /// Asynchronously processes the decimal type reference.
         /// </summary>
         /// <param name="element">The Edm Decimal type reference.</param>
-        protected override Task ProcessDecimalTypeReferenceAsync(IEdmDecimalTypeReference element)
-        {
-            return this.schemaWriter.WriteDecimalTypeAttributesAsync(element);
-        }
+        protected override Task ProcessDecimalTypeReferenceAsync(IEdmDecimalTypeReference element) => this.schemaWriter.WriteDecimalTypeAttributesAsync(element);
 
-        protected override void ProcessSpatialTypeReference(IEdmSpatialTypeReference element)
-        {
-            this.schemaWriter.WriteSpatialTypeAttributes(element);
-        }
+        protected override void ProcessSpatialTypeReference(IEdmSpatialTypeReference element) => this.schemaWriter.WriteSpatialTypeAttributes(element);
 
         /// <summary>
         /// Asynchronously processes the spatial type reference.
         /// </summary>
         /// <param name="element">The Edm spatial type reference.</param>
-        protected override Task ProcessSpatialTypeReferenceAsync(IEdmSpatialTypeReference element)
-        {
-            return this.schemaWriter.WriteSpatialTypeAttributesAsync(element);
-        }
+        protected override Task ProcessSpatialTypeReferenceAsync(IEdmSpatialTypeReference element) => this.schemaWriter.WriteSpatialTypeAttributesAsync(element);
 
-        protected override void ProcessStringTypeReference(IEdmStringTypeReference element)
-        {
-            this.schemaWriter.WriteStringTypeAttributes(element);
-        }
+        protected override void ProcessStringTypeReference(IEdmStringTypeReference element) => this.schemaWriter.WriteStringTypeAttributes(element);
 
         /// <summary>
         /// Asynchronously processes the string type reference.
         /// </summary>
         /// <param name="element">The Edm string type reference.</param>
-        protected override Task ProcessStringTypeReferenceAsync(IEdmStringTypeReference element)
-        {
-            return this.schemaWriter.WriteStringTypeAttributesAsync(element);
-        }
+        protected override Task ProcessStringTypeReferenceAsync(IEdmStringTypeReference element) => this.schemaWriter.WriteStringTypeAttributesAsync(element);
 
-        protected override void ProcessTemporalTypeReference(IEdmTemporalTypeReference element)
-        {
-            this.schemaWriter.WriteTemporalTypeAttributes(element);
-        }
+        protected override void ProcessTemporalTypeReference(IEdmTemporalTypeReference element) => this.schemaWriter.WriteTemporalTypeAttributes(element);
 
         /// <summary>
         /// Asynchronously processes the temporal type reference.
         /// </summary>
         /// <param name="element">The Edm temporal type reference.</param>
-        protected override Task ProcessTemporalTypeReferenceAsync(IEdmTemporalTypeReference element)
-        {
-            return this.schemaWriter.WriteTemporalTypeAttributesAsync(element);
-        }
+        protected override Task ProcessTemporalTypeReferenceAsync(IEdmTemporalTypeReference element) => this.schemaWriter.WriteTemporalTypeAttributesAsync(element);
 
         protected override void ProcessNavigationProperty(IEdmNavigationProperty element)
         {
@@ -565,33 +529,21 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             await this.EndElementAsync(term).ConfigureAwait(false);
         }
 
-        protected override void ProcessAction(IEdmAction action)
-        {
-            this.ProcessOperation(action, this.schemaWriter.WriteActionElementHeader);
-        }
+        protected override void ProcessAction(IEdmAction action) => this.ProcessOperation(action, this.schemaWriter.WriteActionElementHeader);
 
         /// <summary>
         /// Asynchronously processes the action.
         /// </summary>
         /// <param name="action">The Edm action.</param>
-        protected override Task ProcessActionAsync(IEdmAction action)
-        {
-            return this.ProcessOperationAsync(action, this.schemaWriter.WriteActionElementHeaderAsync);
-        }
+        protected override Task ProcessActionAsync(IEdmAction action) => this.ProcessOperationAsync(action, this.schemaWriter.WriteActionElementHeaderAsync);
 
-        protected override void ProcessFunction(IEdmFunction function)
-        {
-            this.ProcessOperation(function, this.schemaWriter.WriteFunctionElementHeader);
-        }
+        protected override void ProcessFunction(IEdmFunction function) => this.ProcessOperation(function, this.schemaWriter.WriteFunctionElementHeader);
 
         /// <summary>
         /// Asynchronously processes the function.
         /// </summary>
         /// <param name="function">The Edm function.</param>
-        protected override Task ProcessFunctionAsync(IEdmFunction function)
-        {
-            return this.ProcessOperationAsync(function, this.schemaWriter.WriteFunctionElementHeaderAsync);
-        }
+        protected override Task ProcessFunctionAsync(IEdmFunction function) => this.ProcessOperationAsync(function, this.schemaWriter.WriteFunctionElementHeaderAsync);
 
         protected override void ProcessOperationParameter(IEdmOperationParameter element)
         {
@@ -798,33 +750,21 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         #region Expressions
 
-        protected override void ProcessStringConstantExpression(IEdmStringConstantExpression expression)
-        {
-            this.schemaWriter.WriteStringConstantExpressionElement(expression);
-        }
+        protected override void ProcessStringConstantExpression(IEdmStringConstantExpression expression) => this.schemaWriter.WriteStringConstantExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the string constant expression.
         /// </summary>
         /// <param name="expression">The Edm string constant expression.</param>
-        protected override Task ProcessStringConstantExpressionAsync(IEdmStringConstantExpression expression)
-        {
-            return this.schemaWriter.WriteStringConstantExpressionElementAsync(expression);
-        }
+        protected override Task ProcessStringConstantExpressionAsync(IEdmStringConstantExpression expression) => this.schemaWriter.WriteStringConstantExpressionElementAsync(expression);
 
-        protected override void ProcessBinaryConstantExpression(IEdmBinaryConstantExpression expression)
-        {
-            this.schemaWriter.WriteBinaryConstantExpressionElement(expression);
-        }
+        protected override void ProcessBinaryConstantExpression(IEdmBinaryConstantExpression expression) => this.schemaWriter.WriteBinaryConstantExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the binary constant expression.
         /// </summary>
         /// <param name="expression">The Edm binary constant expression.</param>
-        protected override Task ProcessBinaryConstantExpressionAsync(IEdmBinaryConstantExpression expression)
-        {
-            return this.schemaWriter.WriteBinaryConstantExpressionElementAsync(expression);
-        }
+        protected override Task ProcessBinaryConstantExpressionAsync(IEdmBinaryConstantExpression expression) => this.schemaWriter.WriteBinaryConstantExpressionElementAsync(expression);
 
         protected override void ProcessRecordExpression(IEdmRecordExpression expression)
         {
@@ -876,19 +816,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        protected override void ProcessLabeledExpressionReferenceExpression(IEdmLabeledExpressionReferenceExpression element)
-        {
-            this.schemaWriter.WriteLabeledExpressionReferenceExpression(element);
-        }
+        protected override void ProcessLabeledExpressionReferenceExpression(IEdmLabeledExpressionReferenceExpression element) => this.schemaWriter.WriteLabeledExpressionReferenceExpression(element);
 
         /// <summary>
         /// Asynchronously processes the labeled expression reference expression.
         /// </summary>
         /// <param name="element">The Edm labeled expression reference.</param>
-        protected override Task ProcessLabeledExpressionReferenceExpressionAsync(IEdmLabeledExpressionReferenceExpression element)
-        {
-            return this.schemaWriter.WriteLabeledExpressionReferenceExpressionAsync(element);
-        }
+        protected override Task ProcessLabeledExpressionReferenceExpressionAsync(IEdmLabeledExpressionReferenceExpression element) => this.schemaWriter.WriteLabeledExpressionReferenceExpressionAsync(element);
 
         protected override void ProcessPropertyConstructor(IEdmPropertyConstructor constructor)
         {
@@ -918,61 +852,37 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             await this.EndElementAsync(constructor, this.schemaWriter.WritePropertyConstructorElementEndAsync).ConfigureAwait(false);
         }
 
-        protected override void ProcessPathExpression(IEdmPathExpression expression)
-        {
-            this.schemaWriter.WritePathExpressionElement(expression);
-        }
+        protected override void ProcessPathExpression(IEdmPathExpression expression) => this.schemaWriter.WritePathExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the path expression.
         /// </summary>
         /// <param name="expression">The Edm path expression.</param>
-        protected override Task ProcessPathExpressionAsync(IEdmPathExpression expression)
-        {
-            return this.schemaWriter.WritePathExpressionElementAsync(expression);
-        }
+        protected override Task ProcessPathExpressionAsync(IEdmPathExpression expression) => this.schemaWriter.WritePathExpressionElementAsync(expression);
 
-        protected override void ProcessPropertyPathExpression(IEdmPathExpression expression)
-        {
-            this.schemaWriter.WritePropertyPathExpressionElement(expression);
-        }
+        protected override void ProcessPropertyPathExpression(IEdmPathExpression expression) => this.schemaWriter.WritePropertyPathExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the property path expression.
         /// </summary>
         /// <param name="expression">The Edm path expression.</param>
-        protected override Task ProcessPropertyPathExpressionAsync(IEdmPathExpression expression)
-        {
-            return this.schemaWriter.WritePropertyPathExpressionElementAsync(expression);
-        }
+        protected override Task ProcessPropertyPathExpressionAsync(IEdmPathExpression expression) => this.schemaWriter.WritePropertyPathExpressionElementAsync(expression);
 
-        protected override void ProcessNavigationPropertyPathExpression(IEdmPathExpression expression)
-        {
-            this.schemaWriter.WriteNavigationPropertyPathExpressionElement(expression);
-        }
+        protected override void ProcessNavigationPropertyPathExpression(IEdmPathExpression expression) => this.schemaWriter.WriteNavigationPropertyPathExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the navigation property path expression.
         /// </summary>
         /// <param name="expression">The Edm path expression.</param>
-        protected override Task ProcessNavigationPropertyPathExpressionAsync(IEdmPathExpression expression)
-        {
-            return this.schemaWriter.WriteNavigationPropertyPathExpressionElementAsync(expression);
-        }
+        protected override Task ProcessNavigationPropertyPathExpressionAsync(IEdmPathExpression expression) => this.schemaWriter.WriteNavigationPropertyPathExpressionElementAsync(expression);
 
-        protected override void ProcessAnnotationPathExpression(IEdmPathExpression expression)
-        {
-            this.schemaWriter.WriteAnnotationPathExpressionElement(expression);
-        }
+        protected override void ProcessAnnotationPathExpression(IEdmPathExpression expression) => this.schemaWriter.WriteAnnotationPathExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the annotation path expression.
         /// </summary>
         /// <param name="expression">The Edm path expression.</param>
-        protected override Task ProcessAnnotationPathExpressionAsync(IEdmPathExpression expression)
-        {
-            return this.schemaWriter.WriteAnnotationPathExpressionElementAsync(expression);
-        }
+        protected override Task ProcessAnnotationPathExpressionAsync(IEdmPathExpression expression) => this.schemaWriter.WriteAnnotationPathExpressionElementAsync(expression);
 
         protected override void ProcessCollectionExpression(IEdmCollectionExpression expression)
         {
@@ -1047,19 +957,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        protected override void ProcessIntegerConstantExpression(IEdmIntegerConstantExpression expression)
-        {
-            this.schemaWriter.WriteIntegerConstantExpressionElement(expression);
-        }
+        protected override void ProcessIntegerConstantExpression(IEdmIntegerConstantExpression expression) => this.schemaWriter.WriteIntegerConstantExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the integer constant expression.
         /// </summary>
         /// <param name="expression">The Edm integer constant expression.</param>
-        protected override Task ProcessIntegerConstantExpressionAsync(IEdmIntegerConstantExpression expression)
-        {
-            return this.schemaWriter.WriteIntegerConstantExpressionElementAsync(expression);
-        }
+        protected override Task ProcessIntegerConstantExpressionAsync(IEdmIntegerConstantExpression expression) => this.schemaWriter.WriteIntegerConstantExpressionElementAsync(expression);
 
         protected override void ProcessIfExpression(IEdmIfExpression expression)
         {
@@ -1097,145 +1001,85 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             await this.EndElementAsync(expression, this.schemaWriter.WriteFunctionApplicationElementEndAsync).ConfigureAwait(false);
         }
 
-        protected override void ProcessFloatingConstantExpression(IEdmFloatingConstantExpression expression)
-        {
-            this.schemaWriter.WriteFloatingConstantExpressionElement(expression);
-        }
+        protected override void ProcessFloatingConstantExpression(IEdmFloatingConstantExpression expression) => this.schemaWriter.WriteFloatingConstantExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the floating constant expression.
         /// </summary>
         /// <param name="expression">The Edm floating constant expression.</param>
-        protected override Task ProcessFloatingConstantExpressionAsync(IEdmFloatingConstantExpression expression)
-        {
-            return this.schemaWriter.WriteFloatingConstantExpressionElementAsync(expression);
-        }
+        protected override Task ProcessFloatingConstantExpressionAsync(IEdmFloatingConstantExpression expression) => this.schemaWriter.WriteFloatingConstantExpressionElementAsync(expression);
 
-        protected override void ProcessGuidConstantExpression(IEdmGuidConstantExpression expression)
-        {
-            this.schemaWriter.WriteGuidConstantExpressionElement(expression);
-        }
+        protected override void ProcessGuidConstantExpression(IEdmGuidConstantExpression expression) => this.schemaWriter.WriteGuidConstantExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the guid constant expression.
         /// </summary>
         /// <param name="expression">The Edm Guid constant expression.</param>
-        protected override Task ProcessGuidConstantExpressionAsync(IEdmGuidConstantExpression expression)
-        {
-            return this.schemaWriter.WriteGuidConstantExpressionElementAsync(expression);
-        }
+        protected override Task ProcessGuidConstantExpressionAsync(IEdmGuidConstantExpression expression) => this.schemaWriter.WriteGuidConstantExpressionElementAsync(expression);
 
-        protected override void ProcessEnumMemberExpression(IEdmEnumMemberExpression expression)
-        {
-            this.schemaWriter.WriteEnumMemberExpressionElement(expression);
-        }
+        protected override void ProcessEnumMemberExpression(IEdmEnumMemberExpression expression) => this.schemaWriter.WriteEnumMemberExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the enum member expression.
         /// </summary>
         /// <param name="expression">The Edm enumeration member.</param>
-        protected override Task ProcessEnumMemberExpressionAsync(IEdmEnumMemberExpression expression)
-        {
-            return this.schemaWriter.WriteEnumMemberExpressionElementAsync(expression);
-        }
+        protected override Task ProcessEnumMemberExpressionAsync(IEdmEnumMemberExpression expression) => this.schemaWriter.WriteEnumMemberExpressionElementAsync(expression);
 
-        protected override void ProcessDecimalConstantExpression(IEdmDecimalConstantExpression expression)
-        {
-            this.schemaWriter.WriteDecimalConstantExpressionElement(expression);
-        }
+        protected override void ProcessDecimalConstantExpression(IEdmDecimalConstantExpression expression) => this.schemaWriter.WriteDecimalConstantExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the decimal constant expression.
         /// </summary>
         /// <param name="expression">The Edm decimal constant expression.</param>
-        protected override Task ProcessDecimalConstantExpressionAsync(IEdmDecimalConstantExpression expression)
-        {
-            return this.schemaWriter.WriteDecimalConstantExpressionElementAsync(expression);
-        }
+        protected override Task ProcessDecimalConstantExpressionAsync(IEdmDecimalConstantExpression expression) => this.schemaWriter.WriteDecimalConstantExpressionElementAsync(expression);
 
-        protected override void ProcessDateConstantExpression(IEdmDateConstantExpression expression)
-        {
-            this.schemaWriter.WriteDateConstantExpressionElement(expression);
-        }
+        protected override void ProcessDateConstantExpression(IEdmDateConstantExpression expression) => this.schemaWriter.WriteDateConstantExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the date constant expression.
         /// </summary>
         /// <param name="expression">The Edm date constant expression.</param>
-        protected override Task ProcessDateConstantExpressionAsync(IEdmDateConstantExpression expression)
-        {
-            return this.schemaWriter.WriteDateConstantExpressionElementAsync(expression);
-        }
+        protected override Task ProcessDateConstantExpressionAsync(IEdmDateConstantExpression expression) => this.schemaWriter.WriteDateConstantExpressionElementAsync(expression);
 
-        protected override void ProcessDateTimeOffsetConstantExpression(IEdmDateTimeOffsetConstantExpression expression)
-        {
-            this.schemaWriter.WriteDateTimeOffsetConstantExpressionElement(expression);
-        }
+        protected override void ProcessDateTimeOffsetConstantExpression(IEdmDateTimeOffsetConstantExpression expression) => this.schemaWriter.WriteDateTimeOffsetConstantExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the date time offset constant expression.
         /// </summary>
         /// <param name="expression">The Edm DateTimeOffset constant expression.</param>
-        protected override Task ProcessDateTimeOffsetConstantExpressionAsync(IEdmDateTimeOffsetConstantExpression expression)
-        {
-            return this.schemaWriter.WriteDateTimeOffsetConstantExpressionElementAsync(expression);
-        }
+        protected override Task ProcessDateTimeOffsetConstantExpressionAsync(IEdmDateTimeOffsetConstantExpression expression) => this.schemaWriter.WriteDateTimeOffsetConstantExpressionElementAsync(expression);
 
-        protected override void ProcessDurationConstantExpression(IEdmDurationConstantExpression expression)
-        {
-            this.schemaWriter.WriteDurationConstantExpressionElement(expression);
-        }
+        protected override void ProcessDurationConstantExpression(IEdmDurationConstantExpression expression) => this.schemaWriter.WriteDurationConstantExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the duration constant expression.
         /// </summary>
         /// <param name="expression">The Edm duration constant expression.</param>
-        protected override Task ProcessDurationConstantExpressionAsync(IEdmDurationConstantExpression expression)
-        {
-            return this.schemaWriter.WriteDurationConstantExpressionElementAsync(expression);
-        }
+        protected override Task ProcessDurationConstantExpressionAsync(IEdmDurationConstantExpression expression) => this.schemaWriter.WriteDurationConstantExpressionElementAsync(expression);
 
-        protected override void ProcessTimeOfDayConstantExpression(IEdmTimeOfDayConstantExpression expression)
-        {
-            this.schemaWriter.WriteTimeOfDayConstantExpressionElement(expression);
-        }
+        protected override void ProcessTimeOfDayConstantExpression(IEdmTimeOfDayConstantExpression expression) => this.schemaWriter.WriteTimeOfDayConstantExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the time of day constant expression.
         /// </summary>
         /// <param name="expression">The Edm TimeOfDay constant expression.</param>
-        protected override Task ProcessTimeOfDayConstantExpressionAsync(IEdmTimeOfDayConstantExpression expression)
-        {
-            return this.schemaWriter.WriteTimeOfDayConstantExpressionElementAsync(expression);
-        }
+        protected override Task ProcessTimeOfDayConstantExpressionAsync(IEdmTimeOfDayConstantExpression expression) => this.schemaWriter.WriteTimeOfDayConstantExpressionElementAsync(expression);
 
-        protected override void ProcessBooleanConstantExpression(IEdmBooleanConstantExpression expression)
-        {
-            this.schemaWriter.WriteBooleanConstantExpressionElement(expression);
-        }
+        protected override void ProcessBooleanConstantExpression(IEdmBooleanConstantExpression expression) => this.schemaWriter.WriteBooleanConstantExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the boolean constant expression.
         /// </summary>
         /// <param name="expression">The Edm boolean constant expression.</param>
-        protected override Task ProcessBooleanConstantExpressionAsync(IEdmBooleanConstantExpression expression)
-        {
-            return this.schemaWriter.WriteBooleanConstantExpressionElementAsync(expression);
-        }
+        protected override Task ProcessBooleanConstantExpressionAsync(IEdmBooleanConstantExpression expression) => this.schemaWriter.WriteBooleanConstantExpressionElementAsync(expression);
 
-        protected override void ProcessNullConstantExpression(IEdmNullExpression expression)
-        {
-            this.schemaWriter.WriteNullConstantExpressionElement(expression);
-        }
+        protected override void ProcessNullConstantExpression(IEdmNullExpression expression) => this.schemaWriter.WriteNullConstantExpressionElement(expression);
 
         /// <summary>
         /// Asynchronously processes the null constant expression.
         /// </summary>
         /// <param name="expression">The Edm Null expression.</param>
-        protected override Task ProcessNullConstantExpressionAsync(IEdmNullExpression expression)
-        {
-            return this.schemaWriter.WriteNullConstantExpressionElementAsync(expression);
-        }
+        protected override Task ProcessNullConstantExpressionAsync(IEdmNullExpression expression) => this.schemaWriter.WriteNullConstantExpressionElementAsync(expression);
 
         protected override void ProcessCastExpression(IEdmCastExpression expression)
         {
@@ -1628,33 +1472,21 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        private void ProcessAttributeAnnotation(IEdmDirectValueAnnotation annotation)
-        {
-            this.schemaWriter.WriteAnnotationStringAttribute(annotation);
-        }
+        private void ProcessAttributeAnnotation(IEdmDirectValueAnnotation annotation) => this.schemaWriter.WriteAnnotationStringAttribute(annotation);
 
         /// <summary>
         /// Asynchronously processes the attribute annotation.
         /// </summary>
         /// <param name="annotation">The Edm direct value annotation.</param>
-        private Task ProcessAttributeAnnotationAsync(IEdmDirectValueAnnotation annotation)
-        {
-            return this.schemaWriter.WriteAnnotationStringAttributeAsync(annotation);
-        }
+        private Task ProcessAttributeAnnotationAsync(IEdmDirectValueAnnotation annotation) => this.schemaWriter.WriteAnnotationStringAttributeAsync(annotation);
 
-        private void ProcessElementAnnotation(IEdmDirectValueAnnotation annotation)
-        {
-            this.schemaWriter.WriteAnnotationStringElement(annotation);
-        }
+        private void ProcessElementAnnotation(IEdmDirectValueAnnotation annotation) => this.schemaWriter.WriteAnnotationStringElement(annotation);
 
         /// <summary>
         /// Asynchronously processes the element annotation.
         /// </summary>
         /// <param name="annotation">The Edm Direct value annotation.</param>
-        private Task ProcessElementAnnotationAsync(IEdmDirectValueAnnotation annotation)
-        {
-            return this.schemaWriter.WriteAnnotationStringElementAsync(annotation);
-        }
+        private Task ProcessElementAnnotationAsync(IEdmDirectValueAnnotation annotation) => this.schemaWriter.WriteAnnotationStringElementAsync(annotation);
 
         private void VisitElementVocabularyAnnotations(IEnumerable<IEdmVocabularyAnnotation> annotations)
         {

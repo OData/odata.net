@@ -468,10 +468,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="type">Type reference.</param>
         /// <returns>This reference refers to a string type.</returns>
-        public static bool IsString(this IEdmTypeReference type)
-        {
-            return type.Definition.IsString();
-        }
+        public static bool IsString(this IEdmTypeReference type) => type.Definition.IsString();
 
         /// <summary>
         /// Returns true if this definition refers to a string type.
@@ -1298,10 +1295,7 @@ namespace Microsoft.OData.Edm
         /// <param name="thisType">This EDM type.</param>
         /// <param name="otherType">The other EDM type.</param>
         /// <returns>true if thisType and otherType are along the same line in the type hierarchy; false otherwise.</returns>
-        public static bool IsOnSameTypeHierarchyLineWith(this IEdmType thisType, IEdmType otherType)
-        {
-            return thisType.IsOrInheritsFrom(otherType) || otherType.IsOrInheritsFrom(thisType);
-        }
+        public static bool IsOnSameTypeHierarchyLineWith(this IEdmType thisType, IEdmType otherType) => thisType.IsOrInheritsFrom(otherType) || otherType.IsOrInheritsFrom(thisType);
 
         /// <summary>
         /// Returns the actual type of the given type.
@@ -1444,9 +1438,6 @@ namespace Microsoft.OData.Edm
             return false;
         }
 
-        private static IEnumerable<EdmError> ConversionError(EdmLocation location, string typeName, string typeKindName)
-        {
-            return new[] { new EdmError(location, EdmErrorCode.TypeSemanticsCouldNotConvertTypeReference, Error.Format(SRResources.TypeSemantics_CouldNotConvertTypeReference, typeName ?? EdmConstants.Value_UnnamedType, typeKindName)) };
-        }
+        private static IEnumerable<EdmError> ConversionError(EdmLocation location, string typeName, string typeKindName) => new[] { new EdmError(location, EdmErrorCode.TypeSemanticsCouldNotConvertTypeReference, Error.Format(SRResources.TypeSemantics_CouldNotConvertTypeReference, typeName ?? EdmConstants.Value_UnnamedType, typeKindName)) };
     }
 }

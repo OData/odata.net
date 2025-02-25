@@ -16,7 +16,7 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Gets the path segments as a decomposed qualified name. "A.B/C/D.E" is { "A.B", "C", "D.E" }.
         /// </summary>
-        IEnumerable<string> PathSegments { get; }
+        IEnumerable<string> PathSegments { get; } 
 
         /// <summary>
         /// Gets the path string, like "A.B/C/D.E".

@@ -26,10 +26,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="writer">XmlWriter the generated Schema will be written to.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
-        public static bool TryWriteSchema(this IEdmModel model, XmlWriter writer, out IEnumerable<EdmError> errors)
-        {
-            return TryWriteSchema(model, x => writer, true, out errors);
-        }
+        public static bool TryWriteSchema(this IEdmModel model, XmlWriter writer, out IEnumerable<EdmError> errors) => TryWriteSchema(model, x => writer, true, out errors);
 
         /// <summary>
         /// Asynchronously Outputs a Schema artifact to the provided writer.
@@ -37,10 +34,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="model">Model to be written.</param>
         /// <param name="writer">XmlWriter the generated Schema will be written to.</param>
         /// <returns>A task represents a Tuple with value indicating whether serialization was successful and Errors that prevented successful serialization, or no errors if serialization was successful.</returns>
-        public static Task<(bool, IEnumerable<EdmError>)> TryWriteSchemaAsync(this IEdmModel model, XmlWriter writer)
-        {
-            return TryWriteSchemaAsync(model, x => writer, true);
-        }
+        public static Task<(bool, IEnumerable<EdmError>)> TryWriteSchemaAsync(this IEdmModel model, XmlWriter writer) => TryWriteSchemaAsync(model, x => writer, true);
 
         /// <summary>
         /// Outputs Schema artifacts to the provided writers.
@@ -49,10 +43,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="writerProvider">A delegate that takes in a Schema namespace name and returns an XmlWriter to write the Schema to.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
-        public static bool TryWriteSchema(this IEdmModel model, Func<string, XmlWriter> writerProvider, out IEnumerable<EdmError> errors)
-        {
-            return TryWriteSchema(model, writerProvider, false, out errors);
-        }
+        public static bool TryWriteSchema(this IEdmModel model, Func<string, XmlWriter> writerProvider, out IEnumerable<EdmError> errors) => TryWriteSchema(model, writerProvider, false, out errors);
 
         /// <summary>
         /// Asynchronously Outputs Schema artifacts to the provided writers.
@@ -60,10 +51,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="model">Model to be written.</param>
         /// <param name="writerProvider">A delegate that takes in a Schema namespace name and returns an XmlWriter to write the Schema to.</param>
         /// <returns>A task represents a Tuple with value indicating whether serialization was successful and Errors that prevented successful serialization, or no errors if serialization was successful.</returns>
-        public static Task<(bool, IEnumerable<EdmError>)> TryWriteSchemaAsync(this IEdmModel model, Func<string, XmlWriter> writerProvider)
-        {
-            return TryWriteSchemaAsync(model, writerProvider, false);
-        }
+        public static Task<(bool, IEnumerable<EdmError>)> TryWriteSchemaAsync(this IEdmModel model, Func<string, XmlWriter> writerProvider) => TryWriteSchemaAsync(model, writerProvider, false);
 
         internal static bool TryWriteSchema(IEdmModel model, Func<string, XmlWriter> writerProvider, bool singleFileExpected, out IEnumerable<EdmError> errors)
         {

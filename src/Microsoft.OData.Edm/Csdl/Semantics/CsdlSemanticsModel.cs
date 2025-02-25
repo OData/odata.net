@@ -557,18 +557,12 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return Enumerable.Empty<IEdmVocabularyAnnotation>();
         }
 
-        private IEdmVocabularyAnnotation WrapVocabularyAnnotation(CsdlAnnotation annotation, CsdlSemanticsSchema schema, IEdmVocabularyAnnotatable targetContext, CsdlSemanticsAnnotations annotationsContext, string qualifier)
-        {
-            return EdmUtil.DictionaryGetOrUpdate(
+        private IEdmVocabularyAnnotation WrapVocabularyAnnotation(CsdlAnnotation annotation, CsdlSemanticsSchema schema, IEdmVocabularyAnnotatable targetContext, CsdlSemanticsAnnotations annotationsContext, string qualifier) => EdmUtil.DictionaryGetOrUpdate(
                 this.wrappedAnnotations,
                 annotation,
                 ann => new CsdlSemanticsVocabularyAnnotation(this, schema, targetContext, annotationsContext, ann, qualifier));
-        }
 
-        private void AddSchema(CsdlSchema schema)
-        {
-            this.AddSchema(schema, true);
-        }
+        private void AddSchema(CsdlSchema schema) => this.AddSchema(schema, true);
 
         private void AddSchema(CsdlSchema schema, bool addAnnotations)
         {

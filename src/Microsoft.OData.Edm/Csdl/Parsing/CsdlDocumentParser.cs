@@ -357,15 +357,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return new CsdlNavigationProperty(name, typeName, isNullable, partner, containsTarget ?? false, onDelete, referentialConstraints, element.Location);
         }
 
-        private static CsdlKey OnEntityKeyElement(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            return new CsdlKey(new List<CsdlPropertyReference>(childValues.ValuesOfType<CsdlPropertyReference>()), element.Location);
-        }
+        private static CsdlKey OnEntityKeyElement(XmlElementInfo element, XmlElementValueCollection childValues) => new CsdlKey(new List<CsdlPropertyReference>(childValues.ValuesOfType<CsdlPropertyReference>()), element.Location);
 
-        private CsdlPropertyReference OnPropertyRefElement(XmlElementInfo element, XmlElementValueCollection childValues)
-        {
-            return new CsdlPropertyReference(Required(CsdlConstants.Attribute_Name), element.Location);
-        }
+        private CsdlPropertyReference OnPropertyRefElement(XmlElementInfo element, XmlElementValueCollection childValues) => new CsdlPropertyReference(Required(CsdlConstants.Attribute_Name), element.Location);
 
         private CsdlEnumType OnEnumTypeElement(XmlElementInfo element, XmlElementValueCollection childValues)
         {

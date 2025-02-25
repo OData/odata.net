@@ -24,10 +24,7 @@ namespace Microsoft.OData.Edm
             this.CompareFunction = compareFunction;
         }
 
-        public static VersioningDictionary<TKey, TValue> Create(Func<TKey, TKey, int> compareFunction)
-        {
-            return new EmptyVersioningDictionary(compareFunction);
-        }
+        public static VersioningDictionary<TKey, TValue> Create(Func<TKey, TKey, int> compareFunction) => new EmptyVersioningDictionary(compareFunction);
 
         public abstract VersioningDictionary<TKey, TValue> Set(TKey keyToSet, TValue newValue);
 
@@ -53,15 +50,9 @@ namespace Microsoft.OData.Edm
             {
             }
 
-            public override VersioningDictionary<TKey, TValue> Set(TKey keyToSet, TValue newValue)
-            {
-                return new OneKeyDictionary(this.CompareFunction, keyToSet, newValue);
-            }
+            public override VersioningDictionary<TKey, TValue> Set(TKey keyToSet, TValue newValue) => new OneKeyDictionary(this.CompareFunction, keyToSet, newValue);
 
-            public override VersioningDictionary<TKey, TValue> Remove(TKey keyToRemove)
-            {
-                throw new KeyNotFoundException(keyToRemove.ToString());
-            }
+            public override VersioningDictionary<TKey, TValue> Remove(TKey keyToRemove) => throw new KeyNotFoundException(keyToRemove.ToString());
 
             public override bool TryGetValue(TKey key, out TValue value)
             {
@@ -208,10 +199,7 @@ namespace Microsoft.OData.Edm
                 return new TreeDictionary(this.CompareFunction, this.tree.SetKeyValue(keyToSet, newValue, this.CompareFunction));
             }
 
-            public override VersioningDictionary<TKey, TValue> Remove(TKey keyToRemove)
-            {
-                return new TreeDictionary(this.CompareFunction, this.tree.Remove(keyToRemove, this.CompareFunction));
-            }
+            public override VersioningDictionary<TKey, TValue> Remove(TKey keyToRemove) => new TreeDictionary(this.CompareFunction, this.tree.Remove(keyToRemove, this.CompareFunction));
 
             public override bool TryGetValue(TKey key, out TValue value)
             {
@@ -252,15 +240,9 @@ namespace Microsoft.OData.Edm
                 this.RemoveKey(key);
             }
 
-            public override VersioningDictionary<TKey, TValue> Set(TKey keyToSet, TValue newValue)
-            {
-                return new HashTreeDictionary(this.CompareFunction, this.treeBuckets, keyToSet, newValue);
-            }
+            public override VersioningDictionary<TKey, TValue> Set(TKey keyToSet, TValue newValue) => new HashTreeDictionary(this.CompareFunction, this.treeBuckets, keyToSet, newValue);
 
-            public override VersioningDictionary<TKey, TValue> Remove(TKey keyToRemove)
-            {
-                return new HashTreeDictionary(this.CompareFunction, this.treeBuckets, keyToRemove);
-            }
+            public override VersioningDictionary<TKey, TValue> Remove(TKey keyToRemove) => new HashTreeDictionary(this.CompareFunction, this.treeBuckets, keyToRemove);
 
             public override bool TryGetValue(TKey key, out TValue value)
             {

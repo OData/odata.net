@@ -29,24 +29,12 @@ namespace Microsoft.OData.Edm
             return true;
         }
 
-        public bool Contains(T item)
-        {
-            return this.wrappedDictionary.ContainsKey(item);
-        }
+        public bool Contains(T item) => this.wrappedDictionary.ContainsKey(item);
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (IEnumerator)this.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => (IEnumerator)this.GetEnumerator();
 
-        public IEnumerator<T> GetEnumerator()
-        {
-            return this.wrappedDictionary.Keys.GetEnumerator();
-        }
+        public IEnumerator<T> GetEnumerator() => this.wrappedDictionary.Keys.GetEnumerator();
 
-        public void Remove(T item)
-        {
-            this.wrappedDictionary.Remove(item);
-        }
+        public void Remove(T item) => this.wrappedDictionary.Remove(item);
     }
 }

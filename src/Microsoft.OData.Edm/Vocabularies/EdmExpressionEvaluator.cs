@@ -122,25 +122,13 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <param name="edmTypeName">The specified edm type name.</param>
         /// <param name="edmModel">The edm model.</param>
         /// <returns>The requested type, or null if no such type exists.</returns>
-        protected static IEdmType FindEdmType(string edmTypeName, IEdmModel edmModel)
-        {
-            return edmModel.FindDeclaredType(edmTypeName);
-        }
+        protected static IEdmType FindEdmType(string edmTypeName, IEdmModel edmModel) => edmModel.FindDeclaredType(edmTypeName);
 
-        private static bool InRange(Int64 value, Int64 min, Int64 max)
-        {
-            return value >= min && value <= max;
-        }
+        private static bool InRange(Int64 value, Int64 min, Int64 max) => value >= min && value <= max;
 
-        private static bool FitsInSingle(double value)
-        {
-            return value >= Single.MinValue && value <= Single.MaxValue;
-        }
+        private static bool FitsInSingle(double value) => value >= Single.MinValue && value <= Single.MaxValue;
 
-        private static bool MatchesType(IEdmTypeReference targetType, IEdmValue operand)
-        {
-            return MatchesType(targetType, operand, true);
-        }
+        private static bool MatchesType(IEdmTypeReference targetType, IEdmValue operand) => MatchesType(targetType, operand, true);
 
         private static bool MatchesType(IEdmTypeReference targetType, IEdmValue operand, bool testPropertyTypes)
         {
@@ -735,10 +723,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                 this.context = context;
             }
 
-            public IEdmValue Eval(IEdmExpression expression)
-            {
-                return this.expressionEvaluator.Eval(expression, this.context);
-            }
+            public IEdmValue Eval(IEdmExpression expression) => this.expressionEvaluator.Eval(expression, this.context);
         }
 
         private abstract class DelayedValue : IEdmDelayedValue
@@ -830,15 +815,9 @@ namespace Microsoft.OData.Edm.Vocabularies
                 get { return EdmValueKind.Collection; }
             }
 
-            IEnumerator<IEdmDelayedValue> IEnumerable<IEdmDelayedValue>.GetEnumerator()
-            {
-                return new CastCollectionValueEnumerator(this);
-            }
+            IEnumerator<IEdmDelayedValue> IEnumerable<IEdmDelayedValue>.GetEnumerator() => new CastCollectionValueEnumerator(this);
 
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                return new CastCollectionValueEnumerator(this);
-            }
+            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => new CastCollectionValueEnumerator(this);
 
             private class CastCollectionValueEnumerator : IEnumerator<IEdmDelayedValue>
             {
@@ -861,20 +840,11 @@ namespace Microsoft.OData.Edm.Vocabularies
                     get { return this.Current; }
                 }
 
-                bool System.Collections.IEnumerator.MoveNext()
-                {
-                    return this.enumerator.MoveNext();
-                }
+                bool System.Collections.IEnumerator.MoveNext() => this.enumerator.MoveNext();
 
-                void System.Collections.IEnumerator.Reset()
-                {
-                    this.enumerator.Reset();
-                }
+                void System.Collections.IEnumerator.Reset() => this.enumerator.Reset();
 
-                void IDisposable.Dispose()
-                {
-                    this.enumerator.Dispose();
-                }
+                void IDisposable.Dispose() => this.enumerator.Dispose();
 
                 private class DelayedCast : IEdmDelayedValue
                 {

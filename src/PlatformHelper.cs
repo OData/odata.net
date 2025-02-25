@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+﻿ //---------------------------------------------------------------------
 // <copyright file="PlatformHelper.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -82,10 +82,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>See documentation for property being accessed in the body of the method.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static Assembly GetAssembly(this Type type)
-        {
-            return type.GetTypeInfo().Assembly;
-        }
+        internal static Assembly GetAssembly(this Type type) => type.GetTypeInfo().Assembly;
 
         /// <summary>
         /// Replacement for Type.IsValueType.
@@ -93,10 +90,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>See documentation for property being accessed in the body of the method.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool IsValueType(this Type type)
-        {
-            return type.GetTypeInfo().IsValueType;
-        }
+        internal static bool IsValueType(this Type type) => type.GetTypeInfo().IsValueType;
 
         /// <summary>
         /// Replacement for Type.IsAbstract.
@@ -104,10 +98,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>See documentation for property being accessed in the body of the method.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool IsAbstract(this Type type)
-        {
-            return type.GetTypeInfo().IsAbstract;
-        }
+        internal static bool IsAbstract(this Type type) => type.GetTypeInfo().IsAbstract;
 
         /// <summary>
         /// Replacement for Type.IsGenericType.
@@ -115,10 +106,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>See documentation for property being accessed in the body of the method.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool IsGenericType(this Type type)
-        {
-            return type.GetTypeInfo().IsGenericType;
-        }
+        internal static bool IsGenericType(this Type type) => type.GetTypeInfo().IsGenericType;
 
         /// <summary>
         /// Replacement for Type.IsGenericTypeDefinition.
@@ -126,10 +114,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>See documentation for property being accessed in the body of the method.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool IsGenericTypeDefinition(this Type type)
-        {
-            return type.GetTypeInfo().IsGenericTypeDefinition;
-        }
+        internal static bool IsGenericTypeDefinition(this Type type) => type.GetTypeInfo().IsGenericTypeDefinition;
 
         /// <summary>
         /// Replacement for Type.IsVisible.
@@ -137,10 +122,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>See documentation for property being accessed in the body of the method.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool IsVisible(this Type type)
-        {
-            return type.GetTypeInfo().IsVisible;
-        }
+        internal static bool IsVisible(this Type type) => type.GetTypeInfo().IsVisible;
 
         /// <summary>
         /// Replacement for Type.IsInterface.
@@ -148,10 +130,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>See documentation for property being accessed in the body of the method.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool IsInterface(this Type type)
-        {
-            return type.GetTypeInfo().IsInterface;
-        }
+        internal static bool IsInterface(this Type type) => type.GetTypeInfo().IsInterface;
 
         /// <summary>
         /// Replacement for Type.IsClass.
@@ -159,10 +138,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>See documentation for property being accessed in the body of the method.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool IsClass(this Type type)
-        {
-            return type.GetTypeInfo().IsClass;
-        }
+        internal static bool IsClass(this Type type) => type.GetTypeInfo().IsClass;
 
         /// <summary>
         /// Replacement for Type.IsEnum.
@@ -170,10 +146,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>See documentation for property being accessed in the body of the method.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool IsEnum(this Type type)
-        {
-            return type.GetTypeInfo().IsEnum;
-        }
+        internal static bool IsEnum(this Type type) => type.GetTypeInfo().IsEnum;
 
         /// <summary>
         /// Replacement for Type.BaseType.
@@ -181,10 +154,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>See documentation for property being accessed in the body of the method.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static Type GetBaseType(this Type type)
-        {
-            return type.GetTypeInfo().BaseType;
-        }
+        internal static Type GetBaseType(this Type type) => type.GetTypeInfo().BaseType;
 
         /// <summary>
         /// Replacement for Type.ContainsGenericParameters.
@@ -192,10 +162,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>See documentation for property being accessed in the body of the method.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool ContainsGenericParameters(this Type type)
-        {
-            return type.GetTypeInfo().ContainsGenericParameters;
-        }
+        internal static bool ContainsGenericParameters(this Type type) => type.GetTypeInfo().ContainsGenericParameters;
 
         #endregion
 
@@ -415,10 +382,7 @@ namespace Microsoft.OData.Edm
         /// <exception cref="TypeLoadException">Throws if the type could not be found.</exception>
         /// <returns>Type instance that represents the specified type name.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static Type GetTypeOrThrow(string typeName)
-        {
-            return Type.GetType(typeName, true);
-        }
+        internal static Type GetTypeOrThrow(string typeName) => Type.GetType(typeName, true);
 
         #endregion
 
@@ -429,11 +393,9 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="c">Character to get category of.</param>
         /// <returns>Category of the character.</returns>
-        internal static UnicodeCategory GetUnicodeCategory(Char c)
-        {
+        internal static UnicodeCategory GetUnicodeCategory(Char c) =>
             // Portable Library platform doesn't have Char.GetUnicodeCategory, its on CharUnicodeInfo instead.
-            return CharUnicodeInfo.GetUnicodeCategory(c);
-        }
+            CharUnicodeInfo.GetUnicodeCategory(c);
 
         /// <summary>
         /// Replacement for usage of MemberInfo.MemberType property.
@@ -441,10 +403,7 @@ namespace Microsoft.OData.Edm
         /// <param name="member">MemberInfo on which to access this method.</param>
         /// <returns>True if the specified member is a property, otherwise false.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool IsProperty(MemberInfo member)
-        {
-            return member is PropertyInfo;
-        }
+        internal static bool IsProperty(MemberInfo member) => member is PropertyInfo;
 
         /// <summary>
         /// Replacement for usage of Type.IsPrimitive property.
@@ -452,10 +411,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to access this method.</param>
         /// <returns>True if the specified type is primitive, otherwise false.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool IsPrimitive(this Type type)
-        {
-            return type.GetTypeInfo().IsPrimitive;
-        }
+        internal static bool IsPrimitive(this Type type) => type.GetTypeInfo().IsPrimitive;
 
         /// <summary>
         /// Replacement for usage of Type.IsSealed property.
@@ -463,10 +419,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to access this method.</param>
         /// <returns>True if the specified type is sealed, otherwise false.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool IsSealed(this Type type)
-        {
-            return type.GetTypeInfo().IsSealed;
-        }
+        internal static bool IsSealed(this Type type) => type.GetTypeInfo().IsSealed;
 
         /// <summary>
         /// Replacement for usage of MemberInfo.MemberType property.
@@ -474,10 +427,7 @@ namespace Microsoft.OData.Edm
         /// <param name="member">MemberInfo on which to access this method.</param>
         /// <returns>True if the specified member is a method, otherwise false.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool IsMethod(MemberInfo member)
-        {
-            return member is MethodInfo;
-        }
+        internal static bool IsMethod(MemberInfo member) => member is MethodInfo;
 
         /// <summary>
         /// Compares two methodInfos and returns true if they represent the same method.
@@ -487,10 +437,7 @@ namespace Microsoft.OData.Edm
         /// <param name="member2">MemberInfo to compare.</param>
         /// <returns>True if the specified member is a method, otherwise false.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static bool AreMembersEqual(MemberInfo member1, MemberInfo member2)
-        {
-            return member1 == member2;
-        }
+        internal static bool AreMembersEqual(MemberInfo member1, MemberInfo member2) => member1 == member2;
 
         /// <summary>
         /// Gets public properties for the specified type.
@@ -499,10 +446,7 @@ namespace Microsoft.OData.Edm
         /// <param name="instanceOnly">True if method should return only instance properties, false if it should return both instance and static properties.</param>
         /// <returns>Enumerable of public properties for the type.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static IEnumerable<PropertyInfo> GetPublicProperties(this Type type, bool instanceOnly)
-        {
-            return GetPublicProperties(type, instanceOnly, false /*declaredOnly*/);
-        }
+        internal static IEnumerable<PropertyInfo> GetPublicProperties(this Type type, bool instanceOnly) => GetPublicProperties(type, instanceOnly, false /*declaredOnly*/);
 
         /// <summary>
         /// Gets public properties for the specified type.
@@ -540,10 +484,7 @@ namespace Microsoft.OData.Edm
         /// <param name="isPublic">True if method should return only public constructors, false if it should return only non-public constructors.</param>
         /// <returns>Enumerable of instance constructors for the specified type.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static IEnumerable<ConstructorInfo> GetInstanceConstructors(this Type type, bool isPublic)
-        {
-            return type.GetTypeInfo().DeclaredConstructors.Where(c => !c.IsStatic && isPublic == c.IsPublic);
-        }
+        internal static IEnumerable<ConstructorInfo> GetInstanceConstructors(this Type type, bool isPublic) => type.GetTypeInfo().DeclaredConstructors.Where(c => !c.IsStatic && isPublic == c.IsPublic);
 
         /// <summary>
         /// Gets a instance constructor for the type that takes the specified argument types.
@@ -553,10 +494,7 @@ namespace Microsoft.OData.Edm
         /// <param name="argTypes">Array of argument types for the constructor.</param>
         /// <returns>ConstructorInfo for the constructor with the specified characteristics if found, otherwise null.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static ConstructorInfo GetInstanceConstructor(this Type type, bool isPublic, Type[] argTypes)
-        {
-            return GetInstanceConstructors(type, isPublic).SingleOrDefault(c => CheckTypeArgs(c, argTypes));
-        }
+        internal static ConstructorInfo GetInstanceConstructor(this Type type, bool isPublic, Type[] argTypes) => GetInstanceConstructors(type, isPublic).SingleOrDefault(c => CheckTypeArgs(c, argTypes));
 
 
         /// <summary>
@@ -587,10 +525,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>Enumerable of all methods for the specified type.</returns>
-        internal static IEnumerable<MethodInfo> GetMethods(this Type type)
-        {
-            return type.GetRuntimeMethods();
-        }
+        internal static IEnumerable<MethodInfo> GetMethods(this Type type) => type.GetRuntimeMethods();
 
         /// <summary>
         /// Gets a method on the specified type.
@@ -601,16 +536,13 @@ namespace Microsoft.OData.Edm
         /// <param name="isStatic">True if method should search only static methods, false if it should search only instance methods.</param>
         /// <returns>MethodInfo for the method with the specified characteristics if found, otherwise null.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static MethodInfo GetMethod(this Type type, string name, bool isPublic, bool isStatic)
-        {
-            return type.GetRuntimeMethods()
+        internal static MethodInfo GetMethod(this Type type, string name, bool isPublic, bool isStatic) => type.GetRuntimeMethods()
                 .Where(
                     m =>
                         m.Name == name &&
                         isPublic == m.IsPublic &&
                         isStatic == m.IsStatic)
                 .SingleOrDefault();
-        }
 
         /// <summary>
         /// Gets a method on the specified type.
@@ -639,10 +571,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>Enumerable of all public static methods for the specified type.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static IEnumerable<MethodInfo> GetPublicStaticMethods(this Type type)
-        {
-            return type.GetRuntimeMethods().Where(m => m.IsPublic && m.IsStatic);
-        }
+        internal static IEnumerable<MethodInfo> GetPublicStaticMethods(this Type type) => type.GetRuntimeMethods().Where(m => m.IsPublic && m.IsStatic);
 
         /// <summary>
         /// Replacement for Type.GetNestedTypes(BindingFlags.NonPublic)
@@ -650,10 +579,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>All types nested in the current type</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        internal static IEnumerable<Type> GetNonPublicNestedTypes(this Type type)
-        {
-            return type.GetTypeInfo().DeclaredNestedTypes.Where(t => !t.IsNestedPublic).Select(t => t.AsType());
-        }
+        internal static IEnumerable<Type> GetNonPublicNestedTypes(this Type type) => type.GetTypeInfo().DeclaredNestedTypes.Where(t => !t.IsNestedPublic).Select(t => t.AsType());
         #endregion
 
         /// <summary>
@@ -690,10 +616,7 @@ namespace Microsoft.OData.Edm
         /// <param name="thisType">Type on which to call this helper method.</param>
         /// <param name="otherType">Type to test for assignability.</param>
         /// <returns>See documentation for method being accessed in the body of the method.</returns>
-        internal static bool IsAssignableFrom(this Type thisType, Type otherType)
-        {
-            return thisType.GetTypeInfo().IsAssignableFrom(otherType.GetTypeInfo());
-        }
+        internal static bool IsAssignableFrom(this Type thisType, Type otherType) => thisType.GetTypeInfo().IsAssignableFrom(otherType.GetTypeInfo());
 
         /// <summary>
         /// Replacement for Type.IsSubclassOf(Type).
@@ -740,10 +663,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <param name="name">Method to find on the specified type.</param>
         /// <returns>MethodInfo if one was found for the specified type, otherwise false.</returns>
-        internal static MethodInfo GetMethod(this Type type, string name)
-        {
-            return type.GetRuntimeMethods().Where(m => m.IsPublic && m.Name == name).SingleOrDefault();
-        }
+        internal static MethodInfo GetMethod(this Type type, string name) => type.GetRuntimeMethods().Where(m => m.IsPublic && m.Name == name).SingleOrDefault();
 
         /// <summary>
         /// Replacement for Type.GetMethod(string, Type[]).
@@ -752,11 +672,9 @@ namespace Microsoft.OData.Edm
         /// <param name="name">Name of method to find on the specified type.</param>
         /// <param name="types">Array of arguments to the method.</param>
         /// <returns>MethodInfo if one was found for the specified type, otherwise false.</returns>
-        internal static MethodInfo GetMethod(this Type type, string name, Type[] types)
-        {
+        internal static MethodInfo GetMethod(this Type type, string name, Type[] types) =>
             // GetRuntimeMethod(string, Type[]) only searched public methods, so it matches Type.GetMethod(string, Type[]) behavior on other platforms.
-            return type.GetRuntimeMethod(name, types);
-        }
+            type.GetRuntimeMethod(name, types);
 
         /// <summary>
         /// Gets a MethodInfo from the specified type. Replaces uses of Type.GetMember.
@@ -767,10 +685,7 @@ namespace Microsoft.OData.Edm
         /// <param name="isStatic">True if the method is static, false otherwise.</param>
         /// <param name="genericArgCount">Number of generics arguments the method has.</param>
         /// <returns>MethodInfo for the method that was found.</returns>
-        internal static MethodInfo GetMethodWithGenericArgs(this Type type, string name, bool isPublic, bool isStatic, int genericArgCount)
-        {
-            return type.GetRuntimeMethods().Single(m => m.Name == name && m.IsPublic == isPublic && m.IsStatic == isStatic && m.GetGenericArguments().Length == genericArgCount);
-        }
+        internal static MethodInfo GetMethodWithGenericArgs(this Type type, string name, bool isPublic, bool isStatic, int genericArgCount) => type.GetRuntimeMethods().Single(m => m.Name == name && m.IsPublic == isPublic && m.IsStatic == isStatic && m.GetGenericArguments().Length == genericArgCount);
 
         /// <summary>
         /// Replacement for Type.GetProperty(string, Type).
@@ -797,11 +712,9 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <param name="name">Name of public property to find on the specified type.</param>
         /// <returns>PropertyInfo if a property was found on the type with the specified name and return type, otherwise null.</returns>
-        internal static PropertyInfo GetProperty(this Type type, string name)
-        {
+        internal static PropertyInfo GetProperty(this Type type, string name) =>
             // Type.GetRuntimeProperty returns public properties only
-            return type.GetRuntimeProperty(name);
-        }
+            type.GetRuntimeProperty(name);
 
         /// <summary>
         /// Replacement for PropertyInfo.GetGetMethod().
@@ -840,32 +753,24 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="methodInfo">MethodInfo on which to call this helper method.</param>
         /// <returns>See documentation for method being accessed in the body of the method.</returns>
-        internal static MethodInfo GetBaseDefinition(this MethodInfo methodInfo)
-        {
-            return methodInfo.GetRuntimeBaseDefinition();
-        }
+        internal static MethodInfo GetBaseDefinition(this MethodInfo methodInfo) => methodInfo.GetRuntimeBaseDefinition();
 
         /// <summary>
         /// Replacement for Type.GetProperties().
         /// </summary>
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>Enumerable of all instance and static public properties on the type.</returns>
-        internal static IEnumerable<PropertyInfo> GetProperties(this Type type)
-        {
-            return GetPublicProperties(type, false /*instanceOnly*/);
-        }
+        internal static IEnumerable<PropertyInfo> GetProperties(this Type type) => GetPublicProperties(type, false /*instanceOnly*/);
 
         /// <summary>
         /// Replacement for Type.GetFields(string).
         /// </summary>
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>Enumerable of all public instance fields for the specified type.</returns>
-        internal static IEnumerable<FieldInfo> GetFields(this Type type)
-        {
+        internal static IEnumerable<FieldInfo> GetFields(this Type type) =>
             // Need to filter to public only to match Type.GetFields() behavior on other platforms.
-            return type.GetRuntimeFields()
+            type.GetRuntimeFields()
                 .Where(m => m.IsPublic);
-        }
 
         /// <summary>
         /// Replacement for Type.GetCustomAttributes(Type, bool).
@@ -874,10 +779,7 @@ namespace Microsoft.OData.Edm
         /// <param name="attributeType">Attribute type to find on the specified type.</param>
         /// <param name="inherit">True if the base types should be searched, false otherwise.</param>
         /// <returns>See documentation for method being accessed in the body of the method.</returns>
-        internal static IEnumerable<object> GetCustomAttributes(this Type type, Type attributeType, bool inherit)
-        {
-            return type.GetTypeInfo().GetCustomAttributes(attributeType, inherit);
-        }
+        internal static IEnumerable<object> GetCustomAttributes(this Type type, Type attributeType, bool inherit) => type.GetTypeInfo().GetCustomAttributes(attributeType, inherit);
 
         /// <summary>
         /// Replacement for Type.GetCustomAttributes(bool).
@@ -885,10 +787,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <param name="inherit">True if the base types should be searched, false otherwise.</param>
         /// <returns>See documentation for method being accessed in the body of the method.</returns>
-        internal static IEnumerable<object> GetCustomAttributes(this Type type, bool inherit)
-        {
-            return type.GetTypeInfo().GetCustomAttributes(inherit);
-        }
+        internal static IEnumerable<object> GetCustomAttributes(this Type type, bool inherit) => type.GetTypeInfo().GetCustomAttributes(inherit);
 
         /// <summary>
         /// Replacement for Type.GetGenericArguments().
@@ -912,10 +811,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="type">Type on which to call this helper method.</param>
         /// <returns>See documentation for property being accessed in the body of the method.</returns>
-        internal static IEnumerable<Type> GetInterfaces(this Type type)
-        {
-            return type.GetTypeInfo().ImplementedInterfaces;
-        }
+        internal static IEnumerable<Type> GetInterfaces(this Type type) => type.GetTypeInfo().ImplementedInterfaces;
 
         /// <summary>
         /// Replacement for Type.IsInstanceOfType(object).
@@ -923,10 +819,7 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <param name="obj">Object to test to see if it's an instance of the specified type.</param>
         /// <returns>See documentation for method being accessed in the body of the method.</returns>
-        internal static bool IsInstanceOfType(this Type type, object obj)
-        {
-            return type.GetTypeInfo().IsAssignableFrom(obj.GetType().GetTypeInfo());
-        }
+        internal static bool IsInstanceOfType(this Type type, object obj) => type.GetTypeInfo().IsAssignableFrom(obj.GetType().GetTypeInfo());
 
         /// <summary>
         /// Replacement for Assembly.GetType(string, bool).
@@ -955,10 +848,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="assembly">Assembly on which to call this helper method.</param>
         /// <returns>Enumerable of the types in the assembly.</returns>
-        internal static IEnumerable<Type> GetTypes(this Assembly assembly)
-        {
-            return assembly.DefinedTypes.Select(dt => dt.AsType());
-        }
+        internal static IEnumerable<Type> GetTypes(this Assembly assembly) => assembly.DefinedTypes.Select(dt => dt.AsType());
 
         /// <summary>
         /// Replacement for GetField(string).
@@ -966,30 +856,21 @@ namespace Microsoft.OData.Edm
         /// <param name="type">Type on which to call this helper method.</param>
         /// <param name="name">Method to find on the specified type.</param>
         /// <returns>FieldInfo if one was found for the specified type, otherwise false.</returns>
-        internal static FieldInfo GetField(this Type type, string name)
-        {
-            return type.GetFields().SingleOrDefault(field => field.Name == name);
-        }
+        internal static FieldInfo GetField(this Type type, string name) => type.GetFields().SingleOrDefault(field => field.Name == name);
 
         /// <summary>
         /// Checks if the specified PropertyInfo is an instance property.
         /// </summary>
         /// <param name="propertyInfo">PropertyInfo on which to call this helper method.</param>
         /// <returns>True if either the GetMethod or SetMethod for the property is an instance method.</returns>
-        private static bool IsInstance(PropertyInfo propertyInfo)
-        {
-            return (propertyInfo.GetMethod != null && !propertyInfo.GetMethod.IsStatic) || (propertyInfo.SetMethod != null && !propertyInfo.SetMethod.IsStatic);
-        }
+        private static bool IsInstance(PropertyInfo propertyInfo) => (propertyInfo.GetMethod != null && !propertyInfo.GetMethod.IsStatic) || (propertyInfo.SetMethod != null && !propertyInfo.SetMethod.IsStatic);
 
         /// <summary>
         /// Checks if the specified PropertyInfo is a public property.
         /// </summary>
         /// <param name="propertyInfo">PropertyInfo on which to call this helper method.</param>
         /// <returns>True if either the GetMethod or SetMethod for the property is public.</returns>
-        private static bool IsPublic(PropertyInfo propertyInfo)
-        {
-            return (propertyInfo.GetMethod != null && propertyInfo.GetMethod.IsPublic) || (propertyInfo.SetMethod != null && propertyInfo.SetMethod.IsPublic);
-        }
+        private static bool IsPublic(PropertyInfo propertyInfo) => (propertyInfo.GetMethod != null && propertyInfo.GetMethod.IsPublic) || (propertyInfo.SetMethod != null && propertyInfo.SetMethod.IsPublic);
         #endregion
 
         /// <summary>
@@ -1015,41 +896,26 @@ namespace Microsoft.OData.Edm
         /// <param name="format">A composite format string.</param>
         /// <param name="args">An object array that contains zero or more objects to format.</param>
         /// <returns>The formatted string.</returns>
-        internal static string Format(string format, params object[] args)
-        {
-            return string.Format(SRResources.Culture, format, args);
-        }
+        internal static string Format(string format, params object[] args) => string.Format(SRResources.Culture, format, args);
 
         /// <summary>
         /// The exception that is thrown when a null reference (Nothing in Visual Basic) is passed to a method that does not accept it as a valid argument.
         /// </summary>
-        internal static Exception ArgumentNull(string paramName)
-        {
-            return new ArgumentNullException(paramName);
-        }
+        internal static Exception ArgumentNull(string paramName) => new ArgumentNullException(paramName);
 
         /// <summary>
         /// The exception that is thrown when the value of an argument is outside the allowable range of values as defined by the invoked method.
         /// </summary>
-        internal static Exception ArgumentOutOfRange(string paramName)
-        {
-            return new ArgumentOutOfRangeException(paramName);
-        }
+        internal static Exception ArgumentOutOfRange(string paramName) => new ArgumentOutOfRangeException(paramName);
 
         /// <summary>
         /// The exception that is thrown when the author has not yet implemented the logic at this point in the program. This can act as an exception based TODO tag.
         /// </summary>
-        internal static Exception NotImplemented()
-        {
-            return new NotImplementedException();
-        }
+        internal static Exception NotImplemented() => new NotImplementedException();
 
         /// <summary>
         /// The exception that is thrown when an invoked method is not supported, or when there is an attempt to read, seek, or write to a stream that does not support the invoked functionality.
         /// </summary>
-        internal static Exception NotSupported()
-        {
-            return new NotSupportedException();
-        }
+        internal static Exception NotSupported() => new NotSupportedException();
     }
 }

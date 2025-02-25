@@ -131,10 +131,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="navigationProperty">The navigation property.</param>
         /// <returns>The entity set that the navigation property targets</returns>
-        public override IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty)
-        {
-            return this.FindNavigationTarget(navigationProperty, new EdmPathExpression(navigationProperty.Name));
-        }
+        public override IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty) => this.FindNavigationTarget(navigationProperty, new EdmPathExpression(navigationProperty.Name));
 
         /// <summary>
         /// Finds the entity set that a navigation property targets.

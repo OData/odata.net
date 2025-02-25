@@ -39,10 +39,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             get { return this.schemata; }
         }
 
-        public void AddSchema(CsdlSchema schema)
-        {
-            this.schemata.Add(schema);
-        }
+        public void AddSchema(CsdlSchema schema) => this.schemata.Add(schema);
 
         public Version CsdlVersion { get; set; }
 
@@ -50,18 +47,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         /// Adds from current model.
         /// </summary>
         /// <param name="referencesToAdd">The items to add.</param>
-        public void AddCurrentModelReferences(IEnumerable<CsdlReference> referencesToAdd)
-        {
-            this.currentModelReferences.AddRange(referencesToAdd);
-        }
+        public void AddCurrentModelReferences(IEnumerable<CsdlReference> referencesToAdd) => this.currentModelReferences.AddRange(referencesToAdd);
 
         /// <summary>
         /// Adds from main model.
         /// </summary>
         /// <param name="referenceToAdd">The IEdmReference to add.</param>
-        public void AddParentModelReferences(CsdlReference referenceToAdd)
-        {
-            this.parentModelReferences.Add(referenceToAdd);
-        }
+        public void AddParentModelReferences(CsdlReference referenceToAdd) => this.parentModelReferences.Add(referenceToAdd);
     }
 }

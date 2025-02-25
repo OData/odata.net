@@ -47,9 +47,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.collection; }
         }
 
-        private IEdmTypeReference ComputeElementType()
-        {
-            return CsdlSemanticsModel.WrapTypeReference(this.schema, this.collection.ElementType);
-        }
+        private IEdmTypeReference ComputeElementType() => CsdlSemanticsModel.WrapTypeReference(this.schema, this.collection.ElementType);
     }
 }

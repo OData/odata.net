@@ -89,10 +89,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Reference Element End.
         /// </summary>
         /// <param name="reference">The Edm Reference element.</param>
-        internal override void WriteReferenceElementEnd(IEdmReference reference)
-        {
-            this.jsonWriter.WriteEndObject();
-        }
+        internal override void WriteReferenceElementEnd(IEdmReference reference) => this.jsonWriter.WriteEndObject();
 
         /// <summary>
         /// Asynchronously Writes Reference Element End.
@@ -145,10 +142,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Include Element End.
         /// </summary>
         /// <param name="include">The Edm Include information.</param>
-        internal override void WriteIncludeElementEnd(IEdmInclude include)
-        {
-            this.jsonWriter.WriteEndObject();
-        }
+        internal override void WriteIncludeElementEnd(IEdmInclude include) => this.jsonWriter.WriteEndObject();
 
         /// <summary>
         /// Asynchronously Writes Include Element End.
@@ -398,13 +392,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Write the Key property
         /// </summary>
         /// <param name="property">The Edm Structural Property.</param>
-        internal override void WritePropertyRefElement(IEdmStructuralProperty property)
-        {
+        internal override void WritePropertyRefElement(IEdmStructuralProperty property) =>
             // Key properties without a key alias are represented as strings containing the property name.
             // Key properties with a key alias are represented as objects with one member whose name is the key alias and whose value is a string containing the path to the property.
             // TODO: It seems the second one is not supported.
             this.jsonWriter.WriteStringValue(property.Name);
-        }
 
         /// <summary>
         /// Asynchronously Writes the Key property.
@@ -524,13 +516,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Referential Constraint End.
         /// </summary>
         /// <param name="referentialConstraint">The Edm Referential Constraint.</param>
-        internal override void WriteReferentialConstraintEnd(IEdmReferentialConstraint referentialConstraint)
-        {
+        internal override void WriteReferentialConstraintEnd(IEdmReferentialConstraint referentialConstraint) =>
             // It also MAY contain annotations. These are prefixed with the path of the dependent property of the annotated referential constraint.
             // So far, it's not supported.
 
             this.jsonWriter.WriteEndObject();
-        }
 
         /// <summary>
         /// Asynchronously Writes Referential Constraint End.
@@ -704,10 +694,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Write $Annotations End: }
         /// </summary>
         /// <param name="outOfLineAnnotations">The total out of line annotations.</param>
-        internal override void WriteOutOfLineAnnotationsEnd(IEnumerable<KeyValuePair<string, List<IEdmVocabularyAnnotation>>> outOfLineAnnotations)
-        {
-            this.jsonWriter.WriteEndObject();
-        }
+        internal override void WriteOutOfLineAnnotationsEnd(IEnumerable<KeyValuePair<string, List<IEdmVocabularyAnnotation>>> outOfLineAnnotations) => this.jsonWriter.WriteEndObject();
 
         /// <summary>
         /// Asynchronously Writes $Annotations End: }
@@ -860,13 +847,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Write Enumeration Member Object start
         /// </summary>
         /// <param name="member">The Edm Enum member.</param>
-        internal override void WriteEnumMemberElementHeader(IEdmEnumMember member)
-        {
+        internal override void WriteEnumMemberElementHeader(IEdmEnumMember member) =>
             // Enumeration type members are represented as JSON object members.
             // Member name is the enumeration member name.
             // member value is the enumeration member value
             this.jsonWriter.WriteRequiredProperty(member.Name, member.Value.Value);
-        }
 
         /// <summary>
         /// Asynchronously Writes Enumeration Member Object start
@@ -887,11 +872,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// 7.2.1 Nullable, A Boolean value specifying whether a value is required for the property.
         /// </summary>
         /// <param name="reference">The Edm type reference.</param>
-        internal override void WriteNullableAttribute(IEdmTypeReference reference)
-        {
+        internal override void WriteNullableAttribute(IEdmTypeReference reference) =>
             // The value of $Nullable is one of the Boolean literals true or false. Absence of the member means false.
             this.jsonWriter.WriteOptionalProperty("$Nullable", reference.IsNullable, defaultValue: false);
-        }
 
         /// <summary>
         /// Asynchronously Writes Nullable, A Boolean value specifying whether a value is required for the property.
@@ -971,13 +954,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Binary Type Attributes.
         /// </summary>
         /// <param name="reference">The Edm Binary Type Reference</param>
-        internal override void WriteBinaryTypeAttributes(IEdmBinaryTypeReference reference)
-        {
+        internal override void WriteBinaryTypeAttributes(IEdmBinaryTypeReference reference) =>
             // CSDL XML defines a symbolic value max that is only allowed in OData 4.0 responses.
             // This symbolic value is not allowed in CDSL JSON documents at all.
             // So, 'IsUnbounded' is skipped in CSDL JSON.
             this.jsonWriter.WriteOptionalProperty("$MaxLength", reference.MaxLength);
-        }
 
         /// <summary>
         /// Asynchronously Writes Binary Type Attributes.
@@ -1105,11 +1086,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Temporal Type Attributes. $Precision
         /// </summary>
         /// <param name="reference">The Edm Temporal Type Reference.</param>
-        internal override void WriteTemporalTypeAttributes(IEdmTemporalTypeReference reference)
-        {
+        internal override void WriteTemporalTypeAttributes(IEdmTemporalTypeReference reference) =>
             // The value of $Precision is a number. Absence of $Precision means arbitrary precision.
             this.jsonWriter.WriteOptionalProperty("$Precision", reference.Precision);
-        }
 
         /// <summary>
         /// Asynchronously Writes Temporal Type Attributes. $Precision
@@ -1217,10 +1196,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="operation">The Key/Value Pair Operation. An operation is represented as a member of the schema object whose name is the unqualified name of the operation.</param>
-        internal override void WriteSchemaOperationsEnd<T>(KeyValuePair<string, IList<T>> operation)
-        {
-            this.jsonWriter.WriteEndArray();
-        }
+        internal override void WriteSchemaOperationsEnd<T>(KeyValuePair<string, IList<T>> operation) => this.jsonWriter.WriteEndArray();
 
         /// <summary>
         /// Asynchronously Writes Schema Operations End.
@@ -1429,20 +1405,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Type Attribute
         /// </summary>
         /// <param name="typeReference">The Edm Type Reference.</param>
-        internal override void WriteTypeAttribute(IEdmTypeReference typeReference)
-        {
-            WriteTypeReference(typeReference);
-        }
+        internal override void WriteTypeAttribute(IEdmTypeReference typeReference) => WriteTypeReference(typeReference);
 
         /// <summary>
         /// Asynchronously Writes Type Attribute
         /// </summary>
         /// <param name="typeReference">The Edm Type Reference.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override Task WriteTypeAttributeAsync(IEdmTypeReference typeReference)
-        {
-            return WriteTypeReferenceAsync(typeReference);
-        }
+        internal override Task WriteTypeAttributeAsync(IEdmTypeReference typeReference) => WriteTypeReferenceAsync(typeReference);
 
         /// <summary>
         /// Write Entity Container Object
@@ -1855,10 +1825,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="collectionType">The Edm Collection Type.</param>
         /// <param name="inlineType">Is line type or not.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
-        internal override Task WriteCollectionTypeElementHeaderAsync(IEdmCollectionType collectionType, bool inlineType)
-        {
-            return Task.CompletedTask;
-        }
+        internal override Task WriteCollectionTypeElementHeaderAsync(IEdmCollectionType collectionType, bool inlineType) => Task.CompletedTask;
 
         /// <summary>
         /// Writes Inline Expression.
@@ -2015,10 +1982,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="annotation">The Edm Vocabulary Annotation.</param>
         /// <param name="isInline">Is line type or not.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
-        internal override Task WriteVocabularyAnnotationElementEndAsync(IEdmVocabularyAnnotation annotation, bool isInline)
-        {
-            return Task.CompletedTask;
-        }
+        internal override Task WriteVocabularyAnnotationElementEndAsync(IEdmVocabularyAnnotation annotation, bool isInline) => Task.CompletedTask;
 
         /// <summary>
         /// Writes Property Value Header.
@@ -2139,20 +2103,15 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <param name="constructor">The Edm Property Constructor.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
-        internal override Task WritePropertyConstructorElementEndAsync(IEdmPropertyConstructor constructor)
-        {
-            return Task.CompletedTask;
-        }
+        internal override Task WritePropertyConstructorElementEndAsync(IEdmPropertyConstructor constructor) => Task.CompletedTask;
 
         /// <summary>
         /// Writes String Constant Expression.
         /// </summary>
         /// <param name="expression">The Edm String Constant Expression.</param>
-        internal override void WriteStringConstantExpressionElement(IEdmStringConstantExpression expression)
-        {
+        internal override void WriteStringConstantExpressionElement(IEdmStringConstantExpression expression) =>
             // String expressions are represented as a JSON string.
             this.jsonWriter.WriteStringValue(expression.Value);
-        }
 
         /// <summary>
         /// Asynchronously Writes String Constant Expression.
@@ -2171,11 +2130,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Binary Constant Expression.
         /// </summary>
         /// <param name="expression">The Edm String Constant Expression.</param>
-        internal override void WriteBinaryConstantExpressionElement(IEdmBinaryConstantExpression expression)
-        {
+        internal override void WriteBinaryConstantExpressionElement(IEdmBinaryConstantExpression expression) =>
             // Binary expressions are represented as a string containing the base64url-encoded binary value.
             this.jsonWriter.WriteStringValue(BinaryToString(expression));
-        }
 
         /// <summary>
         /// Asynchronously Writes Binary Constant Expression.
@@ -2194,11 +2151,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Boolean Constant Expression.
         /// </summary>
         /// <param name="expression">The Edm Boolean Constant Expression.</param>
-        internal override void WriteBooleanConstantExpressionElement(IEdmBooleanConstantExpression expression)
-        {
+        internal override void WriteBooleanConstantExpressionElement(IEdmBooleanConstantExpression expression) =>
             // Boolean expressions are represented as the literals true or false.
             this.jsonWriter.WriteBooleanValue(expression.Value);
-        }
 
         /// <summary>
         /// Asynchronously Writes Boolean Constant Expression.
@@ -2217,14 +2172,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Null Constant Expression.
         /// </summary>
         /// <param name="expression">The Edm Null Constant Expression.</param>
-        internal override void WriteNullConstantExpressionElement(IEdmNullExpression expression)
-        {
+        internal override void WriteNullConstantExpressionElement(IEdmNullExpression expression) =>
             // Null expressions that do not contain annotations are represented as the literal null.
-            this.jsonWriter.WriteNullValue();
-
-            // Null expression containing annotations are represented as an object with a member $Null whose value is the literal null.
-            // So far, it's not supported.
-        }
+            this.jsonWriter.WriteNullValue();// Null expression containing annotations are represented as an object with a member $Null whose value is the literal null.// So far, it's not supported.
 
         /// <summary>
         /// Asynchronously Writes Null Constant Expression.
@@ -2246,11 +2196,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Date Constant Expression.
         /// </summary>
         /// <param name="expression">The Edm Date Constant Expression.</param>
-        internal override void WriteDateConstantExpressionElement(IEdmDateConstantExpression expression)
-        {
+        internal override void WriteDateConstantExpressionElement(IEdmDateConstantExpression expression) =>
             // Date expressions are represented as a string containing the date value.
             this.jsonWriter.WriteStringValue(expression.Value.ToString());
-        }
 
         /// <summary>
         /// Asynchronously Writes Date Constant Expression.
@@ -2269,11 +2217,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Datetime Offset Constant Expression.
         /// </summary>
         /// <param name="expression">The Edm DateTimeOffset Constant Expression.</param>
-        internal override void WriteDateTimeOffsetConstantExpressionElement(IEdmDateTimeOffsetConstantExpression expression)
-        {
+        internal override void WriteDateTimeOffsetConstantExpressionElement(IEdmDateTimeOffsetConstantExpression expression) =>
             // Datetimestamp expressions are represented as a string containing the timestamp value.
             this.jsonWriter.WriteStringValue(EdmValueWriter.DateTimeOffsetAsXml(expression.Value));
-        }
 
         /// <summary>
         /// Asynchronously Writes Datetime Offset Constant Expression.
@@ -2292,11 +2238,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Duration Constant Expression.
         /// </summary>
         /// <param name="expression">The Edm Duration Constant Expression.</param>
-        internal override void WriteDurationConstantExpressionElement(IEdmDurationConstantExpression expression)
-        {
+        internal override void WriteDurationConstantExpressionElement(IEdmDurationConstantExpression expression) =>
             // Duration expressions are represented as a string containing the duration value.
             this.jsonWriter.WriteStringValue(EdmValueWriter.DurationAsXml(expression.Value));
-        }
 
         /// <summary>
         /// Asynchronously Writes Duration Constant Expression.
@@ -2479,11 +2423,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Guid Constant Expression.
         /// </summary>
         /// <param name="expression">The Edm Guid Constant Expression.</param>
-        internal override void WriteGuidConstantExpressionElement(IEdmGuidConstantExpression expression)
-        {
+        internal override void WriteGuidConstantExpressionElement(IEdmGuidConstantExpression expression) =>
             // Guid expressions are represented as a string containing the guid value.
             this.jsonWriter.WriteStringValue(EdmValueWriter.GuidAsXml(expression.Value));
-        }
 
         /// <summary>
         /// Asynchronously Writes Guid Constant Expression.
@@ -2568,11 +2510,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Property Path Expression.
         /// </summary>
         /// <param name="expression">The Edm Path Expression.</param>
-        internal override void WritePropertyPathExpressionElement(IEdmPathExpression expression)
-        {
+        internal override void WritePropertyPathExpressionElement(IEdmPathExpression expression) =>
             // Navigation property path expressions are represented as a string containing a path.
             this.jsonWriter.WriteStringValue(PathAsXml(expression.PathSegments));
-        }
 
         /// <summary>
         /// Asynchronously Writes Property Path Expression.
@@ -2591,11 +2531,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Navigation Property Path Expression.
         /// </summary>
         /// <param name="expression">The Edm Path Expression.</param>
-        internal override void WriteNavigationPropertyPathExpressionElement(IEdmPathExpression expression)
-        {
+        internal override void WriteNavigationPropertyPathExpressionElement(IEdmPathExpression expression) =>
             // Property path expressions are represented as a string containing a path.
             this.jsonWriter.WriteStringValue(PathAsXml(expression.PathSegments));
-        }
 
         /// <summary>
         /// Asynchronously Writes Navigation Property Path Expression.
@@ -2614,11 +2552,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Annotation Path Expression.
         /// </summary>
         /// <param name="expression">The Edm Path Expression.</param>
-        internal override void WriteAnnotationPathExpressionElement(IEdmPathExpression expression)
-        {
+        internal override void WriteAnnotationPathExpressionElement(IEdmPathExpression expression) =>
             // Annotation path expressions are represented as a string containing a path.
             this.jsonWriter.WriteStringValue(PathAsXml(expression.PathSegments));
-        }
 
         /// <summary>
         /// Asynchronously Writes Annotation Path Expression.
@@ -2697,10 +2633,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Collection Expression Header.
         /// </summary>
         /// <param name="expression">The Edm Collection Expression.</param>
-        internal override void WriteCollectionExpressionElementHeader(IEdmCollectionExpression expression)
-        {
-            this.jsonWriter.WriteStartArray();
-        }
+        internal override void WriteCollectionExpressionElementHeader(IEdmCollectionExpression expression) => this.jsonWriter.WriteStartArray();
 
         /// <summary>
         /// Asynchronously Writes Collection Expression Header.
@@ -2718,10 +2651,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Writes Collection Expression End.
         /// </summary>
         /// <param name="expression">The Edm Collection Expression.</param>
-        internal override void WriteCollectionExpressionElementEnd(IEdmCollectionExpression expression)
-        {
-            this.jsonWriter.WriteEndArray();
-        }
+        internal override void WriteCollectionExpressionElementEnd(IEdmCollectionExpression expression) => this.jsonWriter.WriteEndArray();
 
         /// <summary>
         /// Asynchronously Writes Collection Expression End.
@@ -2819,11 +2749,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Write Time Of Day Constant Expression.
         /// </summary>
         /// <param name="expression">The Edm TimeOfDay Constant Expression.</param>
-        internal override void WriteTimeOfDayConstantExpressionElement(IEdmTimeOfDayConstantExpression expression)
-        {
+        internal override void WriteTimeOfDayConstantExpressionElement(IEdmTimeOfDayConstantExpression expression) =>
             // Time-of-day expressions are represented as a string containing the time-of-day value.
             this.jsonWriter.WriteStringValue(EdmValueWriter.TimeOfDayAsXml(expression.Value));
-        }
 
         /// <summary>
         /// Asynchronously Writes Time Of Day Constant Expression.
@@ -2933,10 +2861,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <param name="expression">The Edm cast expression</param>
         /// <param name="inlineType">Is inline type.</param>
-        internal override void WriteCastExpressionElementEnd(IEdmCastExpression expression, bool inlineType)
-        {
-            this.jsonWriter.WriteEndObject();
-        }
+        internal override void WriteCastExpressionElementEnd(IEdmCastExpression expression, bool inlineType) => this.jsonWriter.WriteEndObject();
 
         /// <summary>
         /// Asynchronously Writes Cast Expression End.
@@ -2979,11 +2904,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Enumeration Member Expression
         /// </summary>
         /// <param name="expression">The Edm enum member expression.</param>
-        internal override void WriteEnumMemberExpressionElement(IEdmEnumMemberExpression expression)
-        {
+        internal override void WriteEnumMemberExpressionElement(IEdmEnumMemberExpression expression) =>
             // Enumeration member expressions are represented as a string containing the numeric or symbolic enumeration value.
             this.jsonWriter.WriteStringValue(EnumMemberExpressionAsJson(expression.EnumMembers));
-        }
 
         /// <summary>
         /// Asynchronously Enumeration Member Expression
@@ -3071,10 +2994,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// End $NavigationPropertyBinding
         /// </summary>
         /// <param name="bindings">The collection the bindings.</param>
-        internal override void WriteNavigationPropertyBindingsEnd(IEnumerable<IEdmNavigationPropertyBinding> bindings)
-        {
-            this.jsonWriter.WriteEndObject();
-        }
+        internal override void WriteNavigationPropertyBindingsEnd(IEnumerable<IEdmNavigationPropertyBinding> bindings) => this.jsonWriter.WriteEndObject();
 
         /// <summary>
         /// Asynchronously Writes Navigation Property Bindings End $NavigationPropertyBinding
@@ -3135,10 +3055,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Writes End Element.
         /// </summary>
-        internal override void WriteEndElement()
-        {
-            this.jsonWriter.WriteEndObject();
-        }
+        internal override void WriteEndElement() => this.jsonWriter.WriteEndObject();
 
         /// <summary>
         /// Asynchronously Writes End Element.
@@ -3154,10 +3071,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Writes Array End Element.
         /// </summary>
-        internal override void WriteArrayEndElement()
-        {
-            this.jsonWriter.WriteEndArray();
-        }
+        internal override void WriteArrayEndElement() => this.jsonWriter.WriteEndArray();
 
         /// <summary>
         /// Asynchronously Writes Array End Element.
@@ -3216,12 +3130,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             return Task.CompletedTask;
         }
 
-        private static string BinaryToString(IEdmBinaryConstantExpression binary)
-        {
+        private static string BinaryToString(IEdmBinaryConstantExpression binary) =>
             // whose value is a string containing the base64url-encoded binary value.
             // Below is the work around for the base64 Uri safe encoded string.
-            return Convert.ToBase64String(binary.Value).TrimEnd('=').Replace('+', '-').Replace('/', '_');
-        }
+            Convert.ToBase64String(binary.Value).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
         private string SerializationName(IEdmSchemaElement element)
         {
@@ -3237,10 +3149,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             return element.FullName();
         }
 
-        private string TypeDefinitionAsJson(IEdmSchemaType type)
-        {
-            return this.SerializationName(type);
-        }
+        private string TypeDefinitionAsJson(IEdmSchemaType type) => this.SerializationName(type);
 
         private string AnnotationToString(IEdmVocabularyAnnotation annotation)
         {

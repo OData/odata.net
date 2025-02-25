@@ -104,20 +104,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // nothing here
         }
 
-        internal virtual Task WriteOutOfLineAnnotationsBeginAsync(IEnumerable<KeyValuePair<string, List<IEdmVocabularyAnnotation>>> outOfLineAnnotations)
-        {
-            return Task.CompletedTask;
-        }
+        internal virtual Task WriteOutOfLineAnnotationsBeginAsync(IEnumerable<KeyValuePair<string, List<IEdmVocabularyAnnotation>>> outOfLineAnnotations) => Task.CompletedTask;
 
         internal virtual void WriteOutOfLineAnnotationsEnd(IEnumerable<KeyValuePair<string, List<IEdmVocabularyAnnotation>>> outOfLineAnnotations)
         {
             // nothing here
         }
 
-        internal virtual Task WriteOutOfLineAnnotationsEndAsync(IEnumerable<KeyValuePair<string, List<IEdmVocabularyAnnotation>>> outOfLineAnnotations)
-        {
-            return Task.CompletedTask;
-        }
+        internal virtual Task WriteOutOfLineAnnotationsEndAsync(IEnumerable<KeyValuePair<string, List<IEdmVocabularyAnnotation>>> outOfLineAnnotations) => Task.CompletedTask;
 
         internal abstract void WriteStructuralPropertyElementHeader(IEdmStructuralProperty property, bool inlineType);
         internal abstract Task WriteStructuralPropertyElementHeaderAsync(IEdmStructuralProperty property, bool inlineType);
@@ -130,10 +124,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // Nothing here
         }
 
-        internal virtual Task WriteEnumMemberElementEndAsync(IEdmEnumMember member)
-        {
-            return Task.CompletedTask;
-        }
+        internal virtual Task WriteEnumMemberElementEndAsync(IEdmEnumMember member) => Task.CompletedTask;
 
         internal abstract void WriteNavigationPropertyBinding(IEdmNavigationPropertyBinding binding);
         internal abstract Task WriteNavigationPropertyBindingAsync(IEdmNavigationPropertyBinding binding);
@@ -143,20 +134,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // Nothing here
         }
 
-        internal virtual Task WriteNavigationPropertyBindingsBeginAsync(IEnumerable<IEdmNavigationPropertyBinding> bindings)
-        {
-            return Task.CompletedTask;
-        }
+        internal virtual Task WriteNavigationPropertyBindingsBeginAsync(IEnumerable<IEdmNavigationPropertyBinding> bindings) => Task.CompletedTask;
 
         internal virtual void WriteNavigationPropertyBindingsEnd(IEnumerable<IEdmNavigationPropertyBinding> bindings)
         {
             // Nothing here
         }
 
-        internal virtual Task WriteNavigationPropertyBindingsEndAsync(IEnumerable<IEdmNavigationPropertyBinding> bindings)
-        {
-            return Task.CompletedTask;
-        }
+        internal virtual Task WriteNavigationPropertyBindingsEndAsync(IEnumerable<IEdmNavigationPropertyBinding> bindings) => Task.CompletedTask;
 
         internal abstract void WriteNullableAttribute(IEdmTypeReference reference);
         internal abstract Task WriteNullableAttributeAsync(IEdmTypeReference reference);
@@ -184,20 +169,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // nothing here
         }
 
-        internal virtual Task WriteReferentialConstraintBeginAsync(IEdmReferentialConstraint referentialConstraint)
-        {
-            return Task.CompletedTask;
-        }
+        internal virtual Task WriteReferentialConstraintBeginAsync(IEdmReferentialConstraint referentialConstraint) => Task.CompletedTask;
 
         internal virtual void WriteReferentialConstraintEnd(IEdmReferentialConstraint referentialConstraint)
         {
             // nothing here
         }
 
-        internal virtual Task WriteReferentialConstraintEndAsync(IEdmReferentialConstraint referentialConstraint)
-        {
-            return Task.CompletedTask;
-        }
+        internal virtual Task WriteReferentialConstraintEndAsync(IEdmReferentialConstraint referentialConstraint) => Task.CompletedTask;
 
         internal abstract void WriteReferentialConstraintPair(EdmReferentialConstraintPropertyPair pair);
         internal abstract Task WriteReferentialConstraintPairAsync(EdmReferentialConstraintPropertyPair pair);
@@ -276,40 +255,28 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // nothing here
         }
 
-        internal virtual Task WriteSchemaOperationsHeaderAsync<T>(KeyValuePair<string, IList<T>> operations)
-        {
-            return Task.CompletedTask;
-        }
+        internal virtual Task WriteSchemaOperationsHeaderAsync<T>(KeyValuePair<string, IList<T>> operations) => Task.CompletedTask;
 
         internal virtual void WriteSchemaOperationsEnd<T>(KeyValuePair<string, IList<T>> operation)
         {
             // nothing here
         }
 
-        internal virtual Task WriteSchemaOperationsEndAsync<T>(KeyValuePair<string, IList<T>> operation)
-        {
-            return Task.CompletedTask;
-        }
+        internal virtual Task WriteSchemaOperationsEndAsync<T>(KeyValuePair<string, IList<T>> operation) => Task.CompletedTask;
 
         internal virtual void WriteOperationParametersBegin(IEnumerable<IEdmOperationParameter> parameters)
         {
             // nothing here
         }
 
-        internal virtual Task WriteOperationParametersBeginAsync(IEnumerable<IEdmOperationParameter> parameters)
-        {
-            return Task.CompletedTask;
-        }
+        internal virtual Task WriteOperationParametersBeginAsync(IEnumerable<IEdmOperationParameter> parameters) => Task.CompletedTask;
 
         internal virtual void WriteOperationParametersEnd(IEnumerable<IEdmOperationParameter> parameters)
         {
             // nothing here
         }
 
-        internal virtual Task WriteOperationParametersEndAsync(IEnumerable<IEdmOperationParameter> parameters)
-        {
-            return Task.CompletedTask;
-        }
+        internal virtual Task WriteOperationParametersEndAsync(IEnumerable<IEdmOperationParameter> parameters) => Task.CompletedTask;
 
         internal abstract void WriteDateTimeOffsetConstantExpressionElement(IEdmDateTimeOffsetConstantExpression expression);
         internal abstract Task WriteDateTimeOffsetConstantExpressionElementAsync(IEdmDateTimeOffsetConstantExpression expression);
@@ -376,10 +343,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // nothing here
         }
 
-        internal virtual Task WriteIsOfExpressionTypeAsync(IEdmIsOfExpression expression, bool inlineType)
-        {
-            return Task.CompletedTask;
-        }
+        internal virtual Task WriteIsOfExpressionTypeAsync(IEdmIsOfExpression expression, bool inlineType) => Task.CompletedTask;
 
         internal abstract void WriteCastExpressionElementHeader(IEdmCastExpression expression, bool inlineType);
         internal abstract Task WriteCastExpressionElementHeaderAsync(IEdmCastExpression expression, bool inlineType);
@@ -392,10 +356,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // nothing here
         }
 
-        internal virtual Task WriteCastExpressionTypeAsync(IEdmCastExpression expression, bool inlineType)
-        {
-            return Task.CompletedTask;
-        }
+        internal virtual Task WriteCastExpressionTypeAsync(IEdmCastExpression expression, bool inlineType) => Task.CompletedTask;
 
         internal abstract void WriteEnumMemberExpressionElement(IEdmEnumMemberExpression expression);
         internal abstract Task WriteEnumMemberExpressionElementAsync(IEdmEnumMemberExpression expression);
@@ -415,10 +376,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal abstract void WriteOperationImportAttributes(IEdmOperationImport operationImport, string operationAttributeName);
         internal abstract Task WriteOperationImportAttributesAsync(IEdmOperationImport operationImport, string operationAttributeName);
 
-        internal static string PathAsXml(IEnumerable<string> path)
-        {
-            return EdmUtil.JoinInternal("/", path);
-        }
+        internal static string PathAsXml(IEnumerable<string> path) => EdmUtil.JoinInternal("/", path);
 
         protected static string EnumMemberAsXmlOrJson(IEnumerable<IEdmEnumMember> members)
         {

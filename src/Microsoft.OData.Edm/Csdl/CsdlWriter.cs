@@ -48,10 +48,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="writer">JSON writer the generated CSDL will be written to.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
-        public static bool TryWriteCsdl(IEdmModel model, Utf8JsonWriter writer, out IEnumerable<EdmError> errors)
-        {
-            return TryWriteCsdl(model, writer, CsdlJsonWriterSettings.Default, out errors);
-        }
+        public static bool TryWriteCsdl(IEdmModel model, Utf8JsonWriter writer, out IEnumerable<EdmError> errors) => TryWriteCsdl(model, writer, CsdlJsonWriterSettings.Default, out errors);
 
         /// <summary>
         /// Asynchronously Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/>.
@@ -59,10 +56,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="model">The Edm model to be written.</param>
         /// <param name="writer">JSON writer the generated CSDL will be written to.</param>
         /// <returns>A Task with a tuple with a value indicating whether serialization was successful and EdmError if any</returns>
-        public static Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, Utf8JsonWriter writer)
-        {
-            return TryWriteCsdlAsync(model, writer, CsdlJsonWriterSettings.Default);
-        }
+        public static Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, Utf8JsonWriter writer) => TryWriteCsdlAsync(model, writer, CsdlJsonWriterSettings.Default);
 
         /// <summary>
         /// Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/> using the settings.
@@ -124,10 +118,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="target">Target implementation of the CSDL being generated.</param>
         /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
         /// <returns>A value indicating whether serialization was successful.</returns>
-        public static bool TryWriteCsdl(IEdmModel model, XmlWriter writer, CsdlTarget target, out IEnumerable<EdmError> errors)
-        {
-            return TryWriteCsdl(model, writer, target, new CsdlXmlWriterSettings(), out errors);
-        }
+        public static bool TryWriteCsdl(IEdmModel model, XmlWriter writer, CsdlTarget target, out IEnumerable<EdmError> errors) => TryWriteCsdl(model, writer, target, new CsdlXmlWriterSettings(), out errors);
 
         /// <summary>
         /// Asynchronously Outputs a CSDL XML artifact to the provided <see cref="XmlWriter"/>.
@@ -135,10 +126,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="model">The Edm model to be written.</param>
         /// <param name="writer">Xmlwriter the generated CSDL will be written to.</param>
         /// <returns>A task with tuple with a value indicating whether serialization was successful and EdmError if any</returns>
-        public static Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, XmlWriter writer, CsdlTarget target)
-        {
-            return TryWriteCsdlAsync(model, writer, target, new CsdlXmlWriterSettings());
-        }
+        public static Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, XmlWriter writer, CsdlTarget target) => TryWriteCsdlAsync(model, writer, target, new CsdlXmlWriterSettings());
 
         /// <summary>
         /// Outputs a CSDL XML artifact to the provided <see cref="XmlWriter"/>.
@@ -204,10 +192,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// Asynchronously Writes CSDL output.
         /// </summary>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
-        protected virtual Task WriteCsdlAsync()
-        {
-            return Task.CompletedTask;
-        }
+        protected virtual Task WriteCsdlAsync() => Task.CompletedTask;
 
         /// <summary>
         /// Gets the string form of the EdmVersion.

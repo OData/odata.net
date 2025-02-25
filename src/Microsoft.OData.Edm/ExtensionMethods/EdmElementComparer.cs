@@ -99,38 +99,25 @@ namespace Microsoft.OData.Edm
             }
         }
 
-        private static bool IsEquivalentTo(this IEdmPrimitiveType thisType, IEdmPrimitiveType otherType)
-        {
+        private static bool IsEquivalentTo(this IEdmPrimitiveType thisType, IEdmPrimitiveType otherType) =>
             // ODataLib creates one-off instances of primitive type definitions that match by name and kind, but have different object refs.
             // So we can't use object ref comparison here like for other IEdmSchemaType objects.
             // See "src\Web\Client\System\Data\Services\Client\Serialization\PrimitiveType.cs:CreateEdmPrimitiveType()" for more info.
-            return thisType.PrimitiveKind == otherType.PrimitiveKind &&
+            thisType.PrimitiveKind == otherType.PrimitiveKind &&
                    thisType.FullName() == otherType.FullName();
-        }
 
-        private static bool IsEquivalentTo(this IEdmEnumType thisType, IEdmEnumType otherType)
-        {
+        private static bool IsEquivalentTo(this IEdmEnumType thisType, IEdmEnumType otherType) =>
             // ODataLib requires to register signatures for custom uri functions in static class
             // If we generate multiple models that use the same enum we will have different object refs
-            return thisType.FullName() == otherType.FullName()
+            thisType.FullName() == otherType.FullName()
                 && thisType.UnderlyingType.IsEquivalentTo(otherType.UnderlyingType)
                 && thisType.IsFlags == otherType.IsFlags;
-        }
 
-        private static bool IsEquivalentTo(this IEdmSchemaType thisType, IEdmSchemaType otherType)
-        {
-            return Object.ReferenceEquals(thisType, otherType);
-        }
+        private static bool IsEquivalentTo(this IEdmSchemaType thisType, IEdmSchemaType otherType) => Object.ReferenceEquals(thisType, otherType);
 
-        private static bool IsEquivalentTo(this IEdmCollectionType thisType, IEdmCollectionType otherType)
-        {
-            return thisType.ElementType.IsEquivalentTo(otherType.ElementType);
-        }
+        private static bool IsEquivalentTo(this IEdmCollectionType thisType, IEdmCollectionType otherType) => thisType.ElementType.IsEquivalentTo(otherType.ElementType);
 
-        private static bool IsEquivalentTo(this IEdmEntityReferenceType thisType, IEdmEntityReferenceType otherType)
-        {
-            return thisType.EntityType.IsEquivalentTo(otherType.EntityType);
-        }
+        private static bool IsEquivalentTo(this IEdmEntityReferenceType thisType, IEdmEntityReferenceType otherType) => thisType.EntityType.IsEquivalentTo(otherType.EntityType);
 
         private static bool IsEquivalentTo(this IEdmPrimitiveTypeReference thisType, IEdmPrimitiveTypeReference otherType)
         {
@@ -164,44 +151,29 @@ namespace Microsoft.OData.Edm
             }
         }
 
-        private static bool IsEquivalentTo(this IEdmBinaryTypeReference thisType, IEdmBinaryTypeReference otherType)
-        {
-            return thisType != null && otherType != null &&
+        private static bool IsEquivalentTo(this IEdmBinaryTypeReference thisType, IEdmBinaryTypeReference otherType) => thisType != null && otherType != null &&
                    thisType.IsNullable == otherType.IsNullable &&
                    thisType.IsUnbounded == otherType.IsUnbounded &&
                    thisType.MaxLength == otherType.MaxLength;
-        }
 
-        private static bool IsEquivalentTo(this IEdmDecimalTypeReference thisType, IEdmDecimalTypeReference otherType)
-        {
-            return thisType != null && otherType != null &&
+        private static bool IsEquivalentTo(this IEdmDecimalTypeReference thisType, IEdmDecimalTypeReference otherType) => thisType != null && otherType != null &&
                    thisType.IsNullable == otherType.IsNullable &&
                    thisType.Precision == otherType.Precision &&
                    thisType.Scale == otherType.Scale;
-        }
 
-        private static bool IsEquivalentTo(this IEdmTemporalTypeReference thisType, IEdmTemporalTypeReference otherType)
-        {
-            return thisType != null && otherType != null &&
+        private static bool IsEquivalentTo(this IEdmTemporalTypeReference thisType, IEdmTemporalTypeReference otherType) => thisType != null && otherType != null &&
                    thisType.TypeKind() == otherType.TypeKind() &&
                    thisType.IsNullable == otherType.IsNullable &&
                    thisType.Precision == otherType.Precision;
-        }
 
-        private static bool IsEquivalentTo(this IEdmStringTypeReference thisType, IEdmStringTypeReference otherType)
-        {
-            return thisType != null && otherType != null &&
+        private static bool IsEquivalentTo(this IEdmStringTypeReference thisType, IEdmStringTypeReference otherType) => thisType != null && otherType != null &&
                    thisType.IsNullable == otherType.IsNullable &&
                    thisType.IsUnbounded == otherType.IsUnbounded &&
                    thisType.MaxLength == otherType.MaxLength &&
                    thisType.IsUnicode == otherType.IsUnicode;
-        }
 
-        private static bool IsEquivalentTo(this IEdmSpatialTypeReference thisType, IEdmSpatialTypeReference otherType)
-        {
-            return thisType != null && otherType != null &&
+        private static bool IsEquivalentTo(this IEdmSpatialTypeReference thisType, IEdmSpatialTypeReference otherType) => thisType != null && otherType != null &&
                    thisType.IsNullable == otherType.IsNullable &&
                    thisType.SpatialReferenceIdentifier == otherType.SpatialReferenceIdentifier;
-        }
     }
 }

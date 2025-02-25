@@ -42,10 +42,7 @@ namespace Microsoft.OData.Edm.Validation
         /// </summary>
         /// <param name="element">The element to test.</param>
         /// <returns>True if the <paramref name="element"/> has structural errors associated with it.</returns>
-        public bool IsBad(IEdmElement element)
-        {
-            return this.isBad(element);
-        }
+        public bool IsBad(IEdmElement element) => this.isBad(element);
 
         /// <summary>
         /// Register an error with the validation context.
@@ -53,18 +50,12 @@ namespace Microsoft.OData.Edm.Validation
         /// <param name="location">Location of the error.</param>
         /// <param name="errorCode">Value representing the error.</param>
         /// <param name="errorMessage">Message text describing the error.</param>
-        public void AddError(EdmLocation location, EdmErrorCode errorCode, string errorMessage)
-        {
-            this.AddError(new EdmError(location, errorCode, errorMessage));
-        }
+        public void AddError(EdmLocation location, EdmErrorCode errorCode, string errorMessage) => this.AddError(new EdmError(location, errorCode, errorMessage));
 
         /// <summary>
         /// Register an error with the validation context.
         /// </summary>
         /// <param name="error">Error to register.</param>
-        public void AddError(EdmError error)
-        {
-            this.errors.Add(error);
-        }
+        public void AddError(EdmError error) => this.errors.Add(error);
     }
 }

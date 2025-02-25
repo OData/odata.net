@@ -16,11 +16,8 @@ namespace Microsoft.OData.Edm.Validation
 {
     internal static class ValidationHelper
     {
-        internal static bool IsEdmSystemNamespace(string namespaceName)
-        {
-            return (namespaceName == EdmConstants.TransientNamespace ||
+        internal static bool IsEdmSystemNamespace(string namespaceName) => (namespaceName == EdmConstants.TransientNamespace ||
                     namespaceName == EdmConstants.EdmNamespace);
-        }
 
         internal static bool AddMemberNameToHashSet(IEdmNamedElement item, HashSetInternal<string> memberNameList, ValidationContext context, EdmErrorCode errorCode, string errorString, bool suppressError)
         {
@@ -39,20 +36,11 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
-        internal static bool AllPropertiesAreNullable(IEnumerable<IEdmStructuralProperty> properties)
-        {
-            return !properties.Where(p => !p.Type.IsNullable).Any();
-        }
+        internal static bool AllPropertiesAreNullable(IEnumerable<IEdmStructuralProperty> properties) => !properties.Where(p => !p.Type.IsNullable).Any();
 
-        internal static bool HasNullableProperty(IEnumerable<IEdmStructuralProperty> properties)
-        {
-            return properties.Where(p => p.Type.IsNullable).Any();
-        }
+        internal static bool HasNullableProperty(IEnumerable<IEdmStructuralProperty> properties) => properties.Where(p => p.Type.IsNullable).Any();
 
-        internal static bool PropertySetIsSubset(IEnumerable<IEdmStructuralProperty> set, IEnumerable<IEdmStructuralProperty> subset)
-        {
-            return !subset.Except(set).Any();
-        }
+        internal static bool PropertySetIsSubset(IEnumerable<IEdmStructuralProperty> set, IEnumerable<IEdmStructuralProperty> subset) => !subset.Except(set).Any();
 
         internal static bool PropertySetsAreEquivalent(IEnumerable<IEdmStructuralProperty> set1, IEnumerable<IEdmStructuralProperty> set2)
         {
@@ -135,10 +123,7 @@ namespace Microsoft.OData.Edm.Validation
             }
         }
 
-        internal static bool IsInterfaceCritical(EdmError error)
-        {
-            return error.ErrorCode >= EdmErrorCode.InterfaceCriticalPropertyValueMustNotBeNull && error.ErrorCode <= EdmErrorCode.InterfaceCriticalCycleInTypeHierarchy;
-        }
+        internal static bool IsInterfaceCritical(EdmError error) => error.ErrorCode >= EdmErrorCode.InterfaceCriticalPropertyValueMustNotBeNull && error.ErrorCode <= EdmErrorCode.InterfaceCriticalCycleInTypeHierarchy;
 
         internal static bool ItemExistsInReferencedModel(this IEdmModel model, string fullName, bool checkEntityContainer)
         {

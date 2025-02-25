@@ -25,9 +25,6 @@ namespace Microsoft.OData.Edm.Validation
         /// Gets a string representation of the location.
         /// </summary>
         /// <returns>A string representation of the location.</returns>
-        public override string ToString()
-        {
-            return "(" + this.Object.ToString() + ")";
-        }
+        public override string ToString() => "(" + this.Object.ToString() + ")";
     }
 }

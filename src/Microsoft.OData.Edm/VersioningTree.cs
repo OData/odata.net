@@ -208,15 +208,9 @@ namespace Microsoft.OData.Edm
             return me.SetKeyValue(key, value, compareFunction);
         }
 
-        private static int GetHeight(VersioningTree<TKey, TValue> tree)
-        {
-            return tree == null ? 0 : tree.Height;
-        }
+        private static int GetHeight(VersioningTree<TKey, TValue> tree) => tree == null ? 0 : tree.Height;
 
-        private static int Max(int x, int y)
-        {
-            return x > y ? x : y;
-        }
+        private static int Max(int x, int y) => x > y ? x : y;
 
         private VersioningTree<TKey, TValue> MakeLeftmost(VersioningTree<TKey, TValue> leftmost)
         {

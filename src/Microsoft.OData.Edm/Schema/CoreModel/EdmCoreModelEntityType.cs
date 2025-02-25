@@ -127,9 +127,6 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="name">The name of the property being found.</param>
         /// <returns>The Edm.EntityType is always without any declared properties.</returns>
-        public IEdmProperty FindProperty(string name)
-        {
-            return null;
-        }
+        public IEdmProperty FindProperty(string name) => null;
     }
 }

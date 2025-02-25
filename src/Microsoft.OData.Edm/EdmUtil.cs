@@ -45,10 +45,7 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The <see cref="IEdmModel"/> containing the annotation.</param>
         /// <param name="annotatableProperty">The <see cref="IEdmProperty"/> to check.</param>
         /// <returns>The (non-null) value of the MIME type annotation of the <paramref name="annotatableProperty"/> or null if no MIME type annotation exists.</returns>
-        public static string GetMimeType(this IEdmModel model, IEdmProperty annotatableProperty)
-        {
-            return GetStringAnnotationValue(model, annotatableProperty, EdmConstants.MimeTypeAttributeName, () => SRResources.EdmUtil_NullValueForMimeTypeAnnotation);
-        }
+        public static string GetMimeType(this IEdmModel model, IEdmProperty annotatableProperty) => GetStringAnnotationValue(model, annotatableProperty, EdmConstants.MimeTypeAttributeName, () => SRResources.EdmUtil_NullValueForMimeTypeAnnotation);
 
         /// <summary>
         /// Sets the MIME type annotation of the <paramref name="annotatableProperty"/> to <paramref name="mimeType"/>.
@@ -71,10 +68,7 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The <see cref="IEdmModel"/> containing the annotation.</param>
         /// <param name="annotatableOperation">The <see cref="IEdmOperation"/> to check.</param>
         /// <returns>The (non-null) value of the MIME type annotation of the <paramref name="annotatableOperation"/> or null if no MIME type annotation exists.</returns>
-        public static string GetMimeType(this IEdmModel model, IEdmOperation annotatableOperation)
-        {
-            return GetStringAnnotationValue(model, annotatableOperation, EdmConstants.MimeTypeAttributeName, () => SRResources.EdmUtil_NullValueForMimeTypeAnnotation);
-        }
+        public static string GetMimeType(this IEdmModel model, IEdmOperation annotatableOperation) => GetStringAnnotationValue(model, annotatableOperation, EdmConstants.MimeTypeAttributeName, () => SRResources.EdmUtil_NullValueForMimeTypeAnnotation);
 
         /// <summary>
         /// Gets the symbolic string of an annotated element.
@@ -215,7 +209,7 @@ namespace Microsoft.OData.Edm
         /// <param name="containerName">Name of the container that was determined.</param>
         /// <param name="containerElementName">The fully qualified name of the container element that was determined.</param>
         /// <returns>Returns true if parsing was successful and false if not.</returns>
-        internal static bool TryParseContainerQualifiedElementName(string containerQualifiedElementName, out string containerName, out string containerElementName)
+        internal static bool TryParseContainerQualifiedElementName(ReadOnlySpan<char> containerQualifiedElementName, out string containerName, out string containerElementName)
         {
             containerName = null;
             containerElementName = null;
@@ -226,8 +220,8 @@ namespace Microsoft.OData.Edm
                 return false;
             }
 
-            containerName = containerQualifiedElementName.Substring(0, indexOfContainerNameAndElementNameSeparator);
-            containerElementName = containerQualifiedElementName.Substring(indexOfContainerNameAndElementNameSeparator + 1);
+            containerName = containerQualifiedElementName.Slice(0, indexOfContainerNameAndElementNameSeparator).ToString();
+            containerElementName = containerQualifiedElementName.Slice(indexOfContainerNameAndElementNameSeparator + 1).ToString();
             if (String.IsNullOrEmpty(containerName) || String.IsNullOrEmpty(containerElementName))
             {
                 return false;
@@ -236,10 +230,7 @@ namespace Microsoft.OData.Edm
             return true;
         }
 
-        internal static bool IsNullOrWhiteSpaceInternal(String value)
-        {
-            return value == null || value.ToCharArray().All(Char.IsWhiteSpace);
-        }
+        internal static bool IsNullOrWhiteSpaceInternal(String value) => value == null || value.ToCharArray().All(Char.IsWhiteSpace);
 
         internal static String JoinInternal<T>(String separator, IEnumerable<T> values)
         {
@@ -318,16 +309,11 @@ namespace Microsoft.OData.Edm
             return hasDot && !isAllWhiteSpace;
         }
 
-        internal static bool IsValidUndottedName(string name)
-        {
-            return (!String.IsNullOrEmpty(name) && UndottedNameValidator.IsMatch(name));
-        }
+        internal static bool IsValidUndottedName(string name) => (!String.IsNullOrEmpty(name) && UndottedNameValidator.IsMatch(name));
 
-        internal static bool IsValidDottedName(string name)
-        {
+        internal static bool IsValidDottedName(string name) =>
             // Each part of the dotted name needs to be a valid name.
-            return name.Split('.').All(IsValidUndottedName);
-        }
+            name.Split('.').All(IsValidUndottedName);
 
         internal static string ParameterizedName(IEdmOperation operation)
         {
@@ -499,7 +485,7 @@ namespace Microsoft.OData.Edm
         }
 
         [DebuggerStepThrough]
-        internal static T CheckArgumentNull<T>([ValidatedNotNull]T value, string parameterName) where T : class
+        internal static T CheckArgumentNull<T>([ValidatedNotNull] T value, string parameterName) where T : class
         {
             if (value == null)
             {
@@ -509,15 +495,9 @@ namespace Microsoft.OData.Edm
             return value;
         }
 
-        internal static bool EqualsOrdinal(this string string1, string string2)
-        {
-            return String.Equals(string1, string2, StringComparison.Ordinal);
-        }
+        internal static bool EqualsOrdinal(this string string1, string string2) => String.Equals(string1, string2, StringComparison.Ordinal);
 
-        internal static bool EqualsOrdinalIgnoreCase(this string string1, string string2)
-        {
-            return String.Equals(string1, string2, StringComparison.OrdinalIgnoreCase);
-        }
+        internal static bool EqualsOrdinalIgnoreCase(this string string1, string string2) => String.Equals(string1, string2, StringComparison.OrdinalIgnoreCase);
 
 
         /// <summary>

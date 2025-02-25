@@ -32,9 +32,6 @@ namespace Microsoft.OData.Edm
             get { return EdmExpressionKind.Labeled; }
         }
 
-        private static IEdmExpression ComputeExpression()
-        {
-            return EdmNullExpression.Instance;
-        }
+        private static IEdmExpression ComputeExpression() => EdmNullExpression.Instance;
     }
 }

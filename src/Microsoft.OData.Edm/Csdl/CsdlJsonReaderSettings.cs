@@ -55,16 +55,13 @@ namespace Microsoft.OData.Edm.Csdl
         /// </summary>
         public bool IsBracketNotation { get; set; }
 
-        internal CsdlJsonReaderSettings Clone()
+        internal CsdlJsonReaderSettings Clone() => new CsdlJsonReaderSettings
         {
-            return new CsdlJsonReaderSettings
-            {
-                IsBracketNotation = this.IsBracketNotation,
-                ReferencedModels = this.ReferencedModels,
-                JsonSchemaReaderFactory = this.JsonSchemaReaderFactory,
-                IgnoreUnexpectedJsonElements = this.IgnoreUnexpectedJsonElements,
-                IncludeDefaultVocabularies = this.IncludeDefaultVocabularies
-            };
-        }
+            IsBracketNotation = this.IsBracketNotation,
+            ReferencedModels = this.ReferencedModels,
+            JsonSchemaReaderFactory = this.JsonSchemaReaderFactory,
+            IgnoreUnexpectedJsonElements = this.IgnoreUnexpectedJsonElements,
+            IncludeDefaultVocabularies = this.IncludeDefaultVocabularies
+        };
     }
 }

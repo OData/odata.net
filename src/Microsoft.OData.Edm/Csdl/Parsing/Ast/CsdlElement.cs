@@ -53,20 +53,11 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
             get { return this.location; }
         }
 
-        public void AddAnnotation(CsdlDirectValueAnnotation annotation)
-        {
-            this.AddUntypedAnnotation(annotation);
-        }
+        public void AddAnnotation(CsdlDirectValueAnnotation annotation) => this.AddUntypedAnnotation(annotation);
 
-        public void AddAnnotation(CsdlAnnotation annotation)
-        {
-            this.AddUntypedAnnotation(annotation);
-        }
+        public void AddAnnotation(CsdlAnnotation annotation) => this.AddUntypedAnnotation(annotation);
 
-        private IEnumerable<T> GetAnnotations<T>() where T : class
-        {
-            return this.annotations != null ? this.annotations.OfType<T>() : Enumerable.Empty<T>();
-        }
+        private IEnumerable<T> GetAnnotations<T>() where T : class => this.annotations != null ? this.annotations.OfType<T>() : Enumerable.Empty<T>();
 
         private void AddUntypedAnnotation(object annotation)
         {

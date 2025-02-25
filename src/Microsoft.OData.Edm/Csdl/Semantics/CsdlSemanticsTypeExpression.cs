@@ -43,9 +43,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             get { return this.expressionUsage; }
         }
 
-        public override string ToString()
-        {
-            return this.ToTraceString();
-        }
+        public override string ToString() => this.ToTraceString();
     }
 }

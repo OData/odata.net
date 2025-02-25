@@ -291,5 +291,19 @@ namespace Microsoft.OData.Edm
 
             return Enumerable.Empty<IEdmOperationImport>();
         }
+
+#if NET9_0_OR_GREATER
+        public IEdmEntitySet FindEntitySet(ReadOnlyMemory<char> setName) => throw new NotImplementedException();
+
+        public IEdmSingleton FindSingleton(ReadOnlyMemory<char> singletonName) => throw new NotImplementedException();
+
+        public IEnumerable<IEdmOperationImport> FindOperationImports(ReadOnlyMemory<char> operationName) => throw new NotImplementedException();
+
+        public IEdmEntitySet FindEntitySet(ReadOnlySpan<char> setName) => throw new NotImplementedException();
+
+        public IEdmSingleton FindSingleton(ReadOnlySpan<char> singletonName) => throw new NotImplementedException();
+
+        public IEnumerable<IEdmOperationImport> FindOperationImports(ReadOnlySpan<char> operationName) => throw new NotImplementedException();
+#endif
     }
 }

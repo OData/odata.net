@@ -17,14 +17,8 @@ namespace Microsoft.OData.Edm
         {
         }
 
-        public object ConvertToUnderlyingType(object value)
-        {
-            return value;
-        }
+        public object ConvertToUnderlyingType(object value) => value;
 
-        public object ConvertFromUnderlyingType(object value)
-        {
-            return value;
-        }
+        public object ConvertFromUnderlyingType(object value) => value;
     }
 }

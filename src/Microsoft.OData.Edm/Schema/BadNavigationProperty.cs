@@ -78,9 +78,6 @@ namespace Microsoft.OData.Edm
             return error.ErrorCode + ":" + this.ToTraceString();
         }
 
-        private IEdmTypeReference ComputeType()
-        {
-            return new BadTypeReference(new BadType(this.Errors), true);
-        }
+        private IEdmTypeReference ComputeType() => new BadTypeReference(new BadType(this.Errors), true);
     }
 }

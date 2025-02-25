@@ -223,55 +223,25 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             return base.ProcessEntityContainerAsync(element);
         }
 
-        protected override void ProcessComplexTypeReference(IEdmComplexTypeReference element)
-        {
-            this.CheckSchemaElementReference(element.ComplexDefinition());
-        }
+        protected override void ProcessComplexTypeReference(IEdmComplexTypeReference element) => this.CheckSchemaElementReference(element.ComplexDefinition());
 
-        protected override Task ProcessComplexTypeReferenceAsync(IEdmComplexTypeReference element)
-        {
-            return this.CheckSchemaElementReferenceAsync(element.ComplexDefinition());
-        }
+        protected override Task ProcessComplexTypeReferenceAsync(IEdmComplexTypeReference element) => this.CheckSchemaElementReferenceAsync(element.ComplexDefinition());
 
-        protected override void ProcessEntityTypeReference(IEdmEntityTypeReference element)
-        {
-            this.CheckSchemaElementReference(element.EntityDefinition());
-        }
+        protected override void ProcessEntityTypeReference(IEdmEntityTypeReference element) => this.CheckSchemaElementReference(element.EntityDefinition());
 
-        protected override Task ProcessEntityTypeReferenceAsync(IEdmEntityTypeReference element)
-        {
-            return this.CheckSchemaElementReferenceAsync(element.EntityDefinition());
-        }
+        protected override Task ProcessEntityTypeReferenceAsync(IEdmEntityTypeReference element) => this.CheckSchemaElementReferenceAsync(element.EntityDefinition());
 
-        protected override void ProcessEntityReferenceTypeReference(IEdmEntityReferenceTypeReference element)
-        {
-            this.CheckSchemaElementReference(element.EntityType());
-        }
+        protected override void ProcessEntityReferenceTypeReference(IEdmEntityReferenceTypeReference element) => this.CheckSchemaElementReference(element.EntityType());
 
-        protected override Task ProcessEntityReferenceTypeReferenceAsync(IEdmEntityReferenceTypeReference element)
-        {
-            return this.CheckSchemaElementReferenceAsync(element.EntityType());
-        }
+        protected override Task ProcessEntityReferenceTypeReferenceAsync(IEdmEntityReferenceTypeReference element) => this.CheckSchemaElementReferenceAsync(element.EntityType());
 
-        protected override void ProcessEnumTypeReference(IEdmEnumTypeReference element)
-        {
-            this.CheckSchemaElementReference(element.EnumDefinition());
-        }
+        protected override void ProcessEnumTypeReference(IEdmEnumTypeReference element) => this.CheckSchemaElementReference(element.EnumDefinition());
 
-        protected override Task ProcessEnumTypeReferenceAsync(IEdmEnumTypeReference element)
-        {
-            return this.CheckSchemaElementReferenceAsync(element.EnumDefinition());
-        }
+        protected override Task ProcessEnumTypeReferenceAsync(IEdmEnumTypeReference element) => this.CheckSchemaElementReferenceAsync(element.EnumDefinition());
 
-        protected override void ProcessTypeDefinitionReference(IEdmTypeDefinitionReference element)
-        {
-            this.CheckSchemaElementReference(element.TypeDefinition());
-        }
+        protected override void ProcessTypeDefinitionReference(IEdmTypeDefinitionReference element) => this.CheckSchemaElementReference(element.TypeDefinition());
 
-        protected override Task ProcessTypeDefinitionReferenceAsync(IEdmTypeDefinitionReference element)
-        {
-            return this.CheckSchemaElementReferenceAsync(element.TypeDefinition());
-        }
+        protected override Task ProcessTypeDefinitionReferenceAsync(IEdmTypeDefinitionReference element) => this.CheckSchemaElementReferenceAsync(element.TypeDefinition());
 
         protected override void ProcessEntityType(IEdmEntityType element)
         {
@@ -333,15 +303,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             await this.CheckSchemaElementReferenceAsync(element.UnderlyingType).ConfigureAwait(false);
         }
 
-        private void CheckSchemaElementReference(IEdmSchemaElement element)
-        {
-            this.CheckSchemaElementReference(element.Namespace);
-        }
+        private void CheckSchemaElementReference(IEdmSchemaElement element) => this.CheckSchemaElementReference(element.Namespace);
 
-        private Task CheckSchemaElementReferenceAsync(IEdmSchemaElement element)
-        {
-            return this.CheckSchemaElementReferenceAsync(element.Namespace);
-        }
+        private Task CheckSchemaElementReferenceAsync(IEdmSchemaElement element) => this.CheckSchemaElementReferenceAsync(element.Namespace);
 
         private void CheckSchemaElementReference(string namespaceName)
         {

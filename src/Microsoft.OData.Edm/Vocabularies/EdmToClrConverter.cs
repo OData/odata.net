@@ -140,10 +140,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// </summary>
         /// <param name="edmValue">The EDM value.</param>
         /// <param name="clrObject">The CLR object.</param>
-        public void RegisterConvertedObject(IEdmStructuredValue edmValue, object clrObject)
-        {
-            this.convertedObjects.Add(edmValue, clrObject);
-        }
+        public void RegisterConvertedObject(IEdmStructuredValue edmValue, object clrObject) => this.convertedObjects.Add(edmValue, clrObject);
 
         #region Static converters
 
@@ -288,10 +285,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <param name="edmValue">The EDM value to be converted.</param>
         /// <returns>Converted single.</returns>
         /// <exception cref="InvalidCastException">Exception is thrown if <paramref name="edmValue"/> is not <see cref="IEdmFloatingValue"/>.</exception>
-        internal static Single AsClrSingle(IEdmValue edmValue)
-        {
-            return (Single)AsClrDouble(edmValue);
-        }
+        internal static Single AsClrSingle(IEdmValue edmValue) => (Single)AsClrDouble(edmValue);
 
         /// <summary>
         /// Converts <paramref name="edmValue"/> to a <see cref="Microsoft.OData.Edm.TimeOfDay"/> value.
@@ -554,10 +548,7 @@ namespace Microsoft.OData.Edm.Vocabularies
             return interfaceType.Name;
         }
 
-        private static bool IsBuiltInOrEnumType(Type type)
-        {
-            return type.IsPrimitive() || type == typeof(string) || type == typeof(decimal) || type.IsEnum();
-        }
+        private static bool IsBuiltInOrEnumType(Type type) => type.IsPrimitive() || type == typeof(string) || type == typeof(decimal) || type.IsEnum();
 
         private object AsClrValue(IEdmValue edmValue, Type clrType, bool convertEnumValues)
         {
@@ -966,15 +957,9 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// </summary>
         private static class CastHelper
         {
-            public static T CastToClrType<T>(object obj)
-            {
-                return (T)obj;
-            }
+            public static T CastToClrType<T>(object obj) => (T)obj;
 
-            public static List<T> EnumerableToListOfT<T>(IEnumerable enumerable)
-            {
-                return enumerable.Cast<T>().ToList();
-            }
+            public static List<T> EnumerableToListOfT<T>(IEnumerable enumerable) => enumerable.Cast<T>().ToList();
         }
 
         #endregion

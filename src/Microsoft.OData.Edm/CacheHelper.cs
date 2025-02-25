@@ -18,9 +18,6 @@ namespace Microsoft.OData.Edm
         private static readonly object BoxedTrue = true;
         private static readonly object BoxedFalse = false;
 
-        internal static object BoxedBool(bool value)
-        {
-            return value ? BoxedTrue : BoxedFalse;
-        }
+        internal static object BoxedBool(bool value) => value ? BoxedTrue : BoxedFalse;
     }
 }

@@ -59,9 +59,6 @@ namespace Microsoft.OData.Edm
             get { return this.first.SchemaElementKind; }
         }
 
-        public IEdmOperationParameter FindParameter(string name)
-        {
-            return this.first.FindParameter(name);
-        }
+        public IEdmOperationParameter FindParameter(string name) => this.first.FindParameter(name);
     }
 }

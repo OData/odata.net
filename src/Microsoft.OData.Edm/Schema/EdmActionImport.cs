@@ -56,9 +56,6 @@ namespace Microsoft.OData.Edm
         /// Indicates the name of the constructor argument that is passed to EdmOperationImport.
         /// </summary>
         /// <returns>Returns the name of the operation from this import.</returns>
-        protected override string OperationArgumentNullParameterName()
-        {
-            return ActionArgumentNullParameterName;
-        }
+        protected override string OperationArgumentNullParameterName() => ActionArgumentNullParameterName;
     }
 }

@@ -1491,10 +1491,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             }
         }
 
-        private static void ReportUnexpectedElement(JsonElement element, JsonParserContext context)
-        {
-            context.ReportError(EdmErrorCode.UnexpectedElement, Error.Format(SRResources.CsdlJsonParser_UnexpectedJsonMember, context.Path, element.ValueKind));
-        }
+        private static void ReportUnexpectedElement(JsonElement element, JsonParserContext context) => context.ReportError(EdmErrorCode.UnexpectedElement, Error.Format(SRResources.CsdlJsonParser_UnexpectedJsonMember, context.Path, element.ValueKind));
 
         private static void ValidateKind(JsonElement element, JsonParserContext context, string expectedKind, bool required)
         {

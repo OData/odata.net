@@ -32,10 +32,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
         }
 
         internal static IEnumerable<T> ValuesOfType<T>(this IEnumerable<XmlElementValue> elements)
-             where T : class
-        {
-            return elements.OfResultType<T>().Select(ev => ev.Value);
-        }
+             where T : class => elements.OfResultType<T>().Select(ev => ev.Value);
 
         internal static IEnumerable<XmlTextValue> OfText(this IEnumerable<XmlElementValue> elements)
         {
@@ -65,10 +62,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             private set;
         }
 
-        public void AddChildParser(XmlElementParser child)
-        {
-            this.childParsers[child.ElementName] = child;
-        }
+        public void AddChildParser(XmlElementParser child) => this.childParsers[child.ElementName] = child;
 
         #region Factory Methods
 
@@ -140,15 +134,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             }
         }
 
-        public IEnumerator<XmlElementValue> GetEnumerator()
-        {
-            return this.values.GetEnumerator();
-        }
+        public IEnumerator<XmlElementValue> GetEnumerator() => this.values.GetEnumerator();
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.values.GetEnumerator();
-        }
+        IEnumerator IEnumerable.GetEnumerator() => this.values.GetEnumerator();
 
         internal bool Remove(XmlElementValue value)
         {
@@ -170,21 +158,12 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             return new XmlElementValueCollection(values, null);
         }
 
-        internal IEnumerable<XmlElementValue> FindByName(string elementName)
-        {
-            return this.EnsureLookup()[elementName];
-        }
+        internal IEnumerable<XmlElementValue> FindByName(string elementName) => this.EnsureLookup()[elementName];
 
         internal IEnumerable<XmlElementValue<TResult>> FindByName<TResult>(string elementName)
-            where TResult : class
-        {
-            return this.FindByName(elementName).OfResultType<TResult>();
-        }
+            where TResult : class => this.FindByName(elementName).OfResultType<TResult>();
 
-        private ILookup<string, XmlElementValue> EnsureLookup()
-        {
-            return this.nameLookup ?? (this.nameLookup = this.values.ToLookup(value => value.Name));
-        }
+        private ILookup<string, XmlElementValue> EnsureLookup() => this.nameLookup ?? (this.nameLookup = this.values.ToLookup(value => value.Name));
 
         internal sealed class MissingXmlElementValue : XmlElementValue
         {
@@ -247,10 +226,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             get { return this.ValueAs<string>(); }
         }
 
-        internal virtual TValue ValueAs<TValue>() where TValue : class
-        {
-            return this.UntypedValue as TValue;
-        }
+        internal virtual TValue ValueAs<TValue>() where TValue : class => this.UntypedValue as TValue;
     }
 
     internal class XmlElementValue<TValue> : XmlElementValue
@@ -288,10 +264,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             }
         }
 
-        internal override T ValueAs<T>()
-        {
-            return this.Value as T;
-        }
+        internal override T ValueAs<T>() => this.Value as T;
     }
 
     internal class XmlTextValue : XmlElementValue<string>

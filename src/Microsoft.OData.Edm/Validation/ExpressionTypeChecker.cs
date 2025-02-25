@@ -28,10 +28,7 @@ namespace Microsoft.OData.Edm.Validation
         /// <remarks>If the expression has an associated type, this function will check that it matches the expected type and stop looking further.
         /// If an expression claims a type, it must be validated that the type is valid for the expression. If the expression does not claim a type
         /// this method will attempt to check the validity of the expression itself with the asserted type.</remarks>
-        public static bool TryCast(this IEdmExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors)
-        {
-            return TryCast(expression, type, null, false, out discoveredErrors);
-        }
+        public static bool TryCast(this IEdmExpression expression, IEdmTypeReference type, out IEnumerable<EdmError> discoveredErrors) => TryCast(expression, type, null, false, out discoveredErrors);
 
         /// <summary>
         /// Determines if the type of an expression is compatible with the provided type
@@ -587,10 +584,7 @@ namespace Microsoft.OData.Edm.Validation
             return true;
         }
 
-        private static bool PromotesTo(this EdmPrimitiveTypeKind startingKind, EdmPrimitiveTypeKind target)
-        {
-            return startingKind == target || promotionMap[(int)startingKind, (int)target];
-        }
+        private static bool PromotesTo(this EdmPrimitiveTypeKind startingKind, EdmPrimitiveTypeKind target) => startingKind == target || promotionMap[(int)startingKind, (int)target];
 
         private static bool[,] InitializePromotionMap()
         {
