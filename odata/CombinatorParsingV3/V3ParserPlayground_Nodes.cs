@@ -668,99 +668,56 @@
             private readonly Future<IDeferredOutput<char>> future;
             private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
-            private Output<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>? cachedOutput;
+            private readonly Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node;
+
+            private readonly Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
 
             public Many(Future<IDeferredOutput<char>> future, Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
             {
-                this.future = future; //// TODO this should be of type `future`
+                this.future = future;
                 this.nodeFactory = nodeFactory;
 
-                this.cachedOutput = null;
+                this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(this.future, this.nodeFactory));
+
+                this.cachedOutput = new Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(() => this.RealizeImpl());
             }
 
-            private Many(ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> node)
+            private Many(ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> node, Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
+                this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => FromRealized< ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(node));
+
+                this.cachedOutput = cachedOutput;
             }
-
-            /*private Many(OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> _1, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> _2, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> _3)
-            {
-            }*/
-
-            /*public SequenceNode<T> Element
-            {
-                get
-                {
-                    return new SequenceNode<T>(this.future, this.nodeFactory);
-                }
-            }
-
-            public IOutput<char, Many<T>> Realize()
-            {
-                var output = this.Element.Realize();
-                if (output.Success)
-                {
-                    return new Output<char, Many<T>>(true, this, output.Remainder);
-                }
-                else
-                {
-                    return new Output<char, Many<T>>(false, default, output.Remainder);
-                }
-            }*/
-
-            /*public OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> _1
-            {
-                get
-                {
-                    return new OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>(this.future, this.nodeFactory);
-                }
-            }
-
-            public OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> _2
-            {
-                get
-                {
-                    return new OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>(DeferredOutput2.ToPromise(this._1.Realize), this.nodeFactory);
-                }
-            }
-
-            public OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> _3
-            {
-                get
-                {
-                    return new OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>(DeferredOutput2.ToPromise(this._2.Realize), this.nodeFactory);
-                }
-            }*/
 
             public ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> Node
             {
                 get
                 {
-                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(this.future, this.nodeFactory);
+                    return this.node;
                 }
             }
 
             public IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
             {
-                if (this.cachedOutput != null)
-                {
-                    return this.cachedOutput;
-                }
+                return this.cachedOutput.Value;
+            }
 
+            private IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
+            {
                 var output = this.Node.Realize();
                 if (output.Success)
                 {
-                    this.cachedOutput = new Output<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                    return new Output<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            output.Parsed),
+                            output.Parsed,
+                            this.cachedOutput),
                         output.Remainder);
-                    return this.cachedOutput;
                 }
                 else
                 {
                     // if the optional failed to parse, it means that its dependencies failed to parse
-                    this.cachedOutput = new Output<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(false, default, output.Remainder);
-                    return this.cachedOutput;
+                    return new Output<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(false, default, output.Remainder);
                 }
             }
         }
