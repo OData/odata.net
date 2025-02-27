@@ -565,14 +565,15 @@
             return default!;
         }
 
-        public sealed class AtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
+        public sealed class AtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> 
+            : IDeferredAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> 
+            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> 
+            where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
-
             private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
             private readonly Future<TDeferredAstNode> __1;
-
             private readonly Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node;
 
             private readonly Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
@@ -584,10 +585,18 @@
                 this.future = future;
                 this.nodeFactory = nodeFactory;
 
-                this.__1 = new Future<TDeferredAstNode>(() => this.nodeFactory(this.future));
-                this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(Func.Lift(this._1.Realize, DeferredOutput.Create), this.nodeFactory));
+                this.__1 = new Future<TDeferredAstNode>(
+                    () => this.nodeFactory(this.future));
+                this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
+                    () => new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(
+                        Func.Lift(this._1.Realize, DeferredOutput.Create), 
+                        this.nodeFactory));
 
-                this.cachedOutput = new Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(() => this.RealizeImpl());
+                this.cachedOutput = new Future
+                    <
+                        IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
+                    >(
+                        () => this.RealizeImpl());
             }
 
             private AtLeastOne(
@@ -595,8 +604,16 @@
                 ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> node,
                 Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
-                this.__1 = new Future<TDeferredAstNode>(() => FromRealized<TDeferredAstNode, TRealizedAstNode>(_1));
-                this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => FromRealized<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(node));
+                this.__1 = new Future<TDeferredAstNode>(
+                    () => FromRealized<TDeferredAstNode, TRealizedAstNode>(_1));
+                this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
+                    () => FromRealized
+                        <
+                            ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>, 
+                            ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>
+                        >(
+                            node));
+
                 this.cachedOutput = cachedOutput;
             }
 
@@ -616,6 +633,11 @@
                 }
             }
 
+            public IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
+            {
+                return this.cachedOutput.Value;
+            }
+
             private IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
             {
                 var output = this.Node.Realize();
@@ -631,13 +653,11 @@
                 }
                 else
                 {
-                    return new Output<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(false, default, output.Remainder);
+                    return new Output<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                        false, 
+                        default, 
+                        output.Remainder);
                 }
-            }
-
-            public IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
-            {
-                return this.cachedOutput.Value;
             }
         }
 
