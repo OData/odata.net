@@ -13,7 +13,7 @@ namespace CombinatorParsingV3
         IOutput<TToken, TOutput> Parse(IInput<TToken> input);
     }
 
-    public interface IOutput<TToken, out TOutput>
+    public interface IOutput<out TToken, out TOutput>
     {
         bool Success { get; }
 
@@ -38,7 +38,7 @@ namespace CombinatorParsingV3
         public IInput<TToken>? Remainder { get; }
     }
 
-    public interface IInput<TToken>
+    public interface IInput<out TToken>
     {
         TToken Current { get; }
 

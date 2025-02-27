@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace CombinatorParsingV3
 {
-    public interface IDeferredAstNode<TToken, TRealizedAstNode>
+    public interface IDeferredAstNode<out TToken, out TRealizedAstNode>
     {
         IOutput<TToken, TRealizedAstNode> Realize();
     }
