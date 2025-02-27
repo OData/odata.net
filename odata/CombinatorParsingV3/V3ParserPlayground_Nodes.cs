@@ -565,6 +565,27 @@
             return default!;
         }
 
+        public static 
+            OptionalNode
+                <
+                    TDeferredAstNode, 
+                    TRealizedAstNode, 
+                    TMode
+                >
+            FromRealized
+                <
+                    TDeferredAstNode, 
+                    TRealizedAstNode,
+                    TMode
+                >(
+                    OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> realizedAstNode)
+            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            where TMode : ParseMode
+        {
+            //// TODO implement this
+            return default!;
+        }
+
         public sealed class AtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> 
             : IDeferredAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> 
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> 
@@ -771,16 +792,33 @@
                         () => this.RealizeImpl());
             }
 
-            private static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetTerminalRealizedNode()
+            private static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetTerminalRealizedNode(
+                Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
                 return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
                     new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
                         new RealNullable<TRealizedAstNode>()), 
-                    GetTerminalRealizedNode);
+                    () => GetTerminalRealizedNode(cachedOutput),
+                    cachedOutput);
             }
 
-            private ManyNode(OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> element, Func<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next)
+            private ManyNode(
+                OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> element, 
+                Func<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> next, 
+                Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
+                this.element = new Future<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
+                    () => FromRealized<TDeferredAstNode, TRealizedAstNode, TMode>(element));
+                this.next = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
+                    () => 
+                        FromRealized
+                            <
+                                ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>, 
+                                ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>
+                            >(
+                                next()));
+
+                this.cachedOutput = cachedOutput;
             }
 
             public OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> Element
@@ -827,7 +865,8 @@
                         true,
                         new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
                             new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(parsed),
-                            () => realizedNext.Parsed),
+                            () => realizedNext.Parsed,
+                            this.cachedOutput),
                         realizedNext.Remainder);
                 }
                 else
@@ -836,7 +875,8 @@
                         true,
                         new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
                             new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(realizedElement.Parsed),
-                            GetTerminalRealizedNode),
+                            () => GetTerminalRealizedNode(this.cachedOutput),
+                            this.cachedOutput),
                         realizedElement.Remainder);
                 }
             }
