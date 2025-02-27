@@ -907,7 +907,9 @@
 
             internal readonly Future<IOutput<char, RealNullable<TRealizedAstNode>>> cachedOutput; //// TODO this shouldn't be internal
 
-            public OptionalNode(Future<IDeferredOutput<char>> future, Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
+            public OptionalNode(
+                Future<IDeferredOutput<char>> future, 
+                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
             {
                 this.future = future;
                 this.nodeFactory = nodeFactory;
@@ -917,7 +919,9 @@
                 this.cachedOutput = new Future<IOutput<char, RealNullable<TRealizedAstNode>>>(this.RealizeImpl);
             }
 
-            internal OptionalNode(RealNullable<TRealizedAstNode> value, Future<IOutput<char, RealNullable<TRealizedAstNode>>> cachedOutput)
+            internal OptionalNode(
+                RealNullable<TRealizedAstNode> value, 
+                Future<IOutput<char, RealNullable<TRealizedAstNode>>> cachedOutput)
             {
                 this.value = new Future<TDeferredAstNode>(() => FromRealized<TDeferredAstNode, TRealizedAstNode>(value));
 
@@ -948,11 +952,17 @@
                 var output = this.Value.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, RealNullable<TRealizedAstNode>>(true, new RealNullable<TRealizedAstNode>(output.Parsed), output.Remainder);
+                    return new Output<char, RealNullable<TRealizedAstNode>>(
+                        true, 
+                        new RealNullable<TRealizedAstNode>(output.Parsed), 
+                        output.Remainder);
                 }
                 else
                 {
-                    return new Output<char, RealNullable<TRealizedAstNode>>(true, new RealNullable<TRealizedAstNode>(), output.Remainder);
+                    return new Output<char, RealNullable<TRealizedAstNode>>(
+                        true, 
+                        new RealNullable<TRealizedAstNode>(), 
+                        output.Remainder);
                 }
             }
         }
