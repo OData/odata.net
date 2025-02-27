@@ -919,8 +919,6 @@
 
             internal OptionalNode(RealNullable<TRealizedAstNode> value, Future<IOutput<char, RealNullable<TRealizedAstNode>>> cachedOutput)
             {
-                //// TODO only let this be called if `TMode` is `Realized`
-                
                 this.value = new Future<TDeferredAstNode>(() => FromRealized<TDeferredAstNode, TRealizedAstNode>(value));
 
                 this.cachedOutput = cachedOutput;
