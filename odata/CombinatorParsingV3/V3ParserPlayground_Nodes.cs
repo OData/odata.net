@@ -744,19 +744,39 @@
             private readonly Future<IDeferredOutput<char>> future;
             private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
-            private Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>? cachedOutput;
+            private readonly Future<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>> element;
+            private readonly Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next;
 
-            public ManyNode(Future<IDeferredOutput<char>> future, Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
+            private readonly Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
+
+            public ManyNode(
+                Future<IDeferredOutput<char>> future, 
+                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
             {
                 this.future = future;
                 this.nodeFactory = nodeFactory;
 
-                this.cachedOutput = null;
+                this.element = new Future<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
+                    () => new OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>(this.future, this.nodeFactory));
+                this.next = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
+                    () => 
+                        new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(
+                            Func.Lift(this.Element.Realize, DeferredOutput.Create), 
+                    this.nodeFactory));
+
+                this.cachedOutput = new Future
+                    <
+                        IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
+                    >(
+                        () => this.RealizeImpl());
             }
 
             private static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetTerminalRealizedNode()
             {
-                return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(new RealNullable<TRealizedAstNode>()), GetTerminalRealizedNode);
+                return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                    new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                        new RealNullable<TRealizedAstNode>()), 
+                    GetTerminalRealizedNode);
             }
 
             private ManyNode(OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> element, Func<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next)
@@ -767,7 +787,7 @@
             {
                 get
                 {
-                    return new OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>(this.future, this.nodeFactory);
+                    return this.element;
                 }
             }
 
@@ -778,46 +798,46 @@
             {
                 get
                 {
-                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(Func.Lift(this.Element.Realize, DeferredOutput.Create), this.nodeFactory);
+                    return this.next;
                 }
             }
 
             public IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
             {
-                if (this.cachedOutput != null)
-                {
-                    return this.cachedOutput;
-                }
+                return this.cachedOutput.Value;
+            }
 
+            private IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
+            {
                 var realizedElement = this.Element.Realize();
                 if (!realizedElement.Success)
                 {
                     // this means that the nullable parsing *didn't succeed*, which only happens if its dependencies couldn't be parsed; this means that we also can't succeed in parsing
-                    this.cachedOutput = new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(false, default, realizedElement.Remainder);
-                    return this.cachedOutput;
+                    return new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                        false,
+                        default, 
+                        realizedElement.Remainder);
                 }
 
                 if (realizedElement.Parsed.TryGetValue(out var parsed))
                 {
                     var realizedNext = this.Next.Realize();
                     // *this* instance is the "dependency" for `next`, so we can only have success cases
-                    this.cachedOutput = new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                    return new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
                             new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(parsed),
                             () => realizedNext.Parsed),
                         realizedNext.Remainder);
-                    return this.cachedOutput;
                 }
                 else
                 {
-                    this.cachedOutput = new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                    return new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
                             new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(realizedElement.Parsed),
                             GetTerminalRealizedNode),
                         realizedElement.Remainder);
-                    return this.cachedOutput;
                 }
             }
         }
