@@ -60,7 +60,6 @@ namespace Microsoft.OData.Client.E2E.Tests.TransportLayerTests
         public void QueryForEntryWithInvalidKey_ShouldReturnEmptyResult()
         {
             var query = _context.MessageAttachments.Where(ma => ma.AttachmentId == Guid.NewGuid()).ToList();
-
             Assert.Empty(query);
         }
 
