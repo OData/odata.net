@@ -576,7 +576,9 @@
             private readonly Future<TDeferredAstNode> __1;
             private readonly Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node;
 
-            private readonly Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
+            private readonly 
+                Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> 
+                cachedOutput;
 
             public AtLeastOne(
                 Future<IDeferredOutput<char>> future,
@@ -663,9 +665,8 @@
 
         public sealed class Many<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
-            private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
-
             private readonly Future<IDeferredOutput<char>> future;
+            private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
             private Output<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>? cachedOutput;
 
