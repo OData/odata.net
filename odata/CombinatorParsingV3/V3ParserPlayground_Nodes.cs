@@ -1140,7 +1140,6 @@
             }
         }
 
-        //// TODO you are here
         public sealed class OptionValue<TMode> : IDeferredAstNode<char, OptionValue<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
@@ -1203,25 +1202,27 @@
             }
         }
 
+        //// TODO you are here
         public sealed class QueryOption<TMode> : IDeferredAstNode<char, QueryOption<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
 
-            private Output<char, QueryOption<ParseMode.Realized>>? cachedOutput;
+            private readonly Future<OptionName<TMode>> name;
+            private readonly Future<EqualsSign<TMode>> equalsSign;
+            private readonly Future<OptionValue<TMode>> optionValue;
+
+            private Future<IOutput<char, QueryOption<ParseMode.Realized>>> cachedOutput;
 
             public QueryOption(Future<IDeferredOutput<char>> future)
             {
                 this.future = future;
 
-                this.cachedOutput = null;
-            }
+                this.name = new Future<OptionName<TMode>>(() => new OptionName<TMode>(this.future));
+                this.equalsSign = new Future<EqualsSign<TMode>>(() => new EqualsSign<TMode>(Func.Lift(this.Name.Realize, DeferredOutput.Create)));
+                this.optionValue = new Future<OptionValue<TMode>>(() => new OptionValue<TMode>(DeferredOutput.ToPromise(this.EqualsSign.Realize)));
 
-            /*public QueryOption(OptionName name, EqualsSign equalsSign, OptionValue optionValue)
-            {
-                Name = name;
-                EqualsSign = equalsSign;
-                OptionValue = optionValue;
-            }*/
+                this.cachedOutput = new Future<IOutput<char, QueryOption<ParseMode.Realized>>>(this.RealizeImpl);
+            }
 
             private QueryOption(OptionName<ParseMode.Realized> name, EqualsSign<ParseMode.Realized> equalsSign, OptionValue<ParseMode.Realized> optionValue)
             {
@@ -1231,7 +1232,7 @@
             {
                 get
                 {
-                    return new OptionName<TMode>(this.future);
+                    return this.name;
                 }
             }
 
@@ -1239,7 +1240,7 @@
             {
                 get
                 {
-                    return new EqualsSign<TMode>(Func.Lift(this.Name.Realize, DeferredOutput.Create));
+                    return this.equalsSign;
                 }
             }
 
@@ -1247,32 +1248,28 @@
             {
                 get
                 {
-                    return new OptionValue<TMode>(DeferredOutput.ToPromise(this.EqualsSign.Realize));
+                    return this.optionValue;
                 }
             }
 
             public IOutput<char, QueryOption<ParseMode.Realized>> Realize()
             {
-                if (this.cachedOutput != null)
-                {
-                    return this.cachedOutput;
-                }
+                return this.cachedOutput.Value;
+            }
 
+            private IOutput<char, QueryOption<ParseMode.Realized>> RealizeImpl()
+            {
                 var output = this.OptionValue.Realize();
                 if (output.Success)
                 {
-                    this.cachedOutput = new Output<char, QueryOption<ParseMode.Realized>>(
-
+                    return new Output<char, QueryOption<ParseMode.Realized>>(
                         true,
                         new QueryOption<ParseMode.Realized>(this.Name.Realize().Parsed, this.EqualsSign.Realize().Parsed, this.OptionValue.Realize().Parsed),
                         output.Remainder);
-
-                    return this.cachedOutput;
                 }
                 else
                 {
-                    this.cachedOutput = new Output<char, QueryOption<ParseMode.Realized>>(false, default, output.Remainder);
-                    return this.cachedOutput;
+                    return new Output<char, QueryOption<ParseMode.Realized>>(false, default, output.Remainder);
                 }
             }
         }
