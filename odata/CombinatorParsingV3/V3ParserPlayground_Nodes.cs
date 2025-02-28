@@ -983,7 +983,7 @@
                 this.slash = new Future<Slash<TMode>>(() => new Slash<TMode>(this.future));
                 this.characters = new Future<AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>>(() => new AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>(
                         Func.Lift(this.Slash.Realize, DeferredOutput.Create),
-                        input => new AlphaNumeric<TMode>.A(input))); //// TODO what would a discriminated union actually look like here?)
+                        input => new AlphaNumeric<TMode>.A(input)));
 
                 this.cachedOutput = new Future<IOutput<char, Segment<ParseMode.Realized>>>(this.RealizeImpl);
             }
