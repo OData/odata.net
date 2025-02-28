@@ -789,13 +789,11 @@
 
             private static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetTerminalRealizedNode(
                 Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput,
-                Future<IOutput<char, RealNullable<TRealizedAstNode>>> optionalCachedOutput)
+                OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> element)
             {
                 return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                    new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                        new RealNullable<TRealizedAstNode>(),
-                        optionalCachedOutput), 
-                    () => GetTerminalRealizedNode(cachedOutput, optionalCachedOutput),
+                    element, 
+                    () => GetTerminalRealizedNode(cachedOutput, element),
                     cachedOutput);
             }
 
@@ -853,9 +851,7 @@
                     return new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                                parsed, 
-                                this.element.Value.cachedOutput),
+                            realizedElement.Parsed,
                             () => realizedNext.Parsed,
                             this.cachedOutput),
                         realizedNext.Remainder);
@@ -865,10 +861,8 @@
                     return new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                                realizedElement.Parsed,
-                                this.element.Value.cachedOutput),
-                            () => GetTerminalRealizedNode(this.cachedOutput, this.element.Value.cachedOutput),
+                            realizedElement.Parsed,
+                            () => GetTerminalRealizedNode(this.cachedOutput, realizedElement.Parsed),
                             this.cachedOutput),
                         realizedElement.Remainder);
                 }
