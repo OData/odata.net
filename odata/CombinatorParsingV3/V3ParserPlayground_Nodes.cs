@@ -972,7 +972,7 @@
             private readonly Future<IDeferredOutput<char>> future;
 
             private readonly Future<Slash<TMode>> slash;
-            private readonly Future<AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
+            private readonly Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
 
             private readonly Future<IOutput<char, Segment<ParseMode.Realized>>> cachedOutput;
 
@@ -981,21 +981,21 @@
                 this.future = future;
 
                 this.slash = new Future<Slash<TMode>>(() => new Slash<TMode>(this.future));
-                this.characters = new Future<AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>>(() => new AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>(
+                this.characters = new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(() => new AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>(
                         Func.Lift(this.Slash.Realize, DeferredOutput.Create),
-                        input => new AlphaNumeric<TMode>.A(input)));
+                        input => new AlphaNumeric<ParseMode.Deferred>.A(input)));
 
                 this.cachedOutput = new Future<IOutput<char, Segment<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
             private Segment(
                 Slash<TMode> slash, 
-                AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode> characters,
+                AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> characters,
                 Future<IOutput<char, Segment<ParseMode.Realized>>> cachedOutput)
             {
                 this.slash = new Future<Slash<TMode>>(() => slash);
 
-                this.characters = new Future<AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>>(
+                this.characters = new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(
                     () => characters);
 
                 this.cachedOutput = cachedOutput;
@@ -1009,7 +1009,7 @@
                 }
             }
 
-            public AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode> Characters
+            public AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> Characters
             {
                 get
                 {
@@ -1032,7 +1032,7 @@
                         new Segment<ParseMode.Realized>(
                             this.Slash.Realize().Parsed,
                             //// TODO you are here
-                            this.Characters.Realize().Parsed as AtLeastOne<AlphaNumeric<ParseMode.Realized>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>,//// TODO this is the hackiest part of the whole parsemode thing so far; see if you can address it
+                            this.Characters.Realize().Parsed,
                             this.cachedOutput), 
                         output.Remainder);
                 }
