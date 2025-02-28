@@ -1021,7 +1021,6 @@
             }
         }
 
-        //// TODO you are here
         public sealed class EqualsSign<TMode> : IDeferredAstNode<char, EqualsSign<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
@@ -1073,56 +1072,57 @@
             }
         }
 
+        //// TODO you are here
         public sealed class OptionName<TMode> : IDeferredAstNode<char, OptionName<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
 
-            private Output<char, OptionName<ParseMode.Realized>>? cachedOutput;
+            private readonly Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
 
-            /*public OptionName(IEnumerable<AlphaNumeric> characters)
-{
-Characters = characters;
-}*/
+            private readonly Future<IOutput<char, OptionName<ParseMode.Realized>>> cachedOutput;
 
             public OptionName(Future<IDeferredOutput<char>> future)
             {
                 this.future = future;
 
-                this.cachedOutput = null;
+                this.characters = new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(() => new AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>(future, input => new AlphaNumeric<ParseMode.Deferred>.A(input)));
+
+                this.cachedOutput = new Future<IOutput<char, OptionName<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private OptionName(AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized> characters)
+            private OptionName(AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> characters, Future<IOutput<char, OptionName<ParseMode.Realized>>> cachedOutput)
             {
+                this.characters = new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(() => characters);
+
+                this.cachedOutput = cachedOutput;
             }
 
-            public AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode> Characters
+            public AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> Characters
             {
                 get
                 {
-                    return new AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>(future, input => new AlphaNumeric<TMode>.A(input));
+                    return this.characters;
                 }
             }
 
             public IOutput<char, OptionName<ParseMode.Realized>> Realize()
             {
-                if (this.cachedOutput != null)
-                {
-                    return this.cachedOutput;
-                }
+                return this.cachedOutput.Value;
+            }
 
+            private IOutput<char, OptionName<ParseMode.Realized>> RealizeImpl()
+            {
                 var output = this.Characters.Realize();
                 if (output.Success)
                 {
-                    this.cachedOutput = new Output<char, OptionName<ParseMode.Realized>>(
+                    return new Output<char, OptionName<ParseMode.Realized>>(
                         true,
-                        new OptionName<ParseMode.Realized>(this.Characters.Realize().Parsed as AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>),
+                        new OptionName<ParseMode.Realized>(this.Characters.Realize().Parsed, this.cachedOutput),
                         output.Remainder);
-                    return this.cachedOutput;
                 }
                 else
                 {
-                    this.cachedOutput = new Output<char, OptionName<ParseMode.Realized>>(false, default, output.Remainder);
-                    return this.cachedOutput;
+                    return new Output<char, OptionName<ParseMode.Realized>>(false, default, output.Remainder);
                 }
             }
         }
