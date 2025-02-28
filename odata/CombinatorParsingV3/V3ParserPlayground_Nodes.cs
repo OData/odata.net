@@ -631,18 +631,12 @@
 
             private AtLeastOne(
                 TRealizedAstNode _1,
-                ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> node,
+                ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> node,
                 Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
                 this.__1 = new Future<TDeferredAstNode>(
                     () => FromRealized<TDeferredAstNode, TRealizedAstNode>(_1));
-                this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
-                    () => FromRealized
-                        <
-                            ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>, 
-                            ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>
-                        >(
-                            node));
+                this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => node);
 
                 this.cachedOutput = cachedOutput;
             }
@@ -716,17 +710,10 @@
             }
 
             private Many(
-                ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> node, 
+                ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> node, 
                 Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
-                this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
-                    () =>
-                        FromRealized
-                            <
-                                ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>, 
-                                ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>
-                            >(
-                                node));
+                this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => node);
 
                 this.cachedOutput = cachedOutput;
             }
@@ -812,20 +799,12 @@
             }
 
             private ManyNode(
-                OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> element, 
-                Func<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> next, 
+                OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> element, 
+                Func<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next, 
                 Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
-                this.element = new Future<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
-                    () => FromRealized3<TDeferredAstNode, TRealizedAstNode, TMode>(element));
-                this.next = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
-                    () => 
-                        FromRealized
-                            <
-                                ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>, 
-                                ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>
-                            >(
-                                next()));
+                this.element = new Future<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => element);
+                this.next = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => next());
 
                 this.cachedOutput = cachedOutput;
             }
