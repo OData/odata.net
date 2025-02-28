@@ -73,14 +73,6 @@ namespace odata.tests
             //// Assert.AreEqual(10, indexes.Count);
             
             Assert.AreEqual(9, indexes.Max());
-
-            //// TODO clean up the deferred code
-            //// TODO implement proper "futures"
-            //// TODO dynamic length lists
-            //// TODO you need to get these two tests passing
-            //// TODO write a transcriber just to make sure things still make sense from that perspective
-            //// TODO you need to model deferred writes as well
-            //// TODO generate code for this new design
         }
 
         [TestMethod]
