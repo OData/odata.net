@@ -136,17 +136,54 @@ namespace odata.tests
             Assert.AreEqual(1, indexes.Count);
             Assert.AreEqual(0, indexes[0]);
 
-            //// TODO this succeeds
-            /*var segments = odataUri.Segments.Realize();
-
-            Assert.AreEqual(9, indexes.Max());*/
-
-            var secondSegment = odataUri.Segments.Node.Realize();
-
-            //// TODO this doesn't succeed, but it should
+            var secondSegment = odataUri.Segments.Node.Element.Realize();
             Assert.AreEqual(5, indexes.Max());
 
             var thirdSegment = odataUri.Segments.Node.Next.Realize();
+
+            Assert.AreEqual(9, indexes.Max());
+        }
+
+        [TestMethod]
+        public void DeferredList2()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAA";
+
+            var indexes = new List<int>();
+            var input = new InstrumentedStringInput(url, indexes);
+
+            var odataUri = new V3ParserPlayground.OdataUri<ParseMode.Deferred>(Func.Close(DeferredOutput.Create(input)));
+
+            Assert.AreEqual(0, indexes.Count);
+
+            var slash = odataUri.Segments._1.Slash.Realize();
+
+            Assert.AreEqual(1, indexes.Count);
+            Assert.AreEqual(0, indexes[0]);
+
+            var secondAndThirdSegments = odataUri.Segments.Node.Realize();
+
+            Assert.AreEqual(9, indexes.Max());
+        }
+
+        [TestMethod]
+        public void DeferredList3()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAA";
+
+            var indexes = new List<int>();
+            var input = new InstrumentedStringInput(url, indexes);
+
+            var odataUri = new V3ParserPlayground.OdataUri<ParseMode.Deferred>(Func.Close(DeferredOutput.Create(input)));
+
+            Assert.AreEqual(0, indexes.Count);
+
+            var slash = odataUri.Segments._1.Slash.Realize();
+
+            Assert.AreEqual(1, indexes.Count);
+            Assert.AreEqual(0, indexes[0]);
+
+            var segments = odataUri.Segments.Realize();
 
             Assert.AreEqual(9, indexes.Max());
         }
