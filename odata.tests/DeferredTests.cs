@@ -96,8 +96,7 @@ namespace odata.tests
             // not a successful parse: //// TODO we should really have a convenience method for this
             Assert.IsNotNull(realUri.Remainder);
 
-            var queryOptionElement = realUri.Parsed.QueryOptions.Node.Element;
-            /*Assert.IsTrue(queryOptionElement.Realize().Parsed.TryGetValue(out var queryOption));
+            Assert.IsTrue(realUri.Parsed.QueryOptions.Node.Element.Value.TryGetValue(out var queryOption));
             
             var name = queryOption.Name.Characters;
 
@@ -107,7 +106,7 @@ namespace odata.tests
             var thirdCharacterNode = secondCharacterNode.Next;
             Assert.IsTrue(thirdCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
             var fourthCharacterNode = thirdCharacterNode.Next;
-            Assert.IsTrue(fourthCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);*/
+            Assert.IsTrue(fourthCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
 
             //// TODO get these assertions working
             /*var potentialFifthCharacterNode = fourthCharacterNode.Next;
