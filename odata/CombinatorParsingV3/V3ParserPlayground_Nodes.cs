@@ -1202,7 +1202,6 @@
             }
         }
 
-        //// TODO you are here
         public sealed class QueryOption<TMode> : IDeferredAstNode<char, QueryOption<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
@@ -1289,56 +1288,50 @@
             }
         }
 
+        //// TODO you are here
         public sealed class QuestionMark<TMode> : IDeferredAstNode<char, QuestionMark<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
 
-            private Output<char, QuestionMark<ParseMode.Realized>>? cachedOutput;
-
-            /*private QuestionMark()
-{
-}
-
-public static QuestionMark Instance { get; } = new QuestionMark();*/
+            private readonly Future<IOutput<char, QuestionMark<ParseMode.Realized>>> cachedOutput;
 
             public QuestionMark(Future<IDeferredOutput<char>> future)
             {
                 this.future = future;
 
-                this.cachedOutput = null;
+                this.cachedOutput = new Future<IOutput<char, QuestionMark<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private QuestionMark()
+            private QuestionMark(Future<IOutput<char, QuestionMark<ParseMode.Realized>>> cachedOutput)
             {
+                this.cachedOutput = cachedOutput;
             }
-
-            public static QuestionMark<ParseMode.Realized> Realized { get; } = new QuestionMark<ParseMode.Realized>();
 
             public IOutput<char, QuestionMark<ParseMode.Realized>> Realize()
             {
-                if (this.cachedOutput != null)
-                {
-                    return this.cachedOutput;
-                }
+                return this.cachedOutput.Value;
+            }
 
+            private IOutput<char, QuestionMark<ParseMode.Realized>> RealizeImpl()
+            {
                 var output = this.future.Value;
                 if (!output.Success)
                 {
-                    this.cachedOutput = new Output<char, QuestionMark<ParseMode.Realized>>(false, default, output.Remainder);
-                    return this.cachedOutput;
+                    return new Output<char, QuestionMark<ParseMode.Realized>>(false, default, output.Remainder);
                 }
 
                 var input = output.Remainder;
 
                 if (input.Current == '?')
                 {
-                    this.cachedOutput = new Output<char, QuestionMark<ParseMode.Realized>>(true, QuestionMark<TMode>.Realized, input.Next());
-                    return this.cachedOutput;
+                    return new Output<char, QuestionMark<ParseMode.Realized>>(
+                        true, 
+                        new QuestionMark<ParseMode.Realized>(this.cachedOutput), 
+                        input.Next());
                 }
                 else
                 {
-                    this.cachedOutput = new Output<char, QuestionMark<ParseMode.Realized>>(false, default, input);
-                    return this.cachedOutput;
+                    return new Output<char, QuestionMark<ParseMode.Realized>>(false, default, input);
                 }
             }
         }
