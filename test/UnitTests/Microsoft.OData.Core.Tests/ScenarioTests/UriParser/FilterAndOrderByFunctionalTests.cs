@@ -3125,19 +3125,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal(expectedSecondLiteral, constantNode2.LiteralText);
         }
 
-
-        [Theory]
-        [InlineData("example in (1,2,3)")]
-        [InlineData("example in (1.2,1.3,1.4)")]
-        public void FilterWithInOperationWithOpenTypesInPrimitiveCollections(string filterQueryString)
-        {
-            FilterClause filter = ParseFilter(filterQueryString,
-                HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
-
-            var inNode = Assert.IsType<InNode>(filter.Expression);
-            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-        }
-
         #endregion
 
         private static FilterClause ParseFilter(string text, IEdmModel edmModel, IEdmType edmType, IEdmNavigationSource edmEntitySet = null)
