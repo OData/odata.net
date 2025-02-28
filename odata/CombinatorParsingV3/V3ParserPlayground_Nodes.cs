@@ -1031,6 +1031,7 @@
                         true,
                         new Segment<ParseMode.Realized>(
                             this.Slash.Realize().Parsed,
+                            //// TODO you are here
                             this.Characters.Realize().Parsed as AtLeastOne<AlphaNumeric<ParseMode.Realized>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>,//// TODO this is the hackiest part of the whole parsemode thing so far; see if you can address it
                             this.cachedOutput), 
                         output.Remainder);
