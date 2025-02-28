@@ -899,9 +899,10 @@
                 this.cachedOutput = new Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private OptionalNode(RealNullable<TRealizedAstNode> value)
+            private OptionalNode(RealNullable<TRealizedAstNode> value, Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
                 this.value = new RealNullable<RealNullable<TRealizedAstNode>>(value);
+                this.cachedOutput = cachedOutput;
             }
 
             public RealNullable<TRealizedAstNode> Value
@@ -937,7 +938,8 @@
                     return new Output<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            new RealNullable<TRealizedAstNode>(output.Parsed)),
+                            new RealNullable<TRealizedAstNode>(output.Parsed),
+                            this.cachedOutput),
                         output.Remainder);
                 }
                 else
@@ -945,7 +947,8 @@
                     return new Output<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            new RealNullable<TRealizedAstNode>()),
+                            new RealNullable<TRealizedAstNode>(),
+                            this.cachedOutput),
                         output.Remainder);
                 }
             }
