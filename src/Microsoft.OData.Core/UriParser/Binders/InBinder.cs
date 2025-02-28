@@ -13,6 +13,7 @@ namespace Microsoft.OData.UriParser
     using System.Text;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Class that knows how to bind the In operator.
@@ -129,7 +130,7 @@ namespace Microsoft.OData.UriParser
                     Debug.Assert(expectedType.IsCollection());
                     string expectedTypeFullName = expectedType.Definition.AsElementType().FullTypeName();
 
-                    if (expectedTypeFullName.Equals("Edm.String", StringComparison.Ordinal) || expectedTypeFullName.Equals("Edm.Untyped", StringComparison.Ordinal))
+                    if (expectedTypeFullName.Equals("Edm.String", StringComparison.Ordinal) || (expectedTypeFullName.Equals("Edm.Untyped", StringComparison.Ordinal) && IsCollectionContentEmptyOrSpaces(bracketLiteralText)))
                     {
                         // For collection of strings, need to convert single-quoted string to double-quoted string,
                         // and also, per ABNF, a single quote within a string literal is "encoded" as two consecutive single quotes in either
@@ -422,6 +423,77 @@ namespace Microsoft.OData.UriParser
             }
 
             return "[" + String.Join(",", items) + "]";
+        }
+
+        private static bool IsCollectionContentEmptyOrSpaces(string bracketLiteralText)
+        {
+            if (string.IsNullOrWhiteSpace(bracketLiteralText) || bracketLiteralText.Length < 2)
+            {
+                return true;
+            }
+
+            string content = bracketLiteralText[1..^1].Trim();
+
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return true;
+            }
+
+            bool isEmptyOrHasOnlySpaces = true;
+            bool isCharinsideQuotes = false;
+            char quoteChar = '\0';
+            Span<char> buffer = stackalloc char[content.Length];
+            int bufferIndex = 0;
+
+            for (int i = 0; i < content.Length; i++)
+            {
+                char c = content[i];
+
+                if (isCharinsideQuotes)
+                {
+                    if (c == quoteChar)
+                    {
+                        isCharinsideQuotes = false;
+                    }
+                    buffer[bufferIndex++] = c;
+                }
+                else
+                {
+                    if (c == '"' || c == '\'')
+                    {
+                        isCharinsideQuotes = true;
+                        quoteChar = c;
+                        buffer[bufferIndex++] = c;
+                    }
+                    else if (c == ',')
+                    {
+                        string item = new string(buffer[..bufferIndex]).Trim().Trim('\'', '"');
+
+                        if (!string.IsNullOrWhiteSpace(item))
+                        {
+                            isEmptyOrHasOnlySpaces = false;
+                            break;
+                        }
+                        bufferIndex = 0;
+                    }
+                    else
+                    {
+                        buffer[bufferIndex++] = c;
+                    }
+                }
+            }
+
+            if (bufferIndex > 0)
+            {
+                string lastItem = new string(buffer[..bufferIndex]).Trim().Trim('\'', '"');
+
+                if (!string.IsNullOrWhiteSpace(lastItem))
+                {
+                    isEmptyOrHasOnlySpaces = false;
+                }
+            }
+
+            return isEmptyOrHasOnlySpaces;
         }
     }
 }
