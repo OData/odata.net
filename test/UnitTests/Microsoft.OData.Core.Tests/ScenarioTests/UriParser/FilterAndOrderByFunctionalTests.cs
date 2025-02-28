@@ -2130,6 +2130,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("(1,2,3)", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
         }
 
+        [Theory]
+        [InlineData("TestInt", "(1,2,3)")]
+        [InlineData("TestDouble", "(1.1,2.2,3.3)")]
+        [InlineData("TestBool", "(true,false)")]
+        [InlineData("TestString", "('a','b','c')")]
+        [InlineData("TestDecimal", "(1.1,2.2,3.3)")]
+        public void FilterWithInOperationWithParensCollectionConsistingOfDynamicPrimitiveProperties(string propertyName, string values)
+        {
+            string filterExpression = $"{propertyName} in {values}";
+            FilterClause filter = ParseFilter(filterExpression, HardCodedTestModel.TestModel, HardCodedTestModel.GetOpenEmployeeType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.IsType<SingleValueOpenPropertyAccessNode>(inNode.Left);
+            Assert.Equal(values, Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+        }
+
         [Fact]
         public void FilterWithInOperationWithParensCollectionAndLogicalNotOperator()
         {
@@ -3107,6 +3123,19 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             ConstantNode constantNode2 = collectionNode.Collection.Last();
             Assert.Equal(expectedSecondLiteral, constantNode2.LiteralText);
+        }
+
+
+        [Theory]
+        [InlineData("example in (1,2,3)")]
+        [InlineData("example in (1.2,1.3,1.4)")]
+        public void FilterWithInOperationWithOpenTypesInPrimitiveCollections(string filterQueryString)
+        {
+            FilterClause filter = ParseFilter(filterQueryString,
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
         }
 
         #endregion
