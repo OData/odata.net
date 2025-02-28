@@ -1218,14 +1218,25 @@
                 this.future = future;
 
                 this.name = new Future<OptionName<TMode>>(() => new OptionName<TMode>(this.future));
-                this.equalsSign = new Future<EqualsSign<TMode>>(() => new EqualsSign<TMode>(Func.Lift(this.Name.Realize, DeferredOutput.Create)));
-                this.optionValue = new Future<OptionValue<TMode>>(() => new OptionValue<TMode>(DeferredOutput.ToPromise(this.EqualsSign.Realize)));
+                this.equalsSign = new Future<EqualsSign<TMode>>(() => new EqualsSign<TMode>(
+                    Func.Lift(this.Name.Realize, DeferredOutput.Create)));
+                this.optionValue = new Future<OptionValue<TMode>>(() => new OptionValue<TMode>(
+                    DeferredOutput.ToPromise(this.EqualsSign.Realize)));
 
                 this.cachedOutput = new Future<IOutput<char, QueryOption<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private QueryOption(OptionName<ParseMode.Realized> name, EqualsSign<ParseMode.Realized> equalsSign, OptionValue<ParseMode.Realized> optionValue)
+            private QueryOption(
+                OptionName<TMode> name, 
+                EqualsSign<TMode> equalsSign, 
+                OptionValue<TMode> optionValue, 
+                Future<IOutput<char, QueryOption<ParseMode.Realized>>> cachedOutput)
             {
+                this.name = new Future<OptionName<TMode>>(() => name);
+                this.equalsSign = new Future<EqualsSign<TMode>>(() => equalsSign);
+                this.optionValue = new Future<OptionValue<TMode>>(() => optionValue);
+
+                this.cachedOutput = cachedOutput;
             }
 
             public OptionName<TMode> Name
@@ -1264,7 +1275,11 @@
                 {
                     return new Output<char, QueryOption<ParseMode.Realized>>(
                         true,
-                        new QueryOption<ParseMode.Realized>(this.Name.Realize().Parsed, this.EqualsSign.Realize().Parsed, this.OptionValue.Realize().Parsed),
+                        new QueryOption<ParseMode.Realized>(
+                            this.Name.Realize().Parsed, 
+                            this.EqualsSign.Realize().Parsed, 
+                            this.OptionValue.Realize().Parsed,
+                        this.cachedOutput),
                         output.Remainder);
                 }
                 else
