@@ -160,6 +160,7 @@ namespace Microsoft.OData.Tests.UriParser
             FullyQualifiedNamespacePerson.AddStructuralProperty("MyOpenAddress", FullyQualifiedNamespaceOpenAddressTypeReference);
             FullyQualifiedNamespacePerson.AddStructuralProperty("PreviousAddresses", new EdmCollectionTypeReference(new EdmCollectionType(FullyQualifiedNamespaceAddressTypeReference)));
             FullyQualifiedNamespacePerson.AddStructuralProperty("FavoriteColors", new EdmCollectionTypeReference(new EdmCollectionType(colorTypeReference)));
+            FullyQualifiedNamespacePerson.AddStructuralProperty("SecondFavoriteNumber", EdmCoreModel.Instance.GetInt16(false));
             FullyQualifiedNamespacePerson.AddStructuralProperty("FavoriteNumber", FullyQualifiedNamespaceUInt16Reference);
             FullyQualifiedNamespacePerson.AddStructuralProperty("RelatedIDs", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))));
             FullyQualifiedNamespacePerson.AddStructuralProperty("RelatedSSNs", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
