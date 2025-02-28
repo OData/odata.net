@@ -6,6 +6,7 @@
 //------------------------------------------------------------------------------
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.E2E.TestCommon.Common;
 using Xunit;
 
 namespace Microsoft.OData.E2E.TestCommon
@@ -24,6 +25,10 @@ namespace Microsoft.OData.E2E.TestCommon
             Factory = factory ?? throw new ArgumentNullException(nameof(factory));
             _httpClientFactory = Factory.Services.GetRequiredService<IHttpClientFactory>();
         }
+
+        protected const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
+        protected const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
+        protected const string MimeTypeODataParameterNoMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata;
 
         /// <summary>
         /// An HttpClient to use with the server.
