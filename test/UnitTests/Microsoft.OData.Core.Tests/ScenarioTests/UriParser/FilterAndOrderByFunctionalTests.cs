@@ -2130,6 +2130,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("(1,2,3)", Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
         }
 
+        [Theory]
+        [InlineData("TestInt", "(1,2,3)")]
+        [InlineData("TestDouble", "(1.1,2.2,3.3)")]
+        [InlineData("TestBool", "(true,false)")]
+        [InlineData("TestString", "('a','b','c')")]
+        [InlineData("TestDecimal", "(1.1,2.2,3.3)")]
+        public void FilterWithInOperationWithParensCollectionConsistingOfDynamicPrimitiveProperties(string propertyName, string values)
+        {
+            string filterExpression = $"{propertyName} in {values}";
+            FilterClause filter = ParseFilter(filterExpression, HardCodedTestModel.TestModel, HardCodedTestModel.GetOpenEmployeeType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            Assert.IsType<SingleValueOpenPropertyAccessNode>(inNode.Left);
+            Assert.Equal(values, Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
+        }
+
         [Fact]
         public void FilterWithInOperationWithParensCollectionAndLogicalNotOperator()
         {
