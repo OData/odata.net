@@ -1077,7 +1077,11 @@
         {
             private readonly Future<IDeferredOutput<char>> future;
 
-            private readonly Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
+            private readonly Future
+                <
+                    AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>
+                > 
+                    characters;
 
             private readonly Future<IOutput<char, OptionName<ParseMode.Realized>>> cachedOutput;
 
@@ -1085,14 +1089,21 @@
             {
                 this.future = future;
 
-                this.characters = new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(() => new AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>(future, input => new AlphaNumeric<ParseMode.Deferred>.A(input)));
+                this.characters = 
+                    new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(
+                        () => 
+                            new AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>(
+                                future, 
+                                input => new AlphaNumeric<ParseMode.Deferred>.A(input)));
 
                 this.cachedOutput = new Future<IOutput<char, OptionName<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
             private OptionName(AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> characters, Future<IOutput<char, OptionName<ParseMode.Realized>>> cachedOutput)
             {
-                this.characters = new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(() => characters);
+                this.characters = 
+                    new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(
+                        () => characters);
 
                 this.cachedOutput = cachedOutput;
             }
