@@ -1335,7 +1335,6 @@
             }
         }
 
-        //// TODO you are here
         public sealed class OdataUri<TMode> : IDeferredAstNode<char, OdataUri<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
@@ -1428,73 +1427,5 @@
                 }
             }
         }
-
-        /*public class OdataUri : DeferredOdataUri
-        {
-            public OdataUri(IEnumerable<Segment> segments, QuestionMark questionMark, IEnumerable<QueryOption> queryOptions)
-                :base(new Lazy<IEnumerable<Segment>>(segments), new Lazy<QuestionMark>(questionMark), new Lazy<IEnumerable<QueryOption>>(queryOptions))
-            {
-            }
-        }
-
-        public class DeferredOdataUri : IDeferredAstNode<char, OdataUri>
-        {
-            private readonly Lazy<CombinatorParsingV3.IOutput<char, IEnumerable<Segment>>> segments;
-
-            protected DeferredOdataUri(Lazy<IOutput<char, IEnumerable<Segment>>> segments, Lazy<QuestionMark> questionMark, Lazy<IEnumerable<QueryOption>> queryOptions)
-            {
-                this.segments = segments;
-            }
-
-            public DeferredOdataUri(IInput<char> input)
-                : this(input, SegmentParser.Instance)
-            {
-            }
-
-            public DeferredOdataUri(IInput<char> input, IParser<char, IEnumerable<Segment>> segmentParser, )
-                : this(new Lazy<IEnumerable<Segment>>(() => segmentParser.Parse(input)))
-            {
-            }
-
-            public IEnumerable<Segment> Segments
-            {
-                get
-                {
-                    if (segments.Value.Success)
-                    {
-                        return segments.Value.Parsed;
-                    }
-                    else
-                    {
-                        throw new Exception("TODO");
-                    }
-                }
-            }
-
-            public QuestionMark QuestionMark { get; }
-            public IEnumerable<QueryOption> QueryOptions { get; }
-
-            public IOutput<char, OdataUri> Realize()
-            {
-                var finalSegments = segments.Value.Parsed;
-                if (!segments.Value.Success)
-                {
-                    return new DeferredOutput<OdataUri>(false, default);
-                }
-
-                // 
-
-                return new DeferredOutput<OdataUri>(true, new OdataUri(finalSegments, ));
-            }
-        }*/
-
-        /*public class UriParserV2 : IDeferredParser<char, OdataUri, DeferredOdataUri>
-        {
-            public DeferredOdataUri Parse(IInput<char> input)
-            {
-                return new DeferredOdataUri(
-                    );
-            }
-        }*/
     }
 }
