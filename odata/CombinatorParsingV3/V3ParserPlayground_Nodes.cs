@@ -1010,7 +1010,6 @@
                         true,
                         new Segment<ParseMode.Realized>(
                             this.Slash.Realize().Parsed,
-                            //// TODO you are here
                             this.Characters.Realize().Parsed,
                             this.cachedOutput), 
                         output.Remainder);
@@ -1022,6 +1021,7 @@
             }
         }
 
+        //// TODO you are here
         public sealed class EqualsSign<TMode> : IDeferredAstNode<char, EqualsSign<ParseMode.Realized>> where TMode : ParseMode
         {
             ////private readonly IInput<char> input;
