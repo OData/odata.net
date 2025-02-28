@@ -885,7 +885,7 @@
 
             private readonly RealNullable<RealNullable<TRealizedAstNode>> value;
 
-            internal readonly Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput; //// TODO this shouldn't be internal
+            private readonly Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
 
             public OptionalNode(
                 Future<IDeferredOutput<char>> future,
