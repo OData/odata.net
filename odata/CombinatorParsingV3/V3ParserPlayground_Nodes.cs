@@ -593,17 +593,8 @@
             return default!;
         }
 
-        public interface IAtLeastOne<out TDeferredAstNode, out TRealizedAstNode, out TMode>
-            : IDeferredAstNode<char, IAtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
-            where TMode : ParseMode
-        {
-            IAtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> Self { get; }
-        }
-
         public sealed class AtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> : 
-            IDeferredAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>,
-            IAtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode>
+            IDeferredAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> 
             where TMode : ParseMode
         {
@@ -672,22 +663,9 @@
                 }
             }
 
-            public IAtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> Self
-            {
-                get
-                {
-                    return this;
-                }
-            }
-
             public IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
             {
                 return this.cachedOutput.Value;
-            }
-
-            IOutput<char, IAtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> IDeferredAstNode<char, IAtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>.Realize()
-            {
-                return this.Realize();
             }
 
             private IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
@@ -994,7 +972,7 @@
             private readonly Future<IDeferredOutput<char>> future;
 
             private readonly Future<Slash<TMode>> slash;
-            private readonly Future<IAtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
+            private readonly Future<AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
 
             private readonly Future<IOutput<char, Segment<ParseMode.Realized>>> cachedOutput;
 
@@ -1003,7 +981,7 @@
                 this.future = future;
 
                 this.slash = new Future<Slash<TMode>>(() => new Slash<TMode>(this.future));
-                this.characters = new Future<IAtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>>(() => new AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>(
+                this.characters = new Future<AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>>(() => new AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>(
                         Func.Lift(this.Slash.Realize, DeferredOutput.Create),
                         input => new AlphaNumeric<TMode>.A(input))); //// TODO what would a discriminated union actually look like here?)
 
@@ -1011,49 +989,14 @@
             }
 
             private Segment(
-                Slash<ParseMode.Realized> slash, 
-                AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized> characters,
+                Slash<TMode> slash, 
+                AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode> characters,
                 Future<IOutput<char, Segment<ParseMode.Realized>>> cachedOutput)
             {
-                var thing = FromRealized
-                            <
-                                AtLeastOne
-                                    <
-                                        AlphaNumeric<ParseMode.Deferred>,
-                                        AlphaNumeric<ParseMode.Realized>,
-                                        TMode
-                                    >,
-                                AtLeastOne
-                                    <
-                                        AlphaNumeric<ParseMode.Deferred>,
-                                        AlphaNumeric<ParseMode.Realized>,
-                                        ParseMode.Realized
-                                    >
-                            >(
-                                characters);
+                this.slash = new Future<Slash<TMode>>(() => slash);
 
-                this.slash = new Future<Slash<TMode>>(() => FromRealized<Slash<TMode>, Slash<ParseMode.Realized>>(slash));
-
-                //// TODO you are here
-                //// TODO do you want to remove the iatleastone interface? i'm nto yet sure what the problem is with this line
                 this.characters = new Future<AtLeastOne<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>>(
-                    () => 
-                        FromRealized2
-                            <
-                                IAtLeastOne
-                                    <
-                                        AlphaNumeric<TMode>, 
-                                        AlphaNumeric<ParseMode.Realized>, 
-                                        TMode
-                                    >, 
-                                IAtLeastOne
-                                    <
-                                        AlphaNumeric<ParseMode.Deferred>, 
-                                        AlphaNumeric<ParseMode.Realized>, 
-                                        ParseMode.Realized
-                                    >
-                            >(
-                                characters));
+                    () => characters);
 
                 this.cachedOutput = cachedOutput;
             }
@@ -1088,7 +1031,7 @@
                         true,
                         new Segment<ParseMode.Realized>(
                             this.Slash.Realize().Parsed,
-                            this.Characters.Realize().Parsed as AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>,//// TODO this is the hackiest part of the whole parsemode thing so far; see if you can address it
+                            this.Characters.Realize().Parsed as AtLeastOne<AlphaNumeric<ParseMode.Realized>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>,//// TODO this is the hackiest part of the whole parsemode thing so far; see if you can address it
                             this.cachedOutput), 
                         output.Remainder);
                 }
