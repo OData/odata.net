@@ -787,7 +787,7 @@
                         () => this.RealizeImpl());
             }
 
-            private static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetTerminalRealizedNode(
+            /*private static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetTerminalRealizedNode(
                 Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput,
                 Future<IOutput<char, RealNullable<TRealizedAstNode>>> optionalCachedOutput)
             {
@@ -797,15 +797,15 @@
                         optionalCachedOutput), 
                     () => GetTerminalRealizedNode(cachedOutput, optionalCachedOutput),
                     cachedOutput);
-            }
+            }*/
 
             private ManyNode(
                 OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> element, 
-                Func<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next, 
+                ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> next, 
                 Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
                 this.element = new Future<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => element);
-                this.next = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => next());
+                this.next = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => next);
 
                 this.cachedOutput = cachedOutput;
             }
@@ -836,6 +836,7 @@
 
             private IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
             {
+                //// TODO do you need this explicit check now that you've redesigned optionalnode?
                 var realizedElement = this.Element.Realize();
                 if (!realizedElement.Success)
                 {
@@ -846,32 +847,14 @@
                         realizedElement.Remainder);
                 }
 
-                if (realizedElement.Parsed.TryGetValue(out var parsed))
-                {
-                    var realizedNext = this.Next.Realize();
-                    // *this* instance is the "dependency" for `next`, so we can only have success cases
-                    return new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
-                        true,
-                        new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                                parsed, 
-                                this.element.Value.cachedOutput),
-                            () => realizedNext.Parsed,
-                            this.cachedOutput),
-                        realizedNext.Remainder);
-                }
-                else
-                {
-                    return new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
-                        true,
-                        new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                                realizedElement.Parsed,
-                                this.element.Value.cachedOutput),
-                            () => GetTerminalRealizedNode(this.cachedOutput, this.element.Value.cachedOutput),
-                            this.cachedOutput),
-                        realizedElement.Remainder);
-                }
+                var realizedNext = this.Next.Realize(); 
+                return new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                    true,
+                    new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                        realizedElement.Parsed,
+                        realizedNext.Parsed,
+                        this.cachedOutput),
+                    realizedNext.Remainder);
             }
         }
 
