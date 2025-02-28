@@ -27,6 +27,7 @@
   
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.OData.Client.Tests" />
+    <InternalsVisibleTo Include="Microsoft.OData.Client.E2E.Tests" />
   </ItemGroup>
 
   <ItemGroup>
