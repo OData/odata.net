@@ -1340,29 +1340,50 @@
         {
             private readonly Future<IDeferredOutput<char>> future;
 
-            private Output<char, OdataUri<ParseMode.Realized>>? cachedOutput;
+            private readonly Future<AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, TMode>> segments;
+            private readonly Future<QuestionMark<TMode>> questionMark;
+            private readonly Future<Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, TMode>> queryOptions;
+
+            private readonly Future<IOutput<char, OdataUri<ParseMode.Realized>>> cachedOutput;
 
             public OdataUri(Future<IDeferredOutput<char>> future)
             {
-                //// TODO add the type parameter check or hvae a static factory method that only returns the deferred type
-
                 this.future = future;
 
-                this.cachedOutput = null;
+                this.segments = new Future<AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, TMode>>(
+                    () => new AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, TMode>(
+                        this.future,
+                        input => new Segment<ParseMode.Deferred>(input)));
+                this.questionMark = new Future<QuestionMark<TMode>>(
+                    () => new QuestionMark<TMode>(DeferredOutput.ToPromise(this.Segments.Realize)));
+                this.queryOptions = new Future<Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, TMode>>(
+                    () => new Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, TMode>(
+                        DeferredOutput.ToPromise(this.QuestionMark.Realize), 
+                        input => new QueryOption<ParseMode.Deferred>(input)));
+
+                this.cachedOutput = new Future<IOutput<char, OdataUri<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
             private OdataUri(
-                AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, ParseMode.Realized> segments,
-                QuestionMark<ParseMode.Realized> questionMark,
-                Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, ParseMode.Realized> queryOptions)
+                AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, TMode> segments,
+                QuestionMark<TMode> questionMark,
+                Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, TMode> queryOptions,
+                Future<IOutput<char, OdataUri<ParseMode.Realized>>> cachedOutput)
             {
+                this.segments = new Future<AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, TMode>>(
+                    () => segments);
+                this.questionMark = new Future<QuestionMark<TMode>>(() => questionMark);
+                this.queryOptions = new Future<Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, TMode>>(
+                    () => queryOptions);
+
+                this.cachedOutput = cachedOutput;
             }
 
-            public AtLeastOne<Segment<TMode>, Segment<ParseMode.Realized>, TMode> Segments //// TODO implement "at least one"
+            public AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, TMode> Segments
             {
                 get
                 {
-                    return new AtLeastOne<Segment<TMode>, Segment<ParseMode.Realized>, TMode>(this.future, input => new Segment<TMode>(input));
+                    return this.segments;
                 }
             }
 
@@ -1370,41 +1391,40 @@
             {
                 get
                 {
-                    return new QuestionMark<TMode>(DeferredOutput.ToPromise(this.Segments.Realize));
+                    return this.questionMark;
                 }
             }
 
-            public Many<QueryOption<TMode>, QueryOption<ParseMode.Realized>, TMode> QueryOptions
+            public Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, TMode> QueryOptions
             {
                 get
                 {
-                    return new Many<QueryOption<TMode>, QueryOption<ParseMode.Realized>, TMode>(DeferredOutput.ToPromise(this.QuestionMark.Realize), input => new QueryOption<TMode>(input));
+                    return this.queryOptions;
                 }
             }
 
             public IOutput<char, OdataUri<ParseMode.Realized>> Realize()
             {
-                if (this.cachedOutput != null)
-                {
-                    return this.cachedOutput;
-                }
+                return this.cachedOutput.Value;
+            }
 
+            private IOutput<char, OdataUri<ParseMode.Realized>> RealizeImpl()
+            {
                 var output = this.QueryOptions.Realize();
                 if (output.Success)
                 {
-                    this.cachedOutput = new Output<char, OdataUri<ParseMode.Realized>>(
+                    return new Output<char, OdataUri<ParseMode.Realized>>(
                         true,
                         new OdataUri<ParseMode.Realized>(
-                            this.Segments.Realize().Parsed as AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, ParseMode.Realized>,
+                            this.Segments.Realize().Parsed,
                             this.QuestionMark.Realize().Parsed,
-                            this.QueryOptions.Realize().Parsed as Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, ParseMode.Realized>),
+                            this.QueryOptions.Realize().Parsed,
+                            this.cachedOutput),
                         output.Remainder);
-                    return this.cachedOutput;
                 }
                 else
                 {
-                    this.cachedOutput = new Output<char, OdataUri<ParseMode.Realized>>(false, default, output.Remainder);
-                    return this.cachedOutput;
+                    return new Output<char, OdataUri<ParseMode.Realized>>(false, default, output.Remainder);
                 }
             }
         }
