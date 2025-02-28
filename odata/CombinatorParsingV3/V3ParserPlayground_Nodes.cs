@@ -9,6 +9,7 @@
     using CombinatorParsingV1;
     using System.Runtime.CompilerServices;
     using System.Reflection.Metadata.Ecma335;
+    using System.Net.Cache;
 
     public sealed class Future<T>
     {
@@ -1072,7 +1073,6 @@
             }
         }
 
-        //// TODO you are here
         public sealed class OptionName<TMode> : IDeferredAstNode<char, OptionName<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
@@ -1099,7 +1099,9 @@
                 this.cachedOutput = new Future<IOutput<char, OptionName<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private OptionName(AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> characters, Future<IOutput<char, OptionName<ParseMode.Realized>>> cachedOutput)
+            private OptionName(
+                AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> characters,
+                Future<IOutput<char, OptionName<ParseMode.Realized>>> cachedOutput)
             {
                 this.characters = 
                     new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(
@@ -1138,63 +1140,64 @@
             }
         }
 
+        //// TODO you are here
         public sealed class OptionValue<TMode> : IDeferredAstNode<char, OptionValue<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
 
-            private Output<char, OptionValue<ParseMode.Realized>>? cachedOutput;
+            private readonly Future<Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
 
-            /*private readonly IInput<char> input;
-
-public OptionValue(IInput<char> input)
-{
-this.input = input;
-}*/
-
-            /*public OptionValue(IEnumerable<AlphaNumeric> characters)
-            {
-                Characters = characters;
-            }*/
+            private readonly Future<IOutput<char, OptionValue<ParseMode.Realized>>> cachedOutput;
 
             public OptionValue(Future<IDeferredOutput<char>> future)
             {
                 this.future = future;
 
-                this.cachedOutput = null;
+                this.characters = new Future<Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(
+                    () =>
+                        new Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>(
+                            this.future,
+                            input => new AlphaNumeric<ParseMode.Deferred>.A(input)));
+
+                this.cachedOutput = new Future<IOutput<char, OptionValue<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private OptionValue(Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized> characters)
+            private OptionValue(
+                Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> characters,
+                Future<IOutput<char, OptionValue<ParseMode.Realized>>> cachedOutput)
             {
+                this.characters = new Future<Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(
+                    () => characters);
+
+                this.cachedOutput = cachedOutput;
             }
 
-            public Many<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode> Characters
+            public Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> Characters
             {
                 get
                 {
-                    return new Many<AlphaNumeric<TMode>, AlphaNumeric<ParseMode.Realized>, TMode>(this.future, input => new AlphaNumeric<TMode>.A(input));
+                    return this.characters;
                 }
             }
 
             public IOutput<char, OptionValue<ParseMode.Realized>> Realize()
             {
-                if (this.cachedOutput != null)
-                {
-                    return this.cachedOutput;
-                }
+                return this.cachedOutput.Value;
+            }
 
+            private IOutput<char, OptionValue<ParseMode.Realized>> RealizeImpl()
+            {
                 var output = this.Characters.Realize();
                 if (output.Success)
                 {
-                    this.cachedOutput = new Output<char, OptionValue<ParseMode.Realized>>(
+                    return new Output<char, OptionValue<ParseMode.Realized>>(
                         true,
-                        new OptionValue<ParseMode.Realized>(this.Characters.Realize().Parsed as Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>),
+                        new OptionValue<ParseMode.Realized>(this.Characters.Realize().Parsed, this.cachedOutput),
                         output.Remainder);
-                    return this.cachedOutput;
                 }
                 else
                 {
-                    this.cachedOutput = new Output<char, OptionValue<ParseMode.Realized>>(false, default, output.Remainder);
-                    return this.cachedOutput;
+                    return new Output<char, OptionValue<ParseMode.Realized>>(false, default, output.Remainder);
                 }
 
             }
