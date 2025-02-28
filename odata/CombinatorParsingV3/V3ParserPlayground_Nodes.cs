@@ -573,7 +573,7 @@
             return default!;
         }
 
-        public static 
+        /*public static 
             OptionalNode
                 <
                     TDeferredAstNode, 
@@ -592,7 +592,7 @@
         {
             //// TODO implement this
             return default!;
-        }
+        }*/
 
         public sealed class AtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> : 
             IDeferredAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
@@ -875,7 +875,83 @@
             }
         }
 
-        public sealed class DeferredOptionalNode<TDeferredAstNode, TRealizedAstNode> :
+        public sealed class OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> :
+            IDeferredAstNode<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
+            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            where TMode : ParseMode
+        {
+            private readonly Future<IDeferredOutput<char>> future;
+            private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
+
+            private readonly RealNullable<RealNullable<TRealizedAstNode>> value;
+
+            internal readonly Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput; //// TODO this shouldn't be internal
+
+            public OptionalNode(
+                Future<IDeferredOutput<char>> future,
+                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
+            {
+                this.future = future;
+                this.nodeFactory = nodeFactory;
+
+                this.value = new RealNullable<RealNullable<TRealizedAstNode>>();
+
+                this.cachedOutput = new Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(this.RealizeImpl);
+            }
+
+            private OptionalNode(RealNullable<TRealizedAstNode> value)
+            {
+                this.value = new RealNullable<RealNullable<TRealizedAstNode>>(value);
+            }
+
+            public RealNullable<TRealizedAstNode> Value
+            {
+                get
+                {
+                    if (this.value.TryGetValue(out var realizedValue))
+                    {
+                        return realizedValue;
+                    }
+
+                    throw new InvalidOperationException("can't get the value on a non-realized optionalnode");
+                }
+            }
+
+            public IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
+            {
+                return this.cachedOutput.Value;
+            }
+
+            private IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
+            {
+                var deferredOutput = this.future.Value;
+                if (!deferredOutput.Success)
+                {
+                    return new Output<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(false, default, deferredOutput.Remainder);
+                }
+
+                var value = this.nodeFactory(this.future);
+                var output = value.Realize();
+                if (output.Success)
+                {
+                    return new Output<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                        true,
+                        new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                            new RealNullable<TRealizedAstNode>(output.Parsed)),
+                        output.Remainder);
+                }
+                else
+                {
+                    return new Output<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                        true,
+                        new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                            new RealNullable<TRealizedAstNode>()),
+                        output.Remainder);
+                }
+            }
+        }
+
+        /*public sealed class DeferredOptionalNode<TDeferredAstNode, TRealizedAstNode> :
             IDeferredAstNode<char, RealizedOptionalNode<TRealizedAstNode>>
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
         {
@@ -934,7 +1010,7 @@
             }
 
             public RealNullable<TAstNode> Value { get; }
-        }
+        }*/
 
         /*public sealed class OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> 
             : IDeferredAstNode<char, OptionalNode<TRealizedAstNode, TRealizedAstNode, ParseMode.Realized>> 
