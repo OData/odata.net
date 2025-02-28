@@ -912,6 +912,7 @@
             {
                 get
                 {
+                    //// TODO this always returns deferred; maybe you should have many use the realized node for `tdeferredastnode` when this is realized?
                     return this.value;
                 }
             }

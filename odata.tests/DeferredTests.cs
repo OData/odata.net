@@ -96,7 +96,9 @@ namespace odata.tests
             // not a successful parse: //// TODO we should really have a convenience method for this
             Assert.IsNotNull(realUri.Remainder);
 
-            var queryOption = realUri.Parsed.QueryOptions.Node.Element.Value;
+            var queryOptionElement = realUri.Parsed.QueryOptions.Node.Element;
+            Assert.IsTrue(queryOptionElement.Realize().Parsed.TryGetValue(out var queryOption));
+            
             var name = queryOption.Name.Characters;
 
             Assert.IsTrue(name._1 is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
