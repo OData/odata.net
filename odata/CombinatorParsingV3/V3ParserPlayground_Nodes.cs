@@ -563,36 +563,15 @@
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
         {
             //// TODO make this a static interface method on ideferrednode probably?
-            return default!;
-        }
+            ////return default!;
 
-        public static TDeferredAstNode FromRealized2<TDeferredAstNode, TRealizedAstNode>(RealNullable<TRealizedAstNode> realizedAstNode)
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
-        {
-            //// TODO implement this
-            return default!;
-        }
+            if (realizedAstNode is TDeferredAstNode deferred)
+            {
+                return deferred;
+            }
 
-        /*public static 
-            OptionalNode
-                <
-                    TDeferredAstNode, 
-                    TRealizedAstNode, 
-                    TMode
-                >
-            FromRealized3
-                <
-                    TDeferredAstNode, 
-                    TRealizedAstNode,
-                    TMode
-                >(
-                    OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> realizedAstNode)
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
-            where TMode : ParseMode
-        {
-            //// TODO implement this
-            return default!;
-        }*/
+            return default
+        }
 
         public sealed class AtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> : 
             IDeferredAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
