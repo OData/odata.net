@@ -119,23 +119,6 @@ namespace odata.tests
 
             var potentialSixthCharacterNode = potentialFifthCharacterNode.Next; //// TODO can you make `next` nullable?
             Assert.IsFalse(potentialSixthCharacterNode.Element.Value.TryGetValue(out var potentialSixCharacter));
-
-            /*
-            var thirdCharacterNode = secondCharacterNode.Next;
-            Assert.IsTrue(thirdCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Deferred>.A);
-            var fourthCharacterNode = thirdCharacterNode.Next;
-            Assert.IsTrue(fourthCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Deferred>.A);*/
-
-            //// TODO get these assertions working
-            /*var potentialFifthCharacterNode = fourthCharacterNode.Next;
-            var realizedfifth = potentialFifthCharacterNode.Element.Realize();
-            Assert.IsTrue(realizedfifth.Success);
-            Assert.IsFalse(realizedfifth.Parsed.HasValue);
-
-            var potentialSixthCharacterNode = potentialFifthCharacterNode.Next;
-            var realizedsixth = potentialSixthCharacterNode.Element.Realize();
-            Assert.IsTrue(realizedsixth.Success);
-            Assert.IsFalse(realizedsixth.Parsed.HasValue);*/
         }
 
         [TestMethod]
