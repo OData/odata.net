@@ -487,11 +487,13 @@
             }
         }
 
-        public abstract class AlphaNumeric<TMode> : IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>>
+        public abstract class AlphaNumeric<TMode> : IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>>, IFromRealizedable<AlphaNumeric<ParseMode.Deferred>>
         {
             private AlphaNumeric()
             {
             }
+
+            public abstract AlphaNumeric<ParseMode.Deferred> Convert();
 
             public IOutput<char, AlphaNumeric<ParseMode.Realized>> Realize()
             {
@@ -556,6 +558,18 @@
                 {
                     return this.Realize();
                 }
+
+                public override AlphaNumeric<ParseMode.Deferred> Convert()
+                {
+                    if (typeof(TMode) == typeof(ParseMode.Deferred))
+                    {
+                        return new AlphaNumeric<ParseMode.Deferred>.A(this.future);
+                    }
+                    else
+                    {
+                        return new AlphaNumeric<ParseMode.Deferred>.A(this.cachedOutput);
+                    }
+                }
             }
         }
 
@@ -565,12 +579,17 @@
             //// TODO make this a static interface method on ideferrednode probably?
             ////return default!;
 
-            if (realizedAstNode is TDeferredAstNode deferred)
+            if (realizedAstNode is IFromRealizedable<TDeferredAstNode> fromRealizedable)
             {
-                return deferred;
+                return fromRealizedable.Convert();
             }
 
-            return default
+            return default!;
+        }
+
+        public interface IFromRealizedable<TDeferredAstNode>
+        {
+            TDeferredAstNode Convert();
         }
 
         public sealed class AtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> : 
@@ -621,7 +640,7 @@
                 this.cachedOutput = cachedOutput;
             }
 
-            public TDeferredAstNode _1
+            public TDeferredAstNode _1 //// TODO does the type of this property actually make sense once realized?
             {
                 get
                 {

@@ -100,13 +100,31 @@ namespace odata.tests
             
             var name = queryOption.Name.Characters;
 
-            Assert.IsTrue(name._1 is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+            Assert.IsTrue(name._1 is V3ParserPlayground.AlphaNumeric<ParseMode.Deferred>.A); //// TODO it looks really wrong that the parsemode is "deferred" here
+            
             var secondCharacterNode = name.Node;
-            Assert.IsTrue(secondCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+            Assert.IsTrue(secondCharacterNode.Element.Value.TryGetValue(out var secondCharacter));
+            Assert.IsTrue(secondCharacter is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+
             var thirdCharacterNode = secondCharacterNode.Next;
-            Assert.IsTrue(thirdCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+            Assert.IsTrue(thirdCharacterNode.Element.Value.TryGetValue(out var thirdCharacter));
+            Assert.IsTrue(thirdCharacter is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+
             var fourthCharacterNode = thirdCharacterNode.Next;
-            Assert.IsTrue(fourthCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+            Assert.IsTrue(fourthCharacterNode.Element.Value.TryGetValue(out var fourthCharacter));
+            Assert.IsTrue(fourthCharacter is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+
+            var potentialFifthCharacterNode = fourthCharacterNode.Next;
+            Assert.IsFalse(potentialFifthCharacterNode.Element.Value.TryGetValue(out var potentialFifthCharacter));
+
+            var potentialSixthCharacterNode = potentialFifthCharacterNode.Next; //// TODO can you make `next` nullable?
+            Assert.IsFalse(potentialSixthCharacterNode.Element.Value.TryGetValue(out var potentialSixCharacter));
+
+            /*
+            var thirdCharacterNode = secondCharacterNode.Next;
+            Assert.IsTrue(thirdCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Deferred>.A);
+            var fourthCharacterNode = thirdCharacterNode.Next;
+            Assert.IsTrue(fourthCharacterNode.Element.Value is V3ParserPlayground.AlphaNumeric<ParseMode.Deferred>.A);*/
 
             //// TODO get these assertions working
             /*var potentialFifthCharacterNode = fourthCharacterNode.Next;
