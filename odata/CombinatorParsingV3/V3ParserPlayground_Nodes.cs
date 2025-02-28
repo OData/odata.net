@@ -1024,60 +1024,51 @@
         //// TODO you are here
         public sealed class EqualsSign<TMode> : IDeferredAstNode<char, EqualsSign<ParseMode.Realized>> where TMode : ParseMode
         {
-            ////private readonly IInput<char> input;
             private readonly Future<IDeferredOutput<char>> future;
 
-            private Output<char, EqualsSign<ParseMode.Realized>>? cachedOutput;
-
-            /*public EqualsSign(IInput<char> input)
-            {
-                this.input = input;
-            }*/
+            private readonly Future<IOutput<char, EqualsSign<ParseMode.Realized>>> cachedOutput;
 
             public EqualsSign(Future<IDeferredOutput<char>> future)
             {
-                //// TODO create the `future` type and then follow this single constructor pattern everywhere
                 this.future = future;
 
-                this.cachedOutput = null;
+                this.cachedOutput = new Future<IOutput<char, EqualsSign<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private EqualsSign()
+            private EqualsSign(Future<IOutput<char, EqualsSign<ParseMode.Realized>>> cachedOutput)
             {
+                this.cachedOutput = cachedOutput;
             }
-
-            public static EqualsSign<ParseMode.Realized> Realized { get; } = new EqualsSign<ParseMode.Realized>();
 
             public IOutput<char, EqualsSign<ParseMode.Realized>> Realize()
             {
-                if (this.cachedOutput != null)
-                {
-                    return this.cachedOutput;
-                }
+                return this.cachedOutput.Value;
+            }
 
+            private IOutput<char, EqualsSign<ParseMode.Realized>> RealizeImpl()
+            {
                 var output = this.future.Value;
                 if (!output.Success)
                 {
-                    this.cachedOutput = new Output<char, EqualsSign<ParseMode.Realized>>(false, default, output.Remainder);
-                    return this.cachedOutput;
+                    return new Output<char, EqualsSign<ParseMode.Realized>>(false, default, output.Remainder);
                 }
 
                 var input = output.Remainder;
                 if (input == null)
                 {
-                    this.cachedOutput = new Output<char, EqualsSign<ParseMode.Realized>>(false, default, input);
-                    return this.cachedOutput;
+                    return new Output<char, EqualsSign<ParseMode.Realized>>(false, default, input);
                 }
 
                 if (input.Current == '=')
                 {
-                    this.cachedOutput = new Output<char, EqualsSign<ParseMode.Realized>>(true, EqualsSign<ParseMode.Realized>.Realized, input.Next());
-                    return this.cachedOutput;
+                    return new Output<char, EqualsSign<ParseMode.Realized>>(
+                        true, 
+                        new EqualsSign<ParseMode.Realized>(this.cachedOutput), 
+                        input.Next());
                 }
                 else
                 {
-                    this.cachedOutput = new Output<char, EqualsSign<ParseMode.Realized>>(false, default, input);
-                    return this.cachedOutput;
+                    return new Output<char, EqualsSign<ParseMode.Realized>>(false, default, input);
                 }
             }
         }
