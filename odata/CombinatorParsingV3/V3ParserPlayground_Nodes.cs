@@ -875,9 +875,71 @@
             }
         }
 
-        public sealed class OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> 
-            : IDeferredAstNode<char, RealNullable<TRealizedAstNode>> 
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> 
+        public sealed class DeferredOptionalNode<TDeferredAstNode, TRealizedAstNode> :
+            IDeferredAstNode<char, RealizedOptionalNode<TRealizedAstNode>>
+            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+        {
+            private readonly Future<IDeferredOutput<char>> future;
+            private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
+
+            internal readonly Future<IOutput<char, RealizedOptionalNode<TRealizedAstNode>>> cachedOutput; //// TODO this shouldn't be internal
+
+            public DeferredOptionalNode(
+                Future<IDeferredOutput<char>> future,
+                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
+            {
+                this.future = future;
+                this.nodeFactory = nodeFactory;
+
+                this.cachedOutput = new Future<IOutput<char, RealizedOptionalNode<TRealizedAstNode>>>(this.RealizeImpl);
+            }
+
+            public IOutput<char, RealizedOptionalNode<TRealizedAstNode>> Realize()
+            {
+                return this.cachedOutput.Value;
+            }
+
+            private IOutput<char, RealizedOptionalNode<TRealizedAstNode>> RealizeImpl()
+            {
+                var deferredOutput = this.future.Value;
+                if (!deferredOutput.Success)
+                {
+                    return new Output<char, RealizedOptionalNode<TRealizedAstNode>>(false, default, deferredOutput.Remainder);
+                }
+
+                var value = this.nodeFactory(this.future);
+                var output = value.Realize();
+                if (output.Success)
+                {
+                    return new Output<char, RealizedOptionalNode<TRealizedAstNode>>(
+                        true,
+                        new RealizedOptionalNode<TRealizedAstNode>(output.Parsed),
+                        output.Remainder);
+                }
+                else
+                {
+                    return new Output<char, RealizedOptionalNode<TRealizedAstNode>>(
+                        true,
+                        new RealizedOptionalNode<TRealizedAstNode>(new RealNullable<TRealizedAstNode>()),
+                        output.Remainder);
+                }
+            }
+        }
+
+        public sealed class RealizedOptionalNode<TAstNode>
+        {
+            public RealizedOptionalNode(RealNullable<TAstNode> value)
+            {
+                this.Value = value;
+            }
+
+            public RealNullable<TAstNode> Value { get; }
+        }
+
+        /*public sealed class OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> 
+            : IDeferredAstNode<char, OptionalNode<TRealizedAstNode, TRealizedAstNode, ParseMode.Realized>> 
+            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            where TRealizedAstNode : IDeferredAstNode<char, TRealizedAstNode>
             where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
@@ -900,10 +962,10 @@
             }
 
             internal OptionalNode(
-                RealNullable<TRealizedAstNode> value, 
+                TDeferredAstNode value, 
                 Future<IOutput<char, RealNullable<TRealizedAstNode>>> cachedOutput)
             {
-                this.value = new Future<TDeferredAstNode>(() => FromRealized2<TDeferredAstNode, TRealizedAstNode>(value));
+                this.value = new Future<TDeferredAstNode>(() => value);
 
                 this.cachedOutput = cachedOutput;
             }
@@ -946,7 +1008,12 @@
                         output.Remainder);
                 }
             }
-        }
+
+            IOutput<char, OptionalNode<TRealizedAstNode, TRealizedAstNode, ParseMode.Realized>> IDeferredAstNode<char, OptionalNode<TRealizedAstNode, TRealizedAstNode, ParseMode.Realized>>.Realize()
+            {
+                throw new NotImplementedException();
+            }
+        }*/
 
         public sealed class Segment<TMode> : IDeferredAstNode<char, Segment<ParseMode.Realized>> where TMode : ParseMode
         {
