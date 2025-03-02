@@ -265,7 +265,7 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(tokenIn, "tokenIn");
             ExceptionUtils.CheckArgumentNotNull(tokenIn.PathToProperty, "pathToProperty");
 
-            VerifySelectedPath(tokenIn);
+            VerifySelectedPath(tokenIn, configuration.EnableCaseInsensitiveUriFunctionIdentifier, out bool isCount);
 
             SelectItem newSelectItem;
             if (ProcessWildcardTokenPath(tokenIn, out newSelectItem))
@@ -277,7 +277,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(selectedPath.Count > 0);
 
             // Navigation property should be the last segment in select path.
-            if (VerifySelectedNavigationProperty(selectedPath, tokenIn))
+            if (VerifySelectedNavigationProperty(selectedPath, tokenIn, isCount))
             {
                 return new PathSelectItem(new ODataSelectPath(selectedPath));
             }
@@ -289,6 +289,10 @@ namespace Microsoft.OData.UriParser
             if (collection != null)
             {
                 targetElementType = collection.ElementType.Definition;
+            }
+            else if (isCount && lastSegment is not PathTemplateSegment)
+            {
+                throw new ODataException(SRResources.SelectExpandBinder_NotAllowedDollarCountOnNonCollection);
             }
 
             IEdmTypeReference elementTypeReference = targetElementType.ToTypeReference();
@@ -318,6 +322,15 @@ namespace Microsoft.OData.UriParser
             List<ODataPathSegment> parsedPath = new List<ODataPathSegment>(this.parsedSegments);
             parsedPath.AddRange(selectedPath);
             SelectExpandClause selectExpand = BindSelectExpand(null, tokenIn.SelectOption, parsedPath, this.ResourcePathNavigationSource, targetNavigationSource, elementTypeReference, generatedProperties);
+
+            if (isCount)
+            {
+                // Do we need to throw exception if orderBy and nested select expand are not null within /$count ?
+                return new PathCountSelectItem(new ODataSelectPath(selectedPath),
+                    this.NavigationSource,
+                    filter,
+                    search);
+            }
 
             return new PathSelectItem(new ODataSelectPath(selectedPath),
                 targetNavigationSource,
@@ -953,8 +966,10 @@ namespace Microsoft.OData.UriParser
             return state;
         }
 
-        private static void VerifySelectedPath(SelectTermToken selectedToken)
+        private static void VerifySelectedPath(SelectTermToken selectedToken, bool enableCaseInsensitive, out bool isCount)
         {
+            isCount = false;
+            PathSegmentToken previous = null;
             PathSegmentToken current = selectedToken.PathToProperty;
             while (current != null)
             {
@@ -964,15 +979,39 @@ namespace Microsoft.OData.UriParser
                     throw new ODataException(Error.Format(SRResources.SelectExpandBinder_SystemTokenInSelect, current.Identifier));
                 }
 
+                // Be design, the "/$count" should be built using SystemToken, but now, ODL is using NonSystemToken.
+                // Shall we support "no-dollar sign"?
+                if (current.Identifier.Equals(UriQueryConstants.CountSegment, enableCaseInsensitive ? System.StringComparison.OrdinalIgnoreCase : System.StringComparison.Ordinal))
+                {
+                    if (current.NextToken != null)
+                    {
+                        throw new ODataException(Error.Format(SRResources.SelectExpandBinder_NoSegmentAllowedAfterDollarCount, current.NextToken.Identifier));
+                    }
+
+                    if (previous == null)
+                    {
+                        throw new ODataException(SRResources.SelectExpandBinder_NotAllowedDollarCountAsFirstSegment);
+                    }
+
+                    previous.NextToken = null; // Now remove the last "/$count" from the PathToProperty.
+                    isCount = true;
+                }
+
+                previous = current;
                 current = current.NextToken;
             }
         }
 
-        private static bool VerifySelectedNavigationProperty(IList<ODataPathSegment> selectedPath, SelectTermToken tokenIn)
+        private static bool VerifySelectedNavigationProperty(IList<ODataPathSegment> selectedPath, SelectTermToken tokenIn, bool isCount)
         {
             NavigationPropertySegment navPropSegment = selectedPath.LastOrDefault() as NavigationPropertySegment;
             if (navPropSegment != null)
             {
+                if (isCount)
+                {
+                    throw new ODataException(Error.Format(SRResources.SelectExpandBinder_NotAllowedDollarCountOnNavigationPropertyInDollarSelect, navPropSegment.NavigationProperty.Name));
+                }
+
                 // After navigation property, it's not allowed to nest query options
                 VerifyNoQueryOptionsNested(tokenIn, navPropSegment.Identifier);
 
