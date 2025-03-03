@@ -10,8 +10,6 @@ namespace odata.tests
     [TestClass]
     public sealed class DeferredTests
     {
-        //// TODO use a strongly typed, heterogeneous linked list in order to make clear the dependencies between each property of a given AST node?
-
         [TestMethod]
         public void Test1()
         {
@@ -31,9 +29,6 @@ namespace odata.tests
 
             Assert.IsTrue(realUri.Success);
             Assert.IsNull(realUri.Remainder);
-            /*Assert.IsTrue(realUri.Parsed.Segments._1.Characters._1 is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
-            Assert.IsTrue(realUri.Parsed.Segments._1.Characters._2 is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
-            Assert.IsFalse(realUri.Parsed.Segments._1.Characters._3 is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);*/
         }
 
         [TestMethod]

@@ -423,7 +423,7 @@
             }
         }
 
-        public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>> where TMode : ParseMode
+        public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>>, IFromRealizedable<Slash<ParseMode.Deferred>> where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
 
@@ -444,6 +444,18 @@
             private Slash(Future<IOutput<char, Slash<ParseMode.Realized>>> output)
             {
                 this.cachedOutput = output;
+            }
+
+            public Slash<ParseMode.Deferred> Convert()
+            {
+                if (typeof(TMode) == typeof(ParseMode.Deferred))
+                {
+                    return new Slash<ParseMode.Deferred>(this.previouslyParsedOutput);
+                }
+                else
+                {
+                    return new Slash<ParseMode.Deferred>(this.cachedOutput);
+                }
             }
 
             public IOutput<char, Slash<ParseMode.Realized>> Realize()
@@ -542,7 +554,7 @@
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
-                        throw new ArgumentException("tODO");
+                        throw new ArgumentException("tODO i think this will depend on what you decide for modeling options of the deferred vs realized nodes");
                     }
 
                     this.future = future;
@@ -612,7 +624,7 @@
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
-                        throw new ArgumentException("tODO");
+                        throw new ArgumentException("tODO i think this will depend on what you decide for modeling options of the deferred vs realized nodes");
                     }
 
                     this.future = future;
@@ -673,28 +685,16 @@
             }
         }
 
-        public static TDeferredAstNode FromRealized<TDeferredAstNode, TRealizedAstNode>(TRealizedAstNode realizedAstNode)
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
-        {
-            //// TODO make this a static interface method on ideferrednode probably?
-            ////return default!;
-
-            if (realizedAstNode is IFromRealizedable<TDeferredAstNode> fromRealizedable)
-            {
-                return fromRealizedable.Convert();
-            }
-
-            return default!;
-        }
-
-        public interface IFromRealizedable<TDeferredAstNode>
+        public interface IFromRealizedable<out TDeferredAstNode>
         {
             TDeferredAstNode Convert();
         }
 
         public sealed class AtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> : 
-            IDeferredAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> 
+            IDeferredAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>,
+            IFromRealizedable<AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
+            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
             where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
@@ -733,8 +733,7 @@
                 ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> node,
                 Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
-                this.__1 = new Future<TDeferredAstNode>(
-                    () => FromRealized<TDeferredAstNode, TRealizedAstNode>(_1));
+                this.__1 = new Future<TDeferredAstNode>(_1.Convert);
                 this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => node);
 
                 this.cachedOutput = cachedOutput;
@@ -753,6 +752,21 @@
                 get
                 {
                     return this.node;
+                }
+            }
+
+            public AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Convert()
+            {
+                if (typeof(TMode) == typeof(ParseMode.Deferred))
+                {
+                    return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(this.future, this.nodeFactory);
+                }
+                else
+                {
+                    return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
+                        this._1.Realize().Parsed,
+                        this.node.Value.Convert(),
+                        this.cachedOutput);
                 }
             }
 
@@ -853,7 +867,7 @@
             }
         }
 
-        public sealed class ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
+        public sealed class ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>, IFromRealizedable<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
             private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
@@ -965,10 +979,26 @@
                         realizedElement.Remainder);
                 }
             }
+
+            public ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Convert()
+            {
+                if (typeof(TMode) == typeof(ParseMode.Deferred))
+                {
+                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(this.future, this.nodeFactory);
+                }
+                else
+                {
+                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
+                        this.element.Value.Convert(),
+                        this.next.Value.Convert,
+                        this.cachedOutput);
+                }
+            }
         }
 
         public sealed class OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> :
-            IDeferredAstNode<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
+            IDeferredAstNode<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>,
+            IFromRealizedable<OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
             where TMode : ParseMode
         {
@@ -1007,6 +1037,22 @@
                     }
 
                     throw new InvalidOperationException("can't get the value on a non-realized optionalnode");
+                }
+            }
+
+            public OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Convert()
+            {
+                if (typeof(TMode) == typeof(ParseMode.Deferred))
+                {
+                    return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
+                        this.future,
+                        this.nodeFactory);
+                }
+                else
+                {
+                    return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
+                        this.Value,
+                        this.cachedOutput);
                 }
             }
 
@@ -1186,7 +1232,7 @@
             }
         }*/
 
-        public sealed class Segment<TMode> : IDeferredAstNode<char, Segment<ParseMode.Realized>> where TMode : ParseMode
+        public sealed class Segment<TMode> : IDeferredAstNode<char, Segment<ParseMode.Realized>>, IFromRealizedable<Segment<ParseMode.Deferred>> where TMode : ParseMode
         {
             private readonly Future<IDeferredOutput<char>> future;
 
@@ -1233,6 +1279,18 @@
                 get
                 {
                     return this.characters;
+                }
+            }
+
+            public Segment<ParseMode.Deferred> Convert()
+            {
+                if (typeof(TMode) == typeof(ParseMode.Deferred))
+                {
+                    return new Segment<ParseMode.Deferred>(this.future);
+                }
+                else
+                {
+                    return new Segment<ParseMode.Deferred>(this.slash.Value.Convert(), this.characters.Value.Convert(), this.cachedOutput);
                 }
             }
 
