@@ -685,11 +685,6 @@
             }
         }
 
-        public interface IFromRealizedable<out TDeferredAstNode>
-        {
-            TDeferredAstNode Convert();
-        }
-
         public sealed class AtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> : 
             IDeferredAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>,
             IFromRealizedable<AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>

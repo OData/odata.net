@@ -10,6 +10,11 @@ namespace CombinatorParsingV3
         IOutput<TToken, TRealizedAstNode> Realize();
     }
 
+    public interface IFromRealizedable<out TDeferredAstNode>
+    {
+        TDeferredAstNode Convert();
+    }
+
     public interface IDeferredOutput<TToken> //// TODO probably this needs to be a difference name
     {
         bool Success { get; }
