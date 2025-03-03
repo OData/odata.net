@@ -13,7 +13,6 @@ namespace Microsoft.OData.UriParser
     using System.Text;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
-    using System.Collections.Generic;
 
     /// <summary>
     /// Class that knows how to bind the In operator.
