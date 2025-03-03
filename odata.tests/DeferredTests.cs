@@ -138,7 +138,10 @@ namespace odata.tests
             var potentialFifthCharacterNode = fourthCharacterNode.Next;
             Assert.IsFalse(potentialFifthCharacterNode.Element.Value.TryGetValue(out var potentialFifthCharacter));
 
-            var potentialSixthCharacterNode = potentialFifthCharacterNode.Next; //// TODO can you make `next` nullable?
+            // NOTE: it *is* a bit strange that `Next` will always give you back something, and the caller has to check if there's a value on that element; however, this is necessary because:
+            // 1. in deferred mode, we don't know how many elements there will be, and we have no way to communicate this to the caller because we don't know the answer; if the caller wants to realize the sixth node, only at that time can we notice that there are only 4; to make this clear, we would need to have a different type for `manynode` when it's realized vs when it's deferred
+            // 2. if we use parsemode anywhere in the AST, we have to use it everywhere; in this case, for example, if `manynode` had a deferred type and a realized type, then in `segment`, for example, `characters` would need to be `atleastone<alphanumericholder, alphanumeric<parsemode.realized>, tmode>` for deferred and `atleastone<alphanumeric<parsemode.realized>, alphanumeric<parsemode.realized>, tmode>` for realized; this would require `segment` itself to also have two variants, one for realized and one for deferred, and this would propagate through the entire AST
+            var potentialSixthCharacterNode = potentialFifthCharacterNode.Next;
             Assert.IsFalse(potentialSixthCharacterNode.Element.Value.TryGetValue(out var potentialSixCharacter));
         }
 
