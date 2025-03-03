@@ -1,10 +1,20 @@
-﻿using System.Collections.Generic;
-using System;
-
-namespace Microsoft.OData.Core
+﻿namespace Microsoft.OData.Core
 {
+    using System;
+    using System.Collections.Generic;
+
+    /// <summary>
+    /// Extension methods for <see cref="IEnumerable{T}"/>
+    /// </summary>
     public static class EnumerableExtensions
     {
+        /// <summary>
+        /// Computes the average of a sequence of <see cref="Int16"/> values.
+        /// </summary>
+        /// <param name="source">A sequence of <see cref="Int16"/> values to calculate the average of.</param>
+        /// <returns>The average of the sequence of values.</returns>
+        /// <exception cref="Exception">Thrown if <paramref name="source"/> is <see langword="null"/>.</exception>
+        /// <exception cref="InvalidOperationException">Thrown if <paramref name="source"/> contains no elements.</exception>
         public static double Average(this IEnumerable<short> source)
         {
             ArgumentNullException.ThrowIfNull(source);
@@ -13,7 +23,7 @@ namespace Microsoft.OData.Core
             {
                 if (!enumerator.MoveNext())
                 {
-                    throw new Exception("TODO");
+                    throw new InvalidOperationException("Sequence contains no elements");
                 }
 
                 long sum = enumerator.Current;
