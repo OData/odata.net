@@ -2263,6 +2263,74 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ShouldReportUnexpectedRootNamespaceWithSchemaTagMissingXMLNamespace()
+        {
+            // Arrange
+            string csdl =
+                """
+                <?xml version="1.0" encoding="utf-8"?>
+                <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+                  <edmx:DataServices>
+                    <Schema Namespace="name.space" Alias="self">
+                      <EnumType Name="someEnum">
+                        <Member Name="notApplicable" Value="0" />
+                        <Member Name="enabled" Value="1" />
+                      </EnumType>
+                    </Schema>
+                  </edmx:DataServices>
+                </edmx:Edmx>
+                """;
+
+            // Act
+            using var reader = XmlReader.Create(new StringReader(csdl));
+            var success = CsdlReader.TryParse(reader, out var model, out var errors);
+
+            // Assert
+            Assert.False(success);
+            Assert.NotEmpty(errors);
+
+            var error = errors.FirstOrDefault();
+            Assert.Equal(EdmErrorCode.UnexpectedXmlElement, error?.ErrorCode);
+            Assert.Contains("The root element has no namespace. The root element is expected to belong to one of the following namespaces: 'http://docs.oasis-open.org/odata/ns/edm, http://docs.oasis-open.org/odata/ns/edm'.",
+                error.ErrorMessage);
+            Assert.Equal(4, (error?.ErrorLocation as CsdlLocation)?.LineNumber);
+            Assert.Equal(6, (error?.ErrorLocation as CsdlLocation)?.LinePosition);
+        }
+
+        [Fact]
+        public void ShouldReportUnexpectedXmlElementWithEdmxTagMissingXMLNamespace()
+        {
+            // Arrange
+            string csdl =
+                """
+                <Edmx Version="4.0">
+                  <edmx:DataServices>
+                    <Schema Namespace="name.space" Alias="self" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                      <EnumType Name="someEnum">
+                        <Member Name="notApplicable" Value="0" />
+                        <Member Name="enabled" Value="1" />
+                      </EnumType>
+                    </Schema>
+                  </edmx:DataServices>
+                </Edmx>
+                """;
+
+            // Act
+            using var reader = XmlReader.Create(new StringReader(csdl));
+            var success = CsdlReader.TryParse(reader, out var model, out var errors);
+
+            // Assert
+            Assert.False(success);
+            Assert.NotEmpty(errors);
+
+            var error = errors.FirstOrDefault();
+            Assert.Equal(EdmErrorCode.UnexpectedXmlElement, error?.ErrorCode);
+            Assert.Contains("The element 'Edmx' was unexpected for the root element. The root element should be Edmx.", error.ErrorMessage);
+            Assert.Equal(1, (error?.ErrorLocation as CsdlLocation)?.LineNumber);
+            Assert.Equal(2, (error?.ErrorLocation as CsdlLocation)?.LinePosition);
+        }
+
+        [Fact]
         public void ShouldReportCorrectLineNumbersWithMultiLineElements()
         {
             string csdl =
