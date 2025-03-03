@@ -148,6 +148,11 @@
 
                     private Slash(Future<IOutput<char, Slash<ParseMode.Realized>>> output)
                     {
+                        if (typeof(TMode) != typeof(ParseMode.Realized))
+                        {
+                            throw new ArgumentException("TODO");
+                        }
+
                         this.cachedOutput = output;
                     }
 
@@ -206,6 +211,7 @@
 
                     private Future<IOutput<char, Slash<ParseMode.Realized>>> cachedOutput;
 
+                    //// TODO there may be an attribute that can help discourage the use of this constructor (something akin to obsolete, or maybe just use obsolete itself?)
                     internal Slash(Future<IDeferredOutput<char>> previouslyParsedOutput)
                     {
                         System.Diagnostics.Debug.Assert(typeof(TMode) == typeof(ParseMode.Deferred));
@@ -323,6 +329,9 @@
                 {
                     public static Slash<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
                     {
+                        //// TODO maybe add this?
+                        //// System.Diagnostics.Debug.Assert(typeof(TMode) == typeof(ParseMode.Deferred));
+
                         return new Slash<ParseMode.Deferred>(previouslyParsedOutput);
                     }
 
@@ -386,6 +395,7 @@
                 {
                     public static Slash<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
                     {
+                        //// TODO christof has a vote for option5
                         return Slash<ParseMode.Deferred>.Create(previouslyParsedOutput);
                     }
                 }
@@ -442,6 +452,15 @@
                     }
                 }
             }
+        }
+
+        public static ModelingOptionss.Option4.Slash<ParseMode.Deferred> CreateSlash(this Future<IDeferredOutput<char>> previouslyParsedOutput)
+        {
+            //// TODO maybe this can be added to option4 and make the existing option4 create method internal and marked as "don't call"
+
+            //// TODO side effect is that there will be an extension method per node type
+
+            return ModelingOptionss.Option4.Slash<ParseMode.Deferred>.Create(previouslyParsedOutput);
         }
 
         public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>>, IFromRealizedable<Slash<ParseMode.Deferred>> where TMode : ParseMode
