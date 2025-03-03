@@ -15,6 +15,9 @@
         /// <returns>The average of the sequence of values.</returns>
         /// <exception cref="Exception">Thrown if <paramref name="source"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException">Thrown if <paramref name="source"/> contains no elements.</exception>
+        /// <exception cref="OverflowException">
+        /// Thrown if <paramref name="source"/> contains elements whose sum is greater than <see cref="long.MaxValue"/>
+        /// </exception>
         public static double Average(this IEnumerable<short> source)
         {
             ArgumentNullException.ThrowIfNull(source);
