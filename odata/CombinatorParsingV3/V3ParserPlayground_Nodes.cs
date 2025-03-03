@@ -146,14 +146,14 @@
                         this.cachedOutput = new Future<IOutput<char, Slash<ParseMode.Realized>>>(() => this.RealizeImpl());
                     }
 
-                    private Slash(Future<IOutput<char, Slash<ParseMode.Realized>>> output)
+                    private Slash(Future<IOutput<char, Slash<ParseMode.Realized>>> outputOfRealizationProcess)
                     {
                         if (typeof(TMode) != typeof(ParseMode.Realized))
                         {
                             throw new ArgumentException("TODO");
                         }
 
-                        this.cachedOutput = output;
+                        this.cachedOutput = outputOfRealizationProcess;
                     }
 
                     public IOutput<char, Slash<ParseMode.Realized>> Realize()
@@ -204,6 +204,20 @@
                         return new Slash<ParseMode.Deferred>(previouslyParsedOutput);
                     }
                 }
+
+                //// TODO this might be a good solution too: (make the slash<tmode> constructor protected)
+                /*public class Slash2 : Slash<ParseMode.Deferred>
+                {
+                    private Slash2(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                        : base(previouslyParsedOutput)
+                    {
+                    }
+
+                    public static Slash<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                    {
+                        return new Slash2(previouslyParsedOutput);
+                    }
+                }*/
 
                 public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>> where TMode : ParseMode
                 {
@@ -263,6 +277,32 @@
             /// </summary>
             public static class Option3
             {
+                //// TODO type specialization?
+                /*public abstract class OdataUri
+                {
+                    public Segment Segment
+                    {
+                        get
+                        {
+                            return GetSegment();
+                        }
+                    }
+
+                    protected abstract Segment GetSegment();
+                }
+
+                public class RealizedOdataUri : OdataUri
+                {
+                    public new RealizedSegment Segment { get; }
+                }
+
+                public abstract class Segment
+                {
+                }*/
+
+                //// TODO another issue?: there's no "doesn't matter if deferred or realized"
+
+
                 public sealed class DeferredSlash : IDeferredAstNode<char, RealizedSlash>
                 {
                     private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
