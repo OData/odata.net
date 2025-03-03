@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.Core
+﻿namespace Microsoft.OData
 {
     using System;
     using System.Collections.Generic;
