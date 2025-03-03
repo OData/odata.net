@@ -508,8 +508,6 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 this.Location,
                 EdmErrorCode.UnexpectedXmlElement,
                 errorMessage);
-
-            //throw new XmlException(errorMessage, null, this.Location.LineNumber, this.Location.LinePosition);
         }
 
         private void ReportUnexpectedRootElement(CsdlLocation elementLocation, string elementName, string expectedNamespace)
