@@ -58,31 +58,14 @@
 
     public static class Func
     {
-        public static Func<TOutput> Lift<TInput, TOutput>(Func<TInput> inner, Func<TInput, TOutput> outer)
+        public static Func<TOutput> Compose<TInput, TOutput>(Func<TInput> inner, Func<TInput, TOutput> outer)
         {
-            //// TODO i don't know if this is actually a lift
             return () => outer(inner());
         }
 
         public static Func<T> Close<T>(T value)
         {
             return () => value;
-        }
-
-        public readonly struct Closure<T>
-        {
-            private readonly T value;
-
-            public Closure(T value)
-            {
-                //// TODO do you want something like this for better memory management in the `close` method?
-                this.value = value;
-            }
-
-            public static implicit operator Func<T>(Closure<T> closure)
-            {
-                return () => closure.value;
-            }
         }
     }
 
@@ -735,7 +718,7 @@
                     () => this.nodeFactory(this.future));
                 this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
                     () => new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(
-                        Func.Lift(this._1.Realize, DeferredOutput.Create), 
+                        Func.Compose(this._1.Realize, DeferredOutput.Create), 
                         this.nodeFactory));
 
                 this.cachedOutput = new Future
@@ -892,7 +875,7 @@
                 this.next = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
                     () => 
                         new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(
-                            Func.Lift(this.Element.Realize, DeferredOutput.Create), 
+                            Func.Compose(this.Element.Realize, DeferredOutput.Create), 
                     this.nodeFactory));
 
                 this.cachedOutput = new Future
@@ -1218,7 +1201,7 @@
 
                 this.slash = new Future<Slash<TMode>>(() => new Slash<TMode>(this.future));
                 this.characters = new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>>(() => new AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>(
-                        Func.Lift(this.Slash.Realize, DeferredOutput.Create),
+                        Func.Compose(this.Slash.Realize, DeferredOutput.Create),
                         input => new AlphaNumericHolder(input)));
 
                 this.cachedOutput = new Future<IOutput<char, Segment<ParseMode.Realized>>>(this.RealizeImpl);
@@ -1474,7 +1457,7 @@
 
                 this.name = new Future<OptionName<TMode>>(() => new OptionName<TMode>(this.future));
                 this.equalsSign = new Future<EqualsSign<TMode>>(() => new EqualsSign<TMode>(
-                    Func.Lift(this.Name.Realize, DeferredOutput.Create)));
+                    Func.Compose(this.Name.Realize, DeferredOutput.Create)));
                 this.optionValue = new Future<OptionValue<TMode>>(() => new OptionValue<TMode>(
                     DeferredOutput.ToPromise(this.EqualsSign.Realize)));
 
