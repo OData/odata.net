@@ -10,6 +10,7 @@
     using System.Runtime.CompilerServices;
     using System.Reflection.Metadata.Ecma335;
     using System.Net.Cache;
+    using System.IO;
 
     public interface IFuture<out T> //// TODO i'm not sure i like having an interface...
     {
@@ -95,6 +96,22 @@
 
     public static partial class V3ParserPlayground
     {
+        public static TRealizedAstNode Parse<TToken, TRealizedAstNode>(this IDeferredAstNode<TToken, TRealizedAstNode> deferredAstNode)
+        {
+            var output = deferredAstNode.Realize();
+            if (!output.Success)
+            {
+                throw new InvalidDataException("TODO parse failed");
+            }
+
+            if (output.Remainder != null)
+            {
+                throw new InvalidOperationException("TODO parse succeeded but there were still tokens in the input stream");
+            }
+
+            return output.Parsed;
+        }
+
         public static class ModelingOptionss
         {
             /// <summary>

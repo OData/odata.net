@@ -25,10 +25,7 @@ namespace odata.tests
                 var segments = segOutput.Parsed;
             }
 
-            var realUri = odataUri.Realize();
-
-            Assert.IsTrue(realUri.Success);
-            Assert.IsNull(realUri.Remainder);
+            var realUri = odataUri.Parse();
         }
 
         [TestMethod]
@@ -40,9 +37,7 @@ namespace odata.tests
 
             var odataUri = new V3ParserPlayground.OdataUri<ParseMode.Deferred>(Func.Close(DeferredOutput.Create(input)));
 
-            var realUri = odataUri.Realize();
-
-            Assert.IsFalse(realUri.Success);
+            Assert.ThrowsException<InvalidDataException>(() => odataUri.Parse());
         }
 
         [TestMethod]
@@ -85,10 +80,7 @@ namespace odata.tests
                 var segments = segOutput.Parsed;
             }
 
-            var realUri = odataUri.Realize();
-
-            Assert.IsTrue(realUri.Success);
-            Assert.IsNull(realUri.Remainder);
+            var realUri = odataUri.Parse();
         }
 
         [TestMethod]
@@ -106,13 +98,27 @@ namespace odata.tests
                 var segments = segOutput.Parsed;
             }
 
-            var realUri = odataUri.Realize();
+            Assert.ThrowsException<InvalidOperationException>(() => odataUri.Parse());
+        }
 
-            Assert.IsTrue(realUri.Success);
-            // not a successful parse: //// TODO we should really have a convenience method for this
-            Assert.IsNotNull(realUri.Remainder);
+        [TestMethod]
+        public void Test4()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAAC";
 
-            Assert.IsTrue(realUri.Parsed.QueryOptions.Node.Element.Value.TryGetValue(out var queryOption));
+            var input = new CombinatorParsingV3.StringInput(url);
+
+            var odataUri = new V3ParserPlayground.OdataUri<ParseMode.Deferred>(Func.Close(DeferredOutput.Create(input)));
+
+            var segOutput = odataUri.Segments.Realize();
+            if (segOutput.Success)
+            {
+                var segments = segOutput.Parsed;
+            }
+
+            var realUri = odataUri.Parse();
+
+            Assert.IsTrue(realUri.QueryOptions.Node.Element.Value.TryGetValue(out var queryOption));
             
             var name = queryOption.Name.Characters;
 
