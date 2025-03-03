@@ -70,7 +70,11 @@
         }
     }
 
-    public readonly struct RealNullable<T> //// TODO should you have a class variant so that no boxing occurs in those cases?
+    /// <summary>
+    /// NOTE: you considered having a class variant of this for cases where the caller needs to avoid boxing, but based on nullabletests.test4 there is basically no different in perforamnce
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public readonly struct RealNullable<T>
     {
         private readonly T value;
 
