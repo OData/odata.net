@@ -11,7 +11,12 @@
     using System.Reflection.Metadata.Ecma335;
     using System.Net.Cache;
 
-    public sealed class Future<T>
+    public interface IFuture<out T> //// TODO i'm not sure i like having an interface...
+    {
+        T Value { get; }
+    }
+
+    public sealed class Future<T> : IFuture<T>
     {
         private readonly Func<T> promise;
 
@@ -491,13 +496,18 @@
         {
             private readonly Future<IDeferredOutput<char>> future;
 
-            private readonly Future<IOutput<char, AlphaNumeric<ParseMode.Realized>>> cachedOutput;
+            private readonly IFuture<IOutput<char, AlphaNumeric<ParseMode.Realized>>> cachedOutput;
 
             public AlphaNumericHolder(Future<IDeferredOutput<char>> future)
             {
                 this.future = future;
 
                 this.cachedOutput = new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>>>(this.RealizeImpl);
+            }
+
+            public AlphaNumericHolder(IFuture<IOutput<char, AlphaNumeric<ParseMode.Realized>>> cachedOutput)
+            {
+                this.cachedOutput = cachedOutput;
             }
 
             public IOutput<char, AlphaNumeric<ParseMode.Realized>> Realize()
@@ -523,14 +533,12 @@
             }
         }
 
-        public abstract class AlphaNumeric<TMode> : IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>>, IFromRealizedable<AlphaNumeric<ParseMode.Deferred>>
+        public abstract class AlphaNumeric<TMode> : IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>>, IFromRealizedable<AlphaNumericHolder>
             where TMode : ParseMode
         {
             private AlphaNumeric()
             {
             }
-
-            public abstract AlphaNumeric<ParseMode.Deferred> Convert();
 
             public IOutput<char, AlphaNumeric<ParseMode.Realized>> Realize()
             {
@@ -538,6 +546,8 @@
             }
 
             protected abstract IOutput<char, AlphaNumeric<ParseMode.Realized>> DerivedRealize();
+
+            public abstract AlphaNumericHolder Convert();
 
             public sealed class A : AlphaNumeric<TMode>, IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>.A>
             {
@@ -596,15 +606,15 @@
                     return this.Realize();
                 }
 
-                public override AlphaNumeric<ParseMode.Deferred> Convert()
+                public override AlphaNumericHolder Convert()
                 {
                     if (typeof(TMode) == typeof(ParseMode.Deferred))
                     {
-                        return new AlphaNumeric<ParseMode.Deferred>.A(this.future);
+                        return new AlphaNumericHolder(this.future);
                     }
                     else
                     {
-                        return new AlphaNumeric<ParseMode.Deferred>.A(this.cachedOutput);
+                        return new AlphaNumericHolder(this.cachedOutput);
                     }
                 }
             }
@@ -666,15 +676,15 @@
                     return this.Realize();
                 }
 
-                public override AlphaNumeric<ParseMode.Deferred> Convert()
+                public override AlphaNumericHolder Convert()
                 {
                     if (typeof(TMode) == typeof(ParseMode.Deferred))
                     {
-                        return new AlphaNumeric<ParseMode.Deferred>.C(this.future);
+                        return new AlphaNumericHolder(this.future);
                     }
                     else
                     {
-                        return new AlphaNumeric<ParseMode.Deferred>.C(this.cachedOutput);
+                        return new AlphaNumericHolder(this.cachedOutput);
                     }
                 }
             }
@@ -1198,7 +1208,7 @@
             private readonly Future<IDeferredOutput<char>> future;
 
             private readonly Future<Slash<TMode>> slash;
-            private readonly Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
+            private readonly Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
 
             private readonly Future<IOutput<char, Segment<ParseMode.Realized>>> cachedOutput;
 
@@ -1207,21 +1217,21 @@
                 this.future = future;
 
                 this.slash = new Future<Slash<TMode>>(() => new Slash<TMode>(this.future));
-                this.characters = new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(() => new AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>(
+                this.characters = new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>>(() => new AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>(
                         Func.Lift(this.Slash.Realize, DeferredOutput.Create),
-                        input => new AlphaNumeric<ParseMode.Deferred>.A(input)));
+                        input => new AlphaNumericHolder(input)));
 
                 this.cachedOutput = new Future<IOutput<char, Segment<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
             private Segment(
                 Slash<TMode> slash, 
-                AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> characters,
+                AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
                 Future<IOutput<char, Segment<ParseMode.Realized>>> cachedOutput)
             {
                 this.slash = new Future<Slash<TMode>>(() => slash);
 
-                this.characters = new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(
+                this.characters = new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>>(
                     () => characters);
 
                 this.cachedOutput = cachedOutput;
@@ -1235,7 +1245,7 @@
                 }
             }
 
-            public AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> Characters
+            public AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> Characters
             {
                 get
                 {
@@ -1325,7 +1335,7 @@
 
             private readonly Future
                 <
-                    AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>
+                    AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>
                 > 
                     characters;
 
@@ -1336,27 +1346,27 @@
                 this.future = future;
 
                 this.characters = 
-                    new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(
+                    new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>>(
                         () => 
-                            new AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>(
+                            new AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>(
                                 future, 
-                                input => new AlphaNumeric<ParseMode.Deferred>.A(input)));
+                                input => new AlphaNumericHolder(input)));
 
                 this.cachedOutput = new Future<IOutput<char, OptionName<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
             private OptionName(
-                AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> characters,
+                AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
                 Future<IOutput<char, OptionName<ParseMode.Realized>>> cachedOutput)
             {
                 this.characters = 
-                    new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(
+                    new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>>(
                         () => characters);
 
                 this.cachedOutput = cachedOutput;
             }
 
-            public AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> Characters
+            public AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> Characters
             {
                 get
                 {
@@ -1390,7 +1400,7 @@
         {
             private readonly Future<IDeferredOutput<char>> future;
 
-            private readonly Future<Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
+            private readonly Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
 
             private readonly Future<IOutput<char, OptionValue<ParseMode.Realized>>> cachedOutput;
 
@@ -1398,26 +1408,26 @@
             {
                 this.future = future;
 
-                this.characters = new Future<Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(
+                this.characters = new Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>>(
                     () =>
-                        new Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>(
+                        new Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>(
                             this.future,
-                            input => new AlphaNumeric<ParseMode.Deferred>.A(input)));
+                            input => new AlphaNumericHolder(input)));
 
                 this.cachedOutput = new Future<IOutput<char, OptionValue<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
             private OptionValue(
-                Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> characters,
+                Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
                 Future<IOutput<char, OptionValue<ParseMode.Realized>>> cachedOutput)
             {
-                this.characters = new Future<Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode>>(
+                this.characters = new Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>>(
                     () => characters);
 
                 this.cachedOutput = cachedOutput;
             }
 
-            public Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, TMode> Characters
+            public Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> Characters
             {
                 get
                 {

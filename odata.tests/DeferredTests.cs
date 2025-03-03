@@ -93,8 +93,7 @@ namespace odata.tests
             var realUri = odataUri.Realize();
 
             Assert.IsTrue(realUri.Success);
-            // not a successful parse: //// TODO we should really have a convenience method for this
-            Assert.IsNotNull(realUri.Remainder);
+            Assert.IsNull(realUri.Remainder);
         }
 
         [TestMethod]
@@ -122,7 +121,7 @@ namespace odata.tests
             
             var name = queryOption.Name.Characters;
 
-            Assert.IsTrue(name._1 is V3ParserPlayground.AlphaNumeric<ParseMode.Deferred>.A); //// TODO it looks really wrong that the parsemode is "deferred" here
+            Assert.IsTrue(name._1.Realize().Parsed is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
             
             var secondCharacterNode = name.Node;
             Assert.IsTrue(secondCharacterNode.Element.Value.TryGetValue(out var secondCharacter));
