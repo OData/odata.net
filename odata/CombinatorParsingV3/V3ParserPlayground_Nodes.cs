@@ -487,7 +487,44 @@
             }
         }
 
+        public sealed class AlphaNumericHolder : IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>>
+        {
+            private readonly Future<IDeferredOutput<char>> future;
+
+            private readonly Future<IOutput<char, AlphaNumeric<ParseMode.Realized>>> cachedOutput;
+
+            public AlphaNumericHolder(Future<IDeferredOutput<char>> future)
+            {
+                this.future = future;
+
+                this.cachedOutput = new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>>>(this.RealizeImpl);
+            }
+
+            public IOutput<char, AlphaNumeric<ParseMode.Realized>> Realize()
+            {
+                return this.cachedOutput.Value;
+            }
+
+            private IOutput<char, AlphaNumeric<ParseMode.Realized>> RealizeImpl()
+            {
+                var a = new AlphaNumeric<ParseMode.Deferred>.A(this.future).Realize();
+                if (a.Success)
+                {
+                    return a;
+                }
+
+                var c = new AlphaNumeric<ParseMode.Deferred>.C(this.future).Realize();
+                if (c.Success)
+                {
+                    return c;
+                }
+
+                return new Output<char, AlphaNumeric<ParseMode.Realized>>(false, default, this.future.Value.Remainder);
+            }
+        }
+
         public abstract class AlphaNumeric<TMode> : IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>>, IFromRealizedable<AlphaNumeric<ParseMode.Deferred>>
+            where TMode : ParseMode
         {
             private AlphaNumeric()
             {
@@ -568,6 +605,76 @@
                     else
                     {
                         return new AlphaNumeric<ParseMode.Deferred>.A(this.cachedOutput);
+                    }
+                }
+            }
+
+            public sealed class C : AlphaNumeric<TMode>, IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>.C>
+            {
+                private readonly Future<IDeferredOutput<char>> future;
+
+                private readonly Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>> cachedOutput;
+
+                public C(Future<IDeferredOutput<char>> future)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Deferred))
+                    {
+                        throw new ArgumentException("tODO");
+                    }
+
+                    this.future = future;
+
+                    this.cachedOutput = new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>>(() => this.RealizeImpl());
+                }
+
+                private C(Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>> cachedOutput)
+                {
+                    this.cachedOutput = cachedOutput;
+                }
+
+                public new IOutput<char, AlphaNumeric<ParseMode.Realized>.C> Realize()
+                {
+                    return this.cachedOutput.Value;
+                }
+
+                private IOutput<char, AlphaNumeric<ParseMode.Realized>.C> RealizeImpl()
+                {
+                    var output = this.future.Value;
+                    if (!output.Success)
+                    {
+                        return new Output<char, AlphaNumeric<ParseMode.Realized>.C>(false, default, output.Remainder);
+                    }
+
+                    var input = output.Remainder;
+                    if (input == null)
+                    {
+                        return new Output<char, AlphaNumeric<ParseMode.Realized>.C>(false, default, input);
+                    }
+
+                    if (input.Current == 'C')
+                    {
+                        return new Output<char, AlphaNumeric<ParseMode.Realized>.C>(true, new AlphaNumeric<ParseMode.Realized>.C(this.cachedOutput), input.Next());
+                    }
+                    else
+                    {
+                        return new Output<char, AlphaNumeric<ParseMode.Realized>.C>(false, default, input);
+                    }
+                }
+
+                protected override IOutput<char, AlphaNumeric<ParseMode.Realized>> DerivedRealize()
+                {
+                    return this.Realize();
+                }
+
+                public override AlphaNumeric<ParseMode.Deferred> Convert()
+                {
+                    if (typeof(TMode) == typeof(ParseMode.Deferred))
+                    {
+                        return new AlphaNumeric<ParseMode.Deferred>.C(this.future);
+                    }
+                    else
+                    {
+                        return new AlphaNumeric<ParseMode.Deferred>.C(this.cachedOutput);
                     }
                 }
             }

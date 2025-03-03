@@ -76,6 +76,28 @@ namespace odata.tests
         }
 
         [TestMethod]
+        public void SupportCCharacter()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAAC";
+
+            var input = new CombinatorParsingV3.StringInput(url);
+
+            var odataUri = new V3ParserPlayground.OdataUri<ParseMode.Deferred>(Func.Close(DeferredOutput.Create(input)));
+
+            var segOutput = odataUri.Segments.Realize();
+            if (segOutput.Success)
+            {
+                var segments = segOutput.Parsed;
+            }
+
+            var realUri = odataUri.Realize();
+
+            Assert.IsTrue(realUri.Success);
+            // not a successful parse: //// TODO we should really have a convenience method for this
+            Assert.IsNotNull(realUri.Remainder);
+        }
+
+        [TestMethod]
         public void Test3()
         {
             var url = "/AA/A/AAA?AAAA=AAAAAB";
