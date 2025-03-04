@@ -1,6 +1,7 @@
 ﻿using CombinatorParsingV3;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -270,6 +271,66 @@ namespace odata.tests
             V3ParserPlayground.OdataUriTranscriber.Instance.Transcribe(odataUri, stringBuilder);
 
             Assert.AreEqual(url, stringBuilder.ToString());
+        }
+    }
+
+    public static class ListPlaygroundAgain
+    {
+        public readonly ref struct RefStructNullable<T> where T : allows ref struct
+        {
+            private readonly bool hasValue;
+
+            private readonly Func<T> generator;
+
+            public RefStructNullable(Func<T> generator)
+            {
+                this.generator = generator;
+
+                this.hasValue = true;
+            }
+
+            public bool TryGetValue([MaybeNullWhen(false)] out T value)
+            {
+                if (this.hasValue)
+                {
+                    value = this.generator();
+                    return true;
+                }
+
+                value = default;
+                return false;
+            }
+        }
+
+        public ref struct ListNode<T> where T : allows ref struct
+        {
+            public ListNode(T value)
+            {
+                Value = value;
+
+                this.Next = new RefStructNullable<ListNode<T>>();
+            }
+
+            public T Value { get; }
+
+            public RefStructNullable<ListNode<T>> Next { get; set; }
+        }
+
+        public static class Factory
+        {
+            public static ListNode<T> Create<T>(T value) where T : allows ref struct
+            {
+                return new ListNode<T>(value);
+            }
+        }
+
+        public static void DoWork()
+        {
+            var listNode = Factory.Create("asfD");
+            for (int i = 0; i < 10; ++i)
+            {
+                listNode.Next = new RefStructNullable<ListNode<string>>(() => Factory.Create(i.ToString()));
+            }
         }
     }
 }
