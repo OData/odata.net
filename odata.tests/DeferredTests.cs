@@ -274,26 +274,29 @@ namespace odata.tests
         }
     }
 
-    public static class ListPlaygroundAgain
+    public readonly ref struct ListPlaygroundAgain
     {
-        public readonly ref struct RefStructNullable<T> where T : allows ref struct
+        public readonly ref struct RefStructNullable<TValue, TState> where TValue : allows ref struct where TState : allows ref struct
         {
             private readonly bool hasValue;
 
-            private readonly Func<T> generator;
+            private readonly Func<TState, TValue> generator;
 
-            public RefStructNullable(Func<T> generator)
+            private readonly TState state;
+
+            public RefStructNullable(Func<TState, TValue> generator, TState state)
             {
                 this.generator = generator;
+                this.state = state;
 
                 this.hasValue = true;
             }
 
-            public bool TryGetValue([MaybeNullWhen(false)] out T value)
+            public bool TryGetValue([MaybeNullWhen(false)] out TValue value)
             {
                 if (this.hasValue)
                 {
-                    value = this.generator();
+                    value = this.generator(this.state);
                     return true;
                 }
 
@@ -302,34 +305,56 @@ namespace odata.tests
             }
         }
 
-        public ref struct ListNode<T> where T : allows ref struct
+        public ref struct ListNode<TValue, TState> where TValue : allows ref struct where TState : allows ref struct
         {
-            public ListNode(T value)
+            public ListNode(TValue value)
             {
                 Value = value;
 
-                this.Next = new RefStructNullable<ListNode<T>>();
+                this.Next = new RefStructNullable<ListNode<TValue, TState>, TState>();
             }
 
-            public T Value { get; }
+            public TValue Value { get; }
 
-            public RefStructNullable<ListNode<T>> Next { get; set; }
+            public RefStructNullable<ListNode<TValue, TState>, TState> Next { get; set; }
         }
 
-        public static class Factory
+        public static class Factory<TState> where TState : allows ref struct
         {
-            public static ListNode<T> Create<T>(T value) where T : allows ref struct
+            public static ListNode<TValue, TState> Create<TValue(TValue value) where TValue : allows ref struct
             {
-                return new ListNode<T>(value);
+                return new ListNode<TValue, TState>(value);
             }
         }
 
         public static void DoWork()
         {
-            var listNode = Factory.Create(new PretendNode(-1));
+            var listNode = Factory<Closure<PretendNode>>.Create(new PretendNode(-1));
             for (int i = 0; i < 10; ++i)
             {
-                listNode.Next = new RefStructNullable<ListNode<PretendNode>>(() => Factory.Create(new PretendNode(i)));
+                // TODO is this really ok? it's creating a new closure all the time
+                ////listNode.Next = new RefStructNullable<ListNode<PretendNode, Closure>, Closure>(() => Factory<Closure>.Create(new PretendNode(i)));
+                listNode.Next = new RefStructNullable<ListNode<PretendNode, Closure<PretendNode>>, Closure<PretendNode>>(Create, new Closure<PretendNode>(i));
+            }
+        }
+
+        public static ListNode<PretendNode, Closure<PretendNode>> Create(Closure<PretendNode> closure)
+        {
+            return closure.Create();
+        }
+
+        public readonly ref struct Closure<TValue> where TValue : allows ref struct
+        {
+            public Closure(int value)
+            {
+                Value = value;
+            }
+
+            public int Value { get; }
+
+            public ListNode<PretendNode, Closure<PretendNode>> Create()
+            {
+                return Factory<Closure<PretendNode>>.Create(new PretendNode(this.Value));
             }
         }
 
