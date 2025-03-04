@@ -7,13 +7,13 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
+    using System.Buffers;
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
-    using System.Buffers;
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Class that knows how to bind the In operator.
