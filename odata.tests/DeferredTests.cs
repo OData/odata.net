@@ -254,5 +254,22 @@ namespace odata.tests
                 return new InstrumentedStringInput(this.input, this.indexes, newIndex);
             }
         }
+
+        [TestMethod]
+        public void TranscribeTest()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAAC";
+
+            var input = new CombinatorParsingV3.StringInput(url);
+
+            var deferredOdataUri = new V3ParserPlayground.OdataUri<ParseMode.Deferred>(Func.Close(DeferredOutput.Create(input)));
+
+            var odataUri = deferredOdataUri.Parse();
+
+            var stringBuilder = new StringBuilder();
+            V3ParserPlayground.OdataUriTranscriber.Instance.Transcribe(odataUri, stringBuilder);
+
+            Assert.AreEqual(url, stringBuilder.ToString());
+        }
     }
 }
