@@ -11,6 +11,7 @@
     using System.Reflection.Metadata.Ecma335;
     using System.Net.Cache;
     using System.IO;
+    using Sprache;
 
     public interface IFuture<out T> //// TODO i'm not sure i like having an interface...
     {
@@ -488,6 +489,124 @@
                         else
                         {
                             return new Output<char, Slash<ParseMode.Realized>>(false, default, input);
+                        }
+                    }
+                }
+            }
+
+            public static class Option6
+            {
+                public sealed class WriteOncePointer<T>
+                {
+                    private RealNullable<T> value;
+
+                    public WriteOncePointer(T value)
+                    {
+                        this.Value = value;
+                    }
+
+                    public WriteOncePointer()
+                    {
+                        this.value = new RealNullable<T>();
+                    }
+
+                    public T Value
+                    {
+                        get
+                        {
+                            if (this.value.TryGetValue(out var currentValue))
+                            {
+                                return currentValue;
+                            }
+                            else
+                            {
+                                throw new InvalidOperationException("TODO");
+                            }
+                        }
+                        set
+                        {
+                            if (this.value.TryGetValue(out var currentValue))
+                            {
+                                throw new InvalidOperationException("TODO");
+                            }
+
+                            this.value = value;
+                        }
+                    }
+                }
+
+                public abstract class SlashNode
+                {
+                    static SlashNode()
+                    {
+                        Slash<ParseMode.Deferred>.NoOp();
+                    }
+
+                    private SlashNode()
+                    {
+                    }
+
+                    protected static WriteOncePointer<Func<Future<IDeferredOutput<char>>, Slash<ParseMode.Deferred>>> DeferredSlashFactory { get; }
+
+                    public static Slash<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                    {
+                        return DeferredSlashFactory.Value(previouslyParsedOutput);
+                    }
+
+                    public sealed class Slash<TMode> : SlashNode, IDeferredAstNode<char, Slash<ParseMode.Realized>> where TMode : ParseMode
+                    {
+                        static Slash()
+                        {
+                            SlashNode.DeferredSlashFactory.Value = previouslyParsedOutput => new Slash<ParseMode.Deferred>(previouslyParsedOutput);
+                        }
+
+                        [MethodImpl(MethodImplOptions.NoInlining)]
+                        internal static void NoOp()
+                        {
+                        }
+
+                        private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
+
+                        private Future<IOutput<char, Slash<ParseMode.Realized>>> cachedOutput;
+
+                        private Slash(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                        {
+                            this.previouslyParsedOutput = previouslyParsedOutput;
+
+                            this.cachedOutput = new Future<IOutput<char, Slash<ParseMode.Realized>>>(() => this.RealizeImpl());
+                        }
+
+                        private Slash(Future<IOutput<char, Slash<ParseMode.Realized>>> output)
+                        {
+                            this.cachedOutput = output;
+                        }
+
+                        public IOutput<char, Slash<ParseMode.Realized>> Realize()
+                        {
+                            return cachedOutput.Value;
+                        }
+
+                        private IOutput<char, Slash<ParseMode.Realized>> RealizeImpl()
+                        {
+                            var output = this.previouslyParsedOutput.Value;
+                            if (!output.Success)
+                            {
+                                return new Output<char, Slash<ParseMode.Realized>>(false, default, output.Remainder);
+                            }
+
+                            var input = output.Remainder;
+
+                            if (input.Current == '/')
+                            {
+                                return new Output<char, Slash<ParseMode.Realized>>(
+                                    true,
+                                    new Slash<ParseMode.Realized>(this.cachedOutput),
+                                    input.Next());
+                            }
+                            else
+                            {
+                                return new Output<char, Slash<ParseMode.Realized>>(false, default, input);
+                            }
                         }
                     }
                 }
