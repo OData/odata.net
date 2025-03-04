@@ -427,11 +427,6 @@ namespace Microsoft.OData.UriParser
 
         private static bool IsCollectionEmptyOrWhiteSpace(string bracketLiteralText)
         {
-            if (string.IsNullOrWhiteSpace(bracketLiteralText) || bracketLiteralText.Length < 2)
-            {
-                return true;
-            }
-
             string content = bracketLiteralText[1..^1].Trim();
 
             if (string.IsNullOrWhiteSpace(content))
