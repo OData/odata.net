@@ -11,32 +11,16 @@
 
   <ItemGroup>
     <None Remove="ClientWithoutTypeResolverTests\Clients\MismatchedClientModel\MismatchedClientModelCsdl.xml" />
-    <None Remove="Common\Client\Default\DefaultServiceCsdl.xml" />
-    <None Remove="Common\Client\EndToEnd\EndToEndServiceCsdl.xml" />
-    <None Remove="Common\Client\OpenTypes\OpenTypesODataServiceCsdl.xml" />
-    <None Remove="Common\Client\PrimitiveKeys\PrimitiveKeysODataServiceCsdl.xml" />
-	<None Update="Common\Client\MultipleKeys\MultipleKeysEnumKeyServiceCsdl.xml" />
+    <None Remove="PayloadValueConverterTests\Client\PayloadValueConverterCsdl.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="ClientWithoutTypeResolverTests\Clients\MismatchedClientModel\MismatchedClientModelCsdl.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Common\Client\Default\DefaultServiceCsdl.xml">
+    <EmbeddedResource Include="PayloadValueConverterTests\Client\PayloadValueConverterCsdl.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
-    <EmbeddedResource Include="Common\Client\EndToEnd\EndToEndServiceCsdl.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Common\Client\OpenTypes\OpenTypesODataServiceCsdl.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-	<EmbeddedResource Include="Common\Client\MultipleKeys\MultipleKeysEnumKeyServiceCsdl.xml">
-		<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </EmbeddedResource>
-	<EmbeddedResource Include="Common\Client\PrimitiveKeys\PrimitiveKeysODataServiceCsdl.xml">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>
@@ -55,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common\Microsoft.OData.Client.E2E.TestCommon\Microsoft.OData.Client.E2E.TestCommon.csproj" />
+    <ProjectReference Include="..\..\..\Common\Microsoft.OData.E2E.TestCommon\Microsoft.OData.E2E.TestCommon.csproj" />
   </ItemGroup>
 
 </Project>

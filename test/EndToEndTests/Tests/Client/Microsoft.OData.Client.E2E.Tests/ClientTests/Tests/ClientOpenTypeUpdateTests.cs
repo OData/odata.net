@@ -8,11 +8,12 @@
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
 using Microsoft.OData.Client.E2E.Tests.ClientTests.Server;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.OpenTypes.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.OpenTypes;
 using Xunit;
+using ClientOpenTypesModel = Microsoft.OData.E2E.TestCommon.Common.Client.OpenTypes;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
 {
@@ -52,7 +53,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
 
             // Retrieve the row by its Id
             var rowId = Guid.Parse("814d505b-6b6a-45a0-9de0-153b16149d56");
-            var row = (await ((DataServiceQuery<Common.Clients.OpenTypes.Row>)_context.Rows.Where(r => r.Id == rowId)).ExecuteAsync()).First();
+            var row = (await ((DataServiceQuery<ClientOpenTypesModel.Row>)_context.Rows.Where(r => r.Id == rowId)).ExecuteAsync()).First();
 
             // Verify that initially there is only one dynamic property
             Assert.Single(row.DynamicProperties);
@@ -62,7 +63,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             await _context.SaveChangesAsync();
 
             // Retrieve the updated row
-            var updatedRow = (await ((DataServiceQuery<Common.Clients.OpenTypes.Row>)_context.Rows.Where(r => r.Id == rowId)).ExecuteAsync()).First();
+            var updatedRow = (await ((DataServiceQuery<ClientOpenTypesModel.Row>)_context.Rows.Where(r => r.Id == rowId)).ExecuteAsync()).First();
 
             // Assert
             // Verify that the dynamic properties now contain two items
@@ -77,7 +78,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         public async Task AddOpenTypeWithUndeclaredProperties_DoesNotThrowException()
         {
             var rowId = Guid.NewGuid();
-            var row = Common.Clients.OpenTypes.Row.CreateRow(rowId);
+            var row = ClientOpenTypesModel.Row.CreateRow(rowId);
 
             _context.Configurations.RequestPipeline.OnEntryStarting(ea => EntryStarting(ea));
 
@@ -85,7 +86,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             await _context.SaveChangesAsync();
 
             // Get the created row;
-            var createdRow = (await ((DataServiceQuery<Common.Clients.OpenTypes.Row>)_context.Rows.Where(r => r.Id == rowId)).ExecuteAsync()).First(); ;
+            var createdRow = (await ((DataServiceQuery<ClientOpenTypesModel.Row>)_context.Rows.Where(r => r.Id == rowId)).ExecuteAsync()).First(); ;
 
             Assert.Equal(rowId, createdRow.Id);
             Assert.Single(createdRow.DynamicProperties);
@@ -104,7 +105,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             // Send up an undeclared property on an Open Type.
             if (entityState == EntityStates.Modified || entityState == EntityStates.Added)
             {
-                if (ea.Entity.GetType() == typeof(Common.Clients.OpenTypes.Row))
+                if (ea.Entity.GetType() == typeof(ClientOpenTypesModel.Row))
                 {
                     // In practice, the data from this undeclared property would probably be stored in a transient property of the partial companion class to the client proxy.
                     var undeclaredOdataProperty = new ODataProperty() { Name = "dynamicPropertyKey", Value = "dynamicPropertyValue" };
