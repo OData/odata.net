@@ -338,7 +338,24 @@ namespace odata.tests
                 }
                 else
                 {
-                    AppendImpl(ref node.Next, doWork, generator, state);
+                    AppendImpl2(ref node.Next, doWork, generator, state);
+                }
+            }
+
+            private static void AppendImpl2(ref RefStructNullable<ListNode<TValue, TState>, TState> node, SomeAction<ListNode<TValue, TState>, Func<TState, ListNode<TValue, TState>>, TState> doWork, Func<TState, ListNode<TValue, TState>> generator, TState state)
+            {
+                if (!node.TryGetValue(out var next))
+                {
+                    throw new Exception("TODO shouldn't get here because we already know that the next node has a value");
+                }
+
+                if (!next.Next.TryGetValue(out var next2))
+                {
+                    doWork(ref next, generator, state);
+                }
+                else
+                {
+                    AppendImpl2(ref next.Next, doWork, generator, state);
                 }
             }
 
@@ -366,7 +383,7 @@ namespace odata.tests
 
             public TValue Value { get; }
 
-            public RefStructNullable<ListNode<TValue, TState>, TState> Next { get; private set; }
+            public RefStructNullable<ListNode<TValue, TState>, TState> Next;
 
             public void Append(Func<TState, ListNode<TValue, TState>> generator, TState state)
             {
