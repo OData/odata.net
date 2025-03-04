@@ -14,7 +14,6 @@ using Microsoft.OData.E2E.TestCommon;
 using Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default;
 using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
 using Microsoft.OData.E2E.TestCommon.Common.Server.PropertyTrackingTests;
-using Microsoft.OData.Edm;
 using Microsoft.Spatial;
 using Xunit;
 using AccessLevel = Microsoft.OData.E2E.TestCommon.Common.Client.Default.AccessLevel;
@@ -23,11 +22,11 @@ using AccountInfo = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Account
 using Color = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Color;
 using Company = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Company;
 using Customer = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Customer;
+using GiftCard = Microsoft.OData.E2E.TestCommon.Common.Client.Default.GiftCard;
 using HomeAddress = Microsoft.OData.E2E.TestCommon.Common.Client.Default.HomeAddress;
 using Order = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Order;
 using Person = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Person;
 using Product = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Product;
-using GiftCard = Microsoft.OData.E2E.TestCommon.Common.Client.Default.GiftCard;
 
 namespace Microsoft.OData.Client.E2E.Tests.PropertyTrackingTests;
 
@@ -37,14 +36,12 @@ namespace Microsoft.OData.Client.E2E.Tests.PropertyTrackingTests;
 public class ChangeTrackingOptionsTests : EndToEndTestBase<ChangeTrackingOptionsTests.TestsStartup>
 {
     private readonly Uri _baseUri;
-    private readonly Container _context;
-    private readonly IEdmModel _model;
 
     public class TestsStartup : TestStartupBase
     {
         public override void ConfigureServices(IServiceCollection services)
         {
-            services.ConfigureControllers(typeof(PropertyTrackingTestsController), typeof(MetadataController));
+            services.ConfigureControllers(typeof(ChangeTrackingOptionsTestsController), typeof(MetadataController));
 
             services.AddControllers().AddOData(opt =>
                 opt.EnableQueryFeatures().AddRouteComponents("odata", DefaultEdmModel.GetEdmModel(), batchHandler: new DefaultODataBatchHandler()));
@@ -59,14 +56,6 @@ public class ChangeTrackingOptionsTests : EndToEndTestBase<ChangeTrackingOptions
         }
 
         _baseUri = new Uri(Client.BaseAddress, "odata/");
-
-        _context = new Container(_baseUri)
-        {
-            HttpClientFactory = HttpClientFactory
-        };
-
-        _model = DefaultEdmModel.GetEdmModel();
-        ResetDefaultDataSource();
     }
 
     // This test verifies that updating an entity without any changes results in a PATCH request
@@ -721,15 +710,9 @@ public class ChangeTrackingOptionsTests : EndToEndTestBase<ChangeTrackingOptions
         return context;
     }
 
-    private void ResetDefaultDataSource()
-    {
-        var actionUri = new Uri(_baseUri + "propertytrackingtests/Default.ResetDefaultDataSource", UriKind.Absolute);
-        _context.Execute(actionUri, "POST");
-    }
-
     private void ResetDefaultDataSource(Container context)
     {
-        var actionUri = new Uri(_baseUri + "propertytrackingtests/Default.ResetDefaultDataSource", UriKind.Absolute);
+        var actionUri = new Uri(_baseUri + "changetrackingoptionstests/Default.ResetDefaultDataSource", UriKind.Absolute);
         context.Execute(actionUri, "POST");
     }
 

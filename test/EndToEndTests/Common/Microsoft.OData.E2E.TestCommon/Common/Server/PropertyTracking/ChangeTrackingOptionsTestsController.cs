@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// <copyright file="PropertyTrackingTestsController.cs" company=".NET Foundation">
+// <copyright file="ChangeTrackingOptionsTestsController.cs" company=".NET Foundation">
 //      Copyright (c) .NET Foundation and Contributors. All rights reserved.
 //      See License.txt in the project root for license information.
 // </copyright>
@@ -14,7 +14,7 @@ using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
 
 namespace Microsoft.OData.E2E.TestCommon.Common.Server.PropertyTrackingTests;
 
-public class PropertyTrackingTestsController : ODataController
+public class ChangeTrackingOptionsTestsController : ODataController
 {
     private static DefaultDataSource _dataSource;
 
@@ -49,7 +49,7 @@ public class PropertyTrackingTestsController : ODataController
 
     [EnableQuery]
     [HttpGet("odata/Customers")]
-    public IActionResult GetCustomerss()
+    public IActionResult GetCustomers()
     {
         var customers = _dataSource.Customers;
         return Ok(customers);
@@ -451,7 +451,7 @@ public class PropertyTrackingTestsController : ODataController
         return Updated(updatedCustomer);
     }
 
-    [HttpPost("odata/propertytrackingtests/Default.ResetDefaultDataSource")]
+    [HttpPost("odata/changetrackingoptionstests/Default.ResetDefaultDataSource")]
     public IActionResult ResetDefaultDataSource()
     {
         _dataSource = DefaultDataSource.CreateInstance();

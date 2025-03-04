@@ -13,7 +13,6 @@ using Microsoft.OData.E2E.TestCommon;
 using Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default;
 using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
 using Microsoft.OData.E2E.TestCommon.Common.Server.PropertyTrackingTests;
-using Microsoft.OData.Edm;
 using Xunit;
 using Account = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Account;
 using Customer = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Customer;
@@ -29,14 +28,12 @@ namespace Microsoft.OData.Client.E2E.Tests.PropertyTrackingTests;
 public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTrackingTests.TestsStartup>
 {
     private readonly Uri _baseUri;
-    private readonly Container _context;
-    private readonly IEdmModel _model;
 
     public class TestsStartup : TestStartupBase
     {
         public override void ConfigureServices(IServiceCollection services)
         {
-            services.ConfigureControllers(typeof(PropertyTrackingTestsController), typeof(MetadataController));
+            services.ConfigureControllers(typeof(DefaultChangeTrackingTestsController), typeof(MetadataController));
 
             services.AddControllers().AddOData(opt =>
                 opt.EnableQueryFeatures().AddRouteComponents("odata", DefaultEdmModel.GetEdmModel(), batchHandler: new DefaultODataBatchHandler()));
@@ -51,14 +48,6 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
         }
 
         _baseUri = new Uri(Client.BaseAddress, "odata/");
-
-        _context = new Container(_baseUri)
-        {
-            HttpClientFactory = HttpClientFactory
-        };
-
-        _model = DefaultEdmModel.GetEdmModel();
-        ResetDefaultDataSource();
     }
 
     // This test verifies that primitive and collection properties of entities can be updated using PATCH requests.
@@ -68,6 +57,8 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
     public void UpdatePrimitiveAndCollectionPropertiesUsingPatch()
     {
         // Arrange
+        var _context = this.ContextWrapper();
+
         int expectedPropertyCount = 0;
 
         _context.Configurations.RequestPipeline.OnEntryEnding(
@@ -170,6 +161,8 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
     public void UpdateObjectWithoutChangesUsingPatch()
     {
         // Arrange
+        var _context = this.ContextWrapper();
+
         var people = new DataServiceCollection<Person>(_context.People);
 
         // Act & Assert
@@ -196,6 +189,8 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
     public void UpdatePrimitiveAndCollectionPropertiesUsingPut()
     {
         // Arrange
+        var _context = this.ContextWrapper();
+
         int expectedPropertyCount = 0;
 
         _context.Configurations.RequestPipeline.OnEntryEnding(
@@ -221,6 +216,8 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
     public void UpdateMultipleEntitiesUsingPatchInBatch()
     {
         // Arrange
+        var _context = this.ContextWrapper();
+
         int expectedPropertyCount = 1;
 
         _context.Configurations.RequestPipeline.OnEntryEnding(
@@ -246,11 +243,23 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
 
     #region Private
 
-    private void ResetDefaultDataSource()
+    private Container ContextWrapper()
     {
-        var actionUri = new Uri(_baseUri + "propertytrackingtests/Default.ResetDefaultDataSource", UriKind.Absolute);
-        _context.Execute(actionUri, "POST");
+        var context = new Container(_baseUri)
+        {
+            HttpClientFactory = HttpClientFactory
+        };
+        ResetDefaultDataSource(context);
+
+        return context;
     }
+
+    private void ResetDefaultDataSource(Container context)
+    {
+        var actionUri = new Uri(_baseUri + "defaultchangetrackingtests/Default.ResetDefaultDataSource", UriKind.Absolute);
+        context.Execute(actionUri, "POST");
+    }
+
 
     #endregion
 }
