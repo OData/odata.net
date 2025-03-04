@@ -311,6 +311,50 @@ namespace odata.tests
             }
         }
 
+        public ref struct List<TValue, TState> where TValue : allows ref struct where TState : allows ref struct
+        {
+            private ListNode<TValue, TState> first;
+
+            public List(TValue value)
+            {
+                this.first = new ListNode<TValue, TState>(value);
+            }
+
+            public void Append(Func<TState, ListNode<TValue, TState>> generator, TState state)
+            {
+                if (!first.Next.TryGetValue(out var next))
+                {
+                    this.first.Append(generator, state);
+                }
+
+                AppendImpl(ref this.first, Mutate, generator, state);
+            }
+
+            private static void AppendImpl(ref ListNode<TValue, TState> node, SomeAction<ListNode<TValue, TState>, Func<TState, ListNode<TValue, TState>>, TState> doWork, Func<TState, ListNode<TValue, TState>> generator, TState state)
+            {
+                if (!node.Next.TryGetValue(out var next))
+                {
+                    doWork(ref node, generator, state);
+                }
+                else
+                {
+                    AppendImpl(ref node.Next, doWork, generator, state);
+                }
+            }
+
+            private static void Mutate(ref ListNode<TValue, TState> node, Func<TState, ListNode<TValue, TState>> generator, TState state)
+            {
+                node.Append(generator, state);
+            }
+
+            public ListNodeEnumerable<TValue, TState>.ListNodeEnumerator GetEnumerator()
+            {
+                return new ListNodeEnumerable<TValue, TState>.ListNodeEnumerator(this.first);
+            }
+
+            private delegate void SomeAction<T1, T2, T3>(ref T1 t1, T2 t2, T3 t3) where T1 : allows ref struct where T2 : allows ref struct where T3 : allows ref struct;
+        }
+
         public ref struct ListNode<TValue, TState> where TValue : allows ref struct where TState : allows ref struct
         {
             public ListNode(TValue value)
@@ -340,6 +384,17 @@ namespace odata.tests
 
         public static void DoWork()
         {
+            var list = new List<PretendNode, Closure<PretendNode>>();
+            for (int i = 0; i < 10; ++i)
+            {
+                list.Append(Create, new Closure<PretendNode>(i));
+            }
+
+            foreach (var element in list)
+            {
+                Console.WriteLine(element.Value);
+            }
+
             var listNode = Factory<Closure<PretendNode>>.Create(new PretendNode(-1));
             for (int i = 0; i < 10; ++i)
             {
