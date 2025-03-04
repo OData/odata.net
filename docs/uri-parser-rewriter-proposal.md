@@ -207,12 +207,26 @@ Here's a tree representation of the query:
 
 **Note** This is not how the current `UriQueryExpressionParser` represents this tree. Notably, it does not parse the the collection operand of and the `in` operator.
 
-
 Here's how this would look like in the node array:
 
 ![Array layout of the queyr](./uri-parser-nested-in-query-array.png)
 
 The downside of this approach is that there could be multiple nesting levels between two siblings of the same parent. That would require multiple hops of to skip over from one child to its next sibling. The number of hops is proportional to the level of nesting. If we have highly nested collections, this could noticeably slow down the iteration or indexing beyond O(n). If we anticipate highly nested collections, we could reduce the number of hops to one per sibling by storing more metadata about each child and level (TODO: demonstrate this).
+
+How does the end user process this tree? Since we're using structs, we can't provide a traditional visitor that's based on inheritance. The basic approach is for the user to simply traverse the tree using the APIs on the `QueryNode` struct, like they would any other DOM-like structure. But this may be tedious for some cases. We can propose a handler that exposes a different method based on the type of node for convenience, e.g.:
+
+```csharp
+interface IQueryNodeHandler<T>
+{   
+    public T HandleIntNode(QueryNode intLiteralNode);
+    public T HandleInNode(QueryNode inNode);
+    public T HandleCollectionNode(QueryNode collection);
+}
+```
+
+#### Semantinc binding
+
+In the semantic node phase, we would start with a type that represent's the `IEdmType` of the path then traverse the expression starting from the route and bind a semantinc infomation like the `IEdmType` to each node. This semantic data could be stored in a separate array of the same size as the expression node array. Each index of the array will contain metadata that corresponds to the 
 
 ### Path parser
 
