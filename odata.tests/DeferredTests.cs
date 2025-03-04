@@ -272,9 +272,15 @@ namespace odata.tests
 
             Assert.AreEqual(url, stringBuilder.ToString());
         }
+
+        [TestMethod]
+        public void DynamicList()
+        {
+            ListPlaygroundAgain.DoWork();
+        }
     }
 
-    public readonly ref struct ListPlaygroundAgain
+    public static class ListPlaygroundAgain
     {
         public readonly ref struct RefStructNullable<TValue, TState> where TValue : allows ref struct where TState : allows ref struct
         {
@@ -316,12 +322,17 @@ namespace odata.tests
 
             public TValue Value { get; }
 
-            public RefStructNullable<ListNode<TValue, TState>, TState> Next { get; set; }
+            public RefStructNullable<ListNode<TValue, TState>, TState> Next { get; private set; }
+
+            public void Append(Func<TState, ListNode<TValue, TState>> generator, TState state)
+            {
+                this.Next = new RefStructNullable<ListNode<TValue, TState>, TState>(generator, state);
+            }
         }
 
         public static class Factory<TState> where TState : allows ref struct
         {
-            public static ListNode<TValue, TState> Create<TValue(TValue value) where TValue : allows ref struct
+            public static ListNode<TValue, TState> Create<TValue>(TValue value) where TValue : allows ref struct
             {
                 return new ListNode<TValue, TState>(value);
             }
@@ -335,12 +346,18 @@ namespace odata.tests
                 //// TODO why does this work, but just providing the values doesn't?
                 //// to answer this question, the answer is: just providing the values works fine, but we aren't trying to make it work where the elements are `int`, we are trying to make it work where the elements are a ref struct
                 //// TODO but the question still stands: why do you need the `closure` part? why can't you just provide the `pretendnode` part?
-                
+
 
 
 
                 ///// TODO YOU ARE NOT DYNAMICALLY MAKING THE LIST BIGGER, YOU ARE SECONDING THE SECOND ELEMENT A BUNCH OF TIMES!
-                listNode.Next = new RefStructNullable<ListNode<PretendNode, Closure<PretendNode>>, Closure<PretendNode>>(Create, new Closure<PretendNode>(i));
+                var nextNode = new RefStructNullable<ListNode<PretendNode, Closure<PretendNode>>, Closure<PretendNode>>(Create, new Closure<PretendNode>(i));
+                listNode.Append(Create, new Closure<PretendNode>(i));
+            }
+
+            foreach (var element in listNode.ToEnumerable())
+            {
+                Console.WriteLine(element.Value);
             }
 
             /*var listNode2 = new ListNode<PretendNode, PretendNode>(new PretendNode(-1));
@@ -348,6 +365,72 @@ namespace odata.tests
             {
                 listnode
             }*/
+        }
+
+        public static ListNodeEnumerable<TValue, TState> ToEnumerable<TValue, TState>(this ListNode<TValue, TState> listNode) where TValue : allows ref struct where TState : allows ref struct
+        {
+            return new ListNodeEnumerable<TValue, TState>(listNode);
+        }
+
+        public ref struct ListNodeEnumerable<TValue, TState> where TValue : allows ref struct where TState : allows ref struct
+        {
+            private readonly ListNode<TValue, TState> listNode;
+
+            public ListNodeEnumerable(ListNode<TValue, TState> listNode)
+            {
+                this.listNode = listNode;
+            }
+
+            public ListNodeEnumerator GetEnumerator()
+            {
+                return new ListNodeEnumerator(this.listNode);
+            }
+
+            public ref struct ListNodeEnumerator
+            {
+                private ListNode<TValue, TState> listNode;
+
+                private bool moved;
+
+                public ListNodeEnumerator(ListNode<TValue, TState> listNode)
+                {
+                    this.listNode = listNode;
+
+                    this.moved = false;
+                }
+
+                public TValue Current
+                {
+                    get
+                    {
+                        if (!this.moved)
+                        {
+                            throw new Exception("TODO");
+                        }
+
+                        return this.listNode.Value;
+                    }
+                }
+
+                public bool MoveNext()
+                {
+                    if (!this.moved)
+                    {
+                        this.moved = true;
+                        return true;
+                    }
+
+                    if (this.listNode.Next.TryGetValue(out var next))
+                    {
+                        this.listNode = next;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
         }
 
         public static ListNode<PretendNode, Closure<PretendNode>> Create(Closure<PretendNode> closure)
