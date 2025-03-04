@@ -1,4 +1,4 @@
-# OData URI Parser Rewrite for high performance and reliability
+# OData URI Parser design change for higher performance and reliability
 
 This is a proposal to rewrite the OData URI parser stack from the ground up based on a different architecture. The primary motivation for this proposal is performance,
 but it also aims to make improvements to usability and developer experience.
