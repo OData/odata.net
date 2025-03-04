@@ -332,8 +332,8 @@ namespace odata.tests
             var listNode = Factory<Closure<PretendNode>>.Create(new PretendNode(-1));
             for (int i = 0; i < 10; ++i)
             {
-                // TODO is this really ok? it's creating a new closure all the time
-                ////listNode.Next = new RefStructNullable<ListNode<PretendNode, Closure>, Closure>(() => Factory<Closure>.Create(new PretendNode(i)));
+                //// TODO why does this work, but just providing the values doesn't?
+                //// to answer this question, the answer is: just providing the values works fine, but we aren't trying to make it work where the elements are `int`, we are trying to make it work where the elements are a ref struct
                 listNode.Next = new RefStructNullable<ListNode<PretendNode, Closure<PretendNode>>, Closure<PretendNode>>(Create, new Closure<PretendNode>(i));
             }
         }
