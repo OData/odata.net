@@ -326,11 +326,21 @@ namespace odata.tests
 
         public static void DoWork()
         {
-            var listNode = Factory.Create("asfD");
+            var listNode = Factory.Create(new PretendNode(-1));
             for (int i = 0; i < 10; ++i)
             {
-                listNode.Next = new RefStructNullable<ListNode<string>>(() => Factory.Create(i.ToString()));
+                listNode.Next = new RefStructNullable<ListNode<PretendNode>>(() => Factory.Create(new PretendNode(i)));
             }
+        }
+
+        public readonly ref struct PretendNode
+        {
+            public PretendNode(int value)
+            {
+                Value = value;
+            }
+
+            public int Value { get; }
         }
     }
 }
