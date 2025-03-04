@@ -2136,6 +2136,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [InlineData("TestBool", "(true,false)")]
         [InlineData("TestString", "('a','b','c')")]
         [InlineData("TestDecimal", "(1.1,2.2,3.3)")]
+        [InlineData("TestIntInSquareBrackets", "[1,2,3]")]
+        [InlineData("TestDoubleInSquareBrackets", "[1.1,2.2,3.3]")]
+        [InlineData("TestBoolInSquareBrackets", "[true,false]")]
+        [InlineData("TestStringInSquareBrackets", "['a','b','c']")]
+        [InlineData("TestDecimalInSquareBrackets", "[1.1,2.2,3.3]")]
         public void FilterWithInOperationWithParensCollectionConsistingOfDynamicPrimitiveProperties(string propertyName, string values)
         {
             string filterExpression = $"{propertyName} in {values}";
