@@ -53,6 +53,63 @@ They will rely on enums to distinguish between different node kinds and use meth
 
 This section describes the proposal in more detail for each of the key components of the parser. The focus is on the query options parser, and the `$filter` query option in particular because of its complexity relative to other query options like `$select` and `$expand`. We'll also mention the path parser for completeness.
 
+### Query options parser
+
+The `ODataQueryOptionsParser` class is responsible for parsing the various query options in OData URL. `ODataQueryOptionParser` is not a single parser, but a wrapper around is different of query options.
+This proposal focuses on `$filter` query options due to the relative complexity of its syntax compared to other query options like `$select` or `$expand`. Furthermore, there are similarities between
+parsing `$filter` and other query options like `$apply` and `$orderby`.
+
+Parsing a `$filter` expressions happen in three phases in a pipeline where the output of one phase is the input of the next. The follow table summarizes the phases and components that implement them:
+
+| Phase  | Component | Description |
+|--------|-----------|-------------|
+| Tokenization | `ExpressionLexer` | Generates sequence of tokens from input string. At this phase we can destinguish between a keyword, a literal and an identifier. We can detect some syntax errors like unbalanced parantheses or unexpected end of input.|
+| Abstract Syntax Tree | `UriQueryExpressionParser` | Generates a tree that represents the query expression. Each node in the tree is represent by a subclass of `QueryToken` class. At this stage we can tell the structure of an `or` operand and correctly order the operands based on precedence. We don't know the types of expressions. We can detect a function call and its parameters, but we can't tell the type or whether it exists.
+| Semantic binding | `FilterBinder` | Attaches type information from the model to nodes in the AST. The nodes in the "semantic tree" are subclasses of `QueryNode`. At this stage we can tell the return type of function or property access. We can tell whether a property exists or not.
+
+I propose to keep the same phases, but change how data is stored in memory for better efficiency, and ensure that each phase is "complete" (for example, don't perform tokenization of array elements in the semantic binding stage).
+
+#### Allocation-free lexer
+
+The current `ExpressionLexer` is an internal class that keeps a reference to the input string with the following key methods and properties:
+
+- `NextToken()` reads the next token and advances the lexer to it.
+- `TryPeekNextToken()` reads the next token but does not advance to it. This adds support for looking ahead when that's necessary to resolve some ambiguity.
+- `CurrentToken` the current token. This returns an `ExpressionToken` which is a `struct` representing the current token. We use `ReadOnlyMemory` to reference the token text without allocating.
+
+How the lexer is used: iteratively call `NextToken()` and check `CurrentToken` until you reach the end of input.
+
+The proposed lexer to is very different from the existing, except for the following key differences:
+
+- The lexer is a `ref struct` instead of a class. `ref struct` instead of plain `struct` because it has a `ReadOnlySpan<char>` field. This means it can only be used on the stack.
+- The lexer holds a `ReadOnlySpan<char>` reference to the input Text
+- The `CurrentToken` property returns an `Token` struct.
+- The `ExpressionToken` struct has a `Range` property of type `ValueRange`. `ValueRange` is a struct that contains
+- The lexer will read tokens from paranthesized expressions like collections. This will address a lot of errors we currently face based on our `in` implementation.
+
+This parser does not allocate any objects to the heap as demonstrated by the following [benchmark](https://github.com/habbes/experiments/blob/master/ODataSlimUrlParserConcept/Benchmarks/ParserBenchmarks.cs#L102)
+from the input string `"category eq 'electronics' or price gt 100"`.
+
+The benchmarks compare parsing the following filter expression: `"category eq 'electronics' or price gt 100"`.
+
+```md
+BenchmarkDotNet v0.14.0, Windows 11 (10.0.26100.2314)
+Intel Xeon W-2123 CPU 3.60GHz, 1 CPU, 8 logical and 4 physical cores
+.NET SDK 9.0.100
+  [Host]     : .NET 8.0.11 (8.0.1124.51707), X64 RyuJIT AVX-512F+CD+BW+DQ+VL
+  DefaultJob : .NET 8.0.11 (8.0.1124.51707), X64 RyuJIT AVX-512F+CD+BW+DQ+VL
+```
+
+| Method                                   | Mean         | Error      | StdDev     | Gen0   | Allocated |
+|----------------------------------------- |-------------:|-----------:|-----------:|-------:|----------:|
+| **ParseExpression_SlimExpressionLexer**      |     90.21 ns |   1.688 ns |   1.579 ns |      - |         - |
+
+See a sample implementation here: https://github.com/habbes/experiments/blob/master/ODataSlimUrlParserConcept/Lib/ExpressionLexer.cs.
+
+See a sample usage here: https://github.com/habbes/experiments/blob/master/ODataSlimUrlParserConcept/SlimParserTests/ExpressionLexerTests.cs
+
+#### Expression parsers and AST generation
+
 ### Path parser
 
 The current path parser is implemented in two phases:
