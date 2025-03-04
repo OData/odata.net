@@ -335,8 +335,19 @@ namespace odata.tests
                 //// TODO why does this work, but just providing the values doesn't?
                 //// to answer this question, the answer is: just providing the values works fine, but we aren't trying to make it work where the elements are `int`, we are trying to make it work where the elements are a ref struct
                 //// TODO but the question still stands: why do you need the `closure` part? why can't you just provide the `pretendnode` part?
+                
+
+
+
+                ///// TODO YOU ARE NOT DYNAMICALLY MAKING THE LIST BIGGER, YOU ARE SECONDING THE SECOND ELEMENT A BUNCH OF TIMES!
                 listNode.Next = new RefStructNullable<ListNode<PretendNode, Closure<PretendNode>>, Closure<PretendNode>>(Create, new Closure<PretendNode>(i));
             }
+
+            /*var listNode2 = new ListNode<PretendNode, PretendNode>(new PretendNode(-1));
+            for (int i = 0; i < 10; ++i)
+            {
+                listnode
+            }*/
         }
 
         public static ListNode<PretendNode, Closure<PretendNode>> Create(Closure<PretendNode> closure)
