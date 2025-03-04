@@ -744,6 +744,19 @@
 
             public abstract AlphaNumericHolder Convert();
 
+            protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+            public abstract class Visitor<TResult, TContext>
+            {
+                public TResult Visit(AlphaNumeric<TMode> node, TContext context)
+                {
+                    return node.Dispatch(this, context);
+                }
+
+                protected internal abstract TResult Accept(A node, TContext context);
+                protected internal abstract TResult Accept(C node, TContext context);
+            }
+
             public sealed class A : AlphaNumeric<TMode>, IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>.A>
             {
                 private readonly Future<IDeferredOutput<char>> future;
@@ -799,6 +812,11 @@
                 protected override IOutput<char, AlphaNumeric<ParseMode.Realized>> DerivedRealize()
                 {
                     return this.Realize();
+                }
+
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
                 }
 
                 public override AlphaNumericHolder Convert()
@@ -869,6 +887,11 @@
                 protected override IOutput<char, AlphaNumeric<ParseMode.Realized>> DerivedRealize()
                 {
                     return this.Realize();
+                }
+
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
                 }
 
                 public override AlphaNumericHolder Convert()
