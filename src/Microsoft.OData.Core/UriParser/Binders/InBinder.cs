@@ -130,7 +130,7 @@ namespace Microsoft.OData.UriParser
                     Debug.Assert(expectedType.IsCollection());
                     string expectedTypeFullName = expectedType.Definition.AsElementType().FullTypeName();
 
-                    if (expectedTypeFullName.Equals("Edm.String", StringComparison.Ordinal) || (expectedTypeFullName.Equals("Edm.Untyped", StringComparison.Ordinal) && IsCollectionContentEmptyOrSpaces(bracketLiteralText)))
+                    if (expectedTypeFullName.Equals("Edm.String", StringComparison.Ordinal) || (expectedTypeFullName.Equals("Edm.Untyped", StringComparison.Ordinal) && IsCollectionEmptyOrWhiteSpace(bracketLiteralText)))
                     {
                         // For collection of strings, need to convert single-quoted string to double-quoted string,
                         // and also, per ABNF, a single quote within a string literal is "encoded" as two consecutive single quotes in either
@@ -425,7 +425,7 @@ namespace Microsoft.OData.UriParser
             return "[" + String.Join(",", items) + "]";
         }
 
-        private static bool IsCollectionContentEmptyOrSpaces(string bracketLiteralText)
+        private static bool IsCollectionEmptyOrWhiteSpace(string bracketLiteralText)
         {
             if (string.IsNullOrWhiteSpace(bracketLiteralText) || bracketLiteralText.Length < 2)
             {
@@ -439,7 +439,7 @@ namespace Microsoft.OData.UriParser
                 return true;
             }
 
-            bool isEmptyOrHasOnlySpaces = true;
+            bool isEmptyOrWhiteSpace = true;
             bool isCharInsideQuotes = false;
             char quoteChar = '\0';
             char[] buffer = ArrayPool<char>.Shared.Rent(content.Length);
@@ -473,7 +473,7 @@ namespace Microsoft.OData.UriParser
 
                             if (!string.IsNullOrWhiteSpace(item))
                             {
-                                isEmptyOrHasOnlySpaces = false;
+                                isEmptyOrWhiteSpace = false;
                                 break;
                             }
                             bufferIndex = 0;
@@ -491,7 +491,7 @@ namespace Microsoft.OData.UriParser
 
                     if (!string.IsNullOrWhiteSpace(lastItem))
                     {
-                        isEmptyOrHasOnlySpaces = false;
+                        isEmptyOrWhiteSpace = false;
                     }
                 }
             }
@@ -500,7 +500,7 @@ namespace Microsoft.OData.UriParser
                 ArrayPool<char>.Shared.Return(buffer);
             }
 
-            return isEmptyOrHasOnlySpaces;
+            return isEmptyOrWhiteSpace;
         }
     }
 }
