@@ -322,11 +322,6 @@ namespace odata.tests
 
             public void Append(Func<TState, ListNode<TValue, TState>> generator, TState state)
             {
-                if (!first.Next.TryGetValue(out var next))
-                {
-                    this.first.Append(generator, state);
-                }
-
                 AppendImpl(ref this.first, Mutate, generator, state);
             }
 
@@ -401,7 +396,7 @@ namespace odata.tests
 
         public static void DoWork()
         {
-            var list = new List<PretendNode, Closure<PretendNode>>();
+            var list = new List<PretendNode, Closure<PretendNode>>(new PretendNode(-1));
             for (int i = 0; i < 10; ++i)
             {
                 list.Append(Create, new Closure<PretendNode>(i));
