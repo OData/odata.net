@@ -8,17 +8,17 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
-using Microsoft.OData.Client.E2E.Tests.BatchRequestTests.Server;
-using Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.BatchRequest;
+using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
 using Xunit;
-using Account = Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Account;
-using AccountInfo = Microsoft.OData.Client.E2E.Tests.Common.Client.Default.AccountInfo;
-using PaymentInstrument = Microsoft.OData.Client.E2E.Tests.Common.Client.Default.PaymentInstrument;
-using Statement = Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Statement;
+using Account = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Account;
+using AccountInfo = Microsoft.OData.E2E.TestCommon.Common.Client.Default.AccountInfo;
+using PaymentInstrument = Microsoft.OData.E2E.TestCommon.Common.Client.Default.PaymentInstrument;
+using Statement = Microsoft.OData.E2E.TestCommon.Common.Client.Default.Statement;
 
-namespace Microsoft.OData.Client.E2E.Tests.BatchRequestTests.Tests;
+namespace Microsoft.OData.Client.E2E.Tests.BatchRequestTests;
 
 public class BatchRequestClientTests : EndToEndTestBase<BatchRequestClientTests.TestsStartup>
 {

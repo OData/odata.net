@@ -8,19 +8,18 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
-using Microsoft.OData.Client.E2E.TestCommon.Common;
-using Microsoft.OData.Client.E2E.Tests.BatchRequestTests.Server;
-using Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common;
+using Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.BatchRequest;
+using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
 using Microsoft.OData.Edm;
-using Xunit;
 
-namespace Microsoft.OData.Client.E2E.Tests.BatchRequestTests.Tests;
+namespace Microsoft.OData.Core.E2E.Tests.BatchRequestTests;
 
 public class BatchRequestWithRelativeUriTests : EndToEndTestBase<BatchRequestWithRelativeUriTests.TestsStartup>
 {
-    private const string NameSpacePrefix = "Microsoft.OData.Client.E2E.Tests.Common.Server.Default";
+    private const string NameSpacePrefix = "Microsoft.OData.E2E.TestCommon.Common.Server.Default";
 
     private readonly Uri _baseUri;
     private readonly Container _context;

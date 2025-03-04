@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Deltas;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
 
-namespace Microsoft.OData.Client.E2E.Tests.BatchRequestTests.Server;
+namespace Microsoft.OData.E2E.TestCommon.Common.Server.BatchRequest;
 
 public class BatchRequestTestsController : ODataController
 {
