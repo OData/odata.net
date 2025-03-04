@@ -557,6 +557,7 @@
                     {
                         static Slash()
                         {
+                            // TODO will this try to call for deferred, then for realized?
                             SlashNode.DeferredSlashFactory.Value = previouslyParsedOutput => new Slash<ParseMode.Deferred>(previouslyParsedOutput);
                         }
 
