@@ -110,6 +110,110 @@ See a sample usage here: https://github.com/habbes/experiments/blob/master/OData
 
 #### Expression parsers and AST generation
 
+The current `UriQueryExpressionParser` recursively parses a sequence of token into a tree based on the `QueryToken` class.
+
+- Different subclasses of `QueryToken` represent different types of node.
+- We allocate substrings of the input to store text values in the `QueryToken`s.
+- Binary operator nodes have a reference to the left and right children and `QueryToken`.
+- The `LiteralToken` is used to represent, among others, parenthesized expressions (e.g. collection expressions). The expression is still in unparsed string form.
+
+This is where we propose a drastic change. Instead of nodes with direct reference to each other, we store nodes in a flat array.
+
+A node would have roughly the following structure:
+
+```csharp
+internal struct ExpressionNode
+{
+    public ExpressionNodeKind Kind { get; internal set; }
+    public ValueRange Range { get; internal set; }
+    internal int Count { get; set; }
+    internal int LastChild { get; set; }
+    public bool IsTerminal => Count == -1;
+}
+```
+
+And the expression parser will look roughly as follows:
+
+```csharp
+public ExpressionParser
+{
+    internal readonly ReadOnlyMemory<char> _source;
+    internal NodeList<ExpressionNode> _nodes;
+    
+    public static QueryNode Parse(ReadOnlyMemory<char> source)
+    {
+        var lexer = new ExpressionLexer(_source.Span);
+        int root = ParseExpression(ref lexer, ref _nodes, 0);
+        return QueryNode(this, root);
+    }
+}
+```
+
+The `ExpressioNode` is an internal representation of any kind of node in the "tree". This struct is not exposed publicly.
+Instead, we return a `QueryNode` struct which has the following structure:
+
+```csharp
+public struct QueryNode
+{
+    private int _index { get; set; }
+    private ExpressionParser _parser { get; set; }
+    
+    public ExpressionNodeKind Kind => _parser[_index].Kind;
+    public int GetIntValue()
+    {
+        return int.TryParse(_parser[_index].Range.GetValue(_parser.Source));
+    }
+
+    public string GetStringValue();
+    public ReadOnlySpan<char> GetSpanValue();
+
+    public int CollectionLength();
+    public QueryNode GetItemAt(int index);
+    public Enumerator EnumeratorItems();
+    public QueryNode GetLeft();
+    public QueryNode GetRight();
+}
+```
+
+The public `QueryNode` struct is smaller than the internal `ExpressionNode` and would be cheaper to move around.
+
+`ExpressionNode` can represent terminal nodes like primitives and identifiers, binary operators with a left and right child
+and collections with an arbitrary number of children. It can also represent nodes with nested children.
+
+- The `Count` property represents the number of top-level children a node has. The `LastChild` is the index of the last child in the array.
+- We use `0` for the Count to represent terminal nodes
+- The first child will always be the at parent's index + 1.
+
+For nodes with non-nested children, we can easily find out in O(1):
+
+- whether it has children, via the `Count` property
+- the index of the child (`index + 1`)
+- the index of any child (since we know where each child item will be)
+
+However, if children are nested (e.g. an `or` node that has a left `and` node), it's harder to tell children are located. In this case,
+we have to iterate through each child and skip over nested children to enumerate the top-level children. We can set the most significant bit to 1
+to tell whether a node has "complex" or "nested" childs. If this bit is 0, we use the O(1) approach to find children by index, if the bit is 1 (i.e. `Count < 0`)
+we use the iterative approach.
+
+Let's use the following query to demonstrate how the array will be laid out:
+
+```text
+category in ('electronics', substring(field, 1), "technolgy")
+```
+
+Here's a tree representation of the query:
+
+![Tree representation of the query](uri-parser-nested-in-query-tree.png)
+
+**Note** This is not how the current `UriQueryExpressionParser` represents this tree. Notably, it does not parse the the collection operand of and the `in` operator.
+
+
+Here's how this would look like in the node array:
+
+![Array layout of the queyr](./uri-parser-nested-in-query-array.png)
+
+The downside of this approach is that there could be multiple nesting levels between two siblings of the same parent. That would require multiple hops of to skip over from one child to its next sibling. The number of hops is proportional to the level of nesting. If we have highly nested collections, this could noticeably slow down the iteration or indexing beyond O(n). If we anticipate highly nested collections, we could reduce the number of hops to one per sibling by storing more metadata about each child and level (TODO: demonstrate this).
+
 ### Path parser
 
 The current path parser is implemented in two phases:
