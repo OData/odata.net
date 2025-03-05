@@ -1,4 +1,5 @@
-﻿using CombinatorParsingV3;
+﻿using __GeneratedOdata.Trancsribers.Rules;
+using CombinatorParsingV3;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -275,5 +276,88 @@ namespace odata.tests
 
             Assert.AreEqual(url, stringBuilder.ToString());
         }
+
+        /*public void Foo(ReadOnlySpan<char> foo, Span<char> bar)
+        {
+            foreach (var element in foo)
+            {
+            }
+        }
+
+        public ref struct StreamOfTokens<TToken> where TToken : allows ref struct
+        {
+            private readonly Stream stream;
+            private readonly Func<Span<byte>, int, int, Tokened> tokenizer;
+            private readonly Span<byte> buffer;
+
+            public ref struct Tokened
+            {
+                public TToken Token;
+
+                public int NewIndex;
+            }
+
+            public StreamOfTokens(Stream stream, Span<byte> buffer, Func<Span<byte>, int, int, Tokened> tokenizer)
+            {
+                this.stream = stream;
+                this.buffer = buffer;
+                this.tokenizer = tokenizer;
+            }
+
+            public Enumerator GetEnumerator()
+            {
+            }
+
+            public ref struct Enumerator
+            {
+                private readonly StreamOfTokens<TToken> streamOfTokens;
+
+                private int index;
+
+                private int count;
+
+                private bool hasMoved;
+
+                public Enumerator(StreamOfTokens<TToken> streamOfTokens)
+                {
+                    this.streamOfTokens = streamOfTokens;
+
+                    this.hasMoved = false;
+                    this.index = -1;
+                    this.count = -1;
+                }
+
+                public TToken Current
+                {
+                    get
+                    {
+                        if (!this.hasMoved)
+                        {
+                            throw new Exception("TODO");
+                        }
+
+                        return this.streamOfTokens.buffer[this.index];
+                    }
+                }
+
+                public bool MoveNext()
+                {
+                    if (this.index < this.count)
+                    {
+                        return true;
+                    }
+
+                    this.index = 0;
+                    this.count = this.streamOfTokens.stream.Read(this.streamOfTokens.buffer);
+                    this.hasMoved = true;
+                    if (this.count == 0)
+                    {
+                        return false;
+                    }
+
+                    return true;
+                }
+            }
+        }*/
     }
 }
