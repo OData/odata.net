@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -288,7 +289,7 @@ namespace odata.tests
 
             private readonly Func<TState, TValue> generator;
 
-            private readonly TState state;
+            public readonly TState state;
 
             public RefStructNullable(Func<TState, TValue> generator, TState state)
             {
@@ -311,65 +312,63 @@ namespace odata.tests
             }
         }
 
-        public ref struct List<TValue, TState> where TValue : allows ref struct where TState : allows ref struct
+        public ref struct List<TValue> where TValue : allows ref struct
         {
-            private ListNode<TValue, TState> first;
+            private RefStructNullable<TValue, Tval> first;
 
-            public List(TValue value)
+            public List()
             {
-                this.first = new ListNode<TValue, TState>(value);
+                this.first = new RefStructNullable<ListNode<TValue, Wrapper>, Wrapper>();
             }
 
-            public void Append(Func<TState, ListNode<TValue, TState>> generator, TState state)
+            public void Append(TValue value)
             {
-                AppendImpl(ref this.first, Mutate, generator, state);
+                AppendImpl(ref this.first, value);
             }
 
-            private static void AppendImpl(ref ListNode<TValue, TState> node, SomeAction<ListNode<TValue, TState>, Func<TState, ListNode<TValue, TState>>, TState> doWork, Func<TState, ListNode<TValue, TState>> generator, TState state)
+            private static void AppendImpl(ref RefStructNullable<ListNode<TValue, Wrapper>, Wrapper> potentialNode, TValue value)
             {
-                if (!node.Next.TryGetValue(out var next))
+                if (!potentialNode.TryGetValue(out var node))
                 {
-                    doWork(ref node, generator, state);
+                    potentialNode = new RefStructNullable<ListNode<TValue, Wrapper>, Wrapper>(Create, new Wrapper(value));
                 }
                 else
                 {
-                    AppendImpl2(ref node.Next, Mutate2, generator, state);
+                    potentialNode = new RefStructNullable<ListNode<TValue, Wrapper>, Wrapper>(
+                        wrapper =>
+                        {
+                            var newNode = new ListNode<TValue, Wrapper>(wrapper.Value);
+
+                            return newNode;
+                        },
+                        new Wrapper(node.Value));
                 }
             }
+        }
 
-            private static void AppendImpl2(ref RefStructNullable<ListNode<TValue, TState>, TState> nullableNode, SomeAction<RefStructNullable<ListNode<TValue, TState>, TState>, Func<TState, ListNode<TValue, TState>>, TState> doWork, Func<TState, ListNode<TValue, TState>> generator, TState state)
+        public ref struct ListNode2<TValue> where TValue : allows ref struct
+        {
+            public ListNode2(TValue value)
             {
-                if (!nullableNode.TryGetValue(out var node))
-                {
-                    throw new Exception("TODO shouldn't get here because we already know that the next node has a value");
-                }
+                Value = value;
 
-                if (!node.Next.TryGetValue(out var next))
-                {
-                    doWork(ref nullableNode, generator, state);
-                }
-                else
-                {
-                    AppendImpl2(ref node.Next, doWork, generator, state);
-                }
+                this.Next = new RefStructNullable<ListNode2<TValue>, Func<ListNode2<TValue>>();
             }
 
-            private static void Mutate(ref ListNode<TValue, TState> node, Func<TState, ListNode<TValue, TState>> generator, TState state)
-            {
-                node.Append(generator, state);
-            }
+            public TValue Value { get; }
 
-            private static void Mutate2(ref RefStructNullable<ListNode<TValue, TState>, TState> node, Func<TState, ListNode<TValue, TState>> generator, TState state)
-            {
-                node = new RefStructNullable<ListNode<TValue, TState>, TState>(generator, state);
-            }
+            public RefStructNullable<ListNode2<TValue>, (ListNode2<TValue>, Func<ListNode2<TValue>, ListNode2<TValue>)> Next;
 
-            public ListNodeEnumerable<TValue, TState>.ListNodeEnumerator GetEnumerator()
+            public void Append(TValue value)
             {
-                return new ListNodeEnumerable<TValue, TState>.ListNodeEnumerator(this.first);
+                this.Next = new RefStructNullable<ListNode2<TValue>, Func<ListNode2<TValue>>(_ => new ListNode2<TValue>(_), );
             }
+        }
 
-            private delegate void SomeAction<T1, T2, T3>(ref T1 t1, T2 t2, T3 t3) where T1 : allows ref struct where T2 : allows ref struct where T3 : allows ref struct;
+        public static ListNode2<TValue> Get<TValue>(ListNode2<TValue> node)
+        {
+            node.Next.TryGetValue(out var foo);
+            return foo;
         }
 
         public ref struct ListNode<TValue, TState> where TValue : allows ref struct where TState : allows ref struct
@@ -389,6 +388,12 @@ namespace odata.tests
             {
                 this.Next = new RefStructNullable<ListNode<TValue, TState>, TState>(generator, state);
             }
+
+            public void Prepend(TValue value)
+            {
+                var prefix = new ListNode<TValue, TState>(value);
+                prefix.Next = new RefStructNullable<ListNode<TValue, TState>, TState>()
+            }
         }
 
         public static class Factory<TState> where TState : allows ref struct
@@ -401,7 +406,27 @@ namespace odata.tests
 
         public static void DoWork()
         {
-            var list = new List<PretendNode, Closure<PretendNode>>(new PretendNode(-1));
+            var firstNode = new ListNode<PretendNode, PretendNode>(new PretendNode(-1));
+            var secondNode = new ListNode<PretendNode, PretendNode>(new PretendNode(0));
+
+            firstNode.Next = new RefStructNullable<ListNode<PretendNode, PretendNode>, PretendNode>(
+                _ =>
+                {
+                    var newNode = new ListNode<PretendNode, PretendNode>(_);
+                    newNode.Next = new RefStructNullable<ListNode<PretendNode, PretendNode>, PretendNode>(
+                        _2 =>
+                        {
+                            var newNode2 = new ListNode<PretendNode, PretendNode>(_2);
+                            return newNode2;
+                        },
+                        new PretendNode(2));
+                    return newNode;
+                },
+                new PretendNode(1));
+
+
+
+            var list = new List<PretendNode, Closure<PretendNode>>();
             for (int i = 0; i < 10; ++i)
             {
                 list.Append(Create, new Closure<PretendNode>(i));
