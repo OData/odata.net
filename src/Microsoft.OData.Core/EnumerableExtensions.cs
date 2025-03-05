@@ -54,14 +54,10 @@
 
             using (var enumerator = source.GetEnumerator())
             {
-                if (!enumerator.MoveNext())
+                short? current = null;
+                while (enumerator.MoveNext() && !(current = enumerator.Current).HasValue)
                 {
-                    return null;
-                }
-
-                short? current;
-                for (current = enumerator.Current; !current.HasValue && enumerator.MoveNext(); current = enumerator.Current)
-                {
+                    current = enumerator.Current;
                 }
 
                 if (!current.HasValue)
