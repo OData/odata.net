@@ -1,10 +1,10 @@
-﻿namespace Microsoft.OData.Core.Tests
+﻿namespace Microsoft.OData
 {
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.Serialization;
+
     using Xunit;
 
     /// <summary>
@@ -37,7 +37,7 @@
         /// <summary>
         /// Asserts the correct exception is thrown when averaging a source with too large of values.
         /// </summary>
-        [Fact(Skip = "TODO")]
+        [Fact(Skip = "This test takes approximately 1 month to run. It's assertions can still be valuable if run manually after changing the logic in the `Average` method to use `int` instead of `long` for the sum.")]
         public void AverageShortsOverflow()
         {
             var source = new RepeatEnumerable<short>(short.MaxValue, (long.MaxValue / short.MaxValue) + 1);
@@ -177,14 +177,12 @@
             Assert.Null(average);
         }
 
-        [Fact(Skip = "TODO")]
+        [Fact(Skip = "This test takes approximately 1 month to run. It's assertions can still be valuable if run manually after changing the logic in the `Average` method to use `int` instead of `long` for the sum.")]
         public void AverageNullableShortsOverflow()
         {
             var source = new RepeatEnumerable<short?>(short.MaxValue, (long.MaxValue / short.MaxValue) + 1);
 
             Assert.Throws<OverflowException>(() => source.Average());
         }
-
-        //// TODO this doesn't document that it can throw overflowexception: https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.average?view=net-9.0#system-linq-enumerable-average(system-collections-generic-ienumerable((system-int32)))
     }
 }

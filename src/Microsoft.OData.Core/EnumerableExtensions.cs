@@ -50,7 +50,10 @@
         /// Computes the average of a sequence of nullable <see cref="Int16"/> values.
         /// </summary>
         /// <param name="source">A sequence of nullable <see cref="Int16"/> values to calculate the average of.</param>
-        /// <returns>The average of the sequence of values, or <see langword="null"/> if the source sequence is empty or contains only values that are <see langword="null"/>.</returns>
+        /// <returns>
+        /// The average of the sequence of values, or <see langword="null"/> if the source sequence is empty or contains only values
+        /// that are <see langword="null"/>.
+        /// </returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="source"/> is <see langword="null"/></exception>
         /// <exception cref="OverflowException">
         /// Thrown if the sum of the elements in the sequence is larger than <see cref="Int64.MaxValue"/>
