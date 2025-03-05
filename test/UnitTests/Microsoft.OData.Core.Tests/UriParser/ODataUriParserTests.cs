@@ -27,6 +27,22 @@ namespace Microsoft.OData.Tests.UriParser
         private readonly Uri ServiceRoot = new Uri("http://host");
         private readonly Uri FullUri = new Uri("http://host/People");
 
+        [Fact]
+        public void AverageUint16()
+        {
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri("http://host/People?$apply=aggregate(FavoriteNumber with average as AverageFavoriteNumber)"));
+
+            var odataUri = uriParser.ParseUri();
+        }
+
+        [Fact]
+        public void AverageInt16()
+        {
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri("http://host/People?$apply=aggregate(SecondFavoriteNumber with average as AverageFavoriteNumber)"));
+
+            var odataUri = uriParser.ParseUri();
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]

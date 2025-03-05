@@ -4,7 +4,7 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// Extension methods for <see cref="IEnumerable{T}"/>
+    /// Extension methods for <see cref="IEnumerable{T}"/>.
     /// </summary>
     public static class EnumerableExtensions
     {

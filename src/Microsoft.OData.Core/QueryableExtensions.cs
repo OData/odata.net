@@ -1,10 +1,13 @@
-﻿namespace Microsoft.OData.Core
+﻿namespace Microsoft.OData
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Linq.Expressions;
 
+    /// <summary>
+    /// Extension methods for <see cref="IQueryable{T}"/>.
+    /// </summary>
     public static class QueryableExtensions
     {
         public static double Average(this IQueryable<short> source)
