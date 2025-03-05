@@ -50,8 +50,10 @@
         {
             ArgumentNullException.ThrowIfNull(source);
 
-            //// TODO the logic is: if there are no elements, return null; if there are only null elements, return null; if there are any non-null elements, average the non-null ones, skipping the null ones
-
+            // the overall behavior for this overload is:
+            // 1. if there are no elements, return `null`
+            // 2. if there are only `null` elements, return `null`
+            // 3. if there are any non-`null` elements, average the non-`null` ones, skipping the `null` ones
             using (var enumerator = source.GetEnumerator())
             {
                 short? current = null;
