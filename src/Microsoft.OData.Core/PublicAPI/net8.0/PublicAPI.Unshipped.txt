@@ -1,2 +1,3 @@
 Microsoft.OData.EnumerableExtensions
 static Microsoft.OData.EnumerableExtensions.Average(this System.Collections.Generic.IEnumerable<short> source) -> double
+static Microsoft.OData.EnumerableExtensions.Average(this System.Collections.Generic.IEnumerable<short?> source) -> double?
