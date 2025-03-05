@@ -12,6 +12,7 @@
     {
         public static double Average(this IQueryable<short> source)
         {
+            //// we return double because of this: https://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs03/odata-data-aggregation-ext-v4.0-cs03.html#StandardAggregationMethodaverage
             ArgumentNullException.ThrowIfNull(source);
 
             return source.Provider.Execute<double>(
