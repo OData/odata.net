@@ -168,7 +168,7 @@ namespace Microsoft.OData.Client.Tests
             Assert.Equal("The method 'Contains' is not supported.", exception.Message);
         }
 
-        #endregion
+#endregion
 
         #region CustomFunction tests
 
