@@ -174,5 +174,13 @@
 
             Assert.Null(average);
         }
+
+        [Fact]
+        public void AverageNullableShortsOverflow()
+        {
+            var source = new RepeatEnumerable<short?>(short.MaxValue, (long.MaxValue / short.MaxValue) + 1);
+
+            Assert.Throws<OverflowException>(() => source.Average());
+        }
     }
 }
