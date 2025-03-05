@@ -13,7 +13,7 @@
         /// </summary>
         /// <param name="source">A sequence of <see cref="Int16"/> values to calculate the average of.</param>
         /// <returns>The average of the sequence of values.</returns>
-        /// <exception cref="Exception">Thrown if <paramref name="source"/> is <see langword="null"/>.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="source"/> is <see langword="null"/>.</exception>
         /// <exception cref="InvalidOperationException">Thrown if <paramref name="source"/> contains no elements.</exception>
         /// <exception cref="OverflowException">
         /// Thrown if <paramref name="source"/> contains elements whose sum is greater than <see cref="long.MaxValue"/>
@@ -26,6 +26,7 @@
             {
                 if (!enumerator.MoveNext())
                 {
+                    // this preserves the wording the .NET uses for its overloads
                     throw new InvalidOperationException("Sequence contains no elements");
                 }
 
@@ -39,6 +40,49 @@
                     }
 
                     ++count;
+                }
+
+                return (double)sum / count;
+            }
+        }
+
+        public static double? Average(this IEnumerable<short?> source)
+        {
+            ArgumentNullException.ThrowIfNull(source);
+
+            //// TODO the logic is: if there are no elements, return null; if there are only null elements, return null; if there are any non-null elements, average the non-null ones, skipping the null ones
+
+            using (var enumerator = source.GetEnumerator())
+            {
+                if (!enumerator.MoveNext())
+                {
+                    return null;
+                }
+
+                short? current;
+                for (current = enumerator.Current; !current.HasValue && enumerator.MoveNext(); current = enumerator.Current)
+                {
+                }
+
+                if (!current.HasValue)
+                {
+                    return null;
+                }
+
+                long sum = current.Value;
+                long count = 1;
+                while (enumerator.MoveNext())
+                {
+                    current = enumerator.Current;
+                    if (current.HasValue)
+                    {
+                        checked
+                        {
+                            sum += current.Value;
+                        }
+
+                        ++count;
+                    }
                 }
 
                 return (double)sum / count;

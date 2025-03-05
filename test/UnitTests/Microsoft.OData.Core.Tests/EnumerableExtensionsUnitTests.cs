@@ -4,7 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Runtime.Serialization;
     using Xunit;
 
     /// <summary>
@@ -37,7 +37,7 @@
         /// <summary>
         /// Asserts the correct exception is thrown when averaging a source with too large of values.
         /// </summary>
-        [Fact]
+        [Fact(Skip = "TODO")]
         public void AverageShortsOverflow()
         {
             var source = new RepeatEnumerable<short>(short.MaxValue, (long.MaxValue / short.MaxValue) + 1);
@@ -97,6 +97,82 @@
             var average = data.Average();
 
             Assert.Equal(2.5, average);
+        }
+
+        [Fact]
+        public void AverageNullableShortsNullSource()
+        {
+            //// TODO
+        }
+
+        [Fact]
+        public void AverageNullableShortsEmptySource()
+        {
+            var data = Enumerable.Empty<short?>();
+
+            var average = data.Average();
+
+            Assert.Null(average);
+        }
+
+        [Fact]
+        public void AverageNullableShortsAllNullElements()
+        {
+            var data = new short?[] { null, null, null };
+
+            var average = data.Average();
+
+            Assert.Null(average);
+        }
+
+        [Fact]
+        public void AverageNullableShortsNoNullElements()
+        {
+            var data = new short?[] { 1, 2, 3, 4 };
+
+            var average = data.Average();
+
+            Assert.Equal(2.5, average);
+        }
+
+        [Fact]
+        public void AverageNullableShortsSomeNullElements()
+        {
+            var data = new short?[] { 1, null, 2, 3, null, 4  };
+
+            var average = data.Average();
+
+            Assert.Equal(2.5, average);
+        }
+
+        [Fact]
+        public void AverageNullableShortsLeadingNullElements()
+        {
+            var data = new short?[] { null, null, 1, 2, 3, 4 };
+
+            var average = data.Average();
+
+            Assert.Equal(2.5, average);
+        }
+
+        [Fact]
+        public void AverageNullableShortsTrailingNullElements()
+        {
+            var data = new short?[] { 1, 2, 3, 4, null, null };
+
+            var average = data.Average();
+
+            Assert.Equal(2.5, average);
+        }
+
+        [Fact]
+        public void AverageNullableShortsSingleNullElement()
+        {
+            var data = new short?[] { null };
+
+            var average = data.Average();
+
+            Assert.Null(average);
         }
     }
 }

@@ -36,7 +36,7 @@
 
         private static double? Average(IEnumerable<short?> source)
         {
-            return 
+            return source.Average();
         }
     }
 }
