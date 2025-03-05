@@ -102,7 +102,9 @@
         [Fact]
         public void AverageNullableShortsNullSource()
         {
-            //// TODO
+            IEnumerable<short?> data = null;
+
+            Assert.Throws<ArgumentNullException>(() => data.Average());
         }
 
         [Fact]
@@ -182,5 +184,7 @@
 
             Assert.Throws<OverflowException>(() => source.Average());
         }
+
+        //// TODO this doesn't document that it can throw overflowexception: https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.average?view=net-9.0#system-linq-enumerable-average(system-collections-generic-ienumerable((system-int32)))
     }
 }
