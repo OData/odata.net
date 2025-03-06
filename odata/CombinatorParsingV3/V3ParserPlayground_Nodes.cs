@@ -1779,6 +1779,10 @@
 
             public IOutput<char, OdataUri<ParseMode.Realized>> Realize()
             {
+                //// TODO async optimizations
+                
+                //// TODO what about the case where the input is a `stream` and so we don't necessarily have the next byte to further parse?
+
                 return this.cachedOutput.Value;
             }
 
@@ -1802,5 +1806,89 @@
                 }
             }
         }
+    }
+
+    public interface IOdataServiceDeferred
+    {
+        OdataGetResponseAst Get(OdataUri<ParseMode.Deferred> uri);
+
+        ////OdataGetResponseAst Get(Stream input, IEnumerable<ITokenHandler> handlers);
+
+        OdataPatchResponseAst Patch(OdataUriAst uri, OdataPatchRequestAst request);
+
+        // other verbs here
+    }
+
+    public interface IOdataService
+    {
+        OdataGetResponseAst Get(OdataUri<ParseMode.Realized> uri);
+
+        //// TODO how can you reconcile this with clement's proposal?
+        ////OdataGetResponseAst Get(Stream input, IEnumerable<ITokenHandler> handlers);
+
+        OdataPatchResponseAst Patch(OdataUriAst uri, OdataPatchRequestAst request);
+        
+        // other verbs here
+    }
+
+    public sealed class Client : IOdataService
+    {
+    }
+
+    public class AgsController
+    {
+        [Route("*")]
+        public IAsyncResult Get(string uri)
+        {
+            new Ags().Get(ParseUriIntoAst(uri));
+        }
+    }
+
+    public sealed class Directory : IOdataService
+    {
+    }
+
+    public sealed class Ags : IOdataServiceDeferred
+    {
+        private readonly IEnumerable<IOdataService> workloads;
+
+        public Ags(IEnumerable<IOdataService> workloads)
+        {
+            this.workloads = workloads;
+        }
+
+        public OdataGetResponseAst Get(OdataUri<ParseMode.Deferred> uri)
+        {
+            var segmentsOutput = uri.Segments.Realize();
+            if (!segmentsOutput.Success)
+            {
+                throw new Exception("TODO uri is not valid");
+            }
+
+            var workload = FindWorkloadFromSegents(segmentsOutput.Parsed);
+
+            workload.Get(uri);
+        }
+
+        public OdataPatchResponseAst Patch(OdataUriAst uri, OdataPatchRequestAst request)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public sealed class OdataUriAst
+    {
+    }
+
+    public sealed class OdataPatchRequestAst
+    {
+    }
+
+    public sealed class OdataGetResponseAst
+    {
+    }
+
+    public sealed class OdataPatchResponseAst
+    {
     }
 }
