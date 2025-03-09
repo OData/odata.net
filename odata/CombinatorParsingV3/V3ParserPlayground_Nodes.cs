@@ -1808,7 +1808,7 @@
         }
     }
 
-    public interface IOdataServiceDeferred
+    /*public interface IOdataServiceDeferred
     {
         OdataGetResponseAst Get(OdataUri<ParseMode.Deferred> uri);
 
@@ -1890,5 +1890,5 @@
 
     public sealed class OdataPatchResponseAst
     {
-    }
+    }*/
 }
