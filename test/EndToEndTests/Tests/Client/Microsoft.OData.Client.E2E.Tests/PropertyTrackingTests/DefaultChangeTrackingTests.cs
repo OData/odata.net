@@ -50,115 +50,287 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
         _baseUri = new Uri(Client.BaseAddress, "odata/");
     }
 
-    // This test verifies that primitive and collection properties of entities can be updated using PATCH requests.
-    // It covers updating properties of various entity types, including inherited and complex types, as well as
-    // collection navigation properties and single value navigation properties.
     [Fact]
-    public void UpdatePrimitiveAndCollectionPropertiesUsingPatch()
+    public async Task UpdatePrimitivePropertyUnderEntityUsingPatch()
+    {
+        // Arrange
+        var _context = this.ContextWrapper();
+        int expectedChangedPropertyCount = 0;
+
+        _context.Configurations.RequestPipeline.OnEntryEnding(
+            (arg) =>
+            {
+                if (arg.Entry.TypeName.EndsWith("Order"))
+                {
+                    Assert.Equal(expectedChangedPropertyCount, arg.Entry.Properties.Count());
+                }
+            });
+
+        var orders = new DataServiceCollection<Order>(_context.Orders.Expand("OrderDetails"));
+
+        // Act
+        _context.BuildingRequest += (sender, args) =>
+        {
+            if (args.RequestUri.AbsoluteUri.EndsWith("odata/Orders(8)"))
+            {
+                Assert.Equal("PATCH", args.Method);
+            }
+        };
+
+        var dateTimeOffset = DateTimeOffset.Now;
+        orders[1].OrderDate = dateTimeOffset;
+        expectedChangedPropertyCount = 1;
+        var responses = await _context.SaveChangesAsync();
+
+        // Assert
+        Assert.Equal(204, responses.First().StatusCode);
+        Assert.EndsWith("odata/Orders(8)", ((responses.ElementAt(0) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
+        Assert.Equal(dateTimeOffset, _context.Orders.Where((it) => it.OrderID == orders[1].OrderID).Single().OrderDate);
+    }
+
+    [Fact]
+    public async Task UpdateCollectionPropertyUnderEntityUsingPatch()
+    {
+        // Arrange
+        var _context = this.ContextWrapper();
+        int expectedChangedPropertyCount = 0;
+
+        _context.Configurations.RequestPipeline.OnEntryEnding(
+            (arg) =>
+            {
+                if (arg.Entry.TypeName.EndsWith("Order"))
+                {
+                    Assert.Equal(expectedChangedPropertyCount, arg.Entry.Properties.Count());
+                }
+            });
+
+        var orders = new DataServiceCollection<Order>(_context.Orders.Expand("OrderDetails"));
+
+        // Act
+        _context.BuildingRequest += (sender, args) =>
+        {
+            if (args.RequestUri.AbsoluteUri.EndsWith("odata/Orders(8)"))
+            {
+                Assert.Equal("PATCH", args.Method);
+            }
+        };
+
+        orders[1].OrderShelfLifes.Add(TimeSpan.FromHours(1.2));
+        expectedChangedPropertyCount = 1;
+        var responses = await _context.SaveChangesAsync();
+
+        // Assert
+        Assert.Equal(204, responses.First().StatusCode);
+        Assert.EndsWith("odata/Orders(8)", ((responses.ElementAt(0) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
+        Assert.Equal(2, _context.Orders.Where((it) => it.OrderID == orders[1].OrderID).Single().OrderShelfLifes.Count);
+    }
+
+    [Fact]
+    public async Task UpdatePrimitivePropertyUnderInheritedEntityUsingPatch()
+    {
+        // Arrange
+        var _context = this.ContextWrapper();
+        int expectedChangedPropertyCount = 0;
+
+        _context.Configurations.RequestPipeline.OnEntryEnding(
+            (arg) =>
+            {
+                if (arg.Entry.TypeName.EndsWith("Person"))
+                {
+                    Assert.Equal(expectedChangedPropertyCount, arg.Entry.Properties.Count());
+                }
+            });
+
+        var people = new DataServiceCollection<Person>(_context.People);
+
+        // Act
+        _context.BuildingRequest += (sender, args) =>
+        {
+            if (args.RequestUri.AbsoluteUri.EndsWith("odata/People(1)/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer"))
+            {
+                Assert.Equal("PATCH", args.Method);
+            }
+        };
+
+        ((Customer)people[0]).City = "Redmond";
+        expectedChangedPropertyCount = 1;
+        var responses = await _context.SaveChangesAsync();
+
+        // Assert
+        Assert.Equal(204, responses.First().StatusCode);
+        Assert.EndsWith("odata/People(1)/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer", ((responses.ElementAt(0) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
+        Assert.Equal("Redmond", (_context.People.Where((it) => it.PersonID == people[0].PersonID).Single() as Customer)?.City);
+    }
+
+    [Fact]
+    public async Task UpdatePropertyUnderComplexTypeUsingPatch()
     {
         // Arrange
         var _context = this.ContextWrapper();
 
+        var people = new DataServiceCollection<Person>(_context.People);
+
+        // Act
+        _context.BuildingRequest += (sender, args) =>
+        {
+            if (args.RequestUri.AbsoluteUri.EndsWith("odata/People(1)/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer"))
+            {
+                Assert.Equal("PATCH", args.Method);
+            }
+        };
+
+        people[0].HomeAddress.City = "Redmond";
+        var responses = await _context.SaveChangesAsync();
+
+        // Assert
+        Assert.Equal(204, responses.First().StatusCode);
+        Assert.EndsWith("odata/People(1)/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer", ((responses.ElementAt(0) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
+        Assert.Equal("Redmond", _context.People.Where((it) => it.PersonID == people[0].PersonID).Single().HomeAddress.City);
+        Assert.Equal("98052", _context.People.Where((it) => it.PersonID == people[0].PersonID).Single().HomeAddress.PostalCode);
+    }
+
+    [Fact]
+    public async Task UpdatePropertyUnderInheritedComplexTypeUsingPatch()
+    {
+        // Arrange
+        var _context = this.ContextWrapper();
+
+        var people = new DataServiceCollection<Person>(_context.People);
+
+        // Act
+        _context.BuildingRequest += (sender, args) =>
+        {
+            if (args.RequestUri.AbsoluteUri.EndsWith("odata/People(1)/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer"))
+            {
+                Assert.Equal("PATCH", args.Method);
+            }
+        };
+
+        ((HomeAddress)people[0].HomeAddress).FamilyName = "Microsoft";
+        var responses = await _context.SaveChangesAsync();
+
+        // Assert
+        Assert.Equal(204, responses.First().StatusCode);
+        Assert.EndsWith("odata/People(1)/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer", ((responses.ElementAt(0) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
+        Assert.Equal("Microsoft", (_context.People.Where((it) => it.PersonID == people[0].PersonID).Single().HomeAddress as HomeAddress)?.FamilyName);
+    }
+
+    [Fact]
+    public async Task UpdateCollectionNavigationPropertyUsingPatch()
+    {
+        // Arrange
+        var _context = this.ContextWrapper();
         int expectedPropertyCount = 0;
 
         _context.Configurations.RequestPipeline.OnEntryEnding(
             (arg) =>
             {
-                if (arg.Entry.TypeName.EndsWith("Order")
-                    || arg.Entry.TypeName.EndsWith("Person")
-                    || arg.Entry.TypeName.EndsWith("OrderDetail")
-                    || arg.Entry.TypeName.EndsWith("GiftCard"))
+                if (arg.Entry.TypeName.EndsWith("OrderDetail"))
                 {
                     Assert.Equal(expectedPropertyCount, arg.Entry.Properties.Count());
                 }
             });
 
         var orders = new DataServiceCollection<Order>(_context.Orders.Expand("OrderDetails"));
-        var people = new DataServiceCollection<Person>(_context.People);
-        var boss = new DataServiceCollection<Person>(_context.Boss);
-        var accounts = new DataServiceCollection<Account>(_context.Accounts.Expand("MyGiftCard"));
 
-        // Act & Assert
+        // Act
+        _context.BuildingRequest += (sender, args) =>
+        {
+            if (args.RequestUri.AbsoluteUri.EndsWith("odata/OrderDetails(OrderID=7,ProductID=6)"))
+            {
+                Assert.Equal("PATCH", args.Method);
+            }
+        };
 
-        // Update primitive type and collection property under entity
-        orders[1].OrderDate = DateTimeOffset.Now;
-        orders[1].OrderShelfLifes.Add(TimeSpan.FromHours(1.2));
-
-        expectedPropertyCount = 2;
-        _context.SaveChanges();
-
-        Assert.Equal(2, _context.Orders.Where((it) => it.OrderID == orders[1].OrderID).Single().OrderShelfLifes.Count);
-
-        // Update primitive type under entity (inherited)
-        ((Customer)people[0]).City = "Redmond";
-
+        orders[0].OrderDetails.First().Quantity = 1;
         expectedPropertyCount = 1;
-        _context.SaveChanges();
+        var responses = await _context.SaveChangesAsync();
 
-        Assert.Equal("Redmond", (_context.People.Where((it) => it.PersonID == people[0].PersonID).Single() as Customer)?.City);
+        // Assert
+        Assert.Equal(204, responses.First().StatusCode);
+        Assert.EndsWith("odata/OrderDetails(OrderID=7,ProductID=6)", ((responses.ElementAt(0) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
+        Assert.Equal(1, _context.OrderDetails.Where((it) => it.ProductID == orders[0].OrderDetails.First().ProductID && it.OrderID == orders[0].OrderDetails.First().OrderID).Single().Quantity);
+    }
 
-        // Update the property under complex type.
-        people[0].HomeAddress.City = "Redmond";
+    [Fact]
+    public async Task UpdateSingleValueNavigationPropertyUsingPatch()
+    {
+        // Arrange
+        var _context = this.ContextWrapper();
+        int expectedPropertyCount = 0;
 
         _context.Configurations.RequestPipeline.OnEntryEnding(
-        (arg) =>
-        {
-            if (arg.Entry.TypeName.EndsWith("HomeAddress"))
+            (arg) =>
             {
-                Assert.Equal("Redmond", (arg.Entry.Properties.Single(p => p.Name.Equals("City")) as ODataProperty)?.Value);
+                if (arg.Entry.TypeName.EndsWith("GiftCard"))
+                {
+                    Assert.Equal(expectedPropertyCount, arg.Entry.Properties.Count());
+                }
+            });
+
+        var accounts = new DataServiceCollection<Account>(_context.Accounts.Expand("MyGiftCard"));
+
+        // Act
+        _context.BuildingRequest += (sender, args) =>
+        {
+            if (args.RequestUri.AbsoluteUri.EndsWith("odata/Accounts(101)/MyGiftCard"))
+            {
+                Assert.Equal("PATCH", args.Method);
             }
-        });
+        };
 
-        expectedPropertyCount = 0;
-        _context.SaveChanges();
-
-        Assert.Equal("Redmond", _context.People.Where((it) => it.PersonID == people[0].PersonID).Single().HomeAddress.City);
-        Assert.Equal("98052", _context.People.Where((it) => it.PersonID == people[0].PersonID).Single().HomeAddress.PostalCode);
-
-        // Update the property under complex type (inherited).
-        ((HomeAddress)people[0].HomeAddress).FamilyName = "Microsoft";
-
-        expectedPropertyCount = 0;
-        _context.SaveChanges();
-
-        Assert.Equal("Microsoft", (_context.People.Where((it) => it.PersonID == people[0].PersonID).Single().HomeAddress as HomeAddress)?.FamilyName);
-
-        // Update collection navigation property.
-        orders[0].OrderDetails.First().Quantity = 1;
-
-        expectedPropertyCount = 1;
-        _context.SaveChanges();
-
-        Assert.Equal(1,
-            _context.OrderDetails.Where(
-                (it) => it.ProductID == orders[0].OrderDetails.First().ProductID && it.OrderID == orders[0].OrderDetails.First().OrderID
-                ).Single().Quantity);
-
-        // Update single value navigation property.
         accounts[0].MyGiftCard.ExperationDate = DateTimeOffset.Now;
-
         expectedPropertyCount = 1;
-        _context.SaveChanges();
+        var responses = await _context.SaveChangesAsync();
 
-        Assert.Equal(accounts[0].MyGiftCard.ExperationDate,
-            _context.Accounts.Expand("MyGiftCard").Where((it) => it.AccountID == accounts[0].AccountID).Single().MyGiftCard.ExperationDate);
+        // Assert
+        Assert.Equal(204, responses.First().StatusCode);
+        Assert.EndsWith("odata/Accounts(101)/MyGiftCard", ((responses.ElementAt(0) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
+        Assert.Equal(accounts[0].MyGiftCard.ExperationDate, _context.Accounts.Expand("MyGiftCard").Where((it) => it.AccountID == accounts[0].AccountID).Single().MyGiftCard.ExperationDate);
+    }
 
-        // Update property in singleton.
+    [Fact]
+    public async Task UpdatePropertyInSingletonUsingPatch()
+    {
+        // Arrange
+        var _context = this.ContextWrapper();
+        int expectedPropertyCount = 0;
+
+        _context.Configurations.RequestPipeline.OnEntryEnding(
+            (arg) =>
+            {
+                if (arg.Entry.TypeName.EndsWith("Person"))
+                {
+                    Assert.Equal(expectedPropertyCount, arg.Entry.Properties.Count());
+                }
+            });
+
+        var boss = new DataServiceCollection<Person>(_context.Boss);
+
+        // Act
+        _context.BuildingRequest += (sender, args) =>
+        {
+            if (args.RequestUri.AbsoluteUri.EndsWith("odata/Boss/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer"))
+            {
+                Assert.Equal("PATCH", args.Method);
+            }
+        };
+
         boss.Single().FirstName = "Bill";
-
         expectedPropertyCount = 1;
-        _context.SaveChanges();
+        var responses = await _context.SaveChangesAsync();
 
-        Assert.Equal(
-            "Bill",
-            _context.Boss.GetValue().FirstName);
+        // Assert
+        Assert.Equal(204, responses.First().StatusCode);
+        Assert.EndsWith("odata/Boss/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer", ((responses.ElementAt(0) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
+        Assert.Equal("Bill", _context.Boss.GetValue().FirstName);
     }
 
     // This test verifies that updating an object without any changes results in a PATCH request
     // that includes all properties of the entity. It ensures that the request pipeline correctly
     // handles such scenarios and includes the expected number of properties in the request.
     [Fact]
-    public void UpdateObjectWithoutChangesUsingPatch()
+    public async Task UpdateObjectWithoutChangesUsingPatch()
     {
         // Arrange
         var _context = this.ContextWrapper();
@@ -179,24 +351,32 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
                 }
             });
 
-        _context.SaveChanges();
+        _context.BuildingRequest += (sender, args) =>
+        {
+            Assert.Equal("PATCH", args.Method);
+        };
+
+        var responses = await _context.SaveChangesAsync();
+        Assert.Single(responses);
+        Assert.Equal(204, responses.First().StatusCode);
+        Assert.EndsWith("odata/People(1)/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer", ((responses.ElementAt(0) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
     }
 
     // This test verifies that primitive and collection properties of entities can be updated using PUT requests.
     // It covers updating properties of various entity types and ensures that the request pipeline correctly
     // handles the ReplaceOnUpdate option, which replaces the entire entity with the updated values.
     [Fact]
-    public void UpdatePrimitiveAndCollectionPropertiesUsingPut()
+    public async Task UpdatePrimitiveAndCollectionPropertiesUsingPut()
     {
         // Arrange
         var _context = this.ContextWrapper();
 
-        int expectedPropertyCount = 0;
+        int expectedChangedPropertyCount = 0;
 
         _context.Configurations.RequestPipeline.OnEntryEnding(
             (arg) =>
             {
-                Assert.Equal(expectedPropertyCount, arg.Entry.Properties.Count());
+                Assert.Equal(expectedChangedPropertyCount, arg.Entry.Properties.Count());
             });
 
         var orders = new DataServiceCollection<Order>(_context.Orders.Expand("OrderDetails"));
@@ -205,31 +385,55 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
         orders[1].OrderDate = DateTimeOffset.Now;
         orders[1].OrderShelfLifes.Add(TimeSpan.FromHours(1.2));
 
-        expectedPropertyCount = 7;
-        _context.SaveChanges(SaveChangesOptions.ReplaceOnUpdate);
+        _context.BuildingRequest += (sender, args) =>
+        {
+            Assert.Equal("PUT", args.Method);
+        };
+
+        expectedChangedPropertyCount = 7;
+        var responses = await _context.SaveChangesAsync(SaveChangesOptions.ReplaceOnUpdate);
+
+        // Assert
+        Assert.Single(responses);
+        Assert.Equal(204, responses.First().StatusCode);
+        Assert.EndsWith("odata/Orders(8)", ((responses.ElementAt(0) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
     }
 
     // This test verifies that multiple entities can be updated using PATCH requests in a single batch.
     // It covers updating properties of various entity types and ensures that the request pipeline correctly
     // handles batch requests with a single changeset, updating all entities in a single transaction.
     [Fact]
-    public void UpdateMultipleEntitiesUsingPatchInBatch()
+    public async Task UpdateMultipleEntitiesUsingPatchInBatch()
     {
         // Arrange
         var _context = this.ContextWrapper();
 
-        int expectedPropertyCount = 1;
-
         _context.Configurations.RequestPipeline.OnEntryEnding(
             (arg) =>
             {
-                Assert.Equal(expectedPropertyCount, arg.Entry.Properties.Count());
+                Assert.Single(arg.Entry.Properties);
             });
 
         // Query the entities
         var orders = new DataServiceCollection<Order>(_context.Orders.Expand("OrderDetails"));
         var people = new DataServiceCollection<Person>(_context.People);
         var boss = new DataServiceCollection<Person>(_context.Boss);
+
+
+        _context.BuildingRequest += (sender, args) =>
+        {
+            if (args.RequestUri.AbsoluteUri.EndsWith("odata/$batch"))
+            {
+                Assert.Equal("POST", args.Method);
+            }
+            else if (args.RequestUri.AbsoluteUri.EndsWith("odata/Orders(8)") ||
+                     args.RequestUri.AbsoluteUri.EndsWith("odata/People(1)/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer") ||
+                     args.RequestUri.AbsoluteUri.EndsWith("odata/Boss/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer") ||
+                     args.RequestUri.AbsoluteUri.EndsWith("odata/OrderDetails(OrderID=7,ProductID=6)"))
+            {
+                Assert.Equal("PATCH", args.Method);
+            }
+        };
 
         // Update the entities
         orders[1].OrderDate = DateTimeOffset.Now;
@@ -238,7 +442,19 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
         orders[0].OrderDetails.First().Quantity = 1;
 
         // Save the changes in batch with a single changeset
-        _context.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
+        var responses = await _context.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset);
+
+        // Assert
+        Assert.Equal(4, responses.Count());
+        Assert.All(responses, response =>
+        {
+            Assert.Equal(204, response.StatusCode);
+            Assert.Null(response.Error);
+        });
+        Assert.EndsWith("odata/Orders(8)", ((responses.ElementAt(0) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
+        Assert.EndsWith("odata/People(1)/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer", ((responses.ElementAt(1) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
+        Assert.EndsWith("odata/Boss/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer", ((responses.ElementAt(2) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
+        Assert.EndsWith("odata/OrderDetails(OrderID=7,ProductID=6)", ((responses.ElementAt(3) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
     }
 
     #region Private

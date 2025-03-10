@@ -205,7 +205,7 @@ public class ChangeTrackingOptionsTestsController : ODataController
         customer.Orders ??= new List<Order>();
         customer.Orders.Add(order);
 
-        return Updated(order);
+        return Ok(customer);
     }
 
     [HttpPut("odata/Orders({key})")]
