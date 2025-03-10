@@ -1862,15 +1862,28 @@
             }
         }
 
+        public static class QuestionMark
+        {
+            public static QuestionMark<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            {
+                return QuestionMark<ParseMode.Deferred>.Create(previouslyParsedOutput);
+            }
+        }
+
         public sealed class QuestionMark<TMode> : IDeferredAstNode<char, QuestionMark<ParseMode.Realized>> where TMode : ParseMode
         {
-            private readonly Future<IDeferredOutput<char>> future;
+            private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
 
             private readonly Future<IOutput<char, QuestionMark<ParseMode.Realized>>> cachedOutput;
 
-            public QuestionMark(Future<IDeferredOutput<char>> future)
+            internal static QuestionMark<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
-                this.future = future;
+                return new QuestionMark<ParseMode.Deferred>(previouslyParsedOutput);
+            }
+
+            private QuestionMark(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            {
+                this.previouslyParsedOutput = previouslyParsedOutput;
 
                 this.cachedOutput = new Future<IOutput<char, QuestionMark<ParseMode.Realized>>>(this.RealizeImpl);
             }
@@ -1887,7 +1900,7 @@
 
             private IOutput<char, QuestionMark<ParseMode.Realized>> RealizeImpl()
             {
-                var output = this.future.Value;
+                var output = this.previouslyParsedOutput.Value;
                 if (!output.Success)
                 {
                     return new Output<char, QuestionMark<ParseMode.Realized>>(false, default, output.Remainder);
@@ -1932,7 +1945,7 @@
                         previouslyParsedOutput,
                         input => Segment.Create(input)));
                 var questionMark = new Future<QuestionMark<ParseMode.Deferred>>(
-                    () => new QuestionMark<ParseMode.Deferred>(DeferredOutput.ToPromise(() => segments.Value.Realize())));
+                    () => V3ParserPlayground.QuestionMark.Create(DeferredOutput.ToPromise(() => segments.Value.Realize()).ToFuture()));
                 var queryOptions = new Future<Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, ParseMode.Deferred>>(
                     () => Many.Create<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>>(
                         input => QueryOption.Create(input),
