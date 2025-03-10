@@ -1549,15 +1549,28 @@
             }
         }
 
+        public static class EqualsSign
+        {
+            public static EqualsSign<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            {
+                return EqualsSign<ParseMode.Deferred>.Create(previouslyParsedOutput);
+            }
+        }
+
         public sealed class EqualsSign<TMode> : IDeferredAstNode<char, EqualsSign<ParseMode.Realized>> where TMode : ParseMode
         {
-            private readonly Future<IDeferredOutput<char>> future;
+            private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
 
             private readonly Future<IOutput<char, EqualsSign<ParseMode.Realized>>> cachedOutput;
 
-            public EqualsSign(Future<IDeferredOutput<char>> future)
+            internal static EqualsSign<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
-                this.future = future;
+                return new EqualsSign<ParseMode.Deferred>(previouslyParsedOutput);
+            }
+
+            private EqualsSign(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            {
+                this.previouslyParsedOutput = previouslyParsedOutput;
 
                 this.cachedOutput = new Future<IOutput<char, EqualsSign<ParseMode.Realized>>>(this.RealizeImpl);
             }
@@ -1574,7 +1587,7 @@
 
             private IOutput<char, EqualsSign<ParseMode.Realized>> RealizeImpl()
             {
-                var output = this.future.Value;
+                var output = this.previouslyParsedOutput.Value;
                 if (!output.Success)
                 {
                     return new Output<char, EqualsSign<ParseMode.Realized>>(false, default, output.Remainder);
