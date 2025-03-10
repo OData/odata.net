@@ -839,9 +839,30 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         }
 
         [Fact]
-        public void BindApplyWithAverageWithInt16PropertyShouldReturnApplyClause()
+        public void BindApplyWithAverageWithUInt16PropertyShouldReturnApplyClause()
         {
             IEnumerable<QueryToken> tokens = _parser.ParseApply("aggregate(FavoriteNumber with average as AverageFavoriteNumber)");
+
+            ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindMethodReturningASingleFloatPrimitive, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            Assert.NotNull(actual);
+            AggregateTransformationNode aggregate = Assert.IsType<AggregateTransformationNode>(Assert.Single(actual.Transformations));
+
+            Assert.Equal(TransformationNodeKind.Aggregate, aggregate.Kind);
+            Assert.NotNull(aggregate.AggregateExpressions);
+
+            AggregateExpression statement = Assert.IsType<AggregateExpression>(Assert.Single(aggregate.AggregateExpressions));
+            Assert.NotNull(statement.Expression);
+            Assert.Same(FakeBindMethods.FakeSingleFloatPrimitive, statement.Expression);
+            Assert.Equal(AggregationMethod.Average, statement.Method);
+            Assert.Equal("AverageFavoriteNumber", statement.Alias);
+        }
+
+        [Fact]
+        public void BindApplyWithAverageWithInt16PropertyShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("aggregate(SecondFavoriteNumber with average as AverageFavoriteNumber)");
 
             ApplyBinder binder = new ApplyBinder(FakeBindMethods.BindMethodReturningASingleFloatPrimitive, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
