@@ -12,6 +12,7 @@
     using System.Net.Cache;
     using System.IO;
     using Sprache;
+    using System.Diagnostics.Contracts;
 
     public interface IFuture<out T> //// TODO i'm not sure i like having an interface...
     {
@@ -989,9 +990,9 @@
                 var __1 = new Future<TDeferredAstNode>(
                     () => nodeFactory(previouslyParsedOutput));
                 var node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>(
-                    () => new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
-                        Func.Compose(() => __1.Value.Realize(), DeferredOutput.Create),
-                        nodeFactory));
+                    () => ManyNode.Create<TDeferredAstNode, TRealizedAstNode>(
+                        nodeFactory,
+                        Func.Compose(() => __1.Value.Realize(), DeferredOutput.Create).ToFuture()));
 
                 return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
                     nodeFactory,
@@ -1089,7 +1090,18 @@
             }
         }
 
-        public sealed class Many<TDeferredAstNode, TRealizedAstNode, TMode> 
+        public static class Many
+        {
+            public static Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create<TDeferredAstNode, TRealizedAstNode>(
+                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
+                IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            {
+                return Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>.Create(nodeFactory, previouslyParsedOutput);
+            }
+        }
+
+        public sealed class Many<TDeferredAstNode, TRealizedAstNode, TMode>
             : IDeferredAstNode<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
             where TMode : ParseMode
@@ -1097,9 +1109,32 @@
             private readonly Future<IDeferredOutput<char>> future;
             private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
-            private readonly Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node;
+            private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node;
 
             private readonly Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
+
+            internal static Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create(
+                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
+                IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            {
+                var node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>(
+                    () => ManyNode.Create<TDeferredAstNode, TRealizedAstNode>(nodeFactory, previouslyParsedOutput));
+
+                return new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
+                    nodeFactory,
+                    node);
+            }
+
+            private Many(
+                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
+                IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node)
+            {
+                this.nodeFactory = nodeFactory;
+                this.node = node;
+
+                this.cachedOutput = new Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(
+                    () => this.RealizeImpl());
+            }
 
             public Many(Future<IDeferredOutput<char>> future, Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
             {
@@ -1107,7 +1142,7 @@
                 this.nodeFactory = nodeFactory;
 
                 this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
-                    () => new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(this.future, this.nodeFactory));
+                    () => ManyNode.Create<TDeferredAstNode, TRealizedAstNode>(this.nodeFactory, this.future));
 
                 this.cachedOutput = new Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(
                     () => this.RealizeImpl());
@@ -1126,7 +1161,7 @@
             {
                 get
                 {
-                    return this.node;
+                    return this.node.Value;
                 }
             }
 
@@ -1158,30 +1193,49 @@
             }
         }
 
+        public static class ManyNode
+        {
+            public static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create<TDeferredAstNode, TRealizedAstNode>(
+                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
+                IFuture<IDeferredOutput<char>> previouslyParsedOutput) where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            {
+                return ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>.Create(nodeFactory, previouslyParsedOutput);
+            }
+        }
+
         public sealed class ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>, IFromRealizedable<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
-            private readonly Future<IDeferredOutput<char>> future;
             private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
-            private readonly Future<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>> element;
-            private readonly Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next;
+            private readonly IFuture<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>> element;
+            private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next;
 
             private readonly Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
 
-            public ManyNode(
-                Future<IDeferredOutput<char>> future, 
-                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
+            internal static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create(
+                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
+                IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
-                this.future = future;
+                var element = new Future<OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>(
+                    () => new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(previouslyParsedOutput, nodeFactory));
+                var next = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>(
+                    () =>
+                        ManyNode.Create<TDeferredAstNode, TRealizedAstNode>(
+                            nodeFactory,
+                            Func.Compose(() => element.Value.Realize(), DeferredOutput.Create).ToFuture()));
+
+                return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(nodeFactory, element, next);
+            }
+
+            private ManyNode(
+                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
+                IFuture<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>> element,
+                IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next)
+            {
                 this.nodeFactory = nodeFactory;
 
-                this.element = new Future<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
-                    () => new OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>(this.future, this.nodeFactory));
-                this.next = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
-                    () => 
-                        new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(
-                            Func.Compose(this.Element.Realize, DeferredOutput.Create), 
-                    this.nodeFactory));
+                this.element = element;
+                this.next = next;
 
                 this.cachedOutput = new Future
                     <
@@ -1215,7 +1269,7 @@
             {
                 get
                 {
-                    return this.element;
+                    return this.element.Value;
                 }
             }
 
@@ -1226,7 +1280,7 @@
             {
                 get
                 {
-                    return this.next;
+                    return this.next.Value;
                 }
             }
 
@@ -1275,7 +1329,7 @@
             {
                 if (typeof(TMode) == typeof(ParseMode.Deferred))
                 {
-                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(this.future, this.nodeFactory);
+                    return ManyNode.Create<TDeferredAstNode, TRealizedAstNode>(this.nodeFactory, this.future);
                 }
                 else
                 {
@@ -1293,7 +1347,7 @@
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
             where TMode : ParseMode
         {
-            private readonly Future<IDeferredOutput<char>> future;
+            private readonly IFuture<IDeferredOutput<char>> future;
             private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
             private readonly RealNullable<RealNullable<TRealizedAstNode>> value;
@@ -1301,7 +1355,7 @@
             private readonly Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
 
             public OptionalNode(
-                Future<IDeferredOutput<char>> future,
+                IFuture<IDeferredOutput<char>> future,
                 Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
             {
                 this.future = future;
