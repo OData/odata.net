@@ -1106,7 +1106,6 @@
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
             where TMode : ParseMode
         {
-            private readonly Future<IDeferredOutput<char>> future;
             private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
             private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node;
@@ -1131,18 +1130,6 @@
             {
                 this.nodeFactory = nodeFactory;
                 this.node = node;
-
-                this.cachedOutput = new Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(
-                    () => this.RealizeImpl());
-            }
-
-            public Many(Future<IDeferredOutput<char>> future, Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
-            {
-                this.future = future;
-                this.nodeFactory = nodeFactory;
-
-                this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
-                    () => ManyNode.Create<TDeferredAstNode, TRealizedAstNode>(this.nodeFactory, this.future));
 
                 this.cachedOutput = new Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(
                     () => this.RealizeImpl());
@@ -1666,23 +1653,35 @@
             }
         }
 
+        public static class OptionValue
+        {
+            public static OptionValue<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            {
+                return OptionValue<ParseMode.Deferred>.Create(previouslyParsedOutput);
+            }
+        }
+
         public sealed class OptionValue<TMode> : IDeferredAstNode<char, OptionValue<ParseMode.Realized>> where TMode : ParseMode
         {
-            private readonly Future<IDeferredOutput<char>> future;
-
             private readonly Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
 
             private readonly Future<IOutput<char, OptionValue<ParseMode.Realized>>> cachedOutput;
 
-            public OptionValue(Future<IDeferredOutput<char>> future)
+            internal static OptionValue<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
-                this.future = future;
-
-                this.characters = new Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>>(
+                var characters = new Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(
                     () =>
-                        new Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>(
-                            this.future,
-                            input => new AlphaNumericHolder(input)));
+                        Many.Create<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(
+                            input => new AlphaNumericHolder(input),
+                            previouslyParsedOutput));
+
+                return new OptionValue<ParseMode.Deferred>(characters);
+            }
+
+            private OptionValue(
+                Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters)
+            {
+                this.characters = characters;
 
                 this.cachedOutput = new Future<IOutput<char, OptionValue<ParseMode.Realized>>>(this.RealizeImpl);
             }
@@ -1749,8 +1748,8 @@
                 var name = new Future<OptionName<ParseMode.Deferred>>(() => OptionName.Create(previouslyParsedOutput));
                 var equalsSign = new Future<EqualsSign<ParseMode.Deferred>>(() => new EqualsSign<ParseMode.Deferred>(
                     Func.Compose(() => name.Value.Realize(), DeferredOutput.Create)));
-                var optionValue = new Future<OptionValue<ParseMode.Deferred>>(() => new OptionValue<ParseMode.Deferred>(
-                    DeferredOutput.ToPromise(() => equalsSign.Value.Realize())));
+                var optionValue = new Future<OptionValue<ParseMode.Deferred>>(() => V3ParserPlayground.OptionValue.Create(
+                    DeferredOutput.ToPromise(() => equalsSign.Value.Realize()).ToFuture()));
 
                 return new QueryOption<ParseMode.Deferred>(name, equalsSign, optionValue);
             }
@@ -1899,9 +1898,9 @@
                 var questionMark = new Future<QuestionMark<ParseMode.Deferred>>(
                     () => new QuestionMark<ParseMode.Deferred>(DeferredOutput.ToPromise(() => segments.Value.Realize())));
                 var queryOptions = new Future<Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, ParseMode.Deferred>>(
-                    () => new Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, ParseMode.Deferred>(
-                        DeferredOutput.ToPromise(() => questionMark.Value.Realize()),
-                        input => QueryOption.Create(input)));
+                    () => Many.Create<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>>(
+                        input => QueryOption.Create(input),
+                        DeferredOutput.ToPromise(() => questionMark.Value.Realize()).ToFuture()));
 
                 return new OdataUri<ParseMode.Deferred>(segments, questionMark, queryOptions);
             }
