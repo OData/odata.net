@@ -567,7 +567,7 @@ public class ChangeTrackingOptionsTests : EndToEndTestBase<ChangeTrackingOptions
         // Arrange
         var context = this.ContextWrapper();
 
-        int expectedPropertyCount = 0;
+        int expectedChangedPropertyCount = 0;
         var saveChangesOption = (SaveChangesOptions.ReplaceOnUpdate | SaveChangesOptions.BatchWithSingleChangeset);
 
         context.Configurations.RequestPipeline.OnEntryEnding(
@@ -576,7 +576,7 @@ public class ChangeTrackingOptionsTests : EndToEndTestBase<ChangeTrackingOptions
                 if (arg.Entry.TypeName.EndsWith("Order")
                     || arg.Entry.TypeName.EndsWith("Customer")
                     || arg.Entry.TypeName.EndsWith("OrderDetail"))
-                    Assert.Equal(expectedPropertyCount, arg.Entry.Properties.Count());
+                    Assert.Equal(expectedChangedPropertyCount, arg.Entry.Properties.Count());
             });
 
         var orders = new DataServiceCollection<Order>(context.Orders.Expand("OrderDetails").Take(2));
@@ -601,16 +601,16 @@ public class ChangeTrackingOptionsTests : EndToEndTestBase<ChangeTrackingOptions
         // Act
         var dateTime = DateTimeOffset.Now;
         orders[1].OrderDate = dateTime;
-        expectedPropertyCount = 7;
+        expectedChangedPropertyCount = 7;
         await context.SaveChangesAsync(saveChangesOption);
 
         ((Customer)people[0]).City = "Redmond";
         boss.Single().FirstName = "Bill";
-        expectedPropertyCount = 11;
+        expectedChangedPropertyCount = 11;
         await context.SaveChangesAsync(saveChangesOption);
 
         orders[0].OrderDetails.First().Quantity = 1;
-        expectedPropertyCount = 6;
+        expectedChangedPropertyCount = 6;
         await context.SaveChangesAsync(saveChangesOption);
 
         context.MergeOption = MergeOption.OverwriteChanges;

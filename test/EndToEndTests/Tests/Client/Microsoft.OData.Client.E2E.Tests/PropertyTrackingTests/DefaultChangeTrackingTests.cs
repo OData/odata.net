@@ -220,14 +220,14 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
     {
         // Arrange
         var _context = this.ContextWrapper();
-        int expectedPropertyCount = 0;
+        int expectedChangedPropertyCount = 0;
 
         _context.Configurations.RequestPipeline.OnEntryEnding(
             (arg) =>
             {
                 if (arg.Entry.TypeName.EndsWith("OrderDetail"))
                 {
-                    Assert.Equal(expectedPropertyCount, arg.Entry.Properties.Count());
+                    Assert.Equal(expectedChangedPropertyCount, arg.Entry.Properties.Count());
                 }
             });
 
@@ -243,7 +243,7 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
         };
 
         orders[0].OrderDetails.First().Quantity = 1;
-        expectedPropertyCount = 1;
+        expectedChangedPropertyCount = 1;
         var responses = await _context.SaveChangesAsync();
 
         // Assert
@@ -257,14 +257,14 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
     {
         // Arrange
         var _context = this.ContextWrapper();
-        int expectedPropertyCount = 0;
+        int expectedChangedPropertyCount = 0;
 
         _context.Configurations.RequestPipeline.OnEntryEnding(
             (arg) =>
             {
                 if (arg.Entry.TypeName.EndsWith("GiftCard"))
                 {
-                    Assert.Equal(expectedPropertyCount, arg.Entry.Properties.Count());
+                    Assert.Equal(expectedChangedPropertyCount, arg.Entry.Properties.Count());
                 }
             });
 
@@ -280,7 +280,7 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
         };
 
         accounts[0].MyGiftCard.ExperationDate = DateTimeOffset.Now;
-        expectedPropertyCount = 1;
+        expectedChangedPropertyCount = 1;
         var responses = await _context.SaveChangesAsync();
 
         // Assert
@@ -294,14 +294,14 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
     {
         // Arrange
         var _context = this.ContextWrapper();
-        int expectedPropertyCount = 0;
+        int expectedChangedPropertyCount = 0;
 
         _context.Configurations.RequestPipeline.OnEntryEnding(
             (arg) =>
             {
                 if (arg.Entry.TypeName.EndsWith("Person"))
                 {
-                    Assert.Equal(expectedPropertyCount, arg.Entry.Properties.Count());
+                    Assert.Equal(expectedChangedPropertyCount, arg.Entry.Properties.Count());
                 }
             });
 
@@ -317,7 +317,7 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
         };
 
         boss.Single().FirstName = "Bill";
-        expectedPropertyCount = 1;
+        expectedChangedPropertyCount = 1;
         var responses = await _context.SaveChangesAsync();
 
         // Assert
@@ -336,8 +336,6 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
         var _context = this.ContextWrapper();
 
         var people = new DataServiceCollection<Person>(_context.People);
-
-        // Act & Assert
 
         // Update object by updating the object without any changes
         _context.UpdateObject(people[0]);
@@ -362,11 +360,51 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
         Assert.EndsWith("odata/People(1)/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer", ((responses.ElementAt(0) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
     }
 
-    // This test verifies that primitive and collection properties of entities can be updated using PUT requests.
+    // This test verifies that primitive types can be updated using PUT requests.
     // It covers updating properties of various entity types and ensures that the request pipeline correctly
     // handles the ReplaceOnUpdate option, which replaces the entire entity with the updated values.
     [Fact]
-    public async Task UpdatePrimitiveAndCollectionPropertiesUsingPut()
+    public async Task UpdatePrimitiveTypeUsingPut()
+    {
+        // Arrange
+        var _context = this.ContextWrapper();
+
+        int expectedChangedPropertyCount = 0;
+
+        _context.Configurations.RequestPipeline.OnEntryEnding(
+            (arg) =>
+            {
+                Assert.Equal(expectedChangedPropertyCount, arg.Entry.Properties.Count());
+            });
+
+        var orders = new DataServiceCollection<Order>(_context.Orders.Expand("OrderDetails"));
+
+        var dateTimeOffset = DateTimeOffset.Now;
+        orders[1].OrderDate = dateTimeOffset;
+
+        _context.BuildingRequest += (sender, args) =>
+        {
+            if (args.RequestUri.AbsoluteUri.EndsWith("odata/Orders(8)"))
+            {
+                Assert.Equal("PUT", args.Method);
+            }
+        };
+
+        expectedChangedPropertyCount = 7;
+        var responses = await _context.SaveChangesAsync(SaveChangesOptions.ReplaceOnUpdate);
+
+        // Assert
+        Assert.Single(responses);
+        Assert.Equal(204, responses.First().StatusCode);
+        Assert.EndsWith("odata/Orders(8)", ((responses.ElementAt(0) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
+        Assert.Equal(dateTimeOffset, _context.Orders.Where((it) => it.OrderID == orders[1].OrderID).Single().OrderDate);
+    }
+
+    // This test verifies that collection properties of entities can be updated using PUT requests.
+    // It covers updating properties of various entity types and ensures that the request pipeline correctly
+    // handles the ReplaceOnUpdate option, which replaces the entire entity with the updated values.
+    [Fact]
+    public async Task UpdateCollectionPropertiesUsingPut()
     {
         // Arrange
         var _context = this.ContextWrapper();
@@ -382,12 +420,14 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
         var orders = new DataServiceCollection<Order>(_context.Orders.Expand("OrderDetails"));
 
         // Update primitive type and collection property under entity
-        orders[1].OrderDate = DateTimeOffset.Now;
         orders[1].OrderShelfLifes.Add(TimeSpan.FromHours(1.2));
 
         _context.BuildingRequest += (sender, args) =>
         {
-            Assert.Equal("PUT", args.Method);
+            if (args.RequestUri.AbsoluteUri.EndsWith("odata/Orders(8)"))
+            {
+                Assert.Equal("PUT", args.Method);
+            }
         };
 
         expectedChangedPropertyCount = 7;
@@ -397,6 +437,7 @@ public class DefaultChangeTrackingTests : EndToEndTestBase<DefaultChangeTracking
         Assert.Single(responses);
         Assert.Equal(204, responses.First().StatusCode);
         Assert.EndsWith("odata/Orders(8)", ((responses.ElementAt(0) as ChangeOperationResponse)?.Descriptor as EntityDescriptor)?.EditLink.AbsoluteUri);
+        Assert.Equal(2, _context.Orders.Where((it) => it.OrderID == orders[1].OrderID).Single().OrderShelfLifes.Count);
     }
 
     // This test verifies that multiple entities can be updated using PATCH requests in a single batch.
