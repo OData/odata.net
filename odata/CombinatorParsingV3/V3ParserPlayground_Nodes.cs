@@ -1782,8 +1782,8 @@
             internal static QueryOption<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
                 var name = new Future<OptionName<ParseMode.Deferred>>(() => OptionName.Create(previouslyParsedOutput));
-                var equalsSign = new Future<EqualsSign<ParseMode.Deferred>>(() => new EqualsSign<ParseMode.Deferred>(
-                    Func.Compose(() => name.Value.Realize(), DeferredOutput.Create)));
+                var equalsSign = new Future<EqualsSign<ParseMode.Deferred>>(() => V3ParserPlayground.EqualsSign.Create(
+                    Func.Compose(() => name.Value.Realize(), DeferredOutput.Create).ToFuture()));
                 var optionValue = new Future<OptionValue<ParseMode.Deferred>>(() => V3ParserPlayground.OptionValue.Create(
                     DeferredOutput.ToPromise(() => equalsSign.Value.Realize()).ToFuture()));
 
