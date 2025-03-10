@@ -629,7 +629,7 @@
 
         public static class Slash
         {
-            public static Slash<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+            public static Slash<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
                 return Slash<ParseMode.Deferred>.Create(previouslyParsedOutput);
             }
@@ -637,16 +637,16 @@
 
         public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>>, IFromRealizedable<Slash<ParseMode.Deferred>> where TMode : ParseMode
         {
-            private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
+            private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
 
             private readonly Future<IOutput<char, Slash<ParseMode.Realized>>> cachedOutput;
 
-            internal static Slash<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+            internal static Slash<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
                 return new Slash<ParseMode.Deferred>(previouslyParsedOutput);
             }
 
-            private Slash(Future<IDeferredOutput<char>> previouslyParsedOutput) //// TODO make sure this parameter is named correctly everywhere
+            private Slash(IFuture<IDeferredOutput<char>> previouslyParsedOutput) //// TODO make sure this parameter is named correctly everywhere
             {
                 if (typeof(TMode) != typeof(ParseMode.Deferred))
                 {
@@ -706,11 +706,11 @@
 
         public sealed class AlphaNumericHolder : IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>>
         {
-            private readonly Future<IDeferredOutput<char>> future;
+            private readonly IFuture<IDeferredOutput<char>> future;
 
             private readonly IFuture<IOutput<char, AlphaNumeric<ParseMode.Realized>>> cachedOutput;
 
-            public AlphaNumericHolder(Future<IDeferredOutput<char>> future)
+            public AlphaNumericHolder(IFuture<IDeferredOutput<char>> future)
             {
                 this.future = future;
 
@@ -749,7 +749,7 @@
         {
             public static class A
             {
-                public static AlphaNumeric<ParseMode.Deferred>.A Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                public static AlphaNumeric<ParseMode.Deferred>.A Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
                 {
                     return AlphaNumeric<ParseMode.Deferred>.A.Create(previouslyParsedOutput);
                 }
@@ -757,7 +757,7 @@
 
             public static class C
             {
-                public static AlphaNumeric<ParseMode.Deferred>.C Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                public static AlphaNumeric<ParseMode.Deferred>.C Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
                 {
                     return AlphaNumeric<ParseMode.Deferred>.C.Create(previouslyParsedOutput);
                 }
@@ -795,16 +795,16 @@
 
             public sealed class A : AlphaNumeric<TMode>, IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>.A>
             {
-                private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
+                private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
 
                 private readonly Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>> cachedOutput;
 
-                internal static AlphaNumeric<ParseMode.Deferred>.A Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                internal static AlphaNumeric<ParseMode.Deferred>.A Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
                 {
                     return new AlphaNumeric<ParseMode.Deferred>.A(previouslyParsedOutput);
                 }
 
-                private A(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                private A(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
@@ -875,16 +875,16 @@
 
             public sealed class C : AlphaNumeric<TMode>, IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>.C>
             {
-                private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
+                private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
 
                 private readonly Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>> cachedOutput;
 
-                internal static AlphaNumeric<ParseMode.Deferred>.C Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                internal static AlphaNumeric<ParseMode.Deferred>.C Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
                 {
                     return new AlphaNumeric<ParseMode.Deferred>.C(previouslyParsedOutput);
                 }
 
-                private C(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                private C(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
@@ -1407,7 +1407,7 @@
 
         public static class Segment
         {
-            public static Segment<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+            public static Segment<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
                 return Segment<ParseMode.Deferred>.Create(previouslyParsedOutput);
             }
@@ -1420,7 +1420,7 @@
 
             private readonly Future<IOutput<char, Segment<ParseMode.Realized>>> cachedOutput;
 
-            internal static Segment<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+            internal static Segment<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
                 var slash = new Future<Slash<ParseMode.Deferred>>(() => V3ParserPlayground.Slash.Create(previouslyParsedOutput));
                 var characters = new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(() => AtLeastOne.Create<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(
