@@ -724,19 +724,38 @@
 
             private IOutput<char, AlphaNumeric<ParseMode.Realized>> RealizeImpl()
             {
-                var a = new AlphaNumeric<ParseMode.Deferred>.A(this.future).Realize();
+                var a = AlphaNumeric.A.Create(this.future).Realize();
                 if (a.Success)
                 {
                     return a;
                 }
 
-                var c = new AlphaNumeric<ParseMode.Deferred>.C(this.future).Realize();
+                var c = AlphaNumeric.C.Create(this.future).Realize();
                 if (c.Success)
                 {
                     return c;
                 }
 
                 return new Output<char, AlphaNumeric<ParseMode.Realized>>(false, default, this.future.Value.Remainder);
+            }
+        }
+
+        public static class AlphaNumeric
+        {
+            public static class A
+            {
+                public static AlphaNumeric<ParseMode.Deferred>.A Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                {
+                    return AlphaNumeric<ParseMode.Deferred>.A.Create(previouslyParsedOutput);
+                }
+            }
+
+            public static class C
+            {
+                public static AlphaNumeric<ParseMode.Deferred>.C Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                {
+                    return AlphaNumeric<ParseMode.Deferred>.C.Create(previouslyParsedOutput);
+                }
             }
         }
 
@@ -771,18 +790,23 @@
 
             public sealed class A : AlphaNumeric<TMode>, IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>.A>
             {
-                private readonly Future<IDeferredOutput<char>> future;
+                private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
 
                 private readonly Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>> cachedOutput;
 
-                public A(Future<IDeferredOutput<char>> future)
+                internal static AlphaNumeric<ParseMode.Deferred>.A Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                {
+                    return new AlphaNumeric<ParseMode.Deferred>.A(previouslyParsedOutput);
+                }
+
+                private A(Future<IDeferredOutput<char>> previouslyParsedOutput)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
                         throw new ArgumentException("tODO i think this will depend on what you decide for modeling options of the deferred vs realized nodes");
                     }
 
-                    this.future = future;
+                    this.previouslyParsedOutput = previouslyParsedOutput;
 
                     this.cachedOutput = new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>>(() => this.RealizeImpl());
                 }
@@ -799,7 +823,7 @@
 
                 private IOutput<char, AlphaNumeric<ParseMode.Realized>.A> RealizeImpl()
                 {
-                    var output = this.future.Value;
+                    var output = this.previouslyParsedOutput.Value;
                     if (!output.Success)
                     {
                         return new Output<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, output.Remainder);
@@ -835,7 +859,7 @@
                 {
                     if (typeof(TMode) == typeof(ParseMode.Deferred))
                     {
-                        return new AlphaNumericHolder(this.future);
+                        return new AlphaNumericHolder(this.previouslyParsedOutput);
                     }
                     else
                     {
@@ -846,18 +870,23 @@
 
             public sealed class C : AlphaNumeric<TMode>, IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>.C>
             {
-                private readonly Future<IDeferredOutput<char>> future;
+                private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
 
                 private readonly Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>> cachedOutput;
 
-                public C(Future<IDeferredOutput<char>> future)
+                internal static AlphaNumeric<ParseMode.Deferred>.C Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+                {
+                    return new AlphaNumeric<ParseMode.Deferred>.C(previouslyParsedOutput);
+                }
+
+                private C(Future<IDeferredOutput<char>> previouslyParsedOutput)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
                         throw new ArgumentException("tODO i think this will depend on what you decide for modeling options of the deferred vs realized nodes");
                     }
 
-                    this.future = future;
+                    this.previouslyParsedOutput = previouslyParsedOutput;
 
                     this.cachedOutput = new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>>(() => this.RealizeImpl());
                 }
@@ -874,7 +903,7 @@
 
                 private IOutput<char, AlphaNumeric<ParseMode.Realized>.C> RealizeImpl()
                 {
-                    var output = this.future.Value;
+                    var output = this.previouslyParsedOutput.Value;
                     if (!output.Success)
                     {
                         return new Output<char, AlphaNumeric<ParseMode.Realized>.C>(false, default, output.Remainder);
@@ -910,7 +939,7 @@
                 {
                     if (typeof(TMode) == typeof(ParseMode.Deferred))
                     {
-                        return new AlphaNumericHolder(this.future);
+                        return new AlphaNumericHolder(this.previouslyParsedOutput);
                     }
                     else
                     {
@@ -1337,9 +1366,9 @@
 
             private readonly Future<IOutput<char, Segment<ParseMode.Realized>>> cachedOutput;
 
-            internal static Segment<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> future)
+            internal static Segment<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
             {
-                var slash = new Future<Slash<ParseMode.Deferred>>(() => V3ParserPlayground.Slash.Create(future));
+                var slash = new Future<Slash<ParseMode.Deferred>>(() => V3ParserPlayground.Slash.Create(previouslyParsedOutput));
                 var characters = new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(() => new AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>(
                         Func.Compose(() => slash.Value.Realize(), DeferredOutput.Create), //// TODO the first parameter has a closure...
                         input => new AlphaNumericHolder(input)));
