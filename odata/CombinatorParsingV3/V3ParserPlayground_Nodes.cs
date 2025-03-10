@@ -1316,7 +1316,8 @@
             {
                 if (typeof(TMode) == typeof(ParseMode.Deferred))
                 {
-                    return ManyNode.Create<TDeferredAstNode, TRealizedAstNode>(this.nodeFactory, this.future);
+                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(this.nodeFactory, this.element.Select(_ => (_ as OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>)!),
+                        this.next.Select(_ => (_ as ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>)!));
                 }
                 else
                 {
