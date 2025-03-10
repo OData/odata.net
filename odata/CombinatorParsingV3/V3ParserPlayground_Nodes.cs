@@ -1329,6 +1329,17 @@
             }
         }
 
+        public static class OptionalNode
+        {
+            public static OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create<TDeferredAstNode, TRealizedAstNode>(
+                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory, 
+                IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            {
+                return OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>.Create(nodeFactory, previouslyParsedOutput);
+            }
+        }
+
         public sealed class OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> :
             IDeferredAstNode<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>,
             IFromRealizedable<OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
@@ -1341,6 +1352,26 @@
             private readonly RealNullable<RealNullable<TRealizedAstNode>> value;
 
             private readonly Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
+
+            internal static OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create(
+                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
+                IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            {
+                var value = new RealNullable<RealNullable<TRealizedAstNode>>();
+
+                return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(nodeFactory, value);
+            }
+
+            private OptionalNode(
+                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
+                RealNullable<RealNullable<TRealizedAstNode>> value)
+            {
+                this.nodeFactory = nodeFactory;
+
+                this.value = value;
+
+                this.cachedOutput = new Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(this.RealizeImpl);
+            }
 
             public OptionalNode(
                 IFuture<IDeferredOutput<char>> future,
