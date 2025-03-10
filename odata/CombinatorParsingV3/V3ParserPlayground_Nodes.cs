@@ -973,7 +973,6 @@
             where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
             where TMode : ParseMode
         {
-            private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
             private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
             private readonly IFuture<TDeferredAstNode> __1;
@@ -1009,27 +1008,6 @@
 
                 this.__1 = __1;
                 this.node = node;
-
-                this.cachedOutput = new Future
-                    <
-                        IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
-                    >(
-                        () => this.RealizeImpl());
-            }
-
-            private AtLeastOne(
-                Future<IDeferredOutput<char>> previouslyParsedOutput,
-                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
-            {
-                this.previouslyParsedOutput = previouslyParsedOutput;
-                this.nodeFactory = nodeFactory;
-
-                this.__1 = new Future<TDeferredAstNode>(
-                    () => this.nodeFactory(this.previouslyParsedOutput));
-                this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
-                    () => new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(
-                        Func.Compose(this._1.Realize, DeferredOutput.Create), 
-                        this.nodeFactory));
 
                 this.cachedOutput = new Future
                     <
