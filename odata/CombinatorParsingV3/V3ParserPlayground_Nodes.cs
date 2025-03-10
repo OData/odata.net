@@ -58,6 +58,14 @@
         }
     }
 
+    public static class FutureExtensions
+    {
+        public static IFuture<TResult> Select<TValue, TResult>(this IFuture<TValue> future, Func<TValue, TResult> selector)
+        {
+            return new Future<TResult>(() => selector(future.Value));
+        }
+    }
+
     public static class Func
     {
         public static Func<TOutput> Compose<TInput, TOutput>(Func<TInput> inner, Func<TInput, TOutput> outer)
@@ -614,13 +622,12 @@
             }
         }
 
-        public static ModelingOptionss.Option4.Slash<ParseMode.Deferred> CreateSlash(this Future<IDeferredOutput<char>> previouslyParsedOutput)
+        public static class Slash
         {
-            //// TODO maybe this can be added to option4 and make the existing option4 create method internal and marked as "don't call"
-
-            //// TODO side effect is that there will be an extension method per node type
-
-            return ModelingOptionss.Option4.Slash<ParseMode.Deferred>.Create(previouslyParsedOutput);
+            public static Slash<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+            {
+                return Slash<ParseMode.Deferred>.Create(previouslyParsedOutput);
+            }
         }
 
         public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>>, IFromRealizedable<Slash<ParseMode.Deferred>> where TMode : ParseMode
@@ -629,7 +636,12 @@
 
             private readonly Future<IOutput<char, Slash<ParseMode.Realized>>> cachedOutput;
 
-            public Slash(Future<IDeferredOutput<char>> previouslyParsedOutput)
+            internal static Slash<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+            {
+                return new Slash<ParseMode.Deferred>(previouslyParsedOutput);
+            }
+
+            private Slash(Future<IDeferredOutput<char>> previouslyParsedOutput) //// TODO make sure this parameter is named correctly everywhere
             {
                 if (typeof(TMode) != typeof(ParseMode.Deferred))
                 {
@@ -1310,23 +1322,36 @@
             }
         }
 
+        public static class Segment
+        {
+            public static Segment<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> previouslyParsedOutput)
+            {
+                return Segment<ParseMode.Deferred>.Create(previouslyParsedOutput);
+            }
+        }
+
         public sealed class Segment<TMode> : IDeferredAstNode<char, Segment<ParseMode.Realized>>, IFromRealizedable<Segment<ParseMode.Deferred>> where TMode : ParseMode
         {
-            private readonly Future<IDeferredOutput<char>> future;
-
-            private readonly Future<Slash<TMode>> slash;
-            private readonly Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
+            private readonly IFuture<Slash<TMode>> slash;
+            private readonly IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
 
             private readonly Future<IOutput<char, Segment<ParseMode.Realized>>> cachedOutput;
 
-            public Segment(Future<IDeferredOutput<char>> future)
+            internal static Segment<ParseMode.Deferred> Create(Future<IDeferredOutput<char>> future)
             {
-                this.future = future;
-
-                this.slash = new Future<Slash<TMode>>(() => new Slash<TMode>(this.future));
-                this.characters = new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>>(() => new AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>(
-                        Func.Compose(this.Slash.Realize, DeferredOutput.Create),
+                var slash = new Future<Slash<ParseMode.Deferred>>(() => V3ParserPlayground.Slash.Create(future));
+                var characters = new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(() => new AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>(
+                        Func.Compose(() => slash.Value.Realize(), DeferredOutput.Create), //// TODO the first parameter has a closure...
                         input => new AlphaNumericHolder(input)));
+                return new Segment<ParseMode.Deferred>(slash, characters);
+            }
+
+            private Segment(
+                IFuture<Slash<TMode>> slash, 
+                IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters)
+            {
+                this.slash = slash;
+                this.characters = characters;
 
                 this.cachedOutput = new Future<IOutput<char, Segment<ParseMode.Realized>>>(this.RealizeImpl);
             }
@@ -1348,7 +1373,7 @@
             {
                 get
                 {
-                    return this.slash;
+                    return this.slash.Value;
                 }
             }
 
@@ -1356,7 +1381,7 @@
             {
                 get
                 {
-                    return this.characters;
+                    return this.characters.Value;
                 }
             }
 
@@ -1364,7 +1389,9 @@
             {
                 if (typeof(TMode) == typeof(ParseMode.Deferred))
                 {
-                    return new Segment<ParseMode.Deferred>(this.future);
+                    return new Segment<ParseMode.Deferred>(
+                        this.slash.Select(_ => (_ as Slash<ParseMode.Deferred>)!), //// TODO this is hacky to get around the parsemode type parameter
+                        this.characters.Select(_ => (_ as AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>)!));
                 }
                 else
                 {
@@ -1727,7 +1754,7 @@
                 this.segments = new Future<AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, TMode>>(
                     () => new AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, TMode>(
                         this.future,
-                        input => new Segment<ParseMode.Deferred>(input)));
+                        input => Segment.Create(input)));
                 this.questionMark = new Future<QuestionMark<TMode>>(
                     () => new QuestionMark<TMode>(DeferredOutput.ToPromise(this.Segments.Realize)));
                 this.queryOptions = new Future<Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, TMode>>(
