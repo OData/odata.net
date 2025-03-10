@@ -949,6 +949,18 @@
             }
         }
 
+        public static class AtLeastOne
+        {
+            public static AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create<TDeferredAstNode, TRealizedAstNode>(
+                Future<IDeferredOutput<char>> previouslyParsedOutput,
+                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
+                where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+                where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
+            {
+                return AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>.Create(previouslyParsedOutput, nodeFactory);
+            }
+        }
+
         public sealed class AtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> : 
             IDeferredAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>,
             IFromRealizedable<AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
@@ -956,7 +968,7 @@
             where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
             where TMode : ParseMode
         {
-            private readonly Future<IDeferredOutput<char>> future;
+            private readonly Future<IDeferredOutput<char>> previouslyParsedOutput;
             private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
             private readonly Future<TDeferredAstNode> __1;
@@ -966,15 +978,22 @@
                 Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> 
                 cachedOutput;
 
-            public AtLeastOne(
-                Future<IDeferredOutput<char>> future,
+            internal static AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create(
+                Future<IDeferredOutput<char>> previouslyParsedOutput,
                 Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
             {
-                this.future = future;
+                return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(previouslyParsedOutput, nodeFactory);
+            }
+
+            private AtLeastOne(
+                Future<IDeferredOutput<char>> previouslyParsedOutput,
+                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
+            {
+                this.previouslyParsedOutput = previouslyParsedOutput;
                 this.nodeFactory = nodeFactory;
 
                 this.__1 = new Future<TDeferredAstNode>(
-                    () => this.nodeFactory(this.future));
+                    () => this.nodeFactory(this.previouslyParsedOutput));
                 this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(
                     () => new ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>(
                         Func.Compose(this._1.Realize, DeferredOutput.Create), 
@@ -1018,7 +1037,7 @@
             {
                 if (typeof(TMode) == typeof(ParseMode.Deferred))
                 {
-                    return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(this.future, this.nodeFactory);
+                    return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(this.previouslyParsedOutput, this.nodeFactory);
                 }
                 else
                 {
