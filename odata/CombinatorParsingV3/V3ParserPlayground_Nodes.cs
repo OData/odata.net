@@ -1882,6 +1882,8 @@
                 this.segments = segments;
                 this.questionMark = questionMark;
                 this.queryOptions = queryOptions;
+
+                this.cachedOutput = new Future<IOutput<char, OdataUri<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
             private OdataUri(
