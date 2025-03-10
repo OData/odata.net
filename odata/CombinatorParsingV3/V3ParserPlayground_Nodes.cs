@@ -1204,7 +1204,7 @@
                 IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
                 var element = new Future<OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>(
-                    () => new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(previouslyParsedOutput, nodeFactory));
+                    () => OptionalNode.Create<TDeferredAstNode, TRealizedAstNode>(nodeFactory, previouslyParsedOutput));
                 var next = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>(
                     () =>
                         ManyNode.Create<TDeferredAstNode, TRealizedAstNode>(
@@ -1346,7 +1346,7 @@
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
             where TMode : ParseMode
         {
-            private readonly IFuture<IDeferredOutput<char>> future;
+            private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
             private readonly Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
 
             private readonly RealNullable<RealNullable<TRealizedAstNode>> value;
@@ -1359,29 +1359,18 @@
             {
                 var value = new RealNullable<RealNullable<TRealizedAstNode>>();
 
-                return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(nodeFactory, value);
+                return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(nodeFactory, previouslyParsedOutput, value);
             }
 
             private OptionalNode(
                 Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
+                IFuture<IDeferredOutput<char>> previouslyParsedOutput,
                 RealNullable<RealNullable<TRealizedAstNode>> value)
             {
                 this.nodeFactory = nodeFactory;
+                this.previouslyParsedOutput = previouslyParsedOutput;
 
                 this.value = value;
-
-                this.cachedOutput = new Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(this.RealizeImpl);
-            }
-
-            public OptionalNode(
-                IFuture<IDeferredOutput<char>> future,
-                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
-            {
-                //// TODO you are here getting rid of this constructor
-                this.future = future;
-                this.nodeFactory = nodeFactory;
-
-                this.value = new RealNullable<RealNullable<TRealizedAstNode>>();
 
                 this.cachedOutput = new Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(this.RealizeImpl);
             }
@@ -1410,8 +1399,9 @@
                 if (typeof(TMode) == typeof(ParseMode.Deferred))
                 {
                     return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
-                        this.future,
-                        this.nodeFactory);
+                        this.nodeFactory,
+                        this.previouslyParsedOutput,
+                        this.value);
                 }
                 else
                 {
@@ -1428,13 +1418,13 @@
 
             private IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
             {
-                var deferredOutput = this.future.Value;
+                var deferredOutput = this.previouslyParsedOutput.Value;
                 if (!deferredOutput.Success)
                 {
                     return new Output<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(false, default, deferredOutput.Remainder);
                 }
 
-                var value = this.nodeFactory(this.future);
+                var value = this.nodeFactory(this.previouslyParsedOutput);
                 var output = value.Realize();
                 if (output.Success)
                 {
