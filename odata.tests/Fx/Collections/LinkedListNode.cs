@@ -25,7 +25,7 @@
             }
 
             var self = this;
-            Unsafe2.Copy(previousMemory, in self);
+            Unsafe2.Copy(previousMemory, self);
 
             return new LinkedListNode<T>(values, BetterSpan.FromMemory<LinkedListNode<T>>(previousMemory, 1));
         }
