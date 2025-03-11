@@ -23,14 +23,14 @@ namespace Fx
             return BetterSpan.FromMemory<T>(span, 1);
         }
 
-        public static unsafe BetterSpan<T> FromInstance2<T>(in T value, ref Span<byte> destination) where T : allows ref struct
+        public static unsafe BetterSpan<T> FromInstance2<T>(in T value) where T : allows ref struct
         {
             fixed (T* pointer = &value)
             {
-                destination = new Span<byte>(pointer, Unsafe.SizeOf<T>());
-            }
+                var span = new Span<byte>(pointer, Unsafe.SizeOf<T>());
 
-            return BetterSpan.FromMemory<T>(destination, 1);
+                return BetterSpan.FromMemory<T>(span, 1);
+            }
         }
     }
 }

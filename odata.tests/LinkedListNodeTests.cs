@@ -27,17 +27,7 @@
         public void CreateListAndEnumerateWithRefStruct()
         {
             var originalWrapper = new Wrapper<int>(-1);
-            /*Span<byte> span;
-            unsafe
-            {
-                span = new Span<byte>(&originalWrapper, Unsafe.SizeOf<Wrapper<int>>());
-            }
-
-            var orignalValue = BetterSpan.FromMemory<Wrapper<int>>(span, 1);*/
-
-            Span<byte> span = default;
-            var orignalValue = BetterSpan.FromInstance2(originalWrapper, ref span);
-            ////var orignalValue = BetterSpan.FromInstance(originalWrapper);
+            var orignalValue = BetterSpan.FromInstance2(originalWrapper);
             var list = new LinkedListNode<Wrapper<int>>(orignalValue);
             for (int i = 0; i < 10; ++i)
             {
