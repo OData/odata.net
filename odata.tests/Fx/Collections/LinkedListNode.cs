@@ -30,6 +30,11 @@
             return new LinkedListNode<T>(values, BetterSpan.FromMemory<LinkedListNode<T>>(previousMemory, 1));
         }
 
+        public Enumerator GetEnumerator()
+        {
+            return new Enumerator(this);
+        }
+
         public ref struct Enumerator
         {
             private LinkedListNode<T> node;

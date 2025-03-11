@@ -28,11 +28,21 @@
             for (int i = 0; i < 10; ++i)
             {
                 Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<Wrapper<int>>>()];
-                list = list.Append(new Wrapper<int>(i), memory);
+                var wrapper = new Wrapper<int>(i);
+                var value = BetterSpan.FromInstance(wrapper);
+                list = list.Append(value, memory);
+
+                //// TODO why doesn't this work
+                //// list = list.Append(new Wrapper<int>(i), memory);
+            }
+
+            foreach (var element in list)
+            {
+                Console.WriteLine(element.Value);
             }
         }
 
-        private void Test()
+        /*private void Test()
         {
             Span<byte> span = stackalloc byte[4];
             var betterspan = BetterSpan.FromMemory<string>(span, 1);
@@ -177,7 +187,7 @@
 
             //// TODO this should be allowed
             return list;
-        }
+        }*/
     }
 #pragma warning restore CA2014 // Do not use stackalloc in loops
 }
