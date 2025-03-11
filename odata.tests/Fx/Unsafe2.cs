@@ -4,11 +4,11 @@
 
     public static class Unsafe2
     {
-        public static unsafe void Copy<T>(Span<byte> destination, ref T source) where T : allows ref struct
+        public static unsafe void Copy<T>(Span<byte> destination, in T source) where T : allows ref struct
         {
             fixed (byte* pointer = destination)
             {
-                Unsafe.Copy(pointer, ref source);
+                Unsafe.Copy(pointer, in source);
             }
         }
     }

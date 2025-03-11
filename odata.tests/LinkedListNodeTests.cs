@@ -53,6 +53,8 @@
         {
             Span<byte> span = stackalloc byte[4];
             var betterspan = BetterSpan.FromMemory<string>(span, 1);
+
+            //// THIS IS A GOOD THING
             return betterspan;
         }
 
@@ -62,9 +64,47 @@
             return list;
         }
 
-        private LinkedListNode<int> Test4()
+        private LinkedListNode<int> Test4(Span<byte> memory)
         {
             var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+            Unsafe2.Copy(memory, in list);
+            return list;
+        }
+
+        private BetterSpan<LinkedListNode<int>> Test5()
+        {
+            var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+            Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
+            Unsafe2.Copy(memory, in list);
+
+            var nextValue = BetterSpan.FromInstance(67);
+            var previousNode = BetterSpan.FromMemory<LinkedListNode<int>>(memory, 1);
+
+            //// THIS IS A GOOD THING
+            return previousNode;
+        }
+
+        private LinkedListNode<int> Test6()
+        {
+            var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+            Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
+            Unsafe2.Copy(memory, in list);
+
+            var nextValue = BetterSpan.FromInstance(67);
+            var previousNode = BetterSpan.FromMemory<LinkedListNode<int>>(memory, 1);
+            list = new LinkedListNode<int>(nextValue, previousNode);
+
+            //// THIS IS A GOOD THING
+            return list;
+        }
+
+        private LinkedListNode<int> Test7()
+        {
+            var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+            Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
+            list = list.Append(BetterSpan.FromInstance(67), memory);
+
+            //// THIS IS A GOOD THING
             return list;
         }
     }
