@@ -46,7 +46,7 @@
             }
         }
 
-        /*private void Test()
+        private void Test()
         {
             Span<byte> span = stackalloc byte[4];
             var betterspan = BetterSpan.FromMemory<string>(span, 1);
@@ -191,7 +191,7 @@
 
             //// TODO this should be allowed
             return list;
-        }*/
+        }
     }
 #pragma warning restore CA2014 // Do not use stackalloc in loops
 }
