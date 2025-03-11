@@ -11,13 +11,13 @@
         {
         }
 
-        private LinkedListNode2(in T value, BetterSpan<LinkedListNode2<T>> previous)
+        private LinkedListNode2(in T value, in BetterSpan<LinkedListNode2<T>> previous)
         {
             this.value = value;
             this.previous = previous;
         }
 
-        public LinkedListNode2<T> Append(T value, scoped Span<byte> previousMemory) //// TODO do a sweep of `scoped` and `in` to make sure you have the least coverage necessary
+        public LinkedListNode2<T> Append(T value, Span<byte> previousMemory) //// TODO do a sweep of `scoped` and `in` to make sure you have the least coverage necessary
         {
             if (previousMemory.Length != System.Runtime.CompilerServices.Unsafe.SizeOf<LinkedListNode2<T>>())
             {
@@ -27,7 +27,8 @@
             var self = this;
             Unsafe2.Copy(previousMemory, self);
 
-            return new LinkedListNode2<T>(value, BetterSpan.FromMemory<LinkedListNode2<T>>(previousMemory, 1));
+            var span = BetterSpan.FromMemory<LinkedListNode2<T>>(previousMemory, 1);
+            return new LinkedListNode2<T>(value, span);
         }
 
         public Enumerator GetEnumerator()

@@ -16,7 +16,7 @@
             Length = length;
         }
 
-        internal BetterSpan(scoped Span<byte> memory, int length)
+        internal BetterSpan(Span<byte> memory, int length)
         {
             if (memory.Length != System.Runtime.CompilerServices.Unsafe.SizeOf<T>() * length)
             {
