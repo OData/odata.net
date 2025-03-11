@@ -114,8 +114,24 @@
             for (int i = 0; i < 10; ++i)
             {
                 Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
-                var instance = BetterSpan.FromInstance(i);
-                list = list.Append(instance, memory);
+                Unsafe2.Copy(memory, in list);
+
+                var nextValue = BetterSpan.FromInstance(67);
+                var previousNode = BetterSpan.FromMemory<LinkedListNode<int>>(memory, 1);
+                list = new LinkedListNode<int>(nextValue, previousNode);
+            }
+
+            //// THIS IS A GOOD THING
+            return list;
+        }
+
+        private LinkedListNode<int> Test9()
+        {
+            var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+            for (int i = 0; i < 10; ++i)
+            {
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
+                list = list.Append(BetterSpan.FromInstance(67), memory);
             }
 
             //// THIS IS A GOOD THING

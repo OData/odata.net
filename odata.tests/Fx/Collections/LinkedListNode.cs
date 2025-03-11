@@ -11,13 +11,13 @@
         {
         }
 
-        internal LinkedListNode(in BetterSpan<T> values, BetterSpan<LinkedListNode<T>> previous) //// TODO make this private
+        internal LinkedListNode(scoped in BetterSpan<T> values, BetterSpan<LinkedListNode<T>> previous) //// TODO make this private
         {
             this.values = values;
             this.previous = previous;
         }
 
-        public LinkedListNode<T> Append(in BetterSpan<T> values, Span<byte> previousMemory)
+        public LinkedListNode<T> Append(scoped in BetterSpan<T> values, Span<byte> previousMemory)
         {
             if (previousMemory.Length != System.Runtime.CompilerServices.Unsafe.SizeOf<LinkedListNode<T>>())
             {
