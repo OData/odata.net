@@ -9,21 +9,11 @@ namespace Fx
 
     public readonly unsafe ref struct BetterSpan<T> where T : allows ref struct
     {
-        private readonly T* data;
+        private readonly Span<byte> data;
+
+        ////private readonly T* data;
 
         private readonly int length;
-
-        public BetterSpan()
-        {
-            this.data = null;
-            this.length = 0;
-        }
-
-        internal BetterSpan(T* data, int length)
-        {
-            this.data = data;
-            this.length = length;
-        }
 
         internal BetterSpan(Span<byte> memory, int length)
         {
@@ -32,11 +22,12 @@ namespace Fx
                 throw new Exception("TODO");
             }
 
-            fixed (byte* pointer = memory)
+            /*fixed (byte* pointer = memory)
             {
                 this.data = (T*)pointer;
-            }
+            }*/
 
+            this.data = memory;
             this.length = length;
         }
 
@@ -60,7 +51,11 @@ namespace Fx
                 ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Length);
                 ArgumentOutOfRangeException.ThrowIfNegative(index);
 
-                return data[index];
+                fixed (byte* pointer = this.data)
+                {
+                    T* typedPointer = (T*)pointer;
+                    return typedPointer[index];
+                }
             }
             /*set
             {
