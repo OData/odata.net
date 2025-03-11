@@ -5,7 +5,6 @@
     {
     }
 
-    [Intrinsic]
     public unsafe ref struct BetterSpan<T> where T : allows ref struct
     {
         private readonly T* data;

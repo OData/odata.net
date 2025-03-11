@@ -7,8 +7,8 @@
         private readonly T value;
 
         public LinkedListNode2(in T value)
-            : this(value, default)
         {
+            this.value = value;
         }
 
         internal LinkedListNode2(T value, BetterSpan<LinkedListNode2<T>> previous) //// TODO make this private
