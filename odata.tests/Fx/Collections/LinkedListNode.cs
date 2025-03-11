@@ -17,7 +17,7 @@
             this.previous = previous;
         }
 
-        public LinkedListNode<T> Append(scoped in BetterSpan<T> values, Span<byte> previousMemory)
+        public LinkedListNode<T> Append(scoped in BetterSpan<T> values, Span<byte> previousMemory) //// TODO do a sweep of `scoped` and `in` to make sure you have the least coverage necessary
         {
             if (previousMemory.Length != System.Runtime.CompilerServices.Unsafe.SizeOf<LinkedListNode<T>>())
             {
