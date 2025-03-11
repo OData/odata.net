@@ -1,9 +1,11 @@
 ﻿namespace odata.tests
 {
+    using System;
     using System.Runtime.CompilerServices;
 
     using Fx;
     using Fx.Collections;
+    using Newtonsoft.Json.Linq;
 
 #pragma warning disable CA2014 // Do not use stackalloc in loops
     [TestClass]
@@ -24,7 +26,19 @@
         [TestMethod]
         public void CreateListAndEnumerateWithRefStruct()
         {
-            var list = new LinkedListNode<Wrapper<int>>(BetterSpan.FromInstance(new Wrapper<int>(-1)));
+            var originalWrapper = new Wrapper<int>(-1);
+            /*Span<byte> span;
+            unsafe
+            {
+                span = new Span<byte>(&originalWrapper, Unsafe.SizeOf<Wrapper<int>>());
+            }
+
+            var orignalValue = BetterSpan.FromMemory<Wrapper<int>>(span, 1);*/
+
+            Span<byte> span = default;
+            var orignalValue = BetterSpan.FromInstance2(originalWrapper, ref span);
+            ////var orignalValue = BetterSpan.FromInstance(originalWrapper);
+            var list = new LinkedListNode<Wrapper<int>>(orignalValue);
             for (int i = 0; i < 10; ++i)
             {
                 Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<Wrapper<int>>>()];
