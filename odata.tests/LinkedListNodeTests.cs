@@ -353,6 +353,7 @@
                 var list = new LinkedListNode2<int>(42);
 
                 //// TODO this should be allowed
+                //// this doesn't work currently because `linkedlistnode2.previous` will get initialized to its default, and since it has a `T*` field, it might have a pointer to somewhere in this stackframe, and so when we return `list`, the first node in the list (in this case, the only node) will have a reference to a pointer to the stackframe that has already been popped off; of course, *we* know that the pointer in this case will be `0`, but the compiler doesn't have a way to know that
                 return list;
             }
         }
