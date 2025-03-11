@@ -236,7 +236,7 @@
 
             private static LinkedListNode2<int> Test3()
             {
-                var list = new LinkedListNode2<int>(BetterSpan.FromInstance(42));
+                var list = new LinkedListNode2<int>(42);
                 return list;
             }
 
