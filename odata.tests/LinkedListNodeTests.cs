@@ -68,6 +68,8 @@
                 Assert.AreEqual(expected, element.Value);
                 --expected;
             }
+
+            Assert.AreNotEqual(9, expected);
         }
 
         /*public static class V1
