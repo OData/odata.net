@@ -1,5 +1,11 @@
 ﻿namespace Fx
 {
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Method | AttributeTargets.Constructor | AttributeTargets.Field, Inherited = false)]
+    internal sealed class IntrinsicAttribute : Attribute
+    {
+    }
+
+    [Intrinsic]
     public unsafe ref struct BetterSpan<T> where T : allows ref struct
     {
         private readonly T* data;
