@@ -305,14 +305,16 @@
             private static LinkedListNode2<int> Test9()
             {
                 var list = new LinkedListNode2<int>(42);
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
+                LinkedListNode2<int> list2 = list.Append(0, memory);
                 for (int i = 0; i < 10; ++i)
                 {
-                    Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
-                    list = list.Append(i, memory);
+                    Span<byte> memory2 = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
+                    list2 = list2.Append(i, memory2);
                 }
 
                 //// THIS IS A GOOD THING
-                return list;
+                return list2;
             }
 
             private static void Test10(LinkedListNode2<int> list)

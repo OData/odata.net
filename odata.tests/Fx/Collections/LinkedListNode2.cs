@@ -6,7 +6,7 @@
 
         private readonly T value;
 
-        public LinkedListNode2(in T value)
+        public LinkedListNode2(T value)
             : this(value, BetterSpan<LinkedListNode2<T>>.Empty)
         {
         }
