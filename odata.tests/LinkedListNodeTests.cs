@@ -304,6 +304,8 @@
 
             private static LinkedListNode2<int> Test9()
             {
+                //// TODO look at this!
+
                 var list = new LinkedListNode2<int>(42);
                 Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
                 LinkedListNode2<int> list2 = list.Append(0, memory);
