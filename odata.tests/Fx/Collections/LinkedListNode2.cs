@@ -66,6 +66,7 @@
             {
                 if (!this.hasMoved)
                 {
+                    this.hasMoved = true;
                     return true;
                 }
 
