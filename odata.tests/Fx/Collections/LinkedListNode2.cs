@@ -11,7 +11,7 @@
         {
         }
 
-        private LinkedListNode2(in T value, in BetterSpan<LinkedListNode2<T>> previous)
+        private LinkedListNode2(in T value, BetterSpan<LinkedListNode2<T>> previous)
         {
             this.value = value;
             this.previous = previous;
