@@ -92,6 +92,7 @@
                 }
 
                 this.node = node.previous[0];
+                this.index = -1;
                 return this.MoveNext();
             }
         }
