@@ -46,6 +46,27 @@
             }
         }
 
+        [TestMethod]
+        public void CreateListAndEnumerateWithRefStruct2()
+        {
+            var originalWrapper = new Wrapper<int>(-1);
+            var list = new LinkedListNode2<Wrapper<int>>(originalWrapper);
+            for (int i = 0; i < 10; ++i)
+            {
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<Wrapper<int>>>()];
+                var wrapper = new Wrapper<int>(i);
+                list = list.Append(wrapper, memory);
+
+                //// TODO why doesn't this work
+                //// list = list.Append(new Wrapper<int>(i), memory);
+            }
+
+            foreach (var element in list)
+            {
+                Console.WriteLine(element.Value);
+            }
+        }
+
         /*private void Test()
         {
             Span<byte> span = stackalloc byte[4];

@@ -11,7 +11,7 @@ namespace Fx
             return new BetterSpan<T>(span, values.Length);
         }
 
-        public static BetterSpan<T> FromMemory<T>(scoped in Span<byte> memory, int length) where T : allows ref struct
+        public static BetterSpan<T> FromMemory<T>(scoped Span<byte> memory, int length) where T : allows ref struct
         {
             return new BetterSpan<T>(memory, length);
         }
