@@ -137,6 +137,29 @@
             //// THIS IS A GOOD THING
             return list;
         }
+
+        private void Test10(LinkedListNode<int> list)
+        {
+            Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
+            
+            //// THIS IS A GOOD THING
+            list = list.Append(BetterSpan.FromInstance(42), memory);
+
+            return list.Append(BetterSpan.FromInstance(42), memory);
+        }
+
+        private LinkedListNode<int> Test11(LinkedListNode<int> list)
+        {
+            Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
+
+            //// THIS IS A GOOD THING
+            return list.Append(BetterSpan.FromInstance(42), memory);
+        }
+
+        private LinkedListNode<int> Test12(LinkedListNode<int> list)
+        {
+            return list;
+        }
     }
 #pragma warning restore CA2014 // Do not use stackalloc in loops
 }
