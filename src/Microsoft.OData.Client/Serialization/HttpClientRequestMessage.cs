@@ -14,6 +14,7 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.OData;
@@ -410,6 +411,8 @@ namespace Microsoft.OData.Client
                 {
                     _requestMessage.Content.Headers.Add(contentHeader.Key, contentHeader.Value);
                 }
+
+                string contentString = Encoding.UTF8.GetString(messageContent);
             }
 
             _requestMessage.Method = new HttpMethod(_effectiveHttpMethod);
