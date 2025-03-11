@@ -23,7 +23,11 @@
                 throw new Exception("TODO");
             }
 
-            data = (T*)&memory;
+            fixed (byte* pointer = memory)
+            {
+                this.data = (T*)pointer;
+            }
+
             Length = length;
         }
 
