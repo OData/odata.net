@@ -53,7 +53,7 @@
             var list = new LinkedListNode2<Wrapper<int>>(originalWrapper);
             for (int i = 0; i < 10; ++i)
             {
-                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<Wrapper<int>>>()];
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<Wrapper<int>>>()];
                 var wrapper = new Wrapper<int>(i);
                 list = list.Append(wrapper, memory);
 
