@@ -6,7 +6,7 @@
 
         private readonly BetterSpan<T> values;
 
-        public LinkedListNode(in BetterSpan<T> values)
+        public LinkedListNode(scoped in BetterSpan<T> values)
             : this(values, default)
         {
         }
