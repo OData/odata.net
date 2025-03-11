@@ -28,9 +28,7 @@
             for (int i = 0; i < 10; ++i)
             {
                 Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<Wrapper<int>>>()];
-                var wrapper = new Wrapper<int>(i);
-                list = list.Append(BetterSpan.FromInstance(wrapper), memory);
-
+                list = list.Append(new Wrapper<int>(i), memory);
             }
         }
 
