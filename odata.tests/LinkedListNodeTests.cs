@@ -54,11 +54,11 @@
             for (int i = 0; i < 10; ++i)
             {
                 Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<Wrapper<int>>>()];
-                var wrapper = new Wrapper<int>(i);
-                list = list.Append(wrapper, memory);
+                /*var wrapper = new Wrapper<int>(i);
+                list = list.Append(wrapper, memory);*/
 
                 //// TODO why doesn't this work
-                //// list = list.Append(new Wrapper<int>(i), memory);
+                list = list.Append(new Wrapper<int>(i), memory);
             }
 
             //// TODO these are still backwards...
