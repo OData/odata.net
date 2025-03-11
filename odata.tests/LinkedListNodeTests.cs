@@ -114,7 +114,8 @@
             for (int i = 0; i < 10; ++i)
             {
                 Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
-                list = list.Append(BetterSpan.FromInstance(i), memory);
+                var instance = BetterSpan.FromInstance(i);
+                list = list.Append(instance, memory);
             }
 
             //// THIS IS A GOOD THING
