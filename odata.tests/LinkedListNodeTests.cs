@@ -168,6 +168,16 @@
             //// TODO this should be allowed
             return list;
         }
+
+        private LinkedListNode<int> Test15()
+        {
+            var betterSpan = BetterSpan.FromSpan(new Span<int>(new[] { 1, 2, 3, 4 }));
+
+            var list = new LinkedListNode<int>(betterSpan);
+
+            //// TODO this should be allowed
+            return list;
+        }
     }
 #pragma warning restore CA2014 // Do not use stackalloc in loops
 }
