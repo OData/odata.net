@@ -16,5 +16,13 @@
                 Unsafe.Copy(pointer, in source);
             }
         }
+
+        public static unsafe void Copy2<T>(Span<byte> destination, in T source) where T : allows ref struct
+        {
+            fixed (byte* pointer = destination)
+            {
+                Unsafe.Copy(pointer, in source);
+            }
+        }
     }
 }

@@ -31,6 +31,12 @@ namespace Fx
             this.length = length;
         }
 
+        internal BetterSpan(Span<byte> memory, int length, bool unused)
+        {
+            this.data = memory;
+            this.length = length;
+        }
+
         private BetterSpan(Span<byte> memory)
         {
             this.data = memory;

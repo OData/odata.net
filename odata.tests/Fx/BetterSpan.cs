@@ -19,6 +19,11 @@ namespace Fx
             return new BetterSpan<T>(memory, length);
         }
 
+        public static BetterSpan<T> FromMemory3<T>(Span<byte> memory, int length) where T : allows ref struct
+        {
+            return new BetterSpan<T>(memory, length, false);
+        }
+
         public static unsafe BetterSpan<T> FromInstance<T>(scoped in T value) where T : allows ref struct
         {
             fixed (T* pointer = &value)
