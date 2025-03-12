@@ -51,15 +51,17 @@
         {
             var originalWrapper = new Wrapper<int>(-1);
             var list = new LinkedListNode2<Wrapper<int>>(originalWrapper);
-            for (int i = 0; i < 10; ++i)
+            Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<Wrapper<int>>>()];
+            var list2 = list.Append(new Wrapper<int>(0), memory);
+            for (int i = 1; i < 10; ++i)
             {
-                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<Wrapper<int>>>()];
-                list = list.Append(new Wrapper<int>(i), memory);
+                Span<byte> memory2 = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<Wrapper<int>>>()];
+                list2 = list2.Append(new Wrapper<int>(i), memory2);
             }
 
             //// TODO these are still backwards...
             var expected = 9;
-            foreach (var element in list)
+            foreach (var element in list2)
             {
                 Assert.AreEqual(expected, element.Value);
                 --expected;
@@ -218,7 +220,7 @@
             }
         }*/
 
-        public static class V2
+        /*public static class V2
         {
             private static void Test()
             {
@@ -309,7 +311,7 @@
                 var list = new LinkedListNode2<int>(42);
                 Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
                 LinkedListNode2<int> list2 = list.Append(0, memory);
-                for (int i = 0; i < 10; ++i)
+                for (int i = 1; i < 10; ++i)
                 {
                     Span<byte> memory2 = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
                     list2 = list2.Append(i, memory2);
@@ -362,7 +364,7 @@
                 //// TODO i don't think the above is true, i think it's because the constructor takes in a `in` parameter, so they are receiving `42` *by reference to its location in the stackframe*, so when we return, that referenced value is gone
                 return list;
             }
-        }
+        }*/
     }
 #pragma warning restore CA2014 // Do not use stackalloc in loops
 }
