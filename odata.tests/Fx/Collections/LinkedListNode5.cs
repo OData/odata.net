@@ -6,25 +6,27 @@
 
         private readonly T value;
     }
-    public ref struct Data<T> where T : allows ref struct //// TODO make this readonly
+    public ref struct Data<T> where T : allows ref struct
     {
-        public BetterSpan<LinkedListNode5<T>> previous;
+        public Data(T value, BetterSpan<LinkedListNode5<T>> previous)
+        {
+            Value = value;
+            ////Previous = previous;
+        }
 
-        public T value;
+        public T Value { get; }
+        ////public BetterSpan<LinkedListNode5<T>> Previous { get; }
     }
 
     public ref struct LinkedListNode5<T> where T : allows ref struct
     {
-        /*private Data<T> data;
+        private Data<T> data;
 
-        private Data<T> container;*/
+        ////private Data<T> container;*/
 
         public LinkedListNode5(T value)
         {
-            /*this.data = new Data<T>()
-            {
-                value = value,
-            };*/
+            this.data = new Data<T>(value, default);
         }
 
         /*private LinkedListNode5(T value, BetterSpan<LinkedListNode5<T>> previous)
