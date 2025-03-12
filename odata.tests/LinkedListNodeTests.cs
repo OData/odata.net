@@ -175,6 +175,134 @@
             public T Value { get; }
         }
 
+        [TestMethod]
+        public void Stackframes2()
+        {
+            var list = new NewNode<int>(-1);
+            Span<byte> linkMemory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<Wrapper<int>>>()];
+            var list2 = list.Append(0, linkMemory);
+            for (int i = 0; i < 10; ++i)
+            {
+                linkMemory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<Wrapper<int>>>()];
+                list2 = list2.Append(i, linkMemory);
+            }
+
+            var expected = 9;
+            foreach (var element in list2)
+            {
+                Assert.AreEqual(expected, element);
+                --expected;
+            }
+
+            Assert.AreNotEqual(9, expected);
+        }
+
+        public readonly ref struct NewSpan<T> where T : allows ref struct
+        {
+            private readonly Span<byte> memory;
+            private readonly int length;
+
+            public NewSpan(Span<byte> memory, int length)
+            {
+                this.memory = memory;
+                this.length = length;
+            }
+
+            public T this[int index]
+            {
+                get
+                {
+                    var slice = this.memory.Slice(index * Unsafe.SizeOf<T>());
+                    return Unsafe.As<Span<byte>, T>(ref slice);
+                }
+            }
+
+            public int Length
+            {
+                get
+                {
+                    return this.length;
+                }
+            }
+        }
+
+        public readonly ref struct NewNode<T>
+        {
+            private readonly NewSpan<NewNode<T>> previous;
+
+            private readonly T value;
+
+            public NewNode(T value)
+                : this(value, default)
+            {
+            }
+
+            private NewNode(T value, NewSpan<NewNode<T>> previous)
+            {
+                this.value = value;
+                this.previous = previous;
+            }
+
+            public NewNode<T> Append(T value, Span<byte> linkMemory)
+            {
+                var self = this;
+                Unsafe2.Copy(linkMemory, self);
+
+                var span = new NewSpan<NewNode<T>>(linkMemory, 1);
+                return new NewNode<T>(value, span);
+            }
+
+            public Enumerator GetEnumerator()
+            {
+                return new Enumerator(this);
+            }
+
+            public ref struct Enumerator
+            {
+                private NewNode<T> node;
+
+                private bool hasMoved;
+
+                public Enumerator(NewNode<T> node)
+                {
+                    this.node = node;
+
+                    this.hasMoved = false;
+                }
+
+                public T Current
+                {
+                    get
+                    {
+                        if (!this.hasMoved)
+                        {
+                            throw new Exception("TODO");
+                        }
+
+                        return node.value;
+                    }
+                }
+
+                public bool MoveNext()
+                {
+                    if (!this.hasMoved)
+                    {
+                        this.hasMoved = true;
+                        return true;
+                    }
+
+                    if (this.node.previous.Length == 0)
+                    {
+                        return false;
+                    }
+
+
+                    this.node = node.previous[0];
+                    return true;
+                }
+            }
+        }
+
         /*public static class V1
         {
             private static void Test()
