@@ -80,8 +80,10 @@
             var list = new LinkedListNode3<Wrapper<int>>(betterSpan, BetterSpan<LinkedListNode3<Wrapper<int>>>.CreateEmpty(memory));
             for (int i = 0; i < 10; ++i)
             {
-                Span<byte> memory2 = stackalloc byte[Unsafe.SizeOf<LinkedListNode3<Wrapper<int>>>()];
-                list = list.Append(BetterSpan.FromInstance(new Wrapper<int>(i)), memory2);
+                Span<byte> linkMemory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<Wrapper<int>>>()];
+                Span<byte> valueMemory = stackalloc byte[Unsafe.SizeOf<Wrapper<int>>()];
+                Unsafe2.Copy(valueMemory, new Wrapper<int>(i));
+                list = list.Append(BetterSpan.FromMemory<Wrapper<int>>(valueMemory, 1), linkMemory);
             }
 
             //// TODO these are still backwards...
