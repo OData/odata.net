@@ -1,5 +1,7 @@
 ﻿namespace Fx.Collections
 {
+    using System.Runtime.CompilerServices;
+
     public ref struct LinkedListNode6<T> where T : allows ref struct
     {
         private readonly BetterSpan<LinkedListNode5<T>> previous;
@@ -9,9 +11,9 @@
 
     public ref struct LinkedListNode5<T> where T : allows ref struct
     {
-        private readonly BetterSpan<LinkedListNode5<T>> previous;
+        private BetterSpan<LinkedListNode5<T>> previous;
 
-        private readonly T value;
+        private T value;
 
         private Container container;
 
@@ -57,23 +59,29 @@
             this.previous = default;
         }
 
-        private LinkedListNode5(T value, BetterSpan<LinkedListNode5<T>> previous)
-        {
-            this.value = value;
-            this.previous = previous;
-        }
-
         public unsafe LinkedListNode5<T> Append(T value)
         {
             var self = this;
-            fixed (Container* pointer = &this.container)
+            var next = new LinkedListNode5<T>(value);
+
+            Span<byte> nextContainerMemory = new Span<byte>(&next.container, Unsafe.SizeOf<Container>());
+            var previousMemory = nextContainerMemory.Slice(0, Unsafe.SizeOf<BetterSpan<LinkedListNode5<T>>>());
+            Unsafe2.Copy2(previousMemory, self.previous);
+            var valueMemory = nextContainerMemory.Slice(Unsafe.SizeOf<BetterSpan<LinkedListNode5<T>>>(), Unsafe.SizeOf<T>() + 4); //// TODO why + 4?
+            Unsafe2.Copy2(valueMemory, self.value);
+
+            next.previous = new BetterSpan<LinkedListNode5<T>>(nextContainerMemory, 1, false);
+
+            return next;
+
+            /*fixed (Container* pointer = &next.container)
             {
                 var containerMemory = new Span<byte>(pointer, System.Runtime.CompilerServices.Unsafe.SizeOf<Container>());
                 Unsafe2.Copy2(containerMemory, self); //// TODO you need to fix this so that it only actually copies the first two fields
 
                 var span = BetterSpan.FromMemory3<LinkedListNode5<T>>(containerMemory, 1);
                 return new LinkedListNode5<T>(value, span);
-            }
+            }*/
         }
 
         public Enumerator GetEnumerator()
