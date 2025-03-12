@@ -9,58 +9,36 @@
 
     public ref struct LinkedListNode5<T> where T : allows ref struct
     {
-        private readonly BetterSpan<LinkedListNode5<T>> previous;
+        private readonly Data data;
 
-        private readonly T value;
+        public ref struct Data //// TODO make this readonly
+        {
+            public BetterSpan<LinkedListNode5<T>> previous;
+
+            public T value;
+        }
 
         private Container container;
 
         private ref struct Container
         {
-            byte byte1;
-            byte byte2;
-            byte byte3;
-            byte byte4;
-            byte byte5;
-            byte byte6;
-            byte byte7;
-            byte byte8;
-            byte byte9;
-            byte byte10;
-            byte byte11;
-            byte byte12;
-            byte byte13;
-            byte byte14;
-            byte byte15;
-            byte byte16;
-            byte byte17;
-            byte byte18;
-            byte byte19;
-            byte byte20;
-            byte byte21;
-            byte byte22;
-            byte byte23;
-            byte byte24;
-            byte byte25;
-            byte byte26;
-            byte byte27;
-            byte byte28;
-            byte byte29;
-            byte byte30;
-            byte byte31;
-            byte byte32;
+            private Data data;
         }
 
         public LinkedListNode5(T value)
         {
-            this.value = value;
-            this.previous = default;
+            this.data = new Data()
+            {
+                value = value,
+            };
         }
 
         private LinkedListNode5(T value, BetterSpan<LinkedListNode5<T>> previous)
         {
-            this.value = value;
-            this.previous = previous;
+            this.data = new Data()
+            {
+                value = value,
+            };
         }
 
         public unsafe LinkedListNode5<T> Append(T value)
@@ -103,7 +81,7 @@
                         throw new Exception("TODO");
                     }
 
-                    return node.value;
+                    return node.data.value;
                 }
             }
 
@@ -115,13 +93,13 @@
                     return true;
                 }
 
-                if (this.node.previous.Length == 0)
+                if (this.node.data.previous.Length == 0)
                 {
                     return false;
                 }
 
 
-                this.node = node.previous[0];
+                this.node = node.data.previous[0];
                 return true;
             }
         }
