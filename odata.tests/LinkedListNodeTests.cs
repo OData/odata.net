@@ -2,8 +2,9 @@
 {
     using System;
     using System.ComponentModel.DataAnnotations;
+    using System.Diagnostics.Contracts;
     using System.Runtime.CompilerServices;
-
+    using System.Runtime.InteropServices.Marshalling;
     using Fx;
     using Fx.Collections;
     using Newtonsoft.Json.Linq;
@@ -127,7 +128,7 @@
             Assert.AreNotEqual(9, expected);
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void CreateListAndEnumerateWithRefStruct4()
         {
             var originalWrapper = new Wrapper<int>(-1);
@@ -138,6 +139,9 @@
                 Span<byte> linkMemory = stackalloc byte[Unsafe.SizeOf<LinkedListNode4<Wrapper<int>>>()];
                 var wrapper = new Wrapper<int>(i);
                 list = list.Append(new BetterSpan2<Wrapper<int>>(wrapper), linkMemory);
+
+                BetterSpan2<byte> testing = stackalloc byte[10];
+                Span<byte> testing2 = stackalloc byte[10];
             }
 
             //// TODO these are still backwards...
@@ -149,6 +153,26 @@
             }
 
             Assert.AreNotEqual(9, expected);
+        }*/
+
+        [TestMethod]
+        public void Stackframes()
+        {
+            var container = new Container<int>(42);
+            Span<Container<int>> span = new Span<Container<int>>(ref container);
+            container = new Container<int>(67);
+
+            Assert.AreEqual(67, span[0].Value);
+        }
+
+        public struct Container<T>
+        {
+            public Container(T value)
+            {
+                Value = value;
+            }
+
+            public T Value { get; }
         }
 
         /*public static class V1

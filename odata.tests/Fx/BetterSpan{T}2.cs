@@ -11,6 +11,10 @@ namespace Fx
 
         private readonly bool isSingle;
 
+        public BetterSpan2(void* pointer, int length)
+        {
+        }
+
         internal BetterSpan2(Span<byte> memory, int length)
         {
             if (memory.Length != System.Runtime.CompilerServices.Unsafe.SizeOf<T>() * length)
