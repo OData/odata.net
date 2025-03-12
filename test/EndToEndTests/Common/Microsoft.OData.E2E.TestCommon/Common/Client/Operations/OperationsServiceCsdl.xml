@@ -1,0 +1,136 @@
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Microsoft.OData.E2E.TestCommon.Common.Server.Operations" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Customer">
+        <Key>
+          <PropertyRef Name="CustomerID" />
+        </Key>
+        <Property Name="CustomerID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="FirstName" Type="Edm.String" />
+        <Property Name="LastName" Type="Edm.String" />
+        <Property Name="Emails" Type="Collection(Edm.String)" />
+        <Property Name="Address" Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Address" />
+        <Property Name="Level" Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.CustomerLevel" Nullable="false" />
+        <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
+        <NavigationProperty Name="Orders" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Order)" />
+      </EntityType>
+      <EntityType Name="Order">
+        <Key>
+          <PropertyRef Name="OrderID" />
+        </Key>
+        <Property Name="OrderID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="OrderDate" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="Notes" Type="Collection(Edm.String)" />
+        <Property Name="OrderDetails" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.OrderDetail)" />
+        <Property Name="InfoFromCustomer" Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.InfoFromCustomer" />
+        <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
+        <NavigationProperty Name="Customer" Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer" />
+      </EntityType>
+      <ComplexType Name="Address">
+        <Property Name="Street" Type="Edm.String" />
+        <Property Name="City" Type="Edm.String" />
+        <Property Name="PostalCode" Type="Edm.String" />
+        <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="CompanyAddress" BaseType="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Address">
+        <Property Name="CompanyName" Type="Edm.String" />
+      </ComplexType>
+      <ComplexType Name="OrderDetail">
+        <Property Name="Quantity" Type="Edm.Int32" Nullable="false" />
+        <Property Name="UnitPrice" Type="Edm.Single" Nullable="false" />
+        <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="InfoFromCustomer">
+        <Property Name="CustomerMessage" Type="Edm.String" />
+        <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
+      </ComplexType>
+      <ComplexType Name="HomeAddress" BaseType="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Address">
+        <Property Name="FamilyName" Type="Edm.String" />
+      </ComplexType>
+      <EnumType Name="CustomerLevel">
+        <Member Name="Common" Value="0" />
+        <Member Name="Silver" Value="1" />
+        <Member Name="Gold" Value="2" />
+      </EnumType>
+      <Action Name="ResetDefaultDataSource" />
+      <Function Name="GetCustomerForAddress" IsBound="true" EntitySetPath="bindingParameter" IsComposable="true">
+        <Parameter Name="bindingParameter" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer)" />
+        <Parameter Name="address" Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Address" />
+        <ReturnType Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer" />
+      </Function>
+      <Function Name="GetCustomersForAddresses" IsBound="true" EntitySetPath="bindingParameter" IsComposable="true">
+        <Parameter Name="bindingParameter" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer)" />
+        <Parameter Name="addresses" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Address)" />
+        <ReturnType Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer)" />
+      </Function>
+      <Function Name="GetCustomerForAddresses" IsBound="true" EntitySetPath="bindingParameter" IsComposable="true">
+        <Parameter Name="bindingParameter" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer)" />
+        <Parameter Name="addresses" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Address)" />
+        <ReturnType Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer" />
+      </Function>
+      <Function Name="GetCustomerAddress" IsBound="true" IsComposable="true">
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer" />
+        <ReturnType Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Address" />
+      </Function>
+      <Function Name="GetCustomerAddress" IsComposable="true">
+        <Parameter Name="customer" Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer" />
+        <ReturnType Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Address" />
+      </Function>
+      <Function Name="VerifyCustomerAddress" IsBound="true" EntitySetPath="bindingParameter" IsComposable="true">
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer" />
+        <Parameter Name="address" Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Address" />
+        <ReturnType Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer" />
+      </Function>
+      <Function Name="VerifyCustomerByOrder" IsBound="true" EntitySetPath="bindingParameter" IsComposable="true">
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer" />
+        <Parameter Name="order" Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Order" />
+        <ReturnType Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer" />
+      </Function>
+      <Function Name="GetOrdersFromCustomerByNotes" IsBound="true" EntitySetPath="bindingParameter/Orders" IsComposable="true">
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer" />
+        <Parameter Name="notes" Type="Collection(Edm.String)" />
+        <ReturnType Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Order)" />
+      </Function>
+      <Function Name="GetOrdersByNote" IsBound="true" EntitySetPath="bindingParameter" IsComposable="true">
+        <Parameter Name="bindingParameter" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Order)" />
+        <Parameter Name="note" Type="Edm.String" />
+        <ReturnType Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Order)" />
+      </Function>
+      <Function Name="GetOrderByNote" IsBound="true" EntitySetPath="bindingParameter" IsComposable="true">
+        <Parameter Name="bindingParameter" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Order)" />
+        <Parameter Name="notes" Type="Collection(Edm.String)" />
+        <ReturnType Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Order" />
+      </Function>
+      <Function Name="GetCustomersByOrders" IsBound="true" EntitySetPath="bindingParameter" IsComposable="true">
+        <Parameter Name="bindingParameter" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer)" />
+        <Parameter Name="orders" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Order)" />
+        <ReturnType Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer)" />
+      </Function>
+      <Function Name="GetCustomersByOrders" IsComposable="true">
+        <Parameter Name="orders" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Order)" />
+        <ReturnType Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer)" />
+      </Function>
+      <Function Name="GetCustomerByOrder" IsBound="true" EntitySetPath="bindingParameter" IsComposable="true">
+        <Parameter Name="bindingParameter" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer)" />
+        <Parameter Name="order" Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Order" />
+        <ReturnType Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer" />
+      </Function>
+      <Function Name="GetCustomerByOrder" IsComposable="true">
+        <Parameter Name="order" Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Order" />
+        <ReturnType Type="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer" />
+      </Function>
+      <EntityContainer Name="Container">
+        <EntitySet Name="Customers" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Customer">
+          <NavigationPropertyBinding Path="Orders" Target="Orders" />
+        </EntitySet>
+        <EntitySet Name="Orders" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.Order">
+          <NavigationPropertyBinding Path="Customer" Target="Customers" />
+        </EntitySet>
+        <ActionImport Name="ResetDefaultDataSource" Action="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.ResetDefaultDataSource" />
+        <FunctionImport Name="GetCustomersByOrders" Function="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.GetCustomersByOrders" />
+        <FunctionImport Name="GetCustomerByOrder" Function="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.GetCustomerByOrder" />
+        <FunctionImport Name="GetCustomerAddress" Function="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.GetCustomerAddress" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
