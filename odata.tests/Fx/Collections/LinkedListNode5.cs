@@ -69,18 +69,18 @@
 
         public LinkedListNode5<T> Append(T value)
         {
-            fixed (LinkedListNode5<T>* thisPointer = &this)
-            {
-                var next = new LinkedListNode5<T>(value);
+            var self = this;
+            LinkedListNode5<T>* thisPointer = &self;
 
-                Container* nextContainerPointer = &next.container;
+            var next = new LinkedListNode5<T>(value);
 
-                Copy((byte*)thisPointer, (byte*)nextContainerPointer, Unsafe.SizeOf<Container>());
+            Container* nextContainerPointer = &next.container;
 
-                next.previous = (LinkedListNode5<T>*)nextContainerPointer;
+            Copy((byte*)thisPointer, (byte*)nextContainerPointer, Unsafe.SizeOf<Container>());
 
-                return next;
-            }
+            next.previous = (LinkedListNode5<T>*)nextContainerPointer;
+
+            return next;
         }
 
         public Enumerator GetEnumerator()
@@ -93,7 +93,7 @@
             private LinkedListNode5<T> node;
 
             private bool hasMoved;
-            
+
             public Enumerator(LinkedListNode5<T> node)
             {
                 this.node = node;
