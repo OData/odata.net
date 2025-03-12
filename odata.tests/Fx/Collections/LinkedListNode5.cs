@@ -1,32 +1,26 @@
 ﻿namespace Fx.Collections
 {
-    public ref struct LinkedListNode6<T> where T : allows ref struct
-    {
-        private readonly BetterSpan<LinkedListNode5<T>> previous;
-
-        private readonly T value;
-    }
-    public ref struct Data<T> where T : allows ref struct
-    {
-        public Data(T value, BetterSpan<LinkedListNode5<T>> previous)
-        {
-            Value = value;
-            ////Previous = previous;
-        }
-
-        public T Value { get; }
-        ////public BetterSpan<LinkedListNode5<T>> Previous { get; }
-    }
-
     public ref struct LinkedListNode5<T> where T : allows ref struct
     {
-        private Data<T> data;
+        private Data data;
+
+        private ref struct Data
+        {
+            public Data(T value, BetterSpan<LinkedListNode5<T>> previous)
+            {
+                Value = value;
+                ////Previous = previous;
+            }
+
+            public T Value { get; }
+            ////public BetterSpan<LinkedListNode5<T>> Previous { get; }
+        }
 
         ////private Data<T> container;*/
 
         public LinkedListNode5(T value)
         {
-            this.data = new Data<T>(value, default);
+            this.data = new Data(value, default);
         }
 
         /*private LinkedListNode5(T value, BetterSpan<LinkedListNode5<T>> previous)
