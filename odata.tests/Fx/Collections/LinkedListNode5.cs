@@ -17,17 +17,17 @@
     {
         /*private Data<T> data;
 
-        private Data<T> container;
+        private Data<T> container;*/
 
         public LinkedListNode5(T value)
         {
-            this.data = new Data<T>()
+            /*this.data = new Data<T>()
             {
                 value = value,
-            };
+            };*/
         }
 
-        private LinkedListNode5(T value, BetterSpan<LinkedListNode5<T>> previous)
+        /*private LinkedListNode5(T value, BetterSpan<LinkedListNode5<T>> previous)
         {
             this.data = new Data<T>()
             {

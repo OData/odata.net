@@ -306,7 +306,7 @@
         [TestMethod]
         public void Stackframes3()
         {
-            var list = new LinkedListNode5<Wrapper<int>>(); ////new Wrapper<int>(-1));
+            var list = new LinkedListNode5<Wrapper<int>>(new Wrapper<int>(-1));
             /*for (int i = 0; i < 10; ++i)
             {
                 list = list.Append(new Wrapper<int>(i));
