@@ -9,9 +9,9 @@
         private readonly T value;
     }
 
-    public ref struct LinkedListNode5<T> where T : allows ref struct
+    public unsafe ref struct LinkedListNode5<T> where T : allows ref struct
     {
-        private BetterSpan<LinkedListNode5<T>> previous;
+        private LinkedListNode5<T>* previous;
 
         private T value;
 
@@ -59,29 +59,28 @@
             this.previous = default;
         }
 
-        public unsafe LinkedListNode5<T> Append(T value)
+        private static void Copy(byte* source, byte* destination, int length)
         {
-            var self = this;
-            var next = new LinkedListNode5<T>(value);
-
-            Span<byte> nextContainerMemory = new Span<byte>(&next.container, Unsafe.SizeOf<Container>());
-            var previousMemory = nextContainerMemory.Slice(0, Unsafe.SizeOf<BetterSpan<LinkedListNode5<T>>>());
-            Unsafe2.Copy2(previousMemory, self.previous);
-            var valueMemory = nextContainerMemory.Slice(Unsafe.SizeOf<BetterSpan<LinkedListNode5<T>>>(), Unsafe.SizeOf<T>() + 4); //// TODO why + 4?
-            Unsafe2.Copy2(valueMemory, self.value);
-
-            next.previous = new BetterSpan<LinkedListNode5<T>>(nextContainerMemory, 1, false);
-
-            return next;
-
-            /*fixed (Container* pointer = &next.container)
+            for (int i = 0; i < length; ++i)
             {
-                var containerMemory = new Span<byte>(pointer, System.Runtime.CompilerServices.Unsafe.SizeOf<Container>());
-                Unsafe2.Copy2(containerMemory, self); //// TODO you need to fix this so that it only actually copies the first two fields
+                destination[i] = source[i];
+            }
+        }
 
-                var span = BetterSpan.FromMemory3<LinkedListNode5<T>>(containerMemory, 1);
-                return new LinkedListNode5<T>(value, span);
-            }*/
+        public LinkedListNode5<T> Append(T value)
+        {
+            fixed (LinkedListNode5<T>* thisPointer = &this)
+            {
+                var next = new LinkedListNode5<T>(value);
+
+                Container* nextContainerPointer = &next.container;
+
+                Copy((byte*)thisPointer, (byte*)nextContainerPointer, Unsafe.SizeOf<Container>());
+
+                next.previous = (LinkedListNode5<T>*)nextContainerPointer;
+
+                return next;
+            }
         }
 
         public Enumerator GetEnumerator()
@@ -123,13 +122,13 @@
                     return true;
                 }
 
-                if (this.node.previous.Length == 0)
+                if (this.node.previous == null)
                 {
                     return false;
                 }
 
 
-                this.node = node.previous[0];
+                this.node = *node.previous;
                 return true;
             }
         }
