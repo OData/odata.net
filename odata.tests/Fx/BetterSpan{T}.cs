@@ -31,7 +31,18 @@ namespace Fx
             this.length = length;
         }
 
+        private BetterSpan(Span<byte> memory)
+        {
+            this.data = memory;
+            this.length = 0;
+        }
+
         public static BetterSpan<T> Empty => new BetterSpan<T>(Span<byte>.Empty, 0); //// TODO does the expression syntax make it the caller's stackframe?
+
+        public static BetterSpan<T> CreateEmpty(Span<byte> memory)
+        {
+            return new BetterSpan<T>(memory);
+        }
 
         public T this[int index]
         {

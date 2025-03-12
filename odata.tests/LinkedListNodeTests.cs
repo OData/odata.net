@@ -1,6 +1,7 @@
 ﻿namespace odata.tests
 {
     using System;
+    using System.ComponentModel.DataAnnotations;
     using System.Runtime.CompilerServices;
 
     using Fx;
@@ -62,6 +63,30 @@
             //// TODO these are still backwards...
             var expected = 9;
             foreach (var element in list2)
+            {
+                Assert.AreEqual(expected, element.Value);
+                --expected;
+            }
+
+            Assert.AreNotEqual(9, expected);
+        }
+
+        [TestMethod]
+        public void CreateListAndEnumerateWithRefStruct3()
+        {
+            var originalWrapper = new Wrapper<int>(-1);
+            var betterSpan = BetterSpan.FromInstance(originalWrapper);
+            Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode3<Wrapper<int>>>()];
+            var list = new LinkedListNode3<Wrapper<int>>(betterSpan, BetterSpan<LinkedListNode3<Wrapper<int>>>.CreateEmpty(memory));
+            for (int i = 0; i < 10; ++i)
+            {
+                Span<byte> memory2 = stackalloc byte[Unsafe.SizeOf<LinkedListNode3<Wrapper<int>>>()];
+                list = list.Append(BetterSpan.FromInstance(new Wrapper<int>(i)), memory2);
+            }
+
+            //// TODO these are still backwards...
+            var expected = 9;
+            foreach (var element in list)
             {
                 Assert.AreEqual(expected, element.Value);
                 --expected;
