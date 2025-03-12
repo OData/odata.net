@@ -6,9 +6,12 @@ namespace Fx
     {
         public static unsafe BetterSpan<T> FromSpan<T>(Span<T> values)
         {
-            var span = new Span<byte>(&values, values.Length * Unsafe.SizeOf<T>());
+            fixed (T* pointer = values)
+            {
+                var span = new Span<byte>(pointer, values.Length * Unsafe.SizeOf<T>());
 
-            return new BetterSpan<T>(span, values.Length);
+                return new BetterSpan<T>(span, values.Length);
+            }
         }
 
         public static BetterSpan<T> FromMemory<T>(Span<byte> memory, int length) where T : allows ref struct

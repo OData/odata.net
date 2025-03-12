@@ -97,6 +97,36 @@
             Assert.AreNotEqual(9, expected);
         }
 
+        [TestMethod]
+        public void CreateListAndEnumerateWithStruct3()
+        {
+            var originalWrapper = -1;
+            var betterSpan = BetterSpan.FromInstance(originalWrapper);
+            Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode3<Wrapper<int>>>()];
+            var list = new LinkedListNode3<int>(betterSpan, BetterSpan<LinkedListNode3<int>>.CreateEmpty(memory));
+            for (int i = 0; i < 10; ++i)
+            {
+                Span<byte> linkMemory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<Wrapper<int>>>()];
+                Span<byte> valueMemory = stackalloc byte[Unsafe.SizeOf<Wrapper<int>>()];
+                Unsafe2.Copy(valueMemory, i);
+                list = list.Append(BetterSpan.FromMemory<int>(valueMemory, 1), linkMemory);
+            }
+
+            Span<byte> linkMemory2 = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<Wrapper<int>>>()];
+            var newValue = BetterSpan.FromSpan(new Span<int>(new[] { 10 }));
+            list = list.Append(newValue, linkMemory2);
+
+            //// TODO these are still backwards...
+            var expected = 10;
+            foreach (var element in list)
+            {
+                Assert.AreEqual(expected, element);
+                --expected;
+            }
+
+            Assert.AreNotEqual(9, expected);
+        }
+
         /*public static class V1
         {
             private static void Test()
