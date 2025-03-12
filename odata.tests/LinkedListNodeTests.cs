@@ -127,6 +127,30 @@
             Assert.AreNotEqual(9, expected);
         }
 
+        [TestMethod]
+        public void CreateListAndEnumerateWithRefStruct4()
+        {
+            var originalWrapper = new Wrapper<int>(-1);
+            var betterSpan = BetterSpan.FromInstance3(originalWrapper);
+            var list = new LinkedListNode4<Wrapper<int>>(betterSpan, new BetterSpan2<LinkedListNode4<Wrapper<int>>>());
+            for (int i = 0; i < 10; ++i)
+            {
+                Span<byte> linkMemory = stackalloc byte[Unsafe.SizeOf<LinkedListNode4<Wrapper<int>>>()];
+                var wrapper = new Wrapper<int>(i);
+                list = list.Append(new BetterSpan2<Wrapper<int>>(wrapper), linkMemory);
+            }
+
+            //// TODO these are still backwards...
+            var expected = 9;
+            foreach (var element in list)
+            {
+                Assert.AreEqual(expected, element.Value);
+                --expected;
+            }
+
+            Assert.AreNotEqual(9, expected);
+        }
+
         /*public static class V1
         {
             private static void Test()
