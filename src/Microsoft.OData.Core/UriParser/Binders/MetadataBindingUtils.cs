@@ -201,8 +201,11 @@ namespace Microsoft.OData.UriParser
             {
                 if (item != null && item.Value != null && item.Value is ODataEnumValue enumValue)
                 {
-                    if (!enumType.ContainsMember(enumValue.Value, comparison))
-                    {
+					if (!enumType.ContainsMember(enumValue.Value, comparison) &&
+					   (!long.TryParse(enumValue.Value, out var longValue) ||
+					   !enumType.TryParse(longValue, out var _))
+				   )
+					{
                         throw new ODataException(Error.Format(SRResources.Binder_IsNotValidEnumConstant, enumValue.Value));
                     }
                 }
