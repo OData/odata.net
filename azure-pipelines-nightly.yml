@@ -1,7 +1,13 @@
 name: $(TeamProject)_$(BuildDefinitionName)_$(SourceBranchName)_$(Date:yyyyMMdd)$(Rev:.r)
 
 # No trigger for nightly
-trigger: none
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - tools/CustomMSBuild/Versioning.props
 
 # No Pull request (PR) triggers for nightly
 pr: none
