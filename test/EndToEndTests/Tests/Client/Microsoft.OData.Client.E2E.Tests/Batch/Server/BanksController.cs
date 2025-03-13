@@ -1,8 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿//-----------------------------------------------------------------------------
+// <copyright file="BanksController.cs" company=".NET Foundation">
+//      Copyright (c) .NET Foundation and Contributors. All rights reserved.
+//      See License.txt in the project root for license information.
+// </copyright>
+//------------------------------------------------------------------------------
+
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 
 namespace Microsoft.OData.Client.E2E.Tests.Batch.Server
 {
@@ -14,7 +21,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Batch.Server
         [HttpGet("odata/Banks")]
         public IActionResult Get()
         {
-            var banks = _dataSource.Banks; 
+            var banks = _dataSource.Banks;
             return Ok(banks);
         }
 
@@ -34,7 +41,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Batch.Server
         // POST: /odata/$1/BankAccounts
         [HttpPost]
         [Route("odata/Banks({id})/BankAccounts")]
-        public IActionResult PostBankAccount([FromODataUri] int id , [FromBody] BankAccount bankAccount)
+        public IActionResult PostBankAccount([FromODataUri] int id, [FromBody] BankAccount bankAccount)
         {
             if (bankAccount == null)
             {

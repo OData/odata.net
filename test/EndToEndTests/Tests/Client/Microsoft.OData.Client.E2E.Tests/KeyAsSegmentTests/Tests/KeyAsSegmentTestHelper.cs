@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Default;
 
 namespace Microsoft.OData.Client.E2E.Tests.KeyAsSegmentTests.Tests;
 
@@ -15,13 +15,13 @@ public class KeyAsSegmentTestHelper
 
     public KeyAsSegmentTestHelper(Uri serviceBaseUri, Container context)
     {
-        this._baseUri = serviceBaseUri;
+        _baseUri = serviceBaseUri;
         _context = context;
     }
 
     public Container CreateWrappedContext()
     {
-        var context = new Container(this._baseUri)
+        var context = new Container(_baseUri)
         {
             HttpClientFactory = _context.HttpClientFactory,
             UrlKeyDelimiter = DataServiceUrlKeyDelimiter.Slash

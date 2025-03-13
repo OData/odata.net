@@ -1,0 +1,44 @@
+﻿<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Microsoft.OData.E2E.TestCommon.Common.Server.OpenTypes" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Row" OpenType="true">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Guid" Nullable="false" />
+      </EntityType>
+      <EntityType Name="RowIndex" OpenType="true">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="Rows" Type="Collection(Microsoft.OData.E2E.TestCommon.Common.Server.OpenTypes.IndexedRow)" />
+      </EntityType>
+      <ComplexType Name="ContactDetails">
+        <Property Name="FirstContacted" Type="Edm.Binary" />
+        <Property Name="LastContacted" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="Contacted" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="GUID" Type="Edm.Guid" Nullable="false" />
+        <Property Name="PreferedContactTime" Type="Edm.Duration" Nullable="false" />
+        <Property Name="Byte" Type="Edm.Byte" Nullable="false" />
+        <Property Name="SignedByte" Type="Edm.SByte" Nullable="false" />
+        <Property Name="Double" Type="Edm.Double" Nullable="false" />
+        <Property Name="Single" Type="Edm.Single" Nullable="false" />
+        <Property Name="Short" Type="Edm.Int16" Nullable="false" />
+        <Property Name="Int" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Long" Type="Edm.Int64" Nullable="false" />
+      </ComplexType>
+      <EntityType Name="IndexedRow" BaseType="Microsoft.OData.E2E.TestCommon.Common.Server.OpenTypes.Row" OpenType="true" />
+    </Schema>
+    <Schema Namespace="Default" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Action Name="ResetOpenTypesDataSource" />
+      <EntityContainer Name="Container">
+        <EntitySet Name="Rows" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.OpenTypes.Row" />
+        <EntitySet Name="RowIndices" EntityType="Microsoft.OData.E2E.TestCommon.Common.Server.OpenTypes.RowIndex">
+          <NavigationPropertyBinding Path="Rows" Target="Rows" />
+        </EntitySet>
+        <ActionImport Name="ResetOpenTypesDataSource" Action="Default.ResetOpenTypesDataSource" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
