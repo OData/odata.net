@@ -5,11 +5,13 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.OData.E2E.TestCommon.Common.Server.Operations;
+using Newtonsoft.Json;
 
 namespace Microsoft.OData.E2E.TestCommon.Common.Server.OperationTests;
 
@@ -83,9 +85,33 @@ public class OperationTestsController : ODataController
     }
 
     [HttpGet("odata/Customers/GetCustomersByOrders(orders={orders})")]
-    public IEnumerable<Customer>? GetCustomersByOrders([FromODataUri] IEnumerable<Order> orders)
+    public IEnumerable<Customer>? GetCustomersByOrders([FromRoute] string orders)
     {
-        var customers = _dataSource.Customers?.Where(customer => customer.Orders.Any(o => orders.Any(o2 => o2.OrderID == o.OrderID)));
+        // Deserialize the orders parameter
+        var ordersList = new List<Order>();
+        if (orders.StartsWith("{\"value\":"))
+        {
+            // Handle the case where orders are references
+            var orderReferences = JsonConvert.DeserializeObject<OrderReferences>(orders);
+            foreach (var orderRef in orderReferences.Value)
+            {
+                var match = Regex.Match(orderRef.ODataId, @"Orders\((\d+)\)");
+                var orderId = match.Success ? int.Parse(match.Groups[1].Value) : 0;
+                var order = _dataSource.Orders?.SingleOrDefault(o => o.OrderID == orderId);
+                if (order != null)
+                {
+                    ordersList.Add(order);
+                }
+            }
+        }
+        else
+        {
+            // Handle the case where orders are objects
+            ordersList = JsonConvert.DeserializeObject<List<Order>>(orders);
+        }
+
+        // Find customers with the specified orders
+        var customers = _dataSource.Customers?.Where(customer => customer.Orders.Any(o => ordersList.Any(o2 => o2.OrderID == o.OrderID)));
         return customers;
     }
 
@@ -128,5 +154,17 @@ public class OperationTestsController : ODataController
         _dataSource = OperationsDataSource.CreateInstance();
 
         return Ok();
+    }
+
+    public class OrderReferences
+    {
+        [JsonProperty("value")]
+        public List<OrderReference> Value { get; set; }
+    }
+
+    public class OrderReference
+    {
+        [JsonProperty("@odata.id")]
+        public string ODataId { get; set; }
     }
 }

@@ -127,8 +127,8 @@
           <NavigationPropertyBinding Path="Customer" Target="Customers" />
         </EntitySet>
         <ActionImport Name="ResetDefaultDataSource" Action="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.ResetDefaultDataSource" />
-        <FunctionImport Name="GetCustomersByOrders" Function="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.GetCustomersByOrders" />
-        <FunctionImport Name="GetCustomerByOrder" Function="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.GetCustomerByOrder" />
+        <FunctionImport Name="GetCustomersByOrders" Function="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.GetCustomersByOrders" EntitySet="Customers" />
+        <FunctionImport Name="GetCustomerByOrder" Function="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.GetCustomerByOrder" EntitySet="Customers" />
         <FunctionImport Name="GetCustomerAddress" Function="Microsoft.OData.E2E.TestCommon.Common.Server.Operations.GetCustomerAddress" />
       </EntityContainer>
     </Schema>

@@ -264,6 +264,9 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
 
         // Assert
         Assert.Single(customers);
+        Assert.Equal(2, customers[0].CustomerID);
+        Assert.Equal("Jill", customers[0].FirstName);
+        Assert.Equal("Jones", customers[0].LastName);
     }
 
     [Fact]
