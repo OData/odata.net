@@ -176,6 +176,7 @@ namespace Microsoft.OData.UriParser.Aggregation
                     EdmPrimitiveTypeKind expressionPrimitiveKind = expressionType.PrimitiveKind();
                     switch (expressionPrimitiveKind)
                     {
+                        case EdmPrimitiveTypeKind.Int16:
                         case EdmPrimitiveTypeKind.Int32:
                         case EdmPrimitiveTypeKind.Int64:
                         case EdmPrimitiveTypeKind.Double:
