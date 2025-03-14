@@ -338,6 +338,17 @@
             {
                 Console.WriteLine(element.Value);
             }
+
+            for (int i = 10; i < 20; ++i)
+            {
+                memory = stackalloc byte[LinkedList7<Wrapper<int>>.MemorySize];
+                list.Append(new Wrapper<int>(i), memory);
+            }
+
+            foreach (var element in list)
+            {
+                Console.WriteLine(element.Value);
+            }
         }
 
         /*public static class V1
