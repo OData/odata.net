@@ -72,6 +72,18 @@ namespace Fx
             }*/
         }
 
+        public ref T Get(int index)
+        {
+            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Length);
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
+
+            fixed (byte* pointer = this.data)
+            {
+                T* typedPointer = (T*)pointer;
+                return ref typedPointer[index];
+            }
+        }
+
         public int Length
         {
             get

@@ -322,6 +322,24 @@
             Assert.AreNotEqual(9, expected);
         }
 
+        [TestMethod]
+        public void LinkedList7()
+        {
+            Span<byte> memory = stackalloc byte[LinkedList7<Wrapper<int>>.MemorySize];
+            var list = new LinkedList7<Wrapper<int>>(new Wrapper<int>(-1), memory);
+
+            for (int i = 0; i < 10; ++i)
+            {
+                memory = stackalloc byte[LinkedList7<Wrapper<int>>.MemorySize];
+                list.Append(new Wrapper<int>(i), memory);
+            }
+
+            foreach (var element in list)
+            {
+                Console.WriteLine(element.Value);
+            }
+        }
+
         /*public static class V1
         {
             private static void Test()
