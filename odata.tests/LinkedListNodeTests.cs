@@ -351,6 +351,25 @@
             }
         }
 
+        [TestMethod]
+        public void Compilation1()
+        {
+            var script = Microsoft.CodeAnalysis.CSharp.Scripting.CSharpScript.Create(
+"""
+private static Fx.BetterSpan<string> Test()
+{
+    System.Span<byte> span = stackalloc byte[4];
+    var betterspan = Fx.BetterSpan.FromMemory<string>(span, 1);
+
+    return betterspan;
+}
+""",
+                Microsoft.CodeAnalysis.Scripting.ScriptOptions.Default.WithReferences(new[] { typeof(BetterSpan<>).Assembly })
+                );
+
+            var output = script.Compile();
+        }
+
         /*public static class V1
         {
             private static void Test()
