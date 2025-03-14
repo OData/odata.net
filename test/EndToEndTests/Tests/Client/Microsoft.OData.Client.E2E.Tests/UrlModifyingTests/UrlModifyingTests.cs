@@ -7,9 +7,7 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.OData;
-using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.AspNetCore.Rewrite;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.E2E.TestCommon;
 using Microsoft.OData.E2E.TestCommon.Common.Client.Default.Default;
@@ -34,19 +32,13 @@ public class UrlModifyingTests : EndToEndTestBase<UrlModifyingTests.TestsStartup
 
             services.AddControllers().AddOData(opt =>
             {
-                opt.EnableQueryFeatures().AddRouteComponents("odata", DefaultEdmModel.GetEdmModel(), new DefaultODataBatchHandler());
+                opt.EnableQueryFeatures().AddRouteComponents("odata", DefaultEdmModel.GetEdmModel(), new UrlModifyingBatchHandler());
                 opt.RouteOptions.EnableNonParenthesisForEmptyParameterFunction = true;
             });
         }
 
         public override void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            var options = new RewriteOptions()
-               .AddRewrite(@"RemapPath$", "odata/Customers", skipRemainingRules: true)
-               .AddRewrite("http://localhost/odata/BatchRequest1", "http://localhost/odata/Customers", skipRemainingRules: true)
-               .AddRewrite("http://localhost/odata/BatchRequest2", "http://localhost/odata/People", skipRemainingRules: true);
-
-            app.UseRewriter(options);
             app.UseMiddleware<UrlModifyingMiddleware>();
             base.Configure(app, env);
         }
@@ -90,7 +82,7 @@ public class UrlModifyingTests : EndToEndTestBase<UrlModifyingTests.TestsStartup
     }
 
     [Fact]
-    public async Task Test_RemapRequestUri()
+    public async Task Test_ModifyRequestUri()
     {
         // This test verifies that the request URI is remapped correctly.
 
@@ -110,7 +102,7 @@ public class UrlModifyingTests : EndToEndTestBase<UrlModifyingTests.TestsStartup
     }
 
     [Fact]
-    public async Task Test_RemapBaseUri()
+    public async Task Test_ModifyBaseUri()
     {
         // This test verifies that the base URI is remapped correctly.
 
@@ -133,7 +125,7 @@ public class UrlModifyingTests : EndToEndTestBase<UrlModifyingTests.TestsStartup
     }
 
     [Fact]
-    public async Task Test_RemapBaseAndPathSeparately()
+    public async Task Test_ModifyBaseAndPathUrlsSeparately()
     {
         // This test verifies that the base and path are remapped separately.
 
@@ -155,7 +147,7 @@ public class UrlModifyingTests : EndToEndTestBase<UrlModifyingTests.TestsStartup
     }
 
     [Fact]
-    public async Task Test_BasesDontMatchFail()
+    public async Task Test_WhenBasesDoNotMatch_Fails()
     {
         // This test verifies that an exception is thrown when the bases don't match.
 
@@ -174,7 +166,7 @@ public class UrlModifyingTests : EndToEndTestBase<UrlModifyingTests.TestsStartup
     }
 
     [Fact]
-    public async Task Test_BatchRequest()
+    public async Task Test_ModifyBatchRequests()
     {
         // This test verifies that batch requests are handled correctly.
 

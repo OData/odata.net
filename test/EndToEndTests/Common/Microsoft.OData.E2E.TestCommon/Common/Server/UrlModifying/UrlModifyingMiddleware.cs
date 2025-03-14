@@ -25,28 +25,30 @@ public class UrlModifyingMiddleware
         var request = context.Request;
         var uri = new Uri(request.GetDisplayUrl());
 
-        if (uri.AbsoluteUri.Contains("RemapBase"))
+        if (uri.AbsoluteUri.EndsWith("RemapPath"))
         {
-            var newBaseUri = new Uri("http://potato");
-            context.Request.Scheme = newBaseUri.Scheme;
-            context.Request.Host = new HostString(newBaseUri.Host);
             context.Request.Path = "/odata/Customers";
         }
-        else if (uri.AbsoluteUri.Contains("RemapBaseAndPathSeparately"))
+        else if (uri.AbsoluteUri.EndsWith("RemapBase"))
+        {
+            context.Request.Scheme = "http";
+            context.Request.Host = new HostString("potato");
+            context.Request.Path = "/odata/Customers";
+        }
+        else if (uri.AbsoluteUri.EndsWith("RemapBaseAndPathSeparately"))
         {
             context.Request.Path = "/odata/Customers";
 
-            var newBaseUri = new Uri("http://potato");
-            context.Request.Scheme = newBaseUri.Scheme;
-            context.Request.Host = new HostString(newBaseUri.Host);
+            context.Request.Scheme = "http";
+            context.Request.Host = new HostString("potato");
         }
-        else if (uri.AbsoluteUri.Contains("BasesDontMatchFail"))
+        else if (uri.AbsoluteUri.EndsWith("BasesDontMatchFail"))
         {
             context.Request.Scheme = "http";
             context.Request.Host = new HostString("potato/odata");
-            context.Request.Path = "/DontFailMeService/Customers";
+            context.Request.Path = "/NotFound/Customers";
         }
-        else if (uri.AbsoluteUri.Contains("People"))
+        else if (uri.AbsoluteUri.EndsWith("People"))
         {
             context.Request.QueryString = new QueryString(context.Request.QueryString + "?$top=3");
         }
