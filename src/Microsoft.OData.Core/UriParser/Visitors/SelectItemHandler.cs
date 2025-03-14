@@ -23,6 +23,15 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Handle a PathCountSelectItem
+        /// </summary>
+        /// <param name="item">the item to Handle</param>
+        public virtual void Handle(PathCountSelectItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Handle a PathSelectItem
         /// </summary>
         /// <param name="item">the item to Handle</param>
