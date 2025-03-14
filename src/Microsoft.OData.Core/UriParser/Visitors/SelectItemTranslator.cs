@@ -35,6 +35,16 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Translate a PathCountSelectItem
+        /// </summary>
+        /// <param name="item">the item to Translate</param>
+        /// <returns>Defined by the implementer</returns>
+        public virtual T Translate(PathCountSelectItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Translate a ContainerQualifiedWildcardSelectItem
         /// </summary>
         /// <param name="item">the item to Translate</param>
