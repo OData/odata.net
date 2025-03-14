@@ -8663,6 +8663,8 @@ public sealed class Microsoft.OData.Client.ContainerPropertyAttribute : System.A
 public sealed class Microsoft.OData.Client.DataServiceActionQuery`1 {
     public DataServiceActionQuery`1 (Microsoft.OData.Client.DataServiceContext context, string requestUriString, Microsoft.OData.Client.BodyOperationParameter[] parameters)
 
+    Microsoft.OData.Client.DataServiceContext Context  { public get; }
+    System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Client.BodyOperationParameter]] Parameters  { public get; }
     System.Uri RequestUri  { public get; }
 
     public System.IAsyncResult BeginExecute (System.AsyncCallback callback, object state)
