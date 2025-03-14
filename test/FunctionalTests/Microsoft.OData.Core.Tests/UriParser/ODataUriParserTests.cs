@@ -27,6 +27,410 @@ namespace Microsoft.OData.Tests.UriParser
         private readonly Uri ServiceRoot = new Uri("http://host");
         private readonly Uri FullUri = new Uri("http://host/People");
 
+        /// <summary>
+        /// Selects a property named "true"
+        /// </summary>
+        [Fact]
+        public void SelectTrue()
+        {
+            var model = new EdmModel();
+            var foo = new EdmEntityType("foobar", "foo");
+            foo.AddKeys(foo.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            foo.AddStructuralProperty("true", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(foo);
+            var container = new EdmEntityContainer("foobar", "FooService");
+            container.AddEntitySet("foos", foo);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("/foos?$select=true", UriKind.Relative));
+            var odataUri = parser.ParseUri();
+
+            var selectedItems = odataUri.SelectAndExpand.SelectedItems.ToArray();
+            Assert.Single(selectedItems);
+            var pathSelectItem = selectedItems[0] as PathSelectItem;
+            var segments = pathSelectItem.SelectedPath.Segments.ToArray();
+            Assert.Single(segments);
+            Assert.Equal("true", segments[0].Identifier);
+            Assert.Equal("Edm.String", segments[0].EdmType.FullTypeName());
+        }
+
+        /// <summary>
+        /// Selects a property named "false"
+        /// </summary>
+        [Fact]
+        public void SelectFalse()
+        {
+            var model = new EdmModel();
+            var foo = new EdmEntityType("foobar", "foo");
+            foo.AddKeys(foo.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            foo.AddStructuralProperty("false", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(foo);
+            var container = new EdmEntityContainer("foobar", "FooService");
+            container.AddEntitySet("foos", foo);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("/foos?$select=false", UriKind.Relative));
+            var odataUri = parser.ParseUri();
+
+            var selectedItems = odataUri.SelectAndExpand.SelectedItems.ToArray();
+            Assert.Single(selectedItems);
+            var pathSelectItem = selectedItems[0] as PathSelectItem;
+            var segments = pathSelectItem.SelectedPath.Segments.ToArray();
+            Assert.Single(segments);
+            Assert.Equal("false", segments[0].Identifier);
+            Assert.Equal("Edm.String", segments[0].EdmType.FullTypeName());
+        }
+
+        /// <summary>
+        /// Selects a property named "INF"
+        /// </summary>
+        [Fact]
+        public void SelectInfinity()
+        {
+            var model = new EdmModel();
+            var foo = new EdmEntityType("foobar", "foo");
+            foo.AddKeys(foo.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            foo.AddStructuralProperty("INF", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(foo);
+            var container = new EdmEntityContainer("foobar", "FooService");
+            container.AddEntitySet("foos", foo);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("/foos?$select=INF", UriKind.Relative));
+            var odataUri = parser.ParseUri();
+
+            var selectedItems = odataUri.SelectAndExpand.SelectedItems.ToArray();
+            Assert.Single(selectedItems);
+            var pathSelectItem = selectedItems[0] as PathSelectItem;
+            var segments = pathSelectItem.SelectedPath.Segments.ToArray();
+            Assert.Single(segments);
+            Assert.Equal("INF", segments[0].Identifier);
+            Assert.Equal("Edm.String", segments[0].EdmType.FullTypeName());
+        }
+
+        /// <summary>
+        /// Selects a property named "NaN"
+        /// </summary>
+        [Fact]
+        public void SelectNotANumber()
+        {
+            var model = new EdmModel();
+            var foo = new EdmEntityType("foobar", "foo");
+            foo.AddKeys(foo.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            foo.AddStructuralProperty("NaN", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(foo);
+            var container = new EdmEntityContainer("foobar", "FooService");
+            container.AddEntitySet("foos", foo);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("/foos?$select=NaN", UriKind.Relative));
+            var odataUri = parser.ParseUri();
+
+            var selectedItems = odataUri.SelectAndExpand.SelectedItems.ToArray();
+            Assert.Single(selectedItems);
+            var pathSelectItem = selectedItems[0] as PathSelectItem;
+            var segments = pathSelectItem.SelectedPath.Segments.ToArray();
+            Assert.Single(segments);
+            Assert.Equal("NaN", segments[0].Identifier);
+            Assert.Equal("Edm.String", segments[0].EdmType.FullTypeName());
+        }
+
+        /// <summary>
+        /// Selects a property named "null"
+        /// </summary>
+        [Fact]
+        public void SelectNull()
+        {
+            var model = new EdmModel();
+            var foo = new EdmEntityType("foobar", "foo");
+            foo.AddKeys(foo.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            foo.AddStructuralProperty("null", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(foo);
+            var container = new EdmEntityContainer("foobar", "FooService");
+            container.AddEntitySet("foos", foo);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("/foos?$select=null", UriKind.Relative));
+            var odataUri = parser.ParseUri();
+
+            var selectedItems = odataUri.SelectAndExpand.SelectedItems.ToArray();
+            Assert.Single(selectedItems);
+            var pathSelectItem = selectedItems[0] as PathSelectItem;
+            var segments = pathSelectItem.SelectedPath.Segments.ToArray();
+            Assert.Single(segments);
+            Assert.Equal("null", segments[0].Identifier);
+            Assert.Equal("Edm.String", segments[0].EdmType.FullTypeName());
+        }
+
+        /// <summary>
+        /// Selects a property named "null" when such a property doesn't exist on the entity
+        /// </summary>
+        [Fact]
+        public void SelectNullNotFound()
+        {
+            var model = new EdmModel();
+            var foo = new EdmEntityType("foobar", "foo");
+            foo.AddKeys(foo.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            foo.AddStructuralProperty("true", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(foo);
+            var container = new EdmEntityContainer("foobar", "FooService");
+            container.AddEntitySet("foos", foo);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("/foos?$select=null", UriKind.Relative));
+            var odataException = Assert.Throws<ODataException>(() => parser.ParseUri());
+
+            Assert.Equal("Could not find a property named 'null' on type 'foobar.foo'.", odataException.Message);
+        }
+
+        /// <summary>
+        /// Expands a property named "true"
+        /// </summary>
+        [Fact]
+        public void ExpandTrue()
+        {
+            var model = new EdmModel();
+            var foo = new EdmEntityType("foobar", "foo");
+            foo.AddKeys(foo.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            var bar = new EdmEntityType("foobar", "bar");
+            bar.AddKeys(bar.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            model.AddElement(bar);
+            foo.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() 
+            { 
+                Name = "true", 
+                ContainsTarget = true, 
+                TargetMultiplicity = EdmMultiplicity.ZeroOrOne, 
+                Target = bar ,
+            });
+            model.AddElement(foo);
+            var container = new EdmEntityContainer("foobar", "FooService");
+            container.AddEntitySet("foos", foo);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("/foos?$expand=true", UriKind.Relative));
+            var odataUri = parser.ParseUri();
+
+            var selectedItems = odataUri.SelectAndExpand.SelectedItems.ToArray();
+            Assert.Single(selectedItems);
+            var expandedNavigationSelectItem = selectedItems[0] as ExpandedNavigationSelectItem;
+            Assert.Equal("true", expandedNavigationSelectItem.NavigationSource.Name);
+            Assert.Equal("foobar.bar", expandedNavigationSelectItem.NavigationSource.EntityType().FullTypeName());
+            Assert.Empty(expandedNavigationSelectItem.SelectAndExpand.SelectedItems);
+        }
+
+        /// <summary>
+        /// Expands a property named "false"
+        /// </summary>
+        [Fact]
+        public void ExpandFalse()
+        {
+            var model = new EdmModel();
+            var foo = new EdmEntityType("foobar", "foo");
+            foo.AddKeys(foo.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            var bar = new EdmEntityType("foobar", "bar");
+            bar.AddKeys(bar.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            model.AddElement(bar);
+            foo.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() 
+            { 
+                Name = "false",
+                ContainsTarget = true,
+                TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
+                Target = bar,
+            });
+            model.AddElement(foo);
+            var container = new EdmEntityContainer("foobar", "FooService");
+            container.AddEntitySet("foos", foo);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("/foos?$expand=false", UriKind.Relative));
+            var odataUri = parser.ParseUri();
+
+            var selectedItems = odataUri.SelectAndExpand.SelectedItems.ToArray();
+            Assert.Single(selectedItems);
+            var expandedNavigationSelectItem = selectedItems[0] as ExpandedNavigationSelectItem;
+            Assert.Equal("false", expandedNavigationSelectItem.NavigationSource.Name);
+            Assert.Equal("foobar.bar", expandedNavigationSelectItem.NavigationSource.EntityType().FullTypeName());
+            Assert.Empty(expandedNavigationSelectItem.SelectAndExpand.SelectedItems);
+        }
+
+        /// <summary>
+        /// Expands a property named "INF"
+        /// </summary>
+        [Fact]
+        public void ExpandInfinity()
+        {
+            var model = new EdmModel();
+            var foo = new EdmEntityType("foobar", "foo");
+            foo.AddKeys(foo.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            var bar = new EdmEntityType("foobar", "bar");
+            bar.AddKeys(bar.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            model.AddElement(bar);
+            foo.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() 
+            { 
+                Name = "INF",
+                ContainsTarget = true,
+                TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
+                Target = bar,
+            });
+            model.AddElement(foo);
+            var container = new EdmEntityContainer("foobar", "FooService");
+            container.AddEntitySet("foos", foo);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("/foos?$expand=INF", UriKind.Relative));
+            var odataUri = parser.ParseUri();
+
+            var selectedItems = odataUri.SelectAndExpand.SelectedItems.ToArray();
+            Assert.Single(selectedItems);
+            var expandedNavigationSelectItem = selectedItems[0] as ExpandedNavigationSelectItem;
+            Assert.Equal("INF", expandedNavigationSelectItem.NavigationSource.Name);
+            Assert.Equal("foobar.bar", expandedNavigationSelectItem.NavigationSource.EntityType().FullTypeName());
+            Assert.Empty(expandedNavigationSelectItem.SelectAndExpand.SelectedItems);
+        }
+
+        /// <summary>
+        /// Expands a property named "NaN"
+        /// </summary>
+        [Fact]
+        public void ExpandNotANumber()
+        {
+            var model = new EdmModel();
+            var foo = new EdmEntityType("foobar", "foo");
+            foo.AddKeys(foo.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            var bar = new EdmEntityType("foobar", "bar");
+            bar.AddKeys(bar.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            model.AddElement(bar);
+            foo.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() 
+            { 
+                Name = "NaN",
+                ContainsTarget = true,
+                TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
+                Target = bar,
+            });
+            model.AddElement(foo);
+            var container = new EdmEntityContainer("foobar", "FooService");
+            container.AddEntitySet("foos", foo);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("/foos?$expand=NaN", UriKind.Relative));
+            var odataUri = parser.ParseUri();
+
+            var selectedItems = odataUri.SelectAndExpand.SelectedItems.ToArray();
+            Assert.Single(selectedItems);
+            var expandedNavigationSelectItem = selectedItems[0] as ExpandedNavigationSelectItem;
+            Assert.Equal("NaN", expandedNavigationSelectItem.NavigationSource.Name);
+            Assert.Equal("foobar.bar", expandedNavigationSelectItem.NavigationSource.EntityType().FullTypeName());
+            Assert.Empty(expandedNavigationSelectItem.SelectAndExpand.SelectedItems);
+        }
+
+        /// <summary>
+        /// Expands a property named "null"
+        /// </summary>
+        [Fact]
+        public void ExpandNull()
+        {
+            var model = new EdmModel();
+            var foo = new EdmEntityType("foobar", "foo");
+            foo.AddKeys(foo.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            var bar = new EdmEntityType("foobar", "bar");
+            bar.AddKeys(bar.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            model.AddElement(bar);
+            foo.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() 
+            { 
+                Name = "null",
+                ContainsTarget = true,
+                TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
+                Target = bar,
+            });
+            model.AddElement(foo);
+            var container = new EdmEntityContainer("foobar", "FooService");
+            container.AddEntitySet("foos", foo);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("/foos?$expand=null", UriKind.Relative));
+            var odataUri = parser.ParseUri();
+
+            var selectedItems = odataUri.SelectAndExpand.SelectedItems.ToArray();
+            Assert.Single(selectedItems);
+            var expandedNavigationSelectItem = selectedItems[0] as ExpandedNavigationSelectItem;
+            Assert.Equal("null", expandedNavigationSelectItem.NavigationSource.Name);
+            Assert.Equal("foobar.bar", expandedNavigationSelectItem.NavigationSource.EntityType().FullTypeName());
+            Assert.Empty(expandedNavigationSelectItem.SelectAndExpand.SelectedItems);
+        }
+
+        /// <summary>
+        /// Expands a property named "null" when such a property doesn't exist on the entity
+        /// </summary>
+        [Fact]
+        public void ExpandNullNotFound()
+        {
+            var model = new EdmModel();
+            var foo = new EdmEntityType("foobar", "foo");
+            foo.AddKeys(foo.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            var bar = new EdmEntityType("foobar", "bar");
+            bar.AddKeys(bar.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            model.AddElement(bar);
+            foo.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() 
+            {
+                Name = "true",
+                ContainsTarget = true,
+                TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
+                Target = bar,
+            });
+            model.AddElement(foo);
+            var container = new EdmEntityContainer("foobar", "FooService");
+            container.AddEntitySet("foos", foo);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("/foos?$expand=null", UriKind.Relative));
+            var odataException = Assert.Throws<ODataException>(() => parser.ParseUri());
+
+            Assert.Equal("Could not find a property named 'null' on type 'foobar.foo'.", odataException.Message);
+        }
+
+        /// <summary>
+        /// Expands a property named "true" and selects its property named "false"
+        /// </summary>
+        [Fact]
+        public void ExpandTrueSelectFalse()
+        {
+            var model = new EdmModel();
+            var foo = new EdmEntityType("foobar", "foo");
+            foo.AddKeys(foo.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            var bar = new EdmEntityType("foobar", "bar");
+            bar.AddKeys(bar.AddStructuralProperty("id", EdmCoreModel.Instance.GetInt32(false)));
+            bar.AddStructuralProperty("false", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(bar);
+            foo.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
+            { 
+                Name = "true",
+                ContainsTarget = true,
+                TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
+                Target = bar,
+            });
+            model.AddElement(foo);
+            var container = new EdmEntityContainer("foobar", "FooService");
+            container.AddEntitySet("foos", foo);
+            model.AddElement(container);
+
+            var parser = new ODataUriParser(model, new Uri("/foos?$expand=true($select=false)", UriKind.Relative));
+            var odataUri = parser.ParseUri();
+
+            var expandedItems = odataUri.SelectAndExpand.SelectedItems.ToArray();
+            Assert.Single(expandedItems);
+            var expandedNavigationSelectItem = expandedItems[0] as ExpandedNavigationSelectItem;
+            Assert.Equal("true", expandedNavigationSelectItem.NavigationSource.Name);
+            Assert.Equal("foobar.bar", expandedNavigationSelectItem.NavigationSource.EntityType().FullTypeName());
+
+            var selectedItems = expandedNavigationSelectItem.SelectAndExpand.SelectedItems.ToArray();
+            Assert.Single(selectedItems);
+            var pathSelectItem = selectedItems[0] as PathSelectItem;
+            var segments = pathSelectItem.SelectedPath.Segments.ToArray();
+            Assert.Single(segments);
+            Assert.Equal("false", segments[0].Identifier);
+            Assert.Equal("Edm.String", segments[0].EdmType.FullTypeName());
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
