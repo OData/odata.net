@@ -84,6 +84,7 @@ public class OperationTestsController : ODataController
         return Ok(orders);
     }
 
+    [EnableQuery]
     [HttpGet("odata/Customers/GetCustomersByOrders(orders={orders})")]
     public IEnumerable<Customer>? GetCustomersByOrders([FromRoute] string orders)
     {

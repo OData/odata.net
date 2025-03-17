@@ -336,6 +336,79 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
         Assert.Equal("child", orders[0].Notes[1]);
     }
 
+    [Fact]
+    public async Task FunctionBoundToEntityCollection_WithEntityReference_ReturnEntity()
+    {
+        // Arrange
+        var context = this.ContextWrapper();
+
+        var order = context.Orders.ToList()[1];
+        var getCustomersByOrder = context.Customers.GetCustomerByOrder(order, true);
+        Assert.Contains("odata.id", getCustomersByOrder.RequestUri.AbsoluteUri);
+
+        // Act
+        var customer = await getCustomersByOrder.GetValueAsync();
+
+        // Assert
+        Assert.NotNull(customer);
+        Assert.Equal(2, customer.CustomerID);
+    }
+
+    [Fact]
+    public async Task FunctionBoundToEntityCollection_WithEntityReference_UseLocalEntity()
+    {
+        // Arrange
+        var context = this.ContextWrapper();
+
+        var order = new Order()
+        {
+            OrderID = 1,
+        };
+
+        context.AttachTo("Orders", order);
+        var getCustomersByOrder = context.Customers.GetCustomerByOrder(order, true /*useEntityReference*/);
+        Assert.Contains("odata.id", getCustomersByOrder.RequestUri.AbsoluteUri);
+
+        // Act
+        var customer = await getCustomersByOrder.GetValueAsync();
+
+        // Assert
+        Assert.NotNull(customer);
+        Assert.Equal(2, customer.CustomerID);
+    }
+
+    [Fact]
+    public async Task FunctionBoundToEntityCollection_WithEntityReference_ReturnEntities()
+    {
+        // Arrange
+        var context = this.ContextWrapper();
+
+        var orders = context.Orders.ToList();
+        var getCustomersByOrders = context.Customers.GetCustomersByOrders(orders, true /*useEntityReference*/);
+        Assert.Contains("odata.id", getCustomersByOrders.RequestUri.AbsoluteUri);
+
+        // Act
+        var customers = await getCustomersByOrders.ExecuteAsync();
+
+        Assert.True(customers.Count() > 1);
+    }
+
+    [Fact]
+    public async Task FunctionBoundToAnEntity_WithEntityReference_ReturnEntity()
+    {
+        // Arrange
+        var context = this.ContextWrapper();
+
+        var customer = context.Customers.Expand("Orders").Skip(1).First();
+        var getCustomerByOrder = customer.VerifyCustomerByOrder(customer.Orders.First());
+
+        // Act
+        customer = await getCustomerByOrder.GetValueAsync();
+
+        // Assert
+        Assert.NotNull(customer);
+    }
+
     #region Private
 
     private Container ContextWrapper()
