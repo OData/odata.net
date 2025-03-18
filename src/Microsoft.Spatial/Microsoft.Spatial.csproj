@@ -1,9 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <AssemblyName>Microsoft.Spatial</AssemblyName>
     <RootNamespace>Microsoft.Spatial</RootNamespace>
-
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <DefineConstants>TRACE;SPATIAL;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

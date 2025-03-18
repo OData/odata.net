@@ -5,7 +5,8 @@ steps:
 
 - task: UseDotNet@2
   inputs:
-    version: '8.x'
+    version: '10.x'
+    includePreviewVersions: true
 
 - task: PowerShell@2
   inputs:
@@ -16,12 +17,7 @@ steps:
       [System.Reflection.Assembly]::Load("System.EnterpriseServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
       $publish = New-Object System.EnterpriseServices.Internal.Publish
       $publish.GacInstall("$(gacUtil)")
-- task: UseDotNet@2
-  inputs:
-    version: '8.x'
-- task: UseDotNet@2
-  inputs:
-    version: '9.x'
+
 
 - task: DotNetCoreCLI@2
   displayName: 'Build'  
