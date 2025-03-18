@@ -45,7 +45,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-      <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">net8.0;net9.0</TargetFrameworks>
+      <TargetFrameworks Condition="'$(TargetFrameworks)' == ''">net10.0</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Condition ="'$(TargetFrameworkIdentifier)' == 'net45'">
@@ -77,7 +77,6 @@
     <PackagesConfig>$(NuGetToolsPath)\packages.config</PackagesConfig>
   </PropertyGroup>
 
-  
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.1'">
     <DefineConstants>$(DefineConstants);ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_11</DefineConstants>
   </PropertyGroup>
