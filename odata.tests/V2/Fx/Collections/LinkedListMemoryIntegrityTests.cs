@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Immutable;
     using System.IO;
+    using System.Linq;
     using System.Runtime.CompilerServices;
 
     using Microsoft.CodeAnalysis;
@@ -42,17 +43,20 @@
         {
             //// TODO i think this one maybe *should* be able to compile, as long as one where the input parameter is by reference *doesn't* compile
             var compilationOutput = Compile();
-            Assert.AreEqual(1, compilationOutput.Length);
-            Assert.AreEqual("CS8352", compilationOutput[0].Id);
+            Assert.AreEqual(2, compilationOutput.Length);
+            CollectionAssert.AreEquivalent(
+                new[] { "CS8352", "CS8350" },
+                compilationOutput.Select(element => element.Id).ToArray());
         }
 
         [TestMethod]
         public void ListByReferenceParameterAppended()
         {
-            //// TODO i think this one maybe *should* be able to compile, as long as one where the input parameter is by reference *doesn't* compile
             var compilationOutput = Compile();
-            Assert.AreEqual(1, compilationOutput.Length);
-            Assert.AreEqual("CS8352", compilationOutput[0].Id);
+            Assert.AreEqual(2, compilationOutput.Length);
+            CollectionAssert.AreEquivalent(
+                new[] { "CS8352", "CS8350" }, 
+                compilationOutput.Select(element => element.Id).ToArray());
         }
 
         private ImmutableArray<Diagnostic> Compile([CallerMemberName] string? testMethod = null)
