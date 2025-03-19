@@ -65,10 +65,5 @@
                 return length;
             }
         }
-
-        /*public static implicit operator T*(BetterSpan<T> betterSpan)
-        {
-            return betterSpan.data;
-        }*/
     }
 }
