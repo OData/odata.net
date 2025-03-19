@@ -28,12 +28,7 @@
                 list.Append(new Wrapper<int>(i), memory);
             }
 
-            var expectedValue = -1;
-            foreach (var element in list)
-            {
-                Assert.AreEqual(expectedValue, element.Value);
-                ++expectedValue;
-            }
+            AssertEnumerable(Enumerable.Range(-1, 11), list);
 
             for (int i = 10; i < 20; ++i)
             {
@@ -41,12 +36,8 @@
                 list.Append(new Wrapper<int>(i), memory);
             }
 
-            expectedValue = -1;
-            foreach (var element in list)
-            {
-                Assert.AreEqual(expectedValue, element.Value);
-                ++expectedValue;
-            }
+
+            AssertEnumerable(Enumerable.Range(-1, 21), list);
         }
 
         private static void AssertEnumerable<T>(IEnumerable<T> expected, LinkedList<Wrapper<T>> actual) //// TODO add allows ref struct constraint
