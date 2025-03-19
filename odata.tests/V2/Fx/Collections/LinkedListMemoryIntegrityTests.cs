@@ -14,7 +14,7 @@
     public sealed class LinkedListMemoryIntegrityTests
     {
         [TestMethod]
-        public void SingleValueLinkedList()
+        public void SingleValueLinkedListLeavingFrame()
         {
 
         }

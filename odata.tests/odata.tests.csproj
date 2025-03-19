@@ -21,15 +21,15 @@
   <ItemGroup>
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="V2\Fx\Collections\LinkedListMemoryIntegrityTestsResources\" />
-  </ItemGroup>
   
   <Target Name="RemoveTestResources" BeforeTargets="BeforeBuild">
     <ItemGroup>
       <Compile Remove="V2\Fx\BetterReadOnlySpanMemoryIntegrityTestsResources\**" />
       <EmbeddedResource Include="V2\Fx\BetterReadOnlySpanMemoryIntegrityTestsResources\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <Compile Remove="V2\Fx\Collections\LinkedListMemoryIntegrityTestsResources\**" />
+      <EmbeddedResource Include="V2\Fx\Collections\LinkedListMemoryIntegrityTestsResources\**" />
     </ItemGroup>
   </Target>
   

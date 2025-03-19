@@ -43,6 +43,13 @@
             Assert.AreEqual(0, compilationOutput.Length);
         }
 
+        [TestMethod]
+        public void WrappedValueLeavingFrame()
+        {
+            var compilationOutput = Compile();
+            Assert.AreEqual(0, compilationOutput.Length);
+        }
+
         private ImmutableArray<Diagnostic> Compile([CallerMemberName] string? testMethod = null)
         {
             var scriptContents = GetResource(testMethod);
