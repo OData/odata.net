@@ -8,11 +8,13 @@ trigger:
     include:
     - main
     - dev-8.x
+    - dev-9.x
    
 # Pull request (PR) triggers
 pr:
 - main
 - dev-8.x
+- dev-9.x
 
 resources:
   repositories:

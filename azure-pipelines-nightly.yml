@@ -14,6 +14,7 @@ schedules:
    include:
     - main
     - dev-8.x
+    - dev-9.x
 
 resources:
   repositories:
