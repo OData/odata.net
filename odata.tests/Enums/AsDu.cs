@@ -49,6 +49,7 @@ namespace Enums
                 {
                     return node.Dispatch(this);
                 }
+
                 protected internal abstract TResult Accept(Type1 node);
                 protected internal abstract TResult Accept(Type2 node);
             }
@@ -87,13 +88,6 @@ namespace Enums
             public Kind Kind { get; set; }
 
             public NodeData Data { get; set; }
-        }
-
-        public ref struct Context<TResult>
-        {
-            public Node Node { get; set; }
-
-            public IHandler<TResult> Handler { get; set; }
         }
 
         private sealed class Visitor : Kind.Visitor<int>
