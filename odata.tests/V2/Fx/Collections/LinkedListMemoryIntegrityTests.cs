@@ -46,15 +46,6 @@ public static class StackAllocWithinFrame
 
         /*public static class V1
         {
-            private static BetterSpan<string> Test2()
-            {
-                Span<byte> span = stackalloc byte[4];
-                var betterspan = BetterSpan.FromMemory<string>(span, 1);
-
-                //// THIS IS A GOOD THING
-                return betterspan;
-            }
-
             private static LinkedListNode<int> Test3()
             {
                 var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
