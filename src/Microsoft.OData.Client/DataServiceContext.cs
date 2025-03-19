@@ -668,7 +668,7 @@ namespace Microsoft.OData.Client
         /// When true, a Where clause that has only the key property in the predicate generates a $filter query option, otherwise a key segment is generated.
         /// The default value is true.
         /// </summary>
-        [Obsolete("This property will be removed in a future major release.")]
+        [Obsolete("This property will be removed in a future major release. The ByKey method should be used to generate an OData URL with key segment.")]
         public virtual bool KeyComparisonGeneratesFilterQuery
         {
             get { return this.keyComparisonGeneratesFilterQuery; }

@@ -27,6 +27,7 @@
   
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.OData.Client.Tests" />
+    <InternalsVisibleTo Include="Microsoft.OData.Client.E2E.Tests" />
   </ItemGroup>
 
   <ItemGroup>
@@ -100,10 +101,6 @@
     <Compile Include="..\Microsoft.OData.Core\UriParser\Aggregation\AggregateTokenBase.cs" Link="ALinq\UriParser\Aggregation\AggregateTokenBase.cs" />
     <Compile Include="..\Microsoft.OData.Core\UriParser\Aggregation\AggregateExpressionToken.cs" Link="ALinq\UriParser\Aggregation\AggregateExpressionToken.cs" />
     <Compile Include="..\Microsoft.OData.Core\UriParser\SyntacticAst\CountSegmentToken.cs" Link="ALinq\UriParser\SyntacticAst\CountSegmentToken.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Remove="PublicAPI/net10.0/PublicAPI.Shipped.txt" />
   </ItemGroup>
 
   <ItemGroup>

@@ -136,11 +136,6 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            if (this.lexer.CurrentToken.Span.Equals(UriQueryConstants.CountSegment, StringComparison.Ordinal) && isSelect)
-            {
-                // $count is not allowed in $select e.g $select=NavProperty/$count
-                throw new ODataException(SRResources.ExpressionToken_DollarCountNotAllowedInSelect);
-            }
 
             ReadOnlySpan<char> propertyName;
 
@@ -170,6 +165,8 @@ namespace Microsoft.OData.UriParser
                 this.lexer.NextToken();
             }
 
+            // By design, "/$count" or "/$ref" should return using SystemToken, but the existing implementation is using "NonSystemToken".
+            // So far, let's keep it unchanged.
             return new NonSystemToken(propertyName.ToString(), null, previousSegment);
         }
     }

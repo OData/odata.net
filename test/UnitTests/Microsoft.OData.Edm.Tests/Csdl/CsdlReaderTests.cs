@@ -2262,6 +2262,90 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Null(geographyPointProperty.SpatialReferenceIdentifier);
         }
 
+        [Theory]
+        [InlineData("", "The root element has no namespace.")]
+        [InlineData(" ", "The root element has no namespace.")]
+        [InlineData("xmlns=\"\"", "The root element has no namespace.")]
+        [InlineData("xmlns=\"http://docs.oasis-open.org/odata/ns/edm-invalid\"", "The namespace 'http://docs.oasis-open.org/odata/ns/edm-invalid' is invalid.")]
+        [InlineData("xmlns=\"''\"", "The namespace '''' is invalid.")]
+        [InlineData("xmlns=\"null\"", "The namespace 'null' is invalid.")]
+        [InlineData(null, "The root element has no namespace.")]
+        public void ShouldReportUnexpectedRootNamespaceWithSchemaTagMissingXMLNamespace(string xmlns, string firstPartErrorMessage)
+        {
+            // Arrange
+            string csdl =
+                $"""
+                <?xml version="1.0" encoding="utf-8"?>
+                <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+                  <edmx:DataServices>
+                    <Schema Namespace="NS" Alias="self" {xmlns}>
+                      <EnumType Name="someEnum">
+                        <Member Name="notApplicable" Value="0" />
+                        <Member Name="enabled" Value="1" />
+                      </EnumType>
+                    </Schema>
+                  </edmx:DataServices>
+                </edmx:Edmx>
+                """;
+
+            var errorMessage = $"{firstPartErrorMessage} The root element is expected to belong to one of the following namespaces: 'http://docs.oasis-open.org/odata/ns/edm, http://docs.oasis-open.org/odata/ns/edm'.";
+
+            // Act
+            using var reader = XmlReader.Create(new StringReader(csdl));
+            var success = CsdlReader.TryParse(reader, out var model, out var errors);
+
+            // Assert
+            Assert.False(success);
+            Assert.NotEmpty(errors);
+
+            var error = errors.FirstOrDefault();
+            Assert.Equal(EdmErrorCode.UnexpectedXmlElement, error?.ErrorCode);
+            Assert.Equal(errorMessage, error.ErrorMessage);
+            Assert.Equal(4, (error?.ErrorLocation as CsdlLocation)?.LineNumber);
+            Assert.Equal(6, (error?.ErrorLocation as CsdlLocation)?.LinePosition);
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("xmlns=\"\"")]
+        [InlineData("xmlns=\"http://docs.oasis-open.org/odata/ns/edm\"")]
+        [InlineData("xmlns=\"http://docs.oasis-open.org/odata/ns/edmx-invalid\"")]
+        [InlineData("xmlns=\"''\"")]
+        [InlineData("xmlns=\"null\"")]
+        [InlineData(null)]
+        public void ShouldReportUnexpectedXmlElementWithEdmxTagMissingXMLNamespace(string xmlns)
+        {
+            // Arrange
+            string csdl =
+                $"""
+                <Edmx Version="4.0" {xmlns}>
+                  <edmx:DataServices>
+                    <Schema Namespace="NS" Alias="self" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+                      <EnumType Name="someEnum">
+                        <Member Name="notApplicable" Value="0" />
+                        <Member Name="enabled" Value="1" />
+                      </EnumType>
+                    </Schema>
+                  </edmx:DataServices>
+                </Edmx>
+                """;
+
+            // Act
+            using var reader = XmlReader.Create(new StringReader(csdl));
+            var success = CsdlReader.TryParse(reader, out var model, out var errors);
+
+            // Assert
+            Assert.False(success);
+            Assert.NotEmpty(errors);
+
+            var error = errors.FirstOrDefault();
+            Assert.Equal(EdmErrorCode.UnexpectedXmlElement, error?.ErrorCode);
+            Assert.Contains("The element 'Edmx' was unexpected for the root element. The root element should be Edmx.", error.ErrorMessage);
+            Assert.Equal(1, (error?.ErrorLocation as CsdlLocation)?.LineNumber);
+            Assert.Equal(2, (error?.ErrorLocation as CsdlLocation)?.LinePosition);
+        }
+
         [Fact]
         public void ShouldReportCorrectLineNumbersWithMultiLineElements()
         {

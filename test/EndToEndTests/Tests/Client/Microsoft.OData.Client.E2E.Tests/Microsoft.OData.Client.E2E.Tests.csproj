@@ -4,17 +4,37 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    
+    <AssemblyName>Microsoft.OData.Client.E2E.Tests</AssemblyName>
+    <RootNamespace>Microsoft.OData.Client.E2E.Tests</RootNamespace>
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\..\..\..\tools\StrongNamePublicKeys\testkey.snk</AssemblyOriginatorKeyFile>
+    <DelaySign>True</DelaySign>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>..\..\..\bin\AnyCPU\Debug\Test\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\..\..\bin\AnyCPU\Release\Test\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="ClientWithoutTypeResolverTests\Clients\MismatchedClientModel\MismatchedClientModelCsdl.xml" />
+    <None Remove="PayloadValueConverterTests\Client\PayloadValueConverterCsdl.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="ClientWithoutTypeResolverTests\Clients\MismatchedClientModel\MismatchedClientModelCsdl.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PayloadValueConverterTests\Client\PayloadValueConverterCsdl.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
@@ -35,6 +55,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
     <ProjectReference Include="..\..\..\Common\Microsoft.OData.E2E.TestCommon\Microsoft.OData.E2E.TestCommon.csproj" />
   </ItemGroup>
 

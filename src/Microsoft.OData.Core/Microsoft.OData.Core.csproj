@@ -24,6 +24,7 @@
   
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.OData.Core.Tests" />
+    <InternalsVisibleTo Include="Microsoft.OData.Core.E2E.Tests" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,10 +58,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
     <ProjectReference Include="..\Microsoft.Spatial\Microsoft.Spatial.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <AdditionalFiles Remove="PublicAPI/net10.0/PublicAPI.Shipped.txt" />
   </ItemGroup>
 
   <ItemGroup>
