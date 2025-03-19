@@ -66,6 +66,29 @@
             AssertEnumerable(Enumerable.Range(-1, 21), list);
         }
 
+        [TestMethod]
+        public void EnumerateReturnedList()
+        {
+            Span<byte> memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
+
+            for (int i = 0; i < 10; ++i)
+            {
+                memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+                list.Append(new Wrapper<int>(i), memory);
+            }
+
+            AssertEnumerable(Enumerable.Range(-1, 11), list);
+
+            var newList = PassListThrough(list);
+            AssertEnumerable(Enumerable.Range(-1, 11), newList);
+        }
+
+        private static LinkedList<Wrapper<int>> PassListThrough(LinkedList<Wrapper<int>> list)
+        {
+            return list;
+        }
+
         private static void AssertEnumerable<T>(IEnumerable<T> expected, LinkedList<Wrapper<T>> actual) //// TODO add allows ref struct constraint
         {
             AssertEnumerable(expected, actual, wrapper => wrapper.Value);
