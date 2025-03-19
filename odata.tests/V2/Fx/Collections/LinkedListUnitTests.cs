@@ -45,6 +45,11 @@
             AssertEnumerable(expected, actual, wrapper => wrapper.Value);
         }
 
+        private static void AssertEnumerable<T>(IEnumerable<T> expected, LinkedList<T> actual)
+        {
+            AssertEnumerable(expected, actual, _ => _);
+        }
+
         private static void AssertEnumerable<TValue, TWrapper>(IEnumerable<TValue> expected, LinkedList<TWrapper> actual, Func<TWrapper, TValue> selector) where TWrapper : allows ref struct //// TODO add allows ref struct constraint to TValue
         {
             using (var expectedEnumerator = expected.GetEnumerator())
