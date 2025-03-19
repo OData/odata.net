@@ -22,10 +22,7 @@
                         .Default
                         .WithReferences(
                             typeof(BetterReadOnlySpan<>).Assembly,
-                            typeof(Span<>).Assembly)
-                        .WithImports(
-                            "System.Runtime.CompilerServices", 
-                            "V2.Fx"));
+                            typeof(Span<>).Assembly));
 
             var output = script.Compile();
         }
