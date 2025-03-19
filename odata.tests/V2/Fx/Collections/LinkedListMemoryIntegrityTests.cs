@@ -168,20 +168,7 @@ public static class StackAllocWithinFrame
         }*/
         /*public static class V2
         {
-            private static void Test()
-            {
-                Span<byte> span = stackalloc byte[4];
-                var betterspan = BetterSpan.FromMemory<string>(span, 1);
-            }
 
-            private static BetterSpan<string> Test2()
-            {
-                Span<byte> span = stackalloc byte[4];
-                var betterspan = BetterSpan.FromMemory<string>(span, 1);
-
-                //// THIS IS A GOOD THING
-                return betterspan;
-            }
 
             private static LinkedListNode2<int> Test3()
             {
@@ -196,18 +183,6 @@ public static class StackAllocWithinFrame
                 return list;
             }
 
-            private static BetterSpan<LinkedListNode2<int>> Test5()
-            {
-                var list = new LinkedListNode2<int>(42);
-                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
-                Unsafe2.Copy(memory, in list);
-
-                var nextValue = BetterSpan.FromInstance(67);
-                var previousNode = BetterSpan.FromMemory<LinkedListNode2<int>>(memory, 1);
-
-                //// THIS IS A GOOD THING
-                return previousNode;
-            }
 
             private static LinkedListNode2<int> Test6()
             {
