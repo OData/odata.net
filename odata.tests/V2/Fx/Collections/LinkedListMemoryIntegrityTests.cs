@@ -75,21 +75,6 @@
                 return list;
             }
 
-
-            private static LinkedListNode<int> Test6()
-            {
-                var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
-                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
-                Unsafe2.Copy(memory, in list);
-
-                var nextValue = BetterSpan.FromInstance(67);
-                var previousNode = BetterSpan.FromMemory<LinkedListNode<int>>(memory, 1);
-                list = new LinkedListNode<int>(nextValue, previousNode);
-
-                //// THIS IS A GOOD THING
-                return list;
-            }
-
             private static LinkedListNode<int> Test7()
             {
                 var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
@@ -184,20 +169,6 @@
         }*/
         /*public static class V2
         {
-
-            private static LinkedListNode2<int> Test6()
-            {
-                var list = new LinkedListNode2<int>(42);
-                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
-                Unsafe2.Copy(memory, in list);
-
-                var nextValue = 67;
-                var previousNode = BetterSpan.FromMemory<LinkedListNode2<int>>(memory, 1);
-                list = new LinkedListNode2<int>(nextValue, previousNode);
-
-                //// THIS IS A GOOD THING
-                return list;
-            }
 
             private static LinkedListNode2<int> Test7()
             {
