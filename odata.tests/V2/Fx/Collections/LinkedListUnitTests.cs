@@ -58,19 +58,27 @@
         {
             using (var expectedEnumerator = expected.GetEnumerator())
             {
-                var expectedMoved = expectedEnumerator.MoveNext();
-
-                var actualHasElements = false;
-                foreach (var element in actual)
+                if (!expectedEnumerator.MoveNext())
                 {
-                    actualHasElements = true;
-                    var value = selector(element);
-                    Assert.AreEqual(expectedEnumerator.Current, value);
+                    foreach (var actualElement in actual)
+                    {
+                        Assert.Fail();
+                    }
                 }
+                else
+                {
+                    var expectedHasAnotherElement = true;
+                    foreach (var actualElement in actual)
+                    {
+                        Assert.IsTrue(expectedHasAnotherElement);
 
-                //// TODO what if there's a different number of elements?
+                        var value = selector(actualElement);
+                        Assert.AreEqual(expectedEnumerator.Current, value);
+                        expectedHasAnotherElement = expectedEnumerator.MoveNext();
+                    }
 
-                Assert.AreEqual(expectedMoved, actualHasElements);
+                    Assert.IsFalse(expectedHasAnotherElement);
+                }
             }
         }
     }
