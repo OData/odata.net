@@ -21,10 +21,10 @@
                     ScriptOptions
                         .Default
                         .WithReferences(
-                            typeof(BetterReadOnlySpan<>).Assembly,
-                            typeof(Span<>).Assembly));
+                            typeof(BetterReadOnlySpan<>).Assembly));
 
-            var output = script.Compile();
+            var compilationOutput = script.Compile();
+            Assert.AreEqual(0, compilationOutput.Length);
         }
 
         private string GetResource([CallerMemberName] string? testMethod = null)
