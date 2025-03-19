@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <RootNamespace />
   </PropertyGroup>
 
@@ -11,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Fx\Collections\" />
     <Folder Include="Root\OdataResourcePath\SyntacticCstNodes\" />
   </ItemGroup>
 
