@@ -89,6 +89,27 @@
             return list;
         }
 
+        [TestMethod]
+        public void AddElementToListInCallee()
+        {
+            Span<byte> memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
+
+            AssertEnumerable(new[] { -1 }, list);
+
+            memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            var newList = Foo(list, memory);
+
+            AssertEnumerable(new[] { -1, 42 }, list); //// TODO if `list` is passed by value, shouldn't this still only have 1 element
+            AssertEnumerable(new[] { -1, 42 }, newList);
+        }
+
+        private static LinkedList<Wrapper<int>> Foo(LinkedList<Wrapper<int>> list, Span<byte> memory)
+        {
+            list.Append(new Wrapper<int>(42), memory);
+            return list;
+        }
+
         private static void AssertEnumerable<T>(IEnumerable<T> expected, LinkedList<Wrapper<T>> actual) //// TODO add allows ref struct constraint
         {
             AssertEnumerable(expected, actual, wrapper => wrapper.Value);
