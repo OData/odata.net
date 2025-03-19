@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using static System.Net.Mime.MediaTypeNames;
@@ -50,7 +51,10 @@ namespace Enums
                     return node.Dispatch(this);
                 }
 
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 protected internal abstract TResult Accept(Type1 node);
+
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 protected internal abstract TResult Accept(Type2 node);
             }
 
@@ -62,6 +66,7 @@ namespace Enums
 
                 public static Type1 Instance { get; } = new Type1();
 
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 protected sealed override TResult Dispatch<TResult>(Visitor<TResult> visitor)
                 {
                     return visitor.Accept(this);
@@ -76,6 +81,7 @@ namespace Enums
 
                 public static Type2 Instance { get; } = new Type2();
 
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
                 protected sealed override TResult Dispatch<TResult>(Visitor<TResult> visitor)
                 {
                     return visitor.Accept(this);
@@ -98,11 +104,13 @@ namespace Enums
 
             public static Visitor Instance { get; } = new Visitor();
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             protected internal override int Accept(Kind.Type1 node)
             {
                 return -1;
             }
 
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
             protected internal override int Accept(Kind.Type2 node)
             {
                 return -1;

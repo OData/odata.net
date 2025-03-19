@@ -10,7 +10,7 @@ namespace Enums
     [TestClass]
     public class AsEnum
     {
-        public const int Iterations = 10000000;
+        public const int Iterations = 100000000;
 
         [TestMethod]
         public void Perf()
