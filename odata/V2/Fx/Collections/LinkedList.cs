@@ -15,7 +15,7 @@
             var firstNode = new LinkedListNode(value);
             Unsafe.Copy(memory, firstNode);
 
-            this.first = BetterSpan.FromMemory<LinkedListNode>(memory, 1);
+            this.first = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
             this.current = this.first;
         }
 
@@ -24,7 +24,7 @@
             var nextNode = new LinkedListNode(value);
             Unsafe.Copy(memory, nextNode);
 
-            var next = BetterSpan.FromMemory<LinkedListNode>(memory, 1);
+            var next = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
 
             this.current.Get(0).Next = next;
 
