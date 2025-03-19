@@ -47,8 +47,6 @@ namespace Enums
             {
                 public TResult Visit(Kind node, TContext context)
                 {
-                    ArgumentNullException.ThrowIfNull(node);
-
                     return node.Dispatch(this, context);
                 }
                 protected internal abstract TResult Accept(Type1 node, TContext context);
@@ -65,8 +63,6 @@ namespace Enums
 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    ArgumentNullException.ThrowIfNull(visitor);
-
                     return visitor.Accept(this, context);
                 }
             }
@@ -81,8 +77,6 @@ namespace Enums
 
                 protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    ArgumentNullException.ThrowIfNull(visitor);
-
                     return visitor.Accept(this, context);
                 }
             }
