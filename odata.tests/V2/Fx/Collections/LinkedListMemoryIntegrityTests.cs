@@ -60,6 +60,13 @@
                 compilationOutput.Select(element => element.Id).ToArray());
         }
 
+        [TestMethod]
+        public void ListParameterReturned()
+        {
+            var compilationOutput = Compile();
+            Assert.AreEqual(0, compilationOutput.Length);
+        }
+
         private ImmutableArray<Diagnostic> Compile([CallerMemberName] string? testMethod = null)
         {
             var scriptContents = GetResource(testMethod);
