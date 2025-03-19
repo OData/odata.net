@@ -25,12 +25,6 @@
             this.length = length;
         }
 
-        private BetterReadOnlySpan(Span<byte> memory)
-        {
-            data = memory;
-            length = 0;
-        }
-
         public unsafe T this[int index]
         {
             get
