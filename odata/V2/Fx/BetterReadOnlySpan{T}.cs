@@ -1,4 +1,4 @@
-﻿namespace Fx
+﻿namespace V2.Fx
 {
     using System;
 
@@ -15,20 +15,20 @@
                 throw new Exception("TODO");
             }
 
-            this.data = memory;
+            data = memory;
             this.length = length;
         }
 
         internal BetterReadOnlySpan(Span<byte> memory, int length, bool unused)
         {
-            this.data = memory;
+            data = memory;
             this.length = length;
         }
 
         private BetterReadOnlySpan(Span<byte> memory)
         {
-            this.data = memory;
-            this.length = 0;
+            data = memory;
+            length = 0;
         }
 
         public unsafe T this[int index]
@@ -38,7 +38,7 @@
                 ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Length);
                 ArgumentOutOfRangeException.ThrowIfNegative(index);
 
-                fixed (byte* pointer = this.data)
+                fixed (byte* pointer = data)
                 {
                     T* typedPointer = (T*)pointer;
                     return typedPointer[index];
@@ -51,7 +51,7 @@
             ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Length);
             ArgumentOutOfRangeException.ThrowIfNegative(index);
 
-            fixed (byte* pointer = this.data)
+            fixed (byte* pointer = data)
             {
                 T* typedPointer = (T*)pointer;
                 return ref typedPointer[index];
@@ -62,7 +62,7 @@
         {
             get
             {
-                return this.length;
+                return length;
             }
         }
 

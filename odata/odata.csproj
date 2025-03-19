@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Fx\Collections\" />
+    <Folder Include="V2\Fx\Collections\" />
     <Folder Include="Root\OdataResourcePath\SyntacticCstNodes\" />
   </ItemGroup>
 
