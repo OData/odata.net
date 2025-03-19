@@ -1,9 +1,11 @@
 ﻿namespace V2.Fx
 {
     using System;
+    using System.Collections.Immutable;
     using System.IO;
     using System.Runtime.CompilerServices;
 
+    using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp.Scripting;
     using Microsoft.CodeAnalysis.Scripting;
     using Microsoft.VisualStudio.TestTools.UnitTesting;    
@@ -14,7 +16,13 @@
         [TestMethod]
         public void StackAllocWithinFrame()
         {
-            var scriptContents = GetResource();
+            var compilationOutput = Compile();
+            Assert.AreEqual(0, compilationOutput.Length);
+        }
+
+        private ImmutableArray<Diagnostic> Compile([CallerMemberName] string? testMethod = null)
+        {
+            var scriptContents = GetResource(testMethod);
             var script = CSharpScript
                 .Create(
                     scriptContents,
@@ -23,8 +31,7 @@
                         .WithReferences(
                             typeof(BetterReadOnlySpan<>).Assembly));
 
-            var compilationOutput = script.Compile();
-            Assert.AreEqual(0, compilationOutput.Length);
+            return script.Compile();
         }
 
         private string GetResource([CallerMemberName] string? testMethod = null)
