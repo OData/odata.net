@@ -187,13 +187,6 @@
         }*/
         /*public static class V2
         {
-            private static void Test10(LinkedListNode2<int> list)
-            {
-                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
-
-                //// THIS IS A GOOD THING
-                list = list.Append(42, memory);
-            }
 
             private static LinkedListNode2<int> Test11(LinkedListNode2<int> list)
             {
