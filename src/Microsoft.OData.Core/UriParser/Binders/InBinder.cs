@@ -7,12 +7,13 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
+    using System.Buffers;
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
     using System.Text;
-    using Microsoft.OData.Edm;
     using Microsoft.OData.Core;
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Class that knows how to bind the In operator.
@@ -129,7 +130,7 @@ namespace Microsoft.OData.UriParser
                     Debug.Assert(expectedType.IsCollection());
                     string expectedTypeFullName = expectedType.Definition.AsElementType().FullTypeName();
 
-                    if (expectedTypeFullName.Equals("Edm.String", StringComparison.Ordinal) || expectedTypeFullName.Equals("Edm.Untyped", StringComparison.Ordinal))
+                    if (expectedTypeFullName.Equals("Edm.String", StringComparison.Ordinal) || (expectedTypeFullName.Equals("Edm.Untyped", StringComparison.Ordinal) && IsCollectionEmptyOrWhiteSpace(bracketLiteralText)))
                     {
                         // For collection of strings, need to convert single-quoted string to double-quoted string,
                         // and also, per ABNF, a single quote within a string literal is "encoded" as two consecutive single quotes in either
@@ -422,6 +423,79 @@ namespace Microsoft.OData.UriParser
             }
 
             return "[" + String.Join(",", items) + "]";
+        }
+
+        private static bool IsCollectionEmptyOrWhiteSpace(string bracketLiteralText)
+        {
+            string content = bracketLiteralText[1..^1].Trim();
+
+            if (string.IsNullOrWhiteSpace(content))
+            {
+                return true;
+            }
+
+            bool isEmptyOrWhiteSpace = true;
+            bool isCharInsideQuotes = false;
+            char quoteChar = '\0';
+            char[] buffer = ArrayPool<char>.Shared.Rent(content.Length);
+            int bufferIndex = 0;
+
+            try
+            {
+                for (int i = 0; i < content.Length; i++)
+                {
+                    char c = content[i];
+
+                    if (isCharInsideQuotes)
+                    {
+                        if (c == quoteChar)
+                        {
+                            isCharInsideQuotes = false;
+                        }
+                        buffer[bufferIndex++] = c;
+                    }
+                    else
+                    {
+                        if (c == '"' || c == '\'')
+                        {
+                            isCharInsideQuotes = true;
+                            quoteChar = c;
+                            buffer[bufferIndex++] = c;
+                        }
+                        else if (c == ',')
+                        {
+                            string item = new string(buffer, 0, bufferIndex).Trim().Trim('\'', '"');
+
+                            if (!string.IsNullOrWhiteSpace(item))
+                            {
+                                isEmptyOrWhiteSpace = false;
+                                break;
+                            }
+                            bufferIndex = 0;
+                        }
+                        else
+                        {
+                            buffer[bufferIndex++] = c;
+                        }
+                    }
+                }
+
+                if (bufferIndex > 0)
+                {
+                    string lastItem = new string(buffer, 0, bufferIndex).Trim().Trim('\'', '"');
+
+                    if (!string.IsNullOrWhiteSpace(lastItem))
+                    {
+                        isEmptyOrWhiteSpace = false;
+                    }
+                }
+            }
+            finally
+            {
+                ArrayPool<char>.Shared.Return(buffer);
+            }
+
+            return isEmptyOrWhiteSpace;
         }
     }
 }
