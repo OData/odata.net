@@ -106,20 +106,12 @@ namespace Enums
 
             protected internal override int Accept(Kind.Type1 node)
             {
-                var subNode = new Type1()
-                {
-                    Data = int.Parse("asdf"), //// TODO
-                };
-                return Handler.Instance.Handle(subNode);
+                return -1;
             }
 
             protected internal override int Accept(Kind.Type2 node)
             {
-                var subNode = new Type2()
-                {
-                    Data = "asdf", //// TODO
-                };
-                return Handler.Instance.Handle(subNode);
+                return -1;
             }
         }
 
