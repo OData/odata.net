@@ -40,7 +40,7 @@
         [TestMethod]
         public void ListParameterAppended()
         {
-            //// TODO i think this one maybe *should* be able to compile
+            //// TODO i think this one maybe *should* be able to compile, as long as one where the input parameter is by reference *doesn't* compile
             var compilationOutput = Compile();
             Assert.AreEqual(1, compilationOutput.Length);
             Assert.AreEqual("CS8352", compilationOutput[0].Id);
