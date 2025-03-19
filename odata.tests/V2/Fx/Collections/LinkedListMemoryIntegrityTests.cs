@@ -147,13 +147,7 @@
                 return list;
             }
 
-            
-
-            private static LinkedListNode<int> Test12(LinkedListNode<int> list)
-            {
-                return list;
-            }
-
+        
             private static LinkedListNode<int> Test13()
             {
                 var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
@@ -188,11 +182,6 @@
         /*public static class V2
         {
 
-
-            private static LinkedListNode2<int> Test12(LinkedListNode2<int> list)
-            {
-                return list;
-            }
 
             private static LinkedListNode2<int> Test13()
             {
