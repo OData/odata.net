@@ -19,7 +19,7 @@ namespace Enums
 
             var node = new Node()
             {
-                Kind = Kind.Type2,
+                Kind = Kind.Type2.Instance,
                 Data = new NodeData()
                 {
                     Data = "asdf",
@@ -41,9 +41,9 @@ namespace Enums
             {
             }
 
-            protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+            protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context) where TContext : allows ref struct;
 
-            public abstract class Visitor<TResult, TContext>
+            public abstract class Visitor<TResult, TContext> where TContext : allows ref struct
             {
                 public TResult Visit(Kind node, TContext context)
                 {
@@ -95,26 +95,48 @@ namespace Enums
             public NodeData Data { get; set; }
         }
 
-        public static TResult Handle<TResult>(Node node, IHandler<TResult> handler)
+        public ref struct Context<TResult>
         {
-            if (node.Kind == Kind.Type1)
+            public Node Node { get; set; }
+
+            public IHandler<TResult> Handler { get; set; }
+        }
+
+        private sealed class Visitor<TResult> : Kind.Visitor<TResult, Context<TResult>>
+        {
+            private Visitor()
+            {
+            }
+
+            public static Visitor<TResult> Instance { get; } = new Visitor<TResult>();
+
+            protected internal override TResult Accept(Kind.Type1 node, Context<TResult> context)
             {
                 var subNode = new Type1()
                 {
-                    Data = int.Parse(node.Data.Data),
+                    Data = int.Parse(context.Node.Data.Data),
                 };
-                return handler.Handle(subNode);
+                return context.Handler.Handle(subNode);
             }
-            else if (node.Kind == Kind.Type2)
+
+            protected internal override TResult Accept(Kind.Type2 node, Context<TResult> context)
             {
                 var subNode = new Type2()
                 {
-                    Data = node.Data.Data,
+                    Data = context.Node.Data.Data,
                 };
-                return handler.Handle(subNode);
+                return context.Handler.Handle(subNode);
             }
+        }
 
-            throw new Exception("tODO unreachable code");
+        public static TResult Handle<TResult>(Node node, IHandler<TResult> handler)
+        {
+            var context = new Context<TResult>()
+            {
+                Node = node,
+                Handler = handler,
+            };
+            return Visitor<TResult>.Instance.Visit(node.Kind, context);
         }
     }
 }
