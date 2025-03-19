@@ -5,6 +5,16 @@ steps:
 
 - task: UseDotNet@2
   inputs:
+    version: '9.x'
+    includePreviewVersions: false
+
+- task: UseDotNet@2
+  inputs:
+    version: '8.x'
+    includePreviewVersions: false
+
+- task: UseDotNet@2
+  inputs:
     version: '10.x'
     includePreviewVersions: true
 
