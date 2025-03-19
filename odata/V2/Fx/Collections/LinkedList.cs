@@ -10,25 +10,42 @@
 
         private BetterReadOnlySpan<LinkedListNode> current;
 
+        private bool hasValues;
+
         public LinkedList(T value, Span<byte> memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
+        {
+            //// TODO do you still want this constructor now that empty lists are a thing?
+            this.SetFirstValue(value, memory);
+        }
+
+        private void SetFirstValue(T value, Span<byte> memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
         {
             var firstNode = new LinkedListNode(value);
             Unsafe.Copy(memory, firstNode);
 
             this.first = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
             this.current = this.first;
+
+            this.hasValues = true;
         }
 
         public void Append(T value, Span<byte> memory)
         {
-            var nextNode = new LinkedListNode(value);
-            Unsafe.Copy(memory, nextNode);
+            if (!this.hasValues)
+            {
+                this.SetFirstValue(value, memory);
+            }
+            else
+            {
+                var nextNode = new LinkedListNode(value);
+                Unsafe.Copy(memory, nextNode);
 
-            var next = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
+                var next = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
 
-            this.current.Get(0).Next = next;
+                this.current.Get(0).Next = next;
 
-            this.current = next;
+                this.current = next;
+            }
         }
 
         public static int MemorySize { get; } = System.Runtime.CompilerServices.Unsafe.SizeOf<LinkedListNode>();
@@ -47,7 +64,14 @@
 
         public Enumerator GetEnumerator()
         {
-            return new Enumerator(this.first);
+            if (this.hasValues)
+            {
+                return new Enumerator(this.first);
+            }
+            else
+            {
+                return new Enumerator();
+            }
         }
 
         public ref struct Enumerator
@@ -56,18 +80,21 @@
 
             private bool hasMoved;
 
+            private readonly bool hasValues;
+
             internal Enumerator(BetterReadOnlySpan<LinkedListNode> node)
             {
                 this.node = node;
 
                 this.hasMoved = false;
+                this.hasValues = true;
             }
 
             public T Current //// TODO cna you make this return `ref t`?
             {
                 get
                 {
-                    if (!this.hasMoved)
+                    if (!this.hasValues || !this.hasMoved)
                     {
                         throw new Exception("TODO");
                     }
@@ -78,6 +105,11 @@
 
             public bool MoveNext()
             {
+                if (!this.hasValues)
+                {
+                    return false;
+                }
+
                 if (!this.hasMoved)
                 {
                     this.hasMoved = true;

@@ -115,6 +115,14 @@
             return list;
         }
 
+        [TestMethod]
+        public void EmptyList()
+        {
+            var list = new LinkedList<Wrapper<int>>();
+
+            AssertEnumerable(Enumerable.Empty<int>(), list);
+        }
+
         private static void AssertEnumerable<T>(IEnumerable<T> expected, LinkedList<Wrapper<T>> actual) //// TODO add allows ref struct constraint
         {
             AssertEnumerable(expected, actual, wrapper => wrapper.Value);
