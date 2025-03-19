@@ -10,10 +10,12 @@ namespace Enums
     [TestClass]
     public class AsEnum
     {
+        public const int Iterations = 1000000;
+
         [TestMethod]
         public void Perf()
         {
-            var iterations = 1000000;
+            var iterations = AsEnum.Iterations;
             Stopwatch stopwatch;
 
             var node = new Node()
