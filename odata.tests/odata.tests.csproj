@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -22,5 +22,12 @@
   <ItemGroup>
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
-
+  
+  <Target Name="RemoveTestResources" BeforeTargets="BeforeBuild">
+    <ItemGroup>
+      <Compile Remove="V2\Fx\BetterReadOnlySpanMemoryIntegrityTestsResources\StackAllocWithinFrame.cs" />
+      <EmbeddedResource Include="V2\Fx\BetterReadOnlySpanMemoryIntegrityTestsResources\StackAllocWithinFrame.cs" />
+    </ItemGroup>
+  </Target>
+  
 </Project>
