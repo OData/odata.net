@@ -93,6 +93,7 @@
 
             private static LinkedListNode<int> Test8()
             {
+        //// TODO this might apply to the stack implementation
                 var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
                 for (int i = 0; i < 10; ++i)
                 {
@@ -175,23 +176,6 @@
         }*/
         /*public static class V2
         {
-            private static LinkedListNode2<int> Test8()
-            {
-                var list = new LinkedListNode2<int>(42);
-                for (int i = 0; i < 10; ++i)
-                {
-                    Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
-                    Unsafe2.Copy(memory, in list);
-
-                    var nextValue = i;
-                    var previousNode = BetterSpan.FromMemory<LinkedListNode2<int>>(memory, 1);
-                    list = new LinkedListNode2<int>(nextValue, previousNode);
-                }
-
-                //// THIS IS A GOOD THING
-                return list;
-            }
-
             private static LinkedListNode2<int> Test9()
             {
                 //// TODO look at this!
