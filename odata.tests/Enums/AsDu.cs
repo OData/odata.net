@@ -41,16 +41,16 @@ namespace Enums
             {
             }
 
-            protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context) where TContext : allows ref struct;
+            protected abstract TResult Dispatch<TResult>(Visitor<TResult> visitor);
 
-            public abstract class Visitor<TResult, TContext> where TContext : allows ref struct
+            public abstract class Visitor<TResult>
             {
-                public TResult Visit(Kind node, TContext context)
+                public TResult Visit(Kind node)
                 {
-                    return node.Dispatch(this, context);
+                    return node.Dispatch(this);
                 }
-                protected internal abstract TResult Accept(Type1 node, TContext context);
-                protected internal abstract TResult Accept(Type2 node, TContext context);
+                protected internal abstract TResult Accept(Type1 node);
+                protected internal abstract TResult Accept(Type2 node);
             }
 
             public sealed class Type1 : Kind
@@ -61,9 +61,9 @@ namespace Enums
 
                 public static Type1 Instance { get; } = new Type1();
 
-                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                protected sealed override TResult Dispatch<TResult>(Visitor<TResult> visitor)
                 {
-                    return visitor.Accept(this, context);
+                    return visitor.Accept(this);
                 }
             }
 
@@ -75,9 +75,9 @@ namespace Enums
 
                 public static Type2 Instance { get; } = new Type2();
 
-                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                protected sealed override TResult Dispatch<TResult>(Visitor<TResult> visitor)
                 {
-                    return visitor.Accept(this, context);
+                    return visitor.Accept(this);
                 }
             }
         }
@@ -96,41 +96,36 @@ namespace Enums
             public IHandler<TResult> Handler { get; set; }
         }
 
-        private sealed class Visitor<TResult> : Kind.Visitor<TResult, Context<TResult>>
+        private sealed class Visitor : Kind.Visitor<int>
         {
             private Visitor()
             {
             }
 
-            public static Visitor<TResult> Instance { get; } = new Visitor<TResult>();
+            public static Visitor Instance { get; } = new Visitor();
 
-            protected internal override TResult Accept(Kind.Type1 node, Context<TResult> context)
+            protected internal override int Accept(Kind.Type1 node)
             {
                 var subNode = new Type1()
                 {
-                    Data = int.Parse(context.Node.Data.Data),
+                    Data = int.Parse("asdf"), //// TODO
                 };
-                return context.Handler.Handle(subNode);
+                return Handler.Instance.Handle(subNode);
             }
 
-            protected internal override TResult Accept(Kind.Type2 node, Context<TResult> context)
+            protected internal override int Accept(Kind.Type2 node)
             {
                 var subNode = new Type2()
                 {
-                    Data = context.Node.Data.Data,
+                    Data = "asdf", //// TODO
                 };
-                return context.Handler.Handle(subNode);
+                return Handler.Instance.Handle(subNode);
             }
         }
 
-        public static TResult Handle<TResult>(Node node, IHandler<TResult> handler)
+        public static int Handle<TResult>(Node node, IHandler<TResult> handler)
         {
-            var context = new Context<TResult>()
-            {
-                Node = node,
-                Handler = handler,
-            };
-            return Visitor<TResult>.Instance.Visit(node.Kind, context);
+            return Visitor.Instance.Visit(node.Kind);
         }
     }
 }
