@@ -1,5 +1,7 @@
 ﻿namespace Fx
 {
+    using System;
+
     using System.Runtime.CompilerServices;
 
     public static class Unsafe2

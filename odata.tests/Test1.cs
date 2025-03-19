@@ -5,6 +5,8 @@
     using Root.OdataResourcePath.CombinatorParsers;
     using Root.OdataResourcePath.Transcribers;
     using Sprache;
+    using System;
+    using System.IO;
     using System.Text;
 
     [TestClass]

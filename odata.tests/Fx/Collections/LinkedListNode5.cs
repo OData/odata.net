@@ -1,5 +1,6 @@
 ﻿namespace Fx.Collections
 {
+    using System;
     using System.Runtime.CompilerServices;
 
     public ref struct LinkedListNode6<T> where T : allows ref struct

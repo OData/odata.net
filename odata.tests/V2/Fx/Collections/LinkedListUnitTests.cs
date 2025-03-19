@@ -1,5 +1,9 @@
 ﻿namespace V2.Fx.Collections
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #pragma warning disable CA2014 // Do not use stackalloc in loops

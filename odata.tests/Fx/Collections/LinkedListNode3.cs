@@ -1,5 +1,7 @@
 ﻿namespace Fx.Collections
 {
+    using System;
+
     public readonly ref struct LinkedListNode3<T> where T : allows ref struct
     {
         private readonly BetterSpan<LinkedListNode3<T>> previous;

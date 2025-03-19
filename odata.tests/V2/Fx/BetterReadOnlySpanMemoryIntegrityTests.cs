@@ -1,5 +1,7 @@
 ﻿namespace V2.Fx
 {
+    using System;
+    using System.IO;
     using System.Runtime.CompilerServices;
 
     using Microsoft.CodeAnalysis.CSharp.Scripting;
@@ -18,8 +20,12 @@
                     scriptContents,
                     ScriptOptions
                         .Default
-                        .WithReferences(typeof(BetterReadOnlySpan<>).Assembly)
-                        .WithReferences(typeof(Span<>).Assembly));
+                        .WithReferences(
+                            typeof(BetterReadOnlySpan<>).Assembly,
+                            typeof(Span<>).Assembly)
+                        .WithImports(
+                            "System.Runtime.CompilerServices", 
+                            "V2.Fx"));
 
             var output = script.Compile();
         }

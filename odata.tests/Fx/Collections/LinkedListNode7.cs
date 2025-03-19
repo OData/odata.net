@@ -1,5 +1,7 @@
 ﻿namespace Fx.Collections
 {
+    using System;
+
     public ref struct LinkedList7<T> where T : allows ref struct
     {
         private BetterSpan<LinkedListNode7> first;
