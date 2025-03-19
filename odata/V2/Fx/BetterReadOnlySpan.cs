@@ -11,7 +11,7 @@
             return new BetterReadOnlySpan<T>(memory, length);
         }
 
-        public static unsafe BetterReadOnlySpan<T> FromInstance<T>(in T value) where T : allows ref struct //// TODO `value` is `scoped` in the old code... //// TODO is there a way to do this without `in`?
+        public static unsafe BetterReadOnlySpan<T> FromInstance<T>(scoped in T value) where T : allows ref struct //// TODO is `scoped` ok here? //// TODO is there a way to do this without `in`? //// TODO removing either `scoped` or `in` might cause a test to fail, so you should have a memory integrity issue in mind that removing them fixes
         {
             fixed (T* pointer = &value)
             {

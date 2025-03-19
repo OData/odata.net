@@ -1,48 +1,54 @@
-﻿using Fx;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace V2.Fx.Collections
+﻿namespace V2.Fx.Collections
 {
-    internal class LinkedListMemoryIntegrityTests
+    using System;
+    using System.Collections.Immutable;
+    using System.IO;
+    using System.Runtime.CompilerServices;
+
+    using Microsoft.CodeAnalysis;
+    using Microsoft.CodeAnalysis.CSharp.Scripting;
+    using Microsoft.CodeAnalysis.Scripting;
+    using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+    [TestClass]
+    public sealed class LinkedListMemoryIntegrityTests
     {
-        [TestMethod]
-        public void Compilation1()
+        private ImmutableArray<Diagnostic> Compile([CallerMemberName] string? testMethod = null)
         {
-            var script = Microsoft.CodeAnalysis.CSharp.Scripting.CSharpScript.Create(
-"""
-private static Fx.BetterSpan<string> Test()
-{
-    System.Span<byte> span = stackalloc byte[4];
-    var betterspan = Fx.BetterSpan.FromMemory<string>(span, 1);
+            var scriptContents = GetResource(testMethod);
+            var script = CSharpScript
+                .Create(
+                    scriptContents,
+                    ScriptOptions
+                        .Default
+                        .WithReferences(
+                            typeof(BetterReadOnlySpan<>).Assembly));
 
-    return betterspan;
-}
-""",
-                Microsoft.CodeAnalysis.Scripting.ScriptOptions.Default.WithReferences(new[] { typeof(BetterSpan<>).Assembly })
-                );
-
-            var output = script.Compile();
+            return script.Compile();
         }
 
-        /*
-using System;
-using System.Runtime.CompilerServices;
+        private string GetResource([CallerMemberName] string? testMethod = null)
+        {
+            //// TODO if the caller explicitly provides `null`, what happens?
 
-using V2.Fx;
+            var type = this.GetType();
+            var path = $"{type.Namespace}.{type.Name}Resources.{testMethod}.cs";
+            var assembly = type.Assembly;
+            var names = assembly.GetManifestResourceNames();
+            using (var resourceStream = assembly.GetManifestResourceStream(path)) //// TODO you've previously done something in onboarding for embedded resources, check out that code
+            {
+                if (resourceStream == null)
+                {
+                    throw new Exception("TODO");
+                }
 
-public static class StackAllocWithinFrame
-{
-    public static void Method()
-    {
-        Span<byte> span = stackalloc byte[Unsafe.SizeOf<string>()];
-        var betterSpan = BetterReadOnlySpan.FromMemory<string>(span, 1);
-    }
-}
-        */
+                using (var textReader = new StreamReader(resourceStream))
+                {
+                    return textReader.ReadToEnd();
+                }
+            }
+        }
+
 
         /*public static class V1
         {

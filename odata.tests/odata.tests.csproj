@@ -21,6 +21,10 @@
   <ItemGroup>
     <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="V2\Fx\Collections\LinkedListMemoryIntegrityTestsResources\" />
+  </ItemGroup>
   
   <Target Name="RemoveTestResources" BeforeTargets="BeforeBuild">
     <ItemGroup>
