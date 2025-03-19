@@ -666,5 +666,4 @@ private static Fx.BetterSpan<string> Test()
             }
         }*/
     }
-#pragma warning restore CA2014 // Do not use stackalloc in loops
 }
