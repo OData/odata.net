@@ -102,6 +102,11 @@
 
             AssertEnumerable(new[] { -1, 42 }, list); //// TODO if `list` is passed by value, shouldn't this still only have 1 element
             AssertEnumerable(new[] { -1, 42 }, newList);
+
+            Span<byte> zeroed = stackalloc byte[100];
+
+            AssertEnumerable(new[] { -1, 42 }, list); //// TODO if `list` is passed by value, shouldn't this still only have 1 element
+            AssertEnumerable(new[] { -1, 42 }, newList);
         }
 
         private static LinkedList<Wrapper<int>> Foo(LinkedList<Wrapper<int>> list, Span<byte> memory)
