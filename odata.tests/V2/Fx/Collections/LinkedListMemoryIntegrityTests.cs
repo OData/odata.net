@@ -37,6 +37,15 @@
             Assert.AreEqual("CS8352", compilationOutput[0].Id);
         }
 
+        [TestMethod]
+        public void ListParameterAppended()
+        {
+            //// TODO i think this one maybe *should* be able to compile
+            var compilationOutput = Compile();
+            Assert.AreEqual(1, compilationOutput.Length);
+            Assert.AreEqual("CS8352", compilationOutput[0].Id);
+        }
+
         private ImmutableArray<Diagnostic> Compile([CallerMemberName] string? testMethod = null)
         {
             var scriptContents = GetResource(testMethod);
@@ -117,13 +126,7 @@
                 return list;
             }
 
-            private static void Test10(LinkedListNode<int> list)
-            {
-                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
-
-                //// THIS IS A GOOD THING
-                list = list.Append(BetterSpan.FromInstance(42), memory);
-            }
+            
 
             private static LinkedListNode<int> Test11(LinkedListNode<int> list)
             {

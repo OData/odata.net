@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 
 using V2.Fx.Collections;
 
@@ -7,7 +6,7 @@ public static class SingleValueLinkedListLeavingFrame
 {
     public static LinkedList<int> Method()
     {
-        Span<byte> span = stackalloc byte[Unsafe.SizeOf<int>()];
+        Span<byte> span = stackalloc byte[LinkedList<int>.MemorySize];
         var list = new LinkedList<int>(42, span);
         return list;
     }
