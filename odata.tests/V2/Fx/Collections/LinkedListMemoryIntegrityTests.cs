@@ -42,6 +42,7 @@
         public void ListParameterAppended()
         {
             //// TODO i think this one maybe *should* be able to compile, as long as one where the input parameter is by reference *doesn't* compile
+            //// TODO if you do get this compiling, what *shouldn't* compile is appending to the input parameter and then returning the input parameter
             var compilationOutput = Compile();
             Assert.AreEqual(2, compilationOutput.Length);
             CollectionAssert.AreEquivalent(
@@ -141,14 +142,6 @@
 
             
 
-            private static LinkedListNode<int> Test11(LinkedListNode<int> list)
-            {
-                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
-
-                //// THIS IS A GOOD THING
-                return list.Append(BetterSpan.FromInstance(42), memory);
-            }
-
             private static LinkedListNode<int> Test12(LinkedListNode<int> list)
             {
                 return list;
@@ -188,13 +181,6 @@
         /*public static class V2
         {
 
-            private static LinkedListNode2<int> Test11(LinkedListNode2<int> list)
-            {
-                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
-
-                //// THIS IS A GOOD THING
-                return list.Append(42, memory);
-            }
 
             private static LinkedListNode2<int> Test12(LinkedListNode2<int> list)
             {
