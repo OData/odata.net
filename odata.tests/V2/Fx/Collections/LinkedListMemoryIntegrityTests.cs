@@ -21,6 +21,14 @@
             Assert.AreEqual("CS8352", compilationOutput[0].Id);
         }
 
+        [TestMethod]
+        public void AppendedListLeavingFrame()
+        {
+            var compilationOutput = Compile();
+            Assert.AreEqual(1, compilationOutput.Length);
+            Assert.AreEqual("CS8352", compilationOutput[0].Id);
+        }
+
         private ImmutableArray<Diagnostic> Compile([CallerMemberName] string? testMethod = null)
         {
             var scriptContents = GetResource(testMethod);
@@ -176,13 +184,6 @@
         }*/
         /*public static class V2
         {
-
-
-            private static LinkedListNode2<int> Test3()
-            {
-                var list = new LinkedListNode2<int>(42);
-                return list;
-            }
 
             private static LinkedListNode2<int> Test6()
             {
