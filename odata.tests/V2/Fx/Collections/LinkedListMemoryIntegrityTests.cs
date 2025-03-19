@@ -1,0 +1,326 @@
+﻿using Fx;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace V2.Fx.Collections
+{
+    internal class LinkedListMemoryIntegrityTests
+    {
+        [TestMethod]
+        public void Compilation1()
+        {
+            var script = Microsoft.CodeAnalysis.CSharp.Scripting.CSharpScript.Create(
+"""
+private static Fx.BetterSpan<string> Test()
+{
+    System.Span<byte> span = stackalloc byte[4];
+    var betterspan = Fx.BetterSpan.FromMemory<string>(span, 1);
+
+    return betterspan;
+}
+""",
+                Microsoft.CodeAnalysis.Scripting.ScriptOptions.Default.WithReferences(new[] { typeof(BetterSpan<>).Assembly })
+                );
+
+            var output = script.Compile();
+        }
+
+        /*public static class V1
+        {
+            private static void Test()
+            {
+                Span<byte> span = stackalloc byte[4];
+                var betterspan = BetterSpan.FromMemory<string>(span, 1);
+            }
+
+            private static BetterSpan<string> Test2()
+            {
+                Span<byte> span = stackalloc byte[4];
+                var betterspan = BetterSpan.FromMemory<string>(span, 1);
+
+                //// THIS IS A GOOD THING
+                return betterspan;
+            }
+
+            private static LinkedListNode<int> Test3()
+            {
+                var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+                return list;
+            }
+
+            private static LinkedListNode<int> Test4(Span<byte> memory)
+            {
+                var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+                Unsafe2.Copy(memory, in list);
+                return list;
+            }
+
+            private static BetterSpan<LinkedListNode<int>> Test5()
+            {
+                var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
+                Unsafe2.Copy(memory, in list);
+
+                var nextValue = BetterSpan.FromInstance(67);
+                var previousNode = BetterSpan.FromMemory<LinkedListNode<int>>(memory, 1);
+
+                //// THIS IS A GOOD THING
+                return previousNode;
+            }
+
+            private static LinkedListNode<int> Test6()
+            {
+                var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
+                Unsafe2.Copy(memory, in list);
+
+                var nextValue = BetterSpan.FromInstance(67);
+                var previousNode = BetterSpan.FromMemory<LinkedListNode<int>>(memory, 1);
+                list = new LinkedListNode<int>(nextValue, previousNode);
+
+                //// THIS IS A GOOD THING
+                return list;
+            }
+
+            private static LinkedListNode<int> Test7()
+            {
+                var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
+                list = list.Append(BetterSpan.FromInstance(67), memory);
+
+                //// THIS IS A GOOD THING
+                return list;
+            }
+
+            private static LinkedListNode<int> Test8()
+            {
+                var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+                for (int i = 0; i < 10; ++i)
+                {
+                    Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
+                    Unsafe2.Copy(memory, in list);
+
+                    var nextValue = BetterSpan.FromInstance(i);
+                    var previousNode = BetterSpan.FromMemory<LinkedListNode<int>>(memory, 1);
+                    list = new LinkedListNode<int>(nextValue, previousNode);
+                }
+
+                //// THIS IS A GOOD THING
+                return list;
+            }
+
+            private static LinkedListNode<int> Test9()
+            {
+                var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+                for (int i = 0; i < 10; ++i)
+                {
+                    Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
+                    list = list.Append(BetterSpan.FromInstance(i), memory);
+                }
+
+                //// THIS IS A GOOD THING
+                return list;
+            }
+
+            private static void Test10(LinkedListNode<int> list)
+            {
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
+
+                //// THIS IS A GOOD THING
+                list = list.Append(BetterSpan.FromInstance(42), memory);
+            }
+
+            private static LinkedListNode<int> Test11(LinkedListNode<int> list)
+            {
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
+
+                //// THIS IS A GOOD THING
+                return list.Append(BetterSpan.FromInstance(42), memory);
+            }
+
+            private static LinkedListNode<int> Test12(LinkedListNode<int> list)
+            {
+                return list;
+            }
+
+            private static LinkedListNode<int> Test13()
+            {
+                var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+                for (int i = 0; i < 10; ++i)
+                {
+                    Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
+                    list = list.Append(i, memory);
+                }
+
+                //// THIS IS A GOOD THING
+                return list;
+            }
+
+            private static LinkedListNode<int> Test14()
+            {
+                var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+
+                //// TODO this should be allowed
+                return list;
+            }
+
+            private static LinkedListNode<int> Test15()
+            {
+                var betterSpan = BetterSpan.FromSpan(new Span<int>(new[] { 1, 2, 3, 4 }));
+
+                var list = new LinkedListNode<int>(betterSpan);
+
+                //// TODO this should be allowed
+                return list;
+            }
+        }*/
+        /*public static class V2
+        {
+            private static void Test()
+            {
+                Span<byte> span = stackalloc byte[4];
+                var betterspan = BetterSpan.FromMemory<string>(span, 1);
+            }
+
+            private static BetterSpan<string> Test2()
+            {
+                Span<byte> span = stackalloc byte[4];
+                var betterspan = BetterSpan.FromMemory<string>(span, 1);
+
+                //// THIS IS A GOOD THING
+                return betterspan;
+            }
+
+            private static LinkedListNode2<int> Test3()
+            {
+                var list = new LinkedListNode2<int>(42);
+                return list;
+            }
+
+            private static LinkedListNode2<int> Test4(Span<byte> memory)
+            {
+                var list = new LinkedListNode2<int>(42);
+                Unsafe2.Copy(memory, in list);
+                return list;
+            }
+
+            private static BetterSpan<LinkedListNode2<int>> Test5()
+            {
+                var list = new LinkedListNode2<int>(42);
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
+                Unsafe2.Copy(memory, in list);
+
+                var nextValue = BetterSpan.FromInstance(67);
+                var previousNode = BetterSpan.FromMemory<LinkedListNode2<int>>(memory, 1);
+
+                //// THIS IS A GOOD THING
+                return previousNode;
+            }
+
+            private static LinkedListNode2<int> Test6()
+            {
+                var list = new LinkedListNode2<int>(42);
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
+                Unsafe2.Copy(memory, in list);
+
+                var nextValue = 67;
+                var previousNode = BetterSpan.FromMemory<LinkedListNode2<int>>(memory, 1);
+                list = new LinkedListNode2<int>(nextValue, previousNode);
+
+                //// THIS IS A GOOD THING
+                return list;
+            }
+
+            private static LinkedListNode2<int> Test7()
+            {
+                var list = new LinkedListNode2<int>(42);
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
+                list = list.Append(67, memory);
+
+                //// THIS IS A GOOD THING
+                return list;
+            }
+
+            private static LinkedListNode2<int> Test8()
+            {
+                var list = new LinkedListNode2<int>(42);
+                for (int i = 0; i < 10; ++i)
+                {
+                    Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
+                    Unsafe2.Copy(memory, in list);
+
+                    var nextValue = i;
+                    var previousNode = BetterSpan.FromMemory<LinkedListNode2<int>>(memory, 1);
+                    list = new LinkedListNode2<int>(nextValue, previousNode);
+                }
+
+                //// THIS IS A GOOD THING
+                return list;
+            }
+
+            private static LinkedListNode2<int> Test9()
+            {
+                //// TODO look at this!
+
+                var list = new LinkedListNode2<int>(42);
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
+                LinkedListNode2<int> list2 = list.Append(0, memory);
+                for (int i = 1; i < 10; ++i)
+                {
+                    Span<byte> memory2 = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
+                    list2 = list2.Append(i, memory2);
+                }
+
+                //// THIS IS A GOOD THING
+                return list2;
+            }
+
+            private static void Test10(LinkedListNode2<int> list)
+            {
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
+
+                //// THIS IS A GOOD THING
+                list = list.Append(42, memory);
+            }
+
+            private static LinkedListNode2<int> Test11(LinkedListNode2<int> list)
+            {
+                Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
+
+                //// THIS IS A GOOD THING
+                return list.Append(42, memory);
+            }
+
+            private static LinkedListNode2<int> Test12(LinkedListNode2<int> list)
+            {
+                return list;
+            }
+
+            private static LinkedListNode2<int> Test13()
+            {
+                var list = new LinkedListNode2<int>(42);
+                for (int i = 0; i < 10; ++i)
+                {
+                    Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
+                    list = list.Append(i, memory);
+                }
+
+                //// THIS IS A GOOD THING
+                return list;
+            }
+
+            private static LinkedListNode2<int> Test14()
+            {
+                var list = new LinkedListNode2<int>(42);
+
+                //// TODO this should be allowed
+                //// this doesn't work currently because `linkedlistnode2.previous` will get initialized to its default, and since it has a `T*` field, it might have a pointer to somewhere in this stackframe, and so when we return `list`, the first node in the list (in this case, the only node) will have a reference to a pointer to the stackframe that has already been popped off; of course, *we* know that the pointer in this case will be `0`, but the compiler doesn't have a way to know that
+                //// TODO i don't think the above is true, i think it's because the constructor takes in a `in` parameter, so they are receiving `42` *by reference to its location in the stackframe*, so when we return, that referenced value is gone
+                return list;
+            }
+        }*/
+    }
+}
