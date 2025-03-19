@@ -147,20 +147,6 @@
                 return list;
             }
 
-        
-            private static LinkedListNode<int> Test13()
-            {
-                var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
-                for (int i = 0; i < 10; ++i)
-                {
-                    Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode<int>>()];
-                    list = list.Append(i, memory);
-                }
-
-                //// THIS IS A GOOD THING
-                return list;
-            }
-
             private static LinkedListNode<int> Test14()
             {
                 var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
@@ -181,20 +167,6 @@
         }*/
         /*public static class V2
         {
-
-
-            private static LinkedListNode2<int> Test13()
-            {
-                var list = new LinkedListNode2<int>(42);
-                for (int i = 0; i < 10; ++i)
-                {
-                    Span<byte> memory = stackalloc byte[Unsafe.SizeOf<LinkedListNode2<int>>()];
-                    list = list.Append(i, memory);
-                }
-
-                //// THIS IS A GOOD THING
-                return list;
-            }
 
             private static LinkedListNode2<int> Test14()
             {
