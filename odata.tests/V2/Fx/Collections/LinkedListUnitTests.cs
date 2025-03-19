@@ -36,6 +36,28 @@
                 list.Append(new Wrapper<int>(i), memory);
             }
 
+            AssertEnumerable(Enumerable.Range(-1, 21), list);
+        }
+
+        [TestMethod]
+        public void Append()
+        {
+            Span<byte> memory = stackalloc byte[LinkedList<int>.MemorySize];
+            var list = new LinkedList<int>(-1, memory);
+
+            for (int i = 0; i < 10; ++i)
+            {
+                memory = stackalloc byte[LinkedList<int>.MemorySize]; //// TODO memorysize shouldn't be static; this is probably easy if you allow an empty list
+                list.Append(i, memory);
+            }
+
+            AssertEnumerable(Enumerable.Range(-1, 11), list);
+
+            for (int i = 10; i < 20; ++i)
+            {
+                memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+                list.Append(i, memory);
+            }
 
             AssertEnumerable(Enumerable.Range(-1, 21), list);
         }
