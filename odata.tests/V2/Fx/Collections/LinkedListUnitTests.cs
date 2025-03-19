@@ -48,6 +48,31 @@
                 ++expectedValue;
             }
         }
+
+        private static void AssertEnumerable<T>(IEnumerable<T> expected, LinkedList<Wrapper<T>> actual) //// TODO add allows ref struct constraint
+        {
+            AssertEnumerable(expected, actual, wrapper => wrapper.Value);
+        }
+
+        private static void AssertEnumerable<TValue, TWrapper>(IEnumerable<TValue> expected, LinkedList<TWrapper> actual, Func<TWrapper, TValue> selector) where TWrapper : allows ref struct //// TODO add allows ref struct constraint to TValue
+        {
+            using (var expectedEnumerator = expected.GetEnumerator())
+            {
+                var expectedMoved = expectedEnumerator.MoveNext();
+
+                var actualHasElements = false;
+                foreach (var element in actual)
+                {
+                    actualHasElements = true;
+                    var value = selector(element);
+                    Assert.AreEqual(expectedEnumerator.Current, value);
+                }
+
+                //// TODO what if there's a different number of elements?
+
+                Assert.AreEqual(expectedMoved, actualHasElements);
+            }
+        }
     }
 #pragma warning restore CA2014 // Do not use stackalloc in loops
 }
