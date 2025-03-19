@@ -1,11 +1,14 @@
-﻿
-using Fx;
+﻿using System;
+using System.Runtime.CompilerServices;
 
-internal class SingleValueLinkedListLeavingFrame
+using V2.Fx.Collections;
+
+public static class SingleValueLinkedListLeavingFrame
 {
-    private static LinkedListNode<int> Method()
+    public static LinkedList<int> Method()
     {
-        var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
+        Span<byte> span = stackalloc byte[Unsafe.SizeOf<int>()];
+        var list = new LinkedList<int>(42, span);
         return list;
     }
 }

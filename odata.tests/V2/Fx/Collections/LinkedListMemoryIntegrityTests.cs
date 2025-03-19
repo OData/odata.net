@@ -16,7 +16,9 @@
         [TestMethod]
         public void SingleValueLinkedListLeavingFrame()
         {
-
+            var compilationOutput = Compile();
+            Assert.AreEqual(1, compilationOutput.Length);
+            Assert.AreEqual("CS8352", compilationOutput[0].Id);
         }
 
         private ImmutableArray<Diagnostic> Compile([CallerMemberName] string? testMethod = null)
@@ -60,6 +62,7 @@
         {
             private static LinkedListNode<int> Test3()
             {
+        //// TODO this is probably applicable to an empty list
                 var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
                 return list;
             }
