@@ -1,7 +1,7 @@
 ﻿namespace V2.Fx.Collections
 {
     using System;
-
+    using System.Collections;
     using V2.Fx.Runtime.CompilerServices;
 
     public ref struct LinkedList<T> where T : allows ref struct
@@ -63,7 +63,7 @@
                 this.hasMoved = false;
             }
 
-            public T Current
+            public T Current //// TODO cna you make this return `ref t`?
             {
                 get
                 {

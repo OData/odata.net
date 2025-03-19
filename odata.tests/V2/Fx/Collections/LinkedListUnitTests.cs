@@ -43,8 +43,6 @@
             {
                 Console.WriteLine(element.Value);
             }
-
-            Assert.That
         }
     }
 #pragma warning restore CA2014 // Do not use stackalloc in loops

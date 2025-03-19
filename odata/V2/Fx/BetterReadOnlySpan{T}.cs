@@ -2,7 +2,7 @@
 {
     using System;
 
-    public readonly ref struct BetterReadOnlySpan<T> where T : allows ref struct
+    public readonly ref struct BetterReadOnlySpan<T> where T : allows ref struct //// TODO is there other span stuff that you should add in here?
     {
         private readonly Span<byte> data;
 

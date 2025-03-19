@@ -6,13 +6,13 @@
 
     public static class AssertExtensions
     {
-        public static void AreEqual<TEnumerableFirst, TEnumerableSecond>(TEnumerableFirst first, TEnumerableSecond second)
+        public static void AreEqualEnumerables<TEnumerableFirst, TEnumerableSecond>(this Assert self, TEnumerableFirst expected, TEnumerableSecond actual)
             where TEnumerableFirst : IEnumerable, allows ref struct 
             where TEnumerableSecond : IEnumerable, allows ref struct
             //// TODO do all of the overloads that `assert`s have
         {
-            var firstEnumerator = first.GetEnumerator();
-            var secondEnumerator = second.GetEnumerator();
+            /*var firstEnumerator = expected.GetEnumerator();
+            var secondEnumerator = actual.GetEnumerator();
 
             while (true)
             {
@@ -27,6 +27,11 @@
                     //// TODO this method should throw its own exceptions
                     Assert.IsFalse(secondEnumerator.MoveNext());
                 }
+            }*/
+
+            int expectedIndex = 0;
+            foreach (var expectedElement in actual)
+            {
             }
         }
     }
