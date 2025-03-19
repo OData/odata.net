@@ -28,9 +28,11 @@
                 list.Append(new Wrapper<int>(i), memory);
             }
 
+            var expectedValue = -1;
             foreach (var element in list)
             {
-                Console.WriteLine(element.Value);
+                Assert.AreEqual(expectedValue, element.Value);
+                ++expectedValue;
             }
 
             for (int i = 10; i < 20; ++i)
@@ -39,9 +41,11 @@
                 list.Append(new Wrapper<int>(i), memory);
             }
 
+            expectedValue = -1;
             foreach (var element in list)
             {
-                Console.WriteLine(element.Value);
+                Assert.AreEqual(expectedValue, element.Value);
+                ++expectedValue;
             }
         }
     }
