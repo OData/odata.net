@@ -142,13 +142,6 @@ public class BatchRequestWithRelativeUriTests : EndToEndTestBase<BatchRequestWit
         // Assert
         Assert.Equal(200, responseMessage.StatusCode);
 
-        await ProcessBatchResponseAsync(responseMessage);
-    }
-
-    #region Private methods
-
-    private async Task ProcessBatchResponseAsync(IODataResponseMessageAsync responseMessage)
-    {
         ODataMessageReaderSettings readerSettings = new() { BaseUri = _baseUri };
 
         using (var innerMessageReader = new ODataMessageReader(responseMessage, readerSettings, _model))
@@ -199,7 +192,7 @@ public class BatchRequestWithRelativeUriTests : EndToEndTestBase<BatchRequestWit
                                 var entryReader = await operationResponseReader.CreateODataResourceReaderAsync();
 
                                 Assert.Equal(201, operationResponse.StatusCode);
-                                
+
                                 var pis = new List<ODataResource>();
                                 while (await entryReader.ReadAsync())
                                 {
@@ -228,7 +221,7 @@ public class BatchRequestWithRelativeUriTests : EndToEndTestBase<BatchRequestWit
                                 var statements = new List<ODataResource>();
                                 while (await entryReader.ReadAsync())
                                 {
-                                    
+
                                     if (entryReader.State == ODataReaderState.ResourceEnd)
                                     {
                                         var entry = entryReader.Item as ODataResource;
@@ -253,6 +246,8 @@ public class BatchRequestWithRelativeUriTests : EndToEndTestBase<BatchRequestWit
             Assert.Equal(ODataBatchReaderState.Completed, batchReader.State);
         }
     }
+
+    #region Private methods
 
     private void ResetDefaultDataSource()
     {

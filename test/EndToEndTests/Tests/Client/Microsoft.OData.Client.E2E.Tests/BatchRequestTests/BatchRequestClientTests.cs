@@ -34,7 +34,6 @@ public class BatchRequestClientTests : EndToEndTestBase<BatchRequestClientTests.
             services.AddControllers().AddOData(opt =>
             {
                 opt.EnableQueryFeatures().AddRouteComponents("odata", DefaultEdmModel.GetEdmModel(), new DefaultODataBatchHandler());
-                opt.RouteOptions.EnableNonParenthesisForEmptyParameterFunction = true;
             });
         }
     }
