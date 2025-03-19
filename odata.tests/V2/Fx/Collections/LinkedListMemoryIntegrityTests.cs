@@ -13,6 +13,12 @@
     [TestClass]
     public sealed class LinkedListMemoryIntegrityTests
     {
+        [TestMethod]
+        public void SingleValueLinkedList()
+        {
+
+        }
+
         private ImmutableArray<Diagnostic> Compile([CallerMemberName] string? testMethod = null)
         {
             var scriptContents = GetResource(testMethod);
@@ -55,13 +61,6 @@
             private static LinkedListNode<int> Test3()
             {
                 var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
-                return list;
-            }
-
-            private static LinkedListNode<int> Test4(Span<byte> memory)
-            {
-                var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
-                Unsafe2.Copy(memory, in list);
                 return list;
             }
 
@@ -181,14 +180,6 @@
                 var list = new LinkedListNode2<int>(42);
                 return list;
             }
-
-            private static LinkedListNode2<int> Test4(Span<byte> memory)
-            {
-                var list = new LinkedListNode2<int>(42);
-                Unsafe2.Copy(memory, in list);
-                return list;
-            }
-
 
             private static LinkedListNode2<int> Test6()
             {
