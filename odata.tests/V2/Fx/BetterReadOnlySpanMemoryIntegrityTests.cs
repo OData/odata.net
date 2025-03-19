@@ -20,6 +20,11 @@
             Assert.AreEqual(0, compilationOutput.Length);
         }
 
+        [TestMethod]
+        public void StackAllocLeavingFrame()
+        {
+        }
+
         private ImmutableArray<Diagnostic> Compile([CallerMemberName] string? testMethod = null)
         {
             var scriptContents = GetResource(testMethod);

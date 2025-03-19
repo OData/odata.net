@@ -28,14 +28,24 @@ private static Fx.BetterSpan<string> Test()
             var output = script.Compile();
         }
 
+        /*
+using System;
+using System.Runtime.CompilerServices;
+
+using V2.Fx;
+
+public static class StackAllocWithinFrame
+{
+    public static void Method()
+    {
+        Span<byte> span = stackalloc byte[Unsafe.SizeOf<string>()];
+        var betterSpan = BetterReadOnlySpan.FromMemory<string>(span, 1);
+    }
+}
+        */
+
         /*public static class V1
         {
-            private static void Test()
-            {
-                Span<byte> span = stackalloc byte[4];
-                var betterspan = BetterSpan.FromMemory<string>(span, 1);
-            }
-
             private static BetterSpan<string> Test2()
             {
                 Span<byte> span = stackalloc byte[4];

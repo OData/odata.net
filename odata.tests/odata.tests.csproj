@@ -24,8 +24,8 @@
   
   <Target Name="RemoveTestResources" BeforeTargets="BeforeBuild">
     <ItemGroup>
-      <Compile Remove="V2\Fx\BetterReadOnlySpanMemoryIntegrityTestsResources\StackAllocWithinFrame.cs" />
-      <EmbeddedResource Include="V2\Fx\BetterReadOnlySpanMemoryIntegrityTestsResources\StackAllocWithinFrame.cs" />
+      <Compile Remove="V2\Fx\BetterReadOnlySpanMemoryIntegrityTestsResources\**" />
+      <EmbeddedResource Include="V2\Fx\BetterReadOnlySpanMemoryIntegrityTestsResources\**" />
     </ItemGroup>
   </Target>
   
