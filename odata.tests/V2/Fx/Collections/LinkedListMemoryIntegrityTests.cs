@@ -147,34 +147,14 @@
                 return list;
             }
 
-            private static LinkedListNode<int> Test14()
-            {
-                var list = new LinkedListNode<int>(BetterSpan.FromInstance(42));
-
-                //// TODO this should be allowed
-                return list;
-            }
-
             private static LinkedListNode<int> Test15()
             {
+        //// TODO this is probably applicable if you allow adding spans of values
                 var betterSpan = BetterSpan.FromSpan(new Span<int>(new[] { 1, 2, 3, 4 }));
 
                 var list = new LinkedListNode<int>(betterSpan);
 
                 //// TODO this should be allowed
-                return list;
-            }
-        }*/
-        /*public static class V2
-        {
-
-            private static LinkedListNode2<int> Test14()
-            {
-                var list = new LinkedListNode2<int>(42);
-
-                //// TODO this should be allowed
-                //// this doesn't work currently because `linkedlistnode2.previous` will get initialized to its default, and since it has a `T*` field, it might have a pointer to somewhere in this stackframe, and so when we return `list`, the first node in the list (in this case, the only node) will have a reference to a pointer to the stackframe that has already been popped off; of course, *we* know that the pointer in this case will be `0`, but the compiler doesn't have a way to know that
-                //// TODO i don't think the above is true, i think it's because the constructor takes in a `in` parameter, so they are receiving `42` *by reference to its location in the stackframe*, so when we return, that referenced value is gone
                 return list;
             }
         }*/
