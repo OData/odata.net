@@ -85,12 +85,12 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToEntityCollection_WithCollectionOfComplexTypeAsParameterAndReturnsAnEntity_ExecuteSuccessfully()
+    public async Task FunctionBoundToEntityCollection_WithComplexTypeAsParameterAndReturnsAnEntity_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
         var customerQuery = context.CreateQuery<Customer>("Customers");
-        Address address = new Address()
+        var address = new Address()
         {
             City = "Sydney",
             PostalCode = "98052",
