@@ -44,7 +44,8 @@
 
         public static unsafe BetterReadOnlySpan<T> Create(scoped in T instance)
         {
-            fixed (T* pointer = &instance)
+            void* pointer = Fx.Runtime.CompilerServices.Unsafe.AsPointer(instance);
+
             {
                 var span = new ReadOnlySpan<byte>(pointer, Unsafe.SizeOf<T>());
 
@@ -87,9 +88,14 @@
                 return length;
             }
         }
+
+        public ref byte GetPinnableReference()
+        {
+            return ref this.data.GetPinnableReference();
+        }
     }
 
-    public ref struct DifferentMemory
+    public ref struct DifferentMemory //// TODO can't be readonly because of the pinnedreference for some reason
     {
         private readonly ReadOnlySpan<byte> memory;
 

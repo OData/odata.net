@@ -16,5 +16,13 @@
                 System.Runtime.CompilerServices.Unsafe.Copy(pointer, in source);
             }
         }
+
+        public static unsafe void* AsPointer<T>(in T value) where T : allows ref struct
+        {
+            fixed (void* pointer = BetterReadOnlySpan.FromInstance(value))
+            {
+                return pointer;
+            }
+        }
     }
 }
