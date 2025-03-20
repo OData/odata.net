@@ -1,7 +1,10 @@
 ﻿namespace V2.Fx
 {
     using System;
+    using System.Buffers;
+    using System.ComponentModel;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
     using static System.Runtime.InteropServices.JavaScript.JSType;
 
     /// <summary>
@@ -19,6 +22,8 @@
 
         private BetterReadOnlySpan(DifferentMemory memory, int length)
         {
+            //// TODO should you have a betterspan variant of this? MemoryMarshal.Cast<>
+
             if (memory.Length != System.Runtime.CompilerServices.Unsafe.SizeOf<T>() * length)
             {
                 throw new Exception("TODO");
@@ -44,6 +49,7 @@
 
         public static unsafe BetterReadOnlySpan<T> Create(scoped in T instance)
         {
+            //// TODO do you have a test that covers this?
             void* pointer = Fx.Runtime.CompilerServices.Unsafe.AsPointer(instance);
 
             var span = new ReadOnlySpan<byte>(pointer, Unsafe.SizeOf<T>());
@@ -84,6 +90,12 @@
         }
     }
 
+    /// <summary>
+    /// TODO check if you need any of these `unsafe` contexts
+    /// </summary>
+    /// <remarks>
+    /// The purpose of this type is to be, in all ways possible, a readonlyspan<byte> that can be create from either a span or a betterspan
+    /// </remarks>
     public ref struct DifferentMemory //// TODO can't be readonly because of the pinnedreference for some reason
     {
         private readonly ReadOnlySpan<byte> memory;
@@ -93,7 +105,7 @@
         private unsafe DifferentMemory(ReadOnlySpan<byte> memory)
         {
             this.memory = memory;
-            fixed (byte* pointer = memory)
+            fixed (byte* pointer = &memory.GetPinnableReference())
             {
                 this.pinnedReference = ref *pointer;
             }
@@ -125,10 +137,20 @@
             }
         }
 
+        //// TODO [EditorBrowsable(EditorBrowsableState.Never)]
         public ref byte GetPinnableReference()
         {
             return ref this.pinnedReference;
         }
+
+        /*
+        //// TODO [EditorBrowsable(EditorBrowsableState.Never)]
+        public ref readonly byte GetPinnableReference()
+        {
+            ref readonly byte pointer = ref MemoryMarshal.AsRef<byte>(memory);
+            return ref pointer;
+        }
+        */
 
         public static implicit operator DifferentMemory(Span<byte> span)
         {

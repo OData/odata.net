@@ -20,6 +20,25 @@
             public T Value { get; }
         }
 
+        public static unsafe byte* Frubber()
+        {
+            byte* pointer = stackalloc byte[10];
+            return pointer;
+        }
+
+        public static unsafe Span<byte> Frubber2()
+        {
+            byte* pointer = stackalloc byte[10];
+            var span = new Span<byte>(pointer, 10);
+            return span;
+        }
+
+        public static unsafe Span<byte> Frubber3()
+        {
+            Span<byte> span = stackalloc byte[10];
+            return span;
+        }
+
         [TestMethod]
         public void AppendRefStruct()
         {
