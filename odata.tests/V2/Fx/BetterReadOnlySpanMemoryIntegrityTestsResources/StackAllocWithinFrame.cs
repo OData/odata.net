@@ -8,6 +8,6 @@ public static class StackAllocWithinFrame
     public static void Method()
     {
         Span<byte> span = stackalloc byte[Unsafe.SizeOf<string>()];
-        var betterSpan = BetterReadOnlySpan.FromMemory<string>(span, 1);
+        var betterSpan = BetterReadOnlySpan.FromMemory<string>(BetterReadOnlySpan.FromMemory(span), 1);
     }
 }
