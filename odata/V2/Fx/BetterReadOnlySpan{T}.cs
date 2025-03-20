@@ -135,5 +135,15 @@
         {
             return ref this.pinnedReference;
         }
+
+        public static implicit operator DifferentMemory(Span<byte> span)
+        {
+            return DifferentMemory.Create(span);
+        }
+
+        public static implicit operator DifferentMemory(ReadOnlySpan<byte> span)
+        {
+            return DifferentMemory.Create(span);
+        }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System;
-
+using V2.Fx;
 using V2.Fx.Collections;
 
 public static class ListByReferenceParameterAppended
@@ -8,6 +8,8 @@ public static class ListByReferenceParameterAppended
     {
         Span<byte> memory = stackalloc byte[LinkedList<int>.MemorySize];
 
-        list.Append(42, memory);
+        var differentMemory = DifferentMemory.Create(memory);
+
+        list.Append(42, differentMemory);
     }
 }

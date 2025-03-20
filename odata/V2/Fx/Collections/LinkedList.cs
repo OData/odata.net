@@ -19,24 +19,24 @@
             this.hasValues = false;
         }
 
-        public LinkedList(T value, Span<byte> memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
+        public LinkedList(T value, DifferentMemory memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
         {
             //// TODO do you still want this constructor now that empty lists are a thing?
             this.SetFirstValue(value, memory);
         }
 
-        private void SetFirstValue(T value, Span<byte> memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
+        private void SetFirstValue(T value, DifferentMemory memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
         {
             var firstNode = new LinkedListNode(value);
             Unsafe.Copy(memory, firstNode);
 
-            this.first = BetterReadOnlySpan.FromMemory<LinkedListNode>(DifferentMemory.Create(memory), 1);
+            this.first = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
             this.current = this.first;
 
             this.hasValues = true;
         }
 
-        public void Append(T value, Span<byte> memory)
+        public void Append(T value, DifferentMemory memory)
         {
             if (!this.hasValues)
             {
@@ -47,7 +47,7 @@
                 var nextNode = new LinkedListNode(value);
                 Unsafe.Copy(memory, nextNode);
 
-                var next = BetterReadOnlySpan.FromMemory<LinkedListNode>(DifferentMemory.Create(memory), 1);
+                var next = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
 
                 this.current.Get(0).Next = next;
 
