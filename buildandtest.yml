@@ -26,7 +26,8 @@ steps:
 - task: UseDotNet@2
   displayName: 'Install .NET 10 Preview'
   inputs:
-    version: '10.0.100-preview.1.25120.13'
+    version: '10.x'
+
     includePreviewVersions: true
 
 - task: DotNetCoreCLI@2
