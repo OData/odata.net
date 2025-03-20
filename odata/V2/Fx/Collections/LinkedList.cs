@@ -106,7 +106,7 @@
                         throw new Exception("TODO");
                     }
 
-                    return this.node[0].Value;
+                    return this.node.Get(0).Value;
                 }
             }
 
