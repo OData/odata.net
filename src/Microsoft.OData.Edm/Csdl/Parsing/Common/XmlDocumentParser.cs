@@ -148,6 +148,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             else
             {
                 this.ReportUnexpectedRootNamespace(this.reader.LocalName, this.DocumentNamespace, expectedNamespaces);
+                this.reader.Skip();
                 return;
             }
 
@@ -160,6 +161,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
             if (!this.TryGetRootElementParser(this.DocumentVersion, rootElement, out currentParser))
             {
                 this.ReportUnexpectedRootElement(rootElement.Location, rootElement.Name, this.DocumentNamespace);
+                this.reader.Skip();
                 return;
             }
 
