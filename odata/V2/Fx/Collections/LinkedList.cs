@@ -123,7 +123,7 @@
                     return true;
                 }
 
-                if (this.node[0].Next.Length != 0)
+                if (this.node.Get(0).Next.Length != 0)
                 {
                     this.node = this.node[0].Next;
                     return true;
