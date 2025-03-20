@@ -22,7 +22,8 @@ public class UriBuilderTests
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
 
         odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -42,7 +43,8 @@ public class UriBuilderTests
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
 
         odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -67,7 +69,8 @@ public class UriBuilderTests
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
 
         odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -97,7 +100,8 @@ public class UriBuilderTests
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
 
         odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -114,8 +118,9 @@ public class UriBuilderTests
         var fullUri = new Uri("http://localhost/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID&$expand=MyDog%2CMyCat/$ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA");
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
         odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
-        
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
+
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
 
@@ -130,7 +135,8 @@ public class UriBuilderTests
         var fullUri = new Uri("http://localhost/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID&$expand=MyDog%2CMyCat/$ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA");
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
         odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -146,7 +152,8 @@ public class UriBuilderTests
         var fullUri = new Uri("http://localhost/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID&$expand=MyDog%2CMyCat/$ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA");
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
         odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -162,7 +169,8 @@ public class UriBuilderTests
         var fullUri = new Uri("http://localhost/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID&$expand=MyDog%2CMyCat/$ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA");
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
         odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -179,7 +187,8 @@ public class UriBuilderTests
         var fullUri = new Uri("http://localhost/People?$filter=MyDog%2FColor%20eq%20%27Brown%27&$select=ID&$expand=MyDog%2CMyCat/$ref&$orderby=ID&$top=1&$skip=2&$count=true&$search=FA");
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
         odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -202,7 +211,8 @@ public class UriBuilderTests
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
         odataUriParser.UrlKeyDelimiter = urlKeyDelimiter == "Slash" ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses;
 
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -231,7 +241,8 @@ public class UriBuilderTests
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
         odataUriParser.UrlKeyDelimiter = urlKeyDelimiter == "Slash" ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses;
 
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -258,7 +269,8 @@ public class UriBuilderTests
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
         odataUriParser.UrlKeyDelimiter = urlKeyDelimiter == "Slash" ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses;
 
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -290,7 +302,8 @@ public class UriBuilderTests
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
         odataUriParser.UrlKeyDelimiter = urlKeyDelimiter == "Slash" ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses;
 
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -311,7 +324,8 @@ public class UriBuilderTests
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
         odataUriParser.UrlKeyDelimiter = urlKeyDelimiter == "Slash" ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses;
 
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -330,7 +344,8 @@ public class UriBuilderTests
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
         odataUriParser.UrlKeyDelimiter = urlKeyDelimiter == "Slash" ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses;
 
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -349,7 +364,8 @@ public class UriBuilderTests
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
         odataUriParser.UrlKeyDelimiter = urlKeyDelimiter == "Slash" ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses;
 
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -368,7 +384,8 @@ public class UriBuilderTests
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
         odataUriParser.UrlKeyDelimiter = urlKeyDelimiter == "Slash" ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses;
 
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -388,7 +405,8 @@ public class UriBuilderTests
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, fullUri);
         odataUriParser.UrlKeyDelimiter = urlKeyDelimiter == "Slash" ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses;
 
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -404,8 +422,9 @@ public class UriBuilderTests
         // Arrange
         var queryUri = new Uri("People", UriKind.Relative);
         var odataUriParser = new ODataUriParser(this.GetModel(), queryUri);
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
         odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -421,8 +440,9 @@ public class UriBuilderTests
     {
         var queryUri = new Uri("http://localhost/People");
         var odataUriParser = new ODataUriParser(this.GetModel(), _baseUri, queryUri);
-        SetODataUriParserSettingsTo(this._settings, odataUriParser.Settings);
         odataUriParser.UrlKeyDelimiter = ODataUrlKeyDelimiter.Parentheses;
+        odataUriParser.Settings.MaximumExpansionCount = this._settings.MaximumExpansionCount;
+        odataUriParser.Settings.MaximumExpansionDepth = this._settings.MaximumExpansionDepth;
 
         // Act
         ODataUri odataUri = odataUriParser.ParseUri();
@@ -450,15 +470,6 @@ public class UriBuilderTests
         container.AddEntitySet("People", edmEntityType);
 
         return model;
-    }
-
-    private static void SetODataUriParserSettingsTo(ODataUriParserSettings sourceSettings, ODataUriParserSettings destSettings)
-    {
-        if (sourceSettings != null)
-        {
-            destSettings.MaximumExpansionCount = sourceSettings.MaximumExpansionCount;
-            destSettings.MaximumExpansionDepth = sourceSettings.MaximumExpansionDepth;
-        }
     }
 
     #endregion
