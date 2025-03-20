@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using Microsoft.VisualBasic;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #pragma warning disable CA2014 // Do not use stackalloc in loops
@@ -107,6 +107,8 @@
 
             AssertEnumerable(new[] { -1, 42 }, list); //// TODO if `list` is passed by value, shouldn't this still only have 1 element
             AssertEnumerable(new[] { -1, 42 }, newList);
+
+            //// TODO the by-value vs by-ref thing aside, what happens if you append more elements
         }
 
         private static LinkedList<Wrapper<int>> Foo(LinkedList<Wrapper<int>> list, Span<byte> memory)
@@ -126,9 +128,18 @@
         [TestMethod]
         public void AppendToList()
         {
-            var list = new LinkedList<Wrapper<int>>();
+            var list2 = new LinkedList<Wrapper<int>>();
+            Span<byte> memory2 = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            list2.Append(new Wrapper<int>(67), memory2);
+
+            LinkedList<Wrapper<int>> list3 = default;
+            Span<byte> memory3 = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            list3.Append(new Wrapper<int>(67), memory3);
 
             Span<byte> memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            var list = new LinkedList<Wrapper<int>>(memory);
+
+            memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
             list.Append(new Wrapper<int>(42), memory);
 
             AssertEnumerable(new[] { 42 }, list);

@@ -6,11 +6,20 @@
 
     public ref struct LinkedList<T> where T : allows ref struct
     {
+        private Span<byte> memory;
+
         private BetterReadOnlySpan<LinkedListNode> first;
 
         private BetterReadOnlySpan<LinkedListNode> current;
 
         private bool hasValues;
+
+        public LinkedList(Span<byte> memory)
+        {
+            this.memory = memory;
+
+            this.hasValues = false;
+        }
 
         public LinkedList(T value, Span<byte> memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
         {
@@ -18,7 +27,7 @@
             this.SetFirstValue(value, memory);
         }
 
-        private void SetFirstValue(T value, Span<byte> memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
+        private void SetFirstValue(T value, scoped in Span<byte> memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
         {
             var firstNode = new LinkedListNode(value);
             Unsafe.Copy(memory, firstNode);
@@ -29,7 +38,7 @@
             this.hasValues = true;
         }
 
-        public void Append(T value, Span<byte> memory)
+        public void Append(T value, scoped in Span<byte> memory)
         {
             if (!this.hasValues)
             {

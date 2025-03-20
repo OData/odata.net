@@ -8,7 +8,7 @@
 
         private readonly int length;
 
-        internal BetterReadOnlySpan(Span<byte> memory, int length)
+        internal BetterReadOnlySpan(scoped in Span<byte> memory, int length)
         {
             if (memory.Length != System.Runtime.CompilerServices.Unsafe.SizeOf<T>() * length)
             {
