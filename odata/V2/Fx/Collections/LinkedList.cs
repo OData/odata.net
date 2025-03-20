@@ -123,9 +123,10 @@
                     return true;
                 }
 
-                if (this.node.Get(0).Next.Length != 0)
+                var nextNode = this.node.Get(0).Next;
+                if (nextNode.Length != 0)
                 {
-                    this.node = this.node[0].Next;
+                    this.node = nextNode;
                     return true;
                 }
 
