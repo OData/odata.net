@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.E2E.TestCommon.Common.Server.UrlModifying;
+namespace Microsoft.OData.Client.E2E.Tests.UrlModifyingTests;
 
 using System;
 using System.Threading.Tasks;

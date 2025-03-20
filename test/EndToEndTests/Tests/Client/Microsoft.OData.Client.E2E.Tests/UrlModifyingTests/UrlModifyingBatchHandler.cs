@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Net.Http.Headers;
 
-namespace Microsoft.OData.E2E.TestCommon.Common.Server.UrlModifying;
+namespace Microsoft.OData.Client.E2E.Tests.UrlModifyingTests;
 
 public class UrlModifyingBatchHandler : DefaultODataBatchHandler
 {

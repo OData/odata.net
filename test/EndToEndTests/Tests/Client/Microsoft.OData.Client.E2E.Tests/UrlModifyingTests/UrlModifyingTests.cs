@@ -33,7 +33,6 @@ public class UrlModifyingTests : EndToEndTestBase<UrlModifyingTests.TestsStartup
             services.AddControllers().AddOData(opt =>
             {
                 opt.EnableQueryFeatures().AddRouteComponents("odata", DefaultEdmModel.GetEdmModel(), new UrlModifyingBatchHandler());
-                opt.RouteOptions.EnableNonParenthesisForEmptyParameterFunction = true;
             });
         }
 
