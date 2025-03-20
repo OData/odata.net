@@ -6,8 +6,6 @@
 
     public ref struct LinkedList<T> where T : allows ref struct
     {
-        private Span<byte> memory;
-
         private BetterReadOnlySpan<LinkedListNode> first;
 
         private BetterReadOnlySpan<LinkedListNode> current;
@@ -16,8 +14,6 @@
 
         public LinkedList(Span<byte> memory)
         {
-            this.memory = memory;
-
             this.hasValues = false;
         }
 

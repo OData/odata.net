@@ -125,7 +125,7 @@
             AssertEnumerable(Enumerable.Empty<int>(), list);
         }
 
-        /*[TestMethod]
+        [TestMethod]
         public void AppendToList()
         {
             var list2 = new LinkedList<Wrapper<int>>();
@@ -136,6 +136,11 @@
             Span<byte> memory3 = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
             list3.Append(new Wrapper<int>(67), memory3);
 
+            Span<byte> memory4 = stackalloc byte[0];
+            var list4 = new LinkedList<Wrapper<int>>(memory4);
+            memory4 = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            list4.Append(new Wrapper<int>(98), memory4);
+
             Span<byte> memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
             var list = new LinkedList<Wrapper<int>>(memory);
 
@@ -143,7 +148,14 @@
             list.Append(new Wrapper<int>(42), memory);
 
             AssertEnumerable(new[] { 42 }, list);
-        }*/
+        }
+
+        private static LinkedList<T> Create<T>() where T : allows ref struct
+        {
+            Span<byte> memory4 = stackalloc byte[0];
+            LinkedList<T> list4 = new LinkedList<T>(memory4);
+            return list4;
+        }
 
         private static void AssertEnumerable<T>(IEnumerable<T> expected, LinkedList<Wrapper<T>> actual) //// TODO add allows ref struct constraint
         {
