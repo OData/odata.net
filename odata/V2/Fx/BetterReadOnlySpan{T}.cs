@@ -44,7 +44,9 @@
 
         public static unsafe BetterReadOnlySpan<T> Create(scoped in T instance)
         {
-            var span = new ReadOnlySpan<byte>(Fx.Runtime.CompilerServices.Unsafe.AsPointer(instance), Unsafe.SizeOf<T>());
+            void* pointer = Fx.Runtime.CompilerServices.Unsafe.AsPointer(instance);
+
+            var span = new ReadOnlySpan<byte>(pointer, Unsafe.SizeOf<T>());
 
             return Create(span, 1);
         }
