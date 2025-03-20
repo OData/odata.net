@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     /// <summary>
     /// 
@@ -12,11 +13,11 @@
     /// </remarks>
     public readonly ref struct BetterReadOnlySpan<T> where T : allows ref struct //// TODO is there other span stuff that you should add in here?
     {
-        private readonly ReadOnlySpan<byte> data;
+        internal readonly DifferentMemory data; //// TODO can you make this private?
 
         private readonly int length;
 
-        private BetterReadOnlySpan(ReadOnlySpan<byte> memory, int length)
+        private BetterReadOnlySpan(DifferentMemory memory, int length)
         {
             if (memory.Length != System.Runtime.CompilerServices.Unsafe.SizeOf<T>() * length)
             {
@@ -27,14 +28,16 @@
             this.length = length;
         }
 
-        public static BetterReadOnlySpan<byte> Create(ReadOnlySpan<byte> span)
+        public static BetterReadOnlySpan<byte> Create(DifferentMemory memory)
         {
-            return new BetterReadOnlySpan<byte>(span, span.Length);
+            //// TODO should this be a cast in `differentmemory`?
+
+            return new BetterReadOnlySpan<byte>(memory, memory.Length);
         }
 
-        public static BetterReadOnlySpan<T> Create(BetterReadOnlySpan<byte> span, int length)
+        public static BetterReadOnlySpan<T> Create(DifferentMemory memory, int length)
         {
-            return new BetterReadOnlySpan<T>(span.data, length);
+            return new BetterReadOnlySpan<T>(memory, length);
         }
 
         public static unsafe BetterReadOnlySpan<T> Create(in T instance)
@@ -43,7 +46,8 @@
             {
                 var span = new ReadOnlySpan<byte>(pointer, Unsafe.SizeOf<T>());
 
-                return BetterReadOnlySpan.FromMemory<T>(Create(span), 1);
+                //// TODO have a cast between readonlyspan<byte> and differentmemory?
+                return Create(DifferentMemory.Create(span), 1);
             }
         }
 
@@ -81,6 +85,53 @@
             {
                 return length;
             }
+        }
+    }
+
+    public ref struct DifferentMemory
+    {
+        private readonly ReadOnlySpan<byte> memory;
+
+        private ref byte pinnedReference;
+
+        private unsafe DifferentMemory(ReadOnlySpan<byte> memory)
+        {
+            this.memory = memory;
+            fixed (byte* pointer = memory)
+            {
+                this.pinnedReference = ref *pointer;
+            }
+        }
+
+        public static DifferentMemory Create(ReadOnlySpan<byte> span)
+        {
+            return new DifferentMemory(span);
+        }
+
+        public static DifferentMemory Create(BetterReadOnlySpan<byte> span)
+        {
+            return new DifferentMemory(span.data.memory);
+        }
+
+        public unsafe byte this[int index]
+        {
+            get
+            {
+                return this.memory[index];
+            }
+        }
+
+        public int Length
+        {
+            get
+            {
+                return this.memory.Length;
+            }
+        }
+
+        public ref byte GetPinnableReference()
+        {
+            return ref this.pinnedReference;
         }
     }
 }

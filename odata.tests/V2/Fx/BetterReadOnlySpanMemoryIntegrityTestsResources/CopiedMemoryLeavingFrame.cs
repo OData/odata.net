@@ -14,7 +14,7 @@ public static class CopiedMemoryLeavingFrame
         Unsafe2.Copy(memory, in list);
 
         var nextValue = BetterReadOnlySpan.FromInstance(67);
-        var previousNode = BetterReadOnlySpan.FromMemory<Wrapper<int>>(BetterReadOnlySpan.FromMemory(memory), 1);
+        var previousNode = BetterReadOnlySpan.FromMemory<Wrapper<int>>(DifferentMemory.Create(memory), 1);
 
         return previousNode;
     }
