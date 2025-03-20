@@ -4,12 +4,10 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.ObjectModel;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Formatter.Serialization;
 using Microsoft.OData.E2E.TestCommon.Common.Server.Default;
 using Microsoft.OData.Edm;
-using Microsoft.OData.UriParser;
 
 namespace Microsoft.OData.Core.E2E.Tests.AnnotationTests;
 
