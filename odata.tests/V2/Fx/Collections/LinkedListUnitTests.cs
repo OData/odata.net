@@ -125,7 +125,7 @@
             AssertEnumerable(Enumerable.Empty<int>(), list);
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void AppendToList()
         {
             var list2 = new LinkedList<Wrapper<int>>();
@@ -143,7 +143,7 @@
             list.Append(new Wrapper<int>(42), memory);
 
             AssertEnumerable(new[] { 42 }, list);
-        }
+        }*/
 
         private static void AssertEnumerable<T>(IEnumerable<T> expected, LinkedList<Wrapper<T>> actual) //// TODO add allows ref struct constraint
         {

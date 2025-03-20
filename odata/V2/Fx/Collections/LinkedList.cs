@@ -27,7 +27,7 @@
             this.SetFirstValue(value, memory);
         }
 
-        private void SetFirstValue(T value, scoped in Span<byte> memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
+        private void SetFirstValue(T value, Span<byte> memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
         {
             var firstNode = new LinkedListNode(value);
             Unsafe.Copy(memory, firstNode);
@@ -38,7 +38,7 @@
             this.hasValues = true;
         }
 
-        public void Append(T value, scoped in Span<byte> memory)
+        public void Append(T value, Span<byte> memory)
         {
             if (!this.hasValues)
             {
