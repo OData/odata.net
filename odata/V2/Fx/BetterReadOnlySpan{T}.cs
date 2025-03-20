@@ -28,6 +28,8 @@
             this.length = length;
         }
 
+        //// TODO since these factory methods are public, you need to add the same tests as you added to betterreadonlyspan
+
         public static BetterReadOnlySpan<byte> Create(DifferentMemory memory)
         {
             //// TODO should this be a cast in `differentmemory`?
@@ -40,7 +42,7 @@
             return new BetterReadOnlySpan<T>(memory, length);
         }
 
-        public static unsafe BetterReadOnlySpan<T> Create(in T instance)
+        public static unsafe BetterReadOnlySpan<T> Create(scoped in T instance)
         {
             fixed (T* pointer = &instance)
             {
