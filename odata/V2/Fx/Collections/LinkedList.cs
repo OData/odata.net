@@ -2,20 +2,72 @@
 {
     using System;
     using System.Collections;
+    using System.Collections.Generic;
     using V2.Fx.Runtime.CompilerServices;
+    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     //// TODO double check that this doesn't have any `unsafe` contexts
 
-    public ref struct LinkedList<T> where T : allows ref struct
+    public interface IBetterReadOnlyCollection<out TValue, out TEnumerator> where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+    {
+        int Count { get; }
+
+        TEnumerator GetEnumerator();
+    }
+
+    public interface IReadOnlyArray<out T> where T : allows ref struct
+    {
+        T this[int index] { get; }
+
+        int Count { get; }
+    }
+
+    public ref struct ReadOnlyArray<T> : IReadOnlyArray<T> where T : allows ref struct
+    {
+        private readonly DifferentMemory memory;
+        private readonly int length;
+
+        public ReadOnlyArray(DifferentMemory memory, int length)
+        {
+            this.memory = memory;
+            this.length = length;
+        }
+
+        public unsafe T this[int index]
+        {
+            get
+            {
+                fixed (byte* pointer = memory)
+                {
+                    byte* indexed = pointer + index * System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+
+                    return System.Runtime.CompilerServices.Unsafe.AsRef<T>(indexed);
+                }
+            }
+        }
+
+        public int Count
+        {
+            get
+            {
+                return this.Count;
+            }
+        }
+    }
+
+    public ref struct LinkedList<T> : IBetterReadOnlyCollection<T, LinkedList<T>.Enumerator> where T : allows ref struct
     {
         private BetterReadOnlySpan<LinkedListNode> first;
 
         private BetterReadOnlySpan<LinkedListNode> current;
 
+        private int count;
+
         private bool hasValues;
 
         public LinkedList()
         {
+            this.count = 0;
             this.hasValues = false;
         }
 
@@ -23,6 +75,14 @@
         {
             //// TODO do you still want this constructor now that empty lists are a thing?
             this.SetFirstValue(value, memory);
+        }
+
+        public int ArraySize
+        {
+            get
+            {
+                return this.Count * System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+            }
         }
 
         private void SetFirstValue(T value, DifferentMemory memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
@@ -33,6 +93,7 @@
             this.first = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
             this.current = this.first;
 
+            this.count = 1;
             this.hasValues = true;
         }
 
@@ -52,10 +113,20 @@
                 this.current[0].Next = next;
 
                 this.current = next;
+
+                ++this.count;
             }
         }
 
         public static int MemorySize { get; } = System.Runtime.CompilerServices.Unsafe.SizeOf<LinkedListNode>();
+
+        public int Count
+        {
+            get
+            {
+                return this.count;
+            }
+        }
 
         internal ref struct LinkedListNode //// TODO can you make this private
         {
@@ -81,7 +152,7 @@
             }
         }
 
-        public ref struct Enumerator
+        public ref struct Enumerator : IEnumerator<T>
         {
             private BetterReadOnlySpan<LinkedListNode> node;
 
@@ -110,6 +181,8 @@
                 }
             }
 
+            object IEnumerator.Current => throw new NotImplementedException();
+
             public bool MoveNext()
             {
                 if (!this.hasValues)
@@ -131,6 +204,16 @@
                 }
 
                 return false;
+            }
+
+            public void Reset()
+            {
+                ////throw new NotImplementedException();
+            }
+
+            public void Dispose()
+            {
+                ////throw new NotImplementedException();
             }
         }
     }

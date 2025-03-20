@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Runtime.CompilerServices;
     using Microsoft.VisualBasic;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -10,6 +12,87 @@
     [TestClass]
     public sealed class LinkedListUnitTests
     {
+        private sealed class Comparer : IEqualityComparer<Wrapper<int>>
+        {
+            private Comparer()
+            {
+            }
+
+            public static Comparer Instance { get; } = new Comparer();
+
+            public bool Equals(Wrapper<int> x, Wrapper<int> y)
+            {
+                return x.Value == y.Value;
+            }
+
+            public int GetHashCode([DisallowNull] Wrapper<int> obj)
+            {
+                return obj.Value.GetHashCode();
+            }
+        }
+
+        private static ReadOnlyArray<TValue> ToArray<TEnumerable, TEnumerator, TValue>(TEnumerable enumerable, DifferentMemory memory) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        {
+            if (memory.Length != enumerable.Count * Unsafe.SizeOf<TValue>())
+            {
+                throw new Exception("TODO");
+            }
+
+            var index = 0;
+            foreach (var element in enumerable)
+            {
+                V2.Fx.Runtime.CompilerServices.Unsafe.Copy<TValue>(memory, element, index);
+
+                ++index;
+            }
+
+            return new ReadOnlyArray<TValue>(memory, enumerable.Count);
+        }
+
+        private static void AssertEnumerable<TValue, TEnumerable, TEnumerator>(TEnumerable expected, TEnumerable actual, IEqualityComparer<TValue> comparer) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        {
+            //// TODO why does this work?
+            DifferentMemory memory = stackalloc byte[expected.Count * Unsafe.SizeOf<TValue>()];
+            var expectedArray = ToArray<TEnumerable, TEnumerator, TValue>(expected, memory);
+
+            var index = 0;
+            foreach (var element in actual)
+            {
+                Assert.IsTrue(comparer.Equals(element, expectedArray[index]));
+
+                ++index;
+            }
+        }
+
+        [TestMethod]
+        public void Enumeration()
+        {
+            Span<byte> memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
+
+            for (int i = 0; i < 10; ++i)
+            {
+                memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+                list.Append(new Wrapper<int>(i), memory);
+            }
+
+
+            Span<byte> memory2 = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            var list2 = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory2);
+
+            for (int i = 0; i < 10; ++i)
+            {
+                memory2 = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+                list2.Append(new Wrapper<int>(i), memory2);
+            }
+
+            AssertEnumerable<Wrapper<int>, LinkedList<Wrapper<int>>, LinkedList<Wrapper<int>>.Enumerator>(list, list2, Comparer.Instance);
+        }
+
+
+        //// TODO iequalitycomparer for ref structs? maybe use reflection for this?
+
+
         private readonly ref struct Wrapper<T> where T : allows ref struct
         {
             public Wrapper(T value)
