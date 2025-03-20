@@ -2087,6 +2087,18 @@
   <data name="SelectExpandBinder_SystemTokenInSelect" xml:space="preserve">
     <value>Found a system token, '{0}', while parsing a select clause.</value>
   </data>
+  <data name="SelectExpandBinder_NoSegmentAllowedAfterDollarCount" xml:space="preserve">
+    <value>No more segment '{0}' is allowed after '/$count' segment.</value>
+  </data>
+  <data name="SelectExpandBinder_NotAllowedDollarCountAsFirstSegment" xml:space="preserve">
+    <value>'/$count' segment is not allowed as first segment.</value>
+  </data>
+  <data name="SelectExpandBinder_NotAllowedDollarCountOnNonCollection" xml:space="preserve">
+    <value>'/$count' segment is only allowed on the collection type segment.</value>
+  </data>
+  <data name="SelectExpandBinder_NotAllowedDollarCountOnNavigationPropertyInDollarSelect" xml:space="preserve">
+    <value>In $select query option, '/$count' segment is not allowed on the navigation property segment '{0}'.</value>
+  </data>
   <data name="SelectionItemBinder_NoExpandForSelectedProperty" xml:space="preserve">
     <value>Only properties specified in $expand can be traversed in $select query options. Selected item was '{0}'.</value>
   </data>
@@ -2443,9 +2455,6 @@
   </data>
   <data name="ExpressionToken_OnlyRefAllowWithStarInExpand" xml:space="preserve">
     <value>Only $ref is allowed with star in $expand option.</value>
-  </data>
-  <data name="ExpressionToken_DollarCountNotAllowedInSelect" xml:space="preserve">
-    <value>$count is not allowed in $select option.</value>
   </data>
   <data name="ExpressionToken_NoPropAllowedAfterDollarCount" xml:space="preserve">
     <value>No property is allowed after $count segment.</value>
