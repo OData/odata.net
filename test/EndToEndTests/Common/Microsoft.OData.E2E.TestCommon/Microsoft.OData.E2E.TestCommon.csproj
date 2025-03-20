@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Common\Client\Operations\OperationsServiceCsdl.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="Common\Client\Default\DefaultServiceCsdl.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
@@ -18,6 +22,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Common\Client\OpenTypes\OpenTypesODataServiceCsdl.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\Client\Operations\OperationsServiceCsdl.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Common\Client\PrimitiveKeys\PrimitiveKeysODataServiceCsdl.xml">
