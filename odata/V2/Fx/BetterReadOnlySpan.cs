@@ -1,8 +1,5 @@
 ﻿namespace V2.Fx
 {
-    using System;
-    using System.Runtime.CompilerServices;
-
     public static class BetterReadOnlySpan
     {
         public static BetterReadOnlySpan<byte> FromMemory(DifferentMemory memory)
