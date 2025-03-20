@@ -2,6 +2,13 @@
 {
     using System;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <remarks>
+    /// You looked into if you could have something like `BetterReadOnlySpan<byte> = stackalloc byte[10];` and the answer is no.
+    /// </remarks>
     public readonly ref struct BetterReadOnlySpan<T> where T : allows ref struct //// TODO is there other span stuff that you should add in here?
     {
         private readonly Span<byte> data;
