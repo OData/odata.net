@@ -49,7 +49,7 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToEntityCollection_WithCollectionOfComplexTypeAsParameter_ReturnsEntityCollection()
+    public async Task FunctionBoundToEntityCollection_WithCollectionOfComplexTypeAsParameterAndReturnsEntityCollection_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
@@ -85,7 +85,7 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToEntityCollection_WithCollectionOfComplexTypeAsParameter_ReturnsAnEntity()
+    public async Task FunctionBoundToEntityCollection_WithCollectionOfComplexTypeAsParameterAndReturnsAnEntity_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
@@ -110,7 +110,7 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToAnEntity_WithCollectionOfPrimitiveTypeAsParameter_ReturnsEntityCollections()
+    public async Task FunctionBoundToAnEntity_WithCollectionOfPrimitiveTypeAsParameterAndReturnsEntityCollection_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
@@ -130,7 +130,7 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToEntityCollection_WithPrimitiveTypeAsParameter_ReturnsEntityCollection()
+    public async Task FunctionBoundToEntityCollection_WithPrimitiveTypeAsParameterAndReturnsEntityCollection_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
@@ -148,7 +148,7 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToEntityCollection_WithEntityCollectionAsParameter_ReturnsEntityCollection()
+    public async Task FunctionBoundToEntityCollection_WithEntityCollectionAsParameterAndReturnsEntityCollection_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
@@ -186,7 +186,7 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToEntityCollection_WithEntityReferenceAsParameter_ReturnsEntity()
+    public async Task FunctionBoundToEntityCollection_WithEntityReferenceAsParameterAndReturnsEntity_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
@@ -198,7 +198,9 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
         };
         context.AttachTo("Orders", order);
         var customerQuery = context.CreateQuery<Customer>("Customers");
-        var functionQuery = customerQuery.CreateFunctionQuery<Customer>("GetCustomerByOrder", true, new UriEntityOperationParameter("order", order, true));
+        var functionQuery = customerQuery.CreateFunctionQuery<Customer>("GetCustomerByOrder", 
+            true, 
+            new UriEntityOperationParameter("order", order, true /*useEntityReference*/));
 
         // Act
         var customers = (await functionQuery.ExecuteAsync()).ToList();
@@ -211,7 +213,7 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToEntityCollection_WithEntityAsParameter_ReturnsEntityCollection()
+    public async Task FunctionBoundToEntityCollection_WithEntityAsParameterAndReturnsEntityCollection_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
@@ -236,7 +238,7 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToEntityCollection_WithEntityReferencesAsParameter_ReturnsEntityCollection()
+    public async Task FunctionBoundToEntityCollection_WithEntityReferencesAsParameterAndReturnsEntityCollection_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
@@ -257,7 +259,9 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
         context.AttachTo("Orders", orders[0]);
         context.AttachTo("Orders", orders[1]);
         var customerQuery = context.CreateQuery<Customer>("Customers");
-        var functionQuery = customerQuery.CreateFunctionQuery<Customer>("GetCustomersByOrders", true, new UriEntityOperationParameter("orders", orders, true));
+        var functionQuery = customerQuery.CreateFunctionQuery<Customer>("GetCustomersByOrders", 
+            true, 
+            new UriEntityOperationParameter("orders", orders, true /*useEntityReference*/));
 
         // Act
         var customers = (await functionQuery.ExecuteAsync()).ToList();
@@ -270,7 +274,7 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToEntityCollection_WithExpandQueryOption_ReturnEntityExpandNavigation()
+    public async Task FunctionBoundToEntityCollection_WithExpandQueryOptionAndReturnEntityExpandNavigation_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
@@ -288,22 +292,24 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToEntityCollection_ReturnEntityWithSelectedProperties()
+    public async Task FunctionBoundToEntityCollectionAndReturnEntityWithSelectedProperties_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
 
         // Act
-        var order = await (context.Orders.GetOrderByNote(new string[] { "1111", "parent" }).Select(o => new Order() { OrderID = o.OrderID, Notes = o.Notes })).GetValueAsync();
+        var query = context.Orders.GetOrderByNote(new string[] { "1111", "parent" }).Select(o => new Order() { OrderID = o.OrderID, Notes = o.Notes });
+        var order = await query.GetValueAsync();
 
         // Assert
+        Assert.EndsWith("odata/Orders/GetOrderByNote(notes=@notes)?$select=OrderID,Notes&@notes=%5B%221111%22%2C%22parent%22%5D", query.RequestUri.AbsoluteUri);
         Assert.Equal(2, order.Notes.Count);
         Assert.Equal(2, order.OrderID);
-        Assert.Equal<DateTimeOffset>(default(DateTimeOffset), order.OrderDate);
+        Assert.Equal<DateTimeOffset>(default(DateTimeOffset), order.OrderDate); // default value of DateTimeOffset since not selected. 
     }
 
     [Fact]
-    public void FunctionBoundToEntityCollection_ReturnEntitiesExpandNavigationProperty()
+    public void FunctionBoundToEntityCollectionAndReturnEntitiesExpandNavigationProperty_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
@@ -337,7 +343,7 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToEntityCollection_WithEntityReference_ReturnEntity()
+    public async Task FunctionBoundToEntityCollection_WithEntityReferenceAndReturnEntity_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
@@ -355,7 +361,7 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToEntityCollection_WithEntityReference_UseLocalEntity()
+    public async Task FunctionBoundToEntityCollection_WithEntityReference_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
@@ -378,7 +384,7 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToEntityCollection_WithEntityReference_ReturnEntities()
+    public async Task FunctionBoundToEntityCollection_WithEntityReferenceAndReturnEntities_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
@@ -394,13 +400,13 @@ public class OperationTests : EndToEndTestBase<OperationTests.TestsStartup>
     }
 
     [Fact]
-    public async Task FunctionBoundToAnEntity_WithEntityReference_ReturnEntity()
+    public async Task FunctionBoundToAnEntity_WithEntityReferenceAndReturnEntity_ExecuteSuccessfully()
     {
         // Arrange
         var context = this.ContextWrapper();
 
         var customer = context.Customers.Expand("Orders").Skip(1).First();
-        var getCustomerByOrder = customer.VerifyCustomerByOrder(customer.Orders.First());
+        var getCustomerByOrder = customer.VerifyCustomerByOrder(customer.Orders.First(), true /*useEntityReference*/);
 
         // Act
         customer = await getCustomerByOrder.GetValueAsync();
