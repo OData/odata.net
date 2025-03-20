@@ -51,31 +51,18 @@
             return Create(span, 1);
         }
 
-        public unsafe T this[int index]
+        public unsafe ref T this[int index]
         {
             get
             {
-                //// TODO return `ref T` (like `Get`) and remove `Get`
                 ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Length);
                 ArgumentOutOfRangeException.ThrowIfNegative(index);
 
                 fixed (byte* pointer = data)
                 {
                     T* typedPointer = (T*)pointer;
-                    return typedPointer[index];
+                    return ref typedPointer[index];
                 }
-            }
-        }
-
-        public unsafe ref T Get(int index)
-        {
-            ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Length);
-            ArgumentOutOfRangeException.ThrowIfNegative(index);
-
-            fixed (byte* pointer = data)
-            {
-                T* typedPointer = (T*)pointer;
-                return ref typedPointer[index];
             }
         }
 

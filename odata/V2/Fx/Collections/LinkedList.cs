@@ -49,7 +49,7 @@
 
                 var next = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
 
-                this.current.Get(0).Next = next;
+                this.current[0].Next = next;
 
                 this.current = next;
             }
@@ -106,7 +106,7 @@
                         throw new Exception("TODO");
                     }
 
-                    return this.node.Get(0).Value;
+                    return this.node[0].Value;
                 }
             }
 
@@ -123,7 +123,7 @@
                     return true;
                 }
 
-                var nextNode = this.node.Get(0).Next;
+                var nextNode = this.node[0].Next;
                 if (nextNode.Length != 0)
                 {
                     this.node = nextNode;
