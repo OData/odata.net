@@ -60,8 +60,12 @@
 
                 fixed (byte* pointer = data)
                 {
-                    T* typedPointer = (T*)pointer;
-                    return ref typedPointer[index];
+                    byte* indexed = pointer + index * System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+
+                    return ref System.Runtime.CompilerServices.Unsafe.AsRef<T>(indexed);
+
+                    /*T* typedPointer = (T*)pointer;
+                    return ref typedPointer[index];*/
                 }
             }
         }
