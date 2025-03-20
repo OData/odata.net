@@ -5,7 +5,12 @@
 
     public static class BetterReadOnlySpan
     {
-        public static BetterReadOnlySpan<T> FromMemory<T>(Span<byte> memory, int length) where T : allows ref struct //// TODO can you use betterspan instead of span for `memory`?
+        public static BetterReadOnlySpan<byte> FromMemory(ReadOnlySpan<byte> memory)
+        {
+            return new BetterReadOnlySpan<byte>(memory, memory.Length);
+        }
+
+        public static BetterReadOnlySpan<T> FromMemory<T>(ReadOnlySpan<byte> memory, int length) where T : allows ref struct //// TODO can you use betterspan instead of span for `memory`?
         {
             //// TODO can this be an extension called `cast` or something instead?
             return new BetterReadOnlySpan<T>(memory, length);
@@ -15,7 +20,7 @@
         {
             fixed (T* pointer = &value)
             {
-                var span = new Span<byte>(pointer, Unsafe.SizeOf<T>());
+                var span = new ReadOnlySpan<byte>(pointer, Unsafe.SizeOf<T>());
 
                 return BetterReadOnlySpan.FromMemory<T>(span, 1);
             }

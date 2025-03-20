@@ -11,11 +11,11 @@
     /// </remarks>
     public readonly ref struct BetterReadOnlySpan<T> where T : allows ref struct //// TODO is there other span stuff that you should add in here?
     {
-        private readonly Span<byte> data;
+        private readonly ReadOnlySpan<byte> data;
 
         private readonly int length;
 
-        internal BetterReadOnlySpan(Span<byte> memory, int length)
+        internal BetterReadOnlySpan(ReadOnlySpan<byte> memory, int length)
         {
             if (memory.Length != System.Runtime.CompilerServices.Unsafe.SizeOf<T>() * length)
             {
@@ -30,6 +30,7 @@
         {
             get
             {
+                //// TODO return `ref T` (like `Get`) and remove `Get`
                 ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Length);
                 ArgumentOutOfRangeException.ThrowIfNegative(index);
 
