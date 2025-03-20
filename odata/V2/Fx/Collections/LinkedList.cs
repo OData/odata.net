@@ -4,6 +4,8 @@
     using System.Collections;
     using V2.Fx.Runtime.CompilerServices;
 
+    //// TODO double check that this doesn't have any `unsafe` contexts
+
     public ref struct LinkedList<T> where T : allows ref struct
     {
         private BetterReadOnlySpan<LinkedListNode> first;
