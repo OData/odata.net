@@ -24,7 +24,7 @@
                 throw new Exception("TODO");
             }
 
-            data = memory;
+            this.data = memory;
             this.length = length;
         }
 
@@ -48,8 +48,7 @@
             {
                 var span = new ReadOnlySpan<byte>(pointer, Unsafe.SizeOf<T>());
 
-                //// TODO have a cast between readonlyspan<byte> and differentmemory?
-                return Create(DifferentMemory.Create(span), 1);
+                return Create(span, 1);
             }
         }
 
