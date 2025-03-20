@@ -14,7 +14,7 @@
 
         private bool hasValues;
 
-        public LinkedList(Span<byte> memory)
+        public LinkedList()
         {
             this.hasValues = false;
         }

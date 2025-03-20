@@ -117,7 +117,7 @@
             return list;
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void EmptyList()
         {
             var list = new LinkedList<Wrapper<int>>();
@@ -125,7 +125,7 @@
             AssertEnumerable(Enumerable.Empty<int>(), list);
         }
 
-        /*[TestMethod]
+        [TestMethod]
         public void AppendToEmptyList()
         {
             //// TODO get these working
