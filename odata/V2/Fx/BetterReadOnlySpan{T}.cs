@@ -29,7 +29,6 @@
             this.length = length;
         }
 
-        //// TODO update all of your stackallocs to use differentmemory 
         //// TODO since these factory methods are public, you need to add the same tests as you added to betterreadonlyspan
 
         public static BetterReadOnlySpan<byte> Create(DifferentMemory memory)
