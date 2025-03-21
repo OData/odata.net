@@ -19,7 +19,7 @@
 
         public static unsafe void* AsPointer<T>(in T value) where T : allows ref struct
         {
-            fixed (void* pointer = BetterReadOnlySpan.FromInstance(value))
+            fixed (void* pointer = &value)
             {
                 return pointer;
             }
