@@ -71,7 +71,7 @@
     /// 
     /// </summary>
     /// <remarks>
-    /// The purpose of this type is to be, in all ways possible, a readonlyspan<byte> that can be create from either a span or a betterspan
+    /// The purpose of this type is to be, in all ways possible, a readonlyspan<byte> that can be created from either a span or a betterspan
     /// </remarks>
     public readonly ref struct DifferentMemory
     {
