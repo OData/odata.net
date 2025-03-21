@@ -105,7 +105,7 @@
         private unsafe DifferentMemory(ReadOnlySpan<byte> memory)
         {
             this.memory = memory;
-            fixed (byte* pointer = &memory.GetPinnableReference())
+            fixed (byte* pointer = memory)
             {
                 this.pinnedReference = ref *pointer;
             }
