@@ -19,8 +19,6 @@
 
         private BetterReadOnlySpan(DifferentMemory memory, int length)
         {
-            //// TODO should you have a betterspan variant of this? MemoryMarshal.Cast<>
-
             if (memory.Length != System.Runtime.CompilerServices.Unsafe.SizeOf<T>() * length)
             {
                 throw new Exception("TODO");
