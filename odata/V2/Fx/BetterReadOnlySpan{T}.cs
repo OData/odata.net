@@ -61,7 +61,7 @@
             }
         }
 
-        public ref readonly byte GetPinnableReference()
+        public ref byte GetPinnableReference()
         {
             return ref this.data.GetPinnableReference();
         }

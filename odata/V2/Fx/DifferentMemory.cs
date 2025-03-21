@@ -7,25 +7,25 @@
     /// 
     /// </summary>
     /// <remarks>
-    /// The purpose of this type is to be, in all ways possible, a readonlyspan<byte> that can be created from either a span or a betterspan
+    /// The purpose of this type is to be, in all ways possible, a `span<byte>` that can be created from either a `span` or a `betterspan`
     /// </remarks>
     public readonly ref struct DifferentMemory
     {
-        private readonly ReadOnlySpan<byte> memory;
+        private readonly Span<byte> memory;
 
-        private DifferentMemory(ReadOnlySpan<byte> memory)
+        private DifferentMemory(Span<byte> memory)
         {
             this.memory = memory;
         }
 
-        public static DifferentMemory Create(ReadOnlySpan<byte> span)
+        public static DifferentMemory Create(Span<byte> span)
         {
             return new DifferentMemory(span);
         }
 
         public static DifferentMemory Create(BetterReadOnlySpan<byte> span)
         {
-            return new DifferentMemory(MemoryMarshal.CreateReadOnlySpan(in span.GetPinnableReference(), span.Length));
+            return new DifferentMemory(MemoryMarshal.CreateSpan(ref span.GetPinnableReference(), span.Length));
         }
 
         public DifferentMemory Slice(int startIndex, int length)
@@ -33,11 +33,11 @@
             return Create(this.memory.Slice(startIndex, length));
         }
 
-        public byte this[int index]
+        public ref byte this[int index]
         {
             get
             {
-                return this.memory[index];
+                return ref this.memory[index];
             }
         }
 
@@ -50,9 +50,9 @@
         }
 
         //// TODO you can add this here (and other places) if you really want to get parity with the .net version [EditorBrowsable(EditorBrowsableState.Never)]
-        public ref readonly byte GetPinnableReference()
+        public ref byte GetPinnableReference()
         {
-            ref readonly byte pointer = ref MemoryMarshal.AsRef<byte>(memory);
+            ref byte pointer = ref MemoryMarshal.AsRef<byte>(memory);
             return ref pointer;
         }
         
