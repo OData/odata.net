@@ -4,7 +4,7 @@
     
     public static class Unsafe
     {
-        public static unsafe void Copy<T>(DifferentMemory destination, in T source) where T : allows ref struct
+        public static unsafe void Copy<T>(ByteSpan destination, in T source) where T : allows ref struct
         {
             if (destination.Length != System.Runtime.CompilerServices.Unsafe.SizeOf<T>())
             {

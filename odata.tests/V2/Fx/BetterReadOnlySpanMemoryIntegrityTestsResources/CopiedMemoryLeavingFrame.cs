@@ -8,7 +8,7 @@ public static class CopiedMemoryLeavingFrame
     public static BetterReadOnlySpan<Wrapper<int>> Method()
     {
         var list = new Wrapper<int>(BetterReadOnlySpan.FromInstance(42));
-        DifferentMemory memory = stackalloc byte[Unsafe.SizeOf<Wrapper<int>>()];
+        ByteSpan memory = stackalloc byte[Unsafe.SizeOf<Wrapper<int>>()];
         Unsafe2.Copy(memory, in list);
 
         var nextValue = BetterReadOnlySpan.FromInstance(67);

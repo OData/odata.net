@@ -4,12 +4,12 @@ namespace V2.Fx
 {
     public static class BetterReadOnlySpan
     {
-        public static BetterReadOnlySpan<byte> FromMemory(DifferentMemory memory)
+        public static BetterReadOnlySpan<byte> FromMemory(ByteSpan memory)
         {
             return BetterReadOnlySpan<byte>.Create(memory);
         }
 
-        public static BetterReadOnlySpan<T> FromMemory<T>(DifferentMemory memory, int length) where T : allows ref struct
+        public static BetterReadOnlySpan<T> FromMemory<T>(ByteSpan memory, int length) where T : allows ref struct
         {
             //// TODO can this be an extension called `cast` or something instead?
             return BetterReadOnlySpan<T>.Create(memory, length);

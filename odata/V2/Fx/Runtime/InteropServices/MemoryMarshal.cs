@@ -5,7 +5,7 @@
 
     public static class MemoryMarshal
     {
-        public static unsafe ref T AsRef<T>(DifferentMemory memory) where T : allows ref struct
+        public static unsafe ref T AsRef<T>(ByteSpan memory) where T : allows ref struct
         {
             if (memory.Length != Unsafe.SizeOf<T>())
             {

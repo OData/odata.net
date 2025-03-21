@@ -12,11 +12,11 @@
     /// </remarks>
     public readonly ref struct BetterReadOnlySpan<T> where T : allows ref struct //// TODO is there other span stuff that you should add in here?
     {
-        private readonly DifferentMemory data;
+        private readonly ByteSpan data;
 
         private readonly int length;
 
-        private BetterReadOnlySpan(DifferentMemory memory, int length)
+        private BetterReadOnlySpan(ByteSpan memory, int length)
         {
             var elementSize = Unsafe.SizeOf<T>();
             if (memory.Length != elementSize * length)
@@ -30,12 +30,12 @@
 
         //// TODO since these factory methods are public, you need to add the same tests as you added to betterreadonlyspan
 
-        public static BetterReadOnlySpan<byte> Create(DifferentMemory memory)
+        public static BetterReadOnlySpan<byte> Create(ByteSpan memory)
         {
             return new BetterReadOnlySpan<byte>(memory, memory.Length);
         }
 
-        public static BetterReadOnlySpan<T> Create(DifferentMemory memory, int length)
+        public static BetterReadOnlySpan<T> Create(ByteSpan memory, int length)
         {
             return new BetterReadOnlySpan<T>(memory, length);
         }

@@ -6,7 +6,7 @@ public static class StackAllocLeavingFrame
 {
     private static BetterReadOnlySpan<string> Method()
     {
-        DifferentMemory span = stackalloc byte[Unsafe.SizeOf<string>()];
+        ByteSpan span = stackalloc byte[Unsafe.SizeOf<string>()];
         var betterspan = BetterReadOnlySpan.FromMemory<string>(span, 1);
 
         return betterspan;

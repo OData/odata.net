@@ -25,7 +25,7 @@
         [TestMethod]
         public void AppendRefStruct()
         {
-            DifferentMemory memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
             var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
 
             for (int i = 0; i < 10; ++i)
@@ -48,7 +48,7 @@
         [TestMethod]
         public void Append()
         {
-            DifferentMemory memory = stackalloc byte[LinkedList<int>.MemorySize];
+            ByteSpan memory = stackalloc byte[LinkedList<int>.MemorySize];
             var list = new LinkedList<int>(-1, memory);
 
             for (int i = 0; i < 10; ++i)
@@ -71,7 +71,7 @@
         [TestMethod]
         public void EnumerateReturnedList()
         {
-            DifferentMemory memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
             var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
 
             for (int i = 0; i < 10; ++i)
@@ -94,7 +94,7 @@
         [TestMethod]
         public void AddElementToListInCallee()
         {
-            DifferentMemory memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
             var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
 
             AssertEnumerable(new[] { -1 }, list);
@@ -114,7 +114,7 @@
             //// TODO the by-value vs by-ref thing aside, what happens if you append more elements
         }
 
-        private static LinkedList<Wrapper<int>> Foo(LinkedList<Wrapper<int>> list, DifferentMemory memory)
+        private static LinkedList<Wrapper<int>> Foo(LinkedList<Wrapper<int>> list, ByteSpan memory)
         {
             list.Append(new Wrapper<int>(42), memory);
             return list;

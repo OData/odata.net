@@ -43,7 +43,7 @@
             }
         }
 
-        public static unsafe void Copy<T>(DifferentMemory destination, in T source, int offset) where T : allows ref struct
+        public static unsafe void Copy<T>(ByteSpan destination, in T source, int offset) where T : allows ref struct
         {
             //// TODO if you keep this method, you should have the overload without `offset` delegate to it
             
@@ -61,7 +61,7 @@
             }
         }
 
-        private static ReadOnlyArray<TValue> ToArray<TEnumerable, TEnumerator, TValue>(TEnumerable enumerable, DifferentMemory memory) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        private static ReadOnlyArray<TValue> ToArray<TEnumerable, TEnumerator, TValue>(TEnumerable enumerable, ByteSpan memory) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
         {
             if (memory.Length != enumerable.Count * Unsafe.SizeOf<TValue>())
             {
@@ -82,7 +82,7 @@
         private static void AssertEnumerable<TValue, TEnumerable, TEnumerator>(TEnumerable expected, TEnumerable actual, IEqualityComparer<TValue> comparer) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
         {
             //// TODO why does this work?
-            DifferentMemory memory = stackalloc byte[expected.Count * Unsafe.SizeOf<TValue>()];
+            ByteSpan memory = stackalloc byte[expected.Count * Unsafe.SizeOf<TValue>()];
             var expectedArray = ToArray<TEnumerable, TEnumerator, TValue>(expected, memory);
 
             var index = 0;
@@ -136,7 +136,7 @@
                 this.hasValues = false;
             }
 
-            public LinkedList(T value, DifferentMemory memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
+            public LinkedList(T value, ByteSpan memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
             {
                 //// TODO do you still want this constructor now that empty lists are a thing?
                 this.SetFirstValue(value, memory);
@@ -150,7 +150,7 @@
                 }
             }
 
-            private void SetFirstValue(T value, DifferentMemory memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
+            private void SetFirstValue(T value, ByteSpan memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
             {
                 var firstNode = new LinkedListNode(value);
                 V2.Fx.Runtime.CompilerServices.Unsafe.Copy(memory, firstNode);
@@ -162,7 +162,7 @@
                 this.hasValues = true;
             }
 
-            public void Append(T value, DifferentMemory memory)
+            public void Append(T value, ByteSpan memory)
             {
                 if (!this.hasValues)
                 {
@@ -299,10 +299,10 @@
 
         public ref struct ReadOnlyArray<T> : IReadOnlyArray<T> where T : allows ref struct
         {
-            private readonly DifferentMemory memory;
+            private readonly ByteSpan memory;
             private readonly int length;
 
-            public ReadOnlyArray(DifferentMemory memory, int length)
+            public ReadOnlyArray(ByteSpan memory, int length)
             {
                 this.memory = memory;
                 this.length = length;

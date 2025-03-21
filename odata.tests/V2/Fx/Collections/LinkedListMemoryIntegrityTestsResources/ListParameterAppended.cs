@@ -5,7 +5,7 @@ public static class ListParameterAppended
 {
     private static void Method(LinkedList<int> list)
     {
-        DifferentMemory memory = stackalloc byte[LinkedList<int>.MemorySize];
+        ByteSpan memory = stackalloc byte[LinkedList<int>.MemorySize];
 
         list.Append(42, memory);
     }
