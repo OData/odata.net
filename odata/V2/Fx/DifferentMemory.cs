@@ -60,10 +60,5 @@
         {
             return DifferentMemory.Create(span);
         }
-
-        /*public static implicit operator DifferentMemory(ReadOnlySpan<byte> span)
-        {
-            return DifferentMemory.Create(span);
-        }*/
     }
 }
