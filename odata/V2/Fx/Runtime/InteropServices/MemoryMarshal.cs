@@ -1,7 +1,7 @@
-﻿using System.Runtime.CompilerServices;
-
-namespace V2.Fx.Runtime.InteropServices
+﻿namespace V2.Fx.Runtime.InteropServices
 {
+    using System.Runtime.CompilerServices;
+
     public static class MemoryMarshal
     {
         public static unsafe ref T AsRef<T>(DifferentMemory memory) where T : allows ref struct

@@ -54,7 +54,7 @@
             return Create(span, 1);
         }
 
-        public unsafe ref T this[int index]
+        public ref T this[int index]
         {
             get
             {
