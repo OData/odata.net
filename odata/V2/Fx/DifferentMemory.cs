@@ -9,7 +9,7 @@
     /// <remarks>
     /// The purpose of this type is to be, in all ways possible, a `span<byte>` that can be created from either a `span` or a `betterspan`
     /// </remarks>
-    public readonly ref struct DifferentMemory
+    public readonly ref struct DifferentMemory //// TODO is there other span stuff that you should add in here?
     {
         private readonly Span<byte> memory;
 
