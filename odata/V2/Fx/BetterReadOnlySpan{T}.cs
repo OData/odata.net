@@ -1,11 +1,8 @@
 ﻿namespace V2.Fx
 {
     using System;
-    using System.Buffers;
-    using System.ComponentModel;
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices;
-    using static System.Runtime.InteropServices.JavaScript.JSType;
 
     /// <summary>
     /// 
@@ -84,7 +81,7 @@
             }
         }
 
-        public ref byte GetPinnableReference()
+        public ref readonly byte GetPinnableReference()
         {
             return ref this.data.GetPinnableReference();
         }
@@ -100,15 +97,9 @@
     {
         private readonly ReadOnlySpan<byte> memory;
 
-        private ref byte pinnedReference;
-
-        private unsafe DifferentMemory(ReadOnlySpan<byte> memory)
+        private DifferentMemory(ReadOnlySpan<byte> memory)
         {
             this.memory = memory;
-            fixed (byte* pointer = memory)
-            {
-                this.pinnedReference = ref *pointer;
-            }
         }
 
         public static DifferentMemory Create(ReadOnlySpan<byte> span)
@@ -137,21 +128,19 @@
             }
         }
 
-        //// TODO [EditorBrowsable(EditorBrowsableState.Never)]
+        /*//// TODO [EditorBrowsable(EditorBrowsableState.Never)]
         public ref byte GetPinnableReference()
         {
             return ref this.pinnedReference;
-        }
+        }*/
 
-        /*
         //// TODO [EditorBrowsable(EditorBrowsableState.Never)]
         public ref readonly byte GetPinnableReference()
         {
             ref readonly byte pointer = ref MemoryMarshal.AsRef<byte>(memory);
             return ref pointer;
         }
-        */
-
+        
         public static implicit operator DifferentMemory(Span<byte> span)
         {
             return DifferentMemory.Create(span);
