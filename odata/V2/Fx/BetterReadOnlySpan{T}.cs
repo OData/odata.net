@@ -88,12 +88,12 @@
     }
 
     /// <summary>
-    /// TODO check if you need any of these `unsafe` contexts
+    /// 
     /// </summary>
     /// <remarks>
     /// The purpose of this type is to be, in all ways possible, a readonlyspan<byte> that can be create from either a span or a betterspan
     /// </remarks>
-    public ref struct DifferentMemory //// TODO can't be readonly because of the pinnedreference for some reason
+    public readonly ref struct DifferentMemory
     {
         private readonly ReadOnlySpan<byte> memory;
 
@@ -112,7 +112,7 @@
             return new DifferentMemory(span.data.memory);
         }
 
-        public unsafe byte this[int index]
+        public byte this[int index]
         {
             get
             {

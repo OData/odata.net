@@ -5,6 +5,13 @@
 
     //// TODO double check that this doesn't have any `unsafe` contexts
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <remarks>
+    /// TODO add a remarks section to all of the new types that explains the scope of that type
+    /// </remarks>
     public ref struct LinkedList<T> where T : allows ref struct
     {
         private BetterReadOnlySpan<LinkedListNode> first;
