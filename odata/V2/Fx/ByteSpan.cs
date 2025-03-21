@@ -7,15 +7,15 @@
     /// 
     /// </summary>
     /// <remarks>
-    /// The purpose of this type is to be, in all ways possible, a `span<byte>` that can be created from either a `span` or a `betterspan`
+    /// The purpose of this type is to be, in all ways possible, a <see cref="Span{byte}"/> that can be created from either a <see cref="Span{byte}"/> or a <see cref="BetterReadOnlySpan{byte}"/>
     /// </remarks>
     public readonly ref struct ByteSpan //// TODO is there other span stuff that you should add in here?
     {
-        private readonly Span<byte> memory;
+        private readonly Span<byte> span;
 
-        private ByteSpan(Span<byte> memory)
+        private ByteSpan(Span<byte> span)
         {
-            this.memory = memory;
+            this.span = span;
         }
 
         public static ByteSpan Create(Span<byte> span)
@@ -39,13 +39,19 @@
         {
             if (startIndex + length > this.Length)
             {
-                var message = $"The slice of memory exceeds the length of the memory that is being sliced. The provided '{nameof(startIndex)}' was '{startIndex}'. The provided '{nameof(length)}' was '{length}'. The length of the memory being sliced was '{this.Length}'.";
+                var message = $"The slice exceeds the length of the span that is being sliced. The provided '{nameof(startIndex)}' was '{startIndex}'. The provided '{nameof(length)}' was '{length}'. The length of the span being sliced was '{this.Length}'.";
                 throw new ArgumentOutOfRangeException(message, (Exception?)null);
             }
 
-            return Create(this.memory.Slice(startIndex, length));
+            return Create(this.span.Slice(startIndex, length));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        /// <exception cref="IndexOutOfRangeException">Thrown if <paramref name="index"/> is negative or greater than or equal to <see cref="ByteSpan.Length"/></exception>
         public ref byte this[int index]
         {
             get
@@ -56,7 +62,7 @@
                     throw new IndexOutOfRangeException(message);
                 }
 
-                return ref this.memory[index];
+                return ref this.span[index];
             }
         }
 
@@ -64,14 +70,14 @@
         {
             get
             {
-                return this.memory.Length;
+                return this.span.Length;
             }
         }
 
         //// TODO you can add this here (and other places) if you really want to get parity with the .net version [EditorBrowsable(EditorBrowsableState.Never)]
         public ref byte GetPinnableReference()
         {
-            ref byte pointer = ref MemoryMarshal.AsRef<byte>(memory);
+            ref byte pointer = ref MemoryMarshal.AsRef<byte>(span);
             return ref pointer;
         }
         
