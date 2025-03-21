@@ -49,7 +49,7 @@
             }
         }
 
-        //// TODO [EditorBrowsable(EditorBrowsableState.Never)]
+        //// TODO you can add this here (and other places) if you really want to get parity with the .net version [EditorBrowsable(EditorBrowsableState.Never)]
         public ref readonly byte GetPinnableReference()
         {
             ref readonly byte pointer = ref MemoryMarshal.AsRef<byte>(memory);
@@ -61,9 +61,9 @@
             return DifferentMemory.Create(span);
         }
 
-        public static implicit operator DifferentMemory(ReadOnlySpan<byte> span)
+        /*public static implicit operator DifferentMemory(ReadOnlySpan<byte> span)
         {
             return DifferentMemory.Create(span);
-        }
+        }*/
     }
 }

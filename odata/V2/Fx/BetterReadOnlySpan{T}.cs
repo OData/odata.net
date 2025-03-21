@@ -18,7 +18,7 @@
 
         private BetterReadOnlySpan(DifferentMemory memory, int length)
         {
-            var elementSize = System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+            var elementSize = Unsafe.SizeOf<T>();
             if (memory.Length != elementSize * length)
             {
                 throw new ArgumentException($"The number of bytes in '{nameof(memory)}' must exactly fit the number of elements in the '{nameof(BetterReadOnlySpan)}'. The number of bytes provide was '{memory.Length}'. The number of requested elements was '{length}'. The size of each element was '{elementSize}'.");
@@ -47,7 +47,7 @@
                 ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Length);
                 ArgumentOutOfRangeException.ThrowIfNegative(index);
 
-                var elementSize = System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+                var elementSize = Unsafe.SizeOf<T>();
                 var slice = this.data.Slice(index * elementSize, elementSize);
                 return ref Fx.Runtime.InteropServices.MemoryMarshal.AsRef<T>(slice);
             }

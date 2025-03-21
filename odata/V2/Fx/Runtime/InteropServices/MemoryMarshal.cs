@@ -22,7 +22,7 @@
         {
             var pointer = Fx.Runtime.CompilerServices.Unsafe.AsPointer(reference);
             return BetterReadOnlySpan.FromMemory<T>(
-                new ReadOnlySpan<byte>(
+                new Span<byte>(
                     pointer,
                     Unsafe.SizeOf<T>()),
                 1);
