@@ -61,15 +61,9 @@
                 ArgumentOutOfRangeException.ThrowIfGreaterThanOrEqual(index, Length);
                 ArgumentOutOfRangeException.ThrowIfNegative(index);
 
-                fixed (byte* pointer = data)
-                {
-                    byte* indexed = pointer + index * System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
-
-                    return ref System.Runtime.CompilerServices.Unsafe.AsRef<T>(indexed);
-
-                    /*T* typedPointer = (T*)pointer;
-                    return ref typedPointer[index];*/
-                }
+                var elementSize = System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+                var slice = this.data.Slice(index * elementSize, elementSize);
+                return ref Fx.Runtime.InteropServices.MemoryMarshal.AsRef<T>(slice);
             }
         }
 
@@ -110,6 +104,11 @@
         public static DifferentMemory Create(BetterReadOnlySpan<byte> span)
         {
             return new DifferentMemory(span.data.memory);
+        }
+
+        public DifferentMemory Slice(int startIndex, int length)
+        {
+            return Create(this.memory.Slice(startIndex, length));
         }
 
         public byte this[int index]
