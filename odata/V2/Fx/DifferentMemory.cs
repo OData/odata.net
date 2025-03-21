@@ -32,7 +32,8 @@
         {
             if (startIndex + length > this.Length)
             {
-                throw new ArgumentOutOfRangeException($"TODO", (Exception?)null);
+                var message = $"The slice of memory exceeds the length of the memory that is being sliced. The provided '{nameof(startIndex)}' was '{startIndex}'. The provided '{nameof(length)}' was '{length}'. The length of the memory being sliced was '{this.Length}'.";
+                throw new ArgumentOutOfRangeException(message, (Exception?)null);
             }
 
             return Create(this.memory.Slice(startIndex, length));
