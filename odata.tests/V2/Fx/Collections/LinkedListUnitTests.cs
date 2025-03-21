@@ -25,7 +25,7 @@
         [TestMethod]
         public void AppendRefStruct()
         {
-            Span<byte> memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            DifferentMemory memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
             var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
 
             for (int i = 0; i < 10; ++i)
@@ -48,7 +48,7 @@
         [TestMethod]
         public void Append()
         {
-            Span<byte> memory = stackalloc byte[LinkedList<int>.MemorySize];
+            DifferentMemory memory = stackalloc byte[LinkedList<int>.MemorySize];
             var list = new LinkedList<int>(-1, memory);
 
             for (int i = 0; i < 10; ++i)
@@ -71,7 +71,7 @@
         [TestMethod]
         public void EnumerateReturnedList()
         {
-            Span<byte> memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            DifferentMemory memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
             var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
 
             for (int i = 0; i < 10; ++i)
@@ -94,7 +94,7 @@
         [TestMethod]
         public void AddElementToListInCallee()
         {
-            Span<byte> memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            DifferentMemory memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
             var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
 
             AssertEnumerable(new[] { -1 }, list);
@@ -114,7 +114,7 @@
             //// TODO the by-value vs by-ref thing aside, what happens if you append more elements
         }
 
-        private static LinkedList<Wrapper<int>> Foo(LinkedList<Wrapper<int>> list, Span<byte> memory)
+        private static LinkedList<Wrapper<int>> Foo(LinkedList<Wrapper<int>> list, DifferentMemory memory)
         {
             list.Append(new Wrapper<int>(42), memory);
             return list;
@@ -131,6 +131,8 @@
         [TestMethod]
         public void AppendToEmptyList()
         {
+        //// TODO use differentmemory instad of span for the stackallocs
+
             //// TODO get these working
             var list2 = new LinkedList<Wrapper<int>>();
             Span<byte> memory2 = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
@@ -156,6 +158,7 @@
 
         private static LinkedList<T> Create<T>() where T : allows ref struct
         {
+        //// TODO use differentmemory instad of span for the stackallocs
             Span<byte> memory4 = stackalloc byte[0];
             LinkedList<T> list4 = new LinkedList<T>(memory4);
             return list4;
