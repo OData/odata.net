@@ -128,12 +128,6 @@
             }
         }
 
-        /*//// TODO [EditorBrowsable(EditorBrowsableState.Never)]
-        public ref byte GetPinnableReference()
-        {
-            return ref this.pinnedReference;
-        }*/
-
         //// TODO [EditorBrowsable(EditorBrowsableState.Never)]
         public ref readonly byte GetPinnableReference()
         {
