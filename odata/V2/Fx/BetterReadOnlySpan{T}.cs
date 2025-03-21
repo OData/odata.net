@@ -34,8 +34,6 @@
 
         public static BetterReadOnlySpan<byte> Create(DifferentMemory memory)
         {
-            //// TODO should this be a cast in `differentmemory`?
-
             return new BetterReadOnlySpan<byte>(memory, memory.Length);
         }
 
