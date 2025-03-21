@@ -30,6 +30,11 @@
 
         public DifferentMemory Slice(int startIndex, int length)
         {
+            if (startIndex + length > this.Length)
+            {
+                throw new ArgumentOutOfRangeException($"TODO", (Exception?)null);
+            }
+
             return Create(this.memory.Slice(startIndex, length));
         }
 

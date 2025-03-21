@@ -21,7 +21,7 @@
             var elementSize = Unsafe.SizeOf<T>();
             if (memory.Length != elementSize * length)
             {
-                throw new ArgumentException($"The number of bytes in '{nameof(memory)}' must exactly fit the number of elements in the '{nameof(BetterReadOnlySpan)}'. The number of bytes provide was '{memory.Length}'. The number of requested elements was '{length}'. The size of each element was '{elementSize}'.");
+                throw new ArgumentOutOfRangeException($"The number of bytes in '{nameof(memory)}' must exactly fit the number of elements in the '{nameof(BetterReadOnlySpan)}'. The number of bytes provide was '{memory.Length}'. The number of requested elements was '{length}'. The size of each element was '{elementSize}'.", (Exception?)null);
             }
 
             this.data = memory;
