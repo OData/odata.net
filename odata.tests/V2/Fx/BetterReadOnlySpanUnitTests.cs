@@ -6,7 +6,7 @@
     public sealed class BetterReadOnlySpanUnitTests
     {
         [TestMethod]
-        public void Test()
+        public void FromInstance()
         {
             var span = BetterReadOnlySpan.FromInstance(42);
 

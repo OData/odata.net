@@ -40,16 +40,6 @@
             return new BetterReadOnlySpan<T>(memory, length);
         }
 
-        public static unsafe BetterReadOnlySpan<T> Create(scoped in T instance)
-        {
-            //// TODO do you have a test that covers this?
-            void* pointer = Fx.Runtime.CompilerServices.Unsafe.AsPointer(instance);
-
-            var span = new ReadOnlySpan<byte>(pointer, Unsafe.SizeOf<T>());
-
-            return Create(span, 1);
-        }
-
         public ref T this[int index]
         {
             get

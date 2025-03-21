@@ -19,10 +19,9 @@
 
         public static unsafe void* AsPointer<T>(in T value) where T : allows ref struct
         {
-            fixed (void* pointer = &value)
-            {
-                return pointer;
-            }
+            ref T reference = ref System.Runtime.CompilerServices.Unsafe.AsRef(in value);
+
+            return System.Runtime.CompilerServices.Unsafe.AsPointer(ref reference);
         }
     }
 }
