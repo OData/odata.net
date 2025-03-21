@@ -12,6 +12,8 @@
     [TestClass]
     public sealed class EnumerationTests
     {
+        //// TODO iequalitycomparer for ref structs? maybe use reflection for this?
+        
         private readonly ref struct Wrapper<T> where T : allows ref struct
         {
             public Wrapper(T value)
