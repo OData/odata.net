@@ -13,15 +13,16 @@
     /// </remarks>
     public readonly ref struct BetterReadOnlySpan<T> where T : allows ref struct //// TODO is there other span stuff that you should add in here?
     {
-        internal readonly DifferentMemory data; //// TODO can you make this private?
+        private readonly DifferentMemory data;
 
         private readonly int length;
 
         private BetterReadOnlySpan(DifferentMemory memory, int length)
         {
-            if (memory.Length != System.Runtime.CompilerServices.Unsafe.SizeOf<T>() * length)
+            var elementSize = System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+            if (memory.Length != elementSize * length)
             {
-                throw new Exception("TODO");
+                throw new ArgumentException($"The number of bytes in '{nameof(memory)}' must exactly fit the number of elements in the '{nameof(BetterReadOnlySpan)}'. The number of bytes provide was '{memory.Length}'. The number of requested elements was '{length}'. The size of each element was '{elementSize}'.");
             }
 
             this.data = memory;
@@ -89,7 +90,7 @@
 
         public static DifferentMemory Create(BetterReadOnlySpan<byte> span)
         {
-            return new DifferentMemory(span.data.memory);
+            return new DifferentMemory(MemoryMarshal.CreateReadOnlySpan(in span.GetPinnableReference(), span.Length));
         }
 
         public DifferentMemory Slice(int startIndex, int length)
