@@ -9,7 +9,7 @@
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <remarks>
-    /// You looked into if you could have something like `BetterReadOnlySpan<byte> = stackalloc byte[10];` and the answer is no.
+    /// You looked into if you could have something like `BetterReadOnlySpan<byte> = stackalloc byte[10];`. You *can* by having an implicit operator taking in `Span<byte>`. However, the return type of that operator must be `BetterReadOnlySpan<T>`, so you will need to assert something about the length of the input `span`, and having assertions in implicit operators is a bad idea.
     /// </remarks>
     public readonly ref struct BetterReadOnlySpan<T> where T : allows ref struct //// TODO is there other span stuff that you should add in here?
     {
