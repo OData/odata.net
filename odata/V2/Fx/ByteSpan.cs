@@ -7,7 +7,8 @@
     /// 
     /// </summary>
     /// <remarks>
-    /// The purpose of this type is to be, in all ways possible, a <see cref="Span{byte}"/> that can be created from either a <see cref="Span{byte}"/> or a <see cref="BetterReadOnlySpan{byte}"/>
+    /// The purpose of this type is to be, in all ways possible, a <see cref="Span{byte}"/> that can be created from either a
+    /// <see cref="Span{byte}"/> or a <see cref="BetterReadOnlySpan{byte}"/>
     /// </remarks>
     public readonly ref struct ByteSpan //// TODO is there other span stuff that you should add in here?
     {
@@ -34,7 +35,10 @@
         /// <param name="startIndex"></param>
         /// <param name="length"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if the sum of <paramref name="startIndex"/> and <paramref name="length"/> is greater than <see cref="ByteSpan.Length"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if the sum of <paramref name="startIndex"/> and <paramref name="length"/> is greater than
+        /// <see cref="ByteSpan.Length"/>
+        /// </exception>
         public ByteSpan Slice(int startIndex, int length)
         {
             if (startIndex + length > this.Length)
@@ -51,7 +55,9 @@
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        /// <exception cref="IndexOutOfRangeException">Thrown if <paramref name="index"/> is negative or greater than or equal to <see cref="ByteSpan.Length"/></exception>
+        /// <exception cref="IndexOutOfRangeException">
+        /// Thrown if <paramref name="index"/> is negative or greater than or equal to <see cref="ByteSpan.Length"/>
+        /// </exception>
         public ref byte this[int index]
         {
             get
