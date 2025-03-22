@@ -1,6 +1,8 @@
 ﻿namespace V2.Fx.Runtime.CompilerServices
 {
     using System;
+
+    using OldUnsafe = System.Runtime.CompilerServices.Unsafe;
     
     public static class Unsafe
     {
@@ -16,7 +18,7 @@
         /// </exception>
         public static unsafe void Copy<T>(ByteSpan destination, in T source) where T : allows ref struct
         {
-            var size = System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+            var size = OldUnsafe.SizeOf<T>();
             if (destination.Length != size)
             {
                 var message = $"The length of '{nameof(destination)}' must be the same as the size of '{nameof(source)}'. The length of '{nameof(destination)}' was '{destination.Length}'. The size of '{nameof(source)}' was '{size}'.";
@@ -31,9 +33,9 @@
 
         public static unsafe void* AsPointer<T>(in T value) where T : allows ref struct
         {
-            ref T reference = ref System.Runtime.CompilerServices.Unsafe.AsRef(in value);
+            ref T reference = ref OldUnsafe.AsRef(in value);
 
-            return System.Runtime.CompilerServices.Unsafe.AsPointer(ref reference);
+            return OldUnsafe.AsPointer(ref reference);
         }
     }
 }
