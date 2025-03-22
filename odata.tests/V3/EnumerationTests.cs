@@ -1,0 +1,333 @@
+﻿namespace V3
+{
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Runtime.CompilerServices;
+
+    using V2.Fx;
+    using V2.Fx.Collections;
+
+    [TestClass]
+    public sealed class EnumerationTests
+    {
+        //// TODO iequalitycomparer for ref structs? maybe use reflection for this?
+        
+        private readonly ref struct Wrapper<T> where T : allows ref struct
+        {
+            public Wrapper(T value)
+            {
+                Value = value;
+            }
+
+            public T Value { get; }
+        }
+
+        private sealed class Comparer : IEqualityComparer<Wrapper<int>>
+        {
+            private Comparer()
+            {
+            }
+
+            public static Comparer Instance { get; } = new Comparer();
+
+            public bool Equals(Wrapper<int> x, Wrapper<int> y)
+            {
+                return x.Value == y.Value;
+            }
+
+            public int GetHashCode([DisallowNull] Wrapper<int> obj)
+            {
+                return obj.Value.GetHashCode();
+            }
+        }
+
+        public static unsafe void Copy<T>(ByteSpan destination, in T source, int offset) where T : allows ref struct
+        {
+            //// TODO if you keep this method, you should have the overload without `offset` delegate to it
+            
+            var index = offset * System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+            if (offset + System.Runtime.CompilerServices.Unsafe.SizeOf<T>() >= destination.Length)
+            {
+                throw new Exception("TODO");
+            }
+
+            fixed (byte* pointer = destination)
+            {
+                var indexedPointer = pointer + index;
+
+                System.Runtime.CompilerServices.Unsafe.Copy(indexedPointer, in source);
+            }
+        }
+
+        private static ReadOnlyArray<TValue> ToArray<TEnumerable, TEnumerator, TValue>(TEnumerable enumerable, ByteSpan memory) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        {
+            if (memory.Length != enumerable.Count * Unsafe.SizeOf<TValue>())
+            {
+                throw new Exception("TODO");
+            }
+
+            var index = 0;
+            foreach (var element in enumerable)
+            {
+                Copy<TValue>(memory, element, index);
+
+                ++index;
+            }
+
+            return new ReadOnlyArray<TValue>(memory, enumerable.Count);
+        }
+
+        private static void AssertEnumerable<TValue, TEnumerable, TEnumerator>(TEnumerable expected, TEnumerable actual, IEqualityComparer<TValue> comparer) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        {
+            //// TODO why does this work?
+            ByteSpan memory = stackalloc byte[expected.Count * Unsafe.SizeOf<TValue>()];
+            var expectedArray = ToArray<TEnumerable, TEnumerator, TValue>(expected, memory);
+
+            var index = 0;
+            foreach (var element in actual)
+            {
+                Assert.IsTrue(comparer.Equals(element, expectedArray[index]));
+
+                ++index;
+            }
+        }
+
+        [TestMethod]
+        public void Enumeration()
+        {
+            Span<byte> memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
+
+            for (int i = 0; i < 10; ++i)
+            {
+                memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+                list.Append(new Wrapper<int>(i), memory);
+            }
+
+
+            Span<byte> memory2 = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            var list2 = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory2);
+
+            for (int i = 0; i < 10; ++i)
+            {
+                memory2 = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+                list2.Append(new Wrapper<int>(i), memory2);
+            }
+
+            //// TODO fix the type inference
+            AssertEnumerable<Wrapper<int>, LinkedList<Wrapper<int>>, LinkedList<Wrapper<int>>.Enumerator>(list, list2, Comparer.Instance);
+        }
+
+        public ref struct LinkedList<T> : IBetterReadOnlyCollection<T, LinkedList<T>.Enumerator> where T : allows ref struct
+        {
+            private BetterReadOnlySpan<LinkedListNode> first;
+
+            private BetterReadOnlySpan<LinkedListNode> current;
+
+            private int count;
+
+            private bool hasValues;
+
+            public LinkedList()
+            {
+                this.count = 0;
+                this.hasValues = false;
+            }
+
+            public LinkedList(T value, ByteSpan memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
+            {
+                //// TODO do you still want this constructor now that empty lists are a thing?
+                this.SetFirstValue(value, memory);
+            }
+
+            public int ArraySize
+            {
+                get
+                {
+                    return this.Count * System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+                }
+            }
+
+            private void SetFirstValue(T value, ByteSpan memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
+            {
+                var firstNode = new LinkedListNode(value);
+                V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(memory, firstNode);
+
+                this.first = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
+                this.current = this.first;
+
+                this.count = 1;
+                this.hasValues = true;
+            }
+
+            public void Append(T value, ByteSpan memory)
+            {
+                if (!this.hasValues)
+                {
+                    this.SetFirstValue(value, memory);
+                }
+                else
+                {
+                    var nextNode = new LinkedListNode(value);
+                    V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(memory, nextNode);
+
+                    var next = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
+
+                    this.current[0].Next = next;
+
+                    this.current = next;
+
+                    ++this.count;
+                }
+            }
+
+            public static int MemorySize { get; } = System.Runtime.CompilerServices.Unsafe.SizeOf<LinkedListNode>();
+
+            public int Count
+            {
+                get
+                {
+                    return this.count;
+                }
+            }
+
+            internal ref struct LinkedListNode //// TODO can you make this private
+            {
+                public readonly T Value;
+
+                public BetterReadOnlySpan<LinkedListNode> Next;
+
+                public LinkedListNode(T value)
+                {
+                    this.Value = value;
+                }
+            }
+
+            public Enumerator GetEnumerator()
+            {
+                if (this.hasValues)
+                {
+                    return new Enumerator(this.first);
+                }
+                else
+                {
+                    return new Enumerator();
+                }
+            }
+
+            public ref struct Enumerator : IEnumerator<T>
+            {
+                private BetterReadOnlySpan<LinkedListNode> node;
+
+                private bool hasMoved;
+
+                private readonly bool hasValues;
+
+                internal Enumerator(BetterReadOnlySpan<LinkedListNode> node)
+                {
+                    this.node = node;
+
+                    this.hasMoved = false;
+                    this.hasValues = true;
+                }
+
+                public T Current //// TODO cna you make this return `ref t`?
+                {
+                    get
+                    {
+                        if (!this.hasValues || !this.hasMoved)
+                        {
+                            throw new Exception("TODO");
+                        }
+
+                        return this.node[0].Value;
+                    }
+                }
+
+                object IEnumerator.Current => throw new NotImplementedException();
+
+                public bool MoveNext()
+                {
+                    if (!this.hasValues)
+                    {
+                        return false;
+                    }
+
+                    if (!this.hasMoved)
+                    {
+                        this.hasMoved = true;
+                        return true;
+                    }
+
+                    var nextNode = this.node[0].Next;
+                    if (nextNode.Length != 0)
+                    {
+                        this.node = nextNode;
+                        return true;
+                    }
+
+                    return false;
+                }
+
+                public void Reset()
+                {
+                    ////throw new NotImplementedException();
+                }
+
+                public void Dispose()
+                {
+                    ////throw new NotImplementedException();
+                }
+            }
+        }
+
+        public interface IBetterReadOnlyCollection<out TValue, out TEnumerator> where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        {
+            int Count { get; }
+
+            TEnumerator GetEnumerator();
+        }
+
+        public interface IReadOnlyArray<out T> where T : allows ref struct
+        {
+            T this[int index] { get; }
+
+            int Count { get; }
+        }
+
+        public ref struct ReadOnlyArray<T> : IReadOnlyArray<T> where T : allows ref struct
+        {
+            private readonly ByteSpan memory;
+            private readonly int length;
+
+            public ReadOnlyArray(ByteSpan memory, int length)
+            {
+                this.memory = memory;
+                this.length = length;
+            }
+
+            public unsafe T this[int index]
+            {
+                get
+                {
+                    fixed (byte* pointer = memory)
+                    {
+                        byte* indexed = pointer + index * System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+
+                        return System.Runtime.CompilerServices.Unsafe.AsRef<T>(indexed);
+                    }
+                }
+            }
+
+            public int Count
+            {
+                get
+                {
+                    return this.Count;
+                }
+            }
+        }
+    }
+}
