@@ -6,7 +6,8 @@
     /// 
     /// </summary>
     /// <remarks>
-    /// The purpose of this to is to be equivalent to <see cref="System.Runtime.CompilerServices.Unsafe"/> while extending it's capabilities to be more accurate.
+    /// The purpose of this to is to be equivalent to <see cref="System.Runtime.CompilerServices.Unsafe"/> while extending it's
+    /// capabilities to be more accurate.
     /// </remarks>
     public static class Unsafe
     {
