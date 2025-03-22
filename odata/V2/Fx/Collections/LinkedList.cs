@@ -2,6 +2,7 @@
 {
     using System;
     using V2.Fx.Runtime.CompilerServices;
+    using V2.Fx.Runtime.InteropServices;
 
     //// TODO double check that this doesn't have any `unsafe` contexts
 
@@ -34,7 +35,7 @@
         private void SetFirstValue(T value, ByteSpan memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
         {
             var firstNode = new LinkedListNode(value);
-            Unsafe.Copy(memory, firstNode);
+            MemoryMarshal.Write(memory, firstNode);
 
             this.first = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
             this.current = this.first;
@@ -51,7 +52,7 @@
             else
             {
                 var nextNode = new LinkedListNode(value);
-                Unsafe.Copy(memory, nextNode);
+                MemoryMarshal.Write(memory, nextNode);
 
                 var next = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
 

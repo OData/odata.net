@@ -1,7 +1,7 @@
-﻿using V2.Fx;
+﻿using System.Runtime.CompilerServices;
 
-using Unsafe = System.Runtime.CompilerServices.Unsafe;
-using Unsafe2 = V2.Fx.Runtime.CompilerServices.Unsafe;
+using V2.Fx;
+using V2.Fx.Runtime.InteropServices;
 
 public static class CopiedMemoryLeavingFrame
 {
@@ -9,7 +9,7 @@ public static class CopiedMemoryLeavingFrame
     {
         var list = new Wrapper<int>(BetterReadOnlySpan.FromInstance(42));
         ByteSpan memory = stackalloc byte[Unsafe.SizeOf<Wrapper<int>>()];
-        Unsafe2.Copy(memory, in list);
+        MemoryMarshal.Write(memory, in list);
 
         var nextValue = BetterReadOnlySpan.FromInstance(67);
         var previousNode = BetterReadOnlySpan.FromMemory<Wrapper<int>>(memory, 1);

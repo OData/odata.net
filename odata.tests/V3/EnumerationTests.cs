@@ -153,7 +153,7 @@
             private void SetFirstValue(T value, ByteSpan memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
             {
                 var firstNode = new LinkedListNode(value);
-                V2.Fx.Runtime.CompilerServices.Unsafe.Copy(memory, firstNode);
+                V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(memory, firstNode);
 
                 this.first = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
                 this.current = this.first;
@@ -171,7 +171,7 @@
                 else
                 {
                     var nextNode = new LinkedListNode(value);
-                    V2.Fx.Runtime.CompilerServices.Unsafe.Copy(memory, nextNode);
+                    V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(memory, nextNode);
 
                     var next = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
 

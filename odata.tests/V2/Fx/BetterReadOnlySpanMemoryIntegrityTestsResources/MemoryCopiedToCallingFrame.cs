@@ -1,14 +1,14 @@
 ﻿using System;
 
 using V2.Fx;
-using V2.Fx.Runtime.CompilerServices;
+using V2.Fx.Runtime.InteropServices;
 
 public static class MemoryCopiedToCallingFrame
 {
     public static Wrapper<int> Method(Span<byte> memory)
     {
         var list = new Wrapper<int>(BetterReadOnlySpan.FromInstance(42));
-        Unsafe.Copy(memory, in list);
+        MemoryMarshal.Write(memory, in list);
         return list;
     }
 

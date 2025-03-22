@@ -27,5 +27,30 @@
                     Unsafe.SizeOf<T>()),
                 1);
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="destination"></param>
+        /// <param name="value"></param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if the <see cref="ByteSpan.Length"/> or <paramref name="destination"/> is not the same as the
+        /// <see langword="sizeof"/> <paramref name="source"/>
+        /// </exception>
+        public static unsafe void Write<T>(ByteSpan destination, in T value) where T : allows ref struct
+        {
+            var size = Unsafe.SizeOf<T>();
+            if (destination.Length != size)
+            {
+                var message = $"The length of '{nameof(destination)}' must be the same as the size of '{nameof(value)}'. The length of '{nameof(destination)}' was '{destination.Length}'. The size of '{nameof(value)}' was '{size}'.";
+                throw new ArgumentOutOfRangeException(message, (Exception?)null);
+            }
+
+            fixed (byte* pointer = destination)
+            {
+                Unsafe.Copy(pointer, in value);
+            }
+        }
     }
 }
