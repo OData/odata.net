@@ -3,6 +3,12 @@
     using System;
     using System.Runtime.CompilerServices;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <remarks>
+    /// The purpose of this type is to be equivalent to <see cref="System.Runtime.InteropServices.MemoryMarshal"/> but using <see cref="ByteSpan"/> instead of <see cref="Span{byte}"/> and using <see cref="BetterReadOnlySpan{T}"/> instead of <see cref="Span{T}"/>
+    /// </remarks>
     public static class MemoryMarshal
     {
         public static unsafe ref T AsRef<T>(ByteSpan memory) where T : allows ref struct
