@@ -4,11 +4,23 @@
     
     public static class Unsafe
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="destination"></param>
+        /// <param name="source"></param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if the <see cref="ByteSpan.Length"/> or <paramref name="destination"/> is not the same as the
+        /// <see langword="sizeof"/> <paramref name="source"/>
+        /// </exception>
         public static unsafe void Copy<T>(ByteSpan destination, in T source) where T : allows ref struct
         {
-            if (destination.Length != System.Runtime.CompilerServices.Unsafe.SizeOf<T>())
+            var size = System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+            if (destination.Length != size)
             {
-                throw new Exception("TODO");
+                var message = $"The length of '{nameof(destination)}' must be the same as the size of '{nameof(source)}'. The length of '{nameof(destination)}' was '{destination.Length}'. The size of '{nameof(source)}' was '{size}'.";
+                throw new ArgumentOutOfRangeException(message, (Exception?)null);
             }
 
             fixed (byte* pointer = destination)
