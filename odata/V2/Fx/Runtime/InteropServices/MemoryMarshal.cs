@@ -14,7 +14,7 @@
 
             fixed (byte* pointer = memory)
             {
-                return ref *(T*)pointer;
+                return ref Unsafe.AsRef<T>(pointer);
             }
         }
 
