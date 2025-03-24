@@ -207,21 +207,42 @@
             AssertEnumerable(new[] { 42 }, list);
         }
 
-        /*[TestMethod]
+        [TestMethod]
         public void StitchStackAndHeap()
         {
             var list = new LinkedList<int>(stackalloc byte[0]);
 
             Span<int> stack = stackalloc int[] { 1, 2, 3, 4 };
-            Span<int> heap = new[] { 5, 6, 7, 8 };
+            Span<int> heap = new[] { 5, 6, 7, 8, 9 };
 
             ByteSpan memory = stackalloc byte[stack.Length * list.MemorySize];
-            list.Append(stack, memory);
+            list.Append(SpanEx.FromSpan(stack), memory);
 
             memory = stackalloc byte[heap.Length * list.MemorySize];
-            list.Append()
+            list.Append(SpanEx.FromSpan(heap), memory);
 
-        }*/
+            AssertEnumerable(new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }, list);
+        }
+
+        [TestMethod]
+        public void AppendStackHeapSingle()
+        {
+            var list = new LinkedList<int>(stackalloc byte[0]);
+
+            Span<int> stack = stackalloc int[] { 1, 2, 3, 4 };
+            Span<int> heap = new[] { 5, 6, 7, 8, 9 };
+
+            ByteSpan memory = stackalloc byte[stack.Length * list.MemorySize];
+            list.Append(SpanEx.FromSpan(stack), memory);
+
+            memory = stackalloc byte[heap.Length * list.MemorySize];
+            list.Append(SpanEx.FromSpan(heap), memory);
+
+            memory = stackalloc byte[list.MemorySize];
+            list.Append(42, memory);
+
+            AssertEnumerable(new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 42 }, list);
+        }
 
         private static void AssertEnumerable<T>(IEnumerable<T> expected, LinkedList<Wrapper<T>> actual) //// TODO add allows ref struct constraint
         {
