@@ -154,10 +154,13 @@
 
             var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
 
-            ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
-            list.Append(new Wrapper<int>(42), memory);
+            for (int i = 0; i < 10; ++i)
+            {
+                ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+                list.Append(new Wrapper<int>(i), memory);
+            }
 
-            AssertEnumerable(new[] { 42 }, list);
+            AssertEnumerable(Enumerable.Range(0, 10), list);
         }
 
         private static LinkedList<Wrapper<int>> GetEmpty()
