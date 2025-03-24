@@ -168,6 +168,24 @@
             return new LinkedList<Wrapper<int>>();
         }
 
+        [TestMethod]
+        public void EmptyList()
+        {
+            var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
+
+            AssertEnumerable(Enumerable.Empty<int>(), list);
+        }
+
+        [TestMethod]
+        public void DefaultList()
+        {
+            //// TODO add test for appending to default list
+
+            var list = new LinkedList<Wrapper<int>>();
+
+            AssertEnumerable(Enumerable.Empty<int>(), list);
+        }
+
         /*[TestMethod]
         public void EmptyList()
         {
