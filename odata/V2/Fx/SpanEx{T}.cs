@@ -99,5 +99,43 @@
         {
             return ref this.data.GetPinnableReference();
         }
+
+        public Enumerator GetEnumerator()
+        {
+            return new Enumerator(this);
+        }
+
+        public ref struct Enumerator
+        {
+            private readonly SpanEx<T> span;
+
+            private int index;
+
+            public Enumerator(SpanEx<T> span)
+            {
+                this.span = span;
+
+                this.index = -1;
+            }
+
+            public T Current
+            {
+                get
+                {
+                    if (this.index < 0)
+                    {
+                        throw new Exception("TODO");
+                    }
+
+                    return this.span[this.index];
+                }
+            }
+
+            public bool MoveNext()
+            {
+                ++this.index;
+                return this.index < this.span.length;
+            }
+        }
     }
 }

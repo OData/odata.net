@@ -1,7 +1,7 @@
 ﻿namespace V2.Fx.Collections
 {
     using System;
-
+    using System.Runtime.CompilerServices;
     using V2.Fx.Runtime.InteropServices;
 
     //// TODO double check that this doesn't have any `unsafe` contexts
@@ -76,6 +76,24 @@
             else
             {
                 this.SetFirstValue(value, memory);
+            }
+        }
+
+        public void Append(SpanEx<T> values, ByteSpan memory)
+        {
+            var valueSize = Unsafe.SizeOf<T>();
+            if (memory.Length != values.Length * valueSize)
+            {
+                throw new Exception("tODO");
+            }
+
+            var sliceIndex = 0;
+            foreach (var value in values)
+            {
+                var slice = memory.Slice(sliceIndex * valueSize, valueSize);
+                ++sliceIndex;
+
+                this.Append(value, slice);
             }
         }
 
