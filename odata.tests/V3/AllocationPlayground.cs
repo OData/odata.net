@@ -1,4 +1,5 @@
-﻿using V2.Fx;
+﻿using System;
+using V2.Fx;
 using V2.Fx.Collections;
 
 namespace V3
@@ -161,6 +162,8 @@ namespace V3
 
         public static bool TryAppend4<T>(this LinkedList<T> list, T value, ByteSpan memory)
         {
+            //// TODO you *might* want to consider if someone invents a stack-based arraypool and that pool has arrays that are not aligned with your node sizes; in that case, you would (currently) be disallowed the use of those buffer, so maybe it makes sense to be able to stitch multiple buffers together if they have some "dangling" memory
+
             // true if `memory` was used, false if we had enough existing memory
             return true;
         }
@@ -171,5 +174,147 @@ namespace V3
             return true;
         }
     }
+
+    [TestClass]
+    public sealed class SpanExPoolTests
+    {
+        [TestMethod]
+        public void Test()
+        {
+            var numberOfSpans = 2;
+            var spanLength = 100;
+            ByteSpan memory = stackalloc byte[numberOfSpans * SpanExPool<int>.SizePerSpan(spanLength)];
+            var pool = new SpanExPool<int>(memory, spanLength);
+
+            Assert.IsTrue(pool.TryRent(out var first));
+            Assert.IsTrue(pool.TryRent(out var second));
+            Assert.IsFalse(pool.TryRent(out var third));
+
+            first.Span[0] = 5;
+            first.Span[99] = 42;
+
+            for (int i = 0; i < first.Span.Length; ++i)
+            {
+                Console.WriteLine(first.Span[i]);
+            }
+
+            first.Dispose();
+
+            Assert.IsTrue(pool.TryRent(out var fourth));
+
+            for (int i = 0; i < fourth.Span.Length; ++i)
+            {
+                Console.WriteLine(first.Span[i]);
+            }
+        }
+    }
+
+    public ref struct SpanExPool<T> where T : allows ref struct
+    {
+        private readonly SpanEx<Pointer> array;
+
+        private int next;
+
+        public SpanExPool(ByteSpan totalMemory, int spanLength)
+        {
+            // you have an array (spanex<spanex<t>>) of pointers (spanex<T>) to elements (T)
+
+            var pointerSize = System.Runtime.CompilerServices.Unsafe.SizeOf<Pointer>();
+            var individualElementSize = System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+            var elementsSize = individualElementSize * spanLength;
+
+            var overheadSize = pointerSize + elementsSize;
+            if (totalMemory.Length % overheadSize != 0)
+            {
+                throw new System.Exception("TODO");
+            }
+
+            var spanCount = totalMemory.Length / overheadSize;
+
+            var pointersLength = pointerSize * spanCount;
+            var pointersMemory = totalMemory.Slice(0, pointersLength);
+            var spansMemory = totalMemory.Slice(pointersLength, totalMemory.Length - pointersLength); //// TODO off by 1?
+
+            this.array = SpanEx.FromMemory<Pointer>(pointersMemory, spanCount);
+            for (int i = 0; i < this.array.Length; ++i)
+            {
+                this.array[i] = new Pointer()
+                {
+                    IsInUse = false,
+                    Span = SpanEx.FromMemory<T>(spansMemory.Slice(i * elementsSize, elementsSize), spanLength),
+                };
+            }
+
+            this.next = 0;
+        }
+
+        public static int SizePerSpan(int spanLength)
+        {
+            var pointerSize = System.Runtime.CompilerServices.Unsafe.SizeOf<Pointer>();
+            var individualElementSize = System.Runtime.CompilerServices.Unsafe.SizeOf<T>();
+            var elementsSize = individualElementSize * spanLength;
+
+            return pointerSize + elementsSize;
+        }
+
+        public bool TryRent(out Disposable rented)
+        {
+            //// TODO start with `this.next`
+            for (int i = 0; i < this.array.Length; ++i)
+            {
+                ref Pointer pointer = ref this.array[i];
+                if (!pointer.IsInUse)
+                {
+                    pointer.IsInUse = true;
+                    rented = new Disposable(ref pointer);
+                    return true;
+                }
+            }
+
+            rented = default;
+            return false;
+        }
+
+        public ref struct Disposable
+        {
+            private Pointer pointer;
+
+            private bool disposed;
+
+            internal Disposable(ref Pointer pointer) //// TODO can you make this private? or public in a way that's always useful?
+            {
+                this.pointer = pointer;
+            }
+
+            public SpanEx<T> Span
+            {
+                get
+                {
+                    //// TODO it'd be nice to return this by ref
+                    //// TODO it'd be better to not even return a spanex<T> but instead for `disposable` to *look* like a `spanex<T>`
+                    return this.pointer.Span;
+                }
+            }
+
+            public void Dispose()
+            {
+                //// TODO this should go in spanex...
+                for (int i = 0; i < this.pointer.Span.Length; ++i)
+                {
+                    this.pointer.Span[i] = default;
+                }
+                
+                this.pointer.IsInUse = false;
+            }
+        }
+
+        internal ref struct Pointer //// TODO can you make this private?
+        {
+            public bool IsInUse;
+
+            public SpanEx<T> Span;
+        }
+    }
+
 #pragma warning restore CA2014 // Do not use stackalloc in loops
 }
