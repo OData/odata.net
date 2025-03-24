@@ -155,7 +155,7 @@
                 var firstNode = new LinkedListNode(value);
                 V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(memory, firstNode);
 
-                this.first = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
+                this.first = SpanEx.FromMemory<LinkedListNode>(memory, 1);
                 this.current = this.first;
 
                 this.count = 1;
@@ -173,7 +173,7 @@
                     var nextNode = new LinkedListNode(value);
                     V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(memory, nextNode);
 
-                    var next = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
+                    var next = SpanEx.FromMemory<LinkedListNode>(memory, 1);
 
                     this.current[0].Next = next;
 

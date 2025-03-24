@@ -1,11 +1,11 @@
 ﻿using V2.Fx;
 
-public static class BetterReadOnlySpanFactoryMemoryIntegrityTestsResourcesWrappedValueLeavingFrame
+public static class SpanExFactoryMemoryIntegrityTestsResourcesWrappedValueLeavingFrame
 {
     public static Wrapper<int> Method()
     {
         var value = 42;
-        var wrapper = new Wrapper<int>(BetterReadOnlySpan.FromInstance(ref value));
+        var wrapper = new Wrapper<int>(SpanEx.FromInstance(ref value));
         return wrapper;
     }
 

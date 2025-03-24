@@ -2,11 +2,11 @@
 
 using V2.Fx;
 
-public static class BetterReadOnlySpanFactoryMemoryIntegrityTestsResourcesStackAllocWithinFrame
+public static class SpanExFactoryMemoryIntegrityTestsResourcesStackAllocWithinFrame
 {
     public static void Method()
     {
         ByteSpan span = stackalloc byte[Unsafe.SizeOf<string>()];
-        var betterSpan = BetterReadOnlySpan.FromMemory<string>(span, 1);
+        var betterSpan = SpanEx.FromMemory<string>(span, 1);
     }
 }

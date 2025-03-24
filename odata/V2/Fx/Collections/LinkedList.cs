@@ -37,7 +37,7 @@
             var firstNode = new LinkedListNode(value);
             MemoryMarshal.Write(memory, firstNode);
 
-            this.first = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
+            this.first = SpanEx.FromMemory<LinkedListNode>(memory, 1);
             this.current = this.first;
 
             this.hasValues = true;
@@ -54,7 +54,7 @@
                 var nextNode = new LinkedListNode(value);
                 MemoryMarshal.Write(memory, nextNode);
 
-                var next = BetterReadOnlySpan.FromMemory<LinkedListNode>(memory, 1);
+                var next = SpanEx.FromMemory<LinkedListNode>(memory, 1);
 
                 this.current[0].Next = next;
 

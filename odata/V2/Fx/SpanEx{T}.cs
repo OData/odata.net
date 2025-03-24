@@ -38,7 +38,7 @@
             var elementSize = Unsafe.SizeOf<T>();
             if (memory.Length != elementSize * length)
             {
-                var message = $"The number of bytes in '{nameof(memory)}' must exactly fit the number of elements in the '{nameof(BetterReadOnlySpan)}'. The number of bytes provide was '{memory.Length}'. The number of requested elements was '{length}'. The type of each element was '{typeof(T).FullName}'; its size was '{elementSize}'.";
+                var message = $"The number of bytes in '{nameof(memory)}' must exactly fit the number of elements in the '{nameof(SpanEx)}'. The number of bytes provide was '{memory.Length}'. The number of requested elements was '{length}'. The type of each element was '{typeof(T).FullName}'; its size was '{elementSize}'.";
                 throw new ArgumentOutOfRangeException(message, (Exception?)null);
             }
 

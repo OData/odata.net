@@ -11,7 +11,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;    
 
     [TestClass]
-    public sealed class BetterReadOnlySpanFactoryMemoryIntegrityTests
+    public sealed class SpanExFactoryMemoryIntegrityTests
     {
         [TestMethod]
         public void StackAllocWithinFrame()

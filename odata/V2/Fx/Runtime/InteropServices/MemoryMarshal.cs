@@ -66,7 +66,7 @@
         public static unsafe SpanEx<T> CreateSpan<T>(scoped ref T reference, int length) where T : allows ref struct
         {
             var pointer = Unsafe.AsPointer(ref reference);
-            return BetterReadOnlySpan.FromMemory<T>(
+            return SpanEx.FromMemory<T>(
                 new Span<byte>(
                     pointer,
                     length * Unsafe.SizeOf<T>()),

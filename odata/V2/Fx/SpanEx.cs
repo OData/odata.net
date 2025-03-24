@@ -2,7 +2,7 @@
 
 namespace V2.Fx
 {
-    public static class BetterReadOnlySpan
+    public static class SpanEx
     {
         public static SpanEx<byte> FromMemory(ByteSpan memory)
         {

@@ -9,7 +9,7 @@
         public void FromInstance()
         {
             var value = 42;
-            var span = BetterReadOnlySpan.FromInstance(ref value);
+            var span = SpanEx.FromInstance(ref value);
 
             Span<byte> zeroed = stackalloc byte[100];
             zeroed.Clear();

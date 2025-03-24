@@ -24,12 +24,12 @@
   
   <Target Name="RemoveTestResources" BeforeTargets="BeforeBuild">
     <ItemGroup>
-      <Compile Remove="V2\Fx\BetterReadOnlySpanFactoryMemoryIntegrityTestsResources\**" />
-      <EmbeddedResource Include="V2\Fx\BetterReadOnlySpanFactoryMemoryIntegrityTestsResources\**" />
+      <Compile Remove="V2\Fx\SpanExFactoryMemoryIntegrityTestsResources\**" />
+      <EmbeddedResource Include="V2\Fx\SpanExFactoryMemoryIntegrityTestsResources\**" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Remove="V2\Fx\BetterReadOnlySpanMemoryIntegrityTestsResources\**" />
-      <EmbeddedResource Include="V2\Fx\BetterReadOnlySpanMemoryIntegrityTestsResources\**" />
+      <Compile Remove="V2\Fx\SpanExMemoryIntegrityTestsResources\**" />
+      <EmbeddedResource Include="V2\Fx\SpanExMemoryIntegrityTestsResources\**" />
     </ItemGroup>
     <ItemGroup>
       <Compile Remove="V2\Fx\Collections\LinkedListMemoryIntegrityTestsResources\**" />

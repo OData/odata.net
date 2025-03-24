@@ -2,7 +2,7 @@
 
 using V2.Fx;
 
-public static class BetterReadOnlySpanMemoryIntegrityTestsResourcesStackAllocWithinFrame
+public static class SpanExMemoryIntegrityTestsResourcesStackAllocWithinFrame
 {
     public static void Method()
     {
