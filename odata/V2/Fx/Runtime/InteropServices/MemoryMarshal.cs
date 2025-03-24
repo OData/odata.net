@@ -7,7 +7,9 @@
     /// 
     /// </summary>
     /// <remarks>
-    /// The purpose of this type is to be equivalent to <see cref="System.Runtime.InteropServices.MemoryMarshal"/> but using <see cref="ByteSpan"/> instead of <see cref="Span{byte}"/> and using <see cref="BetterReadOnlySpan{T}"/> instead of <see cref="Span{T}"/>
+    /// The purpose of this type is to be equivalent to <see cref="System.Runtime.InteropServices.MemoryMarshal"/> but using
+    /// <see cref="ByteSpan"/> instead of <see cref="Span{byte}"/> and using <see cref="BetterReadOnlySpan{T}"/> instead of
+    /// <see cref="Span{T}"/>
     /// </remarks>
     public static class MemoryMarshal
     {
@@ -17,9 +19,15 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="memory"></param>
         /// <returns></returns>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if the <see cref="ByteSpan.Length"/> of <paramref name="memory"/> is not the same as the <see langword="sizeof"/> <typeparamref name="T"/></exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if the <see cref="ByteSpan.Length"/> of <paramref name="memory"/> is not the same as the
+        /// <see langword="sizeof"/> <typeparamref name="T"/>
+        /// </exception>
         /// <remarks>
-        /// <see cref="System.Runtime.InteropServices.MemoryMarshal.AsRef{T}(Span{byte})"/> specifically makes an assertion *against* <typeparamref name="T"/> returning <see langword="true"/> for <see cref="RuntimeHelpers.IsReferenceOrContainsReferences{T}"/> because it doesn't want to allow for situations like this:
+        /// <see cref="System.Runtime.InteropServices.MemoryMarshal.AsRef{T}(Span{byte})"/> specifically makes an assertion
+        /// *against* <typeparamref name="T"/> returning <see langword="true"/> for
+        /// <see cref="RuntimeHelpers.IsReferenceOrContainsReferences{T}"/> because it doesn't want to allow for situations like
+        /// this:
         /// 
         /// ```
         /// public readonly ref struct Foo
@@ -34,14 +42,16 @@
         /// }
         /// ```
         /// 
-        /// This would allow the bytes allocated in `bytes` to be referenced outside of the declaration scope. *This* method, however, is intentionally allowing for <see langword="ref"/> <see langword="struct"/>s and so we need to leave that check out. It is up to the caller to not leak this scope.
+        /// This would allow the bytes allocated in `bytes` to be referenced outside of the declaration scope. *This* method,
+        /// however, is intentionally allowing for <see langword="ref"/> <see langword="struct"/>s and so we need to leave that
+        /// check out. It is up to the caller to not leak this scope.
         /// </remarks>
         public static ref T AsRef<T>(ByteSpan memory) where T : allows ref struct
         {
             var typeSize = Unsafe.SizeOf<T>();
             if (memory.Length != typeSize)
             {
-                var message = $"The length of '{nameof(memory)}' must be the same as the size of the type to get a reference to. The length of '{nameof(memory)}' was '{memory.Length}'. The type was '{typeof(T).FullName}'; it's size was '{typeSize}'.";
+                var message = $"The length of '{nameof(memory)}' must be the same as the size of the type to get a reference to. The length of '{nameof(memory)}' was '{memory.Length}'. The type was '{typeof(T).FullName}'; its size was '{typeSize}'.";
                 throw new ArgumentOutOfRangeException(message, (Exception?)null);
             }
 
@@ -71,14 +81,14 @@
         /// <param name="value"></param>
         /// <exception cref="ArgumentOutOfRangeException">
         /// Thrown if the <see cref="ByteSpan.Length"/> or <paramref name="destination"/> is not the same as the
-        /// <see langword="sizeof"/> <paramref name="source"/>
+        /// <see langword="sizeof"/> <typeparamref name="T"/>
         /// </exception>
         public static unsafe void Write<T>(ByteSpan destination, in T value) where T : allows ref struct
         {
-            var size = Unsafe.SizeOf<T>();
-            if (destination.Length != size)
+            var typeSize = Unsafe.SizeOf<T>();
+            if (destination.Length != typeSize)
             {
-                var message = $"The length of '{nameof(destination)}' must be the same as the size of '{nameof(value)}'. The length of '{nameof(destination)}' was '{destination.Length}'. The size of '{nameof(value)}' was '{size}'.";
+                var message = $"The length of '{nameof(destination)}' must be the same as the size of the type of '{nameof(value)}'. The length of '{nameof(destination)}' was '{destination.Length}'. The type of '{nameof(value)}' was '{typeof(T).FullName}'; its size was '{typeSize}'.";
                 throw new ArgumentOutOfRangeException(message, (Exception?)null);
             }
 
