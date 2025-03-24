@@ -22,7 +22,7 @@
         {
             if (emptySpan.Length != 0)
             {
-                // this is to protect the caller from overallocating memory; we don't use this span for anything
+                // this is to protect the caller from overallocating memory; we don't use this span for anything, it only exists for compiler checks on memory integrity
                 var message = $"A new list must be instantiated with empty data. The provided data has length '{emptySpan.Length}'";
                 throw new ArgumentOutOfRangeException(message, (Exception?)null);
             }
