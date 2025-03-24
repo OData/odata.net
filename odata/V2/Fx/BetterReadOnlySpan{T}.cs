@@ -3,6 +3,8 @@
     using System;
     using System.Runtime.CompilerServices;
 
+    using Fx.Runtime.InteropServices;
+
     /// <summary>
     /// 
     /// </summary>
@@ -63,6 +65,14 @@
             return new BetterReadOnlySpan<T>(memory, length);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if <paramref name="index"/> is negative or greater than or equal to <see cref="Length"/>
+        /// </exception>
         public ref T this[int index]
         {
             get
@@ -72,7 +82,7 @@
 
                 var elementSize = Unsafe.SizeOf<T>();
                 var slice = this.data.Slice(index * elementSize, elementSize);
-                return ref Fx.Runtime.InteropServices.MemoryMarshal.AsRef<T>(slice);
+                return ref MemoryMarshal.AsRef<T>(slice);
             }
         }
 

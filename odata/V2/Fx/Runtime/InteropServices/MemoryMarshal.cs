@@ -37,8 +37,8 @@
         /// ...
         /// public Foo DoWork()
         /// {
-        ///   Span<byte> bytes = stackalloc[10];
-        ///   return Memory.AsRef<Foo>(bytes);
+        ///   Span&lt;byte> bytes = stackalloc[10];
+        ///   return Memory.AsRef&lt;Foo>(bytes);
         /// }
         /// ```
         /// 
