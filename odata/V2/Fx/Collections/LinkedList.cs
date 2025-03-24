@@ -34,7 +34,7 @@
         /// </exception>
         public LinkedList(T value, ByteSpan memory)
         {
-            //// TODO do you still want this constructor now that empty lists are a thing?
+            //// TODO do you still want this constructor once empty lists are a thing?
             this.SetFirstValue(value, memory);
         }
 
