@@ -48,6 +48,16 @@
             return new BetterReadOnlySpan<byte>(memory, memory.Length);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="memory"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if the length of <paramref name="memory"/> is not the same as the product of <paramref name="length"/> and the
+        /// <see langword="sizeof"/> <typeparamref name="T"/>
+        /// </exception>
         public static BetterReadOnlySpan<T> Create(ByteSpan memory, int length)
         {
             return new BetterReadOnlySpan<T>(memory, length);
