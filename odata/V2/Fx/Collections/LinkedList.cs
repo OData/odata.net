@@ -16,8 +16,11 @@
 
         private SpanEx<LinkedListNode> current;
 
+        private bool hasValues;
+
         public LinkedList(ByteSpan pointer)
         {
+            this.hasValues = false;
         }
 
         /// <summary>
@@ -51,6 +54,8 @@
 
             this.first = SpanEx.FromMemory<LinkedListNode>(memory, 1);
             this.current = this.first;
+
+            this.hasValues = true;
         }
 
         /// <summary>
@@ -64,14 +69,21 @@
         /// </exception>
         public void Append(T value, ByteSpan memory)
         {
-            var nextNode = new LinkedListNode(value);
-            MemoryMarshal.Write(memory, nextNode);
+            if (this.hasValues)
+            {
+                var nextNode = new LinkedListNode(value);
+                MemoryMarshal.Write(memory, nextNode);
 
-            var next = SpanEx.FromMemory<LinkedListNode>(memory, 1);
+                var next = SpanEx.FromMemory<LinkedListNode>(memory, 1);
 
-            this.current[0].Next = next;
+                this.current[0].Next = next;
 
-            this.current = next;
+                this.current = next;
+            }
+            else
+            {
+                this.SetFirstValue(value, memory);
+            }
         }
 
         public static int MemorySize { get; } = System.Runtime.CompilerServices.Unsafe.SizeOf<LinkedListNode>();
@@ -99,9 +111,13 @@
 
             private bool hasMoved;
 
+            private readonly bool hasValues;
+
             internal Enumerator(LinkedList<T> list)
             {
                 this.node = list.first;
+
+                this.hasValues = list.hasValues;
 
                 this.hasMoved = false;
             }
@@ -122,6 +138,11 @@
 
             public bool MoveNext()
             {
+                if (!this.hasValues)
+                {
+                    return false;
+                }
+
                 if (!this.hasMoved)
                 {
                     this.hasMoved = true;
