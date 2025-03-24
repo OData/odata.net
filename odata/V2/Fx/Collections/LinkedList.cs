@@ -1,7 +1,7 @@
 ﻿namespace V2.Fx.Collections
 {
     using System;
-    using V2.Fx.Runtime.CompilerServices;
+
     using V2.Fx.Runtime.InteropServices;
 
     //// TODO double check that this doesn't have any `unsafe` contexts

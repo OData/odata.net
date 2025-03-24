@@ -4,6 +4,9 @@
 
     using V2.Fx.Runtime.InteropServices;
 
+    /// <summary>
+    /// Factory methods for <see cref="SpanEx{T}"/>
+    /// </summary>
     public static class SpanEx
     {
         public static SpanEx<byte> FromMemory(ByteSpan memory)
