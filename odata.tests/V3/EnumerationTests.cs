@@ -61,6 +61,11 @@
             }
         }
 
+        private static ReadOnlyArray<TValue> ToArray2<TEnumerable, TEnumerator, TValue>(TEnumerable enumerable, ByteSpan memory, ITypeParameters<TValue, TEnumerator> typeParameters) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        {
+            return ToArray<TEnumerable, TEnumerator, TValue>(enumerable, memory);
+        }
+
         private static ReadOnlyArray<TValue> ToArray<TEnumerable, TEnumerator, TValue>(TEnumerable enumerable, ByteSpan memory) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
         {
             if (memory.Length != enumerable.Count * Unsafe.SizeOf<TValue>())
@@ -79,11 +84,16 @@
             return new ReadOnlyArray<TValue>(memory, enumerable.Count);
         }
 
+        private static void AssertEnumerable2<TValue, TEnumerable, TEnumerator>(TEnumerable expected, TEnumerable actual, IEqualityComparer<TValue> comparer, ITypeParameters<TValue, TEnumerator> typeParameters) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        {
+            AssertEnumerable<TValue, TEnumerable, TEnumerator>(expected, actual, comparer);
+        }
+
         private static void AssertEnumerable<TValue, TEnumerable, TEnumerator>(TEnumerable expected, TEnumerable actual, IEqualityComparer<TValue> comparer) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
         {
             //// TODO why does this work?
             ByteSpan memory = stackalloc byte[expected.Count * Unsafe.SizeOf<TValue>()];
-            var expectedArray = ToArray<TEnumerable, TEnumerator, TValue>(expected, memory);
+            var expectedArray = ToArray2(expected, memory, expected.TypeParameters);
 
             var index = 0;
             foreach (var element in actual)
@@ -117,7 +127,7 @@
             }
 
             //// TODO fix the type inference
-            AssertEnumerable<Wrapper<int>, LinkedList<Wrapper<int>>, LinkedList<Wrapper<int>>.Enumerator>(list, list2, Comparer.Instance);
+            AssertEnumerable2(list, list2, Comparer.Instance, list.TypeParameters);
         }
 
         public ref struct LinkedList<T> : IBetterReadOnlyCollection<T, LinkedList<T>.Enumerator> where T : allows ref struct
@@ -192,6 +202,8 @@
                     return this.count;
                 }
             }
+
+            public ITypeParameters<T, Enumerator> TypeParameters => throw new NotImplementedException();
 
             internal ref struct LinkedListNode //// TODO can you make this private
             {
@@ -283,11 +295,17 @@
             }
         }
 
+        public interface ITypeParameters<out T1, out T2> where T1 : allows ref struct where T2 : allows ref struct
+        {
+        }
+
         public interface IBetterReadOnlyCollection<out TValue, out TEnumerator> where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
         {
             int Count { get; }
 
             TEnumerator GetEnumerator();
+
+            ITypeParameters<TValue, TEnumerator> TypeParameters { get; }
         }
 
         public interface IReadOnlyArray<out T> where T : allows ref struct
