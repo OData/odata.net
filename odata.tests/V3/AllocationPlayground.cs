@@ -202,6 +202,8 @@ namespace V3
 
             Assert.IsTrue(pool.TryRent(out var fourth));
 
+            Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
             for (int i = 0; i < fourth.Span.Length; ++i)
             {
                 Console.WriteLine(first.Span[i]);
@@ -266,7 +268,7 @@ namespace V3
                 if (!pointer.IsInUse)
                 {
                     pointer.IsInUse = true;
-                    rented = new Disposable(ref pointer);
+                    rented = new Disposable(SpanEx.FromInstance(ref pointer));
                     return true;
                 }
             }
@@ -277,11 +279,11 @@ namespace V3
 
         public ref struct Disposable
         {
-            private Pointer pointer;
+            private SpanEx<Pointer> pointer;
 
             private bool disposed;
 
-            internal Disposable(ref Pointer pointer) //// TODO can you make this private? or public in a way that's always useful?
+            internal Disposable(SpanEx<Pointer> pointer) //// TODO can you make this private? or public in a way that's always useful?
             {
                 this.pointer = pointer;
             }
@@ -292,19 +294,19 @@ namespace V3
                 {
                     //// TODO it'd be nice to return this by ref
                     //// TODO it'd be better to not even return a spanex<T> but instead for `disposable` to *look* like a `spanex<T>`
-                    return this.pointer.Span;
+                    return this.pointer[0].Span;
                 }
             }
 
             public void Dispose()
             {
                 //// TODO this should go in spanex...
-                for (int i = 0; i < this.pointer.Span.Length; ++i)
+                for (int i = 0; i < this.pointer[0].Span.Length; ++i)
                 {
-                    this.pointer.Span[i] = default;
+                    this.pointer[0].Span[i] = default;
                 }
-                
-                this.pointer.IsInUse = false;
+
+                this.pointer[0].IsInUse = false;
             }
         }
 
