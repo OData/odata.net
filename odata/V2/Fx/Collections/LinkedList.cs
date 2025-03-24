@@ -79,22 +79,35 @@
             }
         }
 
+        private void SetFirstValue(SpanEx<T> values, ByteSpan memory)
+        {
+            var firstNode = new LinkedListNode(values);
+            MemoryMarshal.Write(memory, firstNode);
+
+            this.first = SpanEx.FromMemory<LinkedListNode>(memory, 1);
+            this.current = this.first;
+
+            this.hasValues = true;
+        }
+
         public void Append(SpanEx<T> values, ByteSpan memory)
         {
             //// TODO this method isn't worth it unless you remove the iteration over values
 
-            if (memory.Length != values.Length * this.MemorySize)
+            if (!this.hasValues)
             {
-                throw new Exception("tODO");
+                this.SetFirstValue(values, memory);
             }
-
-            var sliceIndex = 0;
-            foreach (var value in values)
+            else
             {
-                var slice = memory.Slice(sliceIndex * this.MemorySize, this.MemorySize);
-                ++sliceIndex;
+                var nextNode = new LinkedListNode(values);
+                MemoryMarshal.Write(memory, nextNode);
 
-                this.Append(value, slice);
+                var next = SpanEx.FromMemory<LinkedListNode>(memory, 1);
+
+                this.current[0].Next = next;
+
+                this.current = next;
             }
         }
 

@@ -190,7 +190,7 @@
             var list = new LinkedList<int>(stackalloc byte[0]);
 
             Span<int> ints = stackalloc int[] { 1, 2, 3, 4 };
-            ByteSpan memory = stackalloc byte[list.MemorySize * ints.Length];
+            ByteSpan memory = stackalloc byte[list.MemorySize];
             list.Append(SpanEx.FromSpan(ints), memory);
 
             AssertEnumerable(new[] { 1, 2, 3, 4 }, list);
@@ -215,10 +215,10 @@
             Span<int> stack = stackalloc int[] { 1, 2, 3, 4 };
             Span<int> heap = new[] { 5, 6, 7, 8, 9 };
 
-            ByteSpan memory = stackalloc byte[stack.Length * list.MemorySize];
+            ByteSpan memory = stackalloc byte[list.MemorySize];
             list.Append(SpanEx.FromSpan(stack), memory);
 
-            memory = stackalloc byte[heap.Length * list.MemorySize];
+            memory = stackalloc byte[list.MemorySize];
             list.Append(SpanEx.FromSpan(heap), memory);
 
             AssertEnumerable(new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }, list);
@@ -232,10 +232,10 @@
             Span<int> stack = stackalloc int[] { 1, 2, 3, 4 };
             Span<int> heap = new[] { 5, 6, 7, 8, 9 };
 
-            ByteSpan memory = stackalloc byte[stack.Length * list.MemorySize];
+            ByteSpan memory = stackalloc byte[list.MemorySize];
             list.Append(SpanEx.FromSpan(stack), memory);
 
-            memory = stackalloc byte[heap.Length * list.MemorySize];
+            memory = stackalloc byte[list.MemorySize];
             list.Append(SpanEx.FromSpan(heap), memory);
 
             memory = stackalloc byte[list.MemorySize];
