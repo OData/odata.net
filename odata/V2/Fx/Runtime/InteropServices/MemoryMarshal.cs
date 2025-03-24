@@ -8,7 +8,7 @@
     /// </summary>
     /// <remarks>
     /// The purpose of this type is to be equivalent to <see cref="System.Runtime.InteropServices.MemoryMarshal"/> but using
-    /// <see cref="ByteSpan"/> instead of <see cref="Span{byte}"/> and using <see cref="BetterReadOnlySpan{T}"/> instead of
+    /// <see cref="ByteSpan"/> instead of <see cref="Span{byte}"/> and using <see cref="SpanEx{T}"/> instead of
     /// <see cref="Span{T}"/>
     /// </remarks>
     public static class MemoryMarshal
@@ -63,7 +63,7 @@
             return ref span.GetPinnableReference();
         }
 
-        public static unsafe BetterReadOnlySpan<T> CreateSpan<T>(scoped ref T reference, int length) where T : allows ref struct
+        public static unsafe SpanEx<T> CreateSpan<T>(scoped ref T reference, int length) where T : allows ref struct
         {
             var pointer = Unsafe.AsPointer(ref reference);
             return BetterReadOnlySpan.FromMemory<T>(

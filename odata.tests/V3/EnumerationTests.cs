@@ -122,9 +122,9 @@
 
         public ref struct LinkedList<T> : IBetterReadOnlyCollection<T, LinkedList<T>.Enumerator> where T : allows ref struct
         {
-            private BetterReadOnlySpan<LinkedListNode> first;
+            private SpanEx<LinkedListNode> first;
 
-            private BetterReadOnlySpan<LinkedListNode> current;
+            private SpanEx<LinkedListNode> current;
 
             private int count;
 
@@ -197,7 +197,7 @@
             {
                 public readonly T Value;
 
-                public BetterReadOnlySpan<LinkedListNode> Next;
+                public SpanEx<LinkedListNode> Next;
 
                 public LinkedListNode(T value)
                 {
@@ -219,13 +219,13 @@
 
             public ref struct Enumerator : IEnumerator<T>
             {
-                private BetterReadOnlySpan<LinkedListNode> node;
+                private SpanEx<LinkedListNode> node;
 
                 private bool hasMoved;
 
                 private readonly bool hasValues;
 
-                internal Enumerator(BetterReadOnlySpan<LinkedListNode> node)
+                internal Enumerator(SpanEx<LinkedListNode> node)
                 {
                     this.node = node;
 

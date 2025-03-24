@@ -5,7 +5,7 @@ using V2.Fx.Runtime.InteropServices;
 
 public static class BetterReadOnlySpanFactoryMemoryIntegrityTestsResourcesCopiedMemoryLeavingFrame
 {
-    public static BetterReadOnlySpan<Wrapper<int>> Method()
+    public static SpanEx<Wrapper<int>> Method()
     {
         var element = 42;
         var list = new Wrapper<int>(BetterReadOnlySpan.FromInstance(ref element));
@@ -21,9 +21,9 @@ public static class BetterReadOnlySpanFactoryMemoryIntegrityTestsResourcesCopied
 
     public readonly ref struct Wrapper<T>
     {
-        private readonly BetterReadOnlySpan<T> span;
+        private readonly SpanEx<T> span;
 
-        public Wrapper(BetterReadOnlySpan<T> span)
+        public Wrapper(SpanEx<T> span)
         {
             this.span = span;
         }

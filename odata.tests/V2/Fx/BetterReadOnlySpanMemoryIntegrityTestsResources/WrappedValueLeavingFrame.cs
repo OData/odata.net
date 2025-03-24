@@ -11,9 +11,9 @@ public static class BetterReadOnlySpanMemoryIntegrityTestsResourcesWrappedValueL
 
     public readonly ref struct Wrapper<T>
     {
-        private readonly BetterReadOnlySpan<T> span;
+        private readonly SpanEx<T> span;
 
-        public Wrapper(BetterReadOnlySpan<T> span)
+        public Wrapper(SpanEx<T> span)
         {
             this.span = span;
         }

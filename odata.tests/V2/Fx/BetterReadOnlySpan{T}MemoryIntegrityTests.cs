@@ -59,7 +59,7 @@
                     ScriptOptions
                         .Default
                         .WithReferences(
-                            typeof(BetterReadOnlySpan<>).Assembly));
+                            typeof(SpanEx<>).Assembly));
 
             return script.Compile();
         }

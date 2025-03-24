@@ -8,7 +8,7 @@
     /// </summary>
     /// <remarks>
     /// The purpose of this type is to be, in all ways possible, a <see cref="Span{byte}"/> that can be created from either a
-    /// <see cref="Span{byte}"/> or a <see cref="BetterReadOnlySpan{byte}"/>
+    /// <see cref="Span{byte}"/> or a <see cref="SpanEx{byte}"/>
     /// </remarks>
     public readonly ref struct ByteSpan //// TODO is there other span stuff that you should add in here?
     {
@@ -24,7 +24,7 @@
             return new ByteSpan(span);
         }
 
-        public static ByteSpan Create(BetterReadOnlySpan<byte> span)
+        public static ByteSpan Create(SpanEx<byte> span)
         {
             return new ByteSpan(MemoryMarshal.CreateSpan(ref span.GetPinnableReference(), span.Length));
         }

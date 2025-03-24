@@ -7,6 +7,6 @@ public static class BetterReadOnlySpanMemoryIntegrityTestsResourcesStackAllocWit
     public static void Method()
     {
         ByteSpan span = stackalloc byte[Unsafe.SizeOf<string>()];
-        var betterSpan = BetterReadOnlySpan<string>.Create(span, 1);
+        var betterSpan = SpanEx<string>.Create(span, 1);
     }
 }

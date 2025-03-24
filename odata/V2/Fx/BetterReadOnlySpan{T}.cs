@@ -13,9 +13,12 @@
     /// The purpose of this type is to be equivalent to <see cref="System.Span{T}"/> but allows for <typeparamref name="T"/> to be
     /// a <see langword="ref"/> <see langword="struct"/>
     /// 
-    /// You looked into if you could have something like `BetterReadOnlySpan<byte> = stackalloc byte[10];`. You *can* by having an implicit operator taking in `Span<byte>`. However, the return type of that operator must be `BetterReadOnlySpan<T>`, so you will need to assert something about the length of the input `span`, and having assertions in implicit operators is a bad idea. Note that `differentmemory` can be used instead for this purpose.
+    /// You looked into if you could have something like `<see cref="SpanEx{byte}"/> foo = stackalloc byte[10];`. You *can* by having an implicit
+    /// operator taking in `<see cref="Span{byte}"/>`. However, the return type of that operator must be <see cref="SpanEx{T}"/>, so you will need to
+    /// assert something about the length of the input `<see cref="Span{byte}"/>`, and having assertions in implicit operators is a bad idea. Note that
+    /// <see cref="ByteSpan"/> can be used instead for this purpose.
     /// </remarks>
-    public readonly ref struct BetterReadOnlySpan<T> where T : allows ref struct //// TODO is there other span stuff that you should add in here?
+    public readonly ref struct SpanEx<T> where T : allows ref struct //// TODO is there other span stuff that you should add in here?
     {
         private readonly ByteSpan data;
 
@@ -30,7 +33,7 @@
         /// Thrown if the length of <paramref name="memory"/> is not the same as the product of <paramref name="length"/> and the
         /// <see langword="sizeof"/> <typeparamref name="T"/>
         /// </exception>
-        private BetterReadOnlySpan(ByteSpan memory, int length)
+        private SpanEx(ByteSpan memory, int length)
         {
             var elementSize = Unsafe.SizeOf<T>();
             if (memory.Length != elementSize * length)
@@ -43,9 +46,9 @@
             this.length = length;
         }
 
-        public static BetterReadOnlySpan<byte> Create(ByteSpan memory)
+        public static SpanEx<byte> Create(ByteSpan memory)
         {
-            return new BetterReadOnlySpan<byte>(memory, memory.Length);
+            return new SpanEx<byte>(memory, memory.Length);
         }
 
         /// <summary>
@@ -58,9 +61,9 @@
         /// Thrown if the length of <paramref name="memory"/> is not the same as the product of <paramref name="length"/> and the
         /// <see langword="sizeof"/> <typeparamref name="T"/>
         /// </exception>
-        public static BetterReadOnlySpan<T> Create(ByteSpan memory, int length)
+        public static SpanEx<T> Create(ByteSpan memory, int length)
         {
-            return new BetterReadOnlySpan<T>(memory, length);
+            return new SpanEx<T>(memory, length);
         }
 
         /// <summary>
