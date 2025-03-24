@@ -14,7 +14,7 @@ public static class BetterReadOnlySpanMemoryIntegrityTestsResourcesCopiedMemoryL
 
         var nextElement = 67;
         var nextValue = BetterReadOnlySpan.FromInstance(ref nextElement);
-        var previousNode = BetterReadOnlySpan.FromMemory<Wrapper<int>>(memory, 1);
+        var previousNode = BetterReadOnlySpan<Wrapper<int>>.Create(memory, 1);
 
         return previousNode;
     }
