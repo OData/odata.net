@@ -7,6 +7,7 @@
     using System.Runtime.CompilerServices;
     using System.Runtime.InteropServices.Marshalling;
     using Microsoft.VisualBasic;
+    using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client.Payloads;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #pragma warning disable CA2014 // Do not use stackalloc in loops
@@ -194,6 +195,33 @@
 
             AssertEnumerable(new[] { 1, 2, 3, 4 }, list);
         }
+
+        [TestMethod]
+        public void AppendSingle()
+        {
+            var list = new LinkedList<int>(stackalloc byte[0]);
+
+            ByteSpan memory = stackalloc byte[list.MemorySize];
+            list.Append(42, memory);
+
+            AssertEnumerable(new[] { 42 }, list);
+        }
+
+        /*[TestMethod]
+        public void StitchStackAndHeap()
+        {
+            var list = new LinkedList<int>(stackalloc byte[0]);
+
+            Span<int> stack = stackalloc int[] { 1, 2, 3, 4 };
+            Span<int> heap = new[] { 5, 6, 7, 8 };
+
+            ByteSpan memory = stackalloc byte[stack.Length * list.MemorySize];
+            list.Append(stack, memory);
+
+            memory = stackalloc byte[heap.Length * list.MemorySize];
+            list.Append()
+
+        }*/
 
         private static void AssertEnumerable<T>(IEnumerable<T> expected, LinkedList<Wrapper<T>> actual) //// TODO add allows ref struct constraint
         {

@@ -1,7 +1,7 @@
 ﻿namespace V2.Fx.Collections
 {
     using System;
-    using System.Runtime.CompilerServices;
+
     using V2.Fx.Runtime.InteropServices;
 
     //// TODO double check that this doesn't have any `unsafe` contexts
@@ -104,11 +104,22 @@
         {
             public T Value;
 
+            public SpanEx<T> Values;
+
             public SpanEx<LinkedListNode> Next;
+
+            public bool IsSpan;
 
             public LinkedListNode(T value)
             {
                 this.Value = value;
+                this.IsSpan = false;
+            }
+
+            public LinkedListNode(SpanEx<T> values)
+            {
+                this.Values = values;
+                this.IsSpan = true;
             }
         }
 
@@ -121,6 +132,8 @@
         {
             private SpanEx<LinkedListNode> node;
 
+            private int index;
+
             private bool hasMoved;
 
             private readonly bool hasValues;
@@ -132,19 +145,28 @@
                 this.hasValues = list.hasValues;
 
                 this.hasMoved = false;
+
+                this.index = -1;
             }
 
             public ref T Current
             {
                 get
                 {
-                    if (!this.hasMoved)
+                    if (this.index == -1)
                     {
                         throw new InvalidOperationException("Enumeration has not started. Call MoveNext.");
                     }
 
                     //// TODO this returns by ref; it's not clear to me that this is the best thing to do; what it allows for is to update elements of the list by setting the element that the caller wants updated as they enumerate
-                    return ref this.node[0].Value;
+                    if (this.node[0].IsSpan)
+                    {
+                        return ref this.node[0].Values[this.index];
+                    }
+                    else
+                    {
+                        return ref this.node[0].Value;
+                    }
                 }
             }
 
@@ -155,16 +177,26 @@
                     return false;
                 }
 
-                if (!this.hasMoved)
+                if (this.index == -1)
                 {
-                    this.hasMoved = true;
+                    this.index = 0;
                     return true;
+                }
+
+                if (this.node[0].IsSpan)
+                {
+                    if (this.index < this.node[0].Values.Length - 1)
+                    {
+                        ++this.index;
+                        return true;
+                    }
                 }
 
                 var nextNode = this.node[0].Next;
                 if (nextNode.Length != 0)
                 {
                     this.node = nextNode;
+                    this.index = 0;
                     return true;
                 }
 
