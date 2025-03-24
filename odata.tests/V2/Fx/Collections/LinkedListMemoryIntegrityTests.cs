@@ -67,6 +67,26 @@
             Assert.AreEqual(0, compilationOutput.Length);
         }
 
+        [TestMethod]
+        public void AppendToDefaultList()
+        {
+            var compilationOutput = Compile();
+            Assert.AreEqual(2, compilationOutput.Length);
+            CollectionAssert.AreEquivalent(
+                new[] { "CS8352", "CS8350" },
+                compilationOutput.Select(element => element.Id).ToArray());
+        }
+
+        [TestMethod]
+        public void AppendToReturnedDefaultList()
+        {
+            var compilationOutput = Compile();
+            Assert.AreEqual(2, compilationOutput.Length);
+            CollectionAssert.AreEquivalent(
+                new[] { "CS8352", "CS8350" },
+                compilationOutput.Select(element => element.Id).ToArray());
+        }
+
         private ImmutableArray<Diagnostic> Compile([CallerMemberName] string? testMethod = null)
         {
             var scriptContents = GetResource(testMethod);
