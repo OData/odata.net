@@ -144,7 +144,25 @@
                     {
                         // only if `memory4` actually got used do we allocate some more
                         memory4 = stackalloc byte[list4.MemorySize * 3];
+                        // if the loop were to end right now, we would have 5 nodes worth of memory unused
                     }
+                }
+            }
+
+            var list5 = new LinkedList<int>(stackalloc byte[0]);
+            ByteSpan memory5 = stackalloc byte[0];
+            var reallocate = true;
+            for (int i = 0; i < 10; ++i)
+            {
+                if (!list5.TryAppend4(i))
+                {
+                    if (reallocate)
+                    {
+                        memory5 = stackalloc byte[list.MemorySize * 3];
+                    }
+
+                    reallocate = list5.TryAppend4(i, memory5);
+                    // if the loop were to end right now, we would have 2 nodes worth of memory unused; this is the cost of doing business with this kind of pre-allocation though
                 }
             }
         }
