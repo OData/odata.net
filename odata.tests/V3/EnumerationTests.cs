@@ -61,12 +61,12 @@
             }
         }
 
-        private static ReadOnlyArray<TValue> ToArray2<TEnumerable, TEnumerator, TValue>(TEnumerable enumerable, ByteSpan memory, ITypeParameters<TValue, TEnumerator> typeParameters) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        private static ReadOnlyArray<TValue> ToArray2<TEnumerable, TEnumerator, TValue>(TEnumerable enumerable, ByteSpan memory, Params<TEnumerable, TValue, TEnumerator> typeParameters) where TEnumerable : IBetterReadOnlyCollection<TEnumerable, TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
         {
             return ToArray<TEnumerable, TEnumerator, TValue>(enumerable, memory);
         }
 
-        private static ReadOnlyArray<TValue> ToArray<TEnumerable, TEnumerator, TValue>(TEnumerable enumerable, ByteSpan memory) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        private static ReadOnlyArray<TValue> ToArray<TEnumerable, TEnumerator, TValue>(TEnumerable enumerable, ByteSpan memory) where TEnumerable : IBetterReadOnlyCollection<TEnumerable, TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
         {
             if (memory.Length != enumerable.Count * Unsafe.SizeOf<TValue>())
             {
@@ -84,12 +84,17 @@
             return new ReadOnlyArray<TValue>(memory, enumerable.Count);
         }
 
-        private static void AssertEnumerable2<TValue, TEnumerable, TEnumerator>(TEnumerable expected, TEnumerable actual, IEqualityComparer<TValue> comparer, ITypeParameters<TValue, TEnumerator> typeParameters) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        private static void AssertEnumerable2<TValue, TEnumerable, TEnumerator>(TEnumerable expected, TEnumerable actual, IEqualityComparer<TValue> comparer, Params<TEnumerable, TValue, TEnumerator> typeParameters) where TEnumerable : IBetterReadOnlyCollection<TEnumerable, TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
         {
             AssertEnumerable<TValue, TEnumerable, TEnumerator>(expected, actual, comparer);
         }
 
-        private static void AssertEnumerable<TValue, TEnumerable, TEnumerator>(TEnumerable expected, TEnumerable actual, IEqualityComparer<TValue> comparer) where TEnumerable : IBetterReadOnlyCollection<TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        private static void AssertEnumerable3<TValue, TEnumerable, TEnumerator>(Params<TEnumerable, TValue, TEnumerator> expected, Params<TEnumerable, TValue, TEnumerator> actual, IEqualityComparer<TValue> comparer) where TEnumerable : IBetterReadOnlyCollection<TEnumerable, TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        {
+            AssertEnumerable<TValue, TEnumerable, TEnumerator>(expected.Self, actual.Self, comparer);
+        }
+
+        private static void AssertEnumerable<TValue, TEnumerable, TEnumerator>(TEnumerable expected, TEnumerable actual, IEqualityComparer<TValue> comparer) where TEnumerable : IBetterReadOnlyCollection<TEnumerable, TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
         {
             //// TODO why does this work?
             ByteSpan memory = stackalloc byte[expected.Count * Unsafe.SizeOf<TValue>()];
@@ -127,10 +132,10 @@
             }
 
             //// TODO fix the type inference
-            AssertEnumerable2(list, list2, Comparer.Instance, list.TypeParameters);
+            AssertEnumerable3(list.TypeParameters, list2.TypeParameters, Comparer.Instance);
         }
 
-        public ref struct LinkedList<T> : IBetterReadOnlyCollection<T, LinkedList<T>.Enumerator> where T : allows ref struct
+        public ref struct LinkedList<T> : IBetterReadOnlyCollection<LinkedList<T>, T, LinkedList<T>.Enumerator> where T : allows ref struct
         {
             private SpanEx<LinkedListNode> first;
 
@@ -203,7 +208,13 @@
                 }
             }
 
-            public ITypeParameters<T, Enumerator> TypeParameters => throw new NotImplementedException();
+            public Params<LinkedList<T>, T, Enumerator> TypeParameters
+            {
+                get
+                {
+                    return new Params<LinkedList<T>, T, Enumerator>(this);
+                }
+            }
 
             internal ref struct LinkedListNode //// TODO can you make this private
             {
@@ -300,13 +311,23 @@
             //// TODO can you have like a return ref this?
         }
 
-        public interface IBetterReadOnlyCollection<out TValue, out TEnumerator> where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        public interface IBetterReadOnlyCollection<TSelf, TValue, TEnumerator> where TSelf : allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
         {
             int Count { get; }
 
             TEnumerator GetEnumerator();
 
-            ITypeParameters<TValue, TEnumerator> TypeParameters { get; }
+            Params<TSelf, TValue, TEnumerator> TypeParameters { get; }
+        }
+
+        public readonly ref struct Params<TSelf, T1, T2> : ITypeParameters<T1, T2> where TSelf : allows ref struct where T1 : allows ref struct where T2 : allows ref struct
+        {
+            public Params(TSelf self)
+            {
+                this.Self = self;
+            }
+
+            public TSelf Self { get; }
         }
 
         public interface IReadOnlyArray<out T> where T : allows ref struct
