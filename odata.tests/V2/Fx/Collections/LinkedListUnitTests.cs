@@ -142,6 +142,29 @@
             AssertEnumerable(new[] { -1, 42, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, list);
         }
 
+        [TestMethod]
+        public void AppendToEmptyList()
+        {
+            ////var list = GetEmpty();
+            /*Span<byte> span;
+            unsafe
+            {
+                span = new Span<byte>(null, 0);
+            }*/
+
+            var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
+
+            ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            list.Append(new Wrapper<int>(42), memory);
+
+            AssertEnumerable(new[] { 42 }, list);
+        }
+
+        private static LinkedList<Wrapper<int>> GetEmpty()
+        {
+            return new LinkedList<Wrapper<int>>();
+        }
+
         /*[TestMethod]
         public void EmptyList()
         {

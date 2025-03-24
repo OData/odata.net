@@ -16,6 +16,10 @@
 
         private SpanEx<LinkedListNode> current;
 
+        public LinkedList(ByteSpan pointer)
+        {
+        }
+
         /// <summary>
         /// 
         /// </summary>
