@@ -22,27 +22,13 @@
         {
             if (emptySpan.Length != 0)
             {
-                // this is to protect the caller from overallocating memory; we don't use this span for anything, it only exists for compiler checks on memory integrity
+                // this is to protect the caller from overallocating memory; we don't use this span for anything, it only exists
+                // for compiler checks on memory integrity
                 var message = $"A new list must be instantiated with empty data. The provided data has length '{emptySpan.Length}'";
                 throw new ArgumentOutOfRangeException(message, (Exception?)null);
             }
 
             this.hasValues = false;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="value"></param>
-        /// <param name="memory"></param>
-        /// <exception cref="ArgumentOutOfRangeException">
-        /// Thrown if the <see cref="ByteSpan.Length"/> of <paramref name="memory"/> is not the same as the
-        /// <see langword="sizeof"/> <typeparamref name="T"/>
-        /// </exception>
-        public LinkedList(T value, ByteSpan memory)
-        {
-            //// TODO do you still want this constructor once empty lists are a thing?
-            this.SetFirstValue(value, memory);
         }
 
         /// <summary>
