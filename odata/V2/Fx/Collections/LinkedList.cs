@@ -61,7 +61,7 @@
 
         public static int MemorySize { get; } = System.Runtime.CompilerServices.Unsafe.SizeOf<LinkedListNode>();
 
-        private ref struct LinkedListNode //// TODO can you make this private
+        private ref struct LinkedListNode
         {
             public readonly T Value;
 
