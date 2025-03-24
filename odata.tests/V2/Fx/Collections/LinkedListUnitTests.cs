@@ -145,14 +145,6 @@
         [TestMethod]
         public void AppendToEmptyList()
         {
-            //// TODO add this test
-            ////var list = GetEmpty();
-            /*Span<byte> span;
-            unsafe
-            {
-                span = new Span<byte>(null, 0);
-            }*/
-
             var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
 
             for (int i = 0; i < 10; ++i)
@@ -162,11 +154,6 @@
             }
 
             AssertEnumerable(Enumerable.Range(0, 10), list);
-        }
-
-        private static LinkedList<Wrapper<int>> GetEmpty()
-        {
-            return new LinkedList<Wrapper<int>>();
         }
 
         [TestMethod]
@@ -180,9 +167,6 @@
         [TestMethod]
         public void DefaultList()
         {
-            //// TODO add test for appending to default list
-            //// TODO make memorysize property instance and not static
-
             var list = new LinkedList<Wrapper<int>>();
 
             AssertEnumerable(Enumerable.Empty<int>(), list);
