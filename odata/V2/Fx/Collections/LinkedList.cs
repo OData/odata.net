@@ -61,7 +61,7 @@
 
         public static int MemorySize { get; } = System.Runtime.CompilerServices.Unsafe.SizeOf<LinkedListNode>();
 
-        internal ref struct LinkedListNode //// TODO can you make this private
+        private ref struct LinkedListNode //// TODO can you make this private
         {
             public readonly T Value;
 
@@ -77,7 +77,7 @@
         {
             if (this.hasValues)
             {
-                return new Enumerator(this.first);
+                return new Enumerator(this);
             }
             else
             {
@@ -93,9 +93,9 @@
 
             private readonly bool hasValues;
 
-            internal Enumerator(SpanEx<LinkedListNode> node)
+            internal Enumerator(LinkedList<T> list)
             {
-                this.node = node;
+                this.node = list.first;
 
                 this.hasMoved = false;
                 this.hasValues = true;
