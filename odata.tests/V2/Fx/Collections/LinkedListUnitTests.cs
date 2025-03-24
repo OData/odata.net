@@ -25,8 +25,10 @@
         [TestMethod]
         public void AppendRefStruct()
         {
+            var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
+
             ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
-            var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
+            list.Append(new Wrapper<int>(-1), memory);
 
             for (int i = 0; i < 10; ++i)
             {
@@ -48,8 +50,10 @@
         [TestMethod]
         public void Append()
         {
+            var list = new LinkedList<int>(stackalloc byte[0]);
+
             ByteSpan memory = stackalloc byte[LinkedList<int>.MemorySize];
-            var list = new LinkedList<int>(-1, memory);
+            list.Append(-1, memory);
 
             for (int i = 0; i < 10; ++i)
             {
@@ -61,7 +65,7 @@
 
             for (int i = 10; i < 20; ++i)
             {
-                memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+                memory = stackalloc byte[LinkedList<int>.MemorySize];
                 list.Append(i, memory);
             }
 
@@ -71,8 +75,10 @@
         [TestMethod]
         public void EnumerateReturnedList()
         {
+            var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
+
             ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
-            var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
+            list.Append(new Wrapper<int>(-1), memory);
 
             for (int i = 0; i < 10; ++i)
             {
@@ -94,8 +100,10 @@
         [TestMethod]
         public void AddElementToListInCallee()
         {
+            var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
+
             ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
-            var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
+            list.Append(new Wrapper<int>(-1), memory);
 
             AssertEnumerable(new[] { -1 }, list);
 
@@ -125,8 +133,10 @@
         {
             //// TODO this test is to demonstrate the behavior `LinkedList<T>.Enumerator.Current` returning by ref; that isn't necessarily the correct behavior
 
+            var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
+
             ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
-            var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
+            list.Append(new Wrapper<int>(-1), memory);
 
             for (int i = 0; i < 10; ++i)
             {
@@ -145,6 +155,8 @@
         [TestMethod]
         public void AppendToEmptyList()
         {
+
+            //// TODO empty list leaving frame
             var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
 
             for (int i = 0; i < 10; ++i)

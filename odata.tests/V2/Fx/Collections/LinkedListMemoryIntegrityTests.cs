@@ -87,6 +87,11 @@
                 compilationOutput.Select(element => element.Id).ToArray());
         }
 
+        [TestMethod]
+        public void EmptyListLeavingFrame()
+        {
+        }
+
         private ImmutableArray<Diagnostic> Compile([CallerMemberName] string? testMethod = null)
         {
             var scriptContents = GetResource(testMethod);
