@@ -2,7 +2,6 @@
 {
     using System;
     using System.Runtime.CompilerServices;
-    using System.Runtime.InteropServices;
 
     /// <summary>
     /// 
@@ -40,9 +39,11 @@
         /// </remarks>
         public static ref T AsRef<T>(ByteSpan memory) where T : allows ref struct
         {
-            if (memory.Length != Unsafe.SizeOf<T>())
+            var typeSize = Unsafe.SizeOf<T>();
+            if (memory.Length != typeSize)
             {
-                throw new System.Exception("TODO");
+                var message = $"The length of '{nameof(memory)}' must be the same as the size of the type to get a reference to. The length of '{nameof(memory)}' was '{memory.Length}'. The type was '{typeof(T).FullName}'; it's size was '{typeSize}'.";
+                throw new ArgumentOutOfRangeException(message, (Exception?)null);
             }
 
             return ref Unsafe.As<byte, T>(ref GetReference(memory));
