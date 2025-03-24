@@ -2,7 +2,7 @@
 
 using V2.Fx;
 
-public static class StackAllocLeavingFrame
+public static class BetterReadOnlySpanFactoryMemoryIntegrityTestsResourcesStackAllocLeavingFrame
 {
     private static BetterReadOnlySpan<string> Method()
     {

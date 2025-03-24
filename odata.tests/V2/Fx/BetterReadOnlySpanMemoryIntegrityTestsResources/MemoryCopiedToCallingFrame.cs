@@ -3,7 +3,7 @@
 using V2.Fx;
 using V2.Fx.Runtime.InteropServices;
 
-public static class MemoryCopiedToCallingFrame
+public static class BetterReadOnlySpanMemoryIntegrityTestsResourcesMemoryCopiedToCallingFrame
 {
     public static Wrapper<int> Method(Span<byte> memory)
     {

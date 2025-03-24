@@ -3,7 +3,7 @@
 using V2.Fx;
 using V2.Fx.Runtime.InteropServices;
 
-public static class CopiedMemoryLeavingFrame
+public static class BetterReadOnlySpanMemoryIntegrityTestsResourcesCopiedMemoryLeavingFrame
 {
     public static BetterReadOnlySpan<Wrapper<int>> Method()
     {

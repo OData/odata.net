@@ -1,6 +1,6 @@
 ﻿using V2.Fx;
 
-public static class WrappedValueLeavingFrame
+public static class BetterReadOnlySpanMemoryIntegrityTestsResourcesWrappedValueLeavingFrame
 {
     public static Wrapper<int> Method()
     {

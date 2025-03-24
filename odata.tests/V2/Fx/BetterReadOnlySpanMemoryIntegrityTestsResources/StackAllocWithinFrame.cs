@@ -2,7 +2,7 @@
 
 using V2.Fx;
 
-public static class StackAllocWithinFrame
+public static class BetterReadOnlySpanMemoryIntegrityTestsResourcesStackAllocWithinFrame
 {
     public static void Method()
     {
