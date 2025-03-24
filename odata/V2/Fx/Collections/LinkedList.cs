@@ -49,6 +49,15 @@
             this.current = this.first;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="memory"></param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if the <see cref="ByteSpan.Length"/> of <paramref name="memory"/> is not the same as the
+        /// <see langword="sizeof"/> <typeparamref name="T"/>
+        /// </exception>
         public void Append(T value, ByteSpan memory)
         {
             var nextNode = new LinkedListNode(value);
@@ -65,7 +74,7 @@
 
         private ref struct LinkedListNode
         {
-            public readonly T Value;
+            public T Value;
 
             public SpanEx<LinkedListNode> Next;
 
@@ -93,7 +102,7 @@
                 this.hasMoved = false;
             }
 
-            public T Current //// TODO cna you make this return `ref t`?
+            public ref T Current
             {
                 get
                 {
@@ -102,7 +111,8 @@
                         throw new Exception("TODO");
                     }
 
-                    return this.node[0].Value;
+                    //// TODO this returns by ref; it's not clear to me that this is the best thing to do; what it allows for is to update elements of the list by setting the element that the caller wants updated as they enumerate
+                    return ref this.node[0].Value;
                 }
             }
 

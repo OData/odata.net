@@ -120,6 +120,26 @@
             return list;
         }
 
+        [TestMethod]
+        public void UpdateValue()
+        {
+            ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
+
+            for (int i = 0; i < 10; ++i)
+            {
+                memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+                list.Append(new Wrapper<int>(i), memory);
+            }
+
+            var enumerator = list.GetEnumerator();
+            enumerator.MoveNext();
+            enumerator.MoveNext();
+            enumerator.Current = new Wrapper<int>(42);
+
+            AssertEnumerable(new[] { -1, 42, 1, 2, 3, 4, 5, 6, 7, 8, 9 }, list);
+        }
+
         /*[TestMethod]
         public void EmptyList()
         {
