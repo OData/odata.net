@@ -5,6 +5,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices.Marshalling;
     using Microsoft.VisualBasic;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -182,49 +183,17 @@
             AssertEnumerable(Enumerable.Empty<int>(), list);
         }
 
-        /*[TestMethod]
-        public void EmptyList()
-        {
-            var list = new LinkedList<Wrapper<int>>();
-
-            AssertEnumerable(Enumerable.Empty<int>(), list);
-        }
-
         [TestMethod]
-        public void AppendToEmptyList()
+        public void AppendSpan()
         {
-        //// TODO use differentmemory instad of span for the stackallocs
+            var list = new LinkedList<int>(stackalloc byte[0]);
 
-            //// TODO get these working
-            var list2 = new LinkedList<Wrapper<int>>();
-            Span<byte> memory2 = stackalloc byte[list.MemorySize];
-            list2.Append(new Wrapper<int>(67), memory2);
+            Span<int> ints = stackalloc int[] { 1, 2, 3, 4 };
+            ByteSpan memory = stackalloc byte[list.MemorySize * ints.Length];
+            list.Append(SpanEx.FromSpan(ints), memory);
 
-            LinkedList<Wrapper<int>> list3 = default;
-            Span<byte> memory3 = stackalloc byte[list.MemorySize];
-            list3.Append(new Wrapper<int>(67), memory3);
-
-            Span<byte> memory4 = stackalloc byte[0];
-            var list4 = new LinkedList<Wrapper<int>>(memory4);
-            memory4 = stackalloc byte[list.MemorySize];
-            list4.Append(new Wrapper<int>(98), memory4);
-
-            Span<byte> memory = stackalloc byte[list.MemorySize];
-            var list = new LinkedList<Wrapper<int>>(memory);
-
-            memory = stackalloc byte[list.MemorySize];
-            list.Append(new Wrapper<int>(42), memory);
-
-            AssertEnumerable(new[] { 42 }, list);
+            AssertEnumerable(new[] { 1, 2, 3, 4 }, list);
         }
-
-        private static LinkedList<T> Create<T>() where T : allows ref struct
-        {
-        //// TODO use differentmemory instad of span for the stackallocs
-            Span<byte> memory4 = stackalloc byte[0];
-            LinkedList<T> list4 = new LinkedList<T>(memory4);
-            return list4;
-        }*/
 
         private static void AssertEnumerable<T>(IEnumerable<T> expected, LinkedList<Wrapper<T>> actual) //// TODO add allows ref struct constraint
         {

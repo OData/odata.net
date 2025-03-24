@@ -83,8 +83,7 @@
         {
             //// TODO this method isn't worth it unless you remove the iteration over values
 
-            var valueSize = Unsafe.SizeOf<T>();
-            if (memory.Length != values.Length * valueSize)
+            if (memory.Length != values.Length * this.MemorySize)
             {
                 throw new Exception("tODO");
             }
@@ -92,7 +91,7 @@
             var sliceIndex = 0;
             foreach (var value in values)
             {
-                var slice = memory.Slice(sliceIndex * valueSize, valueSize);
+                var slice = memory.Slice(sliceIndex * this.MemorySize, this.MemorySize);
                 ++sliceIndex;
 
                 this.Append(value, slice);

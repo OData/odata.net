@@ -1,6 +1,7 @@
 ﻿namespace V2.Fx
 {
     using System;
+    using System.Runtime.CompilerServices;
 
     using V2.Fx.Runtime.InteropServices;
 
@@ -33,6 +34,19 @@
         public static SpanEx<T> FromInstance<T>(scoped ref T value) where T : allows ref struct
         {
             return MemoryMarshal.CreateSpan(ref value, 1);
+        }
+
+        public static unsafe SpanEx<T> FromSpan<T>(Span<T> span)
+        {
+            //// TODO does this method belong here? 
+            //// TODO can you remove `unsafe` from this method
+
+            fixed (T* pointer = span)
+            {
+                Span<byte> bytes = new Span<byte>(pointer, span.Length * Unsafe.SizeOf<T>());
+
+                return SpanEx<T>.Create(bytes, span.Length);
+            }
         }
     }
 }
