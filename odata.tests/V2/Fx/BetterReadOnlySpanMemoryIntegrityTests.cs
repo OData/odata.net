@@ -11,7 +11,7 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;    
 
     [TestClass]
-    public sealed class BetterReadOnlyFactorySpanMemoryIntegrityTests
+    public sealed class BetterReadOnlySpanFactoryMemoryIntegrityTests
     {
         [TestMethod]
         public void StackAllocWithinFrame()
@@ -66,7 +66,7 @@
 
         private string GetResource([CallerMemberName] string? testMethod = null)
         {
-            //// TODO if the caller explicitly provides `null`, what happens?
+            ArgumentNullException.ThrowIfNull(testMethod);
 
             var type = this.GetType();
             var path = $"{type.Namespace}.{type.Name}Resources.{testMethod}.cs";
