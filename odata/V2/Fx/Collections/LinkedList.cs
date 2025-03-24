@@ -23,13 +23,13 @@
             this.hasValues = false;
         }
 
-        public LinkedList(T value, ByteSpan memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
+        public LinkedList(T value, ByteSpan memory)
         {
             //// TODO do you still want this constructor now that empty lists are a thing?
             this.SetFirstValue(value, memory);
         }
 
-        private void SetFirstValue(T value, ByteSpan memory) //// TODO can you use betterspan instead of span? how about readonlyspan?
+        private void SetFirstValue(T value, ByteSpan memory)
         {
             var firstNode = new LinkedListNode(value);
             MemoryMarshal.Write(memory, firstNode);
