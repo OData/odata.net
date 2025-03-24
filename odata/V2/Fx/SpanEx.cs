@@ -38,7 +38,7 @@
 
         public static unsafe SpanEx<T> FromSpan<T>(Span<T> span)
         {
-            //// TODO does this method belong here? 
+            //// TODO does this method belong here? or should it go in spanex? or should it be an implicit operator in spanex?
             //// TODO can you remove `unsafe` from this method
             //// TODO can you remove the warnings from this method?
 
