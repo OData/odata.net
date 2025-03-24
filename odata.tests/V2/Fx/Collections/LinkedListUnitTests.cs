@@ -133,6 +133,20 @@
                     // but what if this call returns `false`?
                 }
             }
+
+            var list4 = new LinkedList<int>(stackalloc byte[0]);
+            ByteSpan memory4 = stackalloc byte[list4.MemorySize * 3];
+            for (int i = 0; i < 10; ++i)
+            {
+                if (!list4.TryAppend4(i))
+                {
+                    if (list4.TryAppend4(i, memory4))
+                    {
+                        // only if `memory4` actually got used do we allocate some more
+                        memory4 = stackalloc byte[list4.MemorySize * 3];
+                    }
+                }
+            }
         }
 
         public static bool TryAppend4<T>(this LinkedList<T> list, T value, ByteSpan memory)
