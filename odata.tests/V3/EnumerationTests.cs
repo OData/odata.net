@@ -297,6 +297,7 @@
 
         public interface ITypeParameters<out T1, out T2> where T1 : allows ref struct where T2 : allows ref struct
         {
+            //// TODO can you have like a return ref this?
         }
 
         public interface IBetterReadOnlyCollection<out TValue, out TEnumerator> where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
