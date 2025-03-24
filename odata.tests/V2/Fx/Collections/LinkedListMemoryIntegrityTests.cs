@@ -90,6 +90,9 @@
         [TestMethod]
         public void EmptyListLeavingFrame()
         {
+            var compilationOutput = Compile();
+            Assert.AreEqual(1, compilationOutput.Length);
+            Assert.AreEqual("CS8352", compilationOutput[0].Id);
         }
 
         private ImmutableArray<Diagnostic> Compile([CallerMemberName] string? testMethod = null)
