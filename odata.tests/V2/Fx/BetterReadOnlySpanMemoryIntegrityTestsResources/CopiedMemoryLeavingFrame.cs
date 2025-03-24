@@ -7,11 +7,13 @@ public static class CopiedMemoryLeavingFrame
 {
     public static BetterReadOnlySpan<Wrapper<int>> Method()
     {
-        var list = new Wrapper<int>(BetterReadOnlySpan.FromInstance(42));
+        var element = 42;
+        var list = new Wrapper<int>(BetterReadOnlySpan.FromInstance(ref element));
         ByteSpan memory = stackalloc byte[Unsafe.SizeOf<Wrapper<int>>()];
         MemoryMarshal.Write(memory, in list);
 
-        var nextValue = BetterReadOnlySpan.FromInstance(67);
+        var nextElement = 67;
+        var nextValue = BetterReadOnlySpan.FromInstance(ref nextElement);
         var previousNode = BetterReadOnlySpan.FromMemory<Wrapper<int>>(memory, 1);
 
         return previousNode;

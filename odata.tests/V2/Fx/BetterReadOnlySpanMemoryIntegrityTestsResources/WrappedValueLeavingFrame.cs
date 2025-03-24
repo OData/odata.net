@@ -4,7 +4,8 @@ public static class WrappedValueLeavingFrame
 {
     public static Wrapper<int> Method()
     {
-        var wrapper = new Wrapper<int>(BetterReadOnlySpan.FromInstance(42));
+        var value = 42;
+        var wrapper = new Wrapper<int>(BetterReadOnlySpan.FromInstance(ref value));
         return wrapper;
     }
 

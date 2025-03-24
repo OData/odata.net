@@ -17,8 +17,7 @@
         /// <typeparam name="T"></typeparam>
         /// <param name="memory"></param>
         /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        /// <exception cref="System.Exception"></exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if the <see cref="ByteSpan.Length"/> of <paramref name="memory"/> is not the same as the <see langword="sizeof"/> <typeparamref name="T"/></exception>
         /// <remarks>
         /// <see cref="System.Runtime.InteropServices.MemoryMarshal.AsRef{T}(Span{byte})"/> specifically makes an assertion *against* <typeparamref name="T"/> returning <see langword="true"/> for <see cref="RuntimeHelpers.IsReferenceOrContainsReferences{T}"/> because it doesn't want to allow for situations like this:
         /// 
@@ -54,14 +53,14 @@
             return ref span.GetPinnableReference();
         }
 
-        public static unsafe BetterReadOnlySpan<T> CreateSpan<T>(scoped in T reference) where T : allows ref struct //// TODO the actual memorymarshal uses `scoped ref`; it also takes a length parameter
+        public static unsafe BetterReadOnlySpan<T> CreateSpan<T>(scoped ref T reference, int length) where T : allows ref struct
         {
-            var pointer = Fx.Runtime.CompilerServices.Unsafe.AsPointer(reference);
+            var pointer = Unsafe.AsPointer(ref reference);
             return BetterReadOnlySpan.FromMemory<T>(
                 new Span<byte>(
                     pointer,
-                    Unsafe.SizeOf<T>()),
-                1);
+                    length * Unsafe.SizeOf<T>()),
+                length);
         }
 
         /// <summary>

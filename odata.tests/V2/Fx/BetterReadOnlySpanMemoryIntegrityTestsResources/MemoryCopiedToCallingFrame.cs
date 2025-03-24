@@ -7,7 +7,8 @@ public static class MemoryCopiedToCallingFrame
 {
     public static Wrapper<int> Method(Span<byte> memory)
     {
-        var list = new Wrapper<int>(BetterReadOnlySpan.FromInstance(42));
+        var value = 42;
+        var list = new Wrapper<int>(BetterReadOnlySpan.FromInstance(ref value));
         MemoryMarshal.Write(memory, in list);
         return list;
     }

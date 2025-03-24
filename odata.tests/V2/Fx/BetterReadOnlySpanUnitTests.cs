@@ -8,7 +8,8 @@
         [TestMethod]
         public void FromInstance()
         {
-            var span = BetterReadOnlySpan.FromInstance(42);
+            var value = 42;
+            var span = BetterReadOnlySpan.FromInstance(ref value);
 
             Span<byte> zeroed = stackalloc byte[100];
             zeroed.Clear();
