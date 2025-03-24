@@ -121,6 +121,16 @@
 
             public SpanEx<LinkedListNode> Next;
 
+            /// <summary>
+            /// I decided to have 2 "variants" of this structure. Both could "reduce" to the <see cref="SpanEx{T}"/> variant.
+            /// However, doing this would mean that the <see cref="LinkedList{T}.Append(T, ByteSpan)"/> method would need to
+            /// take a <see langword="ref"/> parameter (because otherwise the memory that holds the <see cref="SpanEx{T}"/> would
+            /// be in the <see cref="LinkedList{T}.Append(T, ByteSpan)"/> stack frame and not in the caller stack frame). Since
+            /// a <see langword="ref"/> parameter makes it difficult for callers to append simple values (for example, 
+            /// `list.Append(42, stackalloc byte[list.MemorySize])` needs to be `var value = 42; 
+            /// list.Append(ref value, stackalloc byte[list.MemorySize]), I made the decision to have different kinds of nodes
+            /// that use this property to differentiate between the two.
+            /// </summary>
             public bool IsSpan;
 
             public LinkedListNode(T value)
