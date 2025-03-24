@@ -322,7 +322,7 @@
 
             TEnumerator GetEnumerator();
 
-            Params<TSelf, TValue, TEnumerator> TypeParameters { get; }
+            Params<TSelf, TValue, TEnumerator> TypeParameters { get; } //// TODO this requires removing covariance...
         }
 
         public readonly ref struct Params<TSelf, T1, T2> : ITypeParameters<T1, T2> where TSelf : allows ref struct where T1 : allows ref struct where T2 : allows ref struct
