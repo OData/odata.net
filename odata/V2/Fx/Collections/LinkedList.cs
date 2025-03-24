@@ -81,6 +81,8 @@
 
         public void Append(SpanEx<T> values, ByteSpan memory)
         {
+            //// TODO this method isn't worth it unless you remove the iteration over values
+
             var valueSize = Unsafe.SizeOf<T>();
             if (memory.Length != values.Length * valueSize)
             {
