@@ -43,8 +43,6 @@
             this.length = length;
         }
 
-        //// TODO since these factory methods are public, you need to add the same tests as you added to betterreadonlyspan
-
         public static BetterReadOnlySpan<byte> Create(ByteSpan memory)
         {
             return new BetterReadOnlySpan<byte>(memory, memory.Length);
