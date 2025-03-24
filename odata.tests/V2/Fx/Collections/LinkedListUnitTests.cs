@@ -155,8 +155,6 @@
         [TestMethod]
         public void AppendToEmptyList()
         {
-
-            //// TODO empty list leaving frame
             var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
 
             for (int i = 0; i < 10; ++i)
