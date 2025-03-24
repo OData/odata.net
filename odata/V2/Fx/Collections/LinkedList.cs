@@ -23,12 +23,30 @@
             this.hasValues = false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="memory"></param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if the <see cref="ByteSpan.Length"/> of <paramref name="memory"/> is not the same as the
+        /// <see langword="sizeof"/> <typeparamref name="T"/>
+        /// </exception>
         public LinkedList(T value, ByteSpan memory)
         {
             //// TODO do you still want this constructor now that empty lists are a thing?
             this.SetFirstValue(value, memory);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="memory"></param>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if the <see cref="ByteSpan.Length"/> of <paramref name="memory"/> is not the same as the
+        /// <see langword="sizeof"/> <typeparamref name="T"/>
+        /// </exception>
         private void SetFirstValue(T value, ByteSpan memory)
         {
             var firstNode = new LinkedListNode(value);
