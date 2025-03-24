@@ -2,6 +2,7 @@
 {
     using System;
     using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices;
 
     /// <summary>
     /// 
@@ -11,17 +12,45 @@
     /// </remarks>
     public static class MemoryMarshal
     {
-        public static unsafe ref T AsRef<T>(ByteSpan memory) where T : allows ref struct
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="memory"></param>
+        /// <returns></returns>
+        /// <exception cref="Exception"></exception>
+        /// <exception cref="System.Exception"></exception>
+        /// <remarks>
+        /// <see cref="System.Runtime.InteropServices.MemoryMarshal.AsRef{T}(Span{byte})"/> specifically makes an assertion *against* <typeparamref name="T"/> returning <see langword="true"/> for <see cref="RuntimeHelpers.IsReferenceOrContainsReferences{T}"/> because it doesn't want to allow for situations like this:
+        /// 
+        /// ```
+        /// public readonly ref struct Foo
+        /// {
+        ///   public int Value { get; }
+        /// }
+        /// ...
+        /// public Foo DoWork()
+        /// {
+        ///   Span<byte> bytes = stackalloc[10];
+        ///   return Memory.AsRef<Foo>(bytes);
+        /// }
+        /// ```
+        /// 
+        /// This would allow the bytes allocated in `bytes` to be referenced outside of the declaration scope. *This* method, however, is intentionally allowing for <see langword="ref"/> <see langword="struct"/>s and so we need to leave that check out. It is up to the caller to not leak this scope.
+        /// </remarks>
+        public static ref T AsRef<T>(ByteSpan memory) where T : allows ref struct
         {
             if (memory.Length != Unsafe.SizeOf<T>())
             {
                 throw new System.Exception("TODO");
             }
 
-            fixed (byte* pointer = memory)
-            {
-                return ref Unsafe.AsRef<T>(pointer);
-            }
+            return ref Unsafe.As<byte, T>(ref GetReference(memory));
+        }
+        
+        public static ref byte GetReference(ByteSpan span)
+        {
+            return ref span.GetPinnableReference();
         }
 
         public static unsafe BetterReadOnlySpan<T> CreateSpan<T>(scoped in T reference) where T : allows ref struct //// TODO the actual memorymarshal uses `scoped ref`; it also takes a length parameter
