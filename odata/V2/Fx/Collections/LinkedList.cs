@@ -7,12 +7,9 @@
     //// TODO double check that this doesn't have any `unsafe` contexts
 
     /// <summary>
-    /// 
+    /// A linked list with nodes that are allocated entirely on the stack and allowing for stack allocated elements
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <remarks>
-    /// TODO add a remarks section to all of the new types that explains the scope of that type
-    /// </remarks>
     public ref struct LinkedList<T> where T : allows ref struct
     {
         private SpanEx<LinkedListNode> first;
