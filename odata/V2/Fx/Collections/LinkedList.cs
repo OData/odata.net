@@ -108,7 +108,7 @@
                 {
                     if (!this.hasMoved)
                     {
-                        throw new Exception("TODO");
+                        throw new InvalidOperationException("Enumeration has not started. Call MoveNext.");
                     }
 
                     //// TODO this returns by ref; it's not clear to me that this is the best thing to do; what it allows for is to update elements of the list by setting the element that the caller wants updated as they enumerate
