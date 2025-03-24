@@ -40,6 +40,7 @@
         {
             //// TODO does this method belong here? 
             //// TODO can you remove `unsafe` from this method
+            //// TODO can you remove the warnings from this method?
 
             fixed (T* pointer = span)
             {
