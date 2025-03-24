@@ -123,6 +123,8 @@
         [TestMethod]
         public void UpdateValue()
         {
+            //// TODO this test is to demonstrate the behavior `LinkedList<T>.Enumerator.Current` returning by ref; that isn't necessarily the correct behavior
+
             ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
             var list = new LinkedList<Wrapper<int>>(new Wrapper<int>(-1), memory);
 
