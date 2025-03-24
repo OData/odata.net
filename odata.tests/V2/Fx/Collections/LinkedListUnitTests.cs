@@ -180,6 +180,7 @@
         public void DefaultList()
         {
             //// TODO add test for appending to default list
+            //// TODO make memorysize property instance and not static
 
             var list = new LinkedList<Wrapper<int>>();
 
