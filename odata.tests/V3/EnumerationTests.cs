@@ -140,6 +140,57 @@
             AssertEnumerable3(list.TypeParameters, list2.TypeParameters, Comparer.Instance);
         }
 
+        /*[TestMethod]
+        public void Cast()
+        {
+            Span<byte> memory = stackalloc byte[LinkedList<Dog>.MemorySize];
+            var list = new LinkedList<Dog>(new Dog(), memory);
+
+            DoCast(list);
+
+            var array = new Dog[0];
+            DoCast2(array);
+
+            var genericList = new System.Collections.Generic.List<Dog>();
+            DoCast3(genericList);
+
+            var thing = new Thing<Dog>();
+            DoCast4(thing);
+        }
+
+        public static void DoCast(LinkedList<Animal> animals)
+        {
+
+        }
+
+        public static void DoCast2(Animal[] animals)
+        {
+        }
+
+        public static void DoCast3(System.Collections.Generic.List<Animal> animals)
+        {
+        }
+
+        public static void DoCast4(Thing<Animal> thing)
+        {
+        }
+
+        public interface IThing<out T>
+        {
+        }
+
+        public sealed class Thing<T> : IThing<T>
+        {
+        }
+
+        public class Animal
+        {
+        }
+
+        public class Dog : Animal
+        {
+        }*/
+
         public ref struct LinkedList<T> : IBetterReadOnlyCollection<LinkedList<T>, T, LinkedList<T>.Enumerator> where T : allows ref struct
         {
             private SpanEx<LinkedListNode> first;
@@ -311,21 +362,16 @@
             }
         }
 
-        public interface ITypeParameters<out T1, out T2> where T1 : allows ref struct where T2 : allows ref struct
-        {
-            //// TODO can you have like a return ref this?
-        }
-
         public interface IBetterReadOnlyCollection<TSelf, TValue, TEnumerator> where TSelf : allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
         {
             int Count { get; }
 
             TEnumerator GetEnumerator();
 
-            Params<TSelf, TValue, TEnumerator> TypeParameters { get; } //// TODO this requires removing covariance...
+            Params<TSelf, TValue, TEnumerator> TypeParameters { get; } //// TODO this requires removing covariance...but if this is really only used for ref structs (why else would it have the enumerator?) then you can't leverage the covariance anyway
         }
 
-        public readonly ref struct Params<TSelf, T1, T2> : ITypeParameters<T1, T2> where TSelf : allows ref struct where T1 : allows ref struct where T2 : allows ref struct
+        public readonly ref struct Params<TSelf, T1, T2> where TSelf : allows ref struct where T1 : allows ref struct where T2 : allows ref struct
         {
             public Params(TSelf self)
             {
