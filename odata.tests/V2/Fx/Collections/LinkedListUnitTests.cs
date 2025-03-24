@@ -27,12 +27,12 @@
         {
             var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
 
-            ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            ByteSpan memory = stackalloc byte[list.MemorySize];
             list.Append(new Wrapper<int>(-1), memory);
 
             for (int i = 0; i < 10; ++i)
             {
-                memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+                memory = stackalloc byte[list.MemorySize];
                 list.Append(new Wrapper<int>(i), memory);
             }
 
@@ -40,7 +40,7 @@
 
             for (int i = 10; i < 20; ++i)
             {
-                memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+                memory = stackalloc byte[list.MemorySize];
                 list.Append(new Wrapper<int>(i), memory);
             }
 
@@ -52,12 +52,12 @@
         {
             var list = new LinkedList<int>(stackalloc byte[0]);
 
-            ByteSpan memory = stackalloc byte[LinkedList<int>.MemorySize];
+            ByteSpan memory = stackalloc byte[list.MemorySize];
             list.Append(-1, memory);
 
             for (int i = 0; i < 10; ++i)
             {
-                memory = stackalloc byte[LinkedList<int>.MemorySize]; //// TODO memorysize shouldn't be static; this is probably easy if you allow an empty list
+                memory = stackalloc byte[list.MemorySize]; //// TODO memorysize shouldn't be static; this is probably easy if you allow an empty list
                 list.Append(i, memory);
             }
 
@@ -65,7 +65,7 @@
 
             for (int i = 10; i < 20; ++i)
             {
-                memory = stackalloc byte[LinkedList<int>.MemorySize];
+                memory = stackalloc byte[list.MemorySize];
                 list.Append(i, memory);
             }
 
@@ -77,12 +77,12 @@
         {
             var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
 
-            ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            ByteSpan memory = stackalloc byte[list.MemorySize];
             list.Append(new Wrapper<int>(-1), memory);
 
             for (int i = 0; i < 10; ++i)
             {
-                memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+                memory = stackalloc byte[list.MemorySize];
                 list.Append(new Wrapper<int>(i), memory);
             }
 
@@ -102,12 +102,12 @@
         {
             var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
 
-            ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            ByteSpan memory = stackalloc byte[list.MemorySize];
             list.Append(new Wrapper<int>(-1), memory);
 
             AssertEnumerable(new[] { -1 }, list);
 
-            memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            memory = stackalloc byte[list.MemorySize];
             var newList = Foo(list, memory);
 
             AssertEnumerable(new[] { -1, 42 }, list); //// TODO if `list` is passed by value, shouldn't this still only have 1 element
@@ -135,12 +135,12 @@
 
             var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
 
-            ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            ByteSpan memory = stackalloc byte[list.MemorySize];
             list.Append(new Wrapper<int>(-1), memory);
 
             for (int i = 0; i < 10; ++i)
             {
-                memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+                memory = stackalloc byte[list.MemorySize];
                 list.Append(new Wrapper<int>(i), memory);
             }
 
@@ -159,7 +159,7 @@
 
             for (int i = 0; i < 10; ++i)
             {
-                ByteSpan memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+                ByteSpan memory = stackalloc byte[list.MemorySize];
                 list.Append(new Wrapper<int>(i), memory);
             }
 
@@ -197,22 +197,22 @@
 
             //// TODO get these working
             var list2 = new LinkedList<Wrapper<int>>();
-            Span<byte> memory2 = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            Span<byte> memory2 = stackalloc byte[list.MemorySize];
             list2.Append(new Wrapper<int>(67), memory2);
 
             LinkedList<Wrapper<int>> list3 = default;
-            Span<byte> memory3 = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            Span<byte> memory3 = stackalloc byte[list.MemorySize];
             list3.Append(new Wrapper<int>(67), memory3);
 
             Span<byte> memory4 = stackalloc byte[0];
             var list4 = new LinkedList<Wrapper<int>>(memory4);
-            memory4 = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            memory4 = stackalloc byte[list.MemorySize];
             list4.Append(new Wrapper<int>(98), memory4);
 
-            Span<byte> memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            Span<byte> memory = stackalloc byte[list.MemorySize];
             var list = new LinkedList<Wrapper<int>>(memory);
 
-            memory = stackalloc byte[LinkedList<Wrapper<int>>.MemorySize];
+            memory = stackalloc byte[list.MemorySize];
             list.Append(new Wrapper<int>(42), memory);
 
             AssertEnumerable(new[] { 42 }, list);

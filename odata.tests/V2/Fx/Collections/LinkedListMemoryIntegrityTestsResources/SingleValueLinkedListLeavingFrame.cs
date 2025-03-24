@@ -7,7 +7,7 @@ public static class SingleValueLinkedListLeavingFrame
     {
         var list = new LinkedList<int>(stackalloc byte[0]);
 
-        ByteSpan span = stackalloc byte[LinkedList<int>.MemorySize];
+        ByteSpan span = stackalloc byte[list.MemorySize];
         list.Append(42, span);
         return list;
     }

@@ -7,7 +7,7 @@ public static class AppendToDefaultList
     {
         var list = new LinkedList<int>();
 
-        ByteSpan memory = stackalloc byte[LinkedList<int>.MemorySize];
+        ByteSpan memory = stackalloc byte[list.MemorySize];
         list.Append(42, memory);
     }
 }

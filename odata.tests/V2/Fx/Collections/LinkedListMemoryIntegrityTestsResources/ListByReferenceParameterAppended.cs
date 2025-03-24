@@ -5,7 +5,7 @@ public static class ListByReferenceParameterAppended
 {
     private static void Method(in LinkedList<int> list)
     {
-        ByteSpan memory = stackalloc byte[LinkedList<int>.MemorySize];
+        ByteSpan memory = stackalloc byte[list.MemorySize];
 
         list.Append(42, memory);
     }

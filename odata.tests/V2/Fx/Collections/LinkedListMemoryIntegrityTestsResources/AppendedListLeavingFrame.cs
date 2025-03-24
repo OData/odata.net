@@ -7,10 +7,10 @@ public static class AppendedListLeavingFrame
     {
         var list = new LinkedList<int>(stackalloc byte[0]);
 
-        ByteSpan memory = stackalloc byte[LinkedList<int>.MemorySize];
+        ByteSpan memory = stackalloc byte[list.MemorySize];
         list.Append(42, memory);
 
-        memory = stackalloc byte[LinkedList<int>.MemorySize];
+        memory = stackalloc byte[list.MemorySize];
         list.Append(67, memory);
 
         return list;

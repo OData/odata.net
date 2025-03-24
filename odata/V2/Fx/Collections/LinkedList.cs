@@ -79,7 +79,7 @@
             }
         }
 
-        public static int MemorySize { get; } = System.Runtime.CompilerServices.Unsafe.SizeOf<LinkedListNode>();
+        public int MemorySize { get; } = System.Runtime.CompilerServices.Unsafe.SizeOf<LinkedListNode>();
 
         private ref struct LinkedListNode
         {
