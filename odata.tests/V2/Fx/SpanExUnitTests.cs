@@ -3,7 +3,7 @@
     using System;
 
     [TestClass]
-    public sealed class BetterReadOnlySpanUnitTests
+    public sealed class SpanExUnitTests
     {
         [TestMethod]
         public void FromInstance()
