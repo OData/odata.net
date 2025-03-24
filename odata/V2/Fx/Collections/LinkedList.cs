@@ -16,13 +16,6 @@
 
         private SpanEx<LinkedListNode> current;
 
-        private bool hasValues;
-
-        public LinkedList()
-        {
-            this.hasValues = false;
-        }
-
         /// <summary>
         /// 
         /// </summary>
@@ -54,27 +47,18 @@
 
             this.first = SpanEx.FromMemory<LinkedListNode>(memory, 1);
             this.current = this.first;
-
-            this.hasValues = true;
         }
 
         public void Append(T value, ByteSpan memory)
         {
-            if (!this.hasValues)
-            {
-                this.SetFirstValue(value, memory);
-            }
-            else
-            {
-                var nextNode = new LinkedListNode(value);
-                MemoryMarshal.Write(memory, nextNode);
+            var nextNode = new LinkedListNode(value);
+            MemoryMarshal.Write(memory, nextNode);
 
-                var next = SpanEx.FromMemory<LinkedListNode>(memory, 1);
+            var next = SpanEx.FromMemory<LinkedListNode>(memory, 1);
 
-                this.current[0].Next = next;
+            this.current[0].Next = next;
 
-                this.current = next;
-            }
+            this.current = next;
         }
 
         public static int MemorySize { get; } = System.Runtime.CompilerServices.Unsafe.SizeOf<LinkedListNode>();
@@ -93,14 +77,7 @@
 
         public Enumerator GetEnumerator()
         {
-            if (this.hasValues)
-            {
-                return new Enumerator(this);
-            }
-            else
-            {
-                return new Enumerator();
-            }
+            return new Enumerator(this);
         }
 
         public ref struct Enumerator
@@ -109,21 +86,18 @@
 
             private bool hasMoved;
 
-            private readonly bool hasValues;
-
             internal Enumerator(LinkedList<T> list)
             {
                 this.node = list.first;
 
                 this.hasMoved = false;
-                this.hasValues = true;
             }
 
             public T Current //// TODO cna you make this return `ref t`?
             {
                 get
                 {
-                    if (!this.hasValues || !this.hasMoved)
+                    if (!this.hasMoved)
                     {
                         throw new Exception("TODO");
                     }
@@ -134,11 +108,6 @@
 
             public bool MoveNext()
             {
-                if (!this.hasValues)
-                {
-                    return false;
-                }
-
                 if (!this.hasMoved)
                 {
                     this.hasMoved = true;
