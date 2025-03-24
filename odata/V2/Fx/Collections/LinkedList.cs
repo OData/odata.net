@@ -18,8 +18,15 @@
 
         private bool hasValues;
 
-        public LinkedList(ByteSpan pointer)
+        public LinkedList(ByteSpan emptySpan)
         {
+            if (emptySpan.Length != 0)
+            {
+                // this is to protect the caller from overallocating memory; we don't use this span for anything
+                var message = $"A new list must be instantiated with empty data. The provided data has length '{emptySpan.Length}'";
+                throw new ArgumentOutOfRangeException(message, (Exception?)null);
+            }
+
             this.hasValues = false;
         }
 
