@@ -66,6 +66,11 @@
             return ToArray<TEnumerable, TEnumerator, TValue>(enumerable, memory);
         }
 
+        private static ReadOnlyArray<TValue> ToArray3<TEnumerable, TEnumerator, TValue>(Params<TEnumerable, TValue, TEnumerable> enumerable, ByteSpan memory) where TEnumerable : IBetterReadOnlyCollection<TEnumerable, TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
+        {
+            return ToArray<TEnumerable, TEnumerator, TValue>(enumerable.Self, memory);
+        }
+
         private static ReadOnlyArray<TValue> ToArray<TEnumerable, TEnumerator, TValue>(TEnumerable enumerable, ByteSpan memory) where TEnumerable : IBetterReadOnlyCollection<TEnumerable, TValue, TEnumerator>, allows ref struct where TValue : allows ref struct where TEnumerator : IEnumerator<TValue>, allows ref struct
         {
             if (memory.Length != enumerable.Count * Unsafe.SizeOf<TValue>())
