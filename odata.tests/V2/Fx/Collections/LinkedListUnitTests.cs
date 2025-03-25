@@ -19,6 +19,61 @@
             public T Value { get; }
         }
 
+        /*private readonly ref struct Wrapper2<T>
+        {
+            public Wrapper2(ref T value)
+            {
+                Value = ref value;
+            }
+
+            public readonly ref T Value;
+        }
+
+        //// TODO add the memory integrity tests
+
+        class HeapVal
+        {
+            public HeapVal(int value)
+            {
+                Value = value;
+            }
+
+            public int Value { get; }
+        }
+
+        private LinkedList<Wrapper2<int>> ByRefGCCounter()
+        {
+            var list = new LinkedList<Wrapper2<int>>(stackalloc byte[0]);
+
+            var value = -1;
+            ByteSpan memory = stackalloc byte[list.MemorySize];
+            list.Append(new Wrapper2<int>(ref value), memory);
+
+            return list;
+        }
+
+        private HeapVal something = new HeapVal(42);
+
+        private LinkedList<Wrapper<HeapVal>> ByRefGCCounter2()
+        {
+            var list = new LinkedList<Wrapper<HeapVal>>(stackalloc byte[0]);
+
+            ByteSpan memory = stackalloc byte[list.MemorySize];
+            list.Append(new Wrapper<HeapVal>(something), memory);
+
+            return list;
+        }
+
+        private LinkedList<Wrapper<HeapVal>> ByRefGCCounter3(HeapVal something3)
+        {
+            var list = new LinkedList<Wrapper<HeapVal>>(stackalloc byte[0]);
+
+            ByteSpan memory = stackalloc byte[list.MemorySize];
+            list.Append(new Wrapper<HeapVal>(something3), memory);
+
+            return list;
+        }*/
+
         [TestMethod]
         public void AppendRefStruct()
         {
