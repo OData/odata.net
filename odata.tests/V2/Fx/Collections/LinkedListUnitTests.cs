@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #pragma warning disable CA2014 // Do not use stackalloc in loops
@@ -109,6 +110,64 @@
             tester.Value = 100;
         }
 
+        private static int Finalized = 0;
+
+        public class CollectedTest
+        {
+            ~CollectedTest()
+            {
+                Interlocked.Increment(ref Finalized);
+            }
+        }
+
+        [TestMethod]
+        public void GarbageCollected()
+        {
+            GarbageCollectedHelper(true);
+            GarbageCollectedHelper(false);
+        }
+
+        private static void GarbageCollectedHelper(bool addToList)
+        {
+            var list = new LinkedList<CollectedTest>(stackalloc byte[0]);
+
+            for (int i = 0; i < 10; ++i)
+            {
+                var foo = new CollectedTest();
+                if (addToList)
+                {
+                    ByteSpan memory = stackalloc byte[list.MemorySize];
+                    list.Append(foo, memory);
+                }
+            }
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            if (addToList)
+            {
+                Assert.AreEqual(0, Finalized);
+            }
+            else
+            {
+                Assert.AreEqual(9, Finalized);
+            }
+        }
+
+        [TestMethod]
+        public void FinalizeTest()
+        {
+            FinalizeTestDelegate();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Assert.AreEqual(1, Finalized);
+        }
+
+        private static void FinalizeTestDelegate()
+        {
+            var foo = new CollectedTest();
+        }
 
         [TestMethod]
         public void AppendRefStruct()
