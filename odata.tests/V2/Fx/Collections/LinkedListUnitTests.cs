@@ -77,6 +77,15 @@
         [TestMethod]
         public void AppendRefStruct()
         {
+            unsafe
+            {
+                ByteSpan span = new ByteSpan();
+
+                fixed (byte* pointer = span)
+                {
+                }
+            }
+
             var list = new LinkedList<Wrapper<int>>(stackalloc byte[0]);
 
             ByteSpan memory = stackalloc byte[list.MemorySize];

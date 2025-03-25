@@ -83,8 +83,10 @@
         //// TODO you can add this here (and other places) if you really want to get parity with the .net version [EditorBrowsable(EditorBrowsableState.Never)]
         public ref byte GetPinnableReference()
         {
-            ref byte pointer = ref MemoryMarshal.AsRef<byte>(span);
-            return ref pointer;
+            return ref this.span.GetPinnableReference();
+
+            /*ref byte pointer = ref MemoryMarshal.AsRef<byte>(span);
+            return ref pointer;*/
         }
         
         public static implicit operator ByteSpan(Span<byte> span)
