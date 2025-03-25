@@ -2,7 +2,6 @@
 {
     using System;
     using System.Runtime.CompilerServices;
-
     using Fx.Runtime.InteropServices;
 
     /// <summary>
@@ -35,6 +34,12 @@
         /// </exception>
         private SpanEx(ByteSpan memory, int length)
         {
+            if (RuntimeHelpers.IsReferenceOrContainsReferences<T>())
+            {
+                //// TODO you need to write unit tests around this assertion
+                //// throw new Exception("TODO");
+            }
+
             var elementSize = Unsafe.SizeOf<T>();
             if (memory.Length != elementSize * length)
             {

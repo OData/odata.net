@@ -84,9 +84,6 @@
         public ref byte GetPinnableReference()
         {
             return ref this.span.GetPinnableReference();
-
-            /*ref byte pointer = ref MemoryMarshal.AsRef<byte>(span);
-            return ref pointer;*/
         }
         
         public static implicit operator ByteSpan(Span<byte> span)

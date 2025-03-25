@@ -37,7 +37,7 @@ namespace V3
             //// TODO what happens to the memory here? do we just waste 9 nodes of the first allocation?
         }
 
-        public static bool TryAppend<T>(this LinkedList<T> list, T value)
+        public static bool TryAppend<T>(this LinkedList<T> list, T value) where T : struct, allows ref struct
         {
             return true;
         }
@@ -54,12 +54,12 @@ namespace V3
             list.TryAppend2(42); //// TODO should return true, but what if it returns false?
         }
 
-        public static bool TryAppend2<T>(this LinkedList<T> list, T value)
+        public static bool TryAppend2<T>(this LinkedList<T> list, T value) where T : struct, allows ref struct
         {
             return true;
         }
 
-        public static bool TryAllocate2<T>(this LinkedList<T> list, ByteSpan memory)
+        public static bool TryAllocate2<T>(this LinkedList<T> list, ByteSpan memory) where T : struct, allows ref struct
         {
             return true;
         }
@@ -77,7 +77,7 @@ namespace V3
             appender = list.Allocate3(memory); //// TODO what happens to the unused memory from the existing appender?
         }
 
-        public static LinkedListAppender<T> Allocate3<T>(this LinkedList<T> list, ByteSpan memory)
+        public static LinkedListAppender<T> Allocate3<T>(this LinkedList<T> list, ByteSpan memory) where T : struct, allows ref struct
         {
             return new LinkedListAppender<T>();
         }
@@ -160,7 +160,7 @@ namespace V3
             }
         }
 
-        public static bool TryAppend4<T>(this LinkedList<T> list, T value, ByteSpan memory)
+        public static bool TryAppend4<T>(this LinkedList<T> list, T value, ByteSpan memory) where T : struct, allows ref struct
         {
             //// TODO you *might* want to consider if someone invents a stack-based arraypool and that pool has arrays that are not aligned with your node sizes; in that case, you would (currently) be disallowed the use of those buffer, so maybe it makes sense to be able to stitch multiple buffers together if they have some "dangling" memory
 
@@ -168,7 +168,7 @@ namespace V3
             return true;
         }
 
-        public static bool TryAppend4<T>(this LinkedList<T> list, T value)
+        public static bool TryAppend4<T>(this LinkedList<T> list, T value) where T : struct, allows ref struct
         {
             // `true` if we had memory available for the operation, false otherwise (and therefore the append didn't happen)
             return true;

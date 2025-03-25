@@ -2,7 +2,6 @@
 {
     using System;
     using System.Runtime.CompilerServices;
-
     using V2.Fx.Runtime.InteropServices;
 
     /// <summary>

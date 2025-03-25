@@ -3,7 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net.WebSockets;
+    using System.Runtime.InteropServices;
+    using System.Threading;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static V2.Fx.Collections.LinkedListUnitTests;
 
 #pragma warning disable CA2014 // Do not use stackalloc in loops
     [TestClass]
@@ -19,96 +24,45 @@
             public T Value { get; }
         }
 
-        /*private readonly ref struct Wrapper2<T>
+        private static int ReferenceElementsFinalized = 0;
+
+        public class ReferencedElementWithFinalizer
         {
-            public Wrapper2(ref T value)
+            ~ReferencedElementWithFinalizer()
             {
-                Value = ref value;
+                Interlocked.Increment(ref ReferenceElementsFinalized);
             }
-
-            public readonly ref T Value;
-        }
-
-        //// TODO add the memory integrity tests
-
-        class HeapVal
-        {
-            public HeapVal(int value)
-            {
-                Value = value;
-            }
-
-            public int Value { get; }
-        }
-
-        private LinkedList<Wrapper2<int>> ByRefGCCounter()
-        {
-            var list = new LinkedList<Wrapper2<int>>(stackalloc byte[0]);
-
-            var value = -1;
-            ByteSpan memory = stackalloc byte[list.MemorySize];
-            list.Append(new Wrapper2<int>(ref value), memory);
-
-            return list;
-        }
-
-        private HeapVal something = new HeapVal(42);
-
-        private LinkedList<Wrapper<HeapVal>> ByRefGCCounter2()
-        {
-            var list = new LinkedList<Wrapper<HeapVal>>(stackalloc byte[0]);
-
-            ByteSpan memory = stackalloc byte[list.MemorySize];
-            list.Append(new Wrapper<HeapVal>(something), memory);
-
-            return list;
-        }
-
-        private LinkedList<Wrapper<HeapVal>> ByRefGCCounter3(HeapVal something3)
-        {
-            var list = new LinkedList<Wrapper<HeapVal>>(stackalloc byte[0]);
-
-            ByteSpan memory = stackalloc byte[list.MemorySize];
-            list.Append(new Wrapper<HeapVal>(something3), memory);
-
-            return list;
-        }*/
-
-        /*private LinkedList<HeapVal> ByRefGCCounter4()
-        {
-            var list = new LinkedList<HeapVal>(stackalloc byte[0]);
-
-            ByteSpan memory = stackalloc byte[list.MemorySize];
-            list.Append(new HeapVal(), memory);
-
-            GC.Collect();
-
-            return list;
-        }*/
-
-        public struct Tester()
-        {
-            public int Value;
         }
 
         [TestMethod]
-        public void Pointers()
+        public void ReferenceElements()
         {
-            //// TODO send the correct version of this to the team
-            Tester a = new Tester();
-            a.Value = 42;
-            Tester b = a;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
-            PointersImpl(ref b);
+            ReferenceElementsFinalized = 0;
 
-            Assert.AreEqual(100, a.Value);
+            Exception? exception = null;
+
+            exception = Assert.ThrowsException<Exception>(() => new LinkedList<Wrapper<ReferencedElementWithFinalizer>>(stackalloc byte[0]));
+
+            if (exception == null)
+            {
+                LinkedList<Wrapper<ReferencedElementWithFinalizer>> list = new LinkedList<Wrapper<ReferencedElementWithFinalizer>>(stackalloc byte[0]);
+
+                for (int i = 0; i < 10; ++i)
+                {
+                    list.Append(
+                        new Wrapper<ReferencedElementWithFinalizer>(new ReferencedElementWithFinalizer()),
+                        stackalloc byte[list.MemorySize]);
+                }
+
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                Assert.AreEqual(0, ReferenceElementsFinalized);
+            }
         }
-
-        public void PointersImpl(ref Tester tester)
-        {
-            tester.Value = 100;
-        }
-
 
         [TestMethod]
         public void AppendRefStruct()
@@ -121,12 +75,7 @@
             for (int i = 0; i < 10; ++i)
             {
                 memory = stackalloc byte[list.MemorySize];
-                LinkedListNode node = new System.Collections.Generic.LinkedListNode();
-
-
-                
-
-                list.Append(new Wrapper<int>(i), node);
+                list.Append(new Wrapper<int>(i), memory);
             }
 
             AssertEnumerable(Enumerable.Range(-1, 11), list);
@@ -371,12 +320,12 @@
             AssertEnumerable(expected, actual, wrapper => wrapper.Value);
         }
 
-        private static void AssertEnumerable<T>(IEnumerable<T> expected, LinkedList<T> actual)
+        private static void AssertEnumerable<T>(IEnumerable<T> expected, LinkedList<T> actual) where T : struct
         {
             AssertEnumerable(expected, actual, _ => _);
         }
 
-        private static void AssertEnumerable<TValue, TWrapper>(IEnumerable<TValue> expected, LinkedList<TWrapper> actual, Func<TWrapper, TValue> selector) where TWrapper : allows ref struct //// TODO add allows ref struct constraint to TValue
+        private static void AssertEnumerable<TValue, TWrapper>(IEnumerable<TValue> expected, LinkedList<TWrapper> actual, Func<TWrapper, TValue> selector) where TWrapper : struct, allows ref struct //// TODO add allows ref struct constraint to TValue
         {
             using (var expectedEnumerator = expected.GetEnumerator())
             {
