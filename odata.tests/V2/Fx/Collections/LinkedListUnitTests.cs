@@ -121,12 +121,7 @@
             for (int i = 0; i < 10; ++i)
             {
                 memory = stackalloc byte[list.MemorySize];
-                LinkedListNode node = new System.Collections.Generic.LinkedListNode();
-
-
-                
-
-                list.Append(new Wrapper<int>(i), node);
+                list.Append(new Wrapper<int>(i), memory);
             }
 
             AssertEnumerable(Enumerable.Range(-1, 11), list);
