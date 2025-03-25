@@ -4,6 +4,8 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Formatter.Serialization;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
@@ -62,6 +64,62 @@ public class InstanceAnnotationTests : EndToEndTestBase<InstanceAnnotationTests.
     private new const string MimeTypeODataParameterFullMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata;
     private new const string MimeTypeODataParameterMinimalMetadata = MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata;
 
+    [Fact]
+    public async Task EntityInstanceAnnotation_WithValidMimeType_ReturnsAnnotations_VerifyInResponseContent()
+    {
+        // Arrange
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + "Boss", UriKind.Absolute);
+
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+        requestMessage.SetHeader("Prefer", string.Format("{0}={1}", IncludeAnnotation, "*"));
+
+        // Act
+        var responseMessage = await requestMessage.GetResponseAsync();
+
+        // Assert
+        Assert.Equal(200, responseMessage.StatusCode);
+
+        var responseString = await this.ReadAsStringAsync(responseMessage);
+
+        var responseInString = @"
+{
+  ""@odata.context"": ""http://localhost/odata/$metadata#Boss/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer"",
+  ""@odata.type"": ""#Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer"",
+  ""@Microsoft.OData.E2E.TestCommon.Common.Server.Default.IsBoss"": true,
+  ""PersonID"": 2,
+  ""FirstName"": ""Jill"",
+  ""LastName"": ""Jones"",
+  ""MiddleName"": null,
+  ""Numbers"": [],
+  ""Emails@Microsoft.OData.E2E.TestCommon.Common.Server.Default.DisplayName"": ""EmailAddresses"",
+  ""Emails"": [],
+  ""Home"": {
+    ""type"": ""Point"",
+    ""coordinates"": [
+      161.8,
+      15.0
+    ],
+    ""crs"": {
+      ""type"": ""name"",
+      ""properties"": {
+        ""name"": ""EPSG:4326""
+      }
+    }
+  },
+  ""UpdatedTime"": ""0001-01-01T00:00:00Z"",
+  ""City@Microsoft.OData.E2E.TestCommon.Common.Server.Default.CityInfo"": ""BestCity"",
+  ""City"": ""Sydney"",
+  ""Birthday"": ""1983-01-15T00:00:00\u002B03:00"",
+  ""TimeBetweenLastTwoOrders"": ""PT0.0000002S"",
+  ""Addresses"": [],
+  ""HomeAddress"": null
+}";
+
+        Assert.NotNull(responseString);
+        Assert.Equal(responseInString.Trim(), responseInString.Trim());
+    }
+
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]
@@ -98,6 +156,96 @@ public class InstanceAnnotationTests : EndToEndTestBase<InstanceAnnotationTests.
             Assert.NotNull(instanceAnnotations);
             Assert.Equal(true, (instanceAnnotations.First(i => i.Name.Equals(string.Format("{0}.IsBoss", NameSpacePrefix))).Value as ODataPrimitiveValue)?.Value);
         }
+    }
+
+    [Fact]
+    public async Task ComplexTypeInstanceAnnotation_WithValidMimeType_ReturnsAnnotations_VerifyInResponseContent()
+    {
+        // Arrange
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + "People(1)", UriKind.Absolute);
+
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterMinimalMetadata);
+        requestMessage.SetHeader("Prefer", string.Format("{0}={1}", IncludeAnnotation, "*"));
+
+        // Act
+        var responseMessage = await requestMessage.GetResponseAsync();
+
+        // Assert
+        Assert.Equal(200, responseMessage.StatusCode);
+
+        var responseString = await this.ReadAsStringAsync(responseMessage);
+
+        var responseInString = @"
+{
+  ""@odata.context"": ""http://localhost/odata/$metadata#People/Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer/$entity"",
+  ""@odata.type"": ""#Microsoft.OData.E2E.TestCommon.Common.Server.Default.Customer"",
+  ""PersonID"": 1,
+  ""FirstName"": ""Bob"",
+  ""LastName"": ""Cat"",
+  ""MiddleName"": null,
+  ""Numbers"": [
+    ""111-111-1111"",
+    ""012"",
+    ""310"",
+    ""bca"",
+    ""ayz""
+  ],
+  ""Emails@Microsoft.OData.E2E.TestCommon.Common.Server.Default.DisplayName"": ""EmailAddresses"",
+  ""Emails"": [
+    ""abc@abc.com""
+  ],
+  ""Home"": {
+    ""type"": ""Point"",
+    ""coordinates"": [
+      23.1,
+      32.1
+    ],
+    ""crs"": {
+      ""type"": ""name"",
+      ""properties"": {
+        ""name"": ""EPSG:4326""
+      }
+    }
+  },
+  ""UpdatedTime"": ""0001-01-01T00:00:00Z"",
+  ""City@Microsoft.OData.E2E.TestCommon.Common.Server.Default.CityInfo"": ""BestCity"",
+  ""City"": ""London"",
+  ""Birthday"": ""1957-04-03T00:00:00\u002B03:00"",
+  ""TimeBetweenLastTwoOrders"": ""PT0.0000001S"",
+  ""Addresses"": [
+    {
+      ""@odata.type"": ""#Microsoft.OData.E2E.TestCommon.Common.Server.Default.HomeAddress"",
+      ""@Microsoft.OData.E2E.TestCommon.Common.Server.Default.AddressType"": ""Home"",
+      ""Street"": ""1 Microsoft Way"",
+      ""City@Microsoft.OData.E2E.TestCommon.Common.Server.Default.CityInfo"": ""BestCity"",
+      ""City"": ""Tokyo"",
+      ""PostalCode"": ""98052"",
+      ""UpdatedTime"": ""0001-01-01T00:00:00Z"",
+      ""FamilyName"": ""Cats""
+    },
+    {
+      ""Street"": ""999 Zixing Road"",
+      ""City@Microsoft.OData.E2E.TestCommon.Common.Server.Default.CityInfo"": ""BestCity"",
+      ""City"": ""Shanghai"",
+      ""PostalCode"": ""200000"",
+      ""UpdatedTime"": ""0001-01-01T00:00:00Z""
+    }
+  ],
+  ""HomeAddress"": {
+    ""@odata.type"": ""#Microsoft.OData.E2E.TestCommon.Common.Server.Default.HomeAddress"",
+    ""@Microsoft.OData.E2E.TestCommon.Common.Server.Default.AddressType"": ""Home"",
+    ""Street"": ""1 Microsoft Way"",
+    ""City@Microsoft.OData.E2E.TestCommon.Common.Server.Default.CityInfo"": ""BestCity"",
+    ""City"": ""Tokyo"",
+    ""PostalCode"": ""98052"",
+    ""UpdatedTime"": ""0001-01-01T00:00:00Z"",
+    ""FamilyName"": ""Cats""
+  }
+}";
+
+        Assert.NotNull(responseString);
+        Assert.Equal(responseInString.Trim(), responseString.Trim());
     }
 
     [Theory]
@@ -167,6 +315,42 @@ public class InstanceAnnotationTests : EndToEndTestBase<InstanceAnnotationTests.
         }
     }
 
+    [Fact]
+    public async Task TopLevelComplexTypeInstanceAnnotation_WithValidMimeType_ReturnsAnnotations_VerifyInResponseContent()
+    {
+        // Arrange
+        var requestUrl = new Uri(_baseUri.AbsoluteUri + "People(1)/HomeAddress", UriKind.Absolute);
+
+        var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
+        requestMessage.SetHeader("Accept", MimeTypeODataParameterFullMetadata);
+        requestMessage.SetHeader("Prefer", string.Format("{0}={1}", IncludeAnnotation, "*"));
+
+        // Act
+        var responseMessage = await requestMessage.GetResponseAsync();
+
+        // Assert
+        Assert.Equal(200, responseMessage.StatusCode);
+
+        var responseString = await this.ReadAsStringAsync(responseMessage);
+
+        var responseInString = @"
+{
+  ""@odata.context"": ""http://localhost/odata/$metadata#People(1)/HomeAddress"",
+  ""@odata.type"": ""#Microsoft.OData.E2E.TestCommon.Common.Server.Default.HomeAddress"",
+  ""@Microsoft.OData.E2E.TestCommon.Common.Server.Default.AddressType"": ""Home"",
+  ""Street"": ""1 Microsoft Way"",
+  ""City@Microsoft.OData.E2E.TestCommon.Common.Server.Default.CityInfo"": ""BestCity"",
+  ""City"": ""Tokyo"",
+  ""PostalCode"": ""98052"",
+  ""UpdatedTime@odata.type"": ""#DateTimeOffset"",
+  ""UpdatedTime"": ""0001-01-01T00:00:00Z"",
+  ""FamilyName"": ""Cats""
+}";
+
+        Assert.NotNull(responseString);
+        Assert.Equal(responseInString.Trim(), responseString.Trim());
+    }
+
     [Theory]
     [InlineData(MimeTypeODataParameterFullMetadata)]
     [InlineData(MimeTypeODataParameterMinimalMetadata)]
@@ -218,6 +402,21 @@ public class InstanceAnnotationTests : EndToEndTestBase<InstanceAnnotationTests.
     }
 
     #region Private
+
+    private async Task<string> ReadAsStringAsync(IODataResponseMessageAsync responseMessage)
+    {
+        using (Stream stream = await responseMessage.GetStreamAsync())
+        {
+            using (StreamReader reader = new StreamReader(stream, Encoding.UTF8))
+            {
+                var content = await reader.ReadToEndAsync();
+
+                // Format the content in JSON format
+                var jsonElement = JsonSerializer.Deserialize<JsonElement>(content);
+                return JsonSerializer.Serialize(jsonElement, new JsonSerializerOptions { WriteIndented = true });
+            }
+        }
+    }
 
     private void ResetDefaultDataSource()
     {
