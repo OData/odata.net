@@ -74,6 +74,42 @@
             return list;
         }*/
 
+        /*private LinkedList<HeapVal> ByRefGCCounter4()
+        {
+            var list = new LinkedList<HeapVal>(stackalloc byte[0]);
+
+            ByteSpan memory = stackalloc byte[list.MemorySize];
+            list.Append(new HeapVal(), memory);
+
+            GC.Collect();
+
+            return list;
+        }*/
+
+        public struct Tester()
+        {
+            public int Value;
+        }
+
+        [TestMethod]
+        public void Pointers()
+        {
+            //// TODO send the correct version of this to the team
+            Tester a = new Tester();
+            a.Value = 42;
+            Tester b = a;
+
+            PointersImpl(ref b);
+
+            Assert.AreEqual(100, a.Value);
+        }
+
+        public void PointersImpl(ref Tester tester)
+        {
+            tester.Value = 100;
+        }
+
+
         [TestMethod]
         public void AppendRefStruct()
         {
@@ -85,7 +121,12 @@
             for (int i = 0; i < 10; ++i)
             {
                 memory = stackalloc byte[list.MemorySize];
-                list.Append(new Wrapper<int>(i), memory);
+                LinkedListNode node = new System.Collections.Generic.LinkedListNode();
+
+
+                
+
+                list.Append(new Wrapper<int>(i), node);
             }
 
             AssertEnumerable(Enumerable.Range(-1, 11), list);
