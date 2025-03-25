@@ -119,7 +119,7 @@ public class Temperature
         }
         else
         {
-            throw new Exception("Unknow format for temperature");
+            throw new Exception("Unknown format for temperature");
         }
     }
 
