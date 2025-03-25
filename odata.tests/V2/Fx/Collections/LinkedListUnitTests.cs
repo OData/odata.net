@@ -54,7 +54,7 @@
 
             for (int i = 0; i < 10; ++i)
             {
-                memory = stackalloc byte[list.MemorySize]; //// TODO memorysize shouldn't be static; this is probably easy if you allow an empty list
+                memory = stackalloc byte[list.MemorySize];
                 list.Append(i, memory);
             }
 
