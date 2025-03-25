@@ -69,6 +69,37 @@
             AssertEnumerable(Enumerable.Range(-1, 21), list);
         }
 
+        /*[TestMethod]
+        public void Append2()
+        {
+            var list = new LinkedList<int>(stackalloc byte[0]);
+
+            ByteSpan memory = stackalloc byte[list.MemorySize];
+            list.Append(-1, memory);
+
+            for (int i = 0; i < 2; ++i)
+            {
+                memory = stackalloc byte[list.MemorySize];
+                list.Append(i, memory);
+            }
+
+            AssertEnumerable(Enumerable.Range(-1, 11), list);
+
+            DelegateCall(list);
+        }
+
+        private static void DelegateCall(LinkedList<int> list2)
+        {
+            //// TODO for some reason this isn't compiling, fix it
+            for (int i = 10; i < 2; ++i)
+            {
+                ByteSpan memory = stackalloc byte[list2.MemorySize];
+                list2.Append(i, memory);
+            }
+
+            AssertEnumerable(Enumerable.Range(-1, 21), list2);
+        }*/
+
         [TestMethod]
         public void EnumerateReturnedList()
         {
