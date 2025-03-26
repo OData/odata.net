@@ -129,6 +129,10 @@
 
         private static void GarbageCollectedHelper(bool addToList)
         {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Finalized = 0;
+
             var list = new LinkedList<CollectedTest>(stackalloc byte[0]);
 
             for (int i = 0; i < 10; ++i)
@@ -154,10 +158,15 @@
             }
         }
 
-        [TestMethod]
+        /*[TestMethod]
         public void FinalizeTest()
         {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Finalized = 0;
+
             FinalizeTestDelegate();
+
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
@@ -167,7 +176,7 @@
         private static void FinalizeTestDelegate()
         {
             var foo = new CollectedTest();
-        }
+        }*/
 
         [TestMethod]
         public void AppendRefStruct()

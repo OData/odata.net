@@ -62,6 +62,10 @@
         /// </exception>
         public void Append(T value, ByteSpan memory)
         {
+            var obj = System.Runtime.CompilerServices.Unsafe.As<T, object>(ref value);
+
+                System.Runtime.InteropServices.GCHandle.Alloc(obj);
+
             if (this.hasValues)
             {
                 var nextNode = new LinkedListNode(value);
