@@ -9,7 +9,7 @@
     /// A linked list with nodes that are allocated entirely on the stack and allowing for stack allocated elements
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public ref struct LinkedList<T> where T : allows ref struct //// TODO what other functionality do you want here? remove? lenght? etc...
+    public ref struct LinkedList<T> where T : struct, allows ref struct //// TODO what other functionality do you want here? remove? lenght? etc...
     {
         private SpanEx<LinkedListNode> first;
 
@@ -86,6 +86,7 @@
         {
             //// TODO you need to note somewhere that, because of copy semantics, calling dispose on a copy does mess up the original; this isn't really different than passing any other disposable to a method and calling dispose in the called method when the original instance is still needed in the caller method, though, so i think it's fine
             //// TODO you should do an assertion that a heap type is being used because, if not, this should just be a no-op
+            //// TODO you could always just have `where T : struct, allows ref struct` since your original use-case is to have everything stack allocated anyway...
 
             var current = this.first;
             while (current.Length != 0)
