@@ -50,6 +50,17 @@ public class CustomResourceSerializer : ODataResourceSerializer
                 case "City":
                     property.InstanceAnnotations.Add(new ODataInstanceAnnotation(_odataNamespace + ".CityInfo", new ODataPrimitiveValue("BestCity")));
                     break;
+                case "Birthday":
+                case "UpdatedTime":
+                    {
+                        // Convert the DateTimeOffset to UTC
+                        if (((ODataProperty)property).Value is DateTimeOffset dto)
+                        {
+                            ((ODataProperty)property).Value = new DateTimeOffset(dto.DateTime, TimeSpan.Zero);
+                        }
+                    }
+                    break;
+
             }
         }
 

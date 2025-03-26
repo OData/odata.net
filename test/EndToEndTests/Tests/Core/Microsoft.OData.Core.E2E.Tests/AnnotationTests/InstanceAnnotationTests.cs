@@ -110,7 +110,7 @@ public class InstanceAnnotationTests : EndToEndTestBase<InstanceAnnotationTests.
   ""UpdatedTime"": ""0001-01-01T00:00:00Z"",
   ""City@Microsoft.OData.E2E.TestCommon.Common.Server.Default.CityInfo"": ""BestCity"",
   ""City"": ""Sydney"",
-  ""Birthday"": ""1983-01-15T00:00:00\u002B03:00"",
+  ""Birthday"": ""1983-01-15T00:00:00Z"",
   ""TimeBetweenLastTwoOrders"": ""PT0.0000002S"",
   ""Addresses"": [],
   ""HomeAddress"": null
@@ -211,7 +211,7 @@ public class InstanceAnnotationTests : EndToEndTestBase<InstanceAnnotationTests.
   ""UpdatedTime"": ""0001-01-01T00:00:00Z"",
   ""City@Microsoft.OData.E2E.TestCommon.Common.Server.Default.CityInfo"": ""BestCity"",
   ""City"": ""London"",
-  ""Birthday"": ""1957-04-03T00:00:00\u002B03:00"",
+  ""Birthday"": ""1957-04-03T00:00:00Z"",
   ""TimeBetweenLastTwoOrders"": ""PT0.0000001S"",
   ""Addresses"": [
     {
