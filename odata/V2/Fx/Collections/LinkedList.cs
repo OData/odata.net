@@ -1,7 +1,6 @@
 ﻿namespace V2.Fx.Collections
 {
     using System;
-
     using V2.Fx.Runtime.InteropServices;
 
     //// TODO double check that this doesn't have any `unsafe` contexts
@@ -42,7 +41,9 @@
         /// </exception>
         private void SetFirstValue(T value, ByteSpan memory)
         {
-            var firstNode = new LinkedListNode(value);
+            var obj = System.Runtime.CompilerServices.Unsafe.As<T, object>(ref value);
+            var handle = System.Runtime.InteropServices.GCHandle.Alloc(obj);
+            var firstNode = new LinkedListNode(value, handle);
             MemoryMarshal.Write(memory, firstNode);
 
             this.first = SpanEx.FromMemory<LinkedListNode>(memory, 1);
@@ -62,13 +63,11 @@
         /// </exception>
         public void Append(T value, ByteSpan memory)
         {
-            var obj = System.Runtime.CompilerServices.Unsafe.As<T, object>(ref value);
-
-                System.Runtime.InteropServices.GCHandle.Alloc(obj);
-
             if (this.hasValues)
             {
-                var nextNode = new LinkedListNode(value);
+                var obj = System.Runtime.CompilerServices.Unsafe.As<T, object>(ref value);
+                var handle = System.Runtime.InteropServices.GCHandle.Alloc(obj);
+                var nextNode = new LinkedListNode(value, handle);
                 MemoryMarshal.Write(memory, nextNode);
 
                 var next = SpanEx.FromMemory<LinkedListNode>(memory, 1);
@@ -80,6 +79,16 @@
             else
             {
                 this.SetFirstValue(value, memory);
+            }
+        }
+
+        public void Dispose()
+        {
+            var current = this.first;
+            while (current.Length != 0)
+            {
+                current[0].Handle.Free();
+                current = current[0].Next;
             }
         }
 
@@ -120,7 +129,7 @@
         private ref struct LinkedListNode
         {
             public T Value;
-
+            public System.Runtime.InteropServices.GCHandle Handle;
             public SpanEx<T> Values;
 
             public SpanEx<LinkedListNode> Next;
@@ -137,9 +146,10 @@
             /// </summary>
             public bool IsSpan;
 
-            public LinkedListNode(T value)
+            public LinkedListNode(T value, System.Runtime.InteropServices.GCHandle handle)
             {
                 this.Value = value;
+                this.Handle = handle;
                 this.IsSpan = false;
             }
 

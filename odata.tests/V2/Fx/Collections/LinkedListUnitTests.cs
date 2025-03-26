@@ -156,6 +156,20 @@
             {
                 Assert.AreEqual(9, Finalized);
             }
+
+            list.Dispose();
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            if (addToList)
+            {
+                Assert.AreEqual(9, Finalized);
+            }
+            else
+            {
+                Assert.AreEqual(9, Finalized);
+            }
         }
 
         /*[TestMethod]
