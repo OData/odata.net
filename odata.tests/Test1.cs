@@ -13,6 +13,7 @@
     using System.Collections;
     using System.Diagnostics;
     using System.Linq;
+    using System.Security.AccessControl;
     using System.Text;
     using System.Xml;
 
@@ -234,6 +235,48 @@
                         new Uri(url, UriKind.Relative))
                         .ParseUri();
                 }
+            }
+        }
+
+        [TestMethod]
+        public void FixThis()
+        {
+            //// TODO this should fail parsing, not transcribing
+            var url = "a/b/c/d?count=true&filter=contains(e%2C%20%27f%27)";
+            if (!__GeneratedOdataV3.Parsers.Rules._odataRelativeUriParser.Instance.TryParse(url, out var urlCst))
+            {
+                throw new Exception("TODO");
+            }
+
+            var stringBuilder = new StringBuilder();
+            __GeneratedOdataV3.Trancsribers.Rules._odataRelativeUriTranscriber.Instance.Transcribe(urlCst, stringBuilder);
+            var transcribed = stringBuilder.ToString();
+            Assert.AreEqual(url, transcribed);
+        }
+
+        private static string[] Uris = new string[0]
+        {
+        };
+
+        [TestMethod]
+        public void Waf()
+        {
+            // inners/257.cs updated to put firstmemberexpr second to last and functionexpr last
+            // rules/410.cs updated to put _pctⲻencodedⲻnoⲻSQUOTEParser first and _unreservedParser second
+
+            for (int i = 0; i < Uris.Length; ++i)
+            {
+                var url = "";
+
+                if (!__GeneratedOdataV3.Parsers.Rules._odataRelativeUriParser.Instance.TryParse(url, out var urlCst))
+                {
+                    ////throw new Exception("TODO");
+                }
+
+                var stringBuilder = new StringBuilder();
+                __GeneratedOdataV3.Trancsribers.Rules._odataRelativeUriTranscriber.Instance.Transcribe(urlCst, stringBuilder);
+                var transcribed = stringBuilder.ToString();
+                Assert.AreEqual(url, transcribed, i.ToString());
             }
         }
 

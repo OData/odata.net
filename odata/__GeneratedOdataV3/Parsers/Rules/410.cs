@@ -4,7 +4,7 @@ namespace __GeneratedOdataV3.Parsers.Rules
     
     public static class _pcharⲻnoⲻSQUOTEParser
     {
-        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE> Instance { get; } = (_unreservedParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE>(_pctⲻencodedⲻnoⲻSQUOTEParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE>(_otherⲻdelimsParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE>(_ʺx24ʺParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE>(_ʺx26ʺParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE>(_ʺx3DʺParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE>(_ʺx3AʺParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE>(_ʺx40ʺParser.Instance);
+        public static IParser<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE> Instance { get; } = _pctⲻencodedⲻnoⲻSQUOTEParser.Instance.Or<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE>(_unreservedParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE>(_otherⲻdelimsParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE>(_ʺx24ʺParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE>(_ʺx26ʺParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE>(_ʺx3DʺParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE>(_ʺx3AʺParser.Instance).Or<char, __GeneratedOdataV3.CstNodes.Rules._pcharⲻnoⲻSQUOTE>(_ʺx40ʺParser.Instance);
         
         public static class _unreservedParser
         {
