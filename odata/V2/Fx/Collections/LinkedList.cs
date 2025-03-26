@@ -9,7 +9,7 @@
     /// A linked list with nodes that are allocated entirely on the stack and allowing for stack allocated elements
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public ref struct LinkedList<T> where T : struct, allows ref struct //// TODO what other functionality do you want here? remove? lenght? etc...
+    public ref struct LinkedList<T> where T : allows ref struct //// TODO what other functionality do you want here? remove? lenght? etc...
     {
         private SpanEx<LinkedListNode> first;
 
