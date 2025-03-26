@@ -121,6 +121,38 @@
         }
 
         [TestMethod]
+        public void GarbageCollectedWithArray()
+        {
+            GarbageCollectedWithArrayHelper(false);
+            GarbageCollectedWithArrayHelper(true);
+        }
+        private static void GarbageCollectedWithArrayHelper(bool addToList)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Finalized = 0;
+
+            var list = new LinkedList<CollectedTest>(stackalloc byte[0]);
+
+            Span<CollectedTest> span = new CollectedTest[10];
+            for (int i = 0; i < span.Length; ++i)
+            {
+                span[i] = new CollectedTest();
+            }
+
+            if (addToList)
+            {
+                ByteSpan memory = stackalloc byte[list.MemorySize];
+                list.Append(SpanEx.FromSpan(span), memory);
+            }
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Assert.AreEqual(0, Finalized);
+        }
+
+        [TestMethod]
         public void GarbageCollected()
         {
             GarbageCollectedHelper(true);
