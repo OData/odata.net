@@ -162,7 +162,7 @@
                 this.cachedOutput = new Future<IOutput<char, Slash<ParseMode.Realized>>>(() => this.RealizeImpl());
             }
 
-            private Slash(Future<IOutput<char, Slash<ParseMode.Realized>>> output)
+            internal Slash(Future<IOutput<char, Slash<ParseMode.Realized>>> output)
             {
                 this.cachedOutput = output;
             }
@@ -321,7 +321,7 @@
                     this.cachedOutput = new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>>(() => this.RealizeImpl());
                 }
 
-                private A(Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>> cachedOutput)
+                internal A(Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>> cachedOutput)
                 {
                     this.cachedOutput = cachedOutput;
                 }
@@ -402,7 +402,7 @@
                     this.cachedOutput = new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>>(() => this.RealizeImpl());
                 }
 
-                private C(Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>> cachedOutput)
+                internal C(Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>> cachedOutput)
                 {
                     this.cachedOutput = cachedOutput;
                 }
@@ -522,7 +522,7 @@
                         () => this.RealizeImpl());
             }
 
-            private AtLeastOne(
+            internal AtLeastOne( //// TODO this should be private
                 TRealizedAstNode _1,
                 ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> node,
                 Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
@@ -640,7 +640,7 @@
                     () => this.RealizeImpl());
             }
 
-            private Many(
+            internal Many(
                 ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> node, 
                 Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
@@ -747,7 +747,7 @@
                     cachedOutput);
             }
 
-            private ManyNode(
+            internal ManyNode(
                 OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> element, 
                 Func<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next, 
                 Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
@@ -881,7 +881,7 @@
                 this.cachedOutput = new Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private OptionalNode(RealNullable<TRealizedAstNode> value, Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
+            internal OptionalNode(RealNullable<TRealizedAstNode> value, Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
                 this.value = new RealNullable<RealNullable<TRealizedAstNode>>(value);
                 this.cachedOutput = cachedOutput;
@@ -987,7 +987,7 @@
                 this.cachedOutput = new Future<IOutput<char, Segment<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private Segment(
+            internal Segment(
                 Slash<TMode> slash, 
                 AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
                 Future<IOutput<char, Segment<ParseMode.Realized>>> cachedOutput)
@@ -1081,7 +1081,7 @@
                 this.cachedOutput = new Future<IOutput<char, EqualsSign<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private EqualsSign(Future<IOutput<char, EqualsSign<ParseMode.Realized>>> cachedOutput)
+            internal EqualsSign(Future<IOutput<char, EqualsSign<ParseMode.Realized>>> cachedOutput)
             {
                 this.cachedOutput = cachedOutput;
             }
@@ -1154,7 +1154,7 @@
                 this.cachedOutput = new Future<IOutput<char, OptionName<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private OptionName(
+            internal OptionName(
                 AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
                 Future<IOutput<char, OptionName<ParseMode.Realized>>> cachedOutput)
             {
@@ -1228,7 +1228,7 @@
                 this.cachedOutput = new Future<IOutput<char, OptionValue<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private OptionValue(
+            internal OptionValue(
                 Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
                 Future<IOutput<char, OptionValue<ParseMode.Realized>>> cachedOutput)
             {
@@ -1305,7 +1305,7 @@
                 this.cachedOutput = new Future<IOutput<char, QueryOption<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private QueryOption(
+            internal QueryOption(
                 OptionName<TMode> name, 
                 EqualsSign<TMode> equalsSign, 
                 OptionValue<TMode> optionValue, 
@@ -1394,7 +1394,7 @@
                 this.cachedOutput = new Future<IOutput<char, QuestionMark<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private QuestionMark(Future<IOutput<char, QuestionMark<ParseMode.Realized>>> cachedOutput)
+            internal QuestionMark(Future<IOutput<char, QuestionMark<ParseMode.Realized>>> cachedOutput)
             {
                 this.cachedOutput = cachedOutput;
             }
@@ -1472,7 +1472,7 @@
                 this.cachedOutput = new Future<IOutput<char, OdataUri<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private OdataUri(
+            internal OdataUri(
                 AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, TMode> segments,
                 QuestionMark<TMode> questionMark,
                 Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, TMode> queryOptions,

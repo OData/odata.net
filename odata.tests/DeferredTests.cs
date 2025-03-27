@@ -289,7 +289,6 @@ namespace odata.tests
             var odataUri = deferredOdataUri.Parse();
 
             var rewritten = Rewrite(odataUri);
-            var realized = rewritten.Realize();
 
             var stringBuilder = new StringBuilder();
             V3ParserPlayground.OdataUriTranscriber.Instance.Transcribe(rewritten, stringBuilder);

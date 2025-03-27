@@ -31,12 +31,10 @@
             public OdataUri<ParseMode.Realized> Transcribe(OdataUri<ParseMode.Realized> value, StringBuilder builder)
             {
                 return new OdataUri<ParseMode.Realized>(
-                    new Future<AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, ParseMode.Realized>>(
-                        () => SegmentsRewriter.Transcribe(value.Segments, builder)),
-                    new Future<QuestionMark<ParseMode.Realized>>(
-                        () => QuestionMarkRewriter.Instance.Transcribe(value.QuestionMark, builder)),
-                    new Future<Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, ParseMode.Realized>>(
-                        () => QueryOptionsRewriter.Transcribe(value.QueryOptions, builder)));
+                    SegmentsRewriter.Transcribe(value.Segments, builder),
+                    QuestionMarkRewriter.Instance.Transcribe(value.QuestionMark, builder),
+                    QueryOptionsRewriter.Transcribe(value.QueryOptions, builder),
+                    null);
             }
         }
 
@@ -51,12 +49,10 @@
             public QueryOption<ParseMode.Realized> Transcribe(QueryOption<ParseMode.Realized> value, StringBuilder builder)
             {
                 return new QueryOption<ParseMode.Realized>(
-                    new Future<OptionName<ParseMode.Realized>>(
-                        () => OptionNameRewriter.Instance.Transcribe(value.Name, builder)),
-                    new Future<EqualsSign<ParseMode.Realized>>(
-                        () => EqualsSignRewriter.Instance.Transcribe(value.EqualsSign, builder)),
-                    new Future<OptionValue<ParseMode.Realized>>(
-                        () => OptionValueRewriter.Instance.Transcribe(value.OptionValue, builder)));
+                    OptionNameRewriter.Instance.Transcribe(value.Name, builder),
+                    EqualsSignRewriter.Instance.Transcribe(value.EqualsSign, builder),
+                    OptionValueRewriter.Instance.Transcribe(value.OptionValue, builder),
+                    null);
             }
         }
 
@@ -73,8 +69,8 @@
             public OptionValue<ParseMode.Realized> Transcribe(OptionValue<ParseMode.Realized> value, StringBuilder builder)
             {
                 return new OptionValue<ParseMode.Realized>(
-                    new Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>>(
-                        () => CharactersRewriter.Transcribe(value.Characters, builder)));
+                    CharactersRewriter.Transcribe(value.Characters, builder),
+                    null);
             }
         }
 
@@ -105,8 +101,8 @@
             public OptionName<ParseMode.Realized> Transcribe(OptionName<ParseMode.Realized> value, StringBuilder builder)
             {
                 return new OptionName<ParseMode.Realized>(
-                    new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>>(
-                        () => CharactersRewriter.Transcribe(value.Characters, builder)));
+                    CharactersRewriter.Transcribe(value.Characters, builder),
+                    null);
             }
         }
 
@@ -147,12 +143,26 @@
 
                 protected internal override AlphaNumeric<ParseMode.Realized> Accept(AlphaNumeric<ParseMode.Realized>.A node, StringBuilder context)
                 {
-                    return new AlphaNumeric<ParseMode.Realized>.C(new Future<IDeferredOutput<char>>(() => new DeferredOutput<char>(true, null)));
+                    return GetC(node);
                 }
 
-                protected internal override AlphaNumeric<ParseMode.Realized> Accept(AlphaNumeric<ParseMode.Realized>.C node, StringBuilder context)
+                private static AlphaNumeric<ParseMode.Realized>.C GetC(AlphaNumeric<ParseMode.Realized>.A node)
 				{
-					return new AlphaNumeric<ParseMode.Realized>.A(new Future<IDeferredOutput<char>>(() => new DeferredOutput<char>(true, null)));
+					return new AlphaNumeric<ParseMode.Realized>.C(
+						new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>>(
+							() => new Output<char, AlphaNumeric<ParseMode.Realized>.C>(true, GetC(node), null)));
+				}
+
+				protected internal override AlphaNumeric<ParseMode.Realized> Accept(AlphaNumeric<ParseMode.Realized>.C node, StringBuilder context)
+				{
+                    return GetA(node);
+				}
+
+                private static AlphaNumeric<ParseMode.Realized>.A GetA(AlphaNumeric<ParseMode.Realized>.C node)
+				{
+					return new AlphaNumeric<ParseMode.Realized>.A(
+						new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>>(
+							() => new Output<char, AlphaNumeric<ParseMode.Realized>.A>(true, GetA(node), null)));
 				}
             }
         }
@@ -184,12 +194,12 @@
             public Segment<ParseMode.Realized> Transcribe(Segment<ParseMode.Realized> value, StringBuilder builder)
             {
                 return new Segment<ParseMode.Realized>(
-                    new Future<Slash<ParseMode.Realized>>(
-                        () => SlashRewriter.Instance.Transcribe(value.Slash, builder)),
-                    new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>>(
-                        () => CharactersRewriter.Transcribe(value.Characters, builder)));
+                    SlashRewriter.Instance.Transcribe(value.Slash, builder),
+                    CharactersRewriter.Transcribe(value.Characters, builder),
+                    new Future<IOutput<char, Segment<ParseMode.Realized>>>(
+                        () => new Output<char, Segment<ParseMode.Realized>>(true, this.Transcribe(value, builder), null)));
             }
-        }
+		}
 
         public sealed class AtLeastOneRewriter<TDeferredAstNode, TRealizedAstNode> : IRewriter<AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
@@ -209,11 +219,9 @@
             public AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> Transcribe(AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> value, StringBuilder builder)
             {
                 return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                    value.nodeFactory,
-                    new Future<TDeferredAstNode>(
-                        () => this.realizedAstNodeRewriter.Transcribe(value._1.Realize().Parsed, builder).Convert()), //// TODO i think you shouldn't need this convert...this is probably the result of returning realized nodes instead of deferred nodes...
-                    new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
-                        () => this.manyNodeRewriter.Transcribe(value.Node, builder)));
+                    this.realizedAstNodeRewriter.Transcribe(value._1.Realize().Parsed, builder),
+                    this.manyNodeRewriter.Transcribe(value.Node, builder),
+                    null);
             }
         }
 
@@ -230,15 +238,11 @@
             public ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> Transcribe(ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> value, StringBuilder builder)
             {
                 return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                    value.nodeFactory,
-                    new Future<OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
-                        () => new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            value.nodeFactory,
-                            new Future<IDeferredOutput<char>>(
-                                () => new DeferredOutput<char>(true, null)),
-                            value.Element.Value.TryGetValue(out var element) ? this.realizedAstNodeRewriter.Transcribe(element, builder) : new RealNullable<TRealizedAstNode>())),
-                    new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
-                        () => value.Element.Value.TryGetValue(out var element) ? this.Transcribe(value.Next, builder) : ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>.GetTerminalRealizedNode(value.cachedOutput, value.element.Value.Realize().Parsed)));
+                    new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                        value.Element.Value.TryGetValue(out var element) ? this.realizedAstNodeRewriter.Transcribe(element, builder) : new RealNullable<TRealizedAstNode>(),
+                        null),
+                    () => value.Element.Value.TryGetValue(out var element) ? this.Transcribe(value.Next, builder) : ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>.GetTerminalRealizedNode(value.cachedOutput, value.element.Value.Realize().Parsed),
+                    null);
             }
         }
 
@@ -255,9 +259,8 @@
             public Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> Transcribe(Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> value, StringBuilder builder)
             {
                 return new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                    value.nodeFactory,
-                    new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
-                        () => this.manyNodeRewriter.Transcribe(value.Node, builder)));
+                    this.manyNodeRewriter.Transcribe(value.Node, builder),
+                    null);
             }
         }
     }
