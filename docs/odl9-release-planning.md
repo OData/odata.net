@@ -10,7 +10,7 @@ The scope of ODL 9 includes evaluating and potentially incorporating the issues 
 
 ## .NET Framework Support
 ODL 9 will align with modern .NET platform support to ensure compatibility and long-term maintainability. The release will target **.NET 10 (LTS) Preview** during development. The framework will be updated to target **.NET 10** after its officially release.
-  - .NET 10 Preview was release Feb 25 2025
+  - .NET 10 Preview was released on Feb 25 2025
   - .NET 10 General Availability (GA) is expected on Nov 11, 2025
 
 ## Proposed Items for Inclusion
