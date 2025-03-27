@@ -5,3 +5,5 @@
 .vs/
 /**/obj/**
 /**/bin/**
+/**/TestResults/**
+/**/*.tmp
