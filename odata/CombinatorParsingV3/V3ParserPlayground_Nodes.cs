@@ -479,8 +479,6 @@
             where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
             where TMode : ParseMode
         {
-            internal readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory; //// TODO should be private
-
             private readonly IFuture<TDeferredAstNode> __1;
             private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node;
 
@@ -500,18 +498,14 @@
                         Func.Compose(() => __1.Value.Realize(), DeferredOutput.Create).ToFuture()));
 
                 return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
-                    nodeFactory,
                     __1,
                     node);
             }
 
             internal AtLeastOne(
-                Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
                 IFuture<TDeferredAstNode> __1,
                 IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node)
             {
-                this.nodeFactory = nodeFactory;
-
                 this.__1 = __1;
                 this.node = node;
 
@@ -554,7 +548,6 @@
                 if (typeof(TMode) == typeof(ParseMode.Deferred))
                 {
                     return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
-                        this.nodeFactory,
                         this.__1,
                         this.node.Select(_ => (_ as ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>)!)); //// TODO this is very hacky
                 }
