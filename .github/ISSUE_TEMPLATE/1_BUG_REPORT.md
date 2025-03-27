@@ -1,14 +1,13 @@
-<!-- markdownlint-disable MD002 MD041 -->
 ---
 name: 🐞 Bug Report
 about: Report a problem to help us improve
-title: ""
-labels: ["bug"]
-assignees: []
+title: ''
+labels: ['bug']
+assignees: ''
 
 ---
 
-## Description
+## Describe the bug
 
 *Short summary (3-5 sentences) describing the issue.*
 

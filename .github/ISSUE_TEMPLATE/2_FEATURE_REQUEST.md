@@ -1,10 +1,9 @@
-<!-- markdownlint-disable MD002 MD041 -->
 ---
 name: 🚀 Feature Request
 about: Suggest a new feature or improvement
-title: ""
-labels: ["enhancement", "feature"]
-assignees: []
+title: ''
+labels: ['enhancement', 'feature']
+assignees: ''
 
 ---
 
