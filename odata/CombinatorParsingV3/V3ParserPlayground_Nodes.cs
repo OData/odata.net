@@ -150,7 +150,7 @@
                 return new Slash<ParseMode.Deferred>(previouslyParsedOutput);
             }
 
-            private Slash(IFuture<IDeferredOutput<char>> previouslyParsedOutput) //// TODO make sure this parameter is named correctly everywhere
+            internal Slash(IFuture<IDeferredOutput<char>> previouslyParsedOutput) //// TODO make sure this parameter is named correctly everywhere
             {
                 if (typeof(TMode) != typeof(ParseMode.Deferred))
                 {
@@ -308,7 +308,7 @@
                     return new AlphaNumeric<ParseMode.Deferred>.A(previouslyParsedOutput);
                 }
 
-                private A(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                internal A(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
@@ -388,7 +388,7 @@
                     return new AlphaNumeric<ParseMode.Deferred>.C(previouslyParsedOutput);
                 }
 
-                private C(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                internal C(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
@@ -503,7 +503,7 @@
                     node);
             }
 
-            private AtLeastOne(
+            internal AtLeastOne(
                 Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
                 IFuture<TDeferredAstNode> __1,
                 IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node)
@@ -627,7 +627,7 @@
                     node);
             }
 
-            private Many(
+            internal Many(
                 Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
                 IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node)
             {
@@ -717,7 +717,7 @@
                 return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(nodeFactory, element, next);
             }
 
-            private ManyNode(
+            internal ManyNode(
                 Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
                 IFuture<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>> element,
                 IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next)
@@ -865,7 +865,7 @@
                 return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(nodeFactory, previouslyParsedOutput, value);
             }
 
-            private OptionalNode(
+            internal OptionalNode(
                 Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
                 IFuture<IDeferredOutput<char>> previouslyParsedOutput,
                 RealNullable<RealNullable<TRealizedAstNode>> value)
@@ -974,7 +974,7 @@
                 return new Segment<ParseMode.Deferred>(slash, characters);
             }
 
-            private Segment(
+            internal Segment(
                 IFuture<Slash<TMode>> slash, 
                 IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters)
             {
@@ -1071,7 +1071,7 @@
                 return new EqualsSign<ParseMode.Deferred>(previouslyParsedOutput);
             }
 
-            private EqualsSign(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            internal EqualsSign(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
                 this.previouslyParsedOutput = previouslyParsedOutput;
 
@@ -1144,7 +1144,7 @@
                 return new OptionName<ParseMode.Deferred>(characters);
             }
 
-            private OptionName(IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters)
+            internal OptionName(IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters)
             {
                 this.characters = characters;
 
@@ -1217,7 +1217,7 @@
                 return new OptionValue<ParseMode.Deferred>(characters);
             }
 
-            private OptionValue(
+            internal OptionValue(
                 Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters)
             {
                 this.characters = characters;
@@ -1293,7 +1293,7 @@
                 return new QueryOption<ParseMode.Deferred>(name, equalsSign, optionValue);
             }
 
-            private QueryOption(IFuture<OptionName<TMode>> name, IFuture<EqualsSign<TMode>> equalsSign, IFuture<OptionValue<TMode>> optionValue)
+            internal QueryOption(IFuture<OptionName<TMode>> name, IFuture<EqualsSign<TMode>> equalsSign, IFuture<OptionValue<TMode>> optionValue)
             {
                 this.name = name;
                 this.equalsSign = equalsSign;
@@ -1384,7 +1384,7 @@
                 return new QuestionMark<ParseMode.Deferred>(previouslyParsedOutput);
             }
 
-            private QuestionMark(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            internal QuestionMark(IFuture<IDeferredOutput<char>> previouslyParsedOutput) //// TODO should this have a "realized" singleton instead?
             {
                 this.previouslyParsedOutput = previouslyParsedOutput;
 
@@ -1457,7 +1457,7 @@
                 return new OdataUri<ParseMode.Deferred>(segments, questionMark, queryOptions);
             }
 
-            private OdataUri(
+            internal OdataUri( //// TODO i think there should be a factory method for these constructors instead of making them internal
                 IFuture<AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, TMode>> segments, 
                 IFuture<QuestionMark<TMode>> questionMark, 
                 IFuture<Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, TMode>> queryOptions)

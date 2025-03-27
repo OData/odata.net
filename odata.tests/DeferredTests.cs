@@ -276,5 +276,31 @@ namespace odata.tests
 
             Assert.AreEqual(url, stringBuilder.ToString());
         }
+
+        [TestMethod]
+        public void WriteTest()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAAC";
+
+            var input = new CombinatorParsingV3.StringInput(url);
+
+            var deferredOdataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+
+            var odataUri = deferredOdataUri.Parse();
+
+            var rewritten = Rewrite(odataUri);
+
+            var stringBuilder = new StringBuilder();
+            V3ParserPlayground.OdataUriTranscriber.Instance.Transcribe(rewritten, stringBuilder);
+
+            Assert.AreEqual(url.Replace('C', 'D').Replace('A', 'C').Replace('D', 'A'), stringBuilder.ToString());
+        }
+
+        private static V3ParserPlayground.OdataUri<ParseMode.Realized> Rewrite(V3ParserPlayground.OdataUri<ParseMode.Realized> originalUri)
+        {
+            //// TODO should this return a `deferred` ast?
+            
+
+        }
     }
 }
