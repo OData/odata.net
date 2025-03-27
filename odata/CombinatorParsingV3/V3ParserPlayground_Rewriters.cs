@@ -24,14 +24,14 @@
 
             public static OdataUriRewriter Instance { get; } = new OdataUriRewriter();
 
-            private static AtLeastOneRewriter<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>> SegmentsRewriter { get; } = new AtLeastOneRewriter<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>>(SegmentRewriter.Instance);
+            private static AtLeastOneRewriter2<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>> SegmentsRewriter { get; } = new AtLeastOneRewriter2<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>>(SegmentRewriter.Instance);
 
             private static ManyRewriter<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>> QueryOptionsRewriter { get; } = new ManyRewriter<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>>(QueryOptionRewriter.Instance);
 
             public OdataUri<ParseMode.Realized> Transcribe(OdataUri<ParseMode.Realized> value, StringBuilder builder)
             {
                 return new OdataUri<ParseMode.Realized>(
-                    SegmentsRewriter.Transcribe(value.Segments, builder),
+                    SegmentsRewriter.Transcribe(value.Segments, builder).Realize().Parsed,
                     QuestionMarkRewriter.Instance.Transcribe(value.QuestionMark, builder).Realize().Parsed,
                     QueryOptionsRewriter.Transcribe(value.QueryOptions, builder),
                     null);
@@ -222,7 +222,7 @@
             }
         }
 
-        public sealed class SegmentRewriter : IRewriter<Segment<ParseMode.Realized>>
+        public sealed class SegmentRewriter : IRewriter<Segment<ParseMode.Realized>, Segment<ParseMode.Deferred>>
         {
             private SegmentRewriter()
             {
@@ -232,13 +232,13 @@
 
             private static AtLeastOneRewriter2<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter2<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter2.Instance);
 
-            public Segment<ParseMode.Realized> Transcribe(Segment<ParseMode.Realized> value, StringBuilder builder)
+            public Segment<ParseMode.Deferred> Transcribe(Segment<ParseMode.Realized> value, StringBuilder builder)
             {
-                return new Segment<ParseMode.Realized>(
-                    SlashRewriter.Instance.Transcribe(value.Slash, builder).Realize().Parsed,
-                    CharactersRewriter.Transcribe(value.Characters, builder).Realize().Parsed,
-                    new Future<IOutput<char, Segment<ParseMode.Realized>>>(
-                        () => new Output<char, Segment<ParseMode.Realized>>(true, this.Transcribe(value, builder), null)));
+                return new Segment<ParseMode.Deferred>(
+                    new Future<Slash<ParseMode.Deferred>>(
+                        () => SlashRewriter.Instance.Transcribe(value.Slash, builder)),
+                    new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(
+                        () => CharactersRewriter.Transcribe(value.Characters, builder)));
             }
 		}
 
