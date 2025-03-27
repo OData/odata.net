@@ -50,7 +50,7 @@
             {
                 return new QueryOption<ParseMode.Realized>(
                     OptionNameRewriter.Instance.Transcribe(value.Name, builder).Realize().Parsed,
-                    EqualsSignRewriter.Instance.Transcribe(value.EqualsSign, builder),
+                    EqualsSignRewriter.Instance.Transcribe(value.EqualsSign, builder).Realize().Parsed,
                     OptionValueRewriter.Instance.Transcribe(value.OptionValue, builder),
                     null);
             }
@@ -74,7 +74,7 @@
             }
         }
 
-        public sealed class EqualsSignRewriter : IRewriter<EqualsSign<ParseMode.Realized>>
+        public sealed class EqualsSignRewriter : IRewriter<EqualsSign<ParseMode.Realized>, EqualsSign<ParseMode.Deferred>>
         {
             private EqualsSignRewriter()
             {
@@ -82,9 +82,11 @@
 
             public static EqualsSignRewriter Instance { get; } = new EqualsSignRewriter();
 
-            public EqualsSign<ParseMode.Realized> Transcribe(EqualsSign<ParseMode.Realized> value, StringBuilder builder)
+            public EqualsSign<ParseMode.Deferred> Transcribe(EqualsSign<ParseMode.Realized> value, StringBuilder builder)
             {
-                return value;
+                return new EqualsSign<ParseMode.Deferred>(
+                    new Future<IOutput<char, EqualsSign<ParseMode.Realized>>>(
+                        () => new Output<char, EqualsSign<ParseMode.Realized>>(true, value, null)));
             }
         }
 
