@@ -3,18 +3,3 @@ contact_links:
   - name: ❓ General Questions & Support
     url: https://github.com/OData/odata.net/discussions
     about: "For general questions, please use GitHub Discussions instead of opening an issue."
-
-issue_templates:
-  - name: "🐞 Bug Report"
-    description: "Report a problem to help us improve"
-    title: "<brief description>"
-    labels: ["bug"]
-    assignees: []
-    body: 1_BUG_REPORT.md
-    
-  - name: "🚀 Feature Request"
-    description: "Suggest a new feature or improvement"
-    title: "<brief description>"
-    labels: ["enhancement", "feature"]
-    assignees: []
-    body: 1_FEATURE_REQUEST.md
