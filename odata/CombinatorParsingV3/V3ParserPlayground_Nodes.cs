@@ -312,7 +312,8 @@
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
-                        throw new ArgumentException("tODO i think this will depend on what you decide for modeling options of the deferred vs realized nodes");
+                        //// TODO add this back?
+                        //// throw new ArgumentException("tODO i think this will depend on what you decide for modeling options of the deferred vs realized nodes");
                     }
 
                     this.previouslyParsedOutput = previouslyParsedOutput;
@@ -392,7 +393,8 @@
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
-                        throw new ArgumentException("tODO i think this will depend on what you decide for modeling options of the deferred vs realized nodes");
+                        //// TODO add this back?
+                        ////throw new ArgumentException("tODO i think this will depend on what you decide for modeling options of the deferred vs realized nodes");
                     }
 
                     this.previouslyParsedOutput = previouslyParsedOutput;
@@ -477,7 +479,7 @@
             where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
             where TMode : ParseMode
         {
-            private readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
+            internal readonly Func<Future<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory; //// TODO should be private
 
             private readonly IFuture<TDeferredAstNode> __1;
             private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node;
@@ -609,7 +611,7 @@
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
             where TMode : ParseMode
         {
-            private readonly Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
+            internal readonly Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory; //// TODO this should be private
 
             private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node;
 
@@ -695,12 +697,12 @@
 
         public sealed class ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>, IFromRealizedable<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
-            private readonly Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
+            internal readonly Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory; //// TODO this should be private
 
-            private readonly IFuture<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>> element;
+            internal readonly IFuture<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>> element; //// TODO this hsould be private
             private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next;
 
-            private readonly Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
+            internal readonly Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput; //// TODO this hsould be private
 
             internal static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create(
                 Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
@@ -734,10 +736,11 @@
                         () => this.RealizeImpl());
             }
 
-            private static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetTerminalRealizedNode(
+            internal static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetTerminalRealizedNode(
                 Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput,
                 OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> element)
             {
+                //// TODO this method hsould be priovate
                 return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
                     element, 
                     () => GetTerminalRealizedNode(cachedOutput, element),

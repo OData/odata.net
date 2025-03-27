@@ -289,6 +289,7 @@ namespace odata.tests
             var odataUri = deferredOdataUri.Parse();
 
             var rewritten = Rewrite(odataUri);
+            var realized = rewritten.Realize();
 
             var stringBuilder = new StringBuilder();
             V3ParserPlayground.OdataUriTranscriber.Instance.Transcribe(rewritten, stringBuilder);
@@ -299,8 +300,8 @@ namespace odata.tests
         private static V3ParserPlayground.OdataUri<ParseMode.Realized> Rewrite(V3ParserPlayground.OdataUri<ParseMode.Realized> originalUri)
         {
             //// TODO should this return a `deferred` ast?
-            
 
+            return V3ParserPlayground.OdataUriRewriter.Instance.Transcribe(originalUri, new StringBuilder());
         }
     }
 }

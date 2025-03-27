@@ -120,7 +120,7 @@
 
             public QuestionMark<ParseMode.Realized> Transcribe(QuestionMark<ParseMode.Realized> value, StringBuilder builder)
             {
-                builder.Append('?');
+                return value;
             }
         }
 
@@ -134,10 +134,10 @@
 
             public AlphaNumeric<ParseMode.Realized> Transcribe(AlphaNumeric<ParseMode.Realized> value, StringBuilder builder)
             {
-                Visitor.Instance.Visit(value, builder);
+                return Visitor.Instance.Visit(value, builder);
             }
 
-            private sealed class Visitor : AlphaNumeric<ParseMode.Realized>.Visitor<Nothing, StringBuilder>
+            private sealed class Visitor : AlphaNumeric<ParseMode.Realized>.Visitor<AlphaNumeric<ParseMode.Realized>, StringBuilder>
             {
                 private Visitor()
                 {
@@ -145,19 +145,15 @@
 
                 public static Visitor Instance { get; } = new Visitor();
 
-                protected internal override Nothing Accept(AlphaNumeric<ParseMode.Realized>.A node, StringBuilder context)
+                protected internal override AlphaNumeric<ParseMode.Realized> Accept(AlphaNumeric<ParseMode.Realized>.A node, StringBuilder context)
                 {
-                    context.Append('A');
-
-                    return default;
+                    return new AlphaNumeric<ParseMode.Realized>.C(new Future<IDeferredOutput<char>>(() => new DeferredOutput<char>(true, null)));
                 }
 
-                protected internal override Nothing Accept(AlphaNumeric<ParseMode.Realized>.C node, StringBuilder context)
-                {
-                    context.Append('C');
-
-                    return default;
-                }
+                protected internal override AlphaNumeric<ParseMode.Realized> Accept(AlphaNumeric<ParseMode.Realized>.C node, StringBuilder context)
+				{
+					return new AlphaNumeric<ParseMode.Realized>.A(new Future<IDeferredOutput<char>>(() => new DeferredOutput<char>(true, null)));
+				}
             }
         }
 
@@ -171,7 +167,7 @@
 
             public Slash<ParseMode.Realized> Transcribe(Slash<ParseMode.Realized> value, StringBuilder builder)
             {
-                builder.Append('/');
+                return value;
             }
         }
 
@@ -187,8 +183,11 @@
 
             public Segment<ParseMode.Realized> Transcribe(Segment<ParseMode.Realized> value, StringBuilder builder)
             {
-                SlashRewriter.Instance.Transcribe(value.Slash, builder);
-                CharactersRewriter.Transcribe(value.Characters, builder);
+                return new Segment<ParseMode.Realized>(
+                    new Future<Slash<ParseMode.Realized>>(
+                        () => SlashRewriter.Instance.Transcribe(value.Slash, builder)),
+                    new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Realized>>(
+                        () => CharactersRewriter.Transcribe(value.Characters, builder)));
             }
         }
 
@@ -209,8 +208,12 @@
 
             public AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> Transcribe(AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> value, StringBuilder builder)
             {
-                this.realizedAstNodeRewriter.Transcribe(value._1.Realize().Parsed, builder);
-                this.manyNodeRewriter.Transcribe(value.Node, builder);
+                return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                    value.nodeFactory,
+                    new Future<TDeferredAstNode>(
+                        () => this.realizedAstNodeRewriter.Transcribe(value._1.Realize().Parsed, builder).Convert()), //// TODO i think you shouldn't need this convert...this is probably the result of returning realized nodes instead of deferred nodes...
+                    new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                        () => this.manyNodeRewriter.Transcribe(value.Node, builder)));
             }
         }
 
@@ -226,11 +229,16 @@
 
             public ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> Transcribe(ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> value, StringBuilder builder)
             {
-                if (value.Element.Value.TryGetValue(out var element))
-                {
-                    this.realizedAstNodeRewriter.Transcribe(element, builder);
-                    this.Transcribe(value.Next, builder);
-                }
+                return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                    value.nodeFactory,
+                    new Future<OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                        () => new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                            value.nodeFactory,
+                            new Future<IDeferredOutput<char>>(
+                                () => new DeferredOutput<char>(true, null)),
+                            value.Element.Value.TryGetValue(out var element) ? this.realizedAstNodeRewriter.Transcribe(element, builder) : new RealNullable<TRealizedAstNode>())),
+                    new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                        () => value.Element.Value.TryGetValue(out var element) ? this.Transcribe(value.Next, builder) : ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>.GetTerminalRealizedNode(value.cachedOutput, value.element.Value.Realize().Parsed)));
             }
         }
 
@@ -246,7 +254,10 @@
 
             public Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> Transcribe(Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> value, StringBuilder builder)
             {
-                this.manyNodeRewriter.Transcribe(value.Node, builder);
+                return new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                    value.nodeFactory,
+                    new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                        () => this.manyNodeRewriter.Transcribe(value.Node, builder)));
             }
         }
     }
