@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Threading;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -120,12 +121,60 @@
             }
         }
 
+        public readonly struct StructCollectedTest
+        {
+            public StructCollectedTest(CollectedTest value, string something)
+            {
+                this.Value = value;
+                Something = something;
+                this.AnotherValue = 1;
+            }
+            public string Something { get; }
+
+            public int AnotherValue { get; }
+
+            public CollectedTest Value { get; }
+        }
+
+        [TestMethod]
+        public void GarbageCollectionWithStruct()
+        {
+            //// TODO for some reason, if `value` *is* a ref struct, the handle still will exist and the garbage collector won't its references; this even goes so far as keeping the data on the stack or something
+            var thing = new StructCollectedTest(new CollectedTest(), "asdf");
+            var @object = System.Runtime.CompilerServices.Unsafe.As<StructCollectedTest, object>(ref thing);
+
+            GarbageCollectionWithStructHelper();
+        }
+
+        private static void GarbageCollectionWithStructHelper()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Finalized = 0;
+
+            var list = new LinkedList<StructCollectedTest>(stackalloc byte[0]);
+
+            for (int j = 0; j < 10; ++j)
+            {
+                var @struct = new StructCollectedTest(new CollectedTest(), "asdf");
+
+                ByteSpan memory = stackalloc byte[list.MemorySize];
+                list.Append(@struct, memory);
+            }
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Assert.AreEqual(0, Finalized);
+        }
+
         [TestMethod]
         public void GarbageCollectedWithArray()
         {
             GarbageCollectedWithArrayHelper(false);
             GarbageCollectedWithArrayHelper(true);
         }
+
         private static void GarbageCollectedWithArrayHelper(bool addToList)
         {
             GC.Collect();

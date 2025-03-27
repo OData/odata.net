@@ -41,8 +41,13 @@
         /// </exception>
         private void SetFirstValue(T value, ByteSpan memory)
         {
-            var obj = System.Runtime.CompilerServices.Unsafe.As<T, object>(ref value);
-            var handle = System.Runtime.InteropServices.GCHandle.Alloc(obj);
+            System.Runtime.InteropServices.GCHandle? handle = null;
+            if (typeof(T).IsByRef)
+            {
+                var obj = System.Runtime.CompilerServices.Unsafe.As<T, object>(ref value);
+                handle = System.Runtime.InteropServices.GCHandle.Alloc(obj);
+            }
+
             var firstNode = new LinkedListNode(value, handle);
             MemoryMarshal.Write(memory, firstNode);
 
@@ -65,8 +70,13 @@
         {
             if (this.hasValues)
             {
-                var obj = System.Runtime.CompilerServices.Unsafe.As<T, object>(ref value);
-                var handle = System.Runtime.InteropServices.GCHandle.Alloc(obj);
+                System.Runtime.InteropServices.GCHandle? handle = null;
+                if (typeof(T).IsByRef)
+                {
+                    var obj = System.Runtime.CompilerServices.Unsafe.As<T, object>(ref value);
+                    handle = System.Runtime.InteropServices.GCHandle.Alloc(obj);
+                }
+
                 var nextNode = new LinkedListNode(value, handle);
                 MemoryMarshal.Write(memory, nextNode);
 
@@ -91,7 +101,7 @@
             var current = this.first;
             while (current.Length != 0)
             {
-                current[0].Handle.Free();
+                current[0].Handle?.Free();
                 current = current[0].Next;
             }
         }
@@ -131,7 +141,7 @@
         private ref struct LinkedListNode
         {
             public T Value;
-            public System.Runtime.InteropServices.GCHandle Handle;
+            public Nullable<System.Runtime.InteropServices.GCHandle> Handle;
             public SpanEx<T> Values;
 
             public SpanEx<LinkedListNode> Next;
@@ -148,7 +158,7 @@
             /// </summary>
             public bool IsSpan;
 
-            public LinkedListNode(T value, System.Runtime.InteropServices.GCHandle handle)
+            public LinkedListNode(T value, Nullable<System.Runtime.InteropServices.GCHandle> handle)
             {
                 this.Value = value;
                 this.Handle = handle;
