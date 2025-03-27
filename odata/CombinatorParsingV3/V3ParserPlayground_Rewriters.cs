@@ -51,12 +51,12 @@
                 return new QueryOption<ParseMode.Realized>(
                     OptionNameRewriter.Instance.Transcribe(value.Name, builder).Realize().Parsed,
                     EqualsSignRewriter.Instance.Transcribe(value.EqualsSign, builder).Realize().Parsed,
-                    OptionValueRewriter.Instance.Transcribe(value.OptionValue, builder),
+                    OptionValueRewriter.Instance.Transcribe(value.OptionValue, builder).Realize().Parsed,
                     null);
             }
         }
 
-        public sealed class OptionValueRewriter : IRewriter<OptionValue<ParseMode.Realized>>
+        public sealed class OptionValueRewriter : IRewriter<OptionValue<ParseMode.Realized>, OptionValue<ParseMode.Deferred>>
         {
             private OptionValueRewriter()
             {
@@ -66,11 +66,11 @@
 
             private static ManyRewriter2<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new ManyRewriter2<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter2.Instance);
 
-            public OptionValue<ParseMode.Realized> Transcribe(OptionValue<ParseMode.Realized> value, StringBuilder builder)
+            public OptionValue<ParseMode.Deferred> Transcribe(OptionValue<ParseMode.Realized> value, StringBuilder builder)
             {
-                return new OptionValue<ParseMode.Realized>(
-                    CharactersRewriter.Transcribe(value.Characters, builder).Realize().Parsed,
-                    null);
+                return new OptionValue<ParseMode.Deferred>(
+                    new Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(
+                        () => CharactersRewriter.Transcribe(value.Characters, builder)));
             }
         }
 
