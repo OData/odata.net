@@ -697,8 +697,6 @@
 
         public sealed class ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>, IFromRealizedable<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
-            internal readonly Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory; //// TODO this should be private
-
             internal readonly IFuture<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>> element; //// TODO this hsould be private
             private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next;
 
@@ -716,16 +714,13 @@
                             nodeFactory,
                             Func.Compose(() => element.Value.Realize(), DeferredOutput.Create).ToFuture()));
 
-                return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(nodeFactory, element, next);
+                return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(element, next);
             }
 
             internal ManyNode(
-                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
                 IFuture<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>> element,
                 IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next)
             {
-                this.nodeFactory = nodeFactory;
-
                 this.element = element;
                 this.next = next;
 
@@ -822,7 +817,7 @@
             {
                 if (typeof(TMode) == typeof(ParseMode.Deferred))
                 {
-                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(this.nodeFactory, this.element.Select(_ => (_ as OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>)!),
+                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(this.element.Select(_ => (_ as OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>)!),
                         this.next.Select(_ => (_ as ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>)!));
                 }
                 else
