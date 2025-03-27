@@ -4,21 +4,17 @@ contact_links:
     url: https://github.com/OData/odata.net/discussions
     about: "For general questions, please use GitHub Discussions instead of opening an issue."
 
-  - name: 🔒 Security Issue Reporting
-    url: https://github.com/OData/odata.net/security
-    about: "If you found a security vulnerability, please report it responsibly via our security page."
-    
 issue_templates:
   - name: "🐞 Bug Report"
     description: "Report a problem to help us improve"
     title: "<brief description>"
     labels: ["bug"]
     assignees: []
-    body: .github/ISSUE_TEMPLATE/1_BUG_REPORT.md
+    body: 1_BUG_REPORT.md
     
   - name: "🚀 Feature Request"
     description: "Suggest a new feature or improvement"
     title: "<brief description>"
     labels: ["enhancement", "feature"]
     assignees: []
-    body: .github/ISSUE_TEMPLATE/1_FEATURE_REQUEST.md
+    body: 1_FEATURE_REQUEST.md
