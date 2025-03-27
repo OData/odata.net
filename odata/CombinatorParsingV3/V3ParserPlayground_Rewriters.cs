@@ -64,7 +64,7 @@
 
             public static OptionValueRewriter Instance { get; } = new OptionValueRewriter();
 
-            private static ManyRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new ManyRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter.Instance);
+            private static ManyRewriter2<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new ManyRewriter2<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter2.Instance);
 
             public OptionValue<ParseMode.Realized> Transcribe(OptionValue<ParseMode.Realized> value, StringBuilder builder)
             {
@@ -398,7 +398,6 @@
             }
         }
 
-
 		public sealed class ManyRewriter<TDeferredAstNode, TRealizedAstNode> : IRewriter<Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
         {
@@ -413,6 +412,24 @@
             {
                 return new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
                     this.manyNodeRewriter.Transcribe(value.Node, builder),
+                    null);
+            }
+        }
+
+        public sealed class ManyRewriter2<TDeferredAstNode, TRealizedAstNode> : IRewriter<Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
+            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+        {
+            private readonly ManyNodeRewriter2<TDeferredAstNode, TRealizedAstNode> manyNodeRewriter;
+
+            public ManyRewriter2(IRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter)
+            {
+                this.manyNodeRewriter = new ManyNodeRewriter2<TDeferredAstNode, TRealizedAstNode>(realizedAstNodeRewriter);
+            }
+
+            public Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> Transcribe(Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> value, StringBuilder builder)
+            {
+                return new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                    this.manyNodeRewriter.Transcribe(value.Node, builder).Realize().Parsed,
                     null);
             }
         }
