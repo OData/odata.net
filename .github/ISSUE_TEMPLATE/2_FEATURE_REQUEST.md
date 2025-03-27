@@ -1,4 +1,12 @@
 <!-- markdownlint-disable MD002 MD041 -->
+---
+name: 🚀 Feature Request
+about: Suggest a new feature or improvement
+title: ""
+labels: ["enhancement", "feature"]
+assignees: []
+
+---
 
 ## Is your feature request related to a problem? Please describe.
 *A clear and concise description of the problem or challenge you’re facing.*
