@@ -300,7 +300,7 @@ namespace odata.tests
         {
             //// TODO should this return a `deferred` ast?
 
-            return V3ParserPlayground.OdataUriRewriter.Instance.Transcribe(originalUri, new StringBuilder());
+            return V3ParserPlayground.OdataUriRewriter.Instance.Transcribe(originalUri, new StringBuilder()).Realize().Parsed;
         }
     }
 }
