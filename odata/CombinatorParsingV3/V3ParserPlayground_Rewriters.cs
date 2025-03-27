@@ -128,53 +128,6 @@
             }
         }
 
-        public sealed class AlphaNumericRewriter : IRewriter<AlphaNumeric<ParseMode.Realized>>
-        {
-            private AlphaNumericRewriter()
-            {
-            }
-
-            public static AlphaNumericRewriter Instance { get; } = new AlphaNumericRewriter();
-
-            public AlphaNumeric<ParseMode.Realized> Transcribe(AlphaNumeric<ParseMode.Realized> value, StringBuilder builder)
-            {
-                return Visitor.Instance.Visit(value, builder);
-            }
-
-            private sealed class Visitor : AlphaNumeric<ParseMode.Realized>.Visitor<AlphaNumeric<ParseMode.Realized>, StringBuilder>
-            {
-                private Visitor()
-                {
-                }
-
-                public static Visitor Instance { get; } = new Visitor();
-
-                protected internal override AlphaNumeric<ParseMode.Realized> Accept(AlphaNumeric<ParseMode.Realized>.A node, StringBuilder context)
-                {
-                    return GetC(node);
-                }
-
-                private static AlphaNumeric<ParseMode.Realized>.C GetC(AlphaNumeric<ParseMode.Realized>.A node)
-				{
-					return new AlphaNumeric<ParseMode.Realized>.C(
-						new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>>(
-							() => new Output<char, AlphaNumeric<ParseMode.Realized>.C>(true, GetC(node), null)));
-				}
-
-				protected internal override AlphaNumeric<ParseMode.Realized> Accept(AlphaNumeric<ParseMode.Realized>.C node, StringBuilder context)
-				{
-                    return GetA(node);
-				}
-
-                private static AlphaNumeric<ParseMode.Realized>.A GetA(AlphaNumeric<ParseMode.Realized>.C node)
-				{
-					return new AlphaNumeric<ParseMode.Realized>.A(
-						new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>>(
-							() => new Output<char, AlphaNumeric<ParseMode.Realized>.A>(true, GetA(node), null)));
-				}
-            }
-        }
-
         public sealed class AlphaNumericRewriter2 : IRewriter<AlphaNumeric<ParseMode.Realized>, AlphaNumericHolder>
         {
             private AlphaNumericRewriter2()
@@ -245,30 +198,6 @@
                         () => SlashRewriter.Instance.Transcribe(value.Slash, builder)),
                     new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(
                         () => CharactersRewriter.Transcribe(value.Characters, builder)));
-            }
-		}
-
-        public sealed class AtLeastOneRewriter<TDeferredAstNode, TRealizedAstNode> : IRewriter<AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
-            where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
-        {
-            private readonly IRewriter<TRealizedAstNode> realizedAstNodeRewriter;
-
-            private readonly ManyNodeRewriter<TDeferredAstNode, TRealizedAstNode> manyNodeRewriter;
-
-            public AtLeastOneRewriter(IRewriter<TRealizedAstNode> realizedAstNodeRewriter)
-            {
-                this.realizedAstNodeRewriter = realizedAstNodeRewriter;
-
-                this.manyNodeRewriter = new ManyNodeRewriter<TDeferredAstNode, TRealizedAstNode>(this.realizedAstNodeRewriter);
-            }
-
-            public AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> Transcribe(AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> value, StringBuilder builder)
-            {
-                return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                    this.realizedAstNodeRewriter.Transcribe(value._1.Realize().Parsed, builder),
-                    this.manyNodeRewriter.Transcribe(value.Node, builder),
-                    null);
             }
 		}
 
@@ -399,24 +328,6 @@
                     new RealNullable<TRealizedAstNode>(),
                     new Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(
                         () => new Output<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(true, GetEmpty(), null)));
-            }
-        }
-
-		public sealed class ManyRewriter<TDeferredAstNode, TRealizedAstNode> : IRewriter<Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
-        {
-            private readonly ManyNodeRewriter<TDeferredAstNode, TRealizedAstNode> manyNodeRewriter;
-
-            public ManyRewriter(IRewriter<TRealizedAstNode> realizedAstNodeRewriter)
-            {
-                this.manyNodeRewriter = new ManyNodeRewriter<TDeferredAstNode, TRealizedAstNode>(realizedAstNodeRewriter);
-            }
-
-            public Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> Transcribe(Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> value, StringBuilder builder)
-            {
-                return new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                    this.manyNodeRewriter.Transcribe(value.Node, builder),
-                    null);
             }
         }
 
