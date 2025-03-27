@@ -32,7 +32,7 @@
             {
                 return new OdataUri<ParseMode.Realized>(
                     SegmentsRewriter.Transcribe(value.Segments, builder),
-                    QuestionMarkRewriter.Instance.Transcribe(value.QuestionMark, builder),
+                    QuestionMarkRewriter.Instance.Transcribe(value.QuestionMark, builder).Realize().Parsed,
                     QueryOptionsRewriter.Transcribe(value.QueryOptions, builder),
                     null);
             }
@@ -106,7 +106,7 @@
             }
         }
 
-        public sealed class QuestionMarkRewriter : IRewriter<QuestionMark<ParseMode.Realized>>
+        public sealed class QuestionMarkRewriter : IRewriter<QuestionMark<ParseMode.Realized>, QuestionMark<ParseMode.Deferred>>
         {
             private QuestionMarkRewriter()
             {
@@ -114,9 +114,11 @@
 
             public static QuestionMarkRewriter Instance { get; } = new QuestionMarkRewriter();
 
-            public QuestionMark<ParseMode.Realized> Transcribe(QuestionMark<ParseMode.Realized> value, StringBuilder builder)
+            public QuestionMark<ParseMode.Deferred> Transcribe(QuestionMark<ParseMode.Realized> value, StringBuilder builder)
             {
-                return value;
+                return new QuestionMark<ParseMode.Deferred>(
+                    new Future<IOutput<char, QuestionMark<ParseMode.Realized>>>(
+                        () => new Output<char, QuestionMark<ParseMode.Realized>>(true, value, null)));
             }
         }
 
@@ -167,7 +169,7 @@
             }
         }
 
-        public sealed class SlashRewriter : IRewriter<Slash<ParseMode.Realized>>
+        public sealed class SlashRewriter : IRewriter<Slash<ParseMode.Realized>, Slash<ParseMode.Deferred>>
         {
             private SlashRewriter()
             {
@@ -175,9 +177,11 @@
 
             public static SlashRewriter Instance { get; } = new SlashRewriter();
 
-            public Slash<ParseMode.Realized> Transcribe(Slash<ParseMode.Realized> value, StringBuilder builder)
+            public Slash<ParseMode.Deferred> Transcribe(Slash<ParseMode.Realized> value, StringBuilder builder)
             {
-                return value;
+                return new Slash<ParseMode.Deferred>(
+                    new Future<IOutput<char, Slash<ParseMode.Realized>>>(
+                        () => new Output<char, Slash<ParseMode.Realized>>(true, value, null)));
             }
         }
 
@@ -194,7 +198,7 @@
             public Segment<ParseMode.Realized> Transcribe(Segment<ParseMode.Realized> value, StringBuilder builder)
             {
                 return new Segment<ParseMode.Realized>(
-                    SlashRewriter.Instance.Transcribe(value.Slash, builder),
+                    SlashRewriter.Instance.Transcribe(value.Slash, builder).Realize().Parsed,
                     CharactersRewriter.Transcribe(value.Characters, builder),
                     new Future<IOutput<char, Segment<ParseMode.Realized>>>(
                         () => new Output<char, Segment<ParseMode.Realized>>(true, this.Transcribe(value, builder), null)));
