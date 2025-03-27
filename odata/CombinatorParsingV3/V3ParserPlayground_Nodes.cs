@@ -604,8 +604,6 @@
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
             where TMode : ParseMode
         {
-            internal readonly Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory; //// TODO this should be private
-
             private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node;
 
             private readonly Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
@@ -618,15 +616,12 @@
                     () => ManyNode.Create<TDeferredAstNode, TRealizedAstNode>(nodeFactory, previouslyParsedOutput));
 
                 return new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
-                    nodeFactory,
                     node);
             }
 
             internal Many(
-                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
                 IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node)
             {
-                this.nodeFactory = nodeFactory;
                 this.node = node;
 
                 this.cachedOutput = new Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(

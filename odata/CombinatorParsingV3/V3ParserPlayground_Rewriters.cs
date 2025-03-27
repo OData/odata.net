@@ -69,7 +69,7 @@
             public OptionValue<ParseMode.Realized> Transcribe(OptionValue<ParseMode.Realized> value, StringBuilder builder)
             {
                 return new OptionValue<ParseMode.Realized>(
-                    CharactersRewriter.Transcribe(value.Characters, builder),
+                    CharactersRewriter.Transcribe(value.Characters, builder).Realize().Parsed,
                     null);
             }
         }
@@ -416,7 +416,7 @@
             }
         }
 
-        public sealed class ManyRewriter2<TDeferredAstNode, TRealizedAstNode> : IRewriter<Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
+        public sealed class ManyRewriter2<TDeferredAstNode, TRealizedAstNode> : IRewriter<Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
         {
             private readonly ManyNodeRewriter2<TDeferredAstNode, TRealizedAstNode> manyNodeRewriter;
@@ -426,11 +426,11 @@
                 this.manyNodeRewriter = new ManyNodeRewriter2<TDeferredAstNode, TRealizedAstNode>(realizedAstNodeRewriter);
             }
 
-            public Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> Transcribe(Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> value, StringBuilder builder)
+            public Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Transcribe(Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> value, StringBuilder builder)
             {
-                return new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                    this.manyNodeRewriter.Transcribe(value.Node, builder).Realize().Parsed,
-                    null);
+                return new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
+                    new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>(
+                        () => this.manyNodeRewriter.Transcribe(value.Node, builder)));
             }
         }
     }
