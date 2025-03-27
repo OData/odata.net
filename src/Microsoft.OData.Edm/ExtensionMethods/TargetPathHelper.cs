@@ -115,14 +115,21 @@ namespace Microsoft.OData.Edm
             // .../MyEntitySet/MySchema.MyEntityType/...
             // .../MyEntitySet/MyComplexProperty/...
             // .../MySingleton/MyComplexProperty/...
-            IEdmSchemaType schemaType = model.FindType(targetSegments[index]);
-
-            if (schemaType != null)
+            string segment = targetSegments[index];
+            if (segment.Contains(".", StringComparison.Ordinal))
             {
-                ValidateSchemaType(schemaType, pathSegments, index);
-                pathSegments.Add(schemaType);
+                // If it's a type, the segment should be qualified name, a qualified type name should contain '.'.
+                // If we don't check the '.', the property name maybe treated as a built-in type name.
+                // For example, a property named 'Geography' could be treated as 'Edm.Geography' within 'FindType'.
+                IEdmSchemaType schemaType = model.FindType(targetSegments[index]);
 
-                return schemaType;
+                if (schemaType != null)
+                {
+                    ValidateSchemaType(schemaType, pathSegments, index);
+                    pathSegments.Add(schemaType);
+
+                    return schemaType;
+                }
             }
 
             IEdmType edmType = null;
