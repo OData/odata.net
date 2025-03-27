@@ -88,7 +88,7 @@
             }
         }
 
-        public sealed class OptionNameRewriter : IRewriter<OptionName<ParseMode.Realized>>
+        public sealed class OptionNameRewriter : IRewriter<OptionName<ParseMode.Realized>, OptionName<ParseMode.Realized>>
         {
             private OptionNameRewriter()
             {
@@ -96,12 +96,12 @@
 
             public static OptionNameRewriter Instance { get; } = new OptionNameRewriter();
 
-            private static AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter.Instance);
+            private static AtLeastOneRewriter2<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter2<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter2.Instance);
 
             public OptionName<ParseMode.Realized> Transcribe(OptionName<ParseMode.Realized> value, StringBuilder builder)
             {
                 return new OptionName<ParseMode.Realized>(
-                    CharactersRewriter.Transcribe(value.Characters, builder),
+                    CharactersRewriter.Transcribe(value.Characters, builder).Realize().Parsed,
                     null);
             }
         }
