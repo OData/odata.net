@@ -1,23 +1,25 @@
 <!-- markdownlint-disable MD002 MD041 -->
 
+## Description
+
 *Short summary (3-5 sentences) describing the issue.*
 
-### Assemblies affected
+## Assemblies affected
 
-*Which assemblies and versions are known to be affected e.g. OData .Net lib 7.x*
+*Which assemblies and versions are known to be affected e.g. Microsoft.OData.Core 8.x*
 
-### Reproduce steps
+## Steps to Reproduce
 
 *The simplest set of steps to reproduce the issue. If possible, reference a commit that demonstrates the issue.*
 
-### Expected result
+## Expected behaviour
 
 *What would happen if there wasn't a bug.*
 
-### Actual result
+## Actual behaviour
 
 *What is actually happening.*
 
-### Additional detail
+## Additional details
 
 *Optional, details of the root cause if known. Delete this section if you have no additional details to add.*
