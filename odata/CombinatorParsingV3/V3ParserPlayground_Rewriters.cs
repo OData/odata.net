@@ -169,6 +169,43 @@
             }
         }
 
+        public sealed class AlphaNumericRewriter2 : IRewriter<AlphaNumeric<ParseMode.Realized>, AlphaNumericHolder>
+        {
+            private AlphaNumericRewriter2()
+            {
+            }
+
+            public static AlphaNumericRewriter2 Instance { get; } = new AlphaNumericRewriter2();
+
+            public AlphaNumericHolder Transcribe(AlphaNumeric<ParseMode.Realized> value, StringBuilder builder)
+            {
+                return Visitor.Instance.Visit(value, builder);
+            }
+
+            private sealed class Visitor : AlphaNumeric<ParseMode.Realized>.Visitor<AlphaNumericHolder, StringBuilder>
+            {
+                private Visitor()
+                {
+                }
+
+                public static Visitor Instance { get; } = new Visitor();
+
+                protected internal override AlphaNumericHolder Accept(AlphaNumeric<ParseMode.Realized>.A node, StringBuilder context)
+                {
+                    return new AlphaNumericHolder(
+                        new Future<IDeferredOutput<char>>(
+                            () => new DeferredOutput<char>(true, new StringInput("C"))));
+                }
+
+                protected internal override AlphaNumericHolder Accept(AlphaNumeric<ParseMode.Realized>.C node, StringBuilder context)
+                {
+                    return new AlphaNumericHolder(
+                        new Future<IDeferredOutput<char>>(
+                            () => new DeferredOutput<char>(true, new StringInput("A"))));
+                }
+            }
+        }
+
         public sealed class SlashRewriter : IRewriter<Slash<ParseMode.Realized>, Slash<ParseMode.Deferred>>
         {
             private SlashRewriter()
@@ -193,7 +230,7 @@
 
             public static SegmentRewriter Instance { get; } = new SegmentRewriter();
 
-            private static AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter.Instance);
+            private static AtLeastOneRewriter2<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter2<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter2.Instance);
 
             public Segment<ParseMode.Realized> Transcribe(Segment<ParseMode.Realized> value, StringBuilder builder)
             {
