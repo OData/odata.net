@@ -26,19 +26,19 @@
 
             private static AtLeastOneRewriter2<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>> SegmentsRewriter { get; } = new AtLeastOneRewriter2<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>>(SegmentRewriter.Instance);
 
-            private static ManyRewriter<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>> QueryOptionsRewriter { get; } = new ManyRewriter<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>>(QueryOptionRewriter.Instance);
+            private static ManyRewriter2<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>> QueryOptionsRewriter { get; } = new ManyRewriter2<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>>(QueryOptionRewriter.Instance);
 
             public OdataUri<ParseMode.Realized> Transcribe(OdataUri<ParseMode.Realized> value, StringBuilder builder)
             {
                 return new OdataUri<ParseMode.Realized>(
                     SegmentsRewriter.Transcribe(value.Segments, builder).Realize().Parsed,
                     QuestionMarkRewriter.Instance.Transcribe(value.QuestionMark, builder).Realize().Parsed,
-                    QueryOptionsRewriter.Transcribe(value.QueryOptions, builder),
+                    QueryOptionsRewriter.Transcribe(value.QueryOptions, builder).Realize().Parsed,
                     null);
             }
         }
 
-        public sealed class QueryOptionRewriter : IRewriter<QueryOption<ParseMode.Realized>>
+        public sealed class QueryOptionRewriter : IRewriter<QueryOption<ParseMode.Realized>, QueryOption<ParseMode.Deferred>>
         {
             private QueryOptionRewriter()
             {
@@ -46,13 +46,15 @@
 
             public static QueryOptionRewriter Instance { get; } = new QueryOptionRewriter();
 
-            public QueryOption<ParseMode.Realized> Transcribe(QueryOption<ParseMode.Realized> value, StringBuilder builder)
+            public QueryOption<ParseMode.Deferred> Transcribe(QueryOption<ParseMode.Realized> value, StringBuilder builder)
             {
-                return new QueryOption<ParseMode.Realized>(
-                    OptionNameRewriter.Instance.Transcribe(value.Name, builder).Realize().Parsed,
-                    EqualsSignRewriter.Instance.Transcribe(value.EqualsSign, builder).Realize().Parsed,
-                    OptionValueRewriter.Instance.Transcribe(value.OptionValue, builder).Realize().Parsed,
-                    null);
+                return new QueryOption<ParseMode.Deferred>(
+                    new Future<OptionName<ParseMode.Deferred>>(
+                        () => OptionNameRewriter.Instance.Transcribe(value.Name, builder)),
+                    new Future<EqualsSign<ParseMode.Deferred>>(
+                        () => EqualsSignRewriter.Instance.Transcribe(value.EqualsSign, builder)),
+                    new Future<OptionValue<ParseMode.Deferred>>(
+                        () => OptionValueRewriter.Instance.Transcribe(value.OptionValue, builder)));
             }
         }
 
