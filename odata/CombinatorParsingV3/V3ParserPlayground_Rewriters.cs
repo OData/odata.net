@@ -232,23 +232,49 @@
         public sealed class ManyNodeRewriter<TDeferredAstNode, TRealizedAstNode> : IRewriter<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
         {
-            private readonly IRewriter<TRealizedAstNode> realizedAstNodeRewriter;
+            private readonly OptionalNodeRewriter<TDeferredAstNode, TRealizedAstNode> optionalNodeRewriter;
 
             public ManyNodeRewriter(IRewriter<TRealizedAstNode> realizedAstNodeRewriter)
             {
-                this.realizedAstNodeRewriter = realizedAstNodeRewriter;
+                this.optionalNodeRewriter = new OptionalNodeRewriter<TDeferredAstNode, TRealizedAstNode>(realizedAstNodeRewriter);
             }
 
             public ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> Transcribe(ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> value, StringBuilder builder)
             {
                 return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                    new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                        value.Element.Value.TryGetValue(out var element) ? this.realizedAstNodeRewriter.Transcribe(element, builder) : new RealNullable<TRealizedAstNode>(),
-                        null),
+                    this.optionalNodeRewriter.Transcribe(value.Element, builder),
                     () => value.Element.Value.TryGetValue(out var element) ? this.Transcribe(value.Next, builder) : ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>.GetTerminalRealizedNode(value.cachedOutput, value.element.Value.Realize().Parsed),
                     null);
             }
         }
+
+        public sealed class OptionalNodeRewriter<TDeferredAstNode, TRealizedAstNode> : IRewriter<OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
+			where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+		{
+            private readonly IRewriter<TRealizedAstNode> realizedAstNodeRewriter;
+
+            public OptionalNodeRewriter(IRewriter<TRealizedAstNode> realizedAstNodeRewriter)
+            {
+                this.realizedAstNodeRewriter = realizedAstNodeRewriter;
+            }
+
+            public OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> Transcribe(OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> value, StringBuilder builder)
+            {
+                if (value.Value.TryGetValue(out var element))
+                {
+                    return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                        new RealNullable<TRealizedAstNode>(this.realizedAstNodeRewriter.Transcribe(element, builder)),
+                        null);
+                }
+                else
+                {
+                    return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
+                        new RealNullable<TRealizedAstNode>(),
+                        null);
+                }
+            }
+        }
+
 
         public sealed class ManyRewriter<TDeferredAstNode, TRealizedAstNode> : IRewriter<Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
