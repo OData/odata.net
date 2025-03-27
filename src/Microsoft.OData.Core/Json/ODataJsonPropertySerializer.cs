@@ -388,7 +388,9 @@ namespace Microsoft.OData.Json
                 return;
             }
 
-            if (value is ODataNullValue || value == null)
+            if (value is ODataNullValue
+                || value == null
+                || value is ODataJsonElementValue jsonElement && jsonElement.Value.ValueKind == System.Text.Json.JsonValueKind.Null)
             {
                 await this.WriteNullPropertyAsync(property).ConfigureAwait(false);
                 return;
