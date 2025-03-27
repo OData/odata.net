@@ -134,16 +134,19 @@
 
             var list = new LinkedList<CollectedTest>(stackalloc byte[0]);
 
-            Span<CollectedTest> span = new CollectedTest[10];
-            for (int i = 0; i < span.Length; ++i)
+            for (int j = 0; j < 10; ++j)
             {
-                span[i] = new CollectedTest();
-            }
+                Span<CollectedTest> span = new CollectedTest[10];
+                for (int i = 0; i < span.Length; ++i)
+                {
+                    span[i] = new CollectedTest();
+                }
 
-            if (addToList)
-            {
-                ByteSpan memory = stackalloc byte[list.MemorySize];
-                list.Append(SpanEx.FromSpan(span), memory);
+                if (addToList)
+                {
+                    ByteSpan memory = stackalloc byte[list.MemorySize];
+                    list.Append(SpanEx.FromSpan(span), memory);
+                }
             }
 
             GC.Collect();

@@ -2,7 +2,6 @@
 {
     using System;
     using System.Runtime.CompilerServices;
-
     using Fx.Runtime.InteropServices;
 
     /// <summary>
@@ -23,6 +22,10 @@
         private readonly ByteSpan data;
 
         private readonly int length;
+
+        private readonly Span<System.Runtime.InteropServices.GCHandle> handles;
+
+        private readonly System.Runtime.InteropServices.GCHandle handle;
 
         /// <summary>
         /// 
@@ -46,9 +49,30 @@
             this.length = length;
         }
 
+        private SpanEx(ByteSpan memory, int length, System.Runtime.InteropServices.GCHandle handle)
+            : this(memory, length)
+        {
+            this.handle = handle;
+        }
+
         public static SpanEx<byte> Create(ByteSpan memory)
         {
             return new SpanEx<byte>(memory, memory.Length);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="memory"></param>
+        /// <param name="length"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown if the length of <paramref name="memory"/> is not the same as the product of <paramref name="length"/> and the
+        /// <see langword="sizeof"/> <typeparamref name="T"/>
+        /// </exception>
+        public static SpanEx<T> Create(ByteSpan memory, int length, System.Runtime.InteropServices.GCHandle handle)
+        {
+            return new SpanEx<T>(memory, length, handle);
         }
 
         /// <summary>

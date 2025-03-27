@@ -2,7 +2,6 @@
 {
     using System;
     using System.Runtime.CompilerServices;
-
     using V2.Fx.Runtime.InteropServices;
 
     /// <summary>
@@ -42,6 +41,7 @@
             //// TODO can you remove `unsafe` from this method
             //// TODO can you remove the warnings from this method?
 
+            var handle = System.Runtime.InteropServices.GCHandle.Alloc(span.GetPinnableReference());
             fixed (T* pointer = span)
             {
                 Span<byte> bytes = new Span<byte>(pointer, span.Length * Unsafe.SizeOf<T>());
