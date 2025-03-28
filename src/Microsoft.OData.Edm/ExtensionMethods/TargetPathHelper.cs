@@ -121,7 +121,7 @@ namespace Microsoft.OData.Edm
                 // If it's a type, the segment should be qualified name, a qualified type name should contain '.'.
                 // If we don't check the '.', the property name maybe treated as a built-in type name.
                 // For example, a property named 'Geography' could be treated as 'Edm.Geography' within 'FindType'.
-                IEdmSchemaType schemaType = model.FindType(targetSegments[index]);
+                IEdmSchemaType schemaType = model.FindType(segment);
 
                 if (schemaType != null)
                 {
