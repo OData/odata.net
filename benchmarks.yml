@@ -39,7 +39,7 @@ jobs:
       jobType: default
       base: "{{base}}"
       baseBranch: "{{baseBranch}}"
-    framework: netcoreapp3.1
+    framework: net10.0
     arguments: "--job {{jobType}} --filter {{filter}} --memory"
     options:
       benchmarkDotNet: true
