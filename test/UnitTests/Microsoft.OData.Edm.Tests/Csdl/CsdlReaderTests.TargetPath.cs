@@ -20,6 +20,24 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     public partial class CsdlReaderTests
     {
         [Fact]
+        public void ParsingGeographyAsPropertyNameWorks()
+        {
+            string types =
+                @"<EntityType Name=""Geography"">
+                    <Key>
+                        <PropertyRef Name=""Id""/>
+                    </Key>
+                    <Property Name=""Id"" Type=""Edm.Int32""/>
+                </EntityType>";
+            string properties = @"<NavigationProperty Name=""Geography"" Type=""NS.Geography""/>";
+            IEdmModel model = GetModel(types: types, properties: properties);
+            Assert.NotNull(model);
+
+            var targetPath = model.GetTargetPath("NS.Default/Customers/Geography");
+            Assert.Equal("NS.Default/Customers/Geography", targetPath.Path);
+        }
+
+        [Fact]
         public void ParsingEntitySetPropertyOutOfLineAnnotationsWorks()
         {
             // Test for MySchema.MyEntityContainer/MyEntitySet/MyProperty
