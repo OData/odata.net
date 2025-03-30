@@ -55,8 +55,6 @@ public class CustomHttpClientRequestMessage : TestHttpClientRequestMessage
             request.SetHeader("Accept", mimeType);
             request.SetHeader("Content-Type", mimeType);
             request.SetHeader("Prefer", "respond-async");
-
-            return await request.GetResponseAsync();
         }
 
         return await request.GetResponseAsync();
