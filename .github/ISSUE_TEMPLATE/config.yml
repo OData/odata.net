@@ -1,5 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: ❓ General Questions & Support
+  - name: 🐞 Bug report
+    url: BUG_REPORT.md
+    about: Report a problem to help us improve
+  - name: 🚀 Feature request
+    url: FEATURE_REQUEST.md
+    about: Suggest a new feature or improvement
+  - name: ❓ General questions & support
     url: https://github.com/OData/odata.net/discussions
     about: "For general questions, please use GitHub Discussions instead of opening an issue."
