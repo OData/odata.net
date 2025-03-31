@@ -63,6 +63,7 @@
     {
         public static IFuture<TResult> Select<TValue, TResult>(this IFuture<TValue> future, Func<TValue, TResult> selector)
         {
+            //// TODO i think this might be a "lift"
             return new Future<TResult>(() => selector(future.Value));
         }
     }
@@ -599,8 +600,9 @@
             }
         }
 
-        public sealed class Many<TDeferredAstNode, TRealizedAstNode, TMode>
-            : IDeferredAstNode<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
+        public sealed class Many<TDeferredAstNode, TRealizedAstNode, TMode> :
+            IDeferredAstNode<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>,
+            IFromRealizedable<Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
             where TMode : ParseMode
         {
@@ -669,6 +671,21 @@
                         false, 
                         default, 
                         output.Remainder);
+                }
+            }
+
+            public Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Convert()
+            {
+                if (typeof(TMode) == typeof(ParseMode.Deferred))
+                {
+                    return new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
+                        this.node.Select(_ => _.Convert()));
+                }
+                else
+                {
+                    return new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
+                        this.node.Value.Convert(),
+                        this.cachedOutput);
                 }
             }
         }
@@ -1046,7 +1063,7 @@
             }
         }
 
-        public sealed class EqualsSign<TMode> : IDeferredAstNode<char, EqualsSign<ParseMode.Realized>> where TMode : ParseMode
+        public sealed class EqualsSign<TMode> : IDeferredAstNode<char, EqualsSign<ParseMode.Realized>>, IFromRealizedable<EqualsSign<ParseMode.Deferred>> where TMode : ParseMode
         {
             private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
 
@@ -1100,6 +1117,18 @@
                     return new Output<char, EqualsSign<ParseMode.Realized>>(false, default, input);
                 }
             }
+
+            public EqualsSign<ParseMode.Deferred> Convert()
+            {
+                if (typeof(TMode) == typeof(ParseMode.Deferred))
+                {
+                    return new EqualsSign<ParseMode.Deferred>(this.previouslyParsedOutput);
+                }
+                else
+                {
+                    return new EqualsSign<ParseMode.Deferred>(this.cachedOutput);
+                }
+            }
         }
 
         public static class OptionName
@@ -1110,7 +1139,8 @@
             }
         }
 
-        public sealed class OptionName<TMode> : IDeferredAstNode<char, OptionName<ParseMode.Realized>> where TMode : ParseMode
+        public sealed class OptionName<TMode> : IDeferredAstNode<char, OptionName<ParseMode.Realized>>, IFromRealizedable<OptionName<ParseMode.Deferred>>
+            where TMode : ParseMode
         {
             private readonly IFuture
                 <
@@ -1176,6 +1206,21 @@
                     return new Output<char, OptionName<ParseMode.Realized>>(false, default, output.Remainder);
                 }
             }
+
+            public OptionName<ParseMode.Deferred> Convert()
+            {
+                if (typeof(TMode) == typeof(ParseMode.Deferred))
+                {
+                    return new OptionName<ParseMode.Deferred>(
+                        this.characters.Select(_ => _.Convert()));
+                }
+                else
+                {
+                    return new OptionName<ParseMode.Deferred>(
+                        this.characters.Value.Convert(),
+                        this.cachedOutput);
+                }
+            }
         }
 
         public static class OptionValue
@@ -1186,9 +1231,9 @@
             }
         }
 
-        public sealed class OptionValue<TMode> : IDeferredAstNode<char, OptionValue<ParseMode.Realized>> where TMode : ParseMode
+        public sealed class OptionValue<TMode> : IDeferredAstNode<char, OptionValue<ParseMode.Realized>>, IFromRealizedable<OptionValue<ParseMode.Deferred>> where TMode : ParseMode
         {
-            private readonly Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
+            private readonly IFuture<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
 
             private readonly Future<IOutput<char, OptionValue<ParseMode.Realized>>> cachedOutput;
 
@@ -1204,7 +1249,7 @@
             }
 
             internal OptionValue(
-                Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters)
+                IFuture<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters)
             {
                 this.characters = characters;
 
@@ -1225,7 +1270,7 @@
             {
                 get
                 {
-                    return this.characters;
+                    return this.characters.Value;
                 }
             }
 
@@ -1250,6 +1295,21 @@
                 }
 
             }
+
+            public OptionValue<ParseMode.Deferred> Convert()
+            {
+                if (typeof(TMode) == typeof(ParseMode.Deferred))
+                {
+                    return new OptionValue<ParseMode.Deferred>(
+                        this.characters.Select(_ => _.Convert()));
+                }
+                else
+                {
+                    return new OptionValue<ParseMode.Deferred>(
+                        this.characters.Value.Convert(),
+                        this.cachedOutput);
+                }
+            }
         }
 
         public static class QueryOption
@@ -1260,7 +1320,7 @@
             }
         }
 
-        public sealed class QueryOption<TMode> : IDeferredAstNode<char, QueryOption<ParseMode.Realized>> where TMode : ParseMode
+        public sealed class QueryOption<TMode> : IDeferredAstNode<char, QueryOption<ParseMode.Realized>>, IFromRealizedable<QueryOption<ParseMode.Deferred>> where TMode : ParseMode
         {
             private readonly IFuture<OptionName<TMode>> name;
             private readonly IFuture<EqualsSign<TMode>> equalsSign;
@@ -1347,6 +1407,25 @@
                 else
                 {
                     return new Output<char, QueryOption<ParseMode.Realized>>(false, default, output.Remainder);
+                }
+            }
+
+            public QueryOption<ParseMode.Deferred> Convert()
+            {
+                if (typeof(TMode) == typeof(ParseMode.Deferred))
+                {
+                    return new QueryOption<ParseMode.Deferred>(
+                        this.name.Select(_ => _.Convert()),
+                        this.equalsSign.Select(_ => _.Convert()),
+                        this.optionValue.Select(_ => _.Convert()));
+                }
+                else
+                {
+                    return new QueryOption<ParseMode.Deferred>(
+                        this.name.Value.Convert(),
+                        this.equalsSign.Value.Convert(),
+                        this.optionValue.Value.Convert(),
+                        this.cachedOutput);
                 }
             }
         }
