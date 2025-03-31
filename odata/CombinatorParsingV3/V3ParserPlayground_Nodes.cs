@@ -515,7 +515,7 @@
                         () => this.RealizeImpl());
             }
 
-            internal AtLeastOne( //// TODO this should be private
+            private AtLeastOne(
                 TRealizedAstNode _1,
                 ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> node,
                 Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
@@ -628,7 +628,7 @@
                     () => this.RealizeImpl());
             }
 
-            internal Many(
+            private Many(
                 ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> node, 
                 Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
@@ -744,7 +744,7 @@
                     cachedOutput);
             }
 
-            internal ManyNode(
+            private ManyNode(
                 OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> element, 
                 Func<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next, 
                 Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
@@ -881,6 +881,7 @@
 
             internal OptionalNode(RealNullable<TRealizedAstNode> value, Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
+                ///// TODO why is this constructor being used in the rewriters?
                 this.value = new RealNullable<RealNullable<TRealizedAstNode>>(value);
                 this.cachedOutput = cachedOutput;
             }
@@ -985,7 +986,7 @@
                 this.cachedOutput = new Future<IOutput<char, Segment<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            internal Segment(
+            private Segment(
                 Slash<TMode> slash, 
                 AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
                 Future<IOutput<char, Segment<ParseMode.Realized>>> cachedOutput)
@@ -1165,7 +1166,7 @@
                 this.cachedOutput = new Future<IOutput<char, OptionName<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            internal OptionName(
+            private OptionName(
                 AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
                 Future<IOutput<char, OptionName<ParseMode.Realized>>> cachedOutput)
             {
@@ -1254,7 +1255,7 @@
                 this.cachedOutput = new Future<IOutput<char, OptionValue<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            internal OptionValue(
+            private OptionValue(
                 Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
                 Future<IOutput<char, OptionValue<ParseMode.Realized>>> cachedOutput)
             {
@@ -1346,7 +1347,7 @@
                 this.cachedOutput = new Future<IOutput<char, QueryOption<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            internal QueryOption(
+            private QueryOption(
                 OptionName<TMode> name, 
                 EqualsSign<TMode> equalsSign, 
                 OptionValue<TMode> optionValue, 
@@ -1538,7 +1539,7 @@
                 this.cachedOutput = new Future<IOutput<char, OdataUri<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            internal OdataUri(
+            private OdataUri(
                 AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, TMode> segments,
                 QuestionMark<TMode> questionMark,
                 Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, TMode> queryOptions,
