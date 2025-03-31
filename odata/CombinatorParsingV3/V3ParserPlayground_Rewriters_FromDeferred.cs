@@ -32,15 +32,13 @@
 
                 public OdataUri<ParseMode.Deferred> Transcribe(OdataUri<ParseMode.Deferred> value, StringBuilder builder)
                 {
-                    var realized = value.Realize().Parsed;
-
                     return new OdataUri<ParseMode.Deferred>(
                         new Future<AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, ParseMode.Deferred>>(
-                            () => SegmentsRewriter.Transcribe(realized.Segments, builder)),
+                            () => SegmentsRewriter.Transcribe(value.Realize().Parsed.Segments, builder)),
                         new Future<QuestionMark<ParseMode.Deferred>>(
-                            () => QuestionMarkRewriter.Instance.Transcribe(realized.QuestionMark, builder)),
+                            () => QuestionMarkRewriter.Instance.Transcribe(value.Realize().Parsed.QuestionMark, builder)),
                         new Future<Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, ParseMode.Deferred>>(
-                            () => QueryOptionsRewriter.Transcribe(realized.QueryOptions, builder)));
+                            () => QueryOptionsRewriter.Transcribe(value.Realize().Parsed.QueryOptions, builder)));
                 }
             }
 
