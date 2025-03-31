@@ -16,8 +16,4 @@
     <Folder Include="__Generated\CstNodes\Rules\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="CombinatorParsingV3\V3ParserPlayground_Rewriters.cs" />
-  </ItemGroup>
-
 </Project>

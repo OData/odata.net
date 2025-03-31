@@ -7,22 +7,22 @@
 
     public static partial class V3ParserPlayground
     {
-        public interface IRewriter<TSource, TResult>
+        public interface IFromRealizedRewriter<TSource, TResult>
         {
             TResult Transcribe(TSource value, StringBuilder builder);
         }
 
-        public interface IRewriter<T> : IRewriter<T, T>
+        public interface IFromRealizedRewriter<T> : IFromRealizedRewriter<T, T>
         {
         }
 
-        public sealed class OdataUriRewriter : IRewriter<OdataUri<ParseMode.Realized>, OdataUri<ParseMode.Deferred>>
+        public sealed class OdataUriFromRealizedRewriter : IFromRealizedRewriter<OdataUri<ParseMode.Realized>, OdataUri<ParseMode.Deferred>>
         {
-            private OdataUriRewriter()
+            private OdataUriFromRealizedRewriter()
             {
             }
 
-            public static OdataUriRewriter Instance { get; } = new OdataUriRewriter();
+            public static OdataUriFromRealizedRewriter Instance { get; } = new OdataUriFromRealizedRewriter();
 
             private static AtLeastOneRewriter2<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>> SegmentsRewriter { get; } = new AtLeastOneRewriter2<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>>(SegmentRewriter.Instance);
 
@@ -40,7 +40,7 @@
             }
         }
 
-        public sealed class QueryOptionRewriter : IRewriter<QueryOption<ParseMode.Realized>, QueryOption<ParseMode.Deferred>>
+        public sealed class QueryOptionRewriter : IFromRealizedRewriter<QueryOption<ParseMode.Realized>, QueryOption<ParseMode.Deferred>>
         {
             private QueryOptionRewriter()
             {
@@ -60,7 +60,7 @@
             }
         }
 
-        public sealed class OptionValueRewriter : IRewriter<OptionValue<ParseMode.Realized>, OptionValue<ParseMode.Deferred>>
+        public sealed class OptionValueRewriter : IFromRealizedRewriter<OptionValue<ParseMode.Realized>, OptionValue<ParseMode.Deferred>>
         {
             private OptionValueRewriter()
             {
@@ -78,7 +78,7 @@
             }
         }
 
-        public sealed class EqualsSignRewriter : IRewriter<EqualsSign<ParseMode.Realized>, EqualsSign<ParseMode.Deferred>>
+        public sealed class EqualsSignRewriter : IFromRealizedRewriter<EqualsSign<ParseMode.Realized>, EqualsSign<ParseMode.Deferred>>
         {
             private EqualsSignRewriter()
             {
@@ -94,7 +94,7 @@
             }
         }
 
-        public sealed class OptionNameRewriter : IRewriter<OptionName<ParseMode.Realized>, OptionName<ParseMode.Deferred>>
+        public sealed class OptionNameRewriter : IFromRealizedRewriter<OptionName<ParseMode.Realized>, OptionName<ParseMode.Deferred>>
         {
             private OptionNameRewriter()
             {
@@ -112,7 +112,7 @@
             }
         }
 
-        public sealed class QuestionMarkRewriter : IRewriter<QuestionMark<ParseMode.Realized>, QuestionMark<ParseMode.Deferred>>
+        public sealed class QuestionMarkRewriter : IFromRealizedRewriter<QuestionMark<ParseMode.Realized>, QuestionMark<ParseMode.Deferred>>
         {
             private QuestionMarkRewriter()
             {
@@ -128,7 +128,7 @@
             }
         }
 
-        public sealed class AlphaNumericRewriter2 : IRewriter<AlphaNumeric<ParseMode.Realized>, AlphaNumericHolder>
+        public sealed class AlphaNumericRewriter2 : IFromRealizedRewriter<AlphaNumeric<ParseMode.Realized>, AlphaNumericHolder>
         {
             private AlphaNumericRewriter2()
             {
@@ -165,7 +165,7 @@
             }
         }
 
-        public sealed class SlashRewriter : IRewriter<Slash<ParseMode.Realized>, Slash<ParseMode.Deferred>>
+        public sealed class SlashRewriter : IFromRealizedRewriter<Slash<ParseMode.Realized>, Slash<ParseMode.Deferred>>
         {
             private SlashRewriter()
             {
@@ -181,7 +181,7 @@
             }
         }
 
-        public sealed class SegmentRewriter : IRewriter<Segment<ParseMode.Realized>, Segment<ParseMode.Deferred>>
+        public sealed class SegmentRewriter : IFromRealizedRewriter<Segment<ParseMode.Realized>, Segment<ParseMode.Deferred>>
         {
             private SegmentRewriter()
             {
@@ -201,15 +201,15 @@
             }
 		}
 
-		public sealed class AtLeastOneRewriter2<TDeferredAstNode, TRealizedAstNode> : IRewriter<AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
+		public sealed class AtLeastOneRewriter2<TDeferredAstNode, TRealizedAstNode> : IFromRealizedRewriter<AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
 			where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
 			where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
 		{
-			private readonly IRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter;
+			private readonly IFromRealizedRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter;
 
 			private readonly ManyNodeRewriter2<TDeferredAstNode, TRealizedAstNode> manyNodeRewriter;
 
-			public AtLeastOneRewriter2(IRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter)
+			public AtLeastOneRewriter2(IFromRealizedRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter)
 			{
 				this.realizedAstNodeRewriter = realizedAstNodeRewriter;
 
@@ -226,12 +226,12 @@
 			}
 		}
 
-		public sealed class ManyNodeRewriter2<TDeferredAstNode, TRealizedAstNode> : IRewriter<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
+		public sealed class ManyNodeRewriter2<TDeferredAstNode, TRealizedAstNode> : IFromRealizedRewriter<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
 			where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
 		{
 			private readonly OptionalNodeRewriter2<TDeferredAstNode, TRealizedAstNode> optionalNodeRewriter;
 
-			public ManyNodeRewriter2(IRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter)
+			public ManyNodeRewriter2(IFromRealizedRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter)
 			{
 				this.optionalNodeRewriter = new OptionalNodeRewriter2<TDeferredAstNode, TRealizedAstNode>(realizedAstNodeRewriter);
 			}
@@ -246,12 +246,12 @@
 			}
 		}
 
-		public sealed class OptionalNodeRewriter2<TDeferredAstNode, TRealizedAstNode> : IRewriter<OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
+		public sealed class OptionalNodeRewriter2<TDeferredAstNode, TRealizedAstNode> : IFromRealizedRewriter<OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
 			where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
 		{
-			private readonly IRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter;
+			private readonly IFromRealizedRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter;
 
-			public OptionalNodeRewriter2(IRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter)
+			public OptionalNodeRewriter2(IFromRealizedRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter)
 			{
 				this.realizedAstNodeRewriter = realizedAstNodeRewriter;
 			}
@@ -285,12 +285,12 @@
             }
         }
 
-        public sealed class ManyRewriter2<TDeferredAstNode, TRealizedAstNode> : IRewriter<Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
+        public sealed class ManyRewriter2<TDeferredAstNode, TRealizedAstNode> : IFromRealizedRewriter<Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
         {
             private readonly ManyNodeRewriter2<TDeferredAstNode, TRealizedAstNode> manyNodeRewriter;
 
-            public ManyRewriter2(IRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter)
+            public ManyRewriter2(IFromRealizedRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter)
             {
                 this.manyNodeRewriter = new ManyNodeRewriter2<TDeferredAstNode, TRealizedAstNode>(realizedAstNodeRewriter);
             }
