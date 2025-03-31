@@ -3,8 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net.WebSockets;
     using System.Runtime.InteropServices;
     using System.Threading;
+    using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #pragma warning disable CA2014 // Do not use stackalloc in loops
@@ -179,6 +181,18 @@
             var span = new Span<StructCollectedTest>(new StructCollectedTest[0]);
         }
 
+        private static unsafe TResult Cast<TSource, TResult>(TSource source) where TSource : allows ref struct where TResult : allows ref struct
+        {
+            return *(TResult*)(void*)&source;
+        }
+
+        public unsafe struct FakeSpan<T>
+        {
+            public T* Reference;
+
+            public int Length;
+        }
+
         [TestMethod]
         public unsafe void SpanWithReferences7()
         {
@@ -193,15 +207,63 @@
             for (int i = 0; i < 10; ++i)
             {
                 var array = new StructCollectedTest[1];
-                array[0] = new StructCollectedTest(new CollectedTest(), "Asdf");
-                var span = new Span<StructCollectedTest>(array);
+                array[0] = new StructCollectedTest(new CollectedTest(), i.ToString());
+
+                Span<StructCollectedTest> span;
+                fixed (StructCollectedTest* pointer = &array[0])
+                {
+                    ref StructCollectedTest aRef = ref System.Runtime.CompilerServices.Unsafe.AsRef<StructCollectedTest>(pointer);
+                    span = new Span<StructCollectedTest>(ref aRef);
+                }
+
                 if (i == 2)
                 {
+                    copy = new Span<StructCollectedTest>(array);
                     V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(bytes, span); //// TODO this would normally throw...
-                    var innerCopy = System.Runtime.CompilerServices.Unsafe.As<Span<byte>, Span<StructCollectedTest>>(ref bytes);
-                    ref StructCollectedTest pin = ref innerCopy.GetPinnableReference();
-                    copy = new Span<StructCollectedTest>(ref pin, 1);
+                    ////var innerCopy = System.Runtime.CompilerServices.Unsafe.As<Span<byte>, Span<StructCollectedTest>>(ref bytes);
+                    ////var innerCopy = System.Runtime.CompilerServices.Unsafe.BitCast<Span<byte>, Span<StructCollectedTest>>(bytes);
+                    var fakeSpan = System.Runtime.CompilerServices.Unsafe.BitCast<Span<byte>, FakeSpan<StructCollectedTest>>(bytes);
 
+                    fakeSpan = System.Runtime.CompilerServices.Unsafe.ReadUnaligned<FakeSpan<StructCollectedTest>>(ref System.Runtime.InteropServices.MemoryMarshal.GetReference(bytes));
+                    ////fakeSpan.Length = 1;
+                    var innerCopy = Cast<FakeSpan<StructCollectedTest>, Span<StructCollectedTest>>(fakeSpan);
+                    copy = MemoryMarshal.CreateSpan(ref innerCopy.GetPinnableReference(), 1);
+
+                    /*fixed (StructCollectedTest* anotherPointer = span)
+                    {
+                        ref StructCollectedTest anotherRef = ref System.Runtime.CompilerServices.Unsafe.AsRef<StructCollectedTest>(anotherPointer);
+                        copy = new Span<StructCollectedTest>(ref anotherRef);
+                    }*/
+
+                    fixed (StructCollectedTest* anotherPointer2 = innerCopy)
+                    {
+                        ref StructCollectedTest anotherRef2 = ref System.Runtime.CompilerServices.Unsafe.AsRef<StructCollectedTest>(anotherPointer2);
+                        copy = new Span<StructCollectedTest>(ref anotherRef2);
+                    }
+
+                    /*var value = System.Runtime.CompilerServices.Unsafe.ReadUnaligned<StructCollectedTest>(ref bytes.GetPinnableReference());
+                    StructCollectedTest* pointer = &value;
+                    ref StructCollectedTest aRef = ref System.Runtime.CompilerServices.Unsafe.AsRef<StructCollectedTest>(pointer);
+                    copy = new Span<StructCollectedTest>(ref aRef);*/
+                }
+
+                //// TODO adding another `if` shouldn't prevent any more garbage collection...
+                if (i == 3)
+                {
+                    copy = new Span<StructCollectedTest>(array);
+                    V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(bytes, span); //// TODO this would normally throw...
+                    
+                    var fakeSpan = System.Runtime.CompilerServices.Unsafe.BitCast<Span<byte>, FakeSpan<StructCollectedTest>>(bytes);
+
+                    fakeSpan = System.Runtime.CompilerServices.Unsafe.ReadUnaligned<FakeSpan<StructCollectedTest>>(ref System.Runtime.InteropServices.MemoryMarshal.GetReference(bytes));
+                    var innerCopy = Cast<FakeSpan<StructCollectedTest>, Span<StructCollectedTest>>(fakeSpan);
+                    copy = MemoryMarshal.CreateSpan(ref innerCopy.GetPinnableReference(), 1);
+
+                    fixed (StructCollectedTest* anotherPointer2 = innerCopy)
+                    {
+                        ref StructCollectedTest anotherRef2 = ref System.Runtime.CompilerServices.Unsafe.AsRef<StructCollectedTest>(anotherPointer2);
+                        copy = new Span<StructCollectedTest>(ref anotherRef2);
+                    }
 
                 }
 
