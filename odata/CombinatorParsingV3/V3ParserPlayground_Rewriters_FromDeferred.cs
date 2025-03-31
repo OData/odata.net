@@ -104,13 +104,13 @@
 
                 public static OptionNameRewriter Instance { get; } = new OptionNameRewriter();
 
-                private static AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter.Instance);
+                private static AtLeastOneRewriter2<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter2<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter2.Instance);
 
                 public OptionName<ParseMode.Deferred> Transcribe(OptionName<ParseMode.Deferred> value, StringBuilder builder)
                 {
                     return new OptionName<ParseMode.Deferred>(
                         new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(
-                            () => CharactersRewriter.Transcribe(value.Characters.Realize().Parsed, builder)));
+                            () => CharactersRewriter.Transcribe(value.Characters, builder)));
                 }
             }
 
