@@ -548,7 +548,7 @@
                 {
                     return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
                         this.__1,
-                        this.node.Select(_ => (_ as ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>)!)); //// TODO this is very hacky
+                        this.node.Select(_ => _.Convert()));
                 }
                 else
                 {
@@ -820,8 +820,9 @@
             {
                 if (typeof(TMode) == typeof(ParseMode.Deferred))
                 {
-                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(this.element.Select(_ => (_ as OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>)!),
-                        this.next.Select(_ => (_ as ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>)!));
+                    return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
+                        this.element.Select(_ => _.Convert()),
+                        this.next.Select(_ => _.Convert()));
                 }
                 else
                 {
