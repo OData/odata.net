@@ -151,7 +151,7 @@
                 return new Slash<ParseMode.Deferred>(previouslyParsedOutput);
             }
 
-            internal Slash(IFuture<IDeferredOutput<char>> previouslyParsedOutput) //// TODO make sure this parameter is named correctly everywhere
+            internal Slash(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
                 if (typeof(TMode) != typeof(ParseMode.Deferred))
                 {
@@ -211,13 +211,13 @@
 
         public sealed class AlphaNumericHolder : IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>>
         {
-            private readonly IFuture<IDeferredOutput<char>> future;
+            private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
 
             private readonly IFuture<IOutput<char, AlphaNumeric<ParseMode.Realized>>> cachedOutput;
 
-            public AlphaNumericHolder(IFuture<IDeferredOutput<char>> future)
+            public AlphaNumericHolder(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
-                this.future = future;
+                this.previouslyParsedOutput = previouslyParsedOutput;
 
                 this.cachedOutput = new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>>>(this.RealizeImpl);
             }
@@ -234,19 +234,19 @@
 
             private IOutput<char, AlphaNumeric<ParseMode.Realized>> RealizeImpl()
             {
-                var a = AlphaNumeric.A.Create(this.future).Realize();
+                var a = AlphaNumeric.A.Create(this.previouslyParsedOutput).Realize();
                 if (a.Success)
                 {
                     return a;
                 }
 
-                var c = AlphaNumeric.C.Create(this.future).Realize();
+                var c = AlphaNumeric.C.Create(this.previouslyParsedOutput).Realize();
                 if (c.Success)
                 {
                     return c;
                 }
 
-                return new Output<char, AlphaNumeric<ParseMode.Realized>>(false, default, this.future.Value.Remainder);
+                return new Output<char, AlphaNumeric<ParseMode.Realized>>(false, default, this.previouslyParsedOutput.Value.Remainder);
             }
         }
 
