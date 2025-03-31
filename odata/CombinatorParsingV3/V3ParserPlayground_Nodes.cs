@@ -1020,8 +1020,8 @@
                 if (typeof(TMode) == typeof(ParseMode.Deferred))
                 {
                     return new Segment<ParseMode.Deferred>(
-                        this.slash.Select(_ => (_ as Slash<ParseMode.Deferred>)!), //// TODO this is hacky to get around the parsemode type parameter
-                        this.characters.Select(_ => (_ as AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>)!));
+                        this.slash.Select(_ => _.Convert()),
+                        this.characters.Select(_ => _.Convert()));
                 }
                 else
                 {
