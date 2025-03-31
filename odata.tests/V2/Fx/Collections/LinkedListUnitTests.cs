@@ -8,6 +8,7 @@
     using System.Threading;
     using Microsoft.CodeAnalysis.CSharp.Syntax;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
+    using static V2.Fx.Collections.LinkedListUnitTests;
 
 #pragma warning disable CA2014 // Do not use stackalloc in loops
     [TestClass]
@@ -204,6 +205,7 @@
             Span<StructCollectedTest> copy = new Span<StructCollectedTest>();
             Span<StructCollectedTest> anotherCopy = new Span<StructCollectedTest>();
             Span<StructCollectedTest> aThirdCopy = new Span<StructCollectedTest>();
+            Span<StructCollectedTest> aFourthCopy = new Span<StructCollectedTest>();
 
             FakeSpan<StructCollectedTest> fakeSpan;
             for (int i = 0; i < 10; ++i)
@@ -284,6 +286,11 @@
 
                 }
 
+                if (i == 7)
+                {
+                    aFourthCopy = Copy(span, bytes);
+                }
+
                 if (i == 5)
                 {
                     anotherCopy = span;
@@ -297,6 +304,14 @@
             GC.WaitForPendingFinalizers();
 
             Assert.AreEqual(0, Finalized);
+        }
+
+        private static Span<StructCollectedTest> Copy(Span<StructCollectedTest> source, Span<byte> destination)
+        {
+            V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(destination, source); //// TODO this would normally throw...
+
+            var fakeSpan = System.Runtime.CompilerServices.Unsafe.ReadUnaligned<FakeSpan<StructCollectedTest>>(ref System.Runtime.InteropServices.MemoryMarshal.GetReference(destination));
+            return System.Runtime.CompilerServices.Unsafe.As<FakeSpan<StructCollectedTest>, Span<StructCollectedTest>>(ref fakeSpan);
         }
 
         [TestMethod]
