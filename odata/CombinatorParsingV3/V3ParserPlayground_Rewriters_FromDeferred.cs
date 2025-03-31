@@ -56,7 +56,7 @@
                         new Future<OptionName<ParseMode.Deferred>>(
                             () => OptionNameRewriter.Instance.Transcribe(value.Name, builder)),
                         new Future<EqualsSign<ParseMode.Deferred>>(
-                            () => EqualsSignRewriter.Instance.Transcribe(value.EqualsSign.Realize().Parsed, builder)),
+                            () => EqualsSignRewriter.Instance.Transcribe(value.EqualsSign, builder)),
                         new Future<OptionValue<ParseMode.Deferred>>(
                             () => OptionValueRewriter.Instance.Transcribe(value.OptionValue.Realize().Parsed, builder)));
                 }
@@ -80,7 +80,7 @@
                 }
             }
 
-            public sealed class EqualsSignRewriter : IRewriter<EqualsSign<ParseMode.Realized>, EqualsSign<ParseMode.Deferred>>
+            public sealed class EqualsSignRewriter : IRewriter<EqualsSign<ParseMode.Deferred>, EqualsSign<ParseMode.Deferred>>
             {
                 private EqualsSignRewriter()
                 {
@@ -88,11 +88,9 @@
 
                 public static EqualsSignRewriter Instance { get; } = new EqualsSignRewriter();
 
-                public EqualsSign<ParseMode.Deferred> Transcribe(EqualsSign<ParseMode.Realized> value, StringBuilder builder)
+                public EqualsSign<ParseMode.Deferred> Transcribe(EqualsSign<ParseMode.Deferred> value, StringBuilder builder)
                 {
-                    return new EqualsSign<ParseMode.Deferred>(
-                        new Future<IOutput<char, EqualsSign<ParseMode.Realized>>>(
-                            () => new Output<char, EqualsSign<ParseMode.Realized>>(true, value, null)));
+                    return value;
                 }
             }
 
