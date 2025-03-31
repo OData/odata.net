@@ -203,7 +203,9 @@
             Span<byte> bytes = stackalloc byte[System.Runtime.CompilerServices.Unsafe.SizeOf<Span<StructCollectedTest>>()];
             Span<StructCollectedTest> copy = new Span<StructCollectedTest>();
             Span<StructCollectedTest> anotherCopy = new Span<StructCollectedTest>();
+            Span<StructCollectedTest> aThirdCopy = new Span<StructCollectedTest>();
 
+            FakeSpan<StructCollectedTest> fakeSpan;
             for (int i = 0; i < 10; ++i)
             {
                 var array = new StructCollectedTest[1];
@@ -222,7 +224,7 @@
                     V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(bytes, span); //// TODO this would normally throw...
                     ////var innerCopy = System.Runtime.CompilerServices.Unsafe.As<Span<byte>, Span<StructCollectedTest>>(ref bytes);
                     ////var innerCopy = System.Runtime.CompilerServices.Unsafe.BitCast<Span<byte>, Span<StructCollectedTest>>(bytes);
-                    var fakeSpan = System.Runtime.CompilerServices.Unsafe.BitCast<Span<byte>, FakeSpan<StructCollectedTest>>(bytes);
+                    fakeSpan = System.Runtime.CompilerServices.Unsafe.BitCast<Span<byte>, FakeSpan<StructCollectedTest>>(bytes);
 
                     fakeSpan = System.Runtime.CompilerServices.Unsafe.ReadUnaligned<FakeSpan<StructCollectedTest>>(ref System.Runtime.InteropServices.MemoryMarshal.GetReference(bytes));
                     ////fakeSpan.Length = 1;
@@ -253,17 +255,32 @@
                     copy = new Span<StructCollectedTest>(array);
                     V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(bytes, span); //// TODO this would normally throw...
                     
-                    var fakeSpan = System.Runtime.CompilerServices.Unsafe.BitCast<Span<byte>, FakeSpan<StructCollectedTest>>(bytes);
-
                     fakeSpan = System.Runtime.CompilerServices.Unsafe.ReadUnaligned<FakeSpan<StructCollectedTest>>(ref System.Runtime.InteropServices.MemoryMarshal.GetReference(bytes));
-                    var innerCopy = Cast<FakeSpan<StructCollectedTest>, Span<StructCollectedTest>>(fakeSpan);
+                    /*var innerCopy = Cast<FakeSpan<StructCollectedTest>, Span<StructCollectedTest>>(fakeSpan);
                     copy = MemoryMarshal.CreateSpan(ref innerCopy.GetPinnableReference(), 1);
 
                     fixed (StructCollectedTest* anotherPointer2 = innerCopy)
                     {
                         ref StructCollectedTest anotherRef2 = ref System.Runtime.CompilerServices.Unsafe.AsRef<StructCollectedTest>(anotherPointer2);
                         copy = new Span<StructCollectedTest>(ref anotherRef2);
-                    }
+                    }*/
+
+                }
+
+                if (i == 4)
+                {
+                    aThirdCopy = new Span<StructCollectedTest>(array);
+                    V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(bytes, span); //// TODO this would normally throw...
+
+                    fakeSpan = System.Runtime.CompilerServices.Unsafe.ReadUnaligned<FakeSpan<StructCollectedTest>>(ref System.Runtime.InteropServices.MemoryMarshal.GetReference(bytes));
+                    var innerCopy = Cast<FakeSpan<StructCollectedTest>, Span<StructCollectedTest>>(fakeSpan);
+                    aThirdCopy = MemoryMarshal.CreateSpan(ref innerCopy.GetPinnableReference(), 1);
+
+                    /*fixed (StructCollectedTest* anotherPointer2 = innerCopy)
+                    {
+                        ref StructCollectedTest anotherRef2 = ref System.Runtime.CompilerServices.Unsafe.AsRef<StructCollectedTest>(anotherPointer2);
+                        aThirdCopy = new Span<StructCollectedTest>(ref anotherRef2);
+                    }*/
 
                 }
 
