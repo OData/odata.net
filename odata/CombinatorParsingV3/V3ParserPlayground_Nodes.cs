@@ -151,7 +151,7 @@
                 return new Slash<ParseMode.Deferred>(previouslyParsedOutput);
             }
 
-            internal Slash(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            private Slash(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
                 if (typeof(TMode) != typeof(ParseMode.Deferred))
                 {
@@ -163,7 +163,7 @@
                 this.cachedOutput = new Future<IOutput<char, Slash<ParseMode.Realized>>>(() => this.RealizeImpl());
             }
 
-            internal Slash(Future<IOutput<char, Slash<ParseMode.Realized>>> output)
+            private Slash(Future<IOutput<char, Slash<ParseMode.Realized>>> output)
             {
                 this.cachedOutput = output;
             }
@@ -309,7 +309,7 @@
                     return new AlphaNumeric<ParseMode.Deferred>.A(previouslyParsedOutput);
                 }
 
-                internal A(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                private A(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
@@ -321,7 +321,7 @@
                     this.cachedOutput = new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>>(() => this.RealizeImpl());
                 }
 
-                internal A(Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>> cachedOutput)
+                private A(Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>> cachedOutput)
                 {
                     this.cachedOutput = cachedOutput;
                 }
@@ -389,7 +389,7 @@
                     return new AlphaNumeric<ParseMode.Deferred>.C(previouslyParsedOutput);
                 }
 
-                internal C(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                private C(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
@@ -401,7 +401,7 @@
                     this.cachedOutput = new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>>(() => this.RealizeImpl());
                 }
 
-                internal C(Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>> cachedOutput)
+                private C(Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>> cachedOutput)
                 {
                     this.cachedOutput = cachedOutput;
                 }
