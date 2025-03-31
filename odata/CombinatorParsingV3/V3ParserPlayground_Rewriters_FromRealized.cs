@@ -173,9 +173,7 @@
 
             public Slash<ParseMode.Deferred> Transcribe(Slash<ParseMode.Realized> value, StringBuilder builder)
             {
-                return new Slash<ParseMode.Deferred>(
-                    new Future<IOutput<char, Slash<ParseMode.Realized>>>(
-                        () => new Output<char, Slash<ParseMode.Realized>>(true, value, null)));
+                return value.Convert();
             }
         }
 
