@@ -1492,6 +1492,12 @@
 
         public static class OdataUri
         {
+            public static OdataUri<ParseMode.Deferred> Create(IInput<char> input)
+            {
+                //// TODO do you want one of these factories for every node?
+                return OdataUri<ParseMode.Deferred>.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+            }
+
             public static OdataUri<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
                 return OdataUri<ParseMode.Deferred>.Create(previouslyParsedOutput);

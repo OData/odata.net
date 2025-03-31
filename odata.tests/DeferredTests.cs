@@ -340,7 +340,7 @@ namespace odata.tests
             var indexes = new List<int>();
             var input = new InstrumentedStringInput(url, indexes);
 
-            var deferredOdataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+            var deferredOdataUri = V3ParserPlayground.OdataUri.Create(input);
 
             var rewritten = Rewrite2(deferredOdataUri);
 
