@@ -70,7 +70,7 @@
 
                 public static OptionValueRewriter Instance { get; } = new OptionValueRewriter();
 
-                private static ManyRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new ManyRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter2.Instance);
+                private static ManyRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new ManyRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter.Instance);
 
                 public OptionValue<ParseMode.Deferred> Transcribe(OptionValue<ParseMode.Realized> value, StringBuilder builder)
                 {
@@ -104,7 +104,7 @@
 
                 public static OptionNameRewriter Instance { get; } = new OptionNameRewriter();
 
-                private static AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter2.Instance);
+                private static AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter.Instance);
 
                 public OptionName<ParseMode.Deferred> Transcribe(OptionName<ParseMode.Realized> value, StringBuilder builder)
                 {
@@ -130,13 +130,13 @@
                 }
             }
 
-            public sealed class AlphaNumericRewriter2 : IRewriter<AlphaNumeric<ParseMode.Realized>, AlphaNumericHolder>
+            public sealed class AlphaNumericRewriter : IRewriter<AlphaNumeric<ParseMode.Realized>, AlphaNumericHolder>
             {
-                private AlphaNumericRewriter2()
+                private AlphaNumericRewriter()
                 {
                 }
 
-                public static AlphaNumericRewriter2 Instance { get; } = new AlphaNumericRewriter2();
+                public static AlphaNumericRewriter Instance { get; } = new AlphaNumericRewriter();
 
                 public AlphaNumericHolder Transcribe(AlphaNumeric<ParseMode.Realized> value, StringBuilder builder)
                 {
@@ -177,9 +177,6 @@
 
                 public Slash<ParseMode.Deferred> Transcribe(Slash<ParseMode.Deferred> value, StringBuilder builder)
                 {
-                    /*return new Slash<ParseMode.Deferred>(
-                        new Future<IOutput<char, Slash<ParseMode.Realized>>>(
-                            () => new Output<char, Slash<ParseMode.Realized>>(true, value, null)));*/
                     return value;
                 }
             }
@@ -192,7 +189,7 @@
 
                 public static SegmentRewriter Instance { get; } = new SegmentRewriter();
 
-                private static AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter2.Instance);
+                private static AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter.Instance);
 
                 public Segment<ParseMode.Deferred> Transcribe(Segment<ParseMode.Deferred> value, StringBuilder builder)
                 {
