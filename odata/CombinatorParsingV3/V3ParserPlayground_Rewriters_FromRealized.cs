@@ -122,9 +122,7 @@
 
             public QuestionMark<ParseMode.Deferred> Transcribe(QuestionMark<ParseMode.Realized> value, StringBuilder builder)
             {
-                return new QuestionMark<ParseMode.Deferred>(
-                    new Future<IOutput<char, QuestionMark<ParseMode.Realized>>>(
-                        () => new Output<char, QuestionMark<ParseMode.Realized>>(true, value, null)));
+                return value.Convert();
             }
         }
 

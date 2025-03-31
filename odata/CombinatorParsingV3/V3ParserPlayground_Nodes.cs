@@ -1437,7 +1437,7 @@
             }
         }
 
-        public sealed class QuestionMark<TMode> : IDeferredAstNode<char, QuestionMark<ParseMode.Realized>> where TMode : ParseMode
+        public sealed class QuestionMark<TMode> : IDeferredAstNode<char, QuestionMark<ParseMode.Realized>>, IFromRealizedable<QuestionMark<ParseMode.Deferred>> where TMode : ParseMode
         {
             private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
 
@@ -1448,14 +1448,14 @@
                 return new QuestionMark<ParseMode.Deferred>(previouslyParsedOutput);
             }
 
-            internal QuestionMark(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            private QuestionMark(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
                 this.previouslyParsedOutput = previouslyParsedOutput;
 
                 this.cachedOutput = new Future<IOutput<char, QuestionMark<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            internal QuestionMark(Future<IOutput<char, QuestionMark<ParseMode.Realized>>> cachedOutput)
+            private QuestionMark(Future<IOutput<char, QuestionMark<ParseMode.Realized>>> cachedOutput)
             {
                 this.cachedOutput = cachedOutput;
             }
@@ -1485,6 +1485,19 @@
                 else
                 {
                     return new Output<char, QuestionMark<ParseMode.Realized>>(false, default, input);
+                }
+            }
+
+            public QuestionMark<ParseMode.Deferred> Convert()
+            {
+                if (typeof(TMode) == typeof(ParseMode.Deferred))
+                {
+                    return new QuestionMark<ParseMode.Deferred>(
+                        this.previouslyParsedOutput);
+                }
+                else
+                {
+                    return new QuestionMark<ParseMode.Deferred>(this.cachedOutput);
                 }
             }
         }
