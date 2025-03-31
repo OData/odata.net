@@ -331,28 +331,39 @@ namespace odata.tests
         }
 
         [TestMethod]
-        public void DeferredWriteTest2()
+        public void WriteFromDeferredToDeferred()
         {
             //// TODO what you really want is to rewrite from deferred to deferred, not realized to deferred
 
             var url = "/AA/A/AAA?AAAA=AAAAAC";
 
-            var input = new CombinatorParsingV3.StringInput(url);
+            var indexes = new List<int>();
+            var input = new InstrumentedStringInput(url, indexes);
 
             var deferredOdataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
 
             var rewritten = Rewrite2(deferredOdataUri);
 
+            Assert.AreEqual(0, indexes.Count);
+
             var segmentOutput = rewritten.Segments._1.Realize();
+
+            Assert.AreEqual(3, indexes.Max());
 
             var stringBuilder = new StringBuilder();
             V3ParserPlayground.SegmentTranscriber.Instance.Transcribe(segmentOutput.Parsed, stringBuilder);
+
+            Assert.AreEqual(3, indexes.Max());
 
             Assert.AreEqual("/CC", stringBuilder.ToString());
 
             var questionMarkOutput = rewritten.QuestionMark.Realize();
 
+            Assert.AreEqual(9, indexes.Max());
+
             var realized = rewritten.Realize().Parsed;
+
+            Assert.AreEqual(url.Length - 1, indexes.Max());
 
             var secondStringBuilder = new StringBuilder();
             V3ParserPlayground.OdataUriTranscriber.Instance.Transcribe(realized, secondStringBuilder);
