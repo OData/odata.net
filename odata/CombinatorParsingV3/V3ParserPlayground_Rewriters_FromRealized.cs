@@ -88,9 +88,7 @@
 
             public EqualsSign<ParseMode.Deferred> Transcribe(EqualsSign<ParseMode.Realized> value, StringBuilder builder)
             {
-                return new EqualsSign<ParseMode.Deferred>(
-                    new Future<IOutput<char, EqualsSign<ParseMode.Realized>>>(
-                        () => new Output<char, EqualsSign<ParseMode.Realized>>(true, value, null)));
+                return value.Convert();
             }
         }
 

@@ -1073,14 +1073,14 @@
                 return new EqualsSign<ParseMode.Deferred>(previouslyParsedOutput);
             }
 
-            internal EqualsSign(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            private EqualsSign(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
                 this.previouslyParsedOutput = previouslyParsedOutput;
 
                 this.cachedOutput = new Future<IOutput<char, EqualsSign<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            internal EqualsSign(Future<IOutput<char, EqualsSign<ParseMode.Realized>>> cachedOutput)
+            private EqualsSign(Future<IOutput<char, EqualsSign<ParseMode.Realized>>> cachedOutput)
             {
                 this.cachedOutput = cachedOutput;
             }
