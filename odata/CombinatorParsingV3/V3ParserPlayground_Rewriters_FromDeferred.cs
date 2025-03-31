@@ -18,7 +18,7 @@
             {
             }
 
-            public sealed class OdataUriRewriter : IRewriter<OdataUri<ParseMode.Realized>, OdataUri<ParseMode.Deferred>>
+            public sealed class OdataUriRewriter : IRewriter<OdataUri<ParseMode.Deferred>, OdataUri<ParseMode.Deferred>>
             {
                 private OdataUriRewriter()
                 {
@@ -30,15 +30,17 @@
 
                 private static ManyRewriter2<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>> QueryOptionsRewriter { get; } = new ManyRewriter2<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>>(QueryOptionRewriter.Instance);
 
-                public OdataUri<ParseMode.Deferred> Transcribe(OdataUri<ParseMode.Realized> value, StringBuilder builder)
+                public OdataUri<ParseMode.Deferred> Transcribe(OdataUri<ParseMode.Deferred> value, StringBuilder builder)
                 {
+                    var realized = value.Realize().Parsed;
+
                     return new OdataUri<ParseMode.Deferred>(
                         new Future<AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, ParseMode.Deferred>>(
-                            () => SegmentsRewriter.Transcribe(value.Segments, builder)),
+                            () => SegmentsRewriter.Transcribe(realized.Segments, builder)),
                         new Future<QuestionMark<ParseMode.Deferred>>(
-                            () => QuestionMarkRewriter.Instance.Transcribe(value.QuestionMark, builder)),
+                            () => QuestionMarkRewriter.Instance.Transcribe(realized.QuestionMark, builder)),
                         new Future<Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, ParseMode.Deferred>>(
-                            () => QueryOptionsRewriter.Transcribe(value.QueryOptions, builder)));
+                            () => QueryOptionsRewriter.Transcribe(realized.QueryOptions, builder)));
                 }
             }
 

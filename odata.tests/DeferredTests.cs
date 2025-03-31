@@ -341,7 +341,7 @@ namespace odata.tests
 
             var deferredOdataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
 
-            var rewritten = Rewrite2(deferredOdataUri~);
+            var rewritten = Rewrite2(deferredOdataUri);
 
             var segmentOutput = rewritten.Segments._1.Realize();
 
@@ -352,12 +352,17 @@ namespace odata.tests
 
             var questionMarkOutput = rewritten.QuestionMark.Realize();
 
-            rewritten.Realize();
+            var realized = rewritten.Realize().Parsed;
+
+            var secondStringBuilder = new StringBuilder();
+            V3ParserPlayground.OdataUriTranscriber.Instance.Transcribe(realized, secondStringBuilder);
+
+            Assert.AreEqual(url.Replace('C', 'D').Replace('A', 'C').Replace('D', 'A'), secondStringBuilder.ToString());
         }
 
         private static V3ParserPlayground.OdataUri<ParseMode.Deferred> Rewrite2(V3ParserPlayground.OdataUri<ParseMode.Deferred> originalUri)
         {
-            return V3ParserPlayground.Rewriter2.OdataUriRewriter.Instance.Transcribe(originalUri.Parse(), new StringBuilder());
+            return V3ParserPlayground.Rewriter2.OdataUriRewriter.Instance.Transcribe(originalUri, new StringBuilder());
         }
     }
 }
