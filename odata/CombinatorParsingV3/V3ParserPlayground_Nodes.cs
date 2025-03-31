@@ -1447,7 +1447,7 @@
                 return new QuestionMark<ParseMode.Deferred>(previouslyParsedOutput);
             }
 
-            internal QuestionMark(IFuture<IDeferredOutput<char>> previouslyParsedOutput) //// TODO should this have a "realized" singleton instead?
+            internal QuestionMark(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
                 this.previouslyParsedOutput = previouslyParsedOutput;
 
