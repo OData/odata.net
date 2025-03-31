@@ -269,12 +269,12 @@
 
                 if (i == 4)
                 {
-                    aThirdCopy = new Span<StructCollectedTest>(array);
                     V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(bytes, span); //// TODO this would normally throw...
 
                     fakeSpan = System.Runtime.CompilerServices.Unsafe.ReadUnaligned<FakeSpan<StructCollectedTest>>(ref System.Runtime.InteropServices.MemoryMarshal.GetReference(bytes));
-                    var innerCopy = Cast<FakeSpan<StructCollectedTest>, Span<StructCollectedTest>>(fakeSpan);
-                    aThirdCopy = MemoryMarshal.CreateSpan(ref innerCopy.GetPinnableReference(), 1);
+                    aThirdCopy = System.Runtime.CompilerServices.Unsafe.As<FakeSpan<StructCollectedTest>, Span<StructCollectedTest>>(ref fakeSpan);
+
+                    ////aThirdCopy = MemoryMarshal.CreateSpan(ref innerCopy.GetPinnableReference(), 1);
 
                     /*fixed (StructCollectedTest* anotherPointer2 = innerCopy)
                     {
