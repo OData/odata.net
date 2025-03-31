@@ -700,10 +700,10 @@
 
         public sealed class ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>, IFromRealizedable<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
-            internal readonly IFuture<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>> element; //// TODO this hsould be private
+            private readonly IFuture<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>> element;
             private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next;
 
-            internal readonly Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput; //// TODO this hsould be private
+            private readonly Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
 
             internal static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create(
                 Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
