@@ -137,6 +137,77 @@
         }
 
         [TestMethod]
+        public unsafe void SpanWithReferences()
+        {
+            var bytes = stackalloc byte[0];
+            Span<StructCollectedTest> span = new Span<StructCollectedTest>(bytes, 0);
+        }
+
+        [TestMethod]
+        public unsafe void SpanWithReferences2()
+        {
+            var bytes = stackalloc byte[0];
+            Span<CollectedTest> span = new Span<CollectedTest>(bytes, 0);
+        }
+
+        class NoReferences()
+        {
+        }
+
+        [TestMethod]
+        public unsafe void SpanWithReferences3()
+        {
+            var bytes = stackalloc byte[0];
+            Span<NoReferences> span = new Span<NoReferences>(bytes, 0);
+        }
+
+        [TestMethod]
+        public void SpanWithReferences4()
+        {
+            Span<NoReferences> span = new Span<NoReferences>(new NoReferences[0]);
+        }
+
+        [TestMethod]
+        public void SpanWithReferences5()
+        {
+            var span = new Span<CollectedTest>(new CollectedTest[0]);
+        }
+
+        [TestMethod]
+        public void SpanWithReferences6()
+        {
+            var span = new Span<StructCollectedTest>(new StructCollectedTest[0]);
+        }
+
+        [TestMethod]
+        public unsafe void SpanWithReferences7()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Finalized = 0;
+
+            Span<byte> bytes = stackalloc byte[System.Runtime.CompilerServices.Unsafe.SizeOf<Span<StructCollectedTest>>()];
+            Span<StructCollectedTest> copy = new Span<StructCollectedTest>();
+
+            for (int i = 0; i < 10; ++i)
+            {
+                var array = new StructCollectedTest[1];
+                array[0] = new StructCollectedTest(new CollectedTest(), "Asdf");
+                var span = new Span<StructCollectedTest>(array);
+                if (i == 0)
+                {
+                    V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(bytes, span); //// TODO this would normally throw...
+                    copy = System.Runtime.CompilerServices.Unsafe.As<Span<byte>, Span<StructCollectedTest>>(ref bytes);
+                }
+            }
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            Assert.AreEqual(9, Finalized);
+        }
+
+        [TestMethod]
         public void GarbageCollectionWithStruct()
         {
             //// TODO for some reason, if `value` *is* a ref struct, the handle still will exist and the garbage collector won't its references; this even goes so far as keeping the data on the stack or something
