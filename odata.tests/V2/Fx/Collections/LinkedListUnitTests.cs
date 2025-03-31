@@ -121,7 +121,7 @@
             }
         }
 
-        public readonly struct StructCollectedTest
+        public struct StructCollectedTest
         {
             public StructCollectedTest(CollectedTest value, string something)
             {
@@ -131,7 +131,7 @@
             }
             public string Something { get; }
 
-            public int AnotherValue { get; }
+            public int AnotherValue;
 
             public CollectedTest Value { get; }
         }
@@ -188,23 +188,36 @@
 
             Span<byte> bytes = stackalloc byte[System.Runtime.CompilerServices.Unsafe.SizeOf<Span<StructCollectedTest>>()];
             Span<StructCollectedTest> copy = new Span<StructCollectedTest>();
+            Span<StructCollectedTest> anotherCopy = new Span<StructCollectedTest>();
 
             for (int i = 0; i < 10; ++i)
             {
                 var array = new StructCollectedTest[1];
                 array[0] = new StructCollectedTest(new CollectedTest(), "Asdf");
                 var span = new Span<StructCollectedTest>(array);
-                if (i == 0)
+                if (i == 2)
                 {
                     V2.Fx.Runtime.InteropServices.MemoryMarshal.Write(bytes, span); //// TODO this would normally throw...
-                    copy = System.Runtime.CompilerServices.Unsafe.As<Span<byte>, Span<StructCollectedTest>>(ref bytes);
+                    var innerCopy = System.Runtime.CompilerServices.Unsafe.As<Span<byte>, Span<StructCollectedTest>>(ref bytes);
+                    ref StructCollectedTest pin = ref innerCopy.GetPinnableReference();
+                    copy = new Span<StructCollectedTest>(ref pin, 1);
+
+
+                }
+
+                if (i == 5)
+                {
+                    anotherCopy = span;
+                    span[0].AnotherValue = 2;
                 }
             }
+
+            Assert.AreEqual(2, anotherCopy[0].AnotherValue);
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
 
-            Assert.AreEqual(9, Finalized);
+            Assert.AreEqual(0, Finalized);
         }
 
         [TestMethod]
