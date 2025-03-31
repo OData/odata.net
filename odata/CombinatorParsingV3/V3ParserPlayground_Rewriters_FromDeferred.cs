@@ -167,7 +167,7 @@
                 }
             }
 
-            public sealed class SlashRewriter : IRewriter<Slash<ParseMode.Realized>, Slash<ParseMode.Deferred>>
+            public sealed class SlashRewriter : IRewriter<Slash<ParseMode.Deferred>, Slash<ParseMode.Deferred>>
             {
                 private SlashRewriter()
                 {
@@ -175,11 +175,12 @@
 
                 public static SlashRewriter Instance { get; } = new SlashRewriter();
 
-                public Slash<ParseMode.Deferred> Transcribe(Slash<ParseMode.Realized> value, StringBuilder builder)
+                public Slash<ParseMode.Deferred> Transcribe(Slash<ParseMode.Deferred> value, StringBuilder builder)
                 {
-                    return new Slash<ParseMode.Deferred>(
+                    /*return new Slash<ParseMode.Deferred>(
                         new Future<IOutput<char, Slash<ParseMode.Realized>>>(
-                            () => new Output<char, Slash<ParseMode.Realized>>(true, value, null)));
+                            () => new Output<char, Slash<ParseMode.Realized>>(true, value, null)));*/
+                    return value;
                 }
             }
 
@@ -197,7 +198,7 @@
                 {
                     return new Segment<ParseMode.Deferred>(
                         new Future<Slash<ParseMode.Deferred>>(
-                            () => SlashRewriter.Instance.Transcribe(value.Slash.Realize().Parsed, builder)),
+                            () => SlashRewriter.Instance.Transcribe(value.Slash, builder)),
                         new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(
                             () => CharactersRewriter.Transcribe(value.Characters.Realize().Parsed, builder)));
                 }
