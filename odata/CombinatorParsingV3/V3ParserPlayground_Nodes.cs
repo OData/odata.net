@@ -393,8 +393,7 @@
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
-                        //// TODO add this back?
-                        ////throw new ArgumentException("tODO i think this will depend on what you decide for modeling options of the deferred vs realized nodes");
+                        throw new ArgumentException("tODO i think this will depend on what you decide for modeling options of the deferred vs realized nodes");
                     }
 
                     this.previouslyParsedOutput = previouslyParsedOutput;
