@@ -19,6 +19,8 @@
 
         public LinkedList(ByteSpan emptySpan)
         {
+            //// TODO RuntimeHelpers.IsReferenceOrContainsReferences
+
             if (emptySpan.Length != 0)
             {
                 // this is to protect the caller from overallocating memory; we don't use this span for anything, it only exists
