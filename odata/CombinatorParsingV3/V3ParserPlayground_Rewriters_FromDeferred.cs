@@ -28,7 +28,7 @@
 
                 private static AtLeastOneRewriter2<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>> SegmentsRewriter { get; } = new AtLeastOneRewriter2<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>>(SegmentRewriter.Instance);
 
-                private static ManyRewriter<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>> QueryOptionsRewriter { get; } = new ManyRewriter<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>>(QueryOptionRewriter.Instance);
+                private static ManyRewriter2<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>> QueryOptionsRewriter { get; } = new ManyRewriter2<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>>(QueryOptionRewriter.Instance);
 
                 public OdataUri<ParseMode.Deferred> Transcribe(OdataUri<ParseMode.Deferred> value, StringBuilder builder)
                 {
@@ -38,7 +38,7 @@
                         new Future<QuestionMark<ParseMode.Deferred>>(
                             () => QuestionMarkRewriter.Instance.Transcribe(value.QuestionMark, builder)),
                         new Future<Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, ParseMode.Deferred>>(
-                            () => QueryOptionsRewriter.Transcribe(value.Realize().Parsed.QueryOptions, builder)));
+                            () => QueryOptionsRewriter.Transcribe(value.QueryOptions, builder)));
                 }
             }
 
@@ -438,6 +438,24 @@
                     return new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
                         new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>(
                             () => this.manyNodeRewriter.Transcribe(value.Node, builder)));
+                }
+            }
+
+            public sealed class ManyRewriter2<TDeferredAstNode, TRealizedAstNode> : IRewriter<Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
+                where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            {
+                private readonly ManyNodeRewriter<TDeferredAstNode, TRealizedAstNode> manyNodeRewriter;
+
+                public ManyRewriter2(IRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter)
+                {
+                    this.manyNodeRewriter = new ManyNodeRewriter<TDeferredAstNode, TRealizedAstNode>(realizedAstNodeRewriter);
+                }
+
+                public Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Transcribe(Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> value, StringBuilder builder)
+                {
+                    return new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
+                        new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>(
+                            () => this.manyNodeRewriter.Transcribe(value.Node.Realize().Parsed, builder)));
                 }
             }
         }
