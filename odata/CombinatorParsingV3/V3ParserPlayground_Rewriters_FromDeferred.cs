@@ -36,7 +36,7 @@
                         new Future<AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, ParseMode.Deferred>>(
                             () => SegmentsRewriter.Transcribe(value.Segments, builder)),
                         new Future<QuestionMark<ParseMode.Deferred>>(
-                            () => QuestionMarkRewriter.Instance.Transcribe(value.Realize().Parsed.QuestionMark, builder)),
+                            () => QuestionMarkRewriter.Instance.Transcribe(value.QuestionMark, builder)),
                         new Future<Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, ParseMode.Deferred>>(
                             () => QueryOptionsRewriter.Transcribe(value.Realize().Parsed.QueryOptions, builder)));
                 }
@@ -114,7 +114,7 @@
                 }
             }
 
-            public sealed class QuestionMarkRewriter : IRewriter<QuestionMark<ParseMode.Realized>, QuestionMark<ParseMode.Deferred>>
+            public sealed class QuestionMarkRewriter : IRewriter<QuestionMark<ParseMode.Deferred>, QuestionMark<ParseMode.Deferred>>
             {
                 private QuestionMarkRewriter()
                 {
@@ -122,11 +122,9 @@
 
                 public static QuestionMarkRewriter Instance { get; } = new QuestionMarkRewriter();
 
-                public QuestionMark<ParseMode.Deferred> Transcribe(QuestionMark<ParseMode.Realized> value, StringBuilder builder)
+                public QuestionMark<ParseMode.Deferred> Transcribe(QuestionMark<ParseMode.Deferred> value, StringBuilder builder)
                 {
-                    return new QuestionMark<ParseMode.Deferred>(
-                        new Future<IOutput<char, QuestionMark<ParseMode.Realized>>>(
-                            () => new Output<char, QuestionMark<ParseMode.Realized>>(true, value, null)));
+                    return value;
                 }
             }
 
