@@ -734,11 +734,10 @@
                         () => this.RealizeImpl());
             }
 
-            internal static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetTerminalRealizedNode(
+            private static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetTerminalRealizedNode(
                 Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput,
                 OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> element)
             {
-                //// TODO this method hsould be priovate
                 return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
                     element, 
                     () => GetTerminalRealizedNode(cachedOutput, element),
