@@ -167,6 +167,52 @@
                 }
             }
 
+            public sealed class AlphaNumericRewriter2 : IRewriter<AlphaNumericHolder, AlphaNumericHolder>
+            {
+                private AlphaNumericRewriter2()
+                {
+                }
+
+                public static AlphaNumericRewriter2 Instance { get; } = new AlphaNumericRewriter2();
+
+                public AlphaNumericHolder Transcribe(AlphaNumericHolder value, StringBuilder builder)
+                {
+                    //// TODO once you get to something that you actually need to make a decision on, you have to realize; is that correct?
+                    var realized = value.Realize();
+                    if (!realized.Success)
+                    {
+                        throw new System.Exception("tODO");
+                    }
+
+                    var parsed = realized.Parsed;
+
+                    return Visitor.Instance.Visit(parsed, builder);
+                }
+
+                private sealed class Visitor : AlphaNumeric<ParseMode.Realized>.Visitor<AlphaNumericHolder, StringBuilder>
+                {
+                    private Visitor()
+                    {
+                    }
+
+                    public static Visitor Instance { get; } = new Visitor();
+
+                    protected internal override AlphaNumericHolder Accept(AlphaNumeric<ParseMode.Realized>.A node, StringBuilder context)
+                    {
+                        return new AlphaNumericHolder(
+                            new Future<IDeferredOutput<char>>(
+                                () => new DeferredOutput<char>(true, new StringInput("C"))));
+                    }
+
+                    protected internal override AlphaNumericHolder Accept(AlphaNumeric<ParseMode.Realized>.C node, StringBuilder context)
+                    {
+                        return new AlphaNumericHolder(
+                            new Future<IDeferredOutput<char>>(
+                                () => new DeferredOutput<char>(true, new StringInput("A"))));
+                    }
+                }
+            }
+
             public sealed class SlashRewriter : IRewriter<Slash<ParseMode.Deferred>, Slash<ParseMode.Deferred>>
             {
                 private SlashRewriter()
@@ -189,7 +235,7 @@
 
                 public static SegmentRewriter Instance { get; } = new SegmentRewriter();
 
-                private static AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter.Instance);
+                private static AtLeastOneRewriter2<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter2<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter2.Instance);
 
                 public Segment<ParseMode.Deferred> Transcribe(Segment<ParseMode.Deferred> value, StringBuilder builder)
                 {
@@ -197,7 +243,7 @@
                         new Future<Slash<ParseMode.Deferred>>(
                             () => SlashRewriter.Instance.Transcribe(value.Slash, builder)),
                         new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(
-                            () => CharactersRewriter.Transcribe(value.Characters.Realize().Parsed, builder)));
+                            () => CharactersRewriter.Transcribe(value.Characters, builder)));
                 }
             }
 
