@@ -765,7 +765,7 @@ namespace Microsoft.OData.UriParser
             {
                 // throw if cast enum to not-string :
                 if ((args[0].GetEdmTypeReference() is IEdmEnumTypeReference)
-                    && !string.Equals(typeArgumentFullName, Metadata.EdmConstants.EdmStringTypeName, state.Configuration.Resolver.EnableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
+                    && !string.Equals(typeArgumentFullName, Microsoft.OData.Metadata.EdmConstants.EdmStringTypeName, state.Configuration.Resolver.EnableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                 {
                     throw new ODataException(SRResources.CastBinder_EnumOnlyCastToOrFromString);
                 }
