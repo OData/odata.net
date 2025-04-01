@@ -410,20 +410,26 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             convertNode.Source.ShouldBeConstantQueryNode((object)null);
         }
 
-        [Fact]
-        public void ParseFilterCastMethod1()
+        [Theory]
+        [InlineData("cast(NS.Color'Green', 'Edm.String') eq 'blue'")]
+        [InlineData("cast(NS.Color'Green', Edm.String) eq 'blue'")]
+        [InlineData("cast(NS.Color'Green', edm.string) eq 'blue'")]
+        [InlineData("cast(NS.Color'Green', EDM.STRING) eq 'blue'")]
+        public void ParseFilterCastMethodWithEdmPrimitiveTypes(string filterQuery)
         {
-            var filter = ParseFilter("cast(NS.Color'Green', 'Edm.String') eq 'blue'", this.userModel, this.entityType, this.entitySet);
+            var filter = ParseFilter(filterQuery, true, this.userModel, this.entityType, this.entitySet);
             var bon = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             var convertNode = Assert.IsType<ConvertNode>(bon.Left);
             var functionCallNode = Assert.IsType<SingleValueFunctionCallNode>(convertNode.Source);
             Assert.Equal("cast", functionCallNode.Name); // ConvertNode is because cast() result's nullable=false.
         }
 
-        [Fact]
-        public void ParseFilterCastMethod2()
+        [Theory]
+        [InlineData("cast('Green', 'NS.Color') eq NS.Color'Green'")]
+        [InlineData("cast('Green', NS.Color) eq NS.Color'Green'")]
+        public void ParseFilterCastMethodWithOrWithoutSingleQuotesOnType(string filterQuery)
         {
-            var filter = ParseFilter("cast('Green', 'NS.Color') eq NS.Color'Green'", this.userModel, this.entityType, this.entitySet);
+            var filter = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
             var bon = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             var functionCallNode = Assert.IsType<SingleValueFunctionCallNode>(bon.Left);
             Assert.Equal("cast", functionCallNode.Name);
@@ -500,17 +506,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             parse.Throws<ODataException>(Error.Format(SRResources.Binder_IsNotValidEnumConstant, "NS.ColorFlags'Red,2'"));
         }
 
-        [Fact]
-        public void ParseFilterEnumTypesWrongCast1()
+        [Theory]
+        [InlineData("cast(NS.ColorFlags'Green', 'Edm.Int64') eq 2")]
+        [InlineData("cast(NS.ColorFlags'Green', Edm.Int64) eq 2")]
+        public void ParseFilterEnumTypesWrongCast1(string filter)
         {
-            Action parse = () => ParseFilter("cast(NS.ColorFlags'Green', 'Edm.Int64') eq 2", this.userModel, this.entityType, this.entitySet);
+            Action parse = () => ParseFilter(filter, this.userModel, this.entityType, this.entitySet);
             parse.Throws<ODataException>(SRResources.CastBinder_EnumOnlyCastToOrFromString);
         }
-
-        [Fact]
-        public void ParseFilterEnumTypesWrongCast2()
+        [Theory]
+        [InlineData("cast(321, 'NS.ColorFlags') eq 2")]
+        [InlineData("cast(321, NS.ColorFlags) eq 2")]
+        public void ParseFilterEnumTypesWrongCast2(string filter)
         {
-            Action parse = () => ParseFilter("cast(321, 'NS.ColorFlags') eq 2", this.userModel, this.entityType, this.entitySet);
+            Action parse = () => ParseFilter(filter, this.userModel, this.entityType, this.entitySet);
             parse.Throws<ODataException>(SRResources.CastBinder_EnumOnlyCastToOrFromString);
         }
 
@@ -536,7 +545,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             IEdmEnumType colorType = this.GetIEdmType<IEdmEnumType>(colorTypeName);
             IEdmEnumMember enumMember = colorType.Members.First(m => m.Name == enumValue);
 
-            string expectedLiteral = "'Green'"; 
+            string expectedLiteral = "'Green'";
             if (filterOptionValue.StartsWith(colorTypeName)) // if the filterOptionValue is already fully qualified, then the expectedLiteral should be the same as filterOptionValue
             {
                 expectedLiteral = "NS.Color'Green'";
@@ -650,6 +659,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         private FilterClause ParseFilter(string text, IEdmModel edmModel, IEdmEntityType edmEntityType, IEdmEntitySet edmEntitySet)
         {
             return new ODataQueryOptionParser(edmModel, entityType, edmEntitySet, new Dictionary<string, string>() { { "$filter", text } }).ParseFilter();
+        }
+
+        private FilterClause ParseFilter(string text, bool caseInsensitive, IEdmModel edmModel, IEdmEntityType edmEntityType, IEdmEntitySet edmEntitySet)
+        {
+            return new ODataQueryOptionParser(edmModel, entityType, edmEntitySet, new Dictionary<string, string>() { { "$filter", text } })
+            { Resolver = new ODataUriResolver() { EnableCaseInsensitive = caseInsensitive } }.ParseFilter();
         }
     }
 }
