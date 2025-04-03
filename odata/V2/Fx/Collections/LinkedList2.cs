@@ -1,6 +1,7 @@
 ﻿namespace V2.Fx.Collections
 {
     using System;
+    using System.Runtime.InteropServices;
 
     public readonly ref struct Pointer<T> where T : allows ref struct
     {
