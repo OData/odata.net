@@ -14,6 +14,8 @@ using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Core.E2E.Tests.ModelReferenceTests;
 
+// Apply the collection attribute to the test class
+[Collection("NonParallelTests")]
 public class ModelReferenceCUDTests : EndToEndTestBase<ModelReferenceCUDTests.TestsStartup>
 {
     private readonly Uri _baseUri;
@@ -52,12 +54,12 @@ public class ModelReferenceCUDTests : EndToEndTestBase<ModelReferenceCUDTests.Te
 
     #region CUD Testing
     [Theory]
-    [InlineData(MimeTypeODataParameterFullMetadata, "30003")]
-    [InlineData(MimeTypeODataParameterMinimalMetadata, "6006006")]
-    public async Task PostDeleteTypeInReferencedModel(string mimeType, string key)
+    [InlineData(MimeTypeODataParameterFullMetadata)]
+    [InlineData(MimeTypeODataParameterMinimalMetadata)]
+    public async Task PostDeleteTypeInReferencedModel(string mimeType)
     {
         // Arrange
-        var entryWrapper = CreateVehicleGPS(key, false);
+        var entryWrapper = this.CreateVehicleGPS("30003", false);
 
         var settings = new ODataMessageWriterSettings
         {
@@ -75,8 +77,8 @@ public class ModelReferenceCUDTests : EndToEndTestBase<ModelReferenceCUDTests.Te
         requestMessage.Method = "POST";
         using (var messageWriter = new ODataMessageWriter(requestMessage, settings, _model))
         {
-            var odataWriter = messageWriter.CreateODataResourceWriter(vehicleGPSSet, vehicleGPSType);
-            ODataWriterHelper.WriteResource(odataWriter, entryWrapper);
+            var odataWriter = await messageWriter.CreateODataResourceWriterAsync(vehicleGPSSet, vehicleGPSType);
+            await ODataWriterHelper.WriteResourceAsync(odataWriter, entryWrapper);
         }
 
         // Act
@@ -85,27 +87,27 @@ public class ModelReferenceCUDTests : EndToEndTestBase<ModelReferenceCUDTests.Te
         // Assert
         Assert.Equal(201, responseMessage.StatusCode);
 
-        var entry = await this.QueryEntityItemAsync($"VehicleGPSSet('{key}')") as ODataResource;
-        Assert.Equal(key, (entry?.Properties.Single(p => p.Name == "Key") as ODataProperty)?.Value);
+        var entry = await this.QueryEntityItemAsync($"VehicleGPSSet('30003')", 200 /* OK statusCode */) as ODataResource;
+        Assert.Equal("30003", (entry?.Properties.Single(p => p.Name == "Key") as ODataProperty)?.Value);
 
         // Delete the entry
-        var deleteRequestMessage = new TestHttpClientRequestMessage(new Uri(_baseUri + $"VehicleGPSSet('{key}')"), Client);
+        var deleteRequestMessage = new TestHttpClientRequestMessage(new Uri(_baseUri + $"VehicleGPSSet('30003')"), Client);
         deleteRequestMessage.Method = "DELETE";
         var deleteResponseMessage = await deleteRequestMessage.GetResponseAsync();
 
         // Verify Deleted
         Assert.Equal(204, deleteResponseMessage.StatusCode);
-        var deletedEntry = await this.QueryEntityItemAsync($"VehicleGPSSet('{key}')", 204 /* NoContent */) as ODataResource;
+        var deletedEntry = await this.QueryEntityItemAsync($"VehicleGPSSet('30003')", 204 /* NoContent statusCode */) as ODataResource;
         Assert.Null(deletedEntry);
     }
 
     [Theory]
-    [InlineData(MimeTypeODataParameterFullMetadata, "20202")]
-    [InlineData(MimeTypeODataParameterMinimalMetadata, "40404")]
-    public async Task PostDeleteTypeInReferencingModel(string mimeType, string key)
+    [InlineData(MimeTypeODataParameterFullMetadata)]
+    [InlineData(MimeTypeODataParameterMinimalMetadata)]
+    public async Task PostDeleteTypeInReferencingModel(string mimeType)
     {
         // Arrange
-        var entryWrapper = CreateVehicleGPS(key, true);
+        var entryWrapper = CreateVehicleGPS("20202", true);
 
         var settings = new ODataMessageWriterSettings
         {
@@ -123,8 +125,8 @@ public class ModelReferenceCUDTests : EndToEndTestBase<ModelReferenceCUDTests.Te
         requestMessage.Method = "POST";
         using (var messageWriter = new ODataMessageWriter(requestMessage, settings, _model))
         {
-            var odataWriter = messageWriter.CreateODataResourceWriter(vehicleGPSSet, vehicleGPSType);
-            ODataWriterHelper.WriteResource(odataWriter, entryWrapper);
+            var odataWriter = await messageWriter.CreateODataResourceWriterAsync(vehicleGPSSet, vehicleGPSType);
+            await ODataWriterHelper.WriteResourceAsync(odataWriter, entryWrapper);
         }
 
         // Act
@@ -132,17 +134,19 @@ public class ModelReferenceCUDTests : EndToEndTestBase<ModelReferenceCUDTests.Te
 
         // Assert
         Assert.Equal(201, responseMessage.StatusCode);
-        var entry = await this.QueryEntityItemAsync($"VehicleGPSSetInGPS('{key}')") as ODataResource;
-        Assert.Equal(key, (entry?.Properties.Single(p => p.Name == "Key") as ODataProperty)?.Value);
+
+        var entry = await this.QueryEntityItemAsync($"VehicleGPSSetInGPS('20202')", 200 /* OK statusCode */) as ODataResource;
+        Assert.Equal("20202", (entry?.Properties.Single(p => p.Name == "Key") as ODataProperty)?.Value);
 
         // Delete the entry
-        var deleteRequestMessage = new TestHttpClientRequestMessage(new Uri(_baseUri + $"VehicleGPSSetInGPS('{key}')"), Client);
+        var deleteRequestMessage = new TestHttpClientRequestMessage(new Uri(_baseUri + $"VehicleGPSSetInGPS('20202')"), Client);
         deleteRequestMessage.Method = "DELETE";
         var deleteResponseMessage = await deleteRequestMessage.GetResponseAsync();
 
         // Verify Deleted
         Assert.Equal(204, deleteResponseMessage.StatusCode);
-        var deletedEntry = await this.QueryEntityItemAsync($"VehicleGPSSetInGPS('{key}')", 204 /* NotFound */) as ODataResource;
+
+        var deletedEntry = await this.QueryEntityItemAsync($"VehicleGPSSetInGPS('20202')", 204 /* NoContent statusCode */) as ODataResource;
         Assert.Null(deletedEntry);
     }
 
@@ -408,3 +412,7 @@ public class ModelReferenceCUDTests : EndToEndTestBase<ModelReferenceCUDTests.Te
 
     #endregion
 }
+
+// Collection definition to disable parallelization
+[CollectionDefinition("NonParallelTests", DisableParallelization = true)]
+public class NonParallelTestsCollection { }
