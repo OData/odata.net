@@ -24,6 +24,7 @@
   
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.OData.Core.Tests" />
+    <InternalsVisibleTo Include="Microsoft.OData.Core.E2E.Tests" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,23 +43,21 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.Buffers" Version="4.5.1" />
   </ItemGroup>
+  
+ <ItemGroup >
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool" Version="6.0.3" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
     <ProjectReference Include="..\Microsoft.Spatial\Microsoft.Spatial.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-	<PackageReference Include="Microsoft.Extensions.ObjectPool">
-	  <Version>6.0.3</Version>
-	</PackageReference>
   </ItemGroup>
 
   <ItemGroup>

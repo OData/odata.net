@@ -9,11 +9,12 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Batch;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Client.E2E.TestCommon;
 using Microsoft.OData.Client.E2E.Tests.ClientTests.Server;
-using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon;
+using Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd.Default;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 using Xunit;
+using ClientEndToEndModel = Microsoft.OData.E2E.TestCommon.Common.Client.EndToEnd;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
 {
@@ -47,10 +48,10 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
 
         [Fact]
         public async Task UpdateObject_ExecutesSuccessfully()
-        { 
+        {
             _context.MergeOption = MergeOption.PreserveChanges;
             var product1 = (await _context.Products.ExecuteAsync()).First();
-            var product2 = (await ((DataServiceQuery<Common.Clients.EndToEnd.Product>)_context.Products.Skip(1)).ExecuteAsync()).First();
+            var product2 = (await ((DataServiceQuery<ClientEndToEndModel.Product>)_context.Products.Skip(1)).ExecuteAsync()).First();
 
             product1.Description = "New Description 1";
             product2.Description = "New Description 2";
@@ -63,7 +64,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             var product1AterUpdate = (await _context.Products.ExecuteAsync()).First();
             Assert.Equal("New Description 1", product1AterUpdate.Description);
 
-            var product2AfterUpdate = (await ((DataServiceQuery<Common.Clients.EndToEnd.Product>)_context.Products.Skip(1)).ExecuteAsync()).First();
+            var product2AfterUpdate = (await ((DataServiceQuery<ClientEndToEndModel.Product>)_context.Products.Skip(1)).ExecuteAsync()).First();
             Assert.Equal("New Description 2", product2AfterUpdate.Description);
         }
 
@@ -71,7 +72,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         public async Task TrackingAndValidatingEntitiesAcrossAllPages_ExecutesSuccessfully()
         {
             var customerCount = (await _context.Customers.ExecuteAsync()).Count();
-            var customers = new DataServiceCollection<Common.Clients.EndToEnd.Customer>(_context, await _context.Customers.GetAllPagesAsync(), TrackingMode.AutoChangeTracking, null, null, null);
+            var customers = new DataServiceCollection<ClientEndToEndModel.Customer>(_context, await _context.Customers.GetAllPagesAsync(), TrackingMode.AutoChangeTracking, null, null, null);
 
             Assert.Equal(customerCount, customers.Count);
 
@@ -88,7 +89,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
 
             await _context.SaveChangesAsync();
 
-            var updatedCustomers = new DataServiceCollection<Common.Clients.EndToEnd.Customer>(_context, await _context.Customers.GetAllPagesAsync(), TrackingMode.AutoChangeTracking, null, null, null);
+            var updatedCustomers = new DataServiceCollection<ClientEndToEndModel.Customer>(_context, await _context.Customers.GetAllPagesAsync(), TrackingMode.AutoChangeTracking, null, null, null);
 
             for (int i = 0; i < updatedCustomers.Count; i++)
             {

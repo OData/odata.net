@@ -27,6 +27,7 @@
   
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.OData.Client.Tests" />
+    <InternalsVisibleTo Include="Microsoft.OData.Client.E2E.Tests" />
   </ItemGroup>
 
   <ItemGroup>
@@ -125,6 +126,7 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4" />
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+    <PackageReference Include="System.Security.Permissions" Version="9.0.1" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
-using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server
 {
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server
         public IActionResult GetContactAliasAlternativeNames([FromRoute] int key)
         {
             var contactAliasAlternativeNames = _dataSource.Customers.SingleOrDefault(a => a.CustomerId == key);
-            
+
             if (contactAliasAlternativeNames == null)
             {
                 return NotFound();
@@ -96,7 +96,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server
         }
 
         [EnableQuery]
-        [HttpGet("odata/Customers({key})/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Customer/PrimaryContactInfo/ContactAlias/AlternativeNames")]
+        [HttpGet("odata/Customers({key})/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.Customer/PrimaryContactInfo/ContactAlias/AlternativeNames")]
         public IActionResult GetDerivedCustomerAliasAlternativeNames([FromRoute] int key)
         {
             var contactAliasAlternativeNames = _dataSource.Customers.SingleOrDefault(a => a.CustomerId == key);
@@ -127,7 +127,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server
         }
 
         [EnableQuery]
-        [HttpGet("odata/PageViews/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.ProductPageView")]
+        [HttpGet("odata/PageViews/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.ProductPageView")]
         public IActionResult GetFromProductPageViews()
         {
             var productPageViews = _dataSource.PageViews.OfType<ProductPageView>().ToList();
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server
         }
 
         [EnableQuery]
-        [HttpGet("odata/Products/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct")]
+        [HttpGet("odata/Products/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct")]
         public IActionResult GetFromProductDiscontinuedProducts()
         {
             var discontinuedProducts = _dataSource.Products.OfType<DiscontinuedProduct>().ToList();
@@ -143,7 +143,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server
         }
 
         [EnableQuery]
-        [HttpGet("odata/Products({key})/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.DiscontinuedProduct/ProductId")]
+        [HttpGet("odata/Products({key})/Microsoft.OData.E2E.TestCommon.Common.Server.EndToEnd.DiscontinuedProduct/ProductId")]
         public IActionResult GetFromProductDiscontinuedProductId([FromRoute] int key)
         {
             var discontinuedProduct = _dataSource.Products.OfType<DiscontinuedProduct>().SingleOrDefault(a => a.ProductId == key);
