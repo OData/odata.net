@@ -184,7 +184,7 @@ if (input == null)
 
 if (input.Current == '/') //// TODO
 {
-    return new RealizationResult<char, Slash<ParseMode.Realized>>(
+    return new RealizationResult<char, {{@class.Name}}<ParseMode.Realized>>(
         true,
         new {{@class.Name}}<ParseMode.Realized>(this.cachedOutput),
         input.Next());
