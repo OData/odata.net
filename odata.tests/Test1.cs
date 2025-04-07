@@ -717,8 +717,8 @@
             GenerateDeferred(
                 fullRulesText,
                 false,
-                "__GeneratedOdataV2.CstNodes.Rules",
-                "__GeneratedOdataV2.CstNodes.Inners",
+                "__GeneratedPartialV1.CstNodes.Rules",
+                "__GeneratedPartialV1.CstNodes.Inners",
                 @"C:\github\odata.net\odata\__GeneratedPartialV1\Realized\CstNodes\Rules",
                 @"C:\github\odata.net\odata\__GeneratedPartialV1\Realized\CstNodes\Inners"
                 );
