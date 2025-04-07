@@ -537,7 +537,7 @@
                         Assert.IsTrue(convert.Source.Kind == QueryNodeKind.SingleValuePropertyAccess);
 
                         Assert.IsTrue(binaryNode.Right.Kind == QueryNodeKind.Constant);*/
-                        
+
                         var uri = Microsoft.OData.ODataUriExtensions.BuildUri(odataUri, Microsoft.OData.ODataUrlKeyDelimiter.Slash).ToString();
 
                         Assert.AreEqual(original, uri);
@@ -590,7 +590,7 @@
 
                     var original = "users/myid/calendar/events?$filter=id%20eq%20%27thisisatest%27";
                     var odataUri = new Microsoft.OData.UriParser.ODataUriParser(
-                        model, 
+                        model,
                         new Uri(original, UriKind.Relative))
                         .ParseUri();
                     var uri = Microsoft.OData.ODataUriExtensions.BuildUri(odataUri, Microsoft.OData.ODataUrlKeyDelimiter.Slash).ToString();
@@ -680,7 +680,7 @@
                 "__GeneratedOdataV3.Parsers.Inners",
                 @"C:\github\odata.net\odata\__GeneratedOdataV3\Parsers\Rules",
                 @"C:\github\odata.net\odata\__GeneratedOdataV3\Parsers\Inners",
-                true, 
+                true,
                 true);
         }
 
@@ -706,6 +706,48 @@
                 @"C:\github\odata.net\odata\__GeneratedOdataV2\Parsers\Rules",
                 @"C:\github\odata.net\odata\__GeneratedOdataV2\Parsers\Inners",
                 true);
+        }
+
+        [TestMethod]
+        public void Deferred()
+        {
+            var coreRulesPath = @"C:\github\odata.net\odata\AbnfParser\core.abnf";
+            var coreRulesText = File.ReadAllText(coreRulesPath);
+            var abnfRulesPath = @"C:\github\odata.net\odata\AbnfParser\abnf.abnf";
+            var abnfRulesText = File.ReadAllText(abnfRulesPath);
+            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
+
+            GenerateDeferred(
+                fullRulesText,
+                false,
+                "__GeneratedOdataV2.CstNodes.Rules",
+                "__GeneratedOdataV2.CstNodes.Inners",
+                @"C:\github\odata.net\odata\__GeneratedDeferredV1\CstNodes\Rules",
+                @"C:\github\odata.net\odata\__GeneratedDeferredV1\CstNodes\Inners"
+                );
+        }
+        private static void GenerateDeferred(
+            string fullRulesText,
+            bool useNumericFileNames,
+            string ruleCstNodesNamespace,
+            string innerCstNodesNamespace,
+            string ruleCstNodesDirectory,
+            string innerCstNodesDirectory
+            )
+        {
+            if (!__Generated.Parsers.Rules._rulelistParser.Instance.TryParse(fullRulesText, out var cst))
+            {
+                throw new Exception("TODO");
+            }
+
+            var generatedCstNodes = new _GeneratorV5.CstNodesGenerator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(cst);
+
+                generatedCstNodes = new _GeneratorV6.CstNodesOptimizer().Optimize(generatedCstNodes);
+
+            Directory.CreateDirectory(ruleCstNodesDirectory);
+            TranscribeNamespace(generatedCstNodes.RuleCstNodes, ruleCstNodesDirectory, useNumericFileNames);
+            Directory.CreateDirectory(innerCstNodesDirectory);
+            TranscribeNamespace(generatedCstNodes.InnerCstNodes, innerCstNodesDirectory, useNumericFileNames);
         }
 
         [TestMethod]

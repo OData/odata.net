@@ -14,7 +14,7 @@
         public static bool TryParse<TToken, TParsed>(this IParser<TToken, TParsed> parser, IInput<TToken> input, out TParsed parsed)
         {
             var output = parser.Parse(input);
-            if (!output.Success || input.Next() != null)
+            if (!output.Success || output.Remainder != null)
             {
                 parsed = output.Parsed;
                 return false;
