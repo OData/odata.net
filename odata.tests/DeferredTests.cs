@@ -23,7 +23,7 @@ namespace odata.tests
 
             var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
-            var odataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+            var odataUri = V3ParserPlayground.OdataUri.Create(input);
 
             var segOutput = odataUri.Segments.Realize();
             if (segOutput.Success)
@@ -41,7 +41,7 @@ namespace odata.tests
 
             var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
-            var odataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+            var odataUri = V3ParserPlayground.OdataUri.Create(input);
 
             Assert.ThrowsException<InvalidDataException>(() => odataUri.Parse());
         }
@@ -54,7 +54,7 @@ namespace odata.tests
             var indexes = new List<int>();
             var input = new InstrumentedStringInput(url, indexes);
 
-            var odataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+            var odataUri = V3ParserPlayground.OdataUri.Create(input);
 
             Assert.AreEqual(0, indexes.Count);
 
@@ -78,7 +78,7 @@ namespace odata.tests
 
             var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
-            var odataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+            var odataUri = V3ParserPlayground.OdataUri.Create(input);
 
             var segOutput = odataUri.Segments.Realize();
             if (segOutput.Success)
@@ -96,7 +96,7 @@ namespace odata.tests
 
             var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
-            var odataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+            var odataUri = V3ParserPlayground.OdataUri.Create(input);
 
             var segOutput = odataUri.Segments.Realize();
             if (segOutput.Success)
@@ -114,7 +114,7 @@ namespace odata.tests
 
             var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
-            var odataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+            var odataUri = V3ParserPlayground.OdataUri.Create(input);
 
             var segOutput = odataUri.Segments.Realize();
             if (segOutput.Success)
@@ -160,7 +160,7 @@ namespace odata.tests
             var indexes = new List<int>();
             var input = new InstrumentedStringInput(url, indexes);
 
-            var odataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+            var odataUri = V3ParserPlayground.OdataUri.Create(input);
 
             Assert.AreEqual(0, indexes.Count);
 
@@ -185,7 +185,7 @@ namespace odata.tests
             var indexes = new List<int>();
             var input = new InstrumentedStringInput(url, indexes);
 
-            var odataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+            var odataUri = V3ParserPlayground.OdataUri.Create(input);
 
             Assert.AreEqual(0, indexes.Count);
 
@@ -207,7 +207,7 @@ namespace odata.tests
             var indexes = new List<int>();
             var input = new InstrumentedStringInput(url, indexes);
 
-            var odataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+            var odataUri = V3ParserPlayground.OdataUri.Create(input);
 
             Assert.AreEqual(0, indexes.Count);
 
@@ -268,7 +268,7 @@ namespace odata.tests
 
             var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
-            var deferredOdataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+            var deferredOdataUri = V3ParserPlayground.OdataUri.Create(input);
 
             var odataUri = deferredOdataUri.Parse();
 
@@ -285,7 +285,7 @@ namespace odata.tests
 
             var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
-            var deferredOdataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+            var deferredOdataUri = V3ParserPlayground.OdataUri.Create(input);
 
             var odataUri = deferredOdataUri.Parse();
 
@@ -307,7 +307,7 @@ namespace odata.tests
 
             var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
-            var deferredOdataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+            var deferredOdataUri = V3ParserPlayground.OdataUri.Create(input);
 
             var odataUri = deferredOdataUri.Parse();
 
