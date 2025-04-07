@@ -41,6 +41,9 @@ namespace _GeneratorV7
                 var translated = Translate(cstNode);
                 if (translated == null)
                 {
+                    toTranslate.Classes.RemoveAt(i);
+                    --i;
+                    continue;
                     //// throw new System.Exception("TODO");
                 }
 
