@@ -88,7 +88,6 @@
     {
         public static IFuture<TResult> Select<TValue, TResult>(this IFuture<TValue> future, Func<TValue, TResult> selector)
         {
-            //// TODO i think this might be a "lift"
             return new Future<TResult>(() => selector(future.Value));
         }
     }
