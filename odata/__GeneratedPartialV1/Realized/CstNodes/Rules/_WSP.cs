@@ -1,0 +1,55 @@
+namespace __GeneratedPartialV1.CstNodes.Rules
+{
+    public abstract class _WSP
+    {
+        private _WSP()
+        {
+        }
+        
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(_WSP node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+            
+            protected internal abstract TResult Accept(_WSP._SP node, TContext context);
+            protected internal abstract TResult Accept(_WSP._HTAB node, TContext context);
+        }
+        
+        public sealed class _SP : _WSP
+        {
+            private _SP()
+            {
+                this._SP_1 = __GeneratedPartialV1.CstNodes.Rules._SP.Instance;
+            }
+            
+            public __GeneratedPartialV1.CstNodes.Rules._SP _SP_1 { get; }
+            public static _SP Instance { get; } = new _SP();
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _HTAB : _WSP
+        {
+            private _HTAB()
+            {
+                this._HTAB_1 = __GeneratedPartialV1.CstNodes.Rules._HTAB.Instance;
+            }
+            
+            public __GeneratedPartialV1.CstNodes.Rules._HTAB _HTAB_1 { get; }
+            public static _HTAB Instance { get; } = new _HTAB();
+            
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+    }
+    
+}
