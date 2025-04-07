@@ -41,15 +41,6 @@ namespace CombinatorParsingV3
         {
             return new RealizationResult<TToken>(true, input);
         }
-
-        public static Func<RealizationResult<TToken>> ToPromise<TToken, TParsed>(Func<IRealizationResult<TToken, TParsed>> realize)
-        {
-            return () =>
-            {
-                var output = realize();
-                return new RealizationResult<TToken>(output.Success, output.RemainingTokens);
-            };
-        }
     }
 
     public abstract class ParseMode
