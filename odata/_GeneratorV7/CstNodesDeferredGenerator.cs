@@ -17,12 +17,18 @@ namespace _GeneratorV7
                 new Namespace(
                     cstNodes.RuleCstNodes.Name,
                     cstNodes.RuleCstNodes.Classes.ToList(),
-                    cstNodes.RuleCstNodes.UsingDeclarations);
+                    new[]
+                    {
+                        "CombinatorParsingV3",
+                    });
             var innerCstNodes =
                 new Namespace(
                     cstNodes.InnerCstNodes.Name,
                     cstNodes.InnerCstNodes.Classes.ToList(),
-                    cstNodes.InnerCstNodes.UsingDeclarations);
+                    new[]
+                    {
+                        "CombinatorParsingV3",
+                    });
 
             Translate(ruleCstNodes);
             Translate(innerCstNodes);
@@ -78,7 +84,7 @@ namespace _GeneratorV7
                                     "IFuture<IRealizationResult<char>>",
                                     "previousNodeRealizationResult"),
                             },
-"""
+$$"""
 if (typeof(TMode) != typeof(ParseMode.Deferred))
 {
     throw new ArgumentException("TODO");
@@ -86,7 +92,7 @@ if (typeof(TMode) != typeof(ParseMode.Deferred))
 
 this.previousNodeRealizationResult = previousNodeRealizationResult;
 
-this.realizationResult = new Future<IRealizationResult<char, Slash<ParseMode.Realized>>>(() => this.RealizeImpl());
+this.realizationResult = new Future<IRealizationResult<char, {{@class.Name}}<ParseMode.Realized>>>(() => this.RealizeImpl());
 """.Split(Environment.NewLine)),
                         new ConstructorDefinition(
                             AccessModifier.Private,
@@ -132,14 +138,14 @@ return new {@class.Name}<ParseMode.Deferred>(previousNodeRealizationResult);
                             Enumerable.Empty<string>(),
                             "Convert",
                             Enumerable.Empty<MethodParameter>(),
-"""
+$$"""
 if (typeof(TMode) == typeof(ParseMode.Deferred))
 {
-    return new Slash<ParseMode.Deferred>(this.previousNodeRealizationResult);
+    return new {{@class.Name}}<ParseMode.Deferred>(this.previousNodeRealizationResult);
 }
 else
 {
-    return new Slash<ParseMode.Deferred>(this.cachedOutput);
+    return new {{@class.Name}}<ParseMode.Deferred>(this.cachedOutput);
 }
 """
                             ),
@@ -163,29 +169,29 @@ return cachedOutput.Value;
                             Enumerable.Empty<string>(),
                             "RealizeImpl",
                             Enumerable.Empty<MethodParameter>(),
-"""
+$$"""
 var output = this.previousNodeRealizationResult.Value;
 if (!output.Success)
 {
-    return new RealizationResult<char, Slash<ParseMode.Realized>>(false, default, output.RemainingTokens);
+    return new RealizationResult<char, {{@class.Name}}<ParseMode.Realized>>(false, default, output.RemainingTokens);
 }
 
 var input = output.RemainingTokens;
 if (input == null)
 {
-    return new RealizationResult<char, Slash<ParseMode.Realized>>(false, default, output.RemainingTokens);
+    return new RealizationResult<char, {{@class.Name}}<ParseMode.Realized>>(false, default, output.RemainingTokens);
 }
 
 if (input.Current == '/') //// TODO
 {
     return new RealizationResult<char, Slash<ParseMode.Realized>>(
         true,
-        new Slash<ParseMode.Realized>(this.cachedOutput),
+        new {{@class.Name}}<ParseMode.Realized>(this.cachedOutput),
         input.Next());
 }
 else
 {
-    return new RealizationResult<char, Slash<ParseMode.Realized>>(false, default, input);
+    return new RealizationResult<char, {{@class.Name}}<ParseMode.Realized>>(false, default, input);
 }
 """
                             ),
