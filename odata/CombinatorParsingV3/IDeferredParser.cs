@@ -24,7 +24,7 @@ namespace CombinatorParsingV3
 
     public sealed class RealizationResult<TToken> : IRealizationResult<TToken>
     {
-        public RealizationResult(bool success, ITokenStream<TToken> remainder)
+        public RealizationResult(bool success, ITokenStream<TToken>? remainder)
         {
             Success = success;
             RemainingTokens = remainder;
@@ -32,7 +32,7 @@ namespace CombinatorParsingV3
 
         public bool Success { get; }
 
-        public ITokenStream<TToken> RemainingTokens { get; }
+        public ITokenStream<TToken>? RemainingTokens { get; }
     }
 
     public static class DeferredOutput
@@ -40,11 +40,6 @@ namespace CombinatorParsingV3
         public static RealizationResult<TToken> Create<TToken>(ITokenStream<TToken> input)
         {
             return new RealizationResult<TToken>(true, input);
-        }
-
-        public static RealizationResult<TToken> Create<TToken, TParsed>(IRealizationResult<TToken, TParsed> output)
-        {
-            return new RealizationResult<TToken>(output.Success, output.RemainingTokens);
         }
 
         public static Func<RealizationResult<TToken>> ToPromise<TToken, TParsed>(Func<IRealizationResult<TToken, TParsed>> realize)

@@ -1,12 +1,8 @@
 ﻿namespace CombinatorParsingV3
 {
-    public interface IRealizationResult<out TToken, out TRealized> //// : IRealizationResult<TToken>
+    public interface IRealizationResult<out TToken, out TRealized> : IRealizationResult<TToken>
     {
-        bool Success { get; }
-
         TRealized RealizedValue { get; }
-
-        ITokenStream<TToken>? RemainingTokens { get; }
     }
 
     public sealed class RealizationResult<TToken, TRealized> : IRealizationResult<TToken, TRealized>

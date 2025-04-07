@@ -59,6 +59,14 @@
         }
     }
 
+    public static class Future
+    {
+        public static Future<T> Create<T>(Func<T> promise)
+        {
+            return promise;
+        }
+    }
+
     public static class FutureExtensions
     {
         public static IFuture<TResult> Select<TValue, TResult>(this IFuture<TValue> future, Func<TValue, TResult> selector)
@@ -494,7 +502,7 @@
                 var node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>(
                     () => ManyNode.Create<TDeferredAstNode, TRealizedAstNode>(
                         nodeFactory,
-                        Func.Compose(() => __1.Value.Realize(), DeferredOutput.Create).ToFuture()));
+                        Future.Create(() => __1.Value.Realize())));
 
                 return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
                     __1,
@@ -715,7 +723,7 @@
                     () =>
                         ManyNode.Create<TDeferredAstNode, TRealizedAstNode>(
                             nodeFactory,
-                            Func.Compose(() => element.Value.Realize(), DeferredOutput.Create).ToFuture()));
+                            Future.Create(() => element.Value.Realize())));
 
                 return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(element, next);
             }
@@ -971,7 +979,7 @@
             {
                 var slash = new Future<Slash<ParseMode.Deferred>>(() => V3ParserPlayground.Slash.Create(previouslyParsedOutput));
                 var characters = new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(() => AtLeastOne.Create<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(
-                        Func.Compose(() => slash.Value.Realize(), DeferredOutput.Create).ToFuture(), //// TODO the first parameter has a closure...
+                        Future.Create(() => slash.Value.Realize()), //// TODO the first parameter has a closure...
                         input => new AlphaNumericHolder(input)));
                 return new Segment<ParseMode.Deferred>(slash, characters);
             }
@@ -1331,9 +1339,9 @@
             {
                 var name = new Future<OptionName<ParseMode.Deferred>>(() => OptionName.Create(previouslyParsedOutput));
                 var equalsSign = new Future<EqualsSign<ParseMode.Deferred>>(() => V3ParserPlayground.EqualsSign.Create(
-                    Func.Compose(() => name.Value.Realize(), DeferredOutput.Create).ToFuture()));
+                    Future.Create(() => name.Value.Realize())));
                 var optionValue = new Future<OptionValue<ParseMode.Deferred>>(() => V3ParserPlayground.OptionValue.Create(
-                    DeferredOutput.ToPromise(() => equalsSign.Value.Realize()).ToFuture()));
+                    Future.Create(() => equalsSign.Value.Realize())));
 
                 return new QueryOption<ParseMode.Deferred>(name, equalsSign, optionValue);
             }
