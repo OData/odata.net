@@ -35,14 +35,6 @@ namespace CombinatorParsingV3
         public ITokenStream<TToken>? RemainingTokens { get; }
     }
 
-    public static class DeferredOutput
-    {
-        public static RealizationResult<TToken> Create<TToken>(ITokenStream<TToken> input)
-        {
-            return new RealizationResult<TToken>(true, input);
-        }
-    }
-
     public abstract class ParseMode
     {
         private ParseMode()
