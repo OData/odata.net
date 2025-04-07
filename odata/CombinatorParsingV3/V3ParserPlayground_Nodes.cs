@@ -1514,8 +1514,7 @@
         {
             public static OdataUri<ParseMode.Deferred> Create(ITokenStream<char> input)
             {
-                //// TODO do you want one of these factories for every node?
-                return OdataUri<ParseMode.Deferred>.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
+                return OdataUri.Create(Future.Create(() => new RealizationResult<char>(true, input)));
             }
 
             public static OdataUri<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
