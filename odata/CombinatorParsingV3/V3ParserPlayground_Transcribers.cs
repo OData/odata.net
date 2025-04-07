@@ -172,7 +172,7 @@
         }
 
         public sealed class AtLeastOneTranscriber<TDeferredAstNode, TRealizedAstNode> : ITranscriber<AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
             where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
         {
             private readonly ITranscriber<TRealizedAstNode> realizedAstNodeTranscriber;
@@ -194,7 +194,7 @@
         }
 
         public sealed class ManyNodeTranscriber<TDeferredAstNode, TRealizedAstNode> : ITranscriber<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
         {
             private readonly ITranscriber<TRealizedAstNode> realizedAstNodeTranscriber;
 
@@ -214,7 +214,7 @@
         }
 
         public sealed class ManyTranscriber<TDeferredAstNode, TRealizedAstNode> : ITranscriber<Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
         {
             private readonly ManyNodeTranscriber<TDeferredAstNode, TRealizedAstNode> manyNodeTranscriber;
 

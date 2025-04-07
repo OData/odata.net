@@ -94,7 +94,7 @@
 
     public static partial class V3ParserPlayground
     {
-        public static TRealizedAstNode Parse<TToken, TRealizedAstNode>(this IDeferredAstNode<TToken, TRealizedAstNode> deferredAstNode)
+        public static TRealizedAstNode Parse<TToken, TRealizedAstNode>(this IAstNode<TToken, TRealizedAstNode> deferredAstNode)
         {
             var output = deferredAstNode.Realize();
             if (!output.Success)
@@ -118,7 +118,7 @@
             }
         }
 
-        public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>>, IFromRealizedable<Slash<ParseMode.Deferred>> where TMode : ParseMode
+        public sealed class Slash<TMode> : IAstNode<char, Slash<ParseMode.Realized>>, IFromRealizedable<Slash<ParseMode.Deferred>> where TMode : ParseMode
         {
             private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
 
@@ -187,7 +187,7 @@
             }
         }
 
-        public sealed class AlphaNumericHolder : IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>>
+        public sealed class AlphaNumericHolder : IAstNode<char, AlphaNumeric<ParseMode.Realized>>
         {
             private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
 
@@ -247,7 +247,7 @@
             }
         }
 
-        public abstract class AlphaNumeric<TMode> : IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>>, IFromRealizedable<AlphaNumericHolder>
+        public abstract class AlphaNumeric<TMode> : IAstNode<char, AlphaNumeric<ParseMode.Realized>>, IFromRealizedable<AlphaNumericHolder>
             where TMode : ParseMode
         {
             private AlphaNumeric()
@@ -276,7 +276,7 @@
                 protected internal abstract TResult Accept(C node, TContext context);
             }
 
-            public sealed class A : AlphaNumeric<TMode>, IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>.A>
+            public sealed class A : AlphaNumeric<TMode>, IAstNode<char, AlphaNumeric<ParseMode.Realized>.A>
             {
                 private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
 
@@ -356,7 +356,7 @@
                 }
             }
 
-            public sealed class C : AlphaNumeric<TMode>, IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>.C>
+            public sealed class C : AlphaNumeric<TMode>, IAstNode<char, AlphaNumeric<ParseMode.Realized>.C>
             {
                 private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
 
@@ -442,7 +442,7 @@
             public static AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create<TDeferredAstNode, TRealizedAstNode>(
                 IFuture<IRealizationResult<char>> previouslyParsedOutput,
                 Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory)
-                where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+                where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
                 where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
             {
                 return AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>.Create(previouslyParsedOutput, nodeFactory);
@@ -450,9 +450,9 @@
         }
 
         public sealed class AtLeastOne<TDeferredAstNode, TRealizedAstNode, TMode> : 
-            IDeferredAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>,
+            IAstNode<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>,
             IFromRealizedable<AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
             where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
             where TMode : ParseMode
         {
@@ -570,16 +570,16 @@
             public static Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create<TDeferredAstNode, TRealizedAstNode>(
                 Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory,
                 IFuture<IRealizationResult<char>> previouslyParsedOutput)
-                where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+                where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
             {
                 return Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>.Create(nodeFactory, previouslyParsedOutput);
             }
         }
 
         public sealed class Many<TDeferredAstNode, TRealizedAstNode, TMode> :
-            IDeferredAstNode<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>,
+            IAstNode<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>,
             IFromRealizedable<Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
             where TMode : ParseMode
         {
             private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node;
@@ -670,13 +670,13 @@
         {
             public static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create<TDeferredAstNode, TRealizedAstNode>(
                 Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory,
-                IFuture<IRealizationResult<char>> previouslyParsedOutput) where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+                IFuture<IRealizationResult<char>> previouslyParsedOutput) where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
             {
                 return ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>.Create(nodeFactory, previouslyParsedOutput);
             }
         }
 
-        public sealed class ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> : IDeferredAstNode<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>, IFromRealizedable<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>> where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode> where TMode : ParseMode
+        public sealed class ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> : IAstNode<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>, IFromRealizedable<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>> where TDeferredAstNode : IAstNode<char, TRealizedAstNode> where TMode : ParseMode
         {
             private readonly IFuture<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>> element;
             private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next;
@@ -816,16 +816,16 @@
             public static OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create<TDeferredAstNode, TRealizedAstNode>(
                 Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory, 
                 IFuture<IRealizationResult<char>> previouslyParsedOutput)
-                where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+                where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
             {
                 return OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>.Create(nodeFactory, previouslyParsedOutput);
             }
         }
 
         public sealed class OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> :
-            IDeferredAstNode<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>,
+            IAstNode<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>,
             IFromRealizedable<OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
             where TMode : ParseMode
         {
             private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
@@ -938,7 +938,7 @@
             }
         }
 
-        public sealed class Segment<TMode> : IDeferredAstNode<char, Segment<ParseMode.Realized>>, IFromRealizedable<Segment<ParseMode.Deferred>> where TMode : ParseMode
+        public sealed class Segment<TMode> : IAstNode<char, Segment<ParseMode.Realized>>, IFromRealizedable<Segment<ParseMode.Deferred>> where TMode : ParseMode
         {
             private readonly IFuture<Slash<TMode>> slash;
             private readonly IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
@@ -1040,7 +1040,7 @@
             }
         }
 
-        public sealed class EqualsSign<TMode> : IDeferredAstNode<char, EqualsSign<ParseMode.Realized>>, IFromRealizedable<EqualsSign<ParseMode.Deferred>> where TMode : ParseMode
+        public sealed class EqualsSign<TMode> : IAstNode<char, EqualsSign<ParseMode.Realized>>, IFromRealizedable<EqualsSign<ParseMode.Deferred>> where TMode : ParseMode
         {
             private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
 
@@ -1116,7 +1116,7 @@
             }
         }
 
-        public sealed class OptionName<TMode> : IDeferredAstNode<char, OptionName<ParseMode.Realized>>, IFromRealizedable<OptionName<ParseMode.Deferred>>
+        public sealed class OptionName<TMode> : IAstNode<char, OptionName<ParseMode.Realized>>, IFromRealizedable<OptionName<ParseMode.Deferred>>
             where TMode : ParseMode
         {
             private readonly IFuture
@@ -1208,7 +1208,7 @@
             }
         }
 
-        public sealed class OptionValue<TMode> : IDeferredAstNode<char, OptionValue<ParseMode.Realized>>, IFromRealizedable<OptionValue<ParseMode.Deferred>> where TMode : ParseMode
+        public sealed class OptionValue<TMode> : IAstNode<char, OptionValue<ParseMode.Realized>>, IFromRealizedable<OptionValue<ParseMode.Deferred>> where TMode : ParseMode
         {
             private readonly IFuture<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
 
@@ -1297,7 +1297,7 @@
             }
         }
 
-        public sealed class QueryOption<TMode> : IDeferredAstNode<char, QueryOption<ParseMode.Realized>>, IFromRealizedable<QueryOption<ParseMode.Deferred>> where TMode : ParseMode
+        public sealed class QueryOption<TMode> : IAstNode<char, QueryOption<ParseMode.Realized>>, IFromRealizedable<QueryOption<ParseMode.Deferred>> where TMode : ParseMode
         {
             private readonly IFuture<OptionName<TMode>> name;
             private readonly IFuture<EqualsSign<TMode>> equalsSign;
@@ -1415,7 +1415,7 @@
             }
         }
 
-        public sealed class QuestionMark<TMode> : IDeferredAstNode<char, QuestionMark<ParseMode.Realized>>, IFromRealizedable<QuestionMark<ParseMode.Deferred>> where TMode : ParseMode
+        public sealed class QuestionMark<TMode> : IAstNode<char, QuestionMark<ParseMode.Realized>>, IFromRealizedable<QuestionMark<ParseMode.Deferred>> where TMode : ParseMode
         {
             private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
 
@@ -1493,7 +1493,7 @@
             }
         }
 
-        public sealed class OdataUri<TMode> : IDeferredAstNode<char, OdataUri<ParseMode.Realized>> where TMode : ParseMode
+        public sealed class OdataUri<TMode> : IAstNode<char, OdataUri<ParseMode.Realized>> where TMode : ParseMode
         {
             private readonly IFuture<AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, TMode>> segments;
             private readonly IFuture<QuestionMark<TMode>> questionMark;

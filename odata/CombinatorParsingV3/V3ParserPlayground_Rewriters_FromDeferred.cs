@@ -207,7 +207,7 @@
             }
 
             public sealed class AtLeastOneRewriter<TDeferredAstNode, TRealizedAstNode> : IRewriter<AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
-                where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+                where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
                 where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
             {
                 private readonly IRewriter<TDeferredAstNode, TDeferredAstNode> realizedAstNodeRewriter;
@@ -232,7 +232,7 @@
             }
 
             public sealed class ManyNodeRewriter<TDeferredAstNode, TRealizedAstNode> : IRewriter<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
-                where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+                where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
                 where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
             {
                 private readonly OptionalNodeRewriter<TDeferredAstNode, TRealizedAstNode> optionalNodeRewriter;
@@ -253,7 +253,7 @@
             }
 
             public sealed class OptionalNodeRewriter<TDeferredAstNode, TRealizedAstNode> : IRewriter<OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
-                where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+                where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
                 where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
             {
                 private readonly IRewriter<TDeferredAstNode, TDeferredAstNode> deferredAstNodeRewriter;
@@ -301,7 +301,7 @@
             }
 
             public sealed class ManyRewriter<TDeferredAstNode, TRealizedAstNode> : IRewriter<Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
-                where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+                where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
                 where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
             {
                 private readonly ManyNodeRewriter<TDeferredAstNode, TRealizedAstNode> manyNodeRewriter;

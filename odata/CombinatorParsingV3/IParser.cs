@@ -63,14 +63,14 @@
             return new CharacterTokenStream(this.input, newIndex);
         }
     }
-    public interface IDeferredAstNode<out TToken, out TRealizedAstNode>
+    public interface IAstNode<out TToken, out TRealizedAstNode>
     {
         IRealizationResult<TToken, TRealizedAstNode> Realize();
     }
 
-    public interface IFromRealizedable<out TDeferredAstNode>
+    public interface IFromRealizedable<out TUnrealizedAstNode>
     {
-        TDeferredAstNode Convert();
+        TUnrealizedAstNode Convert();
     }
 
     public interface IRealizationResult<out TToken>

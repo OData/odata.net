@@ -196,7 +196,7 @@
 		}
 
 		public sealed class AtLeastOneRewriter2<TDeferredAstNode, TRealizedAstNode> : IFromRealizedRewriter<AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
-			where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+			where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
 			where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
 		{
 			private readonly IFromRealizedRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter;
@@ -221,7 +221,7 @@
 		}
 
 		public sealed class ManyNodeRewriter2<TDeferredAstNode, TRealizedAstNode> : IFromRealizedRewriter<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
-			where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+			where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
 		{
 			private readonly OptionalNodeRewriter2<TDeferredAstNode, TRealizedAstNode> optionalNodeRewriter;
 
@@ -241,7 +241,7 @@
 		}
 
 		public sealed class OptionalNodeRewriter2<TDeferredAstNode, TRealizedAstNode> : IFromRealizedRewriter<OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
-			where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+			where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
 		{
 			private readonly IFromRealizedRewriter<TRealizedAstNode, TDeferredAstNode> realizedAstNodeRewriter;
 
@@ -280,7 +280,7 @@
         }
 
         public sealed class ManyRewriter2<TDeferredAstNode, TRealizedAstNode> : IFromRealizedRewriter<Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>
-            where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+            where TDeferredAstNode : IAstNode<char, TRealizedAstNode>
         {
             private readonly ManyNodeRewriter2<TDeferredAstNode, TRealizedAstNode> manyNodeRewriter;
 
