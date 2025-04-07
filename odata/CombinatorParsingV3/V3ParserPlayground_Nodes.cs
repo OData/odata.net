@@ -18,13 +18,13 @@
     /// NOTE: you considered having a class variant of this for cases where the caller needs to avoid boxing, but based on nullabletests.test4 there is basically no different in perforamnce
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public readonly struct RealNullable<T>
+    public readonly struct Optional<T>
     {
         private readonly T value;
 
         private readonly bool hasValue;
 
-        public RealNullable(T value)
+        public Optional(T value)
         {
             this.value = value;
             this.hasValue = true;
@@ -36,9 +36,9 @@
             return this.hasValue;
         }
 
-        public static implicit operator RealNullable<T>(T value)
+        public static implicit operator Optional<T>(T value)
         {
-            return new RealNullable<T>(value);
+            return new Optional<T>(value);
         }
     }
 
@@ -51,7 +51,7 @@
     {
         private readonly Func<T> promise;
 
-        private RealNullable<T> value;
+        private Optional<T> value;
 
         public Future(Func<T> promise)
         {
@@ -863,7 +863,7 @@
             private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
             private readonly Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory;
 
-            private readonly RealNullable<RealNullable<TRealizedAstNode>> value;
+            private readonly Optional<Optional<TRealizedAstNode>> value;
 
             private readonly Future<IRealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
 
@@ -871,7 +871,7 @@
                 Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory,
                 IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
-                var value = new RealNullable<RealNullable<TRealizedAstNode>>();
+                var value = new Optional<Optional<TRealizedAstNode>>();
 
                 return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(nodeFactory, previouslyParsedOutput, value);
             }
@@ -879,7 +879,7 @@
             internal OptionalNode(
                 Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory,
                 IFuture<IRealizationResult<char>> previouslyParsedOutput,
-                RealNullable<RealNullable<TRealizedAstNode>> value)
+                Optional<Optional<TRealizedAstNode>> value)
             {
                 this.nodeFactory = nodeFactory;
                 this.previouslyParsedOutput = previouslyParsedOutput;
@@ -889,14 +889,14 @@
                 this.cachedOutput = new Future<IRealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            internal OptionalNode(RealNullable<TRealizedAstNode> value, Future<IRealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
+            internal OptionalNode(Optional<TRealizedAstNode> value, Future<IRealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
                 ///// TODO why is this constructor being used in the rewriters?
-                this.value = new RealNullable<RealNullable<TRealizedAstNode>>(value);
+                this.value = new Optional<Optional<TRealizedAstNode>>(value);
                 this.cachedOutput = cachedOutput;
             }
 
-            public RealNullable<TRealizedAstNode> Value
+            public Optional<TRealizedAstNode> Value
             {
                 get
                 {
@@ -946,7 +946,7 @@
                     return new RealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            new RealNullable<TRealizedAstNode>(output.RealizedValue),
+                            new Optional<TRealizedAstNode>(output.RealizedValue),
                             this.cachedOutput),
                         output.RemainingTokens);
                 }
@@ -955,7 +955,7 @@
                     return new RealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            new RealNullable<TRealizedAstNode>(),
+                            new Optional<TRealizedAstNode>(),
                             this.cachedOutput),
                         output.RemainingTokens);
                 }

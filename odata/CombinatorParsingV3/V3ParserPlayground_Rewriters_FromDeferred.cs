@@ -279,12 +279,12 @@
                             _ => this.deferredAstNodeRewriter.Transcribe(element.Convert(), builder),
                             new Future<IRealizationResult<char>>(
                                 () => new RealizationResult<char>(true, null)),
-                            new RealNullable<RealNullable<TRealizedAstNode>>());
+                            new Optional<Optional<TRealizedAstNode>>());
                     }
                     else
                     {
                         return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
-                            new RealNullable<TRealizedAstNode>(),
+                            new Optional<TRealizedAstNode>(),
                             new Future<IRealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(
                                 () => new RealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(true, GetEmpty(), null)));
 
@@ -294,7 +294,7 @@
                 private static OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetEmpty()
                 {
                     return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                        new RealNullable<TRealizedAstNode>(),
+                        new Optional<TRealizedAstNode>(),
                         new Future<IRealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(
                             () => new RealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(true, GetEmpty(), null)));
                 }
