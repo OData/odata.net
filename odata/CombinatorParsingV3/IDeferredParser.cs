@@ -1,4 +1,0 @@
-﻿namespace CombinatorParsingV3
-{
-    
-}
