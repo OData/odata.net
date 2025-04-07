@@ -74,18 +74,13 @@
                 return value;
             }
         }
-
-        public static implicit operator Future<T>(Func<T> promise)
-        {
-            return new Future<T>(promise);
-        }
     }
 
     public static class Future
     {
         public static Future<T> Create<T>(Func<T> promise)
         {
-            return promise;
+            return new Future<T>(promise);
         }
     }
 
