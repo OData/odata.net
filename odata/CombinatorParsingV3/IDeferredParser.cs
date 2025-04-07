@@ -7,7 +7,7 @@ namespace CombinatorParsingV3
 {
     public interface IDeferredAstNode<out TToken, out TRealizedAstNode>
     {
-        IOutput<TToken, TRealizedAstNode> Realize();
+        IRealizationResult<TToken, TRealizedAstNode> Realize();
     }
 
     public interface IFromRealizedable<out TDeferredAstNode>
@@ -19,12 +19,12 @@ namespace CombinatorParsingV3
     {
         bool Success { get; }
 
-        IInput<TToken> Remainder { get; }
+        ITokenStream<TToken> Remainder { get; }
     }
 
     public sealed class DeferredOutput<TToken> : IDeferredOutput<TToken>
     {
-        public DeferredOutput(bool success, IInput<TToken> remainder)
+        public DeferredOutput(bool success, ITokenStream<TToken> remainder)
         {
             Success = success;
             Remainder = remainder;
@@ -32,27 +32,27 @@ namespace CombinatorParsingV3
 
         public bool Success { get; }
 
-        public IInput<TToken> Remainder { get; }
+        public ITokenStream<TToken> Remainder { get; }
     }
 
     public static class DeferredOutput
     {
-        public static DeferredOutput<TToken> Create<TToken>(IInput<TToken> input)
+        public static DeferredOutput<TToken> Create<TToken>(ITokenStream<TToken> input)
         {
             return new DeferredOutput<TToken>(true, input);
         }
 
-        public static DeferredOutput<TToken> Create<TToken, TParsed>(IOutput<TToken, TParsed> output)
+        public static DeferredOutput<TToken> Create<TToken, TParsed>(IRealizationResult<TToken, TParsed> output)
         {
-            return new DeferredOutput<TToken>(output.Success, output.Remainder);
+            return new DeferredOutput<TToken>(output.Success, output.RemainingTokens);
         }
 
-        public static Func<DeferredOutput<TToken>> ToPromise<TToken, TParsed>(Func<IOutput<TToken, TParsed>> realize)
+        public static Func<DeferredOutput<TToken>> ToPromise<TToken, TParsed>(Func<IRealizationResult<TToken, TParsed>> realize)
         {
             return () =>
             {
                 var output = realize();
-                return new DeferredOutput<TToken>(output.Success, output.Remainder);
+                return new DeferredOutput<TToken>(output.Success, output.RemainingTokens);
             };
         }
     }

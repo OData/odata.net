@@ -188,7 +188,7 @@
 
             public void Transcribe(AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> value, StringBuilder builder)
             {
-                this.realizedAstNodeTranscriber.Transcribe(value._1.Realize().Parsed, builder);
+                this.realizedAstNodeTranscriber.Transcribe(value._1.Realize().RealizedValue, builder);
                 this.manyNodeTranscriber.Transcribe(value.Node, builder);
             }
         }

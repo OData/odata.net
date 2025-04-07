@@ -21,14 +21,14 @@ namespace odata.tests
         {
             var url = "/AA/A/AAA?AAAA=AAAAA";
 
-            var input = new CombinatorParsingV3.StringInput(url);
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
             var odataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
 
             var segOutput = odataUri.Segments.Realize();
             if (segOutput.Success)
             {
-                var segments = segOutput.Parsed;
+                var segments = segOutput.RealizedValue;
             }
 
             var realUri = odataUri.Parse();
@@ -39,7 +39,7 @@ namespace odata.tests
         {
             var url = "B/AA/A/AAA?AAAA=AAAAA";
 
-            var input = new CombinatorParsingV3.StringInput(url);
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
             var odataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
 
@@ -76,14 +76,14 @@ namespace odata.tests
         {
             var url = "/AA/A/AAA?AAAA=AAAAAC";
 
-            var input = new CombinatorParsingV3.StringInput(url);
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
             var odataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
 
             var segOutput = odataUri.Segments.Realize();
             if (segOutput.Success)
             {
-                var segments = segOutput.Parsed;
+                var segments = segOutput.RealizedValue;
             }
 
             var realUri = odataUri.Parse();
@@ -94,14 +94,14 @@ namespace odata.tests
         {
             var url = "/AA/A/AAA?AAAA=AAAAAB";
 
-            var input = new CombinatorParsingV3.StringInput(url);
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
             var odataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
 
             var segOutput = odataUri.Segments.Realize();
             if (segOutput.Success)
             {
-                var segments = segOutput.Parsed;
+                var segments = segOutput.RealizedValue;
             }
 
             Assert.ThrowsException<InvalidOperationException>(() => odataUri.Parse());
@@ -112,14 +112,14 @@ namespace odata.tests
         {
             var url = "/AA/A/AAA?AAAA=AAAAAC";
 
-            var input = new CombinatorParsingV3.StringInput(url);
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
             var odataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
 
             var segOutput = odataUri.Segments.Realize();
             if (segOutput.Success)
             {
-                var segments = segOutput.Parsed;
+                var segments = segOutput.RealizedValue;
             }
 
             var realUri = odataUri.Parse();
@@ -128,7 +128,7 @@ namespace odata.tests
 
             var name = queryOption.Name.Characters;
 
-            Assert.IsTrue(name._1.Realize().Parsed is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
+            Assert.IsTrue(name._1.Realize().RealizedValue is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.A);
 
             var secondCharacterNode = name.Node;
             Assert.IsTrue(secondCharacterNode.Element.Value.TryGetValue(out var secondCharacter));
@@ -221,7 +221,7 @@ namespace odata.tests
             Assert.AreEqual(9, indexes.Max());
         }
 
-        private sealed class InstrumentedStringInput : IInput<char>
+        private sealed class InstrumentedStringInput : ITokenStream<char>
         {
             private readonly string input;
             private readonly List<int> indexes;
@@ -249,7 +249,7 @@ namespace odata.tests
                 }
             }
 
-            public IInput<char> Next()
+            public ITokenStream<char>? Next()
             {
                 var newIndex = this.index + 1;
                 if (newIndex >= this.input.Length)
@@ -266,7 +266,7 @@ namespace odata.tests
         {
             var url = "/AA/A/AAA?AAAA=AAAAAC";
 
-            var input = new CombinatorParsingV3.StringInput(url);
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
             var deferredOdataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
 
@@ -283,14 +283,14 @@ namespace odata.tests
         {
             var url = "/AA/A/AAA?AAAA=AAAAAC";
 
-            var input = new CombinatorParsingV3.StringInput(url);
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
             var deferredOdataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
 
             var odataUri = deferredOdataUri.Parse();
 
             var rewritten = Rewrite(odataUri);
-            var realized = rewritten.Realize().Parsed;
+            var realized = rewritten.Realize().RealizedValue;
 
             var stringBuilder = new StringBuilder();
             V3ParserPlayground.OdataUriTranscriber.Instance.Transcribe(realized, stringBuilder);
@@ -305,7 +305,7 @@ namespace odata.tests
 
             var url = "/AA/A/AAA?AAAA=AAAAAC";
 
-            var input = new CombinatorParsingV3.StringInput(url);
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
 
             var deferredOdataUri = V3ParserPlayground.OdataUri.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
 
@@ -316,7 +316,7 @@ namespace odata.tests
             var segmentOutput = rewritten.Segments._1.Realize();
 
             var stringBuilder = new StringBuilder();
-            V3ParserPlayground.SegmentTranscriber.Instance.Transcribe(segmentOutput.Parsed, stringBuilder);
+            V3ParserPlayground.SegmentTranscriber.Instance.Transcribe(segmentOutput.RealizedValue, stringBuilder);
 
             Assert.AreEqual("/CC", stringBuilder.ToString());
 
@@ -351,7 +351,7 @@ namespace odata.tests
             Assert.AreEqual(3, indexes.Max());
 
             var stringBuilder = new StringBuilder();
-            V3ParserPlayground.SegmentTranscriber.Instance.Transcribe(segmentOutput.Parsed, stringBuilder);
+            V3ParserPlayground.SegmentTranscriber.Instance.Transcribe(segmentOutput.RealizedValue, stringBuilder);
 
             Assert.AreEqual(3, indexes.Max());
 
@@ -361,7 +361,7 @@ namespace odata.tests
 
             Assert.AreEqual(9, indexes.Max());
 
-            var realized = rewritten.Realize().Parsed;
+            var realized = rewritten.Realize().RealizedValue;
 
             Assert.AreEqual(url.Length - 1, indexes.Max());
 

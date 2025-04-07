@@ -149,14 +149,14 @@
                 {
                     return new AlphaNumericHolder(
                         new Future<IDeferredOutput<char>>(
-                            () => new DeferredOutput<char>(true, new StringInput("C"))));
+                            () => new DeferredOutput<char>(true, new CharacterTokenStream("C"))));
                 }
 
                 protected internal override AlphaNumericHolder Accept(AlphaNumeric<ParseMode.Realized>.C node, StringBuilder context)
                 {
                     return new AlphaNumericHolder(
                         new Future<IDeferredOutput<char>>(
-                            () => new DeferredOutput<char>(true, new StringInput("A"))));
+                            () => new DeferredOutput<char>(true, new CharacterTokenStream("A"))));
                 }
             }
         }
@@ -214,7 +214,7 @@
 			{
                 return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
                     new Future<TDeferredAstNode>(
-                        () => this.realizedAstNodeRewriter.Transcribe(value._1.Realize().Parsed, builder)),
+                        () => this.realizedAstNodeRewriter.Transcribe(value._1.Realize().RealizedValue, builder)),
                     new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>(
                         () => this.manyNodeRewriter.Transcribe(value.Node, builder)));
 			}
@@ -264,8 +264,8 @@
 				{
                     return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
                         new RealNullable<TRealizedAstNode>(),
-                        new Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(
-                            () => new Output<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(true, GetEmpty(), null)));
+                        new Future<IRealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(
+                            () => new RealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(true, GetEmpty(), null)));
 
                 }
 			}
@@ -274,8 +274,8 @@
             {
                 return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
                     new RealNullable<TRealizedAstNode>(),
-                    new Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(
-                        () => new Output<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(true, GetEmpty(), null)));
+                    new Future<IRealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(
+                        () => new RealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(true, GetEmpty(), null)));
             }
         }
 

@@ -8,49 +8,49 @@ using System.Text.RegularExpressions;
 
 namespace CombinatorParsingV3
 {
-    public interface IOutput<out TToken, out TOutput>
+    public interface IRealizationResult<out TToken, out TRealized>
     {
         bool Success { get; }
 
-        TOutput Parsed { get; }
+        TRealized RealizedValue { get; }
 
-        IInput<TToken>? Remainder { get; }
+        ITokenStream<TToken>? RemainingTokens { get; }
     }
 
-    public sealed class Output<TToken, TOutput> : IOutput<TToken, TOutput>
+    public sealed class RealizationResult<TToken, TRealized> : IRealizationResult<TToken, TRealized>
     {
-        public Output(bool success, TOutput parsed, IInput<TToken>? remainder)
+        public RealizationResult(bool success, TRealized realizedValue, ITokenStream<TToken>? remainingTokens)
         {
             Success = success;
-            Parsed = parsed;
-            Remainder = remainder;
+            RealizedValue = realizedValue;
+            RemainingTokens = remainingTokens;
         }
 
         public bool Success { get; }
 
-        public TOutput Parsed { get; }
+        public TRealized RealizedValue { get; }
 
-        public IInput<TToken>? Remainder { get; }
+        public ITokenStream<TToken>? RemainingTokens { get; }
     }
 
-    public interface IInput<out TToken>
+    public interface ITokenStream<out TToken>
     {
         TToken Current { get; }
 
-        IInput<TToken> Next(); //// TODO oops, this should be nullable
+        ITokenStream<TToken>? Next();
     }
 
-    public sealed class StringInput : IInput<char>
+    public sealed class CharacterTokenStream : ITokenStream<char>
     {
         private readonly string input;
         private readonly int index;
 
-        public StringInput(string input)
+        public CharacterTokenStream(string input)
             : this(input, 0)
         {
         }
 
-        private StringInput(string input, int index)
+        private CharacterTokenStream(string input, int index)
         {
             this.input = input;
             this.index = index;
@@ -64,7 +64,7 @@ namespace CombinatorParsingV3
             }
         }
 
-        public IInput<char> Next()
+        public ITokenStream<char>? Next()
         {
             var newIndex = this.index + 1;
             if (newIndex >= this.input.Length)
@@ -72,7 +72,7 @@ namespace CombinatorParsingV3
                 return null;
             }
 
-            return new StringInput(this.input, newIndex);
+            return new CharacterTokenStream(this.input, newIndex);
         }
     }
 }

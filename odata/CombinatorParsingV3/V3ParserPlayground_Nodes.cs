@@ -124,12 +124,12 @@
                 throw new InvalidDataException("TODO parse failed");
             }
 
-            if (output.Remainder != null)
+            if (output.RemainingTokens != null)
             {
                 throw new InvalidOperationException("TODO parse succeeded but there were still tokens in the input stream");
             }
 
-            return output.Parsed;
+            return output.RealizedValue;
         }
 
         public static class Slash
@@ -144,7 +144,7 @@
         {
             private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
 
-            private readonly Future<IOutput<char, Slash<ParseMode.Realized>>> cachedOutput;
+            private readonly Future<IRealizationResult<char, Slash<ParseMode.Realized>>> cachedOutput;
 
             internal static Slash<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
@@ -160,10 +160,10 @@
 
                 this.previouslyParsedOutput = previouslyParsedOutput;
 
-                this.cachedOutput = new Future<IOutput<char, Slash<ParseMode.Realized>>>(() => this.RealizeImpl());
+                this.cachedOutput = new Future<IRealizationResult<char, Slash<ParseMode.Realized>>>(() => this.RealizeImpl());
             }
 
-            private Slash(Future<IOutput<char, Slash<ParseMode.Realized>>> output)
+            private Slash(Future<IRealizationResult<char, Slash<ParseMode.Realized>>> output)
             {
                 this.cachedOutput = output;
             }
@@ -180,31 +180,31 @@
                 }
             }
 
-            public IOutput<char, Slash<ParseMode.Realized>> Realize()
+            public IRealizationResult<char, Slash<ParseMode.Realized>> Realize()
             {
                 return cachedOutput.Value;
             }
 
-            private IOutput<char, Slash<ParseMode.Realized>> RealizeImpl()
+            private IRealizationResult<char, Slash<ParseMode.Realized>> RealizeImpl()
             {
                 var output = this.previouslyParsedOutput.Value;
                 if (!output.Success)
                 {
-                    return new Output<char, Slash<ParseMode.Realized>>(false, default, output.Remainder);
+                    return new RealizationResult<char, Slash<ParseMode.Realized>>(false, default, output.Remainder);
                 }
 
                 var input = output.Remainder;
 
                 if (input.Current == '/')
                 {
-                    return new Output<char, Slash<ParseMode.Realized>>(
+                    return new RealizationResult<char, Slash<ParseMode.Realized>>(
                         true,
                         new Slash<ParseMode.Realized>(this.cachedOutput),
                         input.Next());
                 }
                 else
                 {
-                    return new Output<char, Slash<ParseMode.Realized>>(false, default, input);
+                    return new RealizationResult<char, Slash<ParseMode.Realized>>(false, default, input);
                 }
             }
         }
@@ -213,26 +213,26 @@
         {
             private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
 
-            private readonly IFuture<IOutput<char, AlphaNumeric<ParseMode.Realized>>> cachedOutput;
+            private readonly IFuture<IRealizationResult<char, AlphaNumeric<ParseMode.Realized>>> cachedOutput;
 
             public AlphaNumericHolder(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
                 this.previouslyParsedOutput = previouslyParsedOutput;
 
-                this.cachedOutput = new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>>>(this.RealizeImpl);
+                this.cachedOutput = new Future<IRealizationResult<char, AlphaNumeric<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            public AlphaNumericHolder(IFuture<IOutput<char, AlphaNumeric<ParseMode.Realized>>> cachedOutput)
+            public AlphaNumericHolder(IFuture<IRealizationResult<char, AlphaNumeric<ParseMode.Realized>>> cachedOutput)
             {
                 this.cachedOutput = cachedOutput;
             }
 
-            public IOutput<char, AlphaNumeric<ParseMode.Realized>> Realize()
+            public IRealizationResult<char, AlphaNumeric<ParseMode.Realized>> Realize()
             {
                 return this.cachedOutput.Value;
             }
 
-            private IOutput<char, AlphaNumeric<ParseMode.Realized>> RealizeImpl()
+            private IRealizationResult<char, AlphaNumeric<ParseMode.Realized>> RealizeImpl()
             {
                 var a = AlphaNumeric.A.Create(this.previouslyParsedOutput).Realize();
                 if (a.Success)
@@ -246,7 +246,7 @@
                     return c;
                 }
 
-                return new Output<char, AlphaNumeric<ParseMode.Realized>>(false, default, this.previouslyParsedOutput.Value.Remainder);
+                return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>>(false, default, this.previouslyParsedOutput.Value.Remainder);
             }
         }
 
@@ -276,12 +276,12 @@
             {
             }
 
-            public IOutput<char, AlphaNumeric<ParseMode.Realized>> Realize()
+            public IRealizationResult<char, AlphaNumeric<ParseMode.Realized>> Realize()
             {
                 return this.DerivedRealize();
             }
 
-            protected abstract IOutput<char, AlphaNumeric<ParseMode.Realized>> DerivedRealize();
+            protected abstract IRealizationResult<char, AlphaNumeric<ParseMode.Realized>> DerivedRealize();
 
             public abstract AlphaNumericHolder Convert();
 
@@ -302,7 +302,7 @@
             {
                 private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
 
-                private readonly Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>> cachedOutput;
+                private readonly Future<IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.A>> cachedOutput;
 
                 internal static AlphaNumeric<ParseMode.Deferred>.A Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
                 {
@@ -318,44 +318,44 @@
 
                     this.previouslyParsedOutput = previouslyParsedOutput;
 
-                    this.cachedOutput = new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>>(() => this.RealizeImpl());
+                    this.cachedOutput = new Future<IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.A>>(() => this.RealizeImpl());
                 }
 
-                private A(Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.A>> cachedOutput)
+                private A(Future<IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.A>> cachedOutput)
                 {
                     this.cachedOutput = cachedOutput;
                 }
 
-                public new IOutput<char, AlphaNumeric<ParseMode.Realized>.A> Realize()
+                public new IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.A> Realize()
                 {
                     return this.cachedOutput.Value;
                 }
 
-                private IOutput<char, AlphaNumeric<ParseMode.Realized>.A> RealizeImpl()
+                private IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.A> RealizeImpl()
                 {
                     var output = this.previouslyParsedOutput.Value;
                     if (!output.Success)
                     {
-                        return new Output<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, output.Remainder);
+                        return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, output.Remainder);
                     }
 
                     var input = output.Remainder;
                     if (input == null)
                     {
-                        return new Output<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, input);
+                        return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, input);
                     }
 
                     if (input.Current == 'A')
                     {
-                        return new Output<char, AlphaNumeric<ParseMode.Realized>.A>(true, new AlphaNumeric<ParseMode.Realized>.A(this.cachedOutput), input.Next());
+                        return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.A>(true, new AlphaNumeric<ParseMode.Realized>.A(this.cachedOutput), input.Next());
                     }
                     else
                     {
-                        return new Output<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, input);
+                        return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, input);
                     }
                 }
 
-                protected override IOutput<char, AlphaNumeric<ParseMode.Realized>> DerivedRealize()
+                protected override IRealizationResult<char, AlphaNumeric<ParseMode.Realized>> DerivedRealize()
                 {
                     return this.Realize();
                 }
@@ -382,7 +382,7 @@
             {
                 private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
 
-                private readonly Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>> cachedOutput;
+                private readonly Future<IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.C>> cachedOutput;
 
                 internal static AlphaNumeric<ParseMode.Deferred>.C Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
                 {
@@ -398,44 +398,44 @@
 
                     this.previouslyParsedOutput = previouslyParsedOutput;
 
-                    this.cachedOutput = new Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>>(() => this.RealizeImpl());
+                    this.cachedOutput = new Future<IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.C>>(() => this.RealizeImpl());
                 }
 
-                private C(Future<IOutput<char, AlphaNumeric<ParseMode.Realized>.C>> cachedOutput)
+                private C(Future<IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.C>> cachedOutput)
                 {
                     this.cachedOutput = cachedOutput;
                 }
 
-                public new IOutput<char, AlphaNumeric<ParseMode.Realized>.C> Realize()
+                public new IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.C> Realize()
                 {
                     return this.cachedOutput.Value;
                 }
 
-                private IOutput<char, AlphaNumeric<ParseMode.Realized>.C> RealizeImpl()
+                private IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.C> RealizeImpl()
                 {
                     var output = this.previouslyParsedOutput.Value;
                     if (!output.Success)
                     {
-                        return new Output<char, AlphaNumeric<ParseMode.Realized>.C>(false, default, output.Remainder);
+                        return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.C>(false, default, output.Remainder);
                     }
 
                     var input = output.Remainder;
                     if (input == null)
                     {
-                        return new Output<char, AlphaNumeric<ParseMode.Realized>.C>(false, default, input);
+                        return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.C>(false, default, input);
                     }
 
                     if (input.Current == 'C')
                     {
-                        return new Output<char, AlphaNumeric<ParseMode.Realized>.C>(true, new AlphaNumeric<ParseMode.Realized>.C(this.cachedOutput), input.Next());
+                        return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.C>(true, new AlphaNumeric<ParseMode.Realized>.C(this.cachedOutput), input.Next());
                     }
                     else
                     {
-                        return new Output<char, AlphaNumeric<ParseMode.Realized>.C>(false, default, input);
+                        return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.C>(false, default, input);
                     }
                 }
 
-                protected override IOutput<char, AlphaNumeric<ParseMode.Realized>> DerivedRealize()
+                protected override IRealizationResult<char, AlphaNumeric<ParseMode.Realized>> DerivedRealize()
                 {
                     return this.Realize();
                 }
@@ -482,7 +482,7 @@
             private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node;
 
             private readonly 
-                Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> 
+                Future<IRealizationResult<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> 
                 cachedOutput;
 
             internal static AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create(
@@ -510,7 +510,7 @@
 
                 this.cachedOutput = new Future
                     <
-                        IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
+                        IRealizationResult<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
                     >(
                         () => this.RealizeImpl());
             }
@@ -518,7 +518,7 @@
             private AtLeastOne(
                 TRealizedAstNode _1,
                 ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> node,
-                Future<IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
+                Future<IRealizationResult<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
                 this.__1 = new Future<TDeferredAstNode>(_1.Convert);
                 this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => node);
@@ -553,36 +553,36 @@
                 else
                 {
                     return new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
-                        this._1.Realize().Parsed,
+                        this._1.Realize().RealizedValue,
                         this.node.Value.Convert(),
                         this.cachedOutput);
                 }
             }
 
-            public IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
+            public IRealizationResult<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
             {
                 return this.cachedOutput.Value;
             }
 
-            private IOutput<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
+            private IRealizationResult<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
             {
                 var output = this.Node.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                    return new RealizationResult<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            this._1.Realize().Parsed,
-                            output.Parsed,
+                            this._1.Realize().RealizedValue,
+                            output.RealizedValue,
                             this.cachedOutput),
-                        output.Remainder);
+                        output.RemainingTokens);
                 }
                 else
                 {
-                    return new Output<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                    return new RealizationResult<char, AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         false, 
                         default, 
-                        output.Remainder);
+                        output.RemainingTokens);
                 }
             }
         }
@@ -606,7 +606,7 @@
         {
             private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> node;
 
-            private readonly Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
+            private readonly Future<IRealizationResult<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
 
             internal static Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create(
                 Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
@@ -624,13 +624,13 @@
             {
                 this.node = node;
 
-                this.cachedOutput = new Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(
+                this.cachedOutput = new Future<IRealizationResult<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(
                     () => this.RealizeImpl());
             }
 
             private Many(
                 ManyNode<TDeferredAstNode, TRealizedAstNode, TMode> node, 
-                Future<IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
+                Future<IRealizationResult<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
                 this.node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => node);
 
@@ -645,30 +645,30 @@
                 }
             }
 
-            public IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
+            public IRealizationResult<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
             {
                 return this.cachedOutput.Value;
             }
 
-            private IOutput<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
+            private IRealizationResult<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
             {
                 var output = this.Node.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                    return new RealizationResult<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            output.Parsed,
+                            output.RealizedValue,
                             this.cachedOutput),
-                        output.Remainder);
+                        output.RemainingTokens);
                 }
                 else
                 {
                     // if the optional failed to parse, it means that its dependencies failed to parse
-                    return new Output<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                    return new RealizationResult<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         false, 
                         default, 
-                        output.Remainder);
+                        output.RemainingTokens);
                 }
             }
 
@@ -703,7 +703,7 @@
             private readonly IFuture<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>> element;
             private readonly IFuture<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next;
 
-            private readonly Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
+            private readonly Future<IRealizationResult<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
 
             internal static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create(
                 Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
@@ -729,13 +729,13 @@
 
                 this.cachedOutput = new Future
                     <
-                        IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
+                        IRealizationResult<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>
                     >(
                         () => this.RealizeImpl());
             }
 
             private static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> GetTerminalRealizedNode(
-                Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput,
+                Future<IRealizationResult<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput,
                 OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized> element)
             {
                 return new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
@@ -747,7 +747,7 @@
             private ManyNode(
                 OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode> element, 
                 Func<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>> next, 
-                Future<IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
+                Future<IRealizationResult<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
                 this.element = new Future<OptionalNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => element);
                 this.next = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, TMode>>(() => next());
@@ -774,44 +774,44 @@
                 }
             }
 
-            public IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
+            public IRealizationResult<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
             {
                 return this.cachedOutput.Value;
             }
 
-            private IOutput<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
+            private IRealizationResult<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
             {
                 var realizedElement = this.Element.Realize();
                 if (!realizedElement.Success)
                 {
                     // this means that the nullable parsing *didn't succeed*, which only happens if its dependencies couldn't be parsed; this means that we also can't succeed in parsing
-                    return new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                    return new RealizationResult<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         false,
                         default, 
-                        realizedElement.Remainder);
+                        realizedElement.RemainingTokens);
                 }
 
-                if (realizedElement.Parsed.Value.TryGetValue(out var parsed))
+                if (realizedElement.RealizedValue.Value.TryGetValue(out var parsed))
                 {
                     var realizedNext = this.Next.Realize();
                     // *this* instance is the "dependency" for `next`, so we can only have success cases
-                    return new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                    return new RealizationResult<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            realizedElement.Parsed,
-                            () => realizedNext.Parsed,
+                            realizedElement.RealizedValue,
+                            () => realizedNext.RealizedValue,
                             this.cachedOutput),
-                        realizedNext.Remainder);
+                        realizedNext.RemainingTokens);
                 }
                 else
                 {
-                    return new Output<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                    return new RealizationResult<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            realizedElement.Parsed,
-                            () => GetTerminalRealizedNode(this.cachedOutput, realizedElement.Parsed),
+                            realizedElement.RealizedValue,
+                            () => GetTerminalRealizedNode(this.cachedOutput, realizedElement.RealizedValue),
                             this.cachedOutput),
-                        realizedElement.Remainder);
+                        realizedElement.RemainingTokens);
                 }
             }
 
@@ -855,7 +855,7 @@
 
             private readonly RealNullable<RealNullable<TRealizedAstNode>> value;
 
-            private readonly Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
+            private readonly Future<IRealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
 
             internal static OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create(
                 Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
@@ -876,10 +876,10 @@
 
                 this.value = value;
 
-                this.cachedOutput = new Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(this.RealizeImpl);
+                this.cachedOutput = new Future<IRealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            internal OptionalNode(RealNullable<TRealizedAstNode> value, Future<IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
+            internal OptionalNode(RealNullable<TRealizedAstNode> value, Future<IRealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput)
             {
                 ///// TODO why is this constructor being used in the rewriters?
                 this.value = new RealNullable<RealNullable<TRealizedAstNode>>(value);
@@ -916,38 +916,38 @@
                 }
             }
 
-            public IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
+            public IRealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> Realize()
             {
                 return this.cachedOutput.Value;
             }
 
-            private IOutput<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
+            private IRealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>> RealizeImpl()
             {
                 var deferredOutput = this.previouslyParsedOutput.Value;
                 if (!deferredOutput.Success)
                 {
-                    return new Output<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(false, default, deferredOutput.Remainder);
+                    return new RealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(false, default, deferredOutput.Remainder);
                 }
 
                 var value = this.nodeFactory(this.previouslyParsedOutput);
                 var output = value.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                    return new RealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
-                            new RealNullable<TRealizedAstNode>(output.Parsed),
+                            new RealNullable<TRealizedAstNode>(output.RealizedValue),
                             this.cachedOutput),
-                        output.Remainder);
+                        output.RemainingTokens);
                 }
                 else
                 {
-                    return new Output<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
+                    return new RealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(
                         true,
                         new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>(
                             new RealNullable<TRealizedAstNode>(),
                             this.cachedOutput),
-                        output.Remainder);
+                        output.RemainingTokens);
                 }
             }
         }
@@ -965,7 +965,7 @@
             private readonly IFuture<Slash<TMode>> slash;
             private readonly IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
 
-            private readonly Future<IOutput<char, Segment<ParseMode.Realized>>> cachedOutput;
+            private readonly Future<IRealizationResult<char, Segment<ParseMode.Realized>>> cachedOutput;
 
             internal static Segment<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
@@ -983,13 +983,13 @@
                 this.slash = slash;
                 this.characters = characters;
 
-                this.cachedOutput = new Future<IOutput<char, Segment<ParseMode.Realized>>>(this.RealizeImpl);
+                this.cachedOutput = new Future<IRealizationResult<char, Segment<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
             private Segment(
                 Slash<TMode> slash, 
                 AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
-                Future<IOutput<char, Segment<ParseMode.Realized>>> cachedOutput)
+                Future<IRealizationResult<char, Segment<ParseMode.Realized>>> cachedOutput)
             {
                 this.slash = new Future<Slash<TMode>>(() => slash);
 
@@ -1029,27 +1029,27 @@
                 }
             }
 
-            public IOutput<char, Segment<ParseMode.Realized>> Realize()
+            public IRealizationResult<char, Segment<ParseMode.Realized>> Realize()
             {
                 return this.cachedOutput.Value;
             }
 
-            private IOutput<char, Segment<ParseMode.Realized>> RealizeImpl()
+            private IRealizationResult<char, Segment<ParseMode.Realized>> RealizeImpl()
             {
                 var output = this.Characters.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, Segment<ParseMode.Realized>>(
+                    return new RealizationResult<char, Segment<ParseMode.Realized>>(
                         true,
                         new Segment<ParseMode.Realized>(
-                            this.Slash.Realize().Parsed,
-                            this.Characters.Realize().Parsed,
+                            this.Slash.Realize().RealizedValue,
+                            this.Characters.Realize().RealizedValue,
                             this.cachedOutput), 
-                        output.Remainder);
+                        output.RemainingTokens);
                 }
                 else
                 {
-                    return new Output<char, Segment<ParseMode.Realized>>(false, default, output.Remainder);
+                    return new RealizationResult<char, Segment<ParseMode.Realized>>(false, default, output.RemainingTokens);
                 }
             }
         }
@@ -1066,7 +1066,7 @@
         {
             private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
 
-            private readonly Future<IOutput<char, EqualsSign<ParseMode.Realized>>> cachedOutput;
+            private readonly Future<IRealizationResult<char, EqualsSign<ParseMode.Realized>>> cachedOutput;
 
             internal static EqualsSign<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
@@ -1077,43 +1077,43 @@
             {
                 this.previouslyParsedOutput = previouslyParsedOutput;
 
-                this.cachedOutput = new Future<IOutput<char, EqualsSign<ParseMode.Realized>>>(this.RealizeImpl);
+                this.cachedOutput = new Future<IRealizationResult<char, EqualsSign<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private EqualsSign(Future<IOutput<char, EqualsSign<ParseMode.Realized>>> cachedOutput)
+            private EqualsSign(Future<IRealizationResult<char, EqualsSign<ParseMode.Realized>>> cachedOutput)
             {
                 this.cachedOutput = cachedOutput;
             }
 
-            public IOutput<char, EqualsSign<ParseMode.Realized>> Realize()
+            public IRealizationResult<char, EqualsSign<ParseMode.Realized>> Realize()
             {
                 return this.cachedOutput.Value;
             }
 
-            private IOutput<char, EqualsSign<ParseMode.Realized>> RealizeImpl()
+            private IRealizationResult<char, EqualsSign<ParseMode.Realized>> RealizeImpl()
             {
                 var output = this.previouslyParsedOutput.Value;
                 if (!output.Success)
                 {
-                    return new Output<char, EqualsSign<ParseMode.Realized>>(false, default, output.Remainder);
+                    return new RealizationResult<char, EqualsSign<ParseMode.Realized>>(false, default, output.Remainder);
                 }
 
                 var input = output.Remainder;
                 if (input == null)
                 {
-                    return new Output<char, EqualsSign<ParseMode.Realized>>(false, default, input);
+                    return new RealizationResult<char, EqualsSign<ParseMode.Realized>>(false, default, input);
                 }
 
                 if (input.Current == '=')
                 {
-                    return new Output<char, EqualsSign<ParseMode.Realized>>(
+                    return new RealizationResult<char, EqualsSign<ParseMode.Realized>>(
                         true, 
                         new EqualsSign<ParseMode.Realized>(this.cachedOutput), 
                         input.Next());
                 }
                 else
                 {
-                    return new Output<char, EqualsSign<ParseMode.Realized>>(false, default, input);
+                    return new RealizationResult<char, EqualsSign<ParseMode.Realized>>(false, default, input);
                 }
             }
 
@@ -1147,7 +1147,7 @@
                 > 
                     characters;
 
-            private readonly Future<IOutput<char, OptionName<ParseMode.Realized>>> cachedOutput;
+            private readonly Future<IRealizationResult<char, OptionName<ParseMode.Realized>>> cachedOutput;
 
             internal static OptionName<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
@@ -1163,12 +1163,12 @@
             {
                 this.characters = characters;
 
-                this.cachedOutput = new Future<IOutput<char, OptionName<ParseMode.Realized>>>(this.RealizeImpl);
+                this.cachedOutput = new Future<IRealizationResult<char, OptionName<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
             private OptionName(
                 AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
-                Future<IOutput<char, OptionName<ParseMode.Realized>>> cachedOutput)
+                Future<IRealizationResult<char, OptionName<ParseMode.Realized>>> cachedOutput)
             {
                 this.characters = 
                     new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>>(
@@ -1185,24 +1185,24 @@
                 }
             }
 
-            public IOutput<char, OptionName<ParseMode.Realized>> Realize()
+            public IRealizationResult<char, OptionName<ParseMode.Realized>> Realize()
             {
                 return this.cachedOutput.Value;
             }
 
-            private IOutput<char, OptionName<ParseMode.Realized>> RealizeImpl()
+            private IRealizationResult<char, OptionName<ParseMode.Realized>> RealizeImpl()
             {
                 var output = this.Characters.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, OptionName<ParseMode.Realized>>(
+                    return new RealizationResult<char, OptionName<ParseMode.Realized>>(
                         true,
-                        new OptionName<ParseMode.Realized>(this.Characters.Realize().Parsed, this.cachedOutput),
-                        output.Remainder);
+                        new OptionName<ParseMode.Realized>(this.Characters.Realize().RealizedValue, this.cachedOutput),
+                        output.RemainingTokens);
                 }
                 else
                 {
-                    return new Output<char, OptionName<ParseMode.Realized>>(false, default, output.Remainder);
+                    return new RealizationResult<char, OptionName<ParseMode.Realized>>(false, default, output.RemainingTokens);
                 }
             }
 
@@ -1234,7 +1234,7 @@
         {
             private readonly IFuture<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
 
-            private readonly Future<IOutput<char, OptionValue<ParseMode.Realized>>> cachedOutput;
+            private readonly Future<IRealizationResult<char, OptionValue<ParseMode.Realized>>> cachedOutput;
 
             internal static OptionValue<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
@@ -1252,12 +1252,12 @@
             {
                 this.characters = characters;
 
-                this.cachedOutput = new Future<IOutput<char, OptionValue<ParseMode.Realized>>>(this.RealizeImpl);
+                this.cachedOutput = new Future<IRealizationResult<char, OptionValue<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
             private OptionValue(
                 Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
-                Future<IOutput<char, OptionValue<ParseMode.Realized>>> cachedOutput)
+                Future<IRealizationResult<char, OptionValue<ParseMode.Realized>>> cachedOutput)
             {
                 this.characters = new Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>>(
                     () => characters);
@@ -1273,24 +1273,24 @@
                 }
             }
 
-            public IOutput<char, OptionValue<ParseMode.Realized>> Realize()
+            public IRealizationResult<char, OptionValue<ParseMode.Realized>> Realize()
             {
                 return this.cachedOutput.Value;
             }
 
-            private IOutput<char, OptionValue<ParseMode.Realized>> RealizeImpl()
+            private IRealizationResult<char, OptionValue<ParseMode.Realized>> RealizeImpl()
             {
                 var output = this.Characters.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, OptionValue<ParseMode.Realized>>(
+                    return new RealizationResult<char, OptionValue<ParseMode.Realized>>(
                         true,
-                        new OptionValue<ParseMode.Realized>(this.Characters.Realize().Parsed, this.cachedOutput),
-                        output.Remainder);
+                        new OptionValue<ParseMode.Realized>(this.Characters.Realize().RealizedValue, this.cachedOutput),
+                        output.RemainingTokens);
                 }
                 else
                 {
-                    return new Output<char, OptionValue<ParseMode.Realized>>(false, default, output.Remainder);
+                    return new RealizationResult<char, OptionValue<ParseMode.Realized>>(false, default, output.RemainingTokens);
                 }
 
             }
@@ -1325,7 +1325,7 @@
             private readonly IFuture<EqualsSign<TMode>> equalsSign;
             private readonly IFuture<OptionValue<TMode>> optionValue;
 
-            private Future<IOutput<char, QueryOption<ParseMode.Realized>>> cachedOutput;
+            private Future<IRealizationResult<char, QueryOption<ParseMode.Realized>>> cachedOutput;
 
             internal static QueryOption<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
@@ -1344,14 +1344,14 @@
                 this.equalsSign = equalsSign;
                 this.optionValue = optionValue;
 
-                this.cachedOutput = new Future<IOutput<char, QueryOption<ParseMode.Realized>>>(this.RealizeImpl);
+                this.cachedOutput = new Future<IRealizationResult<char, QueryOption<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
             private QueryOption(
                 OptionName<TMode> name, 
                 EqualsSign<TMode> equalsSign, 
                 OptionValue<TMode> optionValue, 
-                Future<IOutput<char, QueryOption<ParseMode.Realized>>> cachedOutput)
+                Future<IRealizationResult<char, QueryOption<ParseMode.Realized>>> cachedOutput)
             {
                 this.name = new Future<OptionName<TMode>>(() => name);
                 this.equalsSign = new Future<EqualsSign<TMode>>(() => equalsSign);
@@ -1384,28 +1384,28 @@
                 }
             }
 
-            public IOutput<char, QueryOption<ParseMode.Realized>> Realize()
+            public IRealizationResult<char, QueryOption<ParseMode.Realized>> Realize()
             {
                 return this.cachedOutput.Value;
             }
 
-            private IOutput<char, QueryOption<ParseMode.Realized>> RealizeImpl()
+            private IRealizationResult<char, QueryOption<ParseMode.Realized>> RealizeImpl()
             {
                 var output = this.OptionValue.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, QueryOption<ParseMode.Realized>>(
+                    return new RealizationResult<char, QueryOption<ParseMode.Realized>>(
                         true,
                         new QueryOption<ParseMode.Realized>(
-                            this.Name.Realize().Parsed, 
-                            this.EqualsSign.Realize().Parsed, 
-                            this.OptionValue.Realize().Parsed,
+                            this.Name.Realize().RealizedValue, 
+                            this.EqualsSign.Realize().RealizedValue, 
+                            this.OptionValue.Realize().RealizedValue,
                         this.cachedOutput),
-                        output.Remainder);
+                        output.RemainingTokens);
                 }
                 else
                 {
-                    return new Output<char, QueryOption<ParseMode.Realized>>(false, default, output.Remainder);
+                    return new RealizationResult<char, QueryOption<ParseMode.Realized>>(false, default, output.RemainingTokens);
                 }
             }
 
@@ -1441,7 +1441,7 @@
         {
             private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
 
-            private readonly Future<IOutput<char, QuestionMark<ParseMode.Realized>>> cachedOutput;
+            private readonly Future<IRealizationResult<char, QuestionMark<ParseMode.Realized>>> cachedOutput;
 
             internal static QuestionMark<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
@@ -1452,39 +1452,39 @@
             {
                 this.previouslyParsedOutput = previouslyParsedOutput;
 
-                this.cachedOutput = new Future<IOutput<char, QuestionMark<ParseMode.Realized>>>(this.RealizeImpl);
+                this.cachedOutput = new Future<IRealizationResult<char, QuestionMark<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
-            private QuestionMark(Future<IOutput<char, QuestionMark<ParseMode.Realized>>> cachedOutput)
+            private QuestionMark(Future<IRealizationResult<char, QuestionMark<ParseMode.Realized>>> cachedOutput)
             {
                 this.cachedOutput = cachedOutput;
             }
 
-            public IOutput<char, QuestionMark<ParseMode.Realized>> Realize()
+            public IRealizationResult<char, QuestionMark<ParseMode.Realized>> Realize()
             {
                 return this.cachedOutput.Value;
             }
 
-            private IOutput<char, QuestionMark<ParseMode.Realized>> RealizeImpl()
+            private IRealizationResult<char, QuestionMark<ParseMode.Realized>> RealizeImpl()
             {
                 var output = this.previouslyParsedOutput.Value;
                 if (!output.Success)
                 {
-                    return new Output<char, QuestionMark<ParseMode.Realized>>(false, default, output.Remainder);
+                    return new RealizationResult<char, QuestionMark<ParseMode.Realized>>(false, default, output.Remainder);
                 }
 
                 var input = output.Remainder;
 
                 if (input.Current == '?')
                 {
-                    return new Output<char, QuestionMark<ParseMode.Realized>>(
+                    return new RealizationResult<char, QuestionMark<ParseMode.Realized>>(
                         true, 
                         new QuestionMark<ParseMode.Realized>(this.cachedOutput), 
                         input.Next());
                 }
                 else
                 {
-                    return new Output<char, QuestionMark<ParseMode.Realized>>(false, default, input);
+                    return new RealizationResult<char, QuestionMark<ParseMode.Realized>>(false, default, input);
                 }
             }
 
@@ -1504,7 +1504,7 @@
 
         public static class OdataUri
         {
-            public static OdataUri<ParseMode.Deferred> Create(IInput<char> input)
+            public static OdataUri<ParseMode.Deferred> Create(ITokenStream<char> input)
             {
                 //// TODO do you want one of these factories for every node?
                 return OdataUri<ParseMode.Deferred>.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
@@ -1522,7 +1522,7 @@
             private readonly IFuture<QuestionMark<TMode>> questionMark;
             private readonly IFuture<Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, TMode>> queryOptions;
 
-            private readonly Future<IOutput<char, OdataUri<ParseMode.Realized>>> cachedOutput;
+            private readonly Future<IRealizationResult<char, OdataUri<ParseMode.Realized>>> cachedOutput;
 
             internal static OdataUri<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
             {
@@ -1549,14 +1549,14 @@
                 this.questionMark = questionMark;
                 this.queryOptions = queryOptions;
 
-                this.cachedOutput = new Future<IOutput<char, OdataUri<ParseMode.Realized>>>(this.RealizeImpl);
+                this.cachedOutput = new Future<IRealizationResult<char, OdataUri<ParseMode.Realized>>>(this.RealizeImpl);
             }
 
             private OdataUri(
                 AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, TMode> segments,
                 QuestionMark<TMode> questionMark,
                 Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, TMode> queryOptions,
-                Future<IOutput<char, OdataUri<ParseMode.Realized>>> cachedOutput)
+                Future<IRealizationResult<char, OdataUri<ParseMode.Realized>>> cachedOutput)
             {
                 this.segments = new Future<AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, TMode>>(
                     () => segments);
@@ -1591,7 +1591,7 @@
                 }
             }
 
-            public IOutput<char, OdataUri<ParseMode.Realized>> Realize()
+            public IRealizationResult<char, OdataUri<ParseMode.Realized>> Realize()
             {
                 //// TODO async optimizations
                 
@@ -1600,23 +1600,23 @@
                 return this.cachedOutput.Value;
             }
 
-            private IOutput<char, OdataUri<ParseMode.Realized>> RealizeImpl()
+            private IRealizationResult<char, OdataUri<ParseMode.Realized>> RealizeImpl()
             {
                 var output = this.QueryOptions.Realize();
                 if (output.Success)
                 {
-                    return new Output<char, OdataUri<ParseMode.Realized>>(
+                    return new RealizationResult<char, OdataUri<ParseMode.Realized>>(
                         true,
                         new OdataUri<ParseMode.Realized>(
-                            this.Segments.Realize().Parsed,
-                            this.QuestionMark.Realize().Parsed,
-                            this.QueryOptions.Realize().Parsed,
+                            this.Segments.Realize().RealizedValue,
+                            this.QuestionMark.Realize().RealizedValue,
+                            this.QueryOptions.Realize().RealizedValue,
                             this.cachedOutput),
-                        output.Remainder);
+                        output.RemainingTokens);
                 }
                 else
                 {
-                    return new Output<char, OdataUri<ParseMode.Realized>>(false, default, output.Remainder);
+                    return new RealizationResult<char, OdataUri<ParseMode.Realized>>(false, default, output.RemainingTokens);
                 }
             }
         }
