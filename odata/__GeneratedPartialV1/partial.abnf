@@ -1,3 +1,21 @@
+odataUri = 1*segment questionMark *queryOption
+
+segment = slash 1*alphaNumeric
+
+slash = "/"
+
+alphaNumeric = "A" / "C"
+
+questionMark = "?"
+
+queryOption = optionName equalsSign optionValue
+
+optionName = 1*alphaNumeric
+
+equalsSign = "="
+
+optionValue = *alphaNumeric
+
 ALPHA          =  %x41-5A / %x61-7A   ; A-Z / a-z
 
 BIT            =  "0" / "1"
