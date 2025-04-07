@@ -75,12 +75,6 @@
             }
         }
 
-        public static implicit operator T(Future<T> future)
-        {
-            //// TODO is this implicit conversion a good idea?
-            return future.Value;
-        }
-
         public static implicit operator Future<T>(Func<T> promise)
         {
             return new Future<T>(promise);
