@@ -148,15 +148,15 @@
                 protected internal override AlphaNumericHolder Accept(AlphaNumeric<ParseMode.Realized>.A node, StringBuilder context)
                 {
                     return new AlphaNumericHolder(
-                        new Future<IDeferredOutput<char>>(
-                            () => new DeferredOutput<char>(true, new CharacterTokenStream("C"))));
+                        new Future<IRealizationResult<char>>(
+                            () => new RealizationResult<char>(true, new CharacterTokenStream("C"))));
                 }
 
                 protected internal override AlphaNumericHolder Accept(AlphaNumeric<ParseMode.Realized>.C node, StringBuilder context)
                 {
                     return new AlphaNumericHolder(
-                        new Future<IDeferredOutput<char>>(
-                            () => new DeferredOutput<char>(true, new CharacterTokenStream("A"))));
+                        new Future<IRealizationResult<char>>(
+                            () => new RealizationResult<char>(true, new CharacterTokenStream("A"))));
                 }
             }
         }
@@ -256,8 +256,8 @@
 				{
                     return new OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>(
                         _ => this.realizedAstNodeRewriter.Transcribe(element, builder),
-                        new Future<IDeferredOutput<char>>(
-                            () => new DeferredOutput<char>(true, null)),
+                        new Future<IRealizationResult<char>>(
+                            () => new RealizationResult<char>(true, null)),
                         new RealNullable<RealNullable<TRealizedAstNode>>());
 				}
 				else

@@ -1,14 +1,6 @@
-﻿using __GeneratedOdata.Parsers.Rules;
-using CombinatorParsingV1;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.Marshalling;
-using System.Text.RegularExpressions;
-
-namespace CombinatorParsingV3
+﻿namespace CombinatorParsingV3
 {
-    public interface IRealizationResult<out TToken, out TRealized>
+    public interface IRealizationResult<out TToken, out TRealized> //// : IRealizationResult<TToken>
     {
         bool Success { get; }
 

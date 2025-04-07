@@ -134,7 +134,7 @@
 
         public static class Slash
         {
-            public static Slash<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            public static Slash<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 return Slash<ParseMode.Deferred>.Create(previouslyParsedOutput);
             }
@@ -142,16 +142,16 @@
 
         public sealed class Slash<TMode> : IDeferredAstNode<char, Slash<ParseMode.Realized>>, IFromRealizedable<Slash<ParseMode.Deferred>> where TMode : ParseMode
         {
-            private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
+            private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
 
             private readonly Future<IRealizationResult<char, Slash<ParseMode.Realized>>> cachedOutput;
 
-            internal static Slash<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            internal static Slash<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 return new Slash<ParseMode.Deferred>(previouslyParsedOutput);
             }
 
-            private Slash(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            private Slash(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 if (typeof(TMode) != typeof(ParseMode.Deferred))
                 {
@@ -190,10 +190,10 @@
                 var output = this.previouslyParsedOutput.Value;
                 if (!output.Success)
                 {
-                    return new RealizationResult<char, Slash<ParseMode.Realized>>(false, default, output.Remainder);
+                    return new RealizationResult<char, Slash<ParseMode.Realized>>(false, default, output.RemainingTokens);
                 }
 
-                var input = output.Remainder;
+                var input = output.RemainingTokens;
 
                 if (input.Current == '/')
                 {
@@ -211,11 +211,11 @@
 
         public sealed class AlphaNumericHolder : IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>>
         {
-            private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
+            private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
 
             private readonly IFuture<IRealizationResult<char, AlphaNumeric<ParseMode.Realized>>> cachedOutput;
 
-            public AlphaNumericHolder(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            public AlphaNumericHolder(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 this.previouslyParsedOutput = previouslyParsedOutput;
 
@@ -246,7 +246,7 @@
                     return c;
                 }
 
-                return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>>(false, default, this.previouslyParsedOutput.Value.Remainder);
+                return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>>(false, default, this.previouslyParsedOutput.Value.RemainingTokens);
             }
         }
 
@@ -254,7 +254,7 @@
         {
             public static class A
             {
-                public static AlphaNumeric<ParseMode.Deferred>.A Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                public static AlphaNumeric<ParseMode.Deferred>.A Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
                 {
                     return AlphaNumeric<ParseMode.Deferred>.A.Create(previouslyParsedOutput);
                 }
@@ -262,7 +262,7 @@
 
             public static class C
             {
-                public static AlphaNumeric<ParseMode.Deferred>.C Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                public static AlphaNumeric<ParseMode.Deferred>.C Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
                 {
                     return AlphaNumeric<ParseMode.Deferred>.C.Create(previouslyParsedOutput);
                 }
@@ -300,16 +300,16 @@
 
             public sealed class A : AlphaNumeric<TMode>, IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>.A>
             {
-                private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
+                private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
 
                 private readonly Future<IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.A>> cachedOutput;
 
-                internal static AlphaNumeric<ParseMode.Deferred>.A Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                internal static AlphaNumeric<ParseMode.Deferred>.A Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
                 {
                     return new AlphaNumeric<ParseMode.Deferred>.A(previouslyParsedOutput);
                 }
 
-                private A(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                private A(IFuture<IRealizationResult<char>> previouslyParsedOutput)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
@@ -336,10 +336,10 @@
                     var output = this.previouslyParsedOutput.Value;
                     if (!output.Success)
                     {
-                        return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, output.Remainder);
+                        return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, output.RemainingTokens);
                     }
 
-                    var input = output.Remainder;
+                    var input = output.RemainingTokens;
                     if (input == null)
                     {
                         return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.A>(false, default, input);
@@ -380,16 +380,16 @@
 
             public sealed class C : AlphaNumeric<TMode>, IDeferredAstNode<char, AlphaNumeric<ParseMode.Realized>.C>
             {
-                private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
+                private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
 
                 private readonly Future<IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.C>> cachedOutput;
 
-                internal static AlphaNumeric<ParseMode.Deferred>.C Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                internal static AlphaNumeric<ParseMode.Deferred>.C Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
                 {
                     return new AlphaNumeric<ParseMode.Deferred>.C(previouslyParsedOutput);
                 }
 
-                private C(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                private C(IFuture<IRealizationResult<char>> previouslyParsedOutput)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Deferred))
                     {
@@ -416,10 +416,10 @@
                     var output = this.previouslyParsedOutput.Value;
                     if (!output.Success)
                     {
-                        return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.C>(false, default, output.Remainder);
+                        return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.C>(false, default, output.RemainingTokens);
                     }
 
-                    var input = output.Remainder;
+                    var input = output.RemainingTokens;
                     if (input == null)
                     {
                         return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.C>(false, default, input);
@@ -462,8 +462,8 @@
         public static class AtLeastOne
         {
             public static AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create<TDeferredAstNode, TRealizedAstNode>(
-                IFuture<IDeferredOutput<char>> previouslyParsedOutput,
-                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
+                IFuture<IRealizationResult<char>> previouslyParsedOutput,
+                Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory)
                 where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
                 where TRealizedAstNode : IFromRealizedable<TDeferredAstNode>
             {
@@ -486,8 +486,8 @@
                 cachedOutput;
 
             internal static AtLeastOne<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create(
-                IFuture<IDeferredOutput<char>> previouslyParsedOutput,
-                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory)
+                IFuture<IRealizationResult<char>> previouslyParsedOutput,
+                Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory)
             {
                 var __1 = new Future<TDeferredAstNode>(
                     () => nodeFactory(previouslyParsedOutput));
@@ -590,8 +590,8 @@
         public static class Many
         {
             public static Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create<TDeferredAstNode, TRealizedAstNode>(
-                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
-                IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory,
+                IFuture<IRealizationResult<char>> previouslyParsedOutput)
                 where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
             {
                 return Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>.Create(nodeFactory, previouslyParsedOutput);
@@ -609,8 +609,8 @@
             private readonly Future<IRealizationResult<char, Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
 
             internal static Many<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create(
-                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
-                IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory,
+                IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 var node = new Future<ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>(
                     () => ManyNode.Create<TDeferredAstNode, TRealizedAstNode>(nodeFactory, previouslyParsedOutput));
@@ -691,8 +691,8 @@
         public static class ManyNode
         {
             public static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create<TDeferredAstNode, TRealizedAstNode>(
-                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
-                IFuture<IDeferredOutput<char>> previouslyParsedOutput) where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
+                Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory,
+                IFuture<IRealizationResult<char>> previouslyParsedOutput) where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
             {
                 return ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>.Create(nodeFactory, previouslyParsedOutput);
             }
@@ -706,8 +706,8 @@
             private readonly Future<IRealizationResult<char, ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
 
             internal static ManyNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create(
-                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
-                IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory,
+                IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 var element = new Future<OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>>(
                     () => OptionalNode.Create<TDeferredAstNode, TRealizedAstNode>(nodeFactory, previouslyParsedOutput));
@@ -836,8 +836,8 @@
         public static class OptionalNode
         {
             public static OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create<TDeferredAstNode, TRealizedAstNode>(
-                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory, 
-                IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory, 
+                IFuture<IRealizationResult<char>> previouslyParsedOutput)
                 where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
             {
                 return OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred>.Create(nodeFactory, previouslyParsedOutput);
@@ -850,16 +850,16 @@
             where TDeferredAstNode : IDeferredAstNode<char, TRealizedAstNode>
             where TMode : ParseMode
         {
-            private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
-            private readonly Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory;
+            private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
+            private readonly Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory;
 
             private readonly RealNullable<RealNullable<TRealizedAstNode>> value;
 
             private readonly Future<IRealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>> cachedOutput;
 
             internal static OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Deferred> Create(
-                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
-                IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+                Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory,
+                IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 var value = new RealNullable<RealNullable<TRealizedAstNode>>();
 
@@ -867,8 +867,8 @@
             }
 
             internal OptionalNode(
-                Func<IFuture<IDeferredOutput<char>>, TDeferredAstNode> nodeFactory,
-                IFuture<IDeferredOutput<char>> previouslyParsedOutput,
+                Func<IFuture<IRealizationResult<char>>, TDeferredAstNode> nodeFactory,
+                IFuture<IRealizationResult<char>> previouslyParsedOutput,
                 RealNullable<RealNullable<TRealizedAstNode>> value)
             {
                 this.nodeFactory = nodeFactory;
@@ -926,7 +926,7 @@
                 var deferredOutput = this.previouslyParsedOutput.Value;
                 if (!deferredOutput.Success)
                 {
-                    return new RealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(false, default, deferredOutput.Remainder);
+                    return new RealizationResult<char, OptionalNode<TDeferredAstNode, TRealizedAstNode, ParseMode.Realized>>(false, default, deferredOutput.RemainingTokens);
                 }
 
                 var value = this.nodeFactory(this.previouslyParsedOutput);
@@ -954,7 +954,7 @@
 
         public static class Segment
         {
-            public static Segment<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            public static Segment<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 return Segment<ParseMode.Deferred>.Create(previouslyParsedOutput);
             }
@@ -967,7 +967,7 @@
 
             private readonly Future<IRealizationResult<char, Segment<ParseMode.Realized>>> cachedOutput;
 
-            internal static Segment<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            internal static Segment<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 var slash = new Future<Slash<ParseMode.Deferred>>(() => V3ParserPlayground.Slash.Create(previouslyParsedOutput));
                 var characters = new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(() => AtLeastOne.Create<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(
@@ -1056,7 +1056,7 @@
 
         public static class EqualsSign
         {
-            public static EqualsSign<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            public static EqualsSign<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 return EqualsSign<ParseMode.Deferred>.Create(previouslyParsedOutput);
             }
@@ -1064,16 +1064,16 @@
 
         public sealed class EqualsSign<TMode> : IDeferredAstNode<char, EqualsSign<ParseMode.Realized>>, IFromRealizedable<EqualsSign<ParseMode.Deferred>> where TMode : ParseMode
         {
-            private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
+            private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
 
             private readonly Future<IRealizationResult<char, EqualsSign<ParseMode.Realized>>> cachedOutput;
 
-            internal static EqualsSign<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            internal static EqualsSign<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 return new EqualsSign<ParseMode.Deferred>(previouslyParsedOutput);
             }
 
-            private EqualsSign(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            private EqualsSign(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 this.previouslyParsedOutput = previouslyParsedOutput;
 
@@ -1095,10 +1095,10 @@
                 var output = this.previouslyParsedOutput.Value;
                 if (!output.Success)
                 {
-                    return new RealizationResult<char, EqualsSign<ParseMode.Realized>>(false, default, output.Remainder);
+                    return new RealizationResult<char, EqualsSign<ParseMode.Realized>>(false, default, output.RemainingTokens);
                 }
 
-                var input = output.Remainder;
+                var input = output.RemainingTokens;
                 if (input == null)
                 {
                     return new RealizationResult<char, EqualsSign<ParseMode.Realized>>(false, default, input);
@@ -1132,7 +1132,7 @@
 
         public static class OptionName
         {
-            public static OptionName<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            public static OptionName<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 return OptionName<ParseMode.Deferred>.Create(previouslyParsedOutput);
             }
@@ -1149,7 +1149,7 @@
 
             private readonly Future<IRealizationResult<char, OptionName<ParseMode.Realized>>> cachedOutput;
 
-            internal static OptionName<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            internal static OptionName<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 var characters = new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(
                         () =>
@@ -1224,7 +1224,7 @@
 
         public static class OptionValue
         {
-            public static OptionValue<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            public static OptionValue<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 return OptionValue<ParseMode.Deferred>.Create(previouslyParsedOutput);
             }
@@ -1236,7 +1236,7 @@
 
             private readonly Future<IRealizationResult<char, OptionValue<ParseMode.Realized>>> cachedOutput;
 
-            internal static OptionValue<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            internal static OptionValue<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 var characters = new Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(
                     () =>
@@ -1313,7 +1313,7 @@
 
         public static class QueryOption
         {
-            public static QueryOption<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            public static QueryOption<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 return QueryOption<ParseMode.Deferred>.Create(previouslyParsedOutput);
             }
@@ -1327,7 +1327,7 @@
 
             private Future<IRealizationResult<char, QueryOption<ParseMode.Realized>>> cachedOutput;
 
-            internal static QueryOption<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            internal static QueryOption<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 var name = new Future<OptionName<ParseMode.Deferred>>(() => OptionName.Create(previouslyParsedOutput));
                 var equalsSign = new Future<EqualsSign<ParseMode.Deferred>>(() => V3ParserPlayground.EqualsSign.Create(
@@ -1431,7 +1431,7 @@
 
         public static class QuestionMark
         {
-            public static QuestionMark<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            public static QuestionMark<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 return QuestionMark<ParseMode.Deferred>.Create(previouslyParsedOutput);
             }
@@ -1439,16 +1439,16 @@
 
         public sealed class QuestionMark<TMode> : IDeferredAstNode<char, QuestionMark<ParseMode.Realized>>, IFromRealizedable<QuestionMark<ParseMode.Deferred>> where TMode : ParseMode
         {
-            private readonly IFuture<IDeferredOutput<char>> previouslyParsedOutput;
+            private readonly IFuture<IRealizationResult<char>> previouslyParsedOutput;
 
             private readonly Future<IRealizationResult<char, QuestionMark<ParseMode.Realized>>> cachedOutput;
 
-            internal static QuestionMark<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            internal static QuestionMark<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 return new QuestionMark<ParseMode.Deferred>(previouslyParsedOutput);
             }
 
-            private QuestionMark(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            private QuestionMark(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 this.previouslyParsedOutput = previouslyParsedOutput;
 
@@ -1470,10 +1470,10 @@
                 var output = this.previouslyParsedOutput.Value;
                 if (!output.Success)
                 {
-                    return new RealizationResult<char, QuestionMark<ParseMode.Realized>>(false, default, output.Remainder);
+                    return new RealizationResult<char, QuestionMark<ParseMode.Realized>>(false, default, output.RemainingTokens);
                 }
 
-                var input = output.Remainder;
+                var input = output.RemainingTokens;
 
                 if (input.Current == '?')
                 {
@@ -1510,7 +1510,7 @@
                 return OdataUri<ParseMode.Deferred>.Create(Func.Close(DeferredOutput.Create(input)).ToFuture());
             }
 
-            public static OdataUri<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            public static OdataUri<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 return OdataUri<ParseMode.Deferred>.Create(previouslyParsedOutput);
             }
@@ -1524,7 +1524,7 @@
 
             private readonly Future<IRealizationResult<char, OdataUri<ParseMode.Realized>>> cachedOutput;
 
-            internal static OdataUri<ParseMode.Deferred> Create(IFuture<IDeferredOutput<char>> previouslyParsedOutput)
+            internal static OdataUri<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previouslyParsedOutput)
             {
                 var segments = new Future<AtLeastOne<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>, ParseMode.Deferred>>(
                     () => AtLeastOne.Create<Segment<ParseMode.Deferred>, Segment<ParseMode.Realized>>(
