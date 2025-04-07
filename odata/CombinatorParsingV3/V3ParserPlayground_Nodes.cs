@@ -92,26 +92,6 @@
         }
     }
 
-    public static class Func
-    {
-        public static Func<TOutput> Compose<TInput, TOutput>(Func<TInput> inner, Func<TInput, TOutput> outer)
-        {
-            return () => outer(inner());
-        }
-
-        public static Func<T> Close<T>(T value)
-        {
-            return () => value;
-        }
-
-        public static IFuture<T> ToFuture<T>(this Func<T> func)
-        {
-            return new Future<T>(func);
-        }
-    }
-
-    
-
     public static partial class V3ParserPlayground
     {
         public static TRealizedAstNode Parse<TToken, TRealizedAstNode>(this IDeferredAstNode<TToken, TRealizedAstNode> deferredAstNode)
