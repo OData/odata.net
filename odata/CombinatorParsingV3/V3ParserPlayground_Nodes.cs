@@ -1539,11 +1539,12 @@
                         previouslyParsedOutput,
                         input => Segment.Create(input)));
                 var questionMark = new Future<QuestionMark<ParseMode.Deferred>>(
-                    () => V3ParserPlayground.QuestionMark.Create(DeferredOutput.ToPromise(() => segments.Value.Realize()).ToFuture()));
+                    () => V3ParserPlayground.QuestionMark.Create(
+                        Future.Create(() => segments.Value.Realize())));
                 var queryOptions = new Future<Many<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>, ParseMode.Deferred>>(
                     () => Many.Create<QueryOption<ParseMode.Deferred>, QueryOption<ParseMode.Realized>>(
                         input => QueryOption.Create(input),
-                        DeferredOutput.ToPromise(() => questionMark.Value.Realize()).ToFuture()));
+                        Future.Create(() => questionMark.Value.Realize())));
 
                 return new OdataUri<ParseMode.Deferred>(segments, questionMark, queryOptions);
             }
