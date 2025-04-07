@@ -14,6 +14,34 @@
     using Sprache;
     using System.Diagnostics.Contracts;
 
+    /// <summary>
+    /// NOTE: you considered having a class variant of this for cases where the caller needs to avoid boxing, but based on nullabletests.test4 there is basically no different in perforamnce
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public readonly struct RealNullable<T>
+    {
+        private readonly T value;
+
+        private readonly bool hasValue;
+
+        public RealNullable(T value)
+        {
+            this.value = value;
+            this.hasValue = true;
+        }
+
+        public bool TryGetValue([System.Diagnostics.CodeAnalysis.MaybeNullWhen(false)] out T value)
+        {
+            value = this.value;
+            return this.hasValue;
+        }
+
+        public static implicit operator RealNullable<T>(T value)
+        {
+            return new RealNullable<T>(value);
+        }
+    }
+
     public interface IFuture<out T> //// TODO i'm not sure i like having an interface...
     {
         T Value { get; }
@@ -94,33 +122,7 @@
         }
     }
 
-    /// <summary>
-    /// NOTE: you considered having a class variant of this for cases where the caller needs to avoid boxing, but based on nullabletests.test4 there is basically no different in perforamnce
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public readonly struct RealNullable<T>
-    {
-        private readonly T value;
-
-        private readonly bool hasValue;
-
-        public RealNullable(T value)
-        {
-            this.value = value;
-            this.hasValue = true;
-        }
-
-        public bool TryGetValue([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out T value)
-        {
-            value = this.value;
-            return this.hasValue;
-        }
-
-        public static implicit operator RealNullable<T>(T value)
-        {
-            return new RealNullable<T>(value);
-        }
-    }
+    
 
     public static partial class V3ParserPlayground
     {

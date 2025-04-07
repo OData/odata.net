@@ -9,7 +9,6 @@ using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using static CombinatorParsingV3.ParseMode;
 
 namespace odata.tests
 {
