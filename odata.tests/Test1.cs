@@ -711,21 +711,19 @@
         [TestMethod]
         public void Deferred()
         {
-            var coreRulesPath = @"C:\github\odata.net\odata\AbnfParser\core.abnf";
-            var coreRulesText = File.ReadAllText(coreRulesPath);
-            var abnfRulesPath = @"C:\github\odata.net\odata\AbnfParser\abnf.abnf";
-            var abnfRulesText = File.ReadAllText(abnfRulesPath);
-            var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
+            var coreRulesPath = @"C:\github\odata.net\odata\__GeneratedPartialV1\partial.abnf";
+            var fullRulesText = File.ReadAllText(coreRulesPath);
 
             GenerateDeferred(
                 fullRulesText,
                 false,
                 "__GeneratedOdataV2.CstNodes.Rules",
                 "__GeneratedOdataV2.CstNodes.Inners",
-                @"C:\github\odata.net\odata\__GeneratedDeferredV1\CstNodes\Rules",
-                @"C:\github\odata.net\odata\__GeneratedDeferredV1\CstNodes\Inners"
+                @"C:\github\odata.net\odata\__GeneratedPartialV1\Realized\CstNodes\Rules",
+                @"C:\github\odata.net\odata\__GeneratedPartialV1\Realized\CstNodes\Inners"
                 );
         }
+
         private static void GenerateDeferred(
             string fullRulesText,
             bool useNumericFileNames,
@@ -742,7 +740,7 @@
 
             var generatedCstNodes = new _GeneratorV5.CstNodesGenerator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(cst);
 
-                generatedCstNodes = new _GeneratorV6.CstNodesOptimizer().Optimize(generatedCstNodes);
+            generatedCstNodes = new _GeneratorV6.CstNodesOptimizer().Optimize(generatedCstNodes);
 
             Directory.CreateDirectory(ruleCstNodesDirectory);
             TranscribeNamespace(generatedCstNodes.RuleCstNodes, ruleCstNodesDirectory, useNumericFileNames);
@@ -773,7 +771,9 @@
                 "__Generated.Parsers.Rules",
                 "__Generated.Parsers.Inners",
                 @"C:\github\odata.net\odata\__Generated\Parsers\Rules",
-                @"C:\github\odata.net\odata\__Generated\Parsers\Inners");
+                @"C:\github\odata.net\odata\__Generated\Parsers\Inners",
+                true,
+                true);
         }
 
         private static void GenerateParserTypes(

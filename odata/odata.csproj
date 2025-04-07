@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="__GeneratedPartialV1\" />
     <Folder Include="Root\OdataResourcePath\SyntacticCstNodes\" />
     <Folder Include="__Generated\CstNodes\Rules\" />
   </ItemGroup>
