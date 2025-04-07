@@ -18,21 +18,7 @@
 
     public static partial class V3ParserPlayground
     {
-        public static TRealizedAstNode Parse<TToken, TRealizedAstNode>(this IAstNode<TToken, TRealizedAstNode> deferredAstNode)
-        {
-            var output = deferredAstNode.Realize();
-            if (!output.Success)
-            {
-                throw new InvalidDataException("TODO parse failed");
-            }
-
-            if (output.RemainingTokens != null)
-            {
-                throw new InvalidOperationException("TODO parse succeeded but there were still tokens in the input stream");
-            }
-
-            return output.RealizedValue;
-        }
+        
 
         public static class Slash
         {

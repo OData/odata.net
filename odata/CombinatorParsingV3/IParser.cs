@@ -1,5 +1,8 @@
 ﻿namespace CombinatorParsingV3
 {
+    using System;
+    using System.IO;
+
     public interface IRealizationResult<out TToken, out TRealized> : IRealizationResult<TToken>
     {
         TRealized RealizedValue { get; }
@@ -66,6 +69,25 @@
     public interface IAstNode<out TToken, out TRealizedAstNode>
     {
         IRealizationResult<TToken, TRealizedAstNode> Realize();
+    }
+
+    public static class AstNodeExtensions
+    {
+        public static TRealizedAstNode Parse<TToken, TRealizedAstNode>(this IAstNode<TToken, TRealizedAstNode> deferredAstNode)
+        {
+            var output = deferredAstNode.Realize();
+            if (!output.Success)
+            {
+                throw new InvalidDataException("TODO parse failed");
+            }
+
+            if (output.RemainingTokens != null)
+            {
+                throw new InvalidOperationException("TODO parse succeeded but there were still tokens in the input stream");
+            }
+
+            return output.RealizedValue;
+        }
     }
 
     public interface IFromRealizedable<out TUnrealizedAstNode>
