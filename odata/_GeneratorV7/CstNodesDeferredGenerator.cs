@@ -1,4 +1,5 @@
 ﻿using AbnfParserGenerator;
+using System;
 using System.Linq;
 
 namespace _GeneratorV7
@@ -58,7 +59,157 @@ namespace _GeneratorV7
         {
             if (@class.Properties.Where(property => property.Name == "Instance" && property.IsStatic).Any())
             {
+                return new Class(
+                    AccessModifier.Public,
+                    ClassModifier.Sealed,
+                    @class.Name,
+                    new[]
+                    {
+                        "TMode",
+                    },
+                    $"IAstNode<char, {@class.Name}<ParseMode.Realized>>, IFromRealizedable<{@class.Name}<ParseMode.Deferred>> where TMode : ParseMode", //// TODO generic type constraints should be built into `class`
+                    new[]
+                    {
+                        new ConstructorDefinition(
+                            AccessModifier.Private,
+                            new[]
+                            {
+                                new MethodParameter(
+                                    "IFuture<IRealizationResult<char>>",
+                                    "previousNodeRealizationResult"),
+                            },
+"""
+if (typeof(TMode) != typeof(ParseMode.Deferred))
+{
+    throw new ArgumentException("TODO");
+}
 
+this.previousNodeRealizationResult = previousNodeRealizationResult;
+
+this.realizationResult = new Future<IRealizationResult<char, Slash<ParseMode.Realized>>>(() => this.RealizeImpl());
+""".Split(Environment.NewLine)),
+                        new ConstructorDefinition(
+                            AccessModifier.Private,
+                            new[]
+                            {
+                                new MethodParameter(
+                                    $"IFuture<IRealizationResult<char, {@class.Name}<ParseMode.Realized>>>",
+                                    "realizationResult"),
+                            },
+"""
+if (typeof(TMode) != typeof(ParseMode.Deferred))
+{
+    throw new ArgumentException("TODO");
+}
+
+this.realizationResult = realizationResult;
+""".Split(Environment.NewLine)),
+                    },
+                    new[]
+                    {
+                        new MethodDefinition(
+                            AccessModifier.Internal,
+                            ClassModifier.Static,
+                            false,
+                            $"{@class.Name}<ParseMode.Deferred>",
+                            Enumerable.Empty<string>(),
+                            "Create",
+                            new[]
+                            {
+                                new MethodParameter(
+                                    "IFuture<IRealizationResult<char>>",
+                                    "previousNodeRealizationResult"),
+                            },
+$"""         
+return new {@class.Name}<ParseMode.Deferred>(previousNodeRealizationResult);
+"""
+                        ),
+                        new MethodDefinition(
+                            AccessModifier.Public,
+                            ClassModifier.None,
+                            false,
+                            $"{@class.Name}<ParseMode.Deferred>",
+                            Enumerable.Empty<string>(),
+                            "Convert",
+                            Enumerable.Empty<MethodParameter>(),
+"""
+if (typeof(TMode) == typeof(ParseMode.Deferred))
+{
+    return new Slash<ParseMode.Deferred>(this.previousNodeRealizationResult);
+}
+else
+{
+    return new Slash<ParseMode.Deferred>(this.cachedOutput);
+}
+"""
+                            ),
+                        new MethodDefinition(
+                            AccessModifier.Public,
+                            ClassModifier.None,
+                            false,
+                            $"IRealizationResult<char, {@class.Name}<ParseMode.Realized>>",
+                            Enumerable.Empty<string>(),
+                            "Realize",
+                            Enumerable.Empty<MethodParameter>(),
+"""
+return cachedOutput.Value;
+"""
+                            ),
+                        new MethodDefinition(
+                            AccessModifier.Private,
+                            ClassModifier.None,
+                            false,
+                            $"IRealizationResult<char, {@class.Name}<ParseMode.Realized>>",
+                            Enumerable.Empty<string>(),
+                            "RealizeImpl",
+                            Enumerable.Empty<MethodParameter>(),
+"""
+var output = this.previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, Slash<ParseMode.Realized>>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    return new RealizationResult<char, Slash<ParseMode.Realized>>(false, default, output.RemainingTokens);
+}
+
+if (input.Current == '/') //// TODO
+{
+    return new RealizationResult<char, Slash<ParseMode.Realized>>(
+        true,
+        new Slash<ParseMode.Realized>(this.cachedOutput),
+        input.Next());
+}
+else
+{
+    return new RealizationResult<char, Slash<ParseMode.Realized>>(false, default, input);
+}
+"""
+                            ),
+                    },
+                    Enumerable.Empty<Class>(),
+                    new[]
+                    {
+                        new PropertyDefinition(
+                            AccessModifier.Private,
+                            false,
+                            "IFuture<IRealizationResult<char>>",
+                            "previousNodeRealizationResult",
+                            true,
+                            false,
+                            null),
+                        new PropertyDefinition(
+                            AccessModifier.Private,
+                            false,
+                            $"IFuture<IRealizationResult<char, {@class.Name}<ParseMode.Realized>>>",
+                            "realizationResult",
+                            true,
+                            false,
+                            null),
+                    });
             }
 
             return null;
