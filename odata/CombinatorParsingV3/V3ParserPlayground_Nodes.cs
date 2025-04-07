@@ -1,20 +1,6 @@
 ﻿namespace CombinatorParsingV3
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using System;
-    using System.Collections;
-    using System.Threading;
-    using static CombinatorParsingV3.V3ParserPlayground;
-    using CombinatorParsingV1;
-    using System.Runtime.CompilerServices;
-    using System.Reflection.Metadata.Ecma335;
-    using System.Net.Cache;
-    using System.IO;
-    using Sprache;
-    using System.Diagnostics.Contracts;
-
-    
 
     public static partial class V3ParserPlayground
     {
