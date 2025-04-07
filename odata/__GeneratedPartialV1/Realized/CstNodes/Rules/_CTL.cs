@@ -36,13 +36,12 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Rules
         
         public sealed class _Ⰳx7F : _CTL
         {
-            private _Ⰳx7F()
+            public _Ⰳx7F(__GeneratedPartialV1.Realized.CstNodes.Inners._Ⰳx7F _Ⰳx7F_1)
             {
-                this._Ⰳx7F_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._Ⰳx7F.Instance;
+                this._Ⰳx7F_1 = _Ⰳx7F_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._Ⰳx7F _Ⰳx7F_1 { get; }
-            public static _Ⰳx7F Instance { get; } = new _Ⰳx7F();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

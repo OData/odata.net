@@ -45,15 +45,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _61 : _Ⰳx61ⲻ7A
         {
-            private _61()
+            public _61(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._1 _1_1)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._1_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._1.Instance;
+                this._6_1 = _6_1;
+                this._1_1 = _1_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._1 _1_1 { get; }
-            public static _61 Instance { get; } = new _61();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -63,15 +62,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _62 : _Ⰳx61ⲻ7A
         {
-            private _62()
+            public _62(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._2 _2_1)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._2_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._2.Instance;
+                this._6_1 = _6_1;
+                this._2_1 = _2_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._2 _2_1 { get; }
-            public static _62 Instance { get; } = new _62();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -81,15 +79,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _63 : _Ⰳx61ⲻ7A
         {
-            private _63()
+            public _63(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._3 _3_1)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._3_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._3.Instance;
+                this._6_1 = _6_1;
+                this._3_1 = _3_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._3 _3_1 { get; }
-            public static _63 Instance { get; } = new _63();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -99,15 +96,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _64 : _Ⰳx61ⲻ7A
         {
-            private _64()
+            public _64(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._4 _4_1)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._4_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._4.Instance;
+                this._6_1 = _6_1;
+                this._4_1 = _4_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._4 _4_1 { get; }
-            public static _64 Instance { get; } = new _64();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -117,15 +113,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _65 : _Ⰳx61ⲻ7A
         {
-            private _65()
+            public _65(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._5 _5_1)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._5_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._5.Instance;
+                this._6_1 = _6_1;
+                this._5_1 = _5_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._5 _5_1 { get; }
-            public static _65 Instance { get; } = new _65();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -135,15 +130,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _66 : _Ⰳx61ⲻ7A
         {
-            private _66()
+            public _66(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_2)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._6_2 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
+                this._6_1 = _6_1;
+                this._6_2 = _6_2;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_2 { get; }
-            public static _66 Instance { get; } = new _66();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -153,15 +147,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _67 : _Ⰳx61ⲻ7A
         {
-            private _67()
+            public _67(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._7_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._7.Instance;
+                this._6_1 = _6_1;
+                this._7_1 = _7_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1 { get; }
-            public static _67 Instance { get; } = new _67();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -171,15 +164,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _68 : _Ⰳx61ⲻ7A
         {
-            private _68()
+            public _68(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._8 _8_1)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._8_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._8.Instance;
+                this._6_1 = _6_1;
+                this._8_1 = _8_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._8 _8_1 { get; }
-            public static _68 Instance { get; } = new _68();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -189,15 +181,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _69 : _Ⰳx61ⲻ7A
         {
-            private _69()
+            public _69(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._9 _9_1)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._9_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._9.Instance;
+                this._6_1 = _6_1;
+                this._9_1 = _9_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._9 _9_1 { get; }
-            public static _69 Instance { get; } = new _69();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -207,15 +198,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _6A : _Ⰳx61ⲻ7A
         {
-            private _6A()
+            public _6A(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._A _A_1)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._A_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._A.Instance;
+                this._6_1 = _6_1;
+                this._A_1 = _A_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._A _A_1 { get; }
-            public static _6A Instance { get; } = new _6A();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -225,15 +215,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _6B : _Ⰳx61ⲻ7A
         {
-            private _6B()
+            public _6B(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._B _B_1)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._B_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._B.Instance;
+                this._6_1 = _6_1;
+                this._B_1 = _B_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._B _B_1 { get; }
-            public static _6B Instance { get; } = new _6B();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -243,15 +232,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _6C : _Ⰳx61ⲻ7A
         {
-            private _6C()
+            public _6C(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._C _C_1)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._C_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._C.Instance;
+                this._6_1 = _6_1;
+                this._C_1 = _C_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._C _C_1 { get; }
-            public static _6C Instance { get; } = new _6C();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -261,15 +249,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _6D : _Ⰳx61ⲻ7A
         {
-            private _6D()
+            public _6D(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._D _D_1)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._D_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._D.Instance;
+                this._6_1 = _6_1;
+                this._D_1 = _D_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._D _D_1 { get; }
-            public static _6D Instance { get; } = new _6D();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -279,15 +266,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _6E : _Ⰳx61ⲻ7A
         {
-            private _6E()
+            public _6E(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._E _E_1)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._E_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._E.Instance;
+                this._6_1 = _6_1;
+                this._E_1 = _E_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._E _E_1 { get; }
-            public static _6E Instance { get; } = new _6E();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -297,15 +283,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _6F : _Ⰳx61ⲻ7A
         {
-            private _6F()
+            public _6F(__GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1, __GeneratedPartialV1.Realized.CstNodes.Inners._F _F_1)
             {
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
-                this._F_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._F.Instance;
+                this._6_1 = _6_1;
+                this._F_1 = _F_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._F _F_1 { get; }
-            public static _6F Instance { get; } = new _6F();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -315,15 +300,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _70 : _Ⰳx61ⲻ7A
         {
-            private _70()
+            public _70(__GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1, __GeneratedPartialV1.Realized.CstNodes.Inners._0 _0_1)
             {
-                this._7_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._7.Instance;
-                this._0_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._0.Instance;
+                this._7_1 = _7_1;
+                this._0_1 = _0_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._0 _0_1 { get; }
-            public static _70 Instance { get; } = new _70();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -333,15 +317,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _71 : _Ⰳx61ⲻ7A
         {
-            private _71()
+            public _71(__GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1, __GeneratedPartialV1.Realized.CstNodes.Inners._1 _1_1)
             {
-                this._7_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._7.Instance;
-                this._1_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._1.Instance;
+                this._7_1 = _7_1;
+                this._1_1 = _1_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._1 _1_1 { get; }
-            public static _71 Instance { get; } = new _71();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -351,15 +334,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _72 : _Ⰳx61ⲻ7A
         {
-            private _72()
+            public _72(__GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1, __GeneratedPartialV1.Realized.CstNodes.Inners._2 _2_1)
             {
-                this._7_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._7.Instance;
-                this._2_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._2.Instance;
+                this._7_1 = _7_1;
+                this._2_1 = _2_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._2 _2_1 { get; }
-            public static _72 Instance { get; } = new _72();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -369,15 +351,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _73 : _Ⰳx61ⲻ7A
         {
-            private _73()
+            public _73(__GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1, __GeneratedPartialV1.Realized.CstNodes.Inners._3 _3_1)
             {
-                this._7_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._7.Instance;
-                this._3_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._3.Instance;
+                this._7_1 = _7_1;
+                this._3_1 = _3_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._3 _3_1 { get; }
-            public static _73 Instance { get; } = new _73();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -387,15 +368,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _74 : _Ⰳx61ⲻ7A
         {
-            private _74()
+            public _74(__GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1, __GeneratedPartialV1.Realized.CstNodes.Inners._4 _4_1)
             {
-                this._7_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._7.Instance;
-                this._4_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._4.Instance;
+                this._7_1 = _7_1;
+                this._4_1 = _4_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._4 _4_1 { get; }
-            public static _74 Instance { get; } = new _74();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -405,15 +385,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _75 : _Ⰳx61ⲻ7A
         {
-            private _75()
+            public _75(__GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1, __GeneratedPartialV1.Realized.CstNodes.Inners._5 _5_1)
             {
-                this._7_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._7.Instance;
-                this._5_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._5.Instance;
+                this._7_1 = _7_1;
+                this._5_1 = _5_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._5 _5_1 { get; }
-            public static _75 Instance { get; } = new _75();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -423,15 +402,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _76 : _Ⰳx61ⲻ7A
         {
-            private _76()
+            public _76(__GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1, __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1)
             {
-                this._7_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._7.Instance;
-                this._6_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._6.Instance;
+                this._7_1 = _7_1;
+                this._6_1 = _6_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._6 _6_1 { get; }
-            public static _76 Instance { get; } = new _76();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -441,15 +419,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _77 : _Ⰳx61ⲻ7A
         {
-            private _77()
+            public _77(__GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1, __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_2)
             {
-                this._7_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._7.Instance;
-                this._7_2 = __GeneratedPartialV1.Realized.CstNodes.Inners._7.Instance;
+                this._7_1 = _7_1;
+                this._7_2 = _7_2;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_2 { get; }
-            public static _77 Instance { get; } = new _77();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -459,15 +436,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _78 : _Ⰳx61ⲻ7A
         {
-            private _78()
+            public _78(__GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1, __GeneratedPartialV1.Realized.CstNodes.Inners._8 _8_1)
             {
-                this._7_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._7.Instance;
-                this._8_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._8.Instance;
+                this._7_1 = _7_1;
+                this._8_1 = _8_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._8 _8_1 { get; }
-            public static _78 Instance { get; } = new _78();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -477,15 +453,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _79 : _Ⰳx61ⲻ7A
         {
-            private _79()
+            public _79(__GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1, __GeneratedPartialV1.Realized.CstNodes.Inners._9 _9_1)
             {
-                this._7_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._7.Instance;
-                this._9_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._9.Instance;
+                this._7_1 = _7_1;
+                this._9_1 = _9_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._9 _9_1 { get; }
-            public static _79 Instance { get; } = new _79();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -495,15 +470,14 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Inners
         
         public sealed class _7A : _Ⰳx61ⲻ7A
         {
-            private _7A()
+            public _7A(__GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1, __GeneratedPartialV1.Realized.CstNodes.Inners._A _A_1)
             {
-                this._7_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._7.Instance;
-                this._A_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._A.Instance;
+                this._7_1 = _7_1;
+                this._A_1 = _A_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._7 _7_1 { get; }
             public __GeneratedPartialV1.Realized.CstNodes.Inners._A _A_1 { get; }
-            public static _7A Instance { get; } = new _7A();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

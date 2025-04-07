@@ -2,13 +2,12 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Rules
 {
     public sealed class _HTAB
     {
-        private _HTAB()
+        public _HTAB(__GeneratedPartialV1.Realized.CstNodes.Inners._Ⰳx09 _Ⰳx09_1)
         {
-            this._Ⰳx09_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._Ⰳx09.Instance;
+            this._Ⰳx09_1 = _Ⰳx09_1;
         }
         
         public __GeneratedPartialV1.Realized.CstNodes.Inners._Ⰳx09 _Ⰳx09_1 { get; }
-        public static __GeneratedPartialV1.Realized.CstNodes.Rules._HTAB Instance { get; } = new __GeneratedPartialV1.Realized.CstNodes.Rules._HTAB();
     }
     
 }

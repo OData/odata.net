@@ -56,6 +56,11 @@ namespace _GeneratorV7
 
         private Class? Translate(Class @class)
         {
+            if (@class.Properties.Where(property => property.Name == "Instance" && property.IsStatic).Any())
+            {
+
+            }
+
             return null;
         }
     }

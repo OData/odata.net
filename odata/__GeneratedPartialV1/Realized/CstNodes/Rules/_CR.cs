@@ -2,13 +2,12 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Rules
 {
     public sealed class _CR
     {
-        private _CR()
+        public _CR(__GeneratedPartialV1.Realized.CstNodes.Inners._Ⰳx0D _Ⰳx0D_1)
         {
-            this._Ⰳx0D_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._Ⰳx0D.Instance;
+            this._Ⰳx0D_1 = _Ⰳx0D_1;
         }
         
         public __GeneratedPartialV1.Realized.CstNodes.Inners._Ⰳx0D _Ⰳx0D_1 { get; }
-        public static __GeneratedPartialV1.Realized.CstNodes.Rules._CR Instance { get; } = new __GeneratedPartialV1.Realized.CstNodes.Rules._CR();
     }
     
 }

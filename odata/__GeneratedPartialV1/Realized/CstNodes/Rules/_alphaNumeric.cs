@@ -21,13 +21,12 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Rules
         
         public sealed class _ʺx41ʺ : _alphaNumeric
         {
-            private _ʺx41ʺ()
+            public _ʺx41ʺ(__GeneratedPartialV1.Realized.CstNodes.Inners._ʺx41ʺ _ʺx41ʺ_1)
             {
-                this._ʺx41ʺ_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._ʺx41ʺ.Instance;
+                this._ʺx41ʺ_1 = _ʺx41ʺ_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._ʺx41ʺ _ʺx41ʺ_1 { get; }
-            public static _ʺx41ʺ Instance { get; } = new _ʺx41ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -37,13 +36,12 @@ namespace __GeneratedPartialV1.Realized.CstNodes.Rules
         
         public sealed class _ʺx43ʺ : _alphaNumeric
         {
-            private _ʺx43ʺ()
+            public _ʺx43ʺ(__GeneratedPartialV1.Realized.CstNodes.Inners._ʺx43ʺ _ʺx43ʺ_1)
             {
-                this._ʺx43ʺ_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._ʺx43ʺ.Instance;
+                this._ʺx43ʺ_1 = _ʺx43ʺ_1;
             }
             
             public __GeneratedPartialV1.Realized.CstNodes.Inners._ʺx43ʺ _ʺx43ʺ_1 { get; }
-            public static _ʺx43ʺ Instance { get; } = new _ʺx43ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

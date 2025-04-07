@@ -751,7 +751,10 @@
 
             var generatedCstNodes = new _GeneratorV5.CstNodesGenerator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(cst);
 
-            generatedCstNodes = new _GeneratorV6.CstNodesOptimizer().Optimize(generatedCstNodes);
+            /*if (!addDeferredParsing)
+            {
+                generatedCstNodes = new _GeneratorV6.CstNodesOptimizer().Optimize(generatedCstNodes);
+            }*/
 
             if (addDeferredParsing)
             {
