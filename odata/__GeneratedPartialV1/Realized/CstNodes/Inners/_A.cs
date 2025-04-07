@@ -1,4 +1,4 @@
-namespace __GeneratedPartialV1.CstNodes.Inners
+namespace __GeneratedPartialV1.Realized.CstNodes.Inners
 {
     public sealed class _A
     {

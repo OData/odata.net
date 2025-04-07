@@ -1,14 +1,14 @@
-namespace __GeneratedPartialV1.CstNodes.Inners
+namespace __GeneratedPartialV1.Realized.CstNodes.Inners
 {
     public sealed class _ʺx42ʺ
     {
         private _ʺx42ʺ()
         {
-            this._x42_1 = __GeneratedPartialV1.CstNodes.Inners._x42.Instance;
+            this._x42_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._x42.Instance;
         }
         
-        public __GeneratedPartialV1.CstNodes.Inners._x42 _x42_1 { get; }
-        public static __GeneratedPartialV1.CstNodes.Inners._ʺx42ʺ Instance { get; } = new __GeneratedPartialV1.CstNodes.Inners._ʺx42ʺ();
+        public __GeneratedPartialV1.Realized.CstNodes.Inners._x42 _x42_1 { get; }
+        public static __GeneratedPartialV1.Realized.CstNodes.Inners._ʺx42ʺ Instance { get; } = new __GeneratedPartialV1.Realized.CstNodes.Inners._ʺx42ʺ();
     }
     
 }

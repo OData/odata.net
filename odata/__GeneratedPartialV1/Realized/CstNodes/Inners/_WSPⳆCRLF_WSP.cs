@@ -1,4 +1,4 @@
-namespace __GeneratedPartialV1.CstNodes.Inners
+namespace __GeneratedPartialV1.Realized.CstNodes.Inners
 {
     public abstract class _WSPⳆCRLF_WSP
     {
@@ -21,12 +21,12 @@ namespace __GeneratedPartialV1.CstNodes.Inners
         
         public sealed class _WSP : _WSPⳆCRLF_WSP
         {
-            public _WSP(__GeneratedPartialV1.CstNodes.Rules._WSP _WSP_1)
+            public _WSP(__GeneratedPartialV1.Realized.CstNodes.Rules._WSP _WSP_1)
             {
                 this._WSP_1 = _WSP_1;
             }
             
-            public __GeneratedPartialV1.CstNodes.Rules._WSP _WSP_1 { get; }
+            public __GeneratedPartialV1.Realized.CstNodes.Rules._WSP _WSP_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -36,14 +36,14 @@ namespace __GeneratedPartialV1.CstNodes.Inners
         
         public sealed class _CRLF_WSP : _WSPⳆCRLF_WSP
         {
-            public _CRLF_WSP(__GeneratedPartialV1.CstNodes.Rules._CRLF _CRLF_1, __GeneratedPartialV1.CstNodes.Rules._WSP _WSP_1)
+            public _CRLF_WSP(__GeneratedPartialV1.Realized.CstNodes.Rules._CRLF _CRLF_1, __GeneratedPartialV1.Realized.CstNodes.Rules._WSP _WSP_1)
             {
                 this._CRLF_1 = _CRLF_1;
                 this._WSP_1 = _WSP_1;
             }
             
-            public __GeneratedPartialV1.CstNodes.Rules._CRLF _CRLF_1 { get; }
-            public __GeneratedPartialV1.CstNodes.Rules._WSP _WSP_1 { get; }
+            public __GeneratedPartialV1.Realized.CstNodes.Rules._CRLF _CRLF_1 { get; }
+            public __GeneratedPartialV1.Realized.CstNodes.Rules._WSP _WSP_1 { get; }
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

@@ -717,11 +717,21 @@
             GenerateDeferred(
                 fullRulesText,
                 false,
-                "__GeneratedPartialV1.CstNodes.Rules",
-                "__GeneratedPartialV1.CstNodes.Inners",
+                "__GeneratedPartialV1.Realized.CstNodes.Rules",
+                "__GeneratedPartialV1.Realized.CstNodes.Inners",
                 @"C:\github\odata.net\odata\__GeneratedPartialV1\Realized\CstNodes\Rules",
                 @"C:\github\odata.net\odata\__GeneratedPartialV1\Realized\CstNodes\Inners"
                 );
+
+            /*GenerateDeferred(
+                fullRulesText,
+                false,
+                "__GeneratedPartialV1.Deferred.CstNodes.Rules",
+                "__GeneratedPartialV1.Deferred.CstNodes.Inners",
+                @"C:\github\odata.net\odata\__GeneratedPartialV1\Deferred\CstNodes\Rules",
+                @"C:\github\odata.net\odata\__GeneratedPartialV1\Deferred\CstNodes\Inners",
+               true
+                );*/
         }
 
         private static void GenerateDeferred(
@@ -730,7 +740,8 @@
             string ruleCstNodesNamespace,
             string innerCstNodesNamespace,
             string ruleCstNodesDirectory,
-            string innerCstNodesDirectory
+            string innerCstNodesDirectory,
+            bool addDeferredParsing = false
             )
         {
             if (!__Generated.Parsers.Rules._rulelistParser.Instance.TryParse(fullRulesText, out var cst))
@@ -741,6 +752,11 @@
             var generatedCstNodes = new _GeneratorV5.CstNodesGenerator(ruleCstNodesNamespace, innerCstNodesNamespace).Generate(cst);
 
             generatedCstNodes = new _GeneratorV6.CstNodesOptimizer().Optimize(generatedCstNodes);
+
+            if (addDeferredParsing)
+            {
+                generatedCstNodes = new _GeneratorV7.CstNodesDeferredGenerator().CreateDeferred(generatedCstNodes);
+            }
 
             Directory.CreateDirectory(ruleCstNodesDirectory);
             TranscribeNamespace(generatedCstNodes.RuleCstNodes, ruleCstNodesDirectory, useNumericFileNames);

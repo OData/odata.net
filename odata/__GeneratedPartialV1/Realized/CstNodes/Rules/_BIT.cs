@@ -1,4 +1,4 @@
-namespace __GeneratedPartialV1.CstNodes.Rules
+namespace __GeneratedPartialV1.Realized.CstNodes.Rules
 {
     public abstract class _BIT
     {
@@ -23,10 +23,10 @@ namespace __GeneratedPartialV1.CstNodes.Rules
         {
             private _ʺx30ʺ()
             {
-                this._ʺx30ʺ_1 = __GeneratedPartialV1.CstNodes.Inners._ʺx30ʺ.Instance;
+                this._ʺx30ʺ_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._ʺx30ʺ.Instance;
             }
             
-            public __GeneratedPartialV1.CstNodes.Inners._ʺx30ʺ _ʺx30ʺ_1 { get; }
+            public __GeneratedPartialV1.Realized.CstNodes.Inners._ʺx30ʺ _ʺx30ʺ_1 { get; }
             public static _ʺx30ʺ Instance { get; } = new _ʺx30ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -39,10 +39,10 @@ namespace __GeneratedPartialV1.CstNodes.Rules
         {
             private _ʺx31ʺ()
             {
-                this._ʺx31ʺ_1 = __GeneratedPartialV1.CstNodes.Inners._ʺx31ʺ.Instance;
+                this._ʺx31ʺ_1 = __GeneratedPartialV1.Realized.CstNodes.Inners._ʺx31ʺ.Instance;
             }
             
-            public __GeneratedPartialV1.CstNodes.Inners._ʺx31ʺ _ʺx31ʺ_1 { get; }
+            public __GeneratedPartialV1.Realized.CstNodes.Inners._ʺx31ʺ _ʺx31ʺ_1 { get; }
             public static _ʺx31ʺ Instance { get; } = new _ʺx31ʺ();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)

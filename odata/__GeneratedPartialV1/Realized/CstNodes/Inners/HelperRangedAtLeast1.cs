@@ -1,4 +1,4 @@
-namespace __GeneratedPartialV1.CstNodes.Inners
+namespace __GeneratedPartialV1.Realized.CstNodes.Inners
 {
     public sealed class HelperRangedAtLeast1<T> : System.Collections.Generic.IEnumerable<T>
     {

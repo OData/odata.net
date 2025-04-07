@@ -1,13 +1,13 @@
-namespace __GeneratedPartialV1.CstNodes.Rules
+namespace __GeneratedPartialV1.Realized.CstNodes.Rules
 {
     public sealed class _OCTET
     {
-        public _OCTET(__GeneratedPartialV1.CstNodes.Inners._Ⰳx00ⲻFF _Ⰳx00ⲻFF_1)
+        public _OCTET(__GeneratedPartialV1.Realized.CstNodes.Inners._Ⰳx00ⲻFF _Ⰳx00ⲻFF_1)
         {
             this._Ⰳx00ⲻFF_1 = _Ⰳx00ⲻFF_1;
         }
         
-        public __GeneratedPartialV1.CstNodes.Inners._Ⰳx00ⲻFF _Ⰳx00ⲻFF_1 { get; }
+        public __GeneratedPartialV1.Realized.CstNodes.Inners._Ⰳx00ⲻFF _Ⰳx00ⲻFF_1 { get; }
     }
     
 }

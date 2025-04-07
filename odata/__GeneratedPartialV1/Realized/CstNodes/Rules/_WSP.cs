@@ -1,4 +1,4 @@
-namespace __GeneratedPartialV1.CstNodes.Rules
+namespace __GeneratedPartialV1.Realized.CstNodes.Rules
 {
     public abstract class _WSP
     {
@@ -23,10 +23,10 @@ namespace __GeneratedPartialV1.CstNodes.Rules
         {
             private _SP()
             {
-                this._SP_1 = __GeneratedPartialV1.CstNodes.Rules._SP.Instance;
+                this._SP_1 = __GeneratedPartialV1.Realized.CstNodes.Rules._SP.Instance;
             }
             
-            public __GeneratedPartialV1.CstNodes.Rules._SP _SP_1 { get; }
+            public __GeneratedPartialV1.Realized.CstNodes.Rules._SP _SP_1 { get; }
             public static _SP Instance { get; } = new _SP();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -39,10 +39,10 @@ namespace __GeneratedPartialV1.CstNodes.Rules
         {
             private _HTAB()
             {
-                this._HTAB_1 = __GeneratedPartialV1.CstNodes.Rules._HTAB.Instance;
+                this._HTAB_1 = __GeneratedPartialV1.Realized.CstNodes.Rules._HTAB.Instance;
             }
             
-            public __GeneratedPartialV1.CstNodes.Rules._HTAB _HTAB_1 { get; }
+            public __GeneratedPartialV1.Realized.CstNodes.Rules._HTAB _HTAB_1 { get; }
             public static _HTAB Instance { get; } = new _HTAB();
             
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)

@@ -1,4 +1,4 @@
-namespace __GeneratedPartialV1.CstNodes.Rules
+namespace __GeneratedPartialV1.Realized.CstNodes.Rules
 {
     public sealed class _LWSP
     {
