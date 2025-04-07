@@ -19,6 +19,7 @@ namespace _GeneratorV7
                     cstNodes.RuleCstNodes.Classes.ToList(),
                     new[]
                     {
+                        "System",
                         "CombinatorParsingV3",
                     });
             var innerCstNodes =
@@ -27,6 +28,7 @@ namespace _GeneratorV7
                     cstNodes.InnerCstNodes.Classes.ToList(),
                     new[]
                     {
+                        "System",
                         "CombinatorParsingV3",
                     });
 
@@ -145,7 +147,7 @@ if (typeof(TMode) == typeof(ParseMode.Deferred))
 }
 else
 {
-    return new {{@class.Name}}<ParseMode.Deferred>(this.cachedOutput);
+    return new {{@class.Name}}<ParseMode.Deferred>(this.realizationResult);
 }
 """
                             ),
@@ -158,7 +160,7 @@ else
                             "Realize",
                             Enumerable.Empty<MethodParameter>(),
 """
-return cachedOutput.Value;
+return realizationResult.Value;
 """
                             ),
                         new MethodDefinition(
@@ -186,7 +188,7 @@ if (input.Current == '/') //// TODO
 {
     return new RealizationResult<char, {{@class.Name}}<ParseMode.Realized>>(
         true,
-        new {{@class.Name}}<ParseMode.Realized>(this.cachedOutput),
+        new {{@class.Name}}<ParseMode.Realized>(this.realizationResult),
         input.Next());
 }
 else
