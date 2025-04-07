@@ -723,7 +723,7 @@
                 @"C:\github\odata.net\odata\__GeneratedPartialV1\Realized\CstNodes\Inners"
                 );
 
-            /*GenerateDeferred(
+            GenerateDeferred(
                 fullRulesText,
                 false,
                 "__GeneratedPartialV1.Deferred.CstNodes.Rules",
@@ -731,7 +731,7 @@
                 @"C:\github\odata.net\odata\__GeneratedPartialV1\Deferred\CstNodes\Rules",
                 @"C:\github\odata.net\odata\__GeneratedPartialV1\Deferred\CstNodes\Inners",
                true
-                );*/
+                );
         }
 
         private static void GenerateDeferred(
