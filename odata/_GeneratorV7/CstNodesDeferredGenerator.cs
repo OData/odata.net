@@ -52,7 +52,6 @@
 
         private IEnumerable<Class> Translate(Class toTranslate)
         {
-            //// TODO you're not generating any of the factory classes
             if (toTranslate.Properties.Where(property => property.Name == "Instance" && property.IsStatic).Any())
             {
                 char parsedCharacter;
