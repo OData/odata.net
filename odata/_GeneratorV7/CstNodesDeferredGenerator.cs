@@ -124,7 +124,7 @@
                 toTranslate
                     .Properties
                     .Select(
-                        // TODO these should be fields
+                        //// TODO these should be fields
                         property =>
                             new PropertyDefinition(
                                 AccessModifier.Private,
@@ -135,6 +135,7 @@
                                 false,
                                 null))
                     .Append(
+                        //// TODO this should be a field
                         new PropertyDefinition(
                             AccessModifier.Private,
                             false,
