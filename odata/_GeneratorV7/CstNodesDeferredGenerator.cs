@@ -67,6 +67,38 @@
                     yield break;
                 }
 
+                // the factory methods for the cst node
+                yield return new Class(
+                    AccessModifier.Public,
+                    ClassModifier.Static,
+                    toTranslate.Name,
+                    Enumerable.Empty<string>(),
+                    null,
+                    Enumerable.Empty<ConstructorDefinition>(),
+                    new[]
+                    {
+                        new MethodDefinition(
+                            AccessModifier.Public, 
+                            ClassModifier.Static,
+                            false,
+                            $"{toTranslate.Name}<ParseMode.Deferred>",
+                            Enumerable.Empty<string>(),
+                            "Create",
+                            new[]
+                            {
+                                new MethodParameter(
+                                    "IFuture<IRealizationResult<char>>",
+                                    "previousNodeRealizationResult"),
+                            },
+$$"""
+return {{toTranslate.Name}}<ParseMode.Deferred>.Create(previousNodeRealizationResult);
+"""
+                            ),
+                    },
+                    Enumerable.Empty<Class>(),
+                    Enumerable.Empty<PropertyDefinition>());
+
+                // the cst node
                 yield return new Class(
                     AccessModifier.Public,
                     ClassModifier.Sealed,
