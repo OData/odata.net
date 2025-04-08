@@ -119,8 +119,34 @@
                             .Append(
                                 "this.realizationResult = realizationResult;")),
                 },
-                Enumerable.Empty<MethodDefinition>(), //// TODO
-                Enumerable.Empty<Class>(), //// TODO
+                new[]
+                {
+                    new MethodDefinition(
+                        AccessModifier.Public, 
+                        ClassModifier.None, 
+                        false,
+                        $"{toTranslate.Name}<ParseMode.Deferred>",
+                        Enumerable.Empty<string>(),
+                        "Convert",
+                        Enumerable.Empty<MethodParameter>(),
+$$"""
+if (typeof(TMode) == typeof(ParseMode.Deferred))
+{
+    return new {{toTranslate.Name}}<ParseMode.Deferred>(
+        {{string.Join("," + Environment.NewLine, toTranslate
+            .Properties
+            .Select(
+                property => $"this._{property.Name}.Select(_ => _.Convert())"))
+                    }});
+}
+else
+{
+    return new {{toTranslate.Name}}<ParseMode.Deferred>(this.slash.Value.Convert(), this.characters.Value.Convert(), this.realizationResult);
+}
+"""
+                        ),
+                },
+                Enumerable.Empty<Class>(),
                 toTranslate
                     .Properties
                     .Select(
@@ -144,7 +170,19 @@
                             true,
                             false,
                             null))
-                //// TODO append the properties
+                    .Concat(
+                        toTranslate
+                            .Properties
+                            .Select(
+                                property =>
+                                    new PropertyDefinition(
+                                        AccessModifier.Public,
+                                        false,
+                                        $"{property.Type}<TMode>",
+                                        property.Name,
+                                        true, //// TODO need a way to define this getter body
+                                        false,
+                                        null)))
                 );
         }
 
