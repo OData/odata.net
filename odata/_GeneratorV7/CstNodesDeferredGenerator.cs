@@ -89,7 +89,7 @@
                             .Select(
                                 property =>
                                     new MethodParameter(
-                                        $"IFuture<{property.Type}>",
+                                        $"IFuture<{property.Type}<TMode>>",
                                         property.Name)),
                         toTranslate
                             .Properties
@@ -105,7 +105,7 @@
                             .Select(
                                 property =>
                                     new MethodParameter(
-                                        property.Type,
+                                        $"{property.Type}<TMode>",
                                         property.Name))
                             .Append(
                                 new MethodParameter(
