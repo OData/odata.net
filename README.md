@@ -1,10 +1,10 @@
-﻿﻿﻿# OData .NET Libraries
+﻿﻿# OData .NET Libraries
  Build  | Status
 --------|---------
 Rolling | <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/422/badge"/>
 Nightly | <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/107/badge"/>
 
-## 1. Introductionasdf
+## 1. Introductionasdfasdf
 
 The [OData .NET Libraries](http://odata.github.io/odata.net) (or OData .NET, for short) project includes the implementation of core functionalities of OData protocol on the .NET platform, including URI parsing, request and response reading and writing, Entity Data Model (EDM) building, and a .Net OData client which can be used to consume an OData service. It is a fully open sourced project maintained by Microsoft OData team. The libraries are used by the [WebApi](https://github.com/OData/WebApi) and [RESTier](https://github.com/odata/RESTier) libraries for building OData Services.
 
