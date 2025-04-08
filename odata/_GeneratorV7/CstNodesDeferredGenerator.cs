@@ -133,21 +133,72 @@ $$"""
 if (typeof(TMode) == typeof(ParseMode.Deferred))
 {
     return new {{toTranslate.Name}}<ParseMode.Deferred>(
-        {{string.Join("," + Environment.NewLine, toTranslate
-            .Properties
-            .Select(
-                property => $"this._{property.Name}.Select(_ => _.Convert())"))
-                    }});
+        {{
+            string.Join(
+                "," + Environment.NewLine, 
+                toTranslate
+                    .Properties
+                    .Select(
+                        property => $"this._{property.Name}.Select(_ => _.Convert())"))
+        }});
 }
 else
 {
     return new {{toTranslate.Name}}<ParseMode.Deferred>(
-        {{string.Join("," + Environment.NewLine, toTranslate
-            .Properties
-            .Select(
-                property => $"this._{property.Name}.Value.Convert()"))
-                    }},
+        {{
+            string.Join(
+                "," + Environment.NewLine, 
+                toTranslate
+                    .Properties
+                    .Select(
+                        property => $"this._{property.Name}.Value.Convert()"))
+        }},
         this.realizationResult);
+}
+"""
+                        ),
+                    new MethodDefinition(
+                        AccessModifier.Public,
+                        ClassModifier.None,
+                        false,
+                        $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>",
+                        Enumerable.Empty<string>(),
+                        "Realize",
+                        Enumerable.Empty<MethodParameter>(),
+"""
+return this.realizationResult.Value;
+"""
+                        ),
+                    new MethodDefinition(
+                        AccessModifier.Private,
+                        ClassModifier.None,
+                        false,
+                        $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>",
+                        Enumerable.Empty<string>(),
+                        "RealizeImpl",
+                        Enumerable.Empty<MethodParameter>(),
+$$"""
+var output = this.{{toTranslate.Properties.Last().Name}}.Realize();
+if (output.Success)
+{
+    return new RealizationResult<char, {{toTranslate.Name}}<ParseMode.Realized>>(
+        true,
+        new {{toTranslate.Name}}<ParseMode.Realized>(
+            {{
+                string.Join(
+                    "," + Environment.NewLine,
+                    toTranslate
+                        .Properties
+                        .Select(
+                            property =>
+                                $"this.{property.Name}.Realize().RealizedValue"))
+            }},
+            this.realizationResult), 
+        output.RemainingTokens);
+}
+else
+{
+    return new RealizationResult<char, {{toTranslate.Name}}<ParseMode.Realized>>(false, default, output.RemainingTokens);
 }
 """
                         ),
