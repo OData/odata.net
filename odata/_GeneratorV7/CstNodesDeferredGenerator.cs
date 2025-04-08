@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using System.Security.Principal;
     using AbnfParserGenerator;
 
     public sealed class CstNodesDeferredGenerator
@@ -71,7 +71,7 @@
             //// TODO factory class
 
             // the cst node
-            /*yield return new Class(
+            yield return new Class(
                 AccessModifier.Public,
                 ClassModifier.Sealed,
                 toTranslate.Name,
@@ -83,17 +83,46 @@
                 new[]
                 {
                     new ConstructorDefinition(
-                        AccessModifier.Internal,
-
-                        new[]
-                        {
-                            new MethodParameter(
-                                "IFuture<IRealizationResult<char>>",
-                                "previousNodeRealizationResult"),
-                        })
-                }
-                )*/
-            yield break;
+                        AccessModifier.Private,
+                        toTranslate
+                            .Properties
+                            .Select(
+                                property =>
+                                    new MethodParameter(
+                                        $"IFuture<{property.Type}>",
+                                        property.Name)),
+                        toTranslate
+                            .Properties
+                            .Select(
+                                property =>
+                                    $"this._{property.Name} = {property.Name};")
+                            .Append(
+                                $"this.realizationResult = new Future<IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>>(this.RealizeImpl);")),
+                    new ConstructorDefinition(
+                        AccessModifier.Private,
+                        toTranslate
+                            .Properties
+                            .Select(
+                                property =>
+                                    new MethodParameter(
+                                        property.Type,
+                                        property.Name))
+                            .Append(
+                                new MethodParameter(
+                                    $"IFuture<IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>>",
+                                    "realizationResult")),
+                        toTranslate
+                            .Properties
+                            .Select(
+                                property =>
+                                    $"this._{property.Name} = new Future<{property.Type}>(() => {property.Name});")
+                            .Append(
+                                "this.realizationResult = realizationResult")),
+                },
+                Enumerable.Empty<MethodDefinition>(), //// TODO
+                Enumerable.Empty<Class>(), //// TODO
+                Enumerable.Empty<PropertyDefinition>() //// TODO
+                );
         }
 
         private IEnumerable<Class> TranslateDiscriminatedUnion(Class toTranslate)
