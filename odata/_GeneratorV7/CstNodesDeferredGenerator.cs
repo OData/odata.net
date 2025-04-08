@@ -1,9 +1,11 @@
-﻿using AbnfParserGenerator;
-using System;
-using System.Linq;
-
-namespace _GeneratorV7
+﻿namespace _GeneratorV7
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using AbnfParserGenerator;
+
     public sealed class CstNodesDeferredGenerator
     {
         public CstNodesDeferredGenerator()
@@ -42,52 +44,56 @@ namespace _GeneratorV7
                 );
         }
 
-        private void Translate(Namespace toTranslate)
+        private Namespace Translate(Namespace toTranslate)
         {
-            for (int i = 0; i < toTranslate.Classes.Count; ++i)
-            {
-                var cstNode = toTranslate.Classes[i];
-                var translated = Translate(cstNode);
-                if (translated == null)
+            return new Namespace(
+                toTranslate.Name,
+                Translate(toTranslate.Classes).ToList(),
+                new[]
                 {
-                    toTranslate.Classes.RemoveAt(i);
-                    --i;
-                    continue;
-                    //// throw new System.Exception("TODO");
-                }
+                    "System",
+                    "CombinatorParsingV3",
+                });
+        }
 
-                if (translated != null)
+        private IEnumerable<Class> Translate(IEnumerable<Class> toTranslate)
+        {
+            foreach (var @class in toTranslate)
+            {
+                var translated = Translate(@class);
+                foreach (var element in translated)
                 {
-                    toTranslate.Classes[i] = translated;
+                    yield return element;
                 }
             }
         }
 
-        private Class? Translate(Class @class)
+        private IEnumerable<Class> Translate(Class toTranslate)
         {
-            if (@class.Properties.Where(property => property.Name == "Instance" && property.IsStatic).Any())
+            //// TODO you're not generating any of the factory classes
+            if (toTranslate.Properties.Where(property => property.Name == "Instance" && property.IsStatic).Any())
             {
                 char parsedCharacter;
-                if (@class.Name.Length == 4)
+                if (toTranslate.Name.Length == 4)
                 {
-                    var ascii = Convert.ToInt32(@class.Name.Substring(2, 2), 16); //// TODO this throws
+                    var ascii = Convert.ToInt32(toTranslate.Name.Substring(2, 2), 16); //// TODO this throws
 
                     parsedCharacter = (char)ascii;
                 }
                 else
                 {
-                    return null;
+                    yield break;
                 }
 
-                return new Class(
+                yield return new Class(
                     AccessModifier.Public,
                     ClassModifier.Sealed,
-                    @class.Name,
+                    toTranslate.Name,
                     new[]
                     {
                         "TMode",
                     },
-                    $"IAstNode<char, {@class.Name}<ParseMode.Realized>>, IFromRealizedable<{@class.Name}<ParseMode.Deferred>> where TMode : ParseMode", //// TODO generic type constraints should be built into `class`
+                    $"IAstNode<char, {toTranslate.Name}<ParseMode.Realized>>, IFromRealizedable<{toTranslate.Name}<ParseMode.Deferred>> where TMode : ParseMode", //// TODO generic type constraints should be built into `class`
                     new[]
                     {
                         new ConstructorDefinition(
@@ -106,14 +112,14 @@ if (typeof(TMode) != typeof(ParseMode.Deferred))
 
 this.previousNodeRealizationResult = previousNodeRealizationResult;
 
-this.realizationResult = new Future<IRealizationResult<char, {{@class.Name}}<ParseMode.Realized>>>(() => this.RealizeImpl());
+this.realizationResult = new Future<IRealizationResult<char, {{toTranslate.Name}}<ParseMode.Realized>>>(() => this.RealizeImpl());
 """.Split(Environment.NewLine)),
                         new ConstructorDefinition(
                             AccessModifier.Private,
                             new[]
                             {
                                 new MethodParameter(
-                                    $"IFuture<IRealizationResult<char, {@class.Name}<ParseMode.Realized>>>",
+                                    $"IFuture<IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>>",
                                     "realizationResult"),
                             },
 """
@@ -131,7 +137,7 @@ this.realizationResult = realizationResult;
                             AccessModifier.Internal,
                             ClassModifier.Static,
                             false,
-                            $"{@class.Name}<ParseMode.Deferred>",
+                            $"{toTranslate.Name}<ParseMode.Deferred>",
                             Enumerable.Empty<string>(),
                             "Create",
                             new[]
@@ -141,25 +147,25 @@ this.realizationResult = realizationResult;
                                     "previousNodeRealizationResult"),
                             },
 $"""         
-return new {@class.Name}<ParseMode.Deferred>(previousNodeRealizationResult);
+return new {toTranslate.Name}<ParseMode.Deferred>(previousNodeRealizationResult);
 """
                         ),
                         new MethodDefinition(
                             AccessModifier.Public,
                             ClassModifier.None,
                             false,
-                            $"{@class.Name}<ParseMode.Deferred>",
+                            $"{toTranslate.Name}<ParseMode.Deferred>",
                             Enumerable.Empty<string>(),
                             "Convert",
                             Enumerable.Empty<MethodParameter>(),
 $$"""
 if (typeof(TMode) == typeof(ParseMode.Deferred))
 {
-    return new {{@class.Name}}<ParseMode.Deferred>(this.previousNodeRealizationResult);
+    return new {{toTranslate.Name}}<ParseMode.Deferred>(this.previousNodeRealizationResult);
 }
 else
 {
-    return new {{@class.Name}}<ParseMode.Deferred>(this.realizationResult);
+    return new {{toTranslate.Name}}<ParseMode.Deferred>(this.realizationResult);
 }
 """
                             ),
@@ -167,7 +173,7 @@ else
                             AccessModifier.Public,
                             ClassModifier.None,
                             false,
-                            $"IRealizationResult<char, {@class.Name}<ParseMode.Realized>>",
+                            $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>",
                             Enumerable.Empty<string>(),
                             "Realize",
                             Enumerable.Empty<MethodParameter>(),
@@ -179,7 +185,7 @@ return realizationResult.Value;
                             AccessModifier.Private,
                             ClassModifier.None,
                             false,
-                            $"IRealizationResult<char, {@class.Name}<ParseMode.Realized>>",
+                            $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>",
                             Enumerable.Empty<string>(),
                             "RealizeImpl",
                             Enumerable.Empty<MethodParameter>(),
@@ -187,25 +193,25 @@ $$"""
 var output = this.previousNodeRealizationResult.Value;
 if (!output.Success)
 {
-    return new RealizationResult<char, {{@class.Name}}<ParseMode.Realized>>(false, default, output.RemainingTokens);
+    return new RealizationResult<char, {{toTranslate.Name}}<ParseMode.Realized>>(false, default, output.RemainingTokens);
 }
 
 var input = output.RemainingTokens;
 if (input == null)
 {
-    return new RealizationResult<char, {{@class.Name}}<ParseMode.Realized>>(false, default, output.RemainingTokens);
+    return new RealizationResult<char, {{toTranslate.Name}}<ParseMode.Realized>>(false, default, output.RemainingTokens);
 }
 
 if (input.Current == '{{parsedCharacter}}')
 {
-    return new RealizationResult<char, {{@class.Name}}<ParseMode.Realized>>(
+    return new RealizationResult<char, {{toTranslate.Name}}<ParseMode.Realized>>(
         true,
-        new {{@class.Name}}<ParseMode.Realized>(this.realizationResult),
+        new {{toTranslate.Name}}<ParseMode.Realized>(this.realizationResult),
         input.Next());
 }
 else
 {
-    return new RealizationResult<char, {{@class.Name}}<ParseMode.Realized>>(false, default, input);
+    return new RealizationResult<char, {{toTranslate.Name}}<ParseMode.Realized>>(false, default, input);
 }
 """
                             ),
@@ -224,15 +230,13 @@ else
                         new PropertyDefinition( //// TODO this should be a field, not a property
                             AccessModifier.Private,
                             false,
-                            $"IFuture<IRealizationResult<char, {@class.Name}<ParseMode.Realized>>>",
+                            $"IFuture<IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>>",
                             "realizationResult",
                             true,
                             false,
                             null),
                     });
             }
-
-            return null;
         }
     }
 }

@@ -881,7 +881,13 @@
                 }
                 else
                 {
-                    filePath = Path.Combine(folderPath, $"{@class.Name}.cs");
+                    var fileName = @class.Name;
+                    if (@class.GenericTypeParameters.Any())
+                    {
+                        fileName += $"{{{string.Join(", ", @class.GenericTypeParameters)}}}";
+                    }
+
+                    filePath = Path.Combine(folderPath, $"{fileName}.cs");
                 }
 
                 var classTranscriber = new ClassTranscriber();
