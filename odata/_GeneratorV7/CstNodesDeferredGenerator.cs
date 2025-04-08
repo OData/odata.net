@@ -121,7 +121,20 @@
                 },
                 Enumerable.Empty<MethodDefinition>(), //// TODO
                 Enumerable.Empty<Class>(), //// TODO
-                Enumerable.Empty<PropertyDefinition>() //// TODO
+                toTranslate
+                    .Properties
+                    .Select(
+                        // TODO these should be fields
+                        property =>
+                            new PropertyDefinition(
+                                AccessModifier.Private,
+                                false,
+                                $"IFuture<{property.Type}<TMode>>",
+                                $"_{property.Name}",
+                                true,
+                                false,
+                                null))
+                    //// TODO append the properties
                 );
         }
 
