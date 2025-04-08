@@ -187,7 +187,7 @@
 
             public Segment<ParseMode.Deferred> Transcribe(Segment<ParseMode.Realized> value, StringBuilder builder)
             {
-                return new Segment<ParseMode.Deferred>(
+                return Segment.Create(
                     new Future<Slash<ParseMode.Deferred>>(
                         () => SlashRewriter.Instance.Transcribe(value.Slash, builder)),
                     new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(

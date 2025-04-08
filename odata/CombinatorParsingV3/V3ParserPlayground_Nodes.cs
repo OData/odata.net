@@ -341,6 +341,13 @@
             {
                 return Segment<ParseMode.Deferred>.Create(previousNodeRealizationResult);
             }
+
+            public static Segment<ParseMode.Deferred> Create(
+                IFuture<Slash<ParseMode.Deferred>> slash,
+                IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>> characters)
+            {
+                return Segment<ParseMode.Deferred>.Create(slash, characters);
+            }
         }
 
         public sealed class Segment<TMode> : IAstNode<char, Segment<ParseMode.Realized>>, IFromRealizedable<Segment<ParseMode.Deferred>> where TMode : ParseMode
@@ -359,7 +366,14 @@
                 return new Segment<ParseMode.Deferred>(slash, characters);
             }
 
-            internal Segment(
+            internal static Segment<ParseMode.Deferred> Create(
+                IFuture<Slash<ParseMode.Deferred>> slash,
+                IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>> characters)
+            {
+                return new Segment<ParseMode.Deferred>(slash, characters);
+            }
+
+            private Segment(
                 IFuture<Slash<TMode>> slash, 
                 IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters)
             {
