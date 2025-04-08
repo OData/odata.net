@@ -115,7 +115,7 @@
                             .Properties
                             .Select(
                                 property =>
-                                    $"this._{property.Name} = new Future<{property.Type}>(() => {property.Name});")
+                                    $"this._{property.Name} = new Future<{property.Type}<TMode>>(() => {property.Name});")
                             .Append(
                                 "this.realizationResult = realizationResult;")),
                 },
