@@ -15,40 +15,22 @@
         public (Namespace RuleCstNodes, Namespace InnerCstNodes) CreateDeferred(
             (Namespace RuleCstNodes, Namespace InnerCstNodes) cstNodes)
         {
-            var ruleCstNodes =
-                new Namespace(
-                    cstNodes.RuleCstNodes.Name,
-                    cstNodes.RuleCstNodes.Classes.ToList(),
-                    new[]
-                    {
-                        "System",
-                        "CombinatorParsingV3",
-                    });
-            var innerCstNodes =
-                new Namespace(
-                    cstNodes.InnerCstNodes.Name,
-                    cstNodes.InnerCstNodes.Classes.ToList(),
-                    new[]
-                    {
-                        "System",
-                        "CombinatorParsingV3",
-                    });
-
-            Translate(ruleCstNodes);
-            Translate(innerCstNodes);
+            var translatedRules = Translate(cstNodes.RuleCstNodes);
+            var translatedInners = Translate(cstNodes.InnerCstNodes);
 
             return
                 (
-                    ruleCstNodes,
-                    innerCstNodes
+                    translatedRules,
+                    translatedInners
                 );
         }
 
         private Namespace Translate(Namespace toTranslate)
         {
+            var translatedClasses = Translate(toTranslate.Classes).ToList();
             return new Namespace(
                 toTranslate.Name,
-                Translate(toTranslate.Classes).ToList(),
+                translatedClasses,
                 new[]
                 {
                     "System",
@@ -60,10 +42,10 @@
         {
             foreach (var @class in toTranslate)
             {
-                var translated = Translate(@class);
-                foreach (var element in translated)
+                var translatedClasses = Translate(@class);
+                foreach (var translatedClass in translatedClasses)
                 {
-                    yield return element;
+                    yield return translatedClass;
                 }
             }
         }
