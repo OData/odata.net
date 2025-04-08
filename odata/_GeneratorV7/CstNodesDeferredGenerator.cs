@@ -141,7 +141,13 @@ if (typeof(TMode) == typeof(ParseMode.Deferred))
 }
 else
 {
-    return new {{toTranslate.Name}}<ParseMode.Deferred>(this.slash.Value.Convert(), this.characters.Value.Convert(), this.realizationResult);
+    return new {{toTranslate.Name}}<ParseMode.Deferred>(
+        {{string.Join("," + Environment.NewLine, toTranslate
+            .Properties
+            .Select(
+                property => $"this._{property.Name}.Value.Convert()"))
+                    }},
+        this.realizationResult);
 }
 """
                         ),
