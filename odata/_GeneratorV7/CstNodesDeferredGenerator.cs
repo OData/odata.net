@@ -67,6 +67,18 @@ namespace _GeneratorV7
         {
             if (@class.Properties.Where(property => property.Name == "Instance" && property.IsStatic).Any())
             {
+                char parsedCharacter;
+                if (@class.Name.Length == 4)
+                {
+                    var ascii = Convert.ToInt32(@class.Name.Substring(2, 2), 16); //// TODO this throws
+
+                    parsedCharacter = (char)ascii;
+                }
+                else
+                {
+                    return null;
+                }
+
                 return new Class(
                     AccessModifier.Public,
                     ClassModifier.Sealed,
@@ -184,7 +196,7 @@ if (input == null)
     return new RealizationResult<char, {{@class.Name}}<ParseMode.Realized>>(false, default, output.RemainingTokens);
 }
 
-if (input.Current == '/') //// TODO
+if (input.Current == '{{parsedCharacter}}')
 {
     return new RealizationResult<char, {{@class.Name}}<ParseMode.Realized>>(
         true,
@@ -201,7 +213,7 @@ else
                     Enumerable.Empty<Class>(),
                     new[]
                     {
-                        new PropertyDefinition(
+                        new PropertyDefinition( //// TODO this should be a field, not a property
                             AccessModifier.Private,
                             false,
                             "IFuture<IRealizationResult<char>>",
@@ -209,7 +221,7 @@ else
                             true,
                             false,
                             null),
-                        new PropertyDefinition(
+                        new PropertyDefinition( //// TODO this should be a field, not a property
                             AccessModifier.Private,
                             false,
                             $"IFuture<IRealizationResult<char, {@class.Name}<ParseMode.Realized>>>",

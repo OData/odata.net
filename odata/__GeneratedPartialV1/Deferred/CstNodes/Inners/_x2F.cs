@@ -65,7 +65,7 @@ if (input == null)
     return new RealizationResult<char, _x2F<ParseMode.Realized>>(false, default, output.RemainingTokens);
 }
 
-if (input.Current == '/') //// TODO
+if (input.Current == '/')
 {
     return new RealizationResult<char, _x2F<ParseMode.Realized>>(
         true,
