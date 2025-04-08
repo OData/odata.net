@@ -117,7 +117,7 @@
                                 property =>
                                     $"this._{property.Name} = new Future<{property.Type}>(() => {property.Name});")
                             .Append(
-                                "this.realizationResult = realizationResult")),
+                                "this.realizationResult = realizationResult;")),
                 },
                 Enumerable.Empty<MethodDefinition>(), //// TODO
                 Enumerable.Empty<Class>(), //// TODO
@@ -134,7 +134,16 @@
                                 true,
                                 false,
                                 null))
-                    //// TODO append the properties
+                    .Append(
+                        new PropertyDefinition(
+                            AccessModifier.Private,
+                            false,
+                            $"IFuture<IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>>",
+                            "realizationResult",
+                            true,
+                            false,
+                            null))
+                //// TODO append the properties
                 );
         }
 
