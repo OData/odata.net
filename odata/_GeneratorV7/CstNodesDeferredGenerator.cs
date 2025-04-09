@@ -381,9 +381,26 @@ if (!this.previousNodeRealizationResult.Value.Success)
     return new RealizationResult<char, {{realizedTypeName}}>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
 }
 
-//// TODO
-throw new Exception("TODO");
-"""                         
+""",
+                            string.Join(
+                                string.Empty,
+                                toTranslate
+                                    .NestedClasses
+                                    .Where(nestedClass => !string.Equals(nestedClass.Name, "Visitor"))
+                                    .Select(
+                                        nestedClass =>
+$$"""
+var {{nestedClass.Name}} = {{realizedTypeName}}.{{nestedClass.Name}}.Create(this.previousNodeRealizationResult);
+if ({{nestedClass.Name}}.Success)
+{
+    return {{nestedClass.Name}};
+}
+
+"""
+                                    )),
+$$"""
+return new RealizationResult<char, {{realizedTypeName}}>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
+"""
                             )),
                 },
                 Enumerable.Empty<Class>(),
