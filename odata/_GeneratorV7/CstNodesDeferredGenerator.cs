@@ -352,8 +352,25 @@ this.realizationResult = realizationResult;
                 },
                 Enumerable.Empty<MethodDefinition>(), //// TODO
                 Enumerable.Empty<Class>(), //// TODO
-                Enumerable.Empty<PropertyDefinition>() //// TODO
-                );
+                new[]
+                {
+                    new PropertyDefinition(
+                        AccessModifier.Private,
+                        false,
+                        "IFuture<IRealizationResult<char>>",
+                        "previousNodeRealizationResult",
+                        true,
+                        false,
+                        null),
+                    new PropertyDefinition(
+                        AccessModifier.Private,
+                        false,
+                        $"IFuture<IRealizationResult<char, {realizedTypeName}>>",
+                        "realizationResult",
+                        true,
+                        false,
+                        null),
+                });
 
             yield return new Class(
                 AccessModifier.Public,
