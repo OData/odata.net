@@ -574,6 +574,16 @@ return new {{deferredTypeName}}(Future.Create(() => this.RealizationResult));
                                 Enumerable.Empty<Class>(),
                                 nestedClass
                                     .Properties
+                                    .Select(
+                                        property =>
+                                            new PropertyDefinition(
+                                                AccessModifier.Public,
+                                                false,
+                                                $"{property.Type}<ParseMode.Realized>",
+                                                property.Name,
+                                                true,
+                                                false,
+                                                null))
                                     .Prepend(
                                         new PropertyDefinition(
                                             AccessModifier.Private,
