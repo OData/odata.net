@@ -311,7 +311,21 @@ throw new System.Exception("TODO");
                 Enumerable.Empty<Class>(),
                 Enumerable.Empty<PropertyDefinition>());
 
+
             var realizedTypeName = $"{toTranslate.Name}Realized";
+            var deferredTypeName = $"{toTranslate.Name}Deferred";
+            yield return new Class(
+                AccessModifier.Public,
+                ClassModifier.Sealed,
+                deferredTypeName,
+                Enumerable.Empty<string>(),
+                $"IAstNode<char, {realizedTypeName}>",
+                Enumerable.Empty<ConstructorDefinition>(), //// TODO
+                Enumerable.Empty<MethodDefinition>(), //// TODO
+                Enumerable.Empty<Class>(), //// TODO
+                Enumerable.Empty<PropertyDefinition>() //// TODO
+                );
+
             yield return new Class(
                 AccessModifier.Public,
                 ClassModifier.Abstract,
