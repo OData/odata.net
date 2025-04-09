@@ -430,7 +430,7 @@ return new RealizationResult<char, {{realizedTypeName}}>(false, default, this.pr
                 ClassModifier.Abstract,
                 realizedTypeName,
                 Enumerable.Empty<string>(),
-                null, //// TODO add ifromrealizedable
+                $"IFromRealizedable<{deferredTypeName}>",
                 new[]
                 {
                     new ConstructorDefinition(
@@ -440,7 +440,15 @@ return new RealizationResult<char, {{realizedTypeName}}>(false, default, this.pr
                 },
                 new[]
                 {
-                    //// TODO add convert
+                    new MethodDefinition(
+                        AccessModifier.Public,
+                        ClassModifier.Abstract, 
+                        false,
+                        deferredTypeName,
+                        Enumerable.Empty<string>(),
+                        "Convert",
+                        Enumerable.Empty<MethodParameter>(),
+                        null),
                     new MethodDefinition(
                         AccessModifier.Protected,
                         ClassModifier.Abstract,
@@ -529,7 +537,18 @@ else
 }
 """
                                         ),
-                                    //// TODO add convert
+                                    new MethodDefinition(
+                                        AccessModifier.Public, 
+                                        ClassModifier.None,
+                                        true,
+                                        deferredTypeName,
+                                        Enumerable.Empty<string>(),
+                                        "Convert",
+                                        Enumerable.Empty<MethodParameter>(),
+$$"""
+return new {{deferredTypeName}}(Future.Create(() => this.RealizationResult));
+"""
+                                        ),
                                     new MethodDefinition(
                                         AccessModifier.Protected,
                                         ClassModifier.None,
