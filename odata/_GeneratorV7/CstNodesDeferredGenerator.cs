@@ -501,7 +501,7 @@ if (input == null)
     return new RealizationResult<char, {{realizedTypeName}}.{{nestedClass.Name}}>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new {{realizedTypeName}}.{{nestedClass.Name}}(input.Next());
     return a.RealizationResult;
