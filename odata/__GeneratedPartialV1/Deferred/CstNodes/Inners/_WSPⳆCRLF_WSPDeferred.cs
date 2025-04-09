@@ -31,9 +31,18 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
 {
     return new RealizationResult<char, _WSPⳆCRLF_WSPRealized>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
 }
+var _WSP = _WSPⳆCRLF_WSPRealized._WSP.Create(this.previousNodeRealizationResult);
+if (_WSP.Success)
+{
+    return _WSP;
+}
 
-//// TODO
-throw new Exception("TODO");
+var _CRLF_WSP = _WSPⳆCRLF_WSPRealized._CRLF_WSP.Create(this.previousNodeRealizationResult);
+if (_CRLF_WSP.Success)
+{
+    return _CRLF_WSP;
+}
+return new RealizationResult<char, _WSPⳆCRLF_WSPRealized>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
         }
     }
     

@@ -46,7 +46,7 @@ if (input == null)
     return new RealizationResult<char, _CTLRealized._Ⰳx00ⲻ1F>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _CTLRealized._Ⰳx00ⲻ1F(input.Next());
     return a.RealizationResult;
@@ -87,7 +87,7 @@ if (input == null)
     return new RealizationResult<char, _CTLRealized._Ⰳx7F>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _CTLRealized._Ⰳx7F(input.Next());
     return a.RealizationResult;

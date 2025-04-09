@@ -300,7 +300,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._00>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._00(input.Next());
     return a.RealizationResult;
@@ -341,7 +341,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._01>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._01(input.Next());
     return a.RealizationResult;
@@ -382,7 +382,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._02>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._02(input.Next());
     return a.RealizationResult;
@@ -423,7 +423,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._03>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._03(input.Next());
     return a.RealizationResult;
@@ -464,7 +464,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._04>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._04(input.Next());
     return a.RealizationResult;
@@ -505,7 +505,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._05>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._05(input.Next());
     return a.RealizationResult;
@@ -546,7 +546,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._06>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._06(input.Next());
     return a.RealizationResult;
@@ -587,7 +587,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._07>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._07(input.Next());
     return a.RealizationResult;
@@ -628,7 +628,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._08>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._08(input.Next());
     return a.RealizationResult;
@@ -669,7 +669,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._09>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._09(input.Next());
     return a.RealizationResult;
@@ -710,7 +710,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._0A>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._0A(input.Next());
     return a.RealizationResult;
@@ -751,7 +751,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._0B>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._0B(input.Next());
     return a.RealizationResult;
@@ -792,7 +792,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._0C>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._0C(input.Next());
     return a.RealizationResult;
@@ -833,7 +833,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._0D>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._0D(input.Next());
     return a.RealizationResult;
@@ -874,7 +874,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._0E>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._0E(input.Next());
     return a.RealizationResult;
@@ -915,7 +915,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._0F>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._0F(input.Next());
     return a.RealizationResult;
@@ -956,7 +956,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._10>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._10(input.Next());
     return a.RealizationResult;
@@ -997,7 +997,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._11>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._11(input.Next());
     return a.RealizationResult;
@@ -1038,7 +1038,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._12>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._12(input.Next());
     return a.RealizationResult;
@@ -1079,7 +1079,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._13>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._13(input.Next());
     return a.RealizationResult;
@@ -1120,7 +1120,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._14>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._14(input.Next());
     return a.RealizationResult;
@@ -1161,7 +1161,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._15>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._15(input.Next());
     return a.RealizationResult;
@@ -1202,7 +1202,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._16>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._16(input.Next());
     return a.RealizationResult;
@@ -1243,7 +1243,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._17>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._17(input.Next());
     return a.RealizationResult;
@@ -1284,7 +1284,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._18>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._18(input.Next());
     return a.RealizationResult;
@@ -1325,7 +1325,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._19>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._19(input.Next());
     return a.RealizationResult;
@@ -1366,7 +1366,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._1A>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._1A(input.Next());
     return a.RealizationResult;
@@ -1407,7 +1407,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._1B>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._1B(input.Next());
     return a.RealizationResult;
@@ -1448,7 +1448,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._1C>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._1C(input.Next());
     return a.RealizationResult;
@@ -1489,7 +1489,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._1D>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._1D(input.Next());
     return a.RealizationResult;
@@ -1530,7 +1530,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._1E>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._1E(input.Next());
     return a.RealizationResult;
@@ -1571,7 +1571,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._1F>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._1F(input.Next());
     return a.RealizationResult;
@@ -1612,7 +1612,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._20>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._20(input.Next());
     return a.RealizationResult;
@@ -1653,7 +1653,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._21>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._21(input.Next());
     return a.RealizationResult;
@@ -1694,7 +1694,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._22>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._22(input.Next());
     return a.RealizationResult;
@@ -1735,7 +1735,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._23>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._23(input.Next());
     return a.RealizationResult;
@@ -1776,7 +1776,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._24>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._24(input.Next());
     return a.RealizationResult;
@@ -1817,7 +1817,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._25>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._25(input.Next());
     return a.RealizationResult;
@@ -1858,7 +1858,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._26>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._26(input.Next());
     return a.RealizationResult;
@@ -1899,7 +1899,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._27>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._27(input.Next());
     return a.RealizationResult;
@@ -1940,7 +1940,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._28>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._28(input.Next());
     return a.RealizationResult;
@@ -1981,7 +1981,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._29>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._29(input.Next());
     return a.RealizationResult;
@@ -2022,7 +2022,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._2A>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._2A(input.Next());
     return a.RealizationResult;
@@ -2063,7 +2063,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._2B>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._2B(input.Next());
     return a.RealizationResult;
@@ -2104,7 +2104,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._2C>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._2C(input.Next());
     return a.RealizationResult;
@@ -2145,7 +2145,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._2D>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._2D(input.Next());
     return a.RealizationResult;
@@ -2186,7 +2186,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._2E>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._2E(input.Next());
     return a.RealizationResult;
@@ -2227,7 +2227,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._2F>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._2F(input.Next());
     return a.RealizationResult;
@@ -2268,7 +2268,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._30>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._30(input.Next());
     return a.RealizationResult;
@@ -2309,7 +2309,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._31>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._31(input.Next());
     return a.RealizationResult;
@@ -2350,7 +2350,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._32>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._32(input.Next());
     return a.RealizationResult;
@@ -2391,7 +2391,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._33>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._33(input.Next());
     return a.RealizationResult;
@@ -2432,7 +2432,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._34>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._34(input.Next());
     return a.RealizationResult;
@@ -2473,7 +2473,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._35>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._35(input.Next());
     return a.RealizationResult;
@@ -2514,7 +2514,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._36>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._36(input.Next());
     return a.RealizationResult;
@@ -2555,7 +2555,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._37>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._37(input.Next());
     return a.RealizationResult;
@@ -2596,7 +2596,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._38>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._38(input.Next());
     return a.RealizationResult;
@@ -2637,7 +2637,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._39>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._39(input.Next());
     return a.RealizationResult;
@@ -2678,7 +2678,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._3A>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._3A(input.Next());
     return a.RealizationResult;
@@ -2719,7 +2719,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._3B>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._3B(input.Next());
     return a.RealizationResult;
@@ -2760,7 +2760,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._3C>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._3C(input.Next());
     return a.RealizationResult;
@@ -2801,7 +2801,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._3D>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._3D(input.Next());
     return a.RealizationResult;
@@ -2842,7 +2842,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._3E>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._3E(input.Next());
     return a.RealizationResult;
@@ -2883,7 +2883,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._3F>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._3F(input.Next());
     return a.RealizationResult;
@@ -2924,7 +2924,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._40>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._40(input.Next());
     return a.RealizationResult;
@@ -2965,7 +2965,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._41>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._41(input.Next());
     return a.RealizationResult;
@@ -3006,7 +3006,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._42>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._42(input.Next());
     return a.RealizationResult;
@@ -3047,7 +3047,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._43>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._43(input.Next());
     return a.RealizationResult;
@@ -3088,7 +3088,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._44>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._44(input.Next());
     return a.RealizationResult;
@@ -3129,7 +3129,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._45>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._45(input.Next());
     return a.RealizationResult;
@@ -3170,7 +3170,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._46>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._46(input.Next());
     return a.RealizationResult;
@@ -3211,7 +3211,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._47>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._47(input.Next());
     return a.RealizationResult;
@@ -3252,7 +3252,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._48>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._48(input.Next());
     return a.RealizationResult;
@@ -3293,7 +3293,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._49>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._49(input.Next());
     return a.RealizationResult;
@@ -3334,7 +3334,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._4A>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._4A(input.Next());
     return a.RealizationResult;
@@ -3375,7 +3375,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._4B>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._4B(input.Next());
     return a.RealizationResult;
@@ -3416,7 +3416,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._4C>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._4C(input.Next());
     return a.RealizationResult;
@@ -3457,7 +3457,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._4D>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._4D(input.Next());
     return a.RealizationResult;
@@ -3498,7 +3498,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._4E>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._4E(input.Next());
     return a.RealizationResult;
@@ -3539,7 +3539,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._4F>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._4F(input.Next());
     return a.RealizationResult;
@@ -3580,7 +3580,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._50>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._50(input.Next());
     return a.RealizationResult;
@@ -3621,7 +3621,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._51>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._51(input.Next());
     return a.RealizationResult;
@@ -3662,7 +3662,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._52>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._52(input.Next());
     return a.RealizationResult;
@@ -3703,7 +3703,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._53>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._53(input.Next());
     return a.RealizationResult;
@@ -3744,7 +3744,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._54>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._54(input.Next());
     return a.RealizationResult;
@@ -3785,7 +3785,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._55>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._55(input.Next());
     return a.RealizationResult;
@@ -3826,7 +3826,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._56>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._56(input.Next());
     return a.RealizationResult;
@@ -3867,7 +3867,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._57>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._57(input.Next());
     return a.RealizationResult;
@@ -3908,7 +3908,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._58>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._58(input.Next());
     return a.RealizationResult;
@@ -3949,7 +3949,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._59>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._59(input.Next());
     return a.RealizationResult;
@@ -3990,7 +3990,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._5A>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._5A(input.Next());
     return a.RealizationResult;
@@ -4031,7 +4031,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._5B>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._5B(input.Next());
     return a.RealizationResult;
@@ -4072,7 +4072,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._5C>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._5C(input.Next());
     return a.RealizationResult;
@@ -4113,7 +4113,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._5D>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._5D(input.Next());
     return a.RealizationResult;
@@ -4154,7 +4154,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._5E>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._5E(input.Next());
     return a.RealizationResult;
@@ -4195,7 +4195,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._5F>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._5F(input.Next());
     return a.RealizationResult;
@@ -4236,7 +4236,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._60>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._60(input.Next());
     return a.RealizationResult;
@@ -4277,7 +4277,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._61>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._61(input.Next());
     return a.RealizationResult;
@@ -4318,7 +4318,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._62>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._62(input.Next());
     return a.RealizationResult;
@@ -4359,7 +4359,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._63>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._63(input.Next());
     return a.RealizationResult;
@@ -4400,7 +4400,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._64>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._64(input.Next());
     return a.RealizationResult;
@@ -4441,7 +4441,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._65>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._65(input.Next());
     return a.RealizationResult;
@@ -4482,7 +4482,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._66>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._66(input.Next());
     return a.RealizationResult;
@@ -4523,7 +4523,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._67>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._67(input.Next());
     return a.RealizationResult;
@@ -4564,7 +4564,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._68>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._68(input.Next());
     return a.RealizationResult;
@@ -4605,7 +4605,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._69>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._69(input.Next());
     return a.RealizationResult;
@@ -4646,7 +4646,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._6A>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._6A(input.Next());
     return a.RealizationResult;
@@ -4687,7 +4687,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._6B>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._6B(input.Next());
     return a.RealizationResult;
@@ -4728,7 +4728,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._6C>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._6C(input.Next());
     return a.RealizationResult;
@@ -4769,7 +4769,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._6D>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._6D(input.Next());
     return a.RealizationResult;
@@ -4810,7 +4810,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._6E>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._6E(input.Next());
     return a.RealizationResult;
@@ -4851,7 +4851,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._6F>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._6F(input.Next());
     return a.RealizationResult;
@@ -4892,7 +4892,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._70>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._70(input.Next());
     return a.RealizationResult;
@@ -4933,7 +4933,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._71>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._71(input.Next());
     return a.RealizationResult;
@@ -4974,7 +4974,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._72>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._72(input.Next());
     return a.RealizationResult;
@@ -5015,7 +5015,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._73>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._73(input.Next());
     return a.RealizationResult;
@@ -5056,7 +5056,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._74>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._74(input.Next());
     return a.RealizationResult;
@@ -5097,7 +5097,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._75>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._75(input.Next());
     return a.RealizationResult;
@@ -5138,7 +5138,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._76>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._76(input.Next());
     return a.RealizationResult;
@@ -5179,7 +5179,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._77>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._77(input.Next());
     return a.RealizationResult;
@@ -5220,7 +5220,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._78>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._78(input.Next());
     return a.RealizationResult;
@@ -5261,7 +5261,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._79>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._79(input.Next());
     return a.RealizationResult;
@@ -5302,7 +5302,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._7A>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._7A(input.Next());
     return a.RealizationResult;
@@ -5343,7 +5343,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._7B>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._7B(input.Next());
     return a.RealizationResult;
@@ -5384,7 +5384,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._7C>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._7C(input.Next());
     return a.RealizationResult;
@@ -5425,7 +5425,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._7D>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._7D(input.Next());
     return a.RealizationResult;
@@ -5466,7 +5466,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._7E>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._7E(input.Next());
     return a.RealizationResult;
@@ -5507,7 +5507,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._7F>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._7F(input.Next());
     return a.RealizationResult;
@@ -5548,7 +5548,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._80>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._80(input.Next());
     return a.RealizationResult;
@@ -5589,7 +5589,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._81>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._81(input.Next());
     return a.RealizationResult;
@@ -5630,7 +5630,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._82>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._82(input.Next());
     return a.RealizationResult;
@@ -5671,7 +5671,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._83>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._83(input.Next());
     return a.RealizationResult;
@@ -5712,7 +5712,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._84>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._84(input.Next());
     return a.RealizationResult;
@@ -5753,7 +5753,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._85>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._85(input.Next());
     return a.RealizationResult;
@@ -5794,7 +5794,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._86>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._86(input.Next());
     return a.RealizationResult;
@@ -5835,7 +5835,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._87>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._87(input.Next());
     return a.RealizationResult;
@@ -5876,7 +5876,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._88>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._88(input.Next());
     return a.RealizationResult;
@@ -5917,7 +5917,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._89>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._89(input.Next());
     return a.RealizationResult;
@@ -5958,7 +5958,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._8A>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._8A(input.Next());
     return a.RealizationResult;
@@ -5999,7 +5999,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._8B>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._8B(input.Next());
     return a.RealizationResult;
@@ -6040,7 +6040,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._8C>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._8C(input.Next());
     return a.RealizationResult;
@@ -6081,7 +6081,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._8D>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._8D(input.Next());
     return a.RealizationResult;
@@ -6122,7 +6122,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._8E>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._8E(input.Next());
     return a.RealizationResult;
@@ -6163,7 +6163,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._8F>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._8F(input.Next());
     return a.RealizationResult;
@@ -6204,7 +6204,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._90>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._90(input.Next());
     return a.RealizationResult;
@@ -6245,7 +6245,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._91>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._91(input.Next());
     return a.RealizationResult;
@@ -6286,7 +6286,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._92>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._92(input.Next());
     return a.RealizationResult;
@@ -6327,7 +6327,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._93>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._93(input.Next());
     return a.RealizationResult;
@@ -6368,7 +6368,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._94>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._94(input.Next());
     return a.RealizationResult;
@@ -6409,7 +6409,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._95>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._95(input.Next());
     return a.RealizationResult;
@@ -6450,7 +6450,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._96>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._96(input.Next());
     return a.RealizationResult;
@@ -6491,7 +6491,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._97>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._97(input.Next());
     return a.RealizationResult;
@@ -6532,7 +6532,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._98>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._98(input.Next());
     return a.RealizationResult;
@@ -6573,7 +6573,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._99>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._99(input.Next());
     return a.RealizationResult;
@@ -6614,7 +6614,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._9A>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._9A(input.Next());
     return a.RealizationResult;
@@ -6655,7 +6655,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._9B>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._9B(input.Next());
     return a.RealizationResult;
@@ -6696,7 +6696,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._9C>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._9C(input.Next());
     return a.RealizationResult;
@@ -6737,7 +6737,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._9D>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._9D(input.Next());
     return a.RealizationResult;
@@ -6778,7 +6778,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._9E>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._9E(input.Next());
     return a.RealizationResult;
@@ -6819,7 +6819,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._9F>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._9F(input.Next());
     return a.RealizationResult;
@@ -6860,7 +6860,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._A0>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._A0(input.Next());
     return a.RealizationResult;
@@ -6901,7 +6901,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._A1>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._A1(input.Next());
     return a.RealizationResult;
@@ -6942,7 +6942,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._A2>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._A2(input.Next());
     return a.RealizationResult;
@@ -6983,7 +6983,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._A3>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._A3(input.Next());
     return a.RealizationResult;
@@ -7024,7 +7024,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._A4>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._A4(input.Next());
     return a.RealizationResult;
@@ -7065,7 +7065,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._A5>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._A5(input.Next());
     return a.RealizationResult;
@@ -7106,7 +7106,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._A6>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._A6(input.Next());
     return a.RealizationResult;
@@ -7147,7 +7147,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._A7>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._A7(input.Next());
     return a.RealizationResult;
@@ -7188,7 +7188,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._A8>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._A8(input.Next());
     return a.RealizationResult;
@@ -7229,7 +7229,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._A9>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._A9(input.Next());
     return a.RealizationResult;
@@ -7270,7 +7270,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._AA>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._AA(input.Next());
     return a.RealizationResult;
@@ -7311,7 +7311,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._AB>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._AB(input.Next());
     return a.RealizationResult;
@@ -7352,7 +7352,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._AC>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._AC(input.Next());
     return a.RealizationResult;
@@ -7393,7 +7393,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._AD>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._AD(input.Next());
     return a.RealizationResult;
@@ -7434,7 +7434,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._AE>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._AE(input.Next());
     return a.RealizationResult;
@@ -7475,7 +7475,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._AF>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._AF(input.Next());
     return a.RealizationResult;
@@ -7516,7 +7516,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._B0>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._B0(input.Next());
     return a.RealizationResult;
@@ -7557,7 +7557,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._B1>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._B1(input.Next());
     return a.RealizationResult;
@@ -7598,7 +7598,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._B2>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._B2(input.Next());
     return a.RealizationResult;
@@ -7639,7 +7639,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._B3>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._B3(input.Next());
     return a.RealizationResult;
@@ -7680,7 +7680,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._B4>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._B4(input.Next());
     return a.RealizationResult;
@@ -7721,7 +7721,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._B5>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._B5(input.Next());
     return a.RealizationResult;
@@ -7762,7 +7762,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._B6>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._B6(input.Next());
     return a.RealizationResult;
@@ -7803,7 +7803,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._B7>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._B7(input.Next());
     return a.RealizationResult;
@@ -7844,7 +7844,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._B8>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._B8(input.Next());
     return a.RealizationResult;
@@ -7885,7 +7885,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._B9>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._B9(input.Next());
     return a.RealizationResult;
@@ -7926,7 +7926,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._BA>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._BA(input.Next());
     return a.RealizationResult;
@@ -7967,7 +7967,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._BB>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._BB(input.Next());
     return a.RealizationResult;
@@ -8008,7 +8008,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._BC>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._BC(input.Next());
     return a.RealizationResult;
@@ -8049,7 +8049,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._BD>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._BD(input.Next());
     return a.RealizationResult;
@@ -8090,7 +8090,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._BE>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._BE(input.Next());
     return a.RealizationResult;
@@ -8131,7 +8131,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._BF>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._BF(input.Next());
     return a.RealizationResult;
@@ -8172,7 +8172,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._C0>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._C0(input.Next());
     return a.RealizationResult;
@@ -8213,7 +8213,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._C1>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._C1(input.Next());
     return a.RealizationResult;
@@ -8254,7 +8254,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._C2>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._C2(input.Next());
     return a.RealizationResult;
@@ -8295,7 +8295,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._C3>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._C3(input.Next());
     return a.RealizationResult;
@@ -8336,7 +8336,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._C4>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._C4(input.Next());
     return a.RealizationResult;
@@ -8377,7 +8377,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._C5>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._C5(input.Next());
     return a.RealizationResult;
@@ -8418,7 +8418,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._C6>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._C6(input.Next());
     return a.RealizationResult;
@@ -8459,7 +8459,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._C7>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._C7(input.Next());
     return a.RealizationResult;
@@ -8500,7 +8500,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._C8>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._C8(input.Next());
     return a.RealizationResult;
@@ -8541,7 +8541,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._C9>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._C9(input.Next());
     return a.RealizationResult;
@@ -8582,7 +8582,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._CA>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._CA(input.Next());
     return a.RealizationResult;
@@ -8623,7 +8623,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._CB>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._CB(input.Next());
     return a.RealizationResult;
@@ -8664,7 +8664,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._CC>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._CC(input.Next());
     return a.RealizationResult;
@@ -8705,7 +8705,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._CD>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._CD(input.Next());
     return a.RealizationResult;
@@ -8746,7 +8746,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._CE>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._CE(input.Next());
     return a.RealizationResult;
@@ -8787,7 +8787,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._CF>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._CF(input.Next());
     return a.RealizationResult;
@@ -8828,7 +8828,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._D0>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._D0(input.Next());
     return a.RealizationResult;
@@ -8869,7 +8869,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._D1>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._D1(input.Next());
     return a.RealizationResult;
@@ -8910,7 +8910,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._D2>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._D2(input.Next());
     return a.RealizationResult;
@@ -8951,7 +8951,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._D3>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._D3(input.Next());
     return a.RealizationResult;
@@ -8992,7 +8992,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._D4>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._D4(input.Next());
     return a.RealizationResult;
@@ -9033,7 +9033,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._D5>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._D5(input.Next());
     return a.RealizationResult;
@@ -9074,7 +9074,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._D6>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._D6(input.Next());
     return a.RealizationResult;
@@ -9115,7 +9115,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._D7>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._D7(input.Next());
     return a.RealizationResult;
@@ -9156,7 +9156,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._D8>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._D8(input.Next());
     return a.RealizationResult;
@@ -9197,7 +9197,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._D9>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._D9(input.Next());
     return a.RealizationResult;
@@ -9238,7 +9238,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._DA>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._DA(input.Next());
     return a.RealizationResult;
@@ -9279,7 +9279,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._DB>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._DB(input.Next());
     return a.RealizationResult;
@@ -9320,7 +9320,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._DC>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._DC(input.Next());
     return a.RealizationResult;
@@ -9361,7 +9361,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._DD>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._DD(input.Next());
     return a.RealizationResult;
@@ -9402,7 +9402,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._DE>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._DE(input.Next());
     return a.RealizationResult;
@@ -9443,7 +9443,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._DF>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._DF(input.Next());
     return a.RealizationResult;
@@ -9484,7 +9484,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._E0>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._E0(input.Next());
     return a.RealizationResult;
@@ -9525,7 +9525,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._E1>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._E1(input.Next());
     return a.RealizationResult;
@@ -9566,7 +9566,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._E2>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._E2(input.Next());
     return a.RealizationResult;
@@ -9607,7 +9607,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._E3>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._E3(input.Next());
     return a.RealizationResult;
@@ -9648,7 +9648,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._E4>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._E4(input.Next());
     return a.RealizationResult;
@@ -9689,7 +9689,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._E5>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._E5(input.Next());
     return a.RealizationResult;
@@ -9730,7 +9730,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._E6>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._E6(input.Next());
     return a.RealizationResult;
@@ -9771,7 +9771,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._E7>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._E7(input.Next());
     return a.RealizationResult;
@@ -9812,7 +9812,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._E8>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._E8(input.Next());
     return a.RealizationResult;
@@ -9853,7 +9853,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._E9>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._E9(input.Next());
     return a.RealizationResult;
@@ -9894,7 +9894,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._EA>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._EA(input.Next());
     return a.RealizationResult;
@@ -9935,7 +9935,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._EB>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._EB(input.Next());
     return a.RealizationResult;
@@ -9976,7 +9976,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._EC>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._EC(input.Next());
     return a.RealizationResult;
@@ -10017,7 +10017,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._ED>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._ED(input.Next());
     return a.RealizationResult;
@@ -10058,7 +10058,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._EE>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._EE(input.Next());
     return a.RealizationResult;
@@ -10099,7 +10099,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._EF>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._EF(input.Next());
     return a.RealizationResult;
@@ -10140,7 +10140,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._F0>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._F0(input.Next());
     return a.RealizationResult;
@@ -10181,7 +10181,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._F1>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._F1(input.Next());
     return a.RealizationResult;
@@ -10222,7 +10222,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._F2>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._F2(input.Next());
     return a.RealizationResult;
@@ -10263,7 +10263,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._F3>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._F3(input.Next());
     return a.RealizationResult;
@@ -10304,7 +10304,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._F4>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._F4(input.Next());
     return a.RealizationResult;
@@ -10345,7 +10345,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._F5>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._F5(input.Next());
     return a.RealizationResult;
@@ -10386,7 +10386,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._F6>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._F6(input.Next());
     return a.RealizationResult;
@@ -10427,7 +10427,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._F7>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._F7(input.Next());
     return a.RealizationResult;
@@ -10468,7 +10468,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._F8>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._F8(input.Next());
     return a.RealizationResult;
@@ -10509,7 +10509,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._F9>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._F9(input.Next());
     return a.RealizationResult;
@@ -10550,7 +10550,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._FA>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._FA(input.Next());
     return a.RealizationResult;
@@ -10591,7 +10591,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._FB>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._FB(input.Next());
     return a.RealizationResult;
@@ -10632,7 +10632,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._FC>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._FC(input.Next());
     return a.RealizationResult;
@@ -10673,7 +10673,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._FD>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._FD(input.Next());
     return a.RealizationResult;
@@ -10714,7 +10714,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._FE>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._FE(input.Next());
     return a.RealizationResult;
@@ -10755,7 +10755,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx00ⲻFFRealized._FF>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx00ⲻFFRealized._FF(input.Next());
     return a.RealizationResult;

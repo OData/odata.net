@@ -31,9 +31,18 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
 {
     return new RealizationResult<char, _alphaNumericRealized>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
 }
+var _ʺx41ʺ = _alphaNumericRealized._ʺx41ʺ.Create(this.previousNodeRealizationResult);
+if (_ʺx41ʺ.Success)
+{
+    return _ʺx41ʺ;
+}
 
-//// TODO
-throw new Exception("TODO");
+var _ʺx43ʺ = _alphaNumericRealized._ʺx43ʺ.Create(this.previousNodeRealizationResult);
+if (_ʺx43ʺ.Success)
+{
+    return _ʺx43ʺ;
+}
+return new RealizationResult<char, _alphaNumericRealized>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
         }
     }
     

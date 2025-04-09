@@ -383,7 +383,7 @@ if (!this.previousNodeRealizationResult.Value.Success)
 
 """,
                             string.Join(
-                                string.Empty,
+                                Environment.NewLine,
                                 toTranslate
                                     .NestedClasses
                                     .Where(nestedClass => !string.Equals(nestedClass.Name, "Visitor"))

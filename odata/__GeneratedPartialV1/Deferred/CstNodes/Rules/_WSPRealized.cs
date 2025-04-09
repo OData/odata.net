@@ -46,7 +46,7 @@ if (input == null)
     return new RealizationResult<char, _WSPRealized._SP>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _WSPRealized._SP(input.Next());
     return a.RealizationResult;
@@ -87,7 +87,7 @@ if (input == null)
     return new RealizationResult<char, _WSPRealized._HTAB>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _WSPRealized._HTAB(input.Next());
     return a.RealizationResult;

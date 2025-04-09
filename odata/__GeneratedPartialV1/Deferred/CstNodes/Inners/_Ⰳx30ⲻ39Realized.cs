@@ -54,7 +54,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._30>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx30ⲻ39Realized._30(input.Next());
     return a.RealizationResult;
@@ -95,7 +95,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._31>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx30ⲻ39Realized._31(input.Next());
     return a.RealizationResult;
@@ -136,7 +136,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._32>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx30ⲻ39Realized._32(input.Next());
     return a.RealizationResult;
@@ -177,7 +177,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._33>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx30ⲻ39Realized._33(input.Next());
     return a.RealizationResult;
@@ -218,7 +218,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._34>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx30ⲻ39Realized._34(input.Next());
     return a.RealizationResult;
@@ -259,7 +259,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._35>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx30ⲻ39Realized._35(input.Next());
     return a.RealizationResult;
@@ -300,7 +300,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._36>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx30ⲻ39Realized._36(input.Next());
     return a.RealizationResult;
@@ -341,7 +341,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._37>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx30ⲻ39Realized._37(input.Next());
     return a.RealizationResult;
@@ -382,7 +382,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._38>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx30ⲻ39Realized._38(input.Next());
     return a.RealizationResult;
@@ -423,7 +423,7 @@ if (input == null)
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._39>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _Ⰳx30ⲻ39Realized._39(input.Next());
     return a.RealizationResult;

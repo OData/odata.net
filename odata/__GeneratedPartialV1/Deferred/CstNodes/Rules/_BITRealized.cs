@@ -46,7 +46,7 @@ if (input == null)
     return new RealizationResult<char, _BITRealized._ʺx30ʺ>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _BITRealized._ʺx30ʺ(input.Next());
     return a.RealizationResult;
@@ -87,7 +87,7 @@ if (input == null)
     return new RealizationResult<char, _BITRealized._ʺx31ʺ>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _BITRealized._ʺx31ʺ(input.Next());
     return a.RealizationResult;

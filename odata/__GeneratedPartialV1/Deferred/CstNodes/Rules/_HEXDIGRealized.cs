@@ -51,7 +51,7 @@ if (input == null)
     return new RealizationResult<char, _HEXDIGRealized._DIGIT>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _HEXDIGRealized._DIGIT(input.Next());
     return a.RealizationResult;
@@ -92,7 +92,7 @@ if (input == null)
     return new RealizationResult<char, _HEXDIGRealized._ʺx41ʺ>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _HEXDIGRealized._ʺx41ʺ(input.Next());
     return a.RealizationResult;
@@ -133,7 +133,7 @@ if (input == null)
     return new RealizationResult<char, _HEXDIGRealized._ʺx42ʺ>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _HEXDIGRealized._ʺx42ʺ(input.Next());
     return a.RealizationResult;
@@ -174,7 +174,7 @@ if (input == null)
     return new RealizationResult<char, _HEXDIGRealized._ʺx43ʺ>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _HEXDIGRealized._ʺx43ʺ(input.Next());
     return a.RealizationResult;
@@ -215,7 +215,7 @@ if (input == null)
     return new RealizationResult<char, _HEXDIGRealized._ʺx44ʺ>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _HEXDIGRealized._ʺx44ʺ(input.Next());
     return a.RealizationResult;
@@ -256,7 +256,7 @@ if (input == null)
     return new RealizationResult<char, _HEXDIGRealized._ʺx45ʺ>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _HEXDIGRealized._ʺx45ʺ(input.Next());
     return a.RealizationResult;
@@ -297,7 +297,7 @@ if (input == null)
     return new RealizationResult<char, _HEXDIGRealized._ʺx46ʺ>(false, default, input);
 }
 
-if (input.Current == 'A') //// TODO do this correctly...
+if (input.Current == 'A') //// TODO do this correctly...du's aren't always terminal nodes, and they aren't even terminal nodes in your case
 {
     var a = new _HEXDIGRealized._ʺx46ʺ(input.Next());
     return a.RealizationResult;
