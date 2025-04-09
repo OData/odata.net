@@ -115,7 +115,7 @@
                             .Properties
                             .Select(
                                 property =>
-                                    $"this._{property.Name} = new Future<{property.Type}<TMode>>(() => {property.Name});")
+                                    $"this._{property.Name} = Future.Create(() => {property.Name});")
                             .Append(
                                 "this.realizationResult = realizationResult;")),
                 },
@@ -235,7 +235,7 @@ else
                                     new PropertyDefinition(
                                         AccessModifier.Public,
                                         false,
-                                        $"{property.Type}<TMode>",
+                                        TranslateType(property.Type),
                                         property.Name,
                                         true, //// TODO need a way to define this getter body
                                         false,
