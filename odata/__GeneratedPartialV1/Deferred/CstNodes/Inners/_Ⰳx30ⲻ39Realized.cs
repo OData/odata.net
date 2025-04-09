@@ -3,12 +3,13 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
     using System;
     using CombinatorParsingV3;
     
-    public abstract class _Ⰳx30ⲻ39Realized
+    public abstract class _Ⰳx30ⲻ39Realized : IFromRealizedable<_Ⰳx30ⲻ39Deferred>
     {
         private _Ⰳx30ⲻ39Realized()
         {
         }
         
+        public abstract _Ⰳx30ⲻ39Deferred Convert();
         protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
         
         public abstract class Visitor<TResult, TContext>
@@ -65,6 +66,11 @@ else
 }
             }
             
+            public override _Ⰳx30ⲻ39Deferred Convert()
+            {
+                return new _Ⰳx30ⲻ39Deferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -104,6 +110,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._31>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx30ⲻ39Deferred Convert()
+            {
+                return new _Ⰳx30ⲻ39Deferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -147,6 +158,11 @@ else
 }
             }
             
+            public override _Ⰳx30ⲻ39Deferred Convert()
+            {
+                return new _Ⰳx30ⲻ39Deferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -186,6 +202,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._33>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx30ⲻ39Deferred Convert()
+            {
+                return new _Ⰳx30ⲻ39Deferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -229,6 +250,11 @@ else
 }
             }
             
+            public override _Ⰳx30ⲻ39Deferred Convert()
+            {
+                return new _Ⰳx30ⲻ39Deferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -268,6 +294,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._35>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx30ⲻ39Deferred Convert()
+            {
+                return new _Ⰳx30ⲻ39Deferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -311,6 +342,11 @@ else
 }
             }
             
+            public override _Ⰳx30ⲻ39Deferred Convert()
+            {
+                return new _Ⰳx30ⲻ39Deferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -350,6 +386,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._37>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx30ⲻ39Deferred Convert()
+            {
+                return new _Ⰳx30ⲻ39Deferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -393,6 +434,11 @@ else
 }
             }
             
+            public override _Ⰳx30ⲻ39Deferred Convert()
+            {
+                return new _Ⰳx30ⲻ39Deferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -432,6 +478,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx30ⲻ39Realized._39>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx30ⲻ39Deferred Convert()
+            {
+                return new _Ⰳx30ⲻ39Deferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)

@@ -3,12 +3,13 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
     using System;
     using CombinatorParsingV3;
     
-    public abstract class _WSPⳆCRLF_WSPRealized
+    public abstract class _WSPⳆCRLF_WSPRealized : IFromRealizedable<_WSPⳆCRLF_WSPDeferred>
     {
         private _WSPⳆCRLF_WSPRealized()
         {
         }
         
+        public abstract _WSPⳆCRLF_WSPDeferred Convert();
         protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
         
         public abstract class Visitor<TResult, TContext>
@@ -57,6 +58,11 @@ else
 }
             }
             
+            public override _WSPⳆCRLF_WSPDeferred Convert()
+            {
+                return new _WSPⳆCRLF_WSPDeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -96,6 +102,11 @@ else
 {
     return new RealizationResult<char, _WSPⳆCRLF_WSPRealized._CRLF_WSP>(false, default, input);
 }
+            }
+            
+            public override _WSPⳆCRLF_WSPDeferred Convert()
+            {
+                return new _WSPⳆCRLF_WSPDeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)

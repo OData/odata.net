@@ -3,12 +3,13 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
     using System;
     using CombinatorParsingV3;
     
-    public abstract class _Ⰳx41ⲻ5ARealized
+    public abstract class _Ⰳx41ⲻ5ARealized : IFromRealizedable<_Ⰳx41ⲻ5ADeferred>
     {
         private _Ⰳx41ⲻ5ARealized()
         {
         }
         
+        public abstract _Ⰳx41ⲻ5ADeferred Convert();
         protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
         
         public abstract class Visitor<TResult, TContext>
@@ -81,6 +82,11 @@ else
 }
             }
             
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -120,6 +126,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._42>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -163,6 +174,11 @@ else
 }
             }
             
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -202,6 +218,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._44>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -245,6 +266,11 @@ else
 }
             }
             
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -284,6 +310,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._46>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -327,6 +358,11 @@ else
 }
             }
             
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -366,6 +402,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._48>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -409,6 +450,11 @@ else
 }
             }
             
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -448,6 +494,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4A>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -491,6 +542,11 @@ else
 }
             }
             
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -530,6 +586,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4C>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -573,6 +634,11 @@ else
 }
             }
             
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -612,6 +678,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4E>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -655,6 +726,11 @@ else
 }
             }
             
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -694,6 +770,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._50>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -737,6 +818,11 @@ else
 }
             }
             
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -776,6 +862,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._52>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -819,6 +910,11 @@ else
 }
             }
             
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -858,6 +954,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._54>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -901,6 +1002,11 @@ else
 }
             }
             
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -940,6 +1046,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._56>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -983,6 +1094,11 @@ else
 }
             }
             
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -1022,6 +1138,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._58>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -1065,6 +1186,11 @@ else
 }
             }
             
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -1104,6 +1230,11 @@ else
 {
     return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._5A>(false, default, input);
 }
+            }
+            
+            public override _Ⰳx41ⲻ5ADeferred Convert()
+            {
+                return new _Ⰳx41ⲻ5ADeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)

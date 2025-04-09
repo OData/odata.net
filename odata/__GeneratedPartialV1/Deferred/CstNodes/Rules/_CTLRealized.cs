@@ -3,12 +3,13 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
     using System;
     using CombinatorParsingV3;
     
-    public abstract class _CTLRealized
+    public abstract class _CTLRealized : IFromRealizedable<_CTLDeferred>
     {
         private _CTLRealized()
         {
         }
         
+        public abstract _CTLDeferred Convert();
         protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
         
         public abstract class Visitor<TResult, TContext>
@@ -57,6 +58,11 @@ else
 }
             }
             
+            public override _CTLDeferred Convert()
+            {
+                return new _CTLDeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -96,6 +102,11 @@ else
 {
     return new RealizationResult<char, _CTLRealized._Ⰳx7F>(false, default, input);
 }
+            }
+            
+            public override _CTLDeferred Convert()
+            {
+                return new _CTLDeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)

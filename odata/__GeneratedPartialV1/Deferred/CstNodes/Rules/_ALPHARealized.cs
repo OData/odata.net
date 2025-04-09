@@ -3,12 +3,13 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
     using System;
     using CombinatorParsingV3;
     
-    public abstract class _ALPHARealized
+    public abstract class _ALPHARealized : IFromRealizedable<_ALPHADeferred>
     {
         private _ALPHARealized()
         {
         }
         
+        public abstract _ALPHADeferred Convert();
         protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
         
         public abstract class Visitor<TResult, TContext>
@@ -57,6 +58,11 @@ else
 }
             }
             
+            public override _ALPHADeferred Convert()
+            {
+                return new _ALPHADeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -96,6 +102,11 @@ else
 {
     return new RealizationResult<char, _ALPHARealized._Ⰳx61ⲻ7A>(false, default, input);
 }
+            }
+            
+            public override _ALPHADeferred Convert()
+            {
+                return new _ALPHADeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)

@@ -3,12 +3,13 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
     using System;
     using CombinatorParsingV3;
     
-    public abstract class _HEXDIGRealized
+    public abstract class _HEXDIGRealized : IFromRealizedable<_HEXDIGDeferred>
     {
         private _HEXDIGRealized()
         {
         }
         
+        public abstract _HEXDIGDeferred Convert();
         protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
         
         public abstract class Visitor<TResult, TContext>
@@ -62,6 +63,11 @@ else
 }
             }
             
+            public override _HEXDIGDeferred Convert()
+            {
+                return new _HEXDIGDeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -101,6 +107,11 @@ else
 {
     return new RealizationResult<char, _HEXDIGRealized._ʺx41ʺ>(false, default, input);
 }
+            }
+            
+            public override _HEXDIGDeferred Convert()
+            {
+                return new _HEXDIGDeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -144,6 +155,11 @@ else
 }
             }
             
+            public override _HEXDIGDeferred Convert()
+            {
+                return new _HEXDIGDeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -183,6 +199,11 @@ else
 {
     return new RealizationResult<char, _HEXDIGRealized._ʺx43ʺ>(false, default, input);
 }
+            }
+            
+            public override _HEXDIGDeferred Convert()
+            {
+                return new _HEXDIGDeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -226,6 +247,11 @@ else
 }
             }
             
+            public override _HEXDIGDeferred Convert()
+            {
+                return new _HEXDIGDeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -267,6 +293,11 @@ else
 }
             }
             
+            public override _HEXDIGDeferred Convert()
+            {
+                return new _HEXDIGDeferred(Future.Create(() => this.RealizationResult));
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -306,6 +337,11 @@ else
 {
     return new RealizationResult<char, _HEXDIGRealized._ʺx46ʺ>(false, default, input);
 }
+            }
+            
+            public override _HEXDIGDeferred Convert()
+            {
+                return new _HEXDIGDeferred(Future.Create(() => this.RealizationResult));
             }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
