@@ -445,7 +445,25 @@ throw new System.Exception("TODO");
                                                     "TContext",
                                                     "context"),
                                             },
-                                            null)),
+                                            null))
+                                .Prepend(
+                                    new MethodDefinition(
+                                        AccessModifier.Public, 
+                                        ClassModifier.None, 
+                                        false, 
+                                        "TResult",
+                                        Enumerable.Empty<string>(),
+                                        "Visit",
+                                        new[]
+                                        {
+                                            new MethodParameter(
+                                                realizedTypeName,
+                                                "node"),
+                                            new MethodParameter(
+                                                "TContext",
+                                                "context"),
+                                        },
+                                        "return node.Dispatch(this, context);")),
                             Enumerable.Empty<Class>(),
                             Enumerable.Empty<PropertyDefinition>())),
                 Enumerable.Empty<PropertyDefinition>());
