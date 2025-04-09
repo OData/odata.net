@@ -212,7 +212,7 @@ else
                             new PropertyDefinition(
                                 AccessModifier.Private,
                                 false,
-                                $"IFuture<{property.Type}<TMode>>",
+                                $"IFuture<{TranslateType(property.Type)}>",
                                 $"_{property.Name}",
                                 true,
                                 false,
@@ -235,7 +235,7 @@ else
                                     new PropertyDefinition(
                                         AccessModifier.Public,
                                         false,
-                                        TranslateType(property.Type),
+                                        $"{property.Type}<TMode>",
                                         property.Name,
                                         true, //// TODO need a way to define this getter body
                                         false,
