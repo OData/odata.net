@@ -52,7 +52,11 @@
 
         private IEnumerable<Class> Translate(Class toTranslate)
         {
-            if (toTranslate.Properties.Where(property => property.Name == "Instance" && property.IsStatic).Any()) //// TODO should be single
+            if (toTranslate.Name.StartsWith("HelperRanged"))
+            {
+                return Enumerable.Empty<Class>();
+            }
+            else if (toTranslate.Properties.Where(property => property.Name == "Instance" && property.IsStatic).Any()) //// TODO should be single
             {
                 return TranslateTerminal(toTranslate);
             }
