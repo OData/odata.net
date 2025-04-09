@@ -56,11 +56,11 @@
             {
                 return Enumerable.Empty<Class>();
             }
-            else if (toTranslate.Properties.Where(property => property.Name == "Instance" && property.IsStatic).Any()) //// TODO should be single
+            else if (toTranslate.Properties.Where(property => property.Name == "Instance" && property.IsStatic).Any())
             {
                 return TranslateTerminal(toTranslate);
             }
-            else if (toTranslate.NestedClasses.Where(nestedClass => nestedClass.Name == "Visitor").Any()) //// TODO should be single
+            else if (toTranslate.NestedClasses.Where(nestedClass => nestedClass.Name == "Visitor").Any())
             {
                 return TranslateDiscriminatedUnion(toTranslate);
             }
