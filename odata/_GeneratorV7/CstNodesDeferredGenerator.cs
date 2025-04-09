@@ -126,6 +126,37 @@
                 new[]
                 {
                     new MethodDefinition(
+                        AccessModifier.Public,
+                        ClassModifier.Static,
+                        false,
+                        $"{toTranslate.Name}<ParseMode.Deferred>",
+                        Enumerable.Empty<string>(),
+                        "Create",
+                        new[]
+                        {
+                            new MethodParameter(
+                                "IFuture<IRealizationResult<char>>",
+                                "previousNodeRealizationResult"),
+                        },
+                        string.Join(
+                            Environment.NewLine,
+                            toTranslate
+                                .Properties
+                                .Select(
+                                    property =>
+                                    {
+                                        return string.Empty; //// TODO implement this
+                                    })
+                                .Append(
+                                    string.Concat(
+                                        $"return new {toTranslate.Name}<ParseMode.Deferred>(",
+                                        string.Join(
+                                            ", ",
+                                            toTranslate
+                                                .Properties
+                                                .Select(property => property.Name)),
+                                        ");")))),
+                    new MethodDefinition(
                         AccessModifier.Public, 
                         ClassModifier.None, 
                         false,
