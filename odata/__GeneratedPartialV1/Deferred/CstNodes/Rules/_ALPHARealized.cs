@@ -1,0 +1,56 @@
+namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
+{
+    using System;
+    using CombinatorParsingV3;
+    
+    public abstract class _ALPHARealized
+    {
+        private _ALPHARealized()
+        {
+        }
+        
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+        
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(_ALPHARealized node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+            
+            protected internal abstract TResult Accept(_Ⰳx41ⲻ5A node, TContext context);
+            protected internal abstract TResult Accept(_Ⰳx61ⲻ7A node, TContext context);
+        }
+        
+        public sealed class _Ⰳx41ⲻ5A : _ALPHARealized
+        {
+            private _Ⰳx41ⲻ5A(ITokenStream<char>? nextTokens)
+            {
+                this.RealizationResult = new RealizationResult<char, _ALPHARealized._Ⰳx41ⲻ5A>(true, this, nextTokens);
+            }
+            
+            private IRealizationResult<char, _ALPHARealized._Ⰳx41ⲻ5A> RealizationResult { get; }
+            
+            protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+        
+        public sealed class _Ⰳx61ⲻ7A : _ALPHARealized
+        {
+            private _Ⰳx61ⲻ7A(ITokenStream<char>? nextTokens)
+            {
+                this.RealizationResult = new RealizationResult<char, _ALPHARealized._Ⰳx61ⲻ7A>(true, this, nextTokens);
+            }
+            
+            private IRealizationResult<char, _ALPHARealized._Ⰳx61ⲻ7A> RealizationResult { get; }
+            
+            protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
+        }
+    }
+    
+}
