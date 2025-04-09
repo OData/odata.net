@@ -113,9 +113,13 @@
             builder.Append($"var {property.Name} = Future.Create(() => ");
 
             TranslateType(property.Type, out var translatedType, out var elementType);
+
+            var isDiscriminatedUnion = (elementType != null && IsDiscriminatedUnion(elementType, rules, inners)) || IsDiscriminatedUnion(translatedType, rules, inners);
+
             string deferredType;
             string realizedType;
-            if ((elementType != null && IsDiscriminatedUnion(elementType, rules, inners)) || IsDiscriminatedUnion(translatedType, rules, inners))
+
+            if (isDiscriminatedUnion)
             {
                 deferredType = $"{elementType}Deferred";
                 realizedType = $"{elementType}Realized";
@@ -138,7 +142,14 @@
             }
             else
             {
-                builder.Append($"{translatedType}.Create({previousNodeRealizationResult}));");
+                if (isDiscriminatedUnion)
+                {
+                    builder.Append($"new {deferredType}({previousNodeRealizationResult}));");
+                }
+                else
+                {
+                    builder.Append($"{translatedType}.Create({previousNodeRealizationResult}));");
+                }
             }
         }
 
