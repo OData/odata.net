@@ -145,6 +145,7 @@
                                 .Select(
                                     property =>
                                     {
+                                        var propertyType = TranslateType(property.Type);
                                         return string.Empty; //// TODO implement this
                                     })
                                 .Append(
