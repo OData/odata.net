@@ -352,6 +352,7 @@ throw new System.Exception("TODO");
                 },
                 toTranslate
                     .NestedClasses
+                    .Where(nestedClass => !string.Equals(nestedClass.Name, "Visitor"))
                     .Select(
                         nestedClass =>
                             new Class(
@@ -398,7 +399,7 @@ throw new System.Exception("TODO");
                                                 "TContext",
                                                 "context"),
                                         },
-                                        "return visitor.Accept(this, context"),
+                                        "return visitor.Accept(this, context);"),
                                 },
                                 Enumerable.Empty<Class>(),
                                 new[]
