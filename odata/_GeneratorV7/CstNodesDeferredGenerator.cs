@@ -310,6 +310,85 @@ throw new System.Exception("TODO");
                 },
                 Enumerable.Empty<Class>(),
                 Enumerable.Empty<PropertyDefinition>());
+
+            yield return new Class(
+                AccessModifier.Public,
+                ClassModifier.Abstract,
+                $"{toTranslate.Name}Realized",
+                Enumerable.Empty<string>(),
+                null, //// TODO add ifromrealizedable
+                new[]
+                {
+                    new ConstructorDefinition(
+                        AccessModifier.Private,
+                        Enumerable.Empty<MethodParameter>(),
+                        Enumerable.Empty<string>()),
+                },
+                new[]
+                {
+                    //// TODO add convert
+                    new MethodDefinition(
+                        AccessModifier.Protected,
+                        ClassModifier.Abstract,
+                        false,
+                        "TResult",
+                        new[]
+                        {
+                            "TResult",
+                            "TContext",
+                        },
+                        "Dispatch",
+                        new[]
+                        {
+                            new MethodParameter(
+                                "Visitor<TResult, TContext>",
+                                "visitor"),
+                            new MethodParameter(
+                                "TContext",
+                                "context"),
+                        },
+                        null),
+                },
+                new[]
+                {
+                    new Class(
+                        AccessModifier.Public, 
+                        ClassModifier.Abstract,
+                        "Visitor",
+                        new[]
+                        {
+                            "TResult",
+                            "TContext",
+                        },
+                        null,
+                        Enumerable.Empty<ConstructorDefinition>(),
+                        toTranslate
+                            .NestedClasses
+                            .Where(nestedClass => !string.Equals(nestedClass.Name, "Visitor"))
+                            .Select(
+                                nestedClass =>
+                                    new MethodDefinition(
+                                        AccessModifier.Protected | AccessModifier.Internal,
+                                        ClassModifier.Abstract,
+                                        false,
+                                        "TResult",
+                                        Enumerable.Empty<string>(),
+                                        "Accept",
+                                        new[]
+                                        {
+                                            new MethodParameter(
+                                                nestedClass.Name,
+                                                "node"),
+                                            new MethodParameter(
+                                                "TContext",
+                                                "context"),
+                                        },
+                                        null)),
+                        Enumerable.Empty<Class>(),
+                        Enumerable.Empty<PropertyDefinition>()),
+                    //// TODO du members
+                },
+                Enumerable.Empty<PropertyDefinition>());
         }
 
         private IEnumerable<Class> TranslateTerminal(Class toTranslate)
