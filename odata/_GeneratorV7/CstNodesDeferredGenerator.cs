@@ -107,26 +107,20 @@
         {
             builder.Append($"var {property.Name} = Future.Create(() => ");
 
-            var propertyType = TranslateType(property.Type);
+            TranslateType(property.Type, out var translatedType, out var elementType);
             var atleastone = "CombinatorParsingV3.AtLeastOne<";
             var many = "CombinatorParsingV3.Many<";
-            if (propertyType.StartsWith(atleastone)) //// TODO what about other ranges?
+            if (translatedType.StartsWith(atleastone)) //// TODO what about other ranges?
             {
-                var elementType = propertyType.Substring(atleastone.Length);
-                elementType = elementType.Substring(0, elementType.Length - 1);
-
                 builder.Append($"CombinatorParsingV3.AtLeastOne.Create<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>>({previousNodeRealizationResult}, input => {elementType}.Create(input)));");
             }
-            else if (propertyType.StartsWith(many))
+            else if (translatedType.StartsWith(many))
             {
-                var elementType = propertyType.Substring(many.Length);
-                elementType = elementType.Substring(0, elementType.Length - 1);
-
                 builder.Append($"CombinatorParsingV3.Many.Create<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>>(input => {elementType}.Create(input), {previousNodeRealizationResult}));");
             }
             else
             {
-                builder.Append($"{propertyType}.Create({previousNodeRealizationResult}));");
+                builder.Append($"{translatedType}.Create({previousNodeRealizationResult}));");
             }
         }
 
@@ -321,25 +315,36 @@ else
                 );
         }
 
-        private string TranslateType(string toTranslate)
+        private void TranslateType(string toTranslate, out string translated, out string? elementType)
         {
             var ienumerable = "System.Collections.Generic.IEnumerable<";
             if (toTranslate.StartsWith(ienumerable))
             {
-                var elementType = toTranslate.Substring(ienumerable.Length);
+                elementType = toTranslate.Substring(ienumerable.Length);
                 elementType = elementType.Substring(0, elementType.Length - 1);
-                return $"CombinatorParsingV3.Many<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>, TMode>";
+                translated = $"CombinatorParsingV3.Many<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>, TMode>";
+                return;
             }
 
             var atleastone = "__GeneratedPartialV1.Deferred.CstNodes.Inners.HelperRangedAtLeast1<"; //// TODO what about handling other range sizes?
             if (toTranslate.StartsWith(atleastone))
             {
-                var elementType = toTranslate.Substring(atleastone.Length);
+                elementType = toTranslate.Substring(atleastone.Length);
                 elementType = elementType.Substring(0, elementType.Length - 1);
-                return $"CombinatorParsingV3.AtLeastOne<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>, TMode>";
+                translated = $"CombinatorParsingV3.AtLeastOne<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>, TMode>";
+                return;
             }
 
-            return $"{toTranslate}<TMode>";
+            translated = $"{toTranslate}<TMode>";
+            elementType = null;
+            return;
+        }
+
+        private string TranslateType(string toTranslate)
+        {
+            TranslateType(toTranslate, out var translated, out _);
+
+            return translated;
         }
 
         private IEnumerable<Class> TranslateDiscriminatedUnion(Class toTranslate)
