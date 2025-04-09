@@ -352,7 +352,40 @@ this.realizationResult = realizationResult;
 """.Split(Environment.NewLine)
                         ),
                 },
-                Enumerable.Empty<MethodDefinition>(), //// TODO
+                new[]
+                {
+                    new MethodDefinition(
+                        AccessModifier.Public,
+                        ClassModifier.None,
+                        false,
+                        $"IRealizationResult<char, {realizedTypeName}>",
+                        Enumerable.Empty<string>(),
+                        "Realize",
+                        Enumerable.Empty<MethodParameter>(),
+"""
+return this.realizationResult.Value;
+"""
+                        ),
+                    new MethodDefinition(
+                        AccessModifier.Private,
+                        ClassModifier.None,
+                        false,
+                        $"IRealizationResult<char, {realizedTypeName}>",
+                        Enumerable.Empty<string>(),
+                        "RealizeImpl",
+                        Enumerable.Empty<MethodParameter>(),
+                        string.Concat(
+"""
+if (!this.previousNodeRealizationResult.Value.Success)
+{
+    return new RealizationResult<char, AlphaNumericRealized>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
+}
+
+//// TODO
+throw new Exception("TODO");
+"""                         
+                            )),
+                },
                 Enumerable.Empty<Class>(),
                 new[]
                 {
