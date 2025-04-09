@@ -572,18 +572,17 @@ return new {{deferredTypeName}}(Future.Create(() => this.RealizationResult));
                                         "return visitor.Accept(this, context);"),
                                 },
                                 Enumerable.Empty<Class>(),
-                                new[]
-                                {
-                                    new PropertyDefinition(
-                                        AccessModifier.Private,
-                                        false,
-                                        $"IRealizationResult<char, {realizedTypeName}.{nestedClass.Name}>",
-                                        "RealizationResult",
-                                        true,
-                                        false,
-                                        null),
-                                    //// TODO add properties from `nestedclass`
-                                }))
+                                nestedClass
+                                    .Properties
+                                    .Prepend(
+                                        new PropertyDefinition(
+                                            AccessModifier.Private,
+                                            false,
+                                            $"IRealizationResult<char, {realizedTypeName}.{nestedClass.Name}>",
+                                            "RealizationResult",
+                                            true,
+                                            false,
+                                            null))))
                     .Prepend(
                         new Class(
                             AccessModifier.Public,
