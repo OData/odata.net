@@ -375,10 +375,10 @@ return this.realizationResult.Value;
                         "RealizeImpl",
                         Enumerable.Empty<MethodParameter>(),
                         string.Concat(
-"""
+$$"""
 if (!this.previousNodeRealizationResult.Value.Success)
 {
-    return new RealizationResult<char, AlphaNumericRealized>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
+    return new RealizationResult<char, {{realizedTypeName}}>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
 }
 
 //// TODO
