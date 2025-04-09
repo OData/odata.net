@@ -61,6 +61,8 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._00> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_2 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._00> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -107,6 +109,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._01> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._01> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -153,6 +157,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._02> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<ParseMode.Realized> _2_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._02> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -199,6 +205,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._03> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<ParseMode.Realized> _3_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._03> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -245,6 +253,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._04> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<ParseMode.Realized> _4_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._04> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -291,6 +301,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._05> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<ParseMode.Realized> _5_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._05> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -337,6 +349,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._06> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<ParseMode.Realized> _6_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._06> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -383,6 +397,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._07> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<ParseMode.Realized> _7_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._07> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -429,6 +445,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._08> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<ParseMode.Realized> _8_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._08> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -475,6 +493,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._09> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<ParseMode.Realized> _9_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._09> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -521,6 +541,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._0A> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<ParseMode.Realized> _A_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._0A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -567,6 +589,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._0B> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<ParseMode.Realized> _B_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._0B> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -613,6 +637,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._0C> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<ParseMode.Realized> _C_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._0C> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -659,6 +685,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._0D> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<ParseMode.Realized> _D_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._0D> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -705,6 +733,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._0E> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<ParseMode.Realized> _E_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._0E> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -751,6 +781,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._0F> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<ParseMode.Realized> _F_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._0F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -797,6 +829,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._10> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<ParseMode.Realized> _0_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._10> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -843,6 +877,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._11> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_2 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._11> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -889,6 +925,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._12> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<ParseMode.Realized> _2_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._12> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -935,6 +973,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._13> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<ParseMode.Realized> _3_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._13> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -981,6 +1021,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._14> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<ParseMode.Realized> _4_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._14> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -1027,6 +1069,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._15> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<ParseMode.Realized> _5_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._15> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -1073,6 +1117,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._16> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<ParseMode.Realized> _6_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._16> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -1119,6 +1165,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._17> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<ParseMode.Realized> _7_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._17> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -1165,6 +1213,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._18> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<ParseMode.Realized> _8_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._18> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -1211,6 +1261,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._19> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<ParseMode.Realized> _9_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._19> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -1257,6 +1309,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._1A> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<ParseMode.Realized> _A_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._1A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -1303,6 +1357,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._1B> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<ParseMode.Realized> _B_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._1B> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -1349,6 +1405,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._1C> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<ParseMode.Realized> _C_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._1C> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -1395,6 +1453,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._1D> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<ParseMode.Realized> _D_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._1D> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -1441,6 +1501,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._1E> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<ParseMode.Realized> _E_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._1E> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -1487,6 +1549,8 @@ else
             }
             
             private IRealizationResult<char, _Ⰳx00ⲻ1FRealized._1F> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<ParseMode.Realized> _1_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<ParseMode.Realized> _F_1 { get; }
             
             public static IRealizationResult<char, _Ⰳx00ⲻ1FRealized._1F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {

@@ -31,6 +31,7 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _WSPⳆCRLF_WSPRealized._WSP> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<ParseMode.Realized> _WSP_1 { get; }
             
             public static IRealizationResult<char, _WSPⳆCRLF_WSPRealized._WSP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -77,6 +78,8 @@ else
             }
             
             private IRealizationResult<char, _WSPⳆCRLF_WSPRealized._CRLF_WSP> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Rules._CRLF<ParseMode.Realized> _CRLF_1 { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<ParseMode.Realized> _WSP_1 { get; }
             
             public static IRealizationResult<char, _WSPⳆCRLF_WSPRealized._CRLF_WSP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {

@@ -36,6 +36,7 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             }
             
             private IRealizationResult<char, _HEXDIGRealized._DIGIT> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Rules._DIGIT<ParseMode.Realized> _DIGIT_1 { get; }
             
             public static IRealizationResult<char, _HEXDIGRealized._DIGIT> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -82,6 +83,7 @@ else
             }
             
             private IRealizationResult<char, _HEXDIGRealized._ʺx41ʺ> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<ParseMode.Realized> _ʺx41ʺ_1 { get; }
             
             public static IRealizationResult<char, _HEXDIGRealized._ʺx41ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -128,6 +130,7 @@ else
             }
             
             private IRealizationResult<char, _HEXDIGRealized._ʺx42ʺ> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx42ʺ<ParseMode.Realized> _ʺx42ʺ_1 { get; }
             
             public static IRealizationResult<char, _HEXDIGRealized._ʺx42ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -174,6 +177,7 @@ else
             }
             
             private IRealizationResult<char, _HEXDIGRealized._ʺx43ʺ> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<ParseMode.Realized> _ʺx43ʺ_1 { get; }
             
             public static IRealizationResult<char, _HEXDIGRealized._ʺx43ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -220,6 +224,7 @@ else
             }
             
             private IRealizationResult<char, _HEXDIGRealized._ʺx44ʺ> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx44ʺ<ParseMode.Realized> _ʺx44ʺ_1 { get; }
             
             public static IRealizationResult<char, _HEXDIGRealized._ʺx44ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -266,6 +271,7 @@ else
             }
             
             private IRealizationResult<char, _HEXDIGRealized._ʺx45ʺ> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx45ʺ<ParseMode.Realized> _ʺx45ʺ_1 { get; }
             
             public static IRealizationResult<char, _HEXDIGRealized._ʺx45ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -312,6 +318,7 @@ else
             }
             
             private IRealizationResult<char, _HEXDIGRealized._ʺx46ʺ> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx46ʺ<ParseMode.Realized> _ʺx46ʺ_1 { get; }
             
             public static IRealizationResult<char, _HEXDIGRealized._ʺx46ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {

@@ -31,6 +31,7 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             }
             
             private IRealizationResult<char, _CTLRealized._Ⰳx00ⲻ1F> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx00ⲻ1F<ParseMode.Realized> _Ⰳx00ⲻ1F_1 { get; }
             
             public static IRealizationResult<char, _CTLRealized._Ⰳx00ⲻ1F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
@@ -77,6 +78,7 @@ else
             }
             
             private IRealizationResult<char, _CTLRealized._Ⰳx7F> RealizationResult { get; }
+            public __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx7F<ParseMode.Realized> _Ⰳx7F_1 { get; }
             
             public static IRealizationResult<char, _CTLRealized._Ⰳx7F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
