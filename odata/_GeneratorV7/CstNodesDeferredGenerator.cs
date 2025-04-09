@@ -18,8 +18,8 @@
         public (Namespace RuleCstNodes, Namespace InnerCstNodes) CreateDeferred(
             (Namespace RuleCstNodes, Namespace InnerCstNodes) cstNodes)
         {
-            var translatedRules = Translate(cstNodes.RuleCstNodes);
-            var translatedInners = Translate(cstNodes.InnerCstNodes);
+            var translatedRules = Translate(cstNodes.RuleCstNodes, cstNodes.RuleCstNodes, cstNodes.InnerCstNodes);
+            var translatedInners = Translate(cstNodes.InnerCstNodes, cstNodes.RuleCstNodes, cstNodes.InnerCstNodes);
 
             return
                 (
@@ -28,9 +28,9 @@
                 );
         }
 
-        private Namespace Translate(Namespace toTranslate)
+        private Namespace Translate(Namespace toTranslate, Namespace rules, Namespace inners)
         {
-            var translatedClasses = Translate(toTranslate.Classes).ToList();
+            var translatedClasses = Translate(toTranslate.Classes, rules, inners).ToList();
             return new Namespace(
                 toTranslate.Name,
                 translatedClasses,
@@ -41,11 +41,11 @@
                 });
         }
 
-        private IEnumerable<Class> Translate(IEnumerable<Class> toTranslate)
+        private IEnumerable<Class> Translate(IEnumerable<Class> toTranslate, Namespace rules, Namespace inners)
         {
             foreach (var @class in toTranslate)
             {
-                var translatedClasses = Translate(@class);
+                var translatedClasses = Translate(@class, rules, inners);
                 foreach (var translatedClass in translatedClasses)
                 {
                     yield return translatedClass;
@@ -53,7 +53,7 @@
             }
         }
 
-        private IEnumerable<Class> Translate(Class toTranslate)
+        private IEnumerable<Class> Translate(Class toTranslate, Namespace rules, Namespace inners)
         {
             if (toTranslate.Name.StartsWith("HelperRanged"))
             {
@@ -69,11 +69,11 @@
             }
             else
             {
-                return TranslateInner(toTranslate);
+                return TranslateInner(toTranslate, rules, inners);
             }
         }
 
-        private string GenerateDeferredFactoryMethodBody(Class toTranslate)
+        private string GenerateDeferredFactoryMethodBody(Class toTranslate, Namespace rules, Namespace inners)
         {
             var properties = toTranslate.Properties.ToList();
 
@@ -83,13 +83,15 @@
             }
 
             var builder = new StringBuilder();
-            GenerateDeferredFactoryMethodBodyPropertyInitialization(properties[0], "previousNodeRealizationResult", builder);
+            GenerateDeferredFactoryMethodBodyPropertyInitialization(properties[0], "previousNodeRealizationResult", rules, inners, builder);
             builder.AppendLine();
             for (int i = 1; i < properties.Count; ++i)
             {
                 GenerateDeferredFactoryMethodBodyPropertyInitialization(
                     properties[i], 
                     $"Future.Create(() => {properties[i - 1].Name}.Value.Realize())", 
+                    rules,
+                    inners,
                     builder);
                 builder.AppendLine();
             }
@@ -104,11 +106,26 @@
         private void GenerateDeferredFactoryMethodBodyPropertyInitialization(
             PropertyDefinition property,
             string previousNodeRealizationResult,
+            Namespace rules,
+            Namespace inners,
             StringBuilder builder)
         {
             builder.Append($"var {property.Name} = Future.Create(() => ");
 
             TranslateType(property.Type, out var translatedType, out var elementType);
+            string deferredType;
+            string realizedType;
+            if ((elementType != null && IsDiscriminatedUnion(elementType)) || IsDiscriminatedUnion(translatedType))
+            {
+                deferredType = $"{elementType}Deferred";
+                realizedType = $"{elementType}Realized";
+            }
+            else
+            {
+                deferredType = $"{elementType}<ParseMode.Deferred>";
+                realizedType = $"{elementType}<ParseMode.Realized>";
+            }
+
             var atleastone = "CombinatorParsingV3.AtLeastOne<";
             var many = "CombinatorParsingV3.Many<";
             if (translatedType.StartsWith(atleastone)) //// TODO what about other ranges?
@@ -125,7 +142,12 @@
             }
         }
 
-        private IEnumerable<Class> TranslateInner(Class toTranslate)
+        private bool IsDiscriminatedUnion(string namespaceQualifiedType)
+        {
+            return false;
+        }
+
+        private IEnumerable<Class> TranslateInner(Class toTranslate, Namespace rules, Namespace inners)
         {
             // the factory methods for the cst node
             yield return new Class(
@@ -222,7 +244,7 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Create(previousNodeRealizationRe
                                 "IFuture<IRealizationResult<char>>",
                                 "previousNodeRealizationResult"),
                         },
-                        GenerateDeferredFactoryMethodBody(toTranslate)),
+                        GenerateDeferredFactoryMethodBody(toTranslate, rules, inners)),
                     new MethodDefinition(
                         AccessModifier.Public, 
                         ClassModifier.None, 
