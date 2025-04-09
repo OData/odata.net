@@ -18,7 +18,7 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
         }
         private _x41(IFuture<IRealizationResult<char, _x41<ParseMode.Realized>>> realizationResult)
         {
-            if (typeof(TMode) != typeof(ParseMode.Deferred))
+            if (typeof(TMode) != typeof(ParseMode.Realized))
             {
                 throw new ArgumentException("TODO");
             }
