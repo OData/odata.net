@@ -258,7 +258,7 @@ else
             {
                 var elementType = toTranslate.Substring(atleastone.Length);
                 elementType = elementType.Substring(0, elementType.Length - 1);
-                return $"CombinatorParsingV3.AtLeastOne<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>, TMode";
+                return $"CombinatorParsingV3.AtLeastOne<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>, TMode>";
             }
 
             return $"{toTranslate}<TMode>";
