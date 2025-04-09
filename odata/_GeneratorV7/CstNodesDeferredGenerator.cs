@@ -130,11 +130,11 @@
             var many = "CombinatorParsingV3.Many<";
             if (translatedType.StartsWith(atleastone)) //// TODO what about other ranges?
             {
-                builder.Append($"CombinatorParsingV3.AtLeastOne.Create<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>>({previousNodeRealizationResult}, input => {elementType}.Create(input)));");
+                builder.Append($"CombinatorParsingV3.AtLeastOne.Create<{deferredType}, {realizedType}>({previousNodeRealizationResult}, input => {elementType}.Create(input)));");
             }
             else if (translatedType.StartsWith(many))
             {
-                builder.Append($"CombinatorParsingV3.Many.Create<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>>(input => {elementType}.Create(input), {previousNodeRealizationResult}));");
+                builder.Append($"CombinatorParsingV3.Many.Create<{deferredType}, {realizedType}>(input => {elementType}.Create(input), {previousNodeRealizationResult}));");
             }
             else
             {
