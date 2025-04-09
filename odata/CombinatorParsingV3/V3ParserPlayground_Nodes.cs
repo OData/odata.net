@@ -85,6 +85,165 @@
             }
         }
 
+        public sealed class AlphaNumericDeferred : IAstNode<char, AlphaNumericRealized>
+        {
+            private readonly IFuture<IRealizationResult<char>> previousNodeRealizationResult;
+
+            private readonly IFuture<IRealizationResult<char, AlphaNumericRealized>> realizationResult;
+
+            public AlphaNumericDeferred(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                //// TODO get constructor accessibility correct
+                this.previousNodeRealizationResult = previousNodeRealizationResult;
+
+                this.realizationResult = Future.Create(() => this.RealizeImpl());
+            }
+
+            public AlphaNumericDeferred(IFuture<IRealizationResult<char, AlphaNumericRealized>> realizationResult)
+            {
+                this.realizationResult = realizationResult;
+            }
+
+            public IRealizationResult<char, AlphaNumericRealized> Realize()
+            {
+                return this.realizationResult.Value;
+            }
+
+            private IRealizationResult<char, AlphaNumericRealized> RealizeImpl()
+            {
+                if (!this.previousNodeRealizationResult.Value.Success)
+                {
+                    return new RealizationResult<char, AlphaNumericRealized>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
+                }
+
+                var a = AlphaNumericRealized.A.Create(this.previousNodeRealizationResult);
+                if (a.Success)
+                {
+                    return a;
+                }
+
+                var c = AlphaNumericRealized.C.Create(this.previousNodeRealizationResult);
+                if (c.Success)
+                {
+                    return c;
+                }
+
+                return new RealizationResult<char, AlphaNumericRealized>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
+            }
+        }
+
+        public abstract class AlphaNumericRealized : IFromRealizedable<AlphaNumericDeferred>
+        {
+            private AlphaNumericRealized()
+            {
+            }
+
+            public abstract AlphaNumericDeferred Convert();
+
+            protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+            public abstract class Visitor<TResult, TContext>
+            {
+                public TResult Visit(AlphaNumericRealized node, TContext context)
+                {
+                    return node.Dispatch(this, context);
+                }
+
+                protected internal abstract TResult Accept(A node, TContext context);
+                protected internal abstract TResult Accept(C node, TContext context);
+            }
+
+            public sealed class A : AlphaNumericRealized
+            {
+                public static IRealizationResult<char, AlphaNumericRealized.A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    var output = previousNodeRealizationResult.Value;
+                    if (!output.Success)
+                    {
+                        return new RealizationResult<char, AlphaNumericRealized.A>(false, default, output.RemainingTokens);
+                    }
+
+                    var input = output.RemainingTokens;
+                    if (input == null)
+                    {
+                        return new RealizationResult<char, AlphaNumericRealized.A>(false, default, input);
+                    }
+
+                    if (input.Current == 'A')
+                    {
+                        var a = new AlphaNumericRealized.A(input.Next());
+                        return a.RealizationResult;
+                    }
+                    else
+                    {
+                        return new RealizationResult<char, AlphaNumericRealized.A>(false, default, input);
+                    }
+                }
+
+                private A(ITokenStream<char>? nextTokens)
+                {
+                    this.RealizationResult = new RealizationResult<char, AlphaNumericRealized.A>(true, this, nextTokens);
+                }
+
+                private IRealizationResult<char, AlphaNumericRealized.A> RealizationResult { get; }
+
+                public override AlphaNumericDeferred Convert()
+                {
+                    return new AlphaNumericDeferred(Future.Create(() => this.RealizationResult));
+                }
+
+                protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
+            }
+
+            public sealed class C : AlphaNumericRealized
+            {
+                public static IRealizationResult<char, AlphaNumericRealized.C> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    var output = previousNodeRealizationResult.Value;
+                    if (!output.Success)
+                    {
+                        return new RealizationResult<char, AlphaNumericRealized.C>(false, default, output.RemainingTokens);
+                    }
+
+                    var input = output.RemainingTokens;
+                    if (input == null)
+                    {
+                        return new RealizationResult<char, AlphaNumericRealized.C>(false, default, input);
+                    }
+
+                    if (input.Current == 'C')
+                    {
+                        var c = new AlphaNumericRealized.C(input.Next());
+                        return c.RealizationResult;
+                    }
+                    else
+                    {
+                        return new RealizationResult<char, AlphaNumericRealized.C>(false, default, input);
+                    }
+                }
+
+                private C(ITokenStream<char>? nextTokens)
+                {
+                    this.RealizationResult = new RealizationResult<char, AlphaNumericRealized.C>(true, this, nextTokens);
+                }
+
+                private IRealizationResult<char, AlphaNumericRealized.C> RealizationResult { get; }
+
+                public override AlphaNumericDeferred Convert()
+                {
+                    return new AlphaNumericDeferred(Future.Create(() => this.RealizationResult));
+                }
+
+                protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
+            }
+        }
+
         public sealed class AlphaNumericHolder : IAstNode<char, AlphaNumeric<ParseMode.Realized>>
         {
             private readonly IFuture<IRealizationResult<char>> previousNodeRealizationResult;
