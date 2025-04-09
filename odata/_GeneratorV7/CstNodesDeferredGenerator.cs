@@ -311,10 +311,11 @@ throw new System.Exception("TODO");
                 Enumerable.Empty<Class>(),
                 Enumerable.Empty<PropertyDefinition>());
 
+            var realizedTypeName = $"{toTranslate.Name}Realized";
             yield return new Class(
                 AccessModifier.Public,
                 ClassModifier.Abstract,
-                $"{toTranslate.Name}Realized",
+                realizedTypeName,
                 Enumerable.Empty<string>(),
                 null, //// TODO add ifromrealizedable
                 new[]
@@ -349,45 +350,104 @@ throw new System.Exception("TODO");
                         },
                         null),
                 },
-                new[]
-                {
-                    new Class(
-                        AccessModifier.Public, 
-                        ClassModifier.Abstract,
-                        "Visitor",
-                        new[]
-                        {
-                            "TResult",
-                            "TContext",
-                        },
-                        null,
-                        Enumerable.Empty<ConstructorDefinition>(),
-                        toTranslate
-                            .NestedClasses
-                            .Where(nestedClass => !string.Equals(nestedClass.Name, "Visitor"))
-                            .Select(
-                                nestedClass =>
-                                    new MethodDefinition(
-                                        AccessModifier.Protected | AccessModifier.Internal,
-                                        ClassModifier.Abstract,
-                                        false,
-                                        "TResult",
-                                        Enumerable.Empty<string>(),
-                                        "Accept",
+                toTranslate
+                    .NestedClasses
+                    .Select(
+                        nestedClass =>
+                            new Class(
+                                AccessModifier.Public,
+                                ClassModifier.Sealed,
+                                nestedClass.Name,
+                                Enumerable.Empty<string>(),
+                                realizedTypeName,
+                                new[]
+                                {
+                                    new ConstructorDefinition(
+                                        AccessModifier.Private,
                                         new[]
                                         {
                                             new MethodParameter(
-                                                nestedClass.Name,
-                                                "node"),
+                                                "ITokenStream<char>?",
+                                                "nextTokens"),
+                                        },
+                                        new[]
+                                        {
+                                            $"this.RealizationResult = new RealizationResult<char, {realizedTypeName}.{nestedClass.Name}>(true, this, nextTokens);",
+                                        }),
+                                },
+                                new[]
+                                {
+                                    //// TODO add convert
+                                    new MethodDefinition(
+                                        AccessModifier.Protected,
+                                        ClassModifier.None,
+                                        true,
+                                        "TResult",
+                                        new[]
+                                        {
+                                            "TResult",
+                                            "TContext",
+                                        },
+                                        "Dispatch",
+                                        new[]
+                                        {
+                                            new MethodParameter(
+                                                "Visitor<TResult, TContext>",
+                                                "visitor"),
                                             new MethodParameter(
                                                 "TContext",
                                                 "context"),
                                         },
-                                        null)),
-                        Enumerable.Empty<Class>(),
-                        Enumerable.Empty<PropertyDefinition>()),
-                    //// TODO du members
-                },
+                                        "return visitor.Accept(this, context"),
+                                },
+                                Enumerable.Empty<Class>(),
+                                new[]
+                                {
+                                    new PropertyDefinition(
+                                        AccessModifier.Private,
+                                        false,
+                                        $"IRealizationResult<char, {realizedTypeName}.{nestedClass.Name}>",
+                                        "RealizationResult",
+                                        true,
+                                        false,
+                                        null),
+                                }))
+                    .Prepend(
+                        new Class(
+                            AccessModifier.Public,
+                            ClassModifier.Abstract,
+                            "Visitor",
+                            new[]
+                            {
+                                "TResult",
+                                "TContext",
+                            },
+                            null,
+                            Enumerable.Empty<ConstructorDefinition>(),
+                            toTranslate
+                                .NestedClasses
+                                .Where(nestedClass => !string.Equals(nestedClass.Name, "Visitor"))
+                                .Select(
+                                    nestedClass =>
+                                        new MethodDefinition(
+                                            AccessModifier.Protected | AccessModifier.Internal,
+                                            ClassModifier.Abstract,
+                                            false,
+                                            "TResult",
+                                            Enumerable.Empty<string>(),
+                                            "Accept",
+                                            new[]
+                                            {
+                                                new MethodParameter(
+                                                    nestedClass.Name,
+                                                    "node"),
+                                                new MethodParameter(
+                                                    "TContext",
+                                                    "context"),
+                                            },
+                                            null)),
+                            Enumerable.Empty<Class>(),
+                            Enumerable.Empty<PropertyDefinition>())),
                 Enumerable.Empty<PropertyDefinition>());
         }
 
