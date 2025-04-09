@@ -146,7 +146,7 @@
         }
 
         public abstract class AlphaNumeric<TMode> : IAstNode<char, AlphaNumeric<ParseMode.Realized>>, IFromRealizedable<AlphaNumericHolder>
-            where TMode : ParseMode
+            where TMode : ParseMode //// TODO does this actually need a `tmode`? because `alphanumericholder` should always be used for the deferred mode instead
         {
             private AlphaNumeric()
             {
