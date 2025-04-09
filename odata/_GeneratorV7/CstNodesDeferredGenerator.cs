@@ -112,33 +112,17 @@
         {
             builder.Append($"var {property.Name} = Future.Create(() => ");
 
-            TranslateType(property.Type, out var translatedType, out var elementType);
-
-            var isDiscriminatedUnion = (elementType != null && IsDiscriminatedUnion(elementType, rules, inners)) || IsDiscriminatedUnion(translatedType, rules, inners);
-
-            string deferredType;
-            string realizedType;
-
-            if (isDiscriminatedUnion)
-            {
-                deferredType = $"{elementType}Deferred";
-                realizedType = $"{elementType}Realized";
-            }
-            else
-            {
-                deferredType = $"{elementType}<ParseMode.Deferred>";
-                realizedType = $"{elementType}<ParseMode.Realized>";
-            }
+            TranslateType(property.Type, rules, inners, out var translatedType, out var elementTypes);
 
             var atleastone = "CombinatorParsingV3.AtLeastOne<";
             var many = "CombinatorParsingV3.Many<";
             if (translatedType.StartsWith(atleastone)) //// TODO what about other ranges?
             {
-                builder.Append($"CombinatorParsingV3.AtLeastOne.Create<{deferredType}, {realizedType}>({previousNodeRealizationResult}, input => {elementType}.Create(input)));");
+                builder.Append($"CombinatorParsingV3.AtLeastOne.Create<{elementTypes.Value.DeferredElementType}, {elementTypes.Value.RealizedElementType}>({previousNodeRealizationResult}, input => {elementTypes.Value.FactoryType}.Create(input)));");
             }
             else if (translatedType.StartsWith(many))
             {
-                builder.Append($"CombinatorParsingV3.Many.Create<{deferredType}, {realizedType}>(input => {elementType}.Create(input), {previousNodeRealizationResult}));");
+                builder.Append($"CombinatorParsingV3.Many.Create<{elementTypes.Value.DeferredElementType}, {elementTypes.Value.RealizedElementType}>(input => {elementTypes.Value.FactoryType}.Create(input), {previousNodeRealizationResult}));");
             }
             else
             {
@@ -232,7 +216,7 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Create(previousNodeRealizationRe
                             .Select(
                                 property =>
                                     new MethodParameter(
-                                        $"IFuture<{TranslateType(property.Type)}>",
+                                        $"IFuture<{TranslateType(property.Type, rules, inners)}>",
                                         property.Name)),
                         toTranslate
                             .Properties
@@ -248,7 +232,7 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Create(previousNodeRealizationRe
                             .Select(
                                 property =>
                                     new MethodParameter(
-                                        TranslateType(property.Type),
+                                        TranslateType(property.Type, rules, inners),
                                         property.Name))
                             .Append(
                                 new MethodParameter(
@@ -369,7 +353,7 @@ else
                             new PropertyDefinition(
                                 AccessModifier.Private,
                                 false,
-                                $"IFuture<{TranslateType(property.Type)}>",
+                                $"IFuture<{TranslateType(property.Type, rules, inners)}>",
                                 $"_{property.Name}",
                                 true,
                                 false,
@@ -392,7 +376,7 @@ else
                                     new PropertyDefinition(
                                         AccessModifier.Public,
                                         false,
-                                        TranslateType(property.Type),
+                                        TranslateType(property.Type, rules, inners),
                                         property.Name,
                                         true, //// TODO need a way to define this getter body
                                         false,
@@ -400,34 +384,54 @@ else
                 );
         }
 
-        private void TranslateType(string toTranslate, out string translated, out string? elementType)
+        private void TranslateType(string toTranslate, Namespace rules, Namespace inners, out string translated, out (string DeferredElementType, string RealizedElementType, string FactoryType)? elementTypes)
         {
             var ienumerable = "System.Collections.Generic.IEnumerable<";
             if (toTranslate.StartsWith(ienumerable))
             {
-                elementType = toTranslate.Substring(ienumerable.Length);
+                var elementType = toTranslate.Substring(ienumerable.Length);
                 elementType = elementType.Substring(0, elementType.Length - 1);
-                translated = $"CombinatorParsingV3.Many<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>, TMode>";
+
+                if (IsDiscriminatedUnion(elementType, rules, inners))
+                {
+                    elementTypes = ($"{elementType}Deferred", $"{elementType}Realized", elementType);
+                }
+                else
+                {
+                    elementTypes = ($"{elementType}<ParseMode.Deferred>", $"{elementType}<ParseMode.Realized>", elementType);
+                }
+
+                translated = $"CombinatorParsingV3.Many<{elementTypes.Value.DeferredElementType}, {elementTypes.Value.RealizedElementType}, TMode>";
                 return;
             }
 
             var atleastone = "__GeneratedPartialV1.Deferred.CstNodes.Inners.HelperRangedAtLeast1<"; //// TODO what about handling other range sizes?
             if (toTranslate.StartsWith(atleastone))
             {
-                elementType = toTranslate.Substring(atleastone.Length);
+                var elementType = toTranslate.Substring(atleastone.Length);
                 elementType = elementType.Substring(0, elementType.Length - 1);
-                translated = $"CombinatorParsingV3.AtLeastOne<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>, TMode>";
+
+                if (IsDiscriminatedUnion(elementType, rules, inners))
+                {
+                    elementTypes = ($"{elementType}Deferred", $"{elementType}Realized", elementType);
+                }
+                else
+                {
+                    elementTypes = ($"{elementType}<ParseMode.Deferred>", $"{elementType}<ParseMode.Realized>", elementType);
+                }
+
+                translated = $"CombinatorParsingV3.AtLeastOne<{elementTypes.Value.DeferredElementType}, {elementTypes.Value.RealizedElementType}, TMode>";
                 return;
             }
 
             translated = $"{toTranslate}<TMode>";
-            elementType = null;
+            elementTypes = null;
             return;
         }
 
-        private string TranslateType(string toTranslate)
+        private string TranslateType(string toTranslate, Namespace rules, Namespace inners)
         {
-            TranslateType(toTranslate, out var translated, out _);
+            TranslateType(toTranslate, rules, inners, out var translated, out _);
 
             return translated;
         }
