@@ -89,7 +89,7 @@
                             .Select(
                                 property =>
                                     new MethodParameter(
-                                        $"IFuture<{property.Type}<TMode>>",
+                                        $"IFuture<{TranslateType(property.Type)}>",
                                         property.Name)),
                         toTranslate
                             .Properties
@@ -241,6 +241,19 @@ else
                                         false,
                                         null)))
                 );
+        }
+
+        private string TranslateType(string toTranslate)
+        {
+            var ienumerable = "System.Collections.Generic.IEnumerable<";
+            if (toTranslate.StartsWith(ienumerable))
+            {
+                var elementType = toTranslate.Substring(ienumerable.Length);
+                elementType = elementType.Substring(0, elementType.Length - 1);
+                return $"CombinatorParsingV3.Many<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>, TMode>";
+            }
+
+            return $"{toTranslate}<TMode>";
         }
 
         private IEnumerable<Class> TranslateDiscriminatedUnion(Class toTranslate)
