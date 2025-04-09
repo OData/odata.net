@@ -115,7 +115,7 @@
             TranslateType(property.Type, out var translatedType, out var elementType);
             string deferredType;
             string realizedType;
-            if ((elementType != null && IsDiscriminatedUnion(elementType)) || IsDiscriminatedUnion(translatedType))
+            if ((elementType != null && IsDiscriminatedUnion(elementType, rules, inners)) || IsDiscriminatedUnion(translatedType, rules, inners))
             {
                 deferredType = $"{elementType}Deferred";
                 realizedType = $"{elementType}Realized";
@@ -142,8 +142,37 @@
             }
         }
 
-        private bool IsDiscriminatedUnion(string namespaceQualifiedType)
+        private bool IsDiscriminatedUnion(
+            string namespaceQualifiedType,
+            Namespace rules,
+            Namespace inners)
         {
+            var lastPeriodIndex = namespaceQualifiedType.LastIndexOf('.');
+            if (lastPeriodIndex == -1)
+            {
+                throw new Exception("TODO");
+            }
+
+            var @namespace = namespaceQualifiedType.Substring(0, lastPeriodIndex);
+            var type = namespaceQualifiedType.Substring(lastPeriodIndex + 1);
+
+            Func<Class, bool> predicate = @class => string.Equals(type, @class.Name, StringComparison.Ordinal) && @class.NestedClasses.Where(nestedClass => string.Equals(nestedClass.Name, "Visitor", StringComparison.Ordinal)).Any();
+            if (string.Equals(@namespace, rules.Name, StringComparison.Ordinal))
+            {
+                if (rules.Classes.Where(predicate).Any())
+                {
+                    return true;
+                }
+            }
+
+            if (string.Equals(@namespace, inners.Name, StringComparison.Ordinal))
+            {
+                if (inners.Classes.Where(predicate).Any())
+                {
+                    return true;
+                }
+            }
+
             return false;
         }
 
