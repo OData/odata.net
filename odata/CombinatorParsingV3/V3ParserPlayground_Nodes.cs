@@ -503,7 +503,7 @@
 
             public static Segment<ParseMode.Deferred> Create(
                 IFuture<Slash<ParseMode.Deferred>> slash,
-                IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>> characters)
+                IFuture<AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, ParseMode.Deferred>> characters)
             {
                 return Segment<ParseMode.Deferred>.Create(slash, characters);
             }
@@ -512,29 +512,29 @@
         public sealed class Segment<TMode> : IAstNode<char, Segment<ParseMode.Realized>>, IFromRealizedable<Segment<ParseMode.Deferred>> where TMode : ParseMode
         {
             private readonly IFuture<Slash<TMode>> slash;
-            private readonly IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
+            private readonly IFuture<AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, TMode>> characters;
 
             private readonly Future<IRealizationResult<char, Segment<ParseMode.Realized>>> cachedOutput;
 
             internal static Segment<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
                 var slash = new Future<Slash<ParseMode.Deferred>>(() => V3ParserPlayground.Slash.Create(previousNodeRealizationResult));
-                var characters = new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(() => AtLeastOne.Create<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(
+                var characters = new Future<AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, ParseMode.Deferred>>(() => AtLeastOne.Create<AlphaNumericDeferred, AlphaNumericRealized>(
                         Future.Create(() => slash.Value.Realize()), //// TODO the first parameter has a closure...
-                        input => new AlphaNumericHolder(input)));
+                        input => new AlphaNumericDeferred(input)));
                 return new Segment<ParseMode.Deferred>(slash, characters);
             }
 
             internal static Segment<ParseMode.Deferred> Create(
                 IFuture<Slash<ParseMode.Deferred>> slash,
-                IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>> characters)
+                IFuture<AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, ParseMode.Deferred>> characters)
             {
                 return new Segment<ParseMode.Deferred>(slash, characters);
             }
 
             private Segment(
                 IFuture<Slash<TMode>> slash, 
-                IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters)
+                IFuture<AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, TMode>> characters)
             {
                 this.slash = slash;
                 this.characters = characters;
@@ -544,12 +544,12 @@
 
             private Segment(
                 Slash<TMode> slash, 
-                AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
+                AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, TMode> characters,
                 Future<IRealizationResult<char, Segment<ParseMode.Realized>>> cachedOutput)
             {
                 this.slash = new Future<Slash<TMode>>(() => slash);
 
-                this.characters = new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>>(
+                this.characters = new Future<AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, TMode>>(
                     () => characters);
 
                 this.cachedOutput = cachedOutput;
@@ -563,7 +563,7 @@
                 }
             }
 
-            public AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> Characters
+            public AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, TMode> Characters
             {
                 get
                 {
@@ -699,7 +699,7 @@
         {
             private readonly IFuture
                 <
-                    AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>
+                    AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, TMode>
                 > 
                     characters;
 
@@ -707,15 +707,15 @@
 
             internal static OptionName<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
-                var characters = new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(
+                var characters = new Future<AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, ParseMode.Deferred>>(
                         () =>
-                            AtLeastOne.Create<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(
+                            AtLeastOne.Create<AlphaNumericDeferred, AlphaNumericRealized>(
                                 previousNodeRealizationResult,
-                                input => new AlphaNumericHolder(input)));
+                                input => new AlphaNumericDeferred(input)));
                 return new OptionName<ParseMode.Deferred>(characters);
             }
 
-            internal OptionName(IFuture<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters)
+            internal OptionName(IFuture<AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, TMode>> characters)
             {
                 this.characters = characters;
 
@@ -723,17 +723,17 @@
             }
 
             private OptionName(
-                AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
+                AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, TMode> characters,
                 Future<IRealizationResult<char, OptionName<ParseMode.Realized>>> cachedOutput)
             {
                 this.characters = 
-                    new Future<AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>>(
+                    new Future<AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, TMode>>(
                         () => characters);
 
                 this.cachedOutput = cachedOutput;
             }
 
-            public AtLeastOne<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> Characters
+            public AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, TMode> Characters
             {
                 get
                 {
@@ -788,23 +788,23 @@
 
         public sealed class OptionValue<TMode> : IAstNode<char, OptionValue<ParseMode.Realized>>, IFromRealizedable<OptionValue<ParseMode.Deferred>> where TMode : ParseMode
         {
-            private readonly IFuture<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters;
+            private readonly IFuture<Many<AlphaNumericDeferred, AlphaNumericRealized, TMode>> characters;
 
             private readonly Future<IRealizationResult<char, OptionValue<ParseMode.Realized>>> cachedOutput;
 
             internal static OptionValue<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
-                var characters = new Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(
+                var characters = new Future<Many<AlphaNumericDeferred, AlphaNumericRealized, ParseMode.Deferred>>(
                     () =>
-                        Many.Create<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>>(
-                            input => new AlphaNumericHolder(input),
+                        Many.Create<AlphaNumericDeferred, AlphaNumericRealized> (
+                            input => new AlphaNumericDeferred(input),
                             previousNodeRealizationResult));
 
                 return new OptionValue<ParseMode.Deferred>(characters);
             }
 
             internal OptionValue(
-                IFuture<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>> characters)
+                IFuture<Many<AlphaNumericDeferred, AlphaNumericRealized, TMode>> characters)
             {
                 this.characters = characters;
 
@@ -812,16 +812,16 @@
             }
 
             private OptionValue(
-                Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> characters,
+                Many<AlphaNumericDeferred, AlphaNumericRealized, TMode> characters,
                 Future<IRealizationResult<char, OptionValue<ParseMode.Realized>>> cachedOutput)
             {
-                this.characters = new Future<Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode>>(
+                this.characters = new Future<Many<AlphaNumericDeferred, AlphaNumericRealized, TMode>>(
                     () => characters);
 
                 this.cachedOutput = cachedOutput;
             }
 
-            public Many<AlphaNumericHolder, AlphaNumeric<ParseMode.Realized>, TMode> Characters
+            public Many<AlphaNumericDeferred, AlphaNumericRealized, TMode> Characters
             {
                 get
                 {
