@@ -314,6 +314,8 @@ throw new System.Exception("TODO");
 
             var realizedTypeName = $"{toTranslate.Name}Realized";
             var deferredTypeName = $"{toTranslate.Name}Deferred";
+            
+            // the deferred node
             yield return new Class(
                 AccessModifier.Public,
                 ClassModifier.Sealed,
@@ -351,7 +353,7 @@ this.realizationResult = realizationResult;
                         ),
                 },
                 Enumerable.Empty<MethodDefinition>(), //// TODO
-                Enumerable.Empty<Class>(), //// TODO
+                Enumerable.Empty<Class>(),
                 new[]
                 {
                     new PropertyDefinition(
@@ -372,6 +374,7 @@ this.realizationResult = realizationResult;
                         null),
                 });
 
+            // the realized node
             yield return new Class(
                 AccessModifier.Public,
                 ClassModifier.Abstract,
@@ -472,6 +475,7 @@ this.realizationResult = realizationResult;
                                         true,
                                         false,
                                         null),
+                                    //// TODO add properties from `nestedclass`
                                 }))
                     .Prepend(
                         new Class(
