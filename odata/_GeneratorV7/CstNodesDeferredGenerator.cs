@@ -497,6 +497,7 @@ if (!output.Success)
 var input = output.RemainingTokens;
 if (input == null)
 {
+    //// TODO realizationresult.create would be nice
     return new RealizationResult<char, {{realizedTypeName}}.{{nestedClass.Name}}>(false, default, input);
 }
 
