@@ -258,7 +258,46 @@ else
 
         private IEnumerable<Class> TranslateDiscriminatedUnion(Class toTranslate)
         {
-            yield break;
+            //// TODO actually implement this
+            yield return new Class(
+                AccessModifier.Public,
+                ClassModifier.Sealed,
+                toTranslate.Name,
+                new[]
+                {
+                    "TMode",
+                },
+                $"IAstNode<char, {toTranslate.Name}<ParseMode.Realized>>, IFromRealizedable<{toTranslate.Name}<ParseMode.Deferred>> where TMode : ParseMode", //// TODO generic type constraints should be built into `class`
+                Enumerable.Empty<ConstructorDefinition>(),
+                new[]
+                {
+                    new MethodDefinition(
+                        AccessModifier.Public,
+                        ClassModifier.None,
+                        false,
+                        $"{toTranslate.Name}<ParseMode.Deferred>",
+                        Enumerable.Empty<string>(),
+                        "Convert",
+                        Enumerable.Empty<MethodParameter>(),
+$$"""
+throw new System.Exception("TODO");
+"""
+                        ),
+                    new MethodDefinition(
+                        AccessModifier.Public,
+                        ClassModifier.None,
+                        false,
+                        $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>",
+                        Enumerable.Empty<string>(),
+                        "Realize",
+                        Enumerable.Empty<MethodParameter>(),
+$$"""
+throw new System.Exception("TODO");
+"""
+                        ),
+                },
+                Enumerable.Empty<Class>(),
+                Enumerable.Empty<PropertyDefinition>());
         }
 
         private IEnumerable<Class> TranslateTerminal(Class toTranslate)
