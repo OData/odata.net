@@ -105,7 +105,7 @@
                             .Select(
                                 property =>
                                     new MethodParameter(
-                                        $"{property.Type}<TMode>",
+                                        TranslateType(property.Type),
                                         property.Name))
                             .Append(
                                 new MethodParameter(
@@ -272,6 +272,7 @@ else
             }
             else
             {
+                //// TODO what to do in these cases?
                 yield break;
             }
 
@@ -345,7 +346,7 @@ this.realizationResult = new Future<IRealizationResult<char, {{toTranslate.Name}
                                 "realizationResult"),
                         },
 """
-if (typeof(TMode) != typeof(ParseMode.Deferred))
+if (typeof(TMode) != typeof(ParseMode.Realized))
 {
     throw new ArgumentException("TODO");
 }
