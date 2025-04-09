@@ -478,7 +478,38 @@ throw new System.Exception("TODO");
 
             var realizedTypeName = $"{toTranslate.Name}Realized";
             var deferredTypeName = $"{toTranslate.Name}Deferred";
-            
+
+            // the factory methods for the cst node
+            yield return new Class(
+                AccessModifier.Public,
+                ClassModifier.Static,
+                toTranslate.Name,
+                Enumerable.Empty<string>(),
+                null,
+                Enumerable.Empty<ConstructorDefinition>(),
+                new[]
+                {
+                    new MethodDefinition(
+                        AccessModifier.Public,
+                        ClassModifier.Static,
+                        false,
+                        deferredTypeName,
+                        Enumerable.Empty<string>(),
+                        "Create",
+                        new[]
+                        {
+                            new MethodParameter(
+                                "IFuture<IRealizationResult<char>>",
+                                "previousNodeRealizationResult"),
+                        },
+$$"""
+return new {{deferredTypeName}}(previousNodeRealizationResult);
+"""
+                        ),
+                },
+                Enumerable.Empty<Class>(),
+                Enumerable.Empty<PropertyDefinition>());
+
             // the deferred node
             yield return new Class(
                 AccessModifier.Public,
