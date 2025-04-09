@@ -474,8 +474,44 @@ throw new Exception("TODO");
                                 },
                                 new[]
                                 {
+                                    new MethodDefinition(
+                                        AccessModifier.Public,
+                                        ClassModifier.Static, 
+                                        false,
+                                        $"IRealizationResult<char, {realizedTypeName}.{nestedClass.Name}>",
+                                        Enumerable.Empty<string>(),
+                                        "Create",
+                                        new[]
+                                        {
+                                            new MethodParameter(
+                                                "IFuture<IRealizationResult<char>>",
+                                                "previousNodeRealizationResult"),
+                                        },
+$$"""
+var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, {{realizedTypeName}}.{{nestedClass.Name}}>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    return new RealizationResult<char, {{realizedTypeName}}.{{nestedClass.Name}}>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new {{realizedTypeName}}.{{nestedClass.Name}}(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, {{realizedTypeName}}.{{nestedClass.Name}}>(false, default, input);
+}
+"""
+                                        ),
                                     //// TODO add convert
-                                    //// TODO add create
                                     new MethodDefinition(
                                         AccessModifier.Protected,
                                         ClassModifier.None,
