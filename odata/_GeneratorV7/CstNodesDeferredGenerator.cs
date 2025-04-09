@@ -320,7 +320,36 @@ throw new System.Exception("TODO");
                 deferredTypeName,
                 Enumerable.Empty<string>(),
                 $"IAstNode<char, {realizedTypeName}>",
-                Enumerable.Empty<ConstructorDefinition>(), //// TODO
+                new[]
+                {
+                    new ConstructorDefinition(
+                        AccessModifier.Public,
+                        new[]
+                        {
+                            new MethodParameter(
+                                "IFuture<IRealizationResult<char>>",
+                                "previousNodeRealizationResult"),
+                        },
+"""
+//// TODO get constructor accessibility correct
+this.previousNodeRealizationResult = previousNodeRealizationResult;
+
+this.realizationResult = Future.Create(() => this.RealizeImpl());
+""".Split(Environment.NewLine)
+                        ),
+                    new ConstructorDefinition(
+                        AccessModifier.Public,
+                        new[]
+                        {
+                            new MethodParameter(
+                                $"IFuture<IRealizationResult<char, {realizedTypeName}>>",
+                                "realizationResult"),
+                        },
+"""
+this.realizationResult = realizationResult;
+""".Split(Environment.NewLine)
+                        ),
+                },
                 Enumerable.Empty<MethodDefinition>(), //// TODO
                 Enumerable.Empty<Class>(), //// TODO
                 Enumerable.Empty<PropertyDefinition>() //// TODO
