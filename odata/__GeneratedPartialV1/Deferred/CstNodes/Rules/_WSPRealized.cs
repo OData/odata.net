@@ -31,6 +31,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             private IRealizationResult<char, _WSPRealized._SP> RealizationResult { get; }
             
+            public static IRealizationResult<char, _WSPRealized._SP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _WSPRealized._SP>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _WSPRealized._SP>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _WSPRealized._SP(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _WSPRealized._SP>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -45,6 +71,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             }
             
             private IRealizationResult<char, _WSPRealized._HTAB> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _WSPRealized._HTAB> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _WSPRealized._HTAB>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _WSPRealized._HTAB>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _WSPRealized._HTAB(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _WSPRealized._HTAB>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

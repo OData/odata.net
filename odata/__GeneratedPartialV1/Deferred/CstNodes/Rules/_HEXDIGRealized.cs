@@ -36,6 +36,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             private IRealizationResult<char, _HEXDIGRealized._DIGIT> RealizationResult { get; }
             
+            public static IRealizationResult<char, _HEXDIGRealized._DIGIT> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _HEXDIGRealized._DIGIT>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _HEXDIGRealized._DIGIT>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _HEXDIGRealized._DIGIT(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _HEXDIGRealized._DIGIT>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -50,6 +76,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             }
             
             private IRealizationResult<char, _HEXDIGRealized._ʺx41ʺ> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _HEXDIGRealized._ʺx41ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _HEXDIGRealized._ʺx41ʺ>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _HEXDIGRealized._ʺx41ʺ>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _HEXDIGRealized._ʺx41ʺ(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _HEXDIGRealized._ʺx41ʺ>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -66,6 +118,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             private IRealizationResult<char, _HEXDIGRealized._ʺx42ʺ> RealizationResult { get; }
             
+            public static IRealizationResult<char, _HEXDIGRealized._ʺx42ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _HEXDIGRealized._ʺx42ʺ>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _HEXDIGRealized._ʺx42ʺ>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _HEXDIGRealized._ʺx42ʺ(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _HEXDIGRealized._ʺx42ʺ>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -80,6 +158,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             }
             
             private IRealizationResult<char, _HEXDIGRealized._ʺx43ʺ> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _HEXDIGRealized._ʺx43ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _HEXDIGRealized._ʺx43ʺ>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _HEXDIGRealized._ʺx43ʺ>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _HEXDIGRealized._ʺx43ʺ(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _HEXDIGRealized._ʺx43ʺ>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -96,6 +200,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             private IRealizationResult<char, _HEXDIGRealized._ʺx44ʺ> RealizationResult { get; }
             
+            public static IRealizationResult<char, _HEXDIGRealized._ʺx44ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _HEXDIGRealized._ʺx44ʺ>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _HEXDIGRealized._ʺx44ʺ>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _HEXDIGRealized._ʺx44ʺ(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _HEXDIGRealized._ʺx44ʺ>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -111,6 +241,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             private IRealizationResult<char, _HEXDIGRealized._ʺx45ʺ> RealizationResult { get; }
             
+            public static IRealizationResult<char, _HEXDIGRealized._ʺx45ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _HEXDIGRealized._ʺx45ʺ>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _HEXDIGRealized._ʺx45ʺ>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _HEXDIGRealized._ʺx45ʺ(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _HEXDIGRealized._ʺx45ʺ>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -125,6 +281,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             }
             
             private IRealizationResult<char, _HEXDIGRealized._ʺx46ʺ> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _HEXDIGRealized._ʺx46ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _HEXDIGRealized._ʺx46ʺ>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _HEXDIGRealized._ʺx46ʺ>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _HEXDIGRealized._ʺx46ʺ(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _HEXDIGRealized._ʺx46ʺ>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

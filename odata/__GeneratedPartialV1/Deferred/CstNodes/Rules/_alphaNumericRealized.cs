@@ -31,6 +31,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             private IRealizationResult<char, _alphaNumericRealized._ʺx41ʺ> RealizationResult { get; }
             
+            public static IRealizationResult<char, _alphaNumericRealized._ʺx41ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _alphaNumericRealized._ʺx41ʺ>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _alphaNumericRealized._ʺx41ʺ>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _alphaNumericRealized._ʺx41ʺ(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _alphaNumericRealized._ʺx41ʺ>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -45,6 +71,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             }
             
             private IRealizationResult<char, _alphaNumericRealized._ʺx43ʺ> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _alphaNumericRealized._ʺx43ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _alphaNumericRealized._ʺx43ʺ>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _alphaNumericRealized._ʺx43ʺ>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _alphaNumericRealized._ʺx43ʺ(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _alphaNumericRealized._ʺx43ʺ>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

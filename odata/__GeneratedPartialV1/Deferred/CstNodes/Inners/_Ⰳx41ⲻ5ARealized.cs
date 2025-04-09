@@ -55,6 +55,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._41> RealizationResult { get; }
             
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._41> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._41>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._41>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._41(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._41>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -69,6 +95,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._42> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._42> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._42>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._42>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._42(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._42>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -85,6 +137,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._43> RealizationResult { get; }
             
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._43> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._43>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._43>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._43(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._43>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -99,6 +177,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._44> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._44> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._44>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._44>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._44(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._44>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -115,6 +219,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._45> RealizationResult { get; }
             
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._45> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._45>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._45>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._45(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._45>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -129,6 +259,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._46> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._46> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._46>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._46>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._46(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._46>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -145,6 +301,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._47> RealizationResult { get; }
             
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._47> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._47>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._47>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._47(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._47>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -159,6 +341,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._48> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._48> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._48>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._48>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._48(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._48>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -175,6 +383,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._49> RealizationResult { get; }
             
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._49> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._49>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._49>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._49(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._49>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -189,6 +423,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._4A> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._4A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4A>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4A>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._4A(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4A>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -205,6 +465,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._4B> RealizationResult { get; }
             
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._4B> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4B>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4B>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._4B(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4B>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -219,6 +505,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._4C> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._4C> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4C>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4C>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._4C(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4C>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -235,6 +547,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._4D> RealizationResult { get; }
             
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._4D> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4D>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4D>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._4D(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4D>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -249,6 +587,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._4E> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._4E> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4E>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4E>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._4E(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4E>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -265,6 +629,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._4F> RealizationResult { get; }
             
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._4F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4F>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4F>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._4F(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._4F>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -279,6 +669,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._50> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._50> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._50>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._50>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._50(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._50>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -295,6 +711,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._51> RealizationResult { get; }
             
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._51> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._51>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._51>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._51(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._51>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -309,6 +751,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._52> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._52> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._52>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._52>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._52(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._52>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -325,6 +793,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._53> RealizationResult { get; }
             
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._53> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._53>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._53>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._53(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._53>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -339,6 +833,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._54> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._54> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._54>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._54>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._54(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._54>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -355,6 +875,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._55> RealizationResult { get; }
             
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._55> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._55>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._55>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._55(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._55>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -369,6 +915,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._56> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._56> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._56>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._56>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._56(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._56>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -385,6 +957,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._57> RealizationResult { get; }
             
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._57> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._57>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._57>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._57(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._57>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -399,6 +997,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._58> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._58> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._58>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._58>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._58(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._58>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
@@ -415,6 +1039,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._59> RealizationResult { get; }
             
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._59> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._59>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._59>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._59(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._59>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -429,6 +1079,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _Ⰳx41ⲻ5ARealized._5A> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _Ⰳx41ⲻ5ARealized._5A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._5A>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._5A>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _Ⰳx41ⲻ5ARealized._5A(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _Ⰳx41ⲻ5ARealized._5A>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

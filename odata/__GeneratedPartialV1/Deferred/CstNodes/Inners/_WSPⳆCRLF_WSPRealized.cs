@@ -31,6 +31,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _WSPⳆCRLF_WSPRealized._WSP> RealizationResult { get; }
             
+            public static IRealizationResult<char, _WSPⳆCRLF_WSPRealized._WSP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _WSPⳆCRLF_WSPRealized._WSP>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _WSPⳆCRLF_WSPRealized._WSP>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _WSPⳆCRLF_WSPRealized._WSP(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _WSPⳆCRLF_WSPRealized._WSP>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -45,6 +71,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             private IRealizationResult<char, _WSPⳆCRLF_WSPRealized._CRLF_WSP> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _WSPⳆCRLF_WSPRealized._CRLF_WSP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _WSPⳆCRLF_WSPRealized._CRLF_WSP>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _WSPⳆCRLF_WSPRealized._CRLF_WSP>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _WSPⳆCRLF_WSPRealized._CRLF_WSP(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _WSPⳆCRLF_WSPRealized._CRLF_WSP>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {

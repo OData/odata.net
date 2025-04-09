@@ -31,6 +31,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             private IRealizationResult<char, _ALPHARealized._Ⰳx41ⲻ5A> RealizationResult { get; }
             
+            public static IRealizationResult<char, _ALPHARealized._Ⰳx41ⲻ5A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _ALPHARealized._Ⰳx41ⲻ5A>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _ALPHARealized._Ⰳx41ⲻ5A>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _ALPHARealized._Ⰳx41ⲻ5A(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _ALPHARealized._Ⰳx41ⲻ5A>(false, default, input);
+}
+            }
+            
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
                 return visitor.Accept(this, context);
@@ -45,6 +71,32 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             }
             
             private IRealizationResult<char, _ALPHARealized._Ⰳx61ⲻ7A> RealizationResult { get; }
+            
+            public static IRealizationResult<char, _ALPHARealized._Ⰳx61ⲻ7A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                var output = previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, _ALPHARealized._Ⰳx61ⲻ7A>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    //// TODO realizationresult.create would be nice
+    return new RealizationResult<char, _ALPHARealized._Ⰳx61ⲻ7A>(false, default, input);
+}
+
+if (input.Current == 'A') //// TODO do this correctly...
+{
+    var a = new _ALPHARealized._Ⰳx61ⲻ7A(input.Next());
+    return a.RealizationResult;
+}
+else
+{
+    return new RealizationResult<char, _ALPHARealized._Ⰳx61ⲻ7A>(false, default, input);
+}
+            }
             
             protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
             {
