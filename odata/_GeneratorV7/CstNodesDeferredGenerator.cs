@@ -253,6 +253,14 @@ else
                 return $"CombinatorParsingV3.Many<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>, TMode>";
             }
 
+            var atleastone = "__GeneratedPartialV1.Deferred.CstNodes.Inners.HelperRangedAtLeast1<"; //// TODO what about handling other range sizes?
+            if (toTranslate.StartsWith(atleastone))
+            {
+                var elementType = toTranslate.Substring(atleastone.Length);
+                elementType = elementType.Substring(0, elementType.Length - 1);
+                return $"CombinatorParsingV3.AtLeastOne<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>, TMode";
+            }
+
             return $"{toTranslate}<TMode>";
         }
 
