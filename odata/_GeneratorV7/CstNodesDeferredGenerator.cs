@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Security.Principal;
+    using System.Text;
     using AbnfParserGenerator;
 
     public sealed class CstNodesDeferredGenerator
@@ -67,6 +69,64 @@
             else
             {
                 return TranslateInner(toTranslate);
+            }
+        }
+
+        private string GenerateDeferredFactoryMethodBody(Class toTranslate)
+        {
+            var properties = toTranslate.Properties.ToList();
+
+            if (properties.Count == 0)
+            {
+                throw new Exception("TODO");
+            }
+
+            var builder = new StringBuilder();
+            GenerateDeferredFactoryMethodBodyPropertyInitialization(properties[0], "previousNodeRealizationResult", builder);
+            builder.AppendLine();
+            for (int i = 1; i < properties.Count; ++i)
+            {
+                GenerateDeferredFactoryMethodBodyPropertyInitialization(
+                    properties[i], 
+                    $"Future.Create(() => {properties[i - 1].Name}.Value.Realize())", 
+                    builder);
+                builder.AppendLine();
+            }
+
+            builder.Append($"return new {toTranslate.Name}<ParseMode.Deferred>(");
+            builder.AppendJoin(", ", properties.Select(property => property.Name));
+            builder.Append(");");
+
+            return builder.ToString();
+        }
+
+        private void GenerateDeferredFactoryMethodBodyPropertyInitialization(
+            PropertyDefinition property,
+            string previousNodeRealizationResult,
+            StringBuilder builder)
+        {
+            builder.Append($"var {property.Name} = Future.Create(() => ");
+
+            var propertyType = TranslateType(property.Type);
+            var atleastone = "CombinatorParsingV3.AtLeastOne<";
+            var many = "CombinatorParsingV3.Many<";
+            if (propertyType.StartsWith(atleastone)) //// TODO what about other ranges?
+            {
+                var elementType = propertyType.Substring(atleastone.Length);
+                elementType = elementType.Substring(0, elementType.Length - 1);
+
+                builder.Append($"CombinatorParsingV3.AtLeastOne.Create<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>>({previousNodeRealizationResult}, input => {elementType}.Create(input)));");
+            }
+            else if (propertyType.StartsWith(many))
+            {
+                var elementType = propertyType.Substring(many.Length);
+                elementType = elementType.Substring(0, elementType.Length - 1);
+
+                builder.Append($"CombinatorParsingV3.Many.Create<{elementType}<ParseMode.Deferred>, {elementType}<ParseMode.Realized>>(input => {elementType}.Create(input), {previousNodeRealizationResult}));");
+            }
+            else
+            {
+                builder.Append($"{propertyType}.Create({previousNodeRealizationResult}));");
             }
         }
 
@@ -138,25 +198,7 @@
                                 "IFuture<IRealizationResult<char>>",
                                 "previousNodeRealizationResult"),
                         },
-                        string.Join(
-                            Environment.NewLine,
-                            toTranslate
-                                .Properties
-                                .Select(
-                                    property =>
-                                    {
-                                        var propertyType = TranslateType(property.Type);
-                                        return string.Empty; //// TODO implement this
-                                    })
-                                .Append(
-                                    string.Concat(
-                                        $"return new {toTranslate.Name}<ParseMode.Deferred>(",
-                                        string.Join(
-                                            ", ",
-                                            toTranslate
-                                                .Properties
-                                                .Select(property => property.Name)),
-                                        ");")))),
+                        GenerateDeferredFactoryMethodBody(toTranslate)),
                     new MethodDefinition(
                         AccessModifier.Public, 
                         ClassModifier.None, 
