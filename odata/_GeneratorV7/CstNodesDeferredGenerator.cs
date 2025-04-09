@@ -142,14 +142,7 @@
             }
             else
             {
-                if (isDiscriminatedUnion)
-                {
-                    builder.Append($"new {deferredType}({previousNodeRealizationResult}));");
-                }
-                else
-                {
-                    builder.Append($"{translatedType}.Create({previousNodeRealizationResult}));");
-                }
+                builder.Append($"{translatedType}.Create({previousNodeRealizationResult}));");
             }
         }
 
