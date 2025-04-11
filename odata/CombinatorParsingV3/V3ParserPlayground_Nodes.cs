@@ -120,6 +120,11 @@
                     this.realizationResult = Future.Create(() => this.RealizeImpl());
                 }
 
+                internal Deferred(IFuture<IRealizationResult<char, AlphaNumeric<ParseMode.Realized>>> realizationResult)
+                {
+                    this.realizationResult = realizationResult;
+                }
+
                 public override IRealizationResult<char, AlphaNumeric<ParseMode.Realized>> Realize()
                 {
                     return this.realizationResult.Value;
@@ -132,13 +137,13 @@
                         return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
                     }
 
-                    var a = AlphaNumericRealized.A.Create(this.previousNodeRealizationResult);
+                    var a = AlphaNumeric<ParseMode.Realized>.Realized.A.Create(this.previousNodeRealizationResult);
                     if (a.Success)
                     {
                         return a;
                     }
 
-                    var c = AlphaNumericRealized.C.Create(this.previousNodeRealizationResult);
+                    var c = AlphaNumeric<ParseMode.Realized>.Realized.C.Create(this.previousNodeRealizationResult);
                     if (c.Success)
                     {
                         return c;
@@ -149,18 +154,112 @@
             }
 
 
-            public abstract class Realized : AlphaNumeric<ParseMode.Realized>
+            public abstract class Realized : AlphaNumeric<ParseMode.Realized>, IFromRealizedable<AlphaNumeric<ParseMode.Deferred>>
             {
                 private Realized()
                 {
                 }
 
+                public abstract AlphaNumeric<ParseMode.Deferred> Convert();
+
                 public sealed class A : Realized
                 {
+                    internal static IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.Realized.A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                    {
+                        var output = previousNodeRealizationResult.Value;
+                        if (!output.Success)
+                        {
+                            return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.Realized.A>(false, default, output.RemainingTokens);
+                        }
+
+                        var input = output.RemainingTokens;
+                        if (input == null)
+                        {
+                            return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.Realized.A>(false, default, input);
+                        }
+
+                        if (input.Current == 'A')
+                        {
+                            var a = new AlphaNumeric<ParseMode.Realized>.Realized.A(input.Next());
+                            return a.RealizationResult;
+                        }
+                        else
+                        {
+                            return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.Realized.A>(false, default, input);
+                        }
+                    }
+
+                    private A(ITokenStream<char>? nextTokens)
+                    {
+                        if (typeof(TMode) != typeof(ParseMode.Realized))
+                        {
+                            throw new Exception("tODO");
+                        }
+
+                        this.RealizationResult = new RealizationResult<char, AlphaNumeric<TMode>.Realized.A>(true, this, nextTokens);
+                    }
+
+                    private IRealizationResult<char, AlphaNumeric<TMode>.Realized.A> RealizationResult { get; }
+
+                    public override IRealizationResult<char, AlphaNumeric<ParseMode.Realized>> Realize()
+                    {
+                        return this.RealizationResult;
+                    }
+
+                    public override AlphaNumeric<ParseMode.Deferred> Convert()
+                    {
+                        return new AlphaNumeric<ParseMode.Deferred>.Deferred(Future.Create(() => this.RealizationResult));
+                    }
                 }
 
                 public sealed class C : Realized
                 {
+                    internal static IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.Realized.C> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                    {
+                        var output = previousNodeRealizationResult.Value;
+                        if (!output.Success)
+                        {
+                            return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.Realized.C>(false, default, output.RemainingTokens);
+                        }
+
+                        var input = output.RemainingTokens;
+                        if (input == null)
+                        {
+                            return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.Realized.C>(false, default, input);
+                        }
+
+                        if (input.Current == 'C')
+                        {
+                            var a = new AlphaNumeric<ParseMode.Realized>.Realized.C(input.Next());
+                            return a.RealizationResult;
+                        }
+                        else
+                        {
+                            return new RealizationResult<char, AlphaNumeric<ParseMode.Realized>.Realized.C>(false, default, input);
+                        }
+                    }
+
+                    private C(ITokenStream<char>? nextTokens)
+                    {
+                        if (typeof(TMode) != typeof(ParseMode.Realized))
+                        {
+                            throw new Exception("tODO");
+                        }
+
+                        this.RealizationResult = new RealizationResult<char, AlphaNumeric<TMode>.Realized.C>(true, this, nextTokens);
+                    }
+
+                    private IRealizationResult<char, AlphaNumeric<TMode>.Realized.C> RealizationResult { get; }
+
+                    public override IRealizationResult<char, AlphaNumeric<ParseMode.Realized>> Realize()
+                    {
+                        return this.RealizationResult;
+                    }
+
+                    public override AlphaNumeric<ParseMode.Deferred> Convert()
+                    {
+                        return new AlphaNumeric<ParseMode.Deferred>.Deferred(Future.Create(() => this.RealizationResult));
+                    }
                 }
             }
         }
