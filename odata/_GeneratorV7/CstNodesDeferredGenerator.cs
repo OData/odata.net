@@ -974,6 +974,159 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Create(previousNodeRealizationRe
             else
             {
                 //// TODO what to do in these cases?
+
+                yield return new Class(
+                AccessModifier.Public,
+                ClassModifier.Sealed,
+                toTranslate.Name,
+                new[]
+                {
+                    "TMode",
+                },
+                $"IAstNode<char, {toTranslate.Name}<ParseMode.Realized>>, IFromRealizedable<{toTranslate.Name}<ParseMode.Deferred>> where TMode : ParseMode", //// TODO generic type constraints should be built into `class`
+                new[]
+                {
+                    new ConstructorDefinition(
+                        AccessModifier.Private,
+                        new[]
+                        {
+                            new MethodParameter(
+                                "IFuture<IRealizationResult<char>>",
+                                "previousNodeRealizationResult"),
+                        },
+$$"""
+if (typeof(TMode) != typeof(ParseMode.Deferred))
+{
+    throw new ArgumentException("TODO");
+}
+
+this.previousNodeRealizationResult = previousNodeRealizationResult;
+
+this.realizationResult = new Future<IRealizationResult<char, {{toTranslate.Name}}<ParseMode.Realized>>>(() => this.RealizeImpl());
+""".Split(Environment.NewLine)),
+                    new ConstructorDefinition(
+                        AccessModifier.Private,
+                        new[]
+                        {
+                            new MethodParameter(
+                                $"IFuture<IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>>",
+                                "realizationResult"),
+                        },
+"""
+if (typeof(TMode) != typeof(ParseMode.Realized))
+{
+    throw new ArgumentException("TODO");
+}
+
+this.realizationResult = realizationResult;
+""".Split(Environment.NewLine)),
+                },
+                new[]
+                {
+                    new MethodDefinition(
+                        AccessModifier.Internal,
+                        ClassModifier.Static,
+                        false,
+                        $"{toTranslate.Name}<ParseMode.Deferred>",
+                        Enumerable.Empty<string>(),
+                        "Create",
+                        new[]
+                        {
+                            new MethodParameter(
+                                "IFuture<IRealizationResult<char>>",
+                                "previousNodeRealizationResult"),
+                        },
+$"""         
+return new {toTranslate.Name}<ParseMode.Deferred>(previousNodeRealizationResult);
+"""
+                        ),
+                    new MethodDefinition(
+                        AccessModifier.Public,
+                        ClassModifier.None,
+                        false,
+                        $"{toTranslate.Name}<ParseMode.Deferred>",
+                        Enumerable.Empty<string>(),
+                        "Convert",
+                        Enumerable.Empty<MethodParameter>(),
+$$"""
+if (typeof(TMode) == typeof(ParseMode.Deferred))
+{
+    return new {{toTranslate.Name}}<ParseMode.Deferred>(this.previousNodeRealizationResult);
+}
+else
+{
+    return new {{toTranslate.Name}}<ParseMode.Deferred>(this.realizationResult);
+}
+"""
+                        ),
+                    new MethodDefinition(
+                        AccessModifier.Public,
+                        ClassModifier.None,
+                        false,
+                        $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>",
+                        Enumerable.Empty<string>(),
+                        "Realize",
+                        Enumerable.Empty<MethodParameter>(),
+"""
+return realizationResult.Value;
+"""
+                        ),
+                    new MethodDefinition(
+                        AccessModifier.Private,
+                        ClassModifier.None,
+                        false,
+                        $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>",
+                        Enumerable.Empty<string>(),
+                        "RealizeImpl",
+                        Enumerable.Empty<MethodParameter>(),
+$$"""
+var output = this.previousNodeRealizationResult.Value;
+if (!output.Success)
+{
+    return new RealizationResult<char, {{toTranslate.Name}}<ParseMode.Realized>>(false, default, output.RemainingTokens);
+}
+
+var input = output.RemainingTokens;
+if (input == null)
+{
+    return new RealizationResult<char, {{toTranslate.Name}}<ParseMode.Realized>>(false, default, output.RemainingTokens);
+}
+
+if (input.Current == '/') TODO this whole section is wrong to do
+{
+    return new RealizationResult<char, {{toTranslate.Name}}<ParseMode.Realized>>(
+        true,
+        new {{toTranslate.Name}}<ParseMode.Realized>(this.realizationResult),
+        input.Next());
+}
+else
+{
+    return new RealizationResult<char, {{toTranslate.Name}}<ParseMode.Realized>>(false, default, input);
+}
+"""
+                        ),
+                },
+                Enumerable.Empty<Class>(),
+                new[]
+                {
+                    new PropertyDefinition( //// TODO this should be a field, not a property
+                        AccessModifier.Private,
+                        false,
+                        "IFuture<IRealizationResult<char>>",
+                        "previousNodeRealizationResult",
+                        true,
+                        false,
+                        null),
+                    new PropertyDefinition( //// TODO this should be a field, not a property
+                        AccessModifier.Private,
+                        false,
+                        $"IFuture<IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>>",
+                        "realizationResult",
+                        true,
+                        false,
+                        null),
+                });
+
                 yield break;
             }
 
