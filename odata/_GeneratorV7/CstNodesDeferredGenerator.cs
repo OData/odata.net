@@ -112,7 +112,7 @@
         {
             builder.Append($"var {property.Name} = Future.Create(() => ");
 
-            TranslateType(property.Type, rules, inners, out var translatedType, out var elementTypes);
+            TranslateType(property.Type, rules, inners, out var translatedType, out var factoryType, out var elementTypes);
 
             var atleastone = "CombinatorParsingV3.AtLeastOne<";
             var many = "CombinatorParsingV3.Many<";
@@ -126,7 +126,7 @@
             }
             else
             {
-                builder.Append($"{translatedType}.Create({previousNodeRealizationResult}));");
+                builder.Append($"{factoryType}.Create({previousNodeRealizationResult}));");
             }
         }
 
@@ -249,7 +249,7 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Create(previousNodeRealizationRe
                 new[]
                 {
                     new MethodDefinition(
-                        AccessModifier.Public,
+                        AccessModifier.Internal,
                         ClassModifier.Static,
                         false,
                         $"{toTranslate.Name}<ParseMode.Deferred>",
@@ -384,7 +384,7 @@ else
                 );
         }
 
-        private void TranslateType(string toTranslate, Namespace rules, Namespace inners, out string translated, out (string DeferredElementType, string RealizedElementType, string FactoryType)? elementTypes)
+        private void TranslateType(string toTranslate, Namespace rules, Namespace inners, out string translated, out string factoryType, out (string DeferredElementType, string RealizedElementType, string FactoryType)? elementTypes)
         {
             var ienumerable = "System.Collections.Generic.IEnumerable<";
             if (toTranslate.StartsWith(ienumerable))
@@ -402,6 +402,7 @@ else
                 }
 
                 translated = $"CombinatorParsingV3.Many<{elementTypes.Value.DeferredElementType}, {elementTypes.Value.RealizedElementType}, TMode>";
+                factoryType = "CombinatorParsingV3.Many";
                 return;
             }
 
@@ -421,17 +422,19 @@ else
                 }
 
                 translated = $"CombinatorParsingV3.AtLeastOne<{elementTypes.Value.DeferredElementType}, {elementTypes.Value.RealizedElementType}, TMode>";
+                factoryType = "CombinatorParsingV3.AtLeastOne";
                 return;
             }
 
             translated = $"{toTranslate}<TMode>";
+            factoryType = toTranslate;
             elementTypes = null;
             return;
         }
 
         private string TranslateType(string toTranslate, Namespace rules, Namespace inners)
         {
-            TranslateType(toTranslate, rules, inners, out var translated, out _);
+            TranslateType(toTranslate, rules, inners, out var translated, out _, out _);
 
             return translated;
         }
