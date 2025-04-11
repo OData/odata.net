@@ -933,19 +933,6 @@ return new {{deferredTypeName}}(Future.Create(() => this.RealizationResult));
 
         private IEnumerable<Class> TranslateTerminal(Class toTranslate)
         {
-            char parsedCharacter;
-            if (toTranslate.Name.Length == 4)
-            {
-                var ascii = Convert.ToInt32(toTranslate.Name.Substring(2, 2), 16); //// TODO this throws
-
-                parsedCharacter = (char)ascii;
-            }
-            else
-            {
-                //// TODO what to do in these cases?
-                yield break;
-            }
-
             // the factory methods for the cst node
             yield return new Class(
                 AccessModifier.Public,
@@ -976,6 +963,19 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Create(previousNodeRealizationRe
                 },
                 Enumerable.Empty<Class>(),
                 Enumerable.Empty<PropertyDefinition>());
+
+            char parsedCharacter;
+            if (toTranslate.Name.Length == 4)
+            {
+                var ascii = Convert.ToInt32(toTranslate.Name.Substring(2, 2), 16); //// TODO this throws
+
+                parsedCharacter = (char)ascii;
+            }
+            else
+            {
+                //// TODO what to do in these cases?
+                yield break;
+            }
 
             // the cst node
             yield return new Class(
