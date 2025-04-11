@@ -1092,7 +1092,7 @@ if (input == null)
     return new RealizationResult<char, {{toTranslate.Name}}<ParseMode.Realized>>(false, default, output.RemainingTokens);
 }
 
-if (input.Current == '/') TODO this whole section is wrong to do
+if (input.Current == '/') //// TODO this whole section is wrong to do
 {
     return new RealizationResult<char, {{toTranslate.Name}}<ParseMode.Realized>>(
         true,
