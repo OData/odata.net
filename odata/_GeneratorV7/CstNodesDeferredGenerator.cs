@@ -530,7 +530,7 @@ throw new System.Exception("TODO");
                 new[]
                 {
                     new Class(
-                        AccessModifier.Public, 
+                        AccessModifier.Public,
                         ClassModifier.Sealed,
                         "Deferred",
                         Enumerable.Empty<string>(),
@@ -538,7 +538,26 @@ throw new System.Exception("TODO");
                         Enumerable.Empty<ConstructorDefinition>(),
                         new[]
                         {
-                        })
+                            new MethodDefinition(
+                                AccessModifier.Internal,
+                                ClassModifier.Static,
+                                false,
+                                $"{toTranslate.Name}<ParseMode.Deferred>.Deferred",
+                                Enumerable.Empty<string>(),
+                                "Create",
+                                new[]
+                                {
+                                    new MethodParameter(
+                                        "IFuture<IRealizationResult<char>>",
+                                        "previousNodeRealizationResult"),
+                                },
+$$"""
+return {{toTranslate.Name}}<ParseMode.Deferred>.Deferred.Create(previousNodeRealizationResult);
+"""
+                                ),
+                        },
+                        Enumerable.Empty<Class>(),
+                        Enumerable.Empty<PropertyDefinition>()),
                 },
                 Enumerable.Empty<PropertyDefinition>());
 
