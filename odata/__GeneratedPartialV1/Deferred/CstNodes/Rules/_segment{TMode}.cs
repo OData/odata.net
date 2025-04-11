@@ -24,6 +24,13 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
         public __GeneratedPartialV1.Deferred.CstNodes.Rules._slash<TMode> _slash_1 { get; }
         public CombinatorParsingV3.AtLeastOne<__GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Realized>, TMode> _alphaNumeric_1 { get; }
         
+        internal static _segment<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+        {
+            var _slash_1 = Future.Create(() => __GeneratedPartialV1.Deferred.CstNodes.Rules._slash.Create(previousNodeRealizationResult));
+var _alphaNumeric_1 = Future.Create(() => CombinatorParsingV3.AtLeastOne.Create<__GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Realized>>(Future.Create(() => _slash_1.Value.Realize()), input => __GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric.Create(input)));
+return new _segment<ParseMode.Deferred>(_slash_1, _alphaNumeric_1);
+        }
+        
         public _segment<ParseMode.Deferred> Convert()
         {
             if (typeof(TMode) == typeof(ParseMode.Deferred))

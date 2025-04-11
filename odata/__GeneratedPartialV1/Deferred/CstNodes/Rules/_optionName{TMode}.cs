@@ -20,6 +20,12 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
         private IFuture<IRealizationResult<char, _optionName<ParseMode.Realized>>> realizationResult { get; }
         public CombinatorParsingV3.AtLeastOne<__GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Realized>, TMode> _alphaNumeric_1 { get; }
         
+        internal static _optionName<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+        {
+            var _alphaNumeric_1 = Future.Create(() => CombinatorParsingV3.AtLeastOne.Create<__GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Realized>>(previousNodeRealizationResult, input => __GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric.Create(input)));
+return new _optionName<ParseMode.Deferred>(_alphaNumeric_1);
+        }
+        
         public _optionName<ParseMode.Deferred> Convert()
         {
             if (typeof(TMode) == typeof(ParseMode.Deferred))

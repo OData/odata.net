@@ -28,6 +28,14 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
         public __GeneratedPartialV1.Deferred.CstNodes.Rules._questionMark<TMode> _questionMark_1 { get; }
         public CombinatorParsingV3.Many<__GeneratedPartialV1.Deferred.CstNodes.Rules._queryOption<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._queryOption<ParseMode.Realized>, TMode> _queryOption_1 { get; }
         
+        internal static _odataUri<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+        {
+            var _segment_1 = Future.Create(() => CombinatorParsingV3.AtLeastOne.Create<__GeneratedPartialV1.Deferred.CstNodes.Rules._segment<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._segment<ParseMode.Realized>>(previousNodeRealizationResult, input => __GeneratedPartialV1.Deferred.CstNodes.Rules._segment.Create(input)));
+var _questionMark_1 = Future.Create(() => __GeneratedPartialV1.Deferred.CstNodes.Rules._questionMark.Create(Future.Create(() => _segment_1.Value.Realize())));
+var _queryOption_1 = Future.Create(() => CombinatorParsingV3.Many.Create<__GeneratedPartialV1.Deferred.CstNodes.Rules._queryOption<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._queryOption<ParseMode.Realized>>(input => __GeneratedPartialV1.Deferred.CstNodes.Rules._queryOption.Create(input), Future.Create(() => _questionMark_1.Value.Realize())));
+return new _odataUri<ParseMode.Deferred>(_segment_1, _questionMark_1, _queryOption_1);
+        }
+        
         public _odataUri<ParseMode.Deferred> Convert()
         {
             if (typeof(TMode) == typeof(ParseMode.Deferred))

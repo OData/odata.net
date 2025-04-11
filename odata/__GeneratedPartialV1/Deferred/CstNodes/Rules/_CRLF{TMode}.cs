@@ -24,6 +24,13 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
         public __GeneratedPartialV1.Deferred.CstNodes.Rules._CR<TMode> _CR_1 { get; }
         public __GeneratedPartialV1.Deferred.CstNodes.Rules._LF<TMode> _LF_1 { get; }
         
+        internal static _CRLF<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+        {
+            var _CR_1 = Future.Create(() => __GeneratedPartialV1.Deferred.CstNodes.Rules._CR.Create(previousNodeRealizationResult));
+var _LF_1 = Future.Create(() => __GeneratedPartialV1.Deferred.CstNodes.Rules._LF.Create(Future.Create(() => _CR_1.Value.Realize())));
+return new _CRLF<ParseMode.Deferred>(_CR_1, _LF_1);
+        }
+        
         public _CRLF<ParseMode.Deferred> Convert()
         {
             if (typeof(TMode) == typeof(ParseMode.Deferred))

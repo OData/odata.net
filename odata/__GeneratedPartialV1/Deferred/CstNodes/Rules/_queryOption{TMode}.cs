@@ -28,6 +28,14 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
         public __GeneratedPartialV1.Deferred.CstNodes.Rules._equalsSign<TMode> _equalsSign_1 { get; }
         public __GeneratedPartialV1.Deferred.CstNodes.Rules._optionValue<TMode> _optionValue_1 { get; }
         
+        internal static _queryOption<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+        {
+            var _optionName_1 = Future.Create(() => __GeneratedPartialV1.Deferred.CstNodes.Rules._optionName.Create(previousNodeRealizationResult));
+var _equalsSign_1 = Future.Create(() => __GeneratedPartialV1.Deferred.CstNodes.Rules._equalsSign.Create(Future.Create(() => _optionName_1.Value.Realize())));
+var _optionValue_1 = Future.Create(() => __GeneratedPartialV1.Deferred.CstNodes.Rules._optionValue.Create(Future.Create(() => _equalsSign_1.Value.Realize())));
+return new _queryOption<ParseMode.Deferred>(_optionName_1, _equalsSign_1, _optionValue_1);
+        }
+        
         public _queryOption<ParseMode.Deferred> Convert()
         {
             if (typeof(TMode) == typeof(ParseMode.Deferred))

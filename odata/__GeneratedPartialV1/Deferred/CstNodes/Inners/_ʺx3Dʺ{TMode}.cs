@@ -20,6 +20,12 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
         private IFuture<IRealizationResult<char, _ʺx3Dʺ<ParseMode.Realized>>> realizationResult { get; }
         public __GeneratedPartialV1.Deferred.CstNodes.Inners._x3D<TMode> _x3D_1 { get; }
         
+        internal static _ʺx3Dʺ<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+        {
+            var _x3D_1 = Future.Create(() => __GeneratedPartialV1.Deferred.CstNodes.Inners._x3D.Create(previousNodeRealizationResult));
+return new _ʺx3Dʺ<ParseMode.Deferred>(_x3D_1);
+        }
+        
         public _ʺx3Dʺ<ParseMode.Deferred> Convert()
         {
             if (typeof(TMode) == typeof(ParseMode.Deferred))

@@ -20,6 +20,12 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
         private IFuture<IRealizationResult<char, _OCTET<ParseMode.Realized>>> realizationResult { get; }
         public __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx00ⲻFF<TMode> _Ⰳx00ⲻFF_1 { get; }
         
+        internal static _OCTET<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+        {
+            var _Ⰳx00ⲻFF_1 = Future.Create(() => __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx00ⲻFF.Create(previousNodeRealizationResult));
+return new _OCTET<ParseMode.Deferred>(_Ⰳx00ⲻFF_1);
+        }
+        
         public _OCTET<ParseMode.Deferred> Convert()
         {
             if (typeof(TMode) == typeof(ParseMode.Deferred))

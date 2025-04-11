@@ -24,6 +24,13 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
         public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
         public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
         
+        internal static _Ⰳx7F<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+        {
+            var _7_1 = Future.Create(() => __GeneratedPartialV1.Deferred.CstNodes.Inners._7.Create(previousNodeRealizationResult));
+var _F_1 = Future.Create(() => __GeneratedPartialV1.Deferred.CstNodes.Inners._F.Create(Future.Create(() => _7_1.Value.Realize())));
+return new _Ⰳx7F<ParseMode.Deferred>(_7_1, _F_1);
+        }
+        
         public _Ⰳx7F<ParseMode.Deferred> Convert()
         {
             if (typeof(TMode) == typeof(ParseMode.Deferred))
