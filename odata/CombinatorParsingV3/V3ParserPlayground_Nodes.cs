@@ -85,6 +85,10 @@
             }
         }
 
+        public abstract class AlphaNumeric<TMode> : IAstNode<char, AlphaNumeric<ParseMode.Realized>> where TMode : ParseMode
+        {
+        }
+
         public sealed class AlphaNumericDeferred : IAstNode<char, AlphaNumericRealized>
         {
             private readonly IFuture<IRealizationResult<char>> previousNodeRealizationResult;
