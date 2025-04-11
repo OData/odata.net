@@ -475,7 +475,7 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Create(previousNodeRealizationRe
             //// TODO actually implement this
             yield return new Class(
                 AccessModifier.Public,
-                ClassModifier.Sealed,
+                ClassModifier.Abstract,
                 toTranslate.Name,
                 new[]
                 {
@@ -485,6 +485,23 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Create(previousNodeRealizationRe
                 Enumerable.Empty<ConstructorDefinition>(),
                 new[]
                 {
+                    new MethodDefinition(
+                        AccessModifier.Internal,
+                        ClassModifier.Static,
+                        false,
+                        $"{toTranslate.Name}<ParseMode.Deferred>",
+                        Enumerable.Empty<string>(),
+                        "Create",
+                        new[]
+                        {
+                            new MethodParameter(
+                                "IFuture<IRealizationResult<char>>",
+                                "previousNodeRealizationResult"),
+                        },
+$$"""
+return {{toTranslate.Name}}<ParseMode.Deferred>.Deferred.Create(previousNodeRealizationResult);
+"""
+                        ),
                     new MethodDefinition(
                         AccessModifier.Public,
                         ClassModifier.None,
@@ -510,7 +527,19 @@ throw new System.Exception("TODO");
 """
                         ),
                 },
-                Enumerable.Empty<Class>(),
+                new[]
+                {
+                    new Class(
+                        AccessModifier.Public, 
+                        ClassModifier.Sealed,
+                        "Deferred",
+                        Enumerable.Empty<string>(),
+                        $"{toTranslate.Name}<ParseMode.Deferred>",
+                        Enumerable.Empty<ConstructorDefinition>(),
+                        new[]
+                        {
+                        })
+                },
                 Enumerable.Empty<PropertyDefinition>());
 
 

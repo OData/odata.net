@@ -95,6 +95,11 @@
 
         public abstract class AlphaNumeric<TMode> : IAstNode<char, AlphaNumeric<ParseMode.Realized>>, IFromRealizedable<AlphaNumeric<ParseMode.Deferred>> where TMode : ParseMode
         {
+            public static AlphaNumeric<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                return AlphaNumeric<ParseMode.Deferred>.Deferred.Create(previousNodeRealizationResult);
+            }
+
             private AlphaNumeric()
             {
                 //// TODO get all of the access modifiers correct
