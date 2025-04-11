@@ -441,6 +441,37 @@ else
 
         private IEnumerable<Class> TranslateDiscriminatedUnion(Class toTranslate)
         {
+            // the factory methods for the cst node
+            yield return new Class(
+                AccessModifier.Public,
+                ClassModifier.Static,
+                toTranslate.Name,
+                Enumerable.Empty<string>(),
+                null,
+                Enumerable.Empty<ConstructorDefinition>(),
+                new[]
+                {
+                    new MethodDefinition(
+                        AccessModifier.Public,
+                        ClassModifier.Static,
+                        false,
+                        $"{toTranslate.Name}<ParseMode.Deferred>",
+                        Enumerable.Empty<string>(),
+                        "Create",
+                        new[]
+                        {
+                            new MethodParameter(
+                                "IFuture<IRealizationResult<char>>",
+                                "previousNodeRealizationResult"),
+                        },
+$$"""
+return {{toTranslate.Name}}<ParseMode.Deferred>.Create(previousNodeRealizationResult);
+"""
+                        ),
+                },
+                Enumerable.Empty<Class>(),
+                Enumerable.Empty<PropertyDefinition>());
+
             //// TODO actually implement this
             yield return new Class(
                 AccessModifier.Public,
@@ -483,7 +514,7 @@ throw new System.Exception("TODO");
                 Enumerable.Empty<PropertyDefinition>());
 
 
-            var realizedTypeName = $"{toTranslate.Name}Realized";
+            /*var realizedTypeName = $"{toTranslate.Name}Realized";
             var deferredTypeName = $"{toTranslate.Name}Deferred";
 
             // the factory methods for the cst node
@@ -849,7 +880,7 @@ return new {{deferredTypeName}}(Future.Create(() => this.RealizationResult));
                                         "return node.Dispatch(this, context);")),
                             Enumerable.Empty<Class>(),
                             Enumerable.Empty<PropertyDefinition>())),
-                Enumerable.Empty<PropertyDefinition>());
+                Enumerable.Empty<PropertyDefinition>());*/
         }
 
         private IEnumerable<Class> TranslateTerminal(Class toTranslate)
