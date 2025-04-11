@@ -127,19 +127,19 @@ namespace odata.tests
 
             var name = queryOption.Name.Characters;
 
-            Assert.IsTrue(name._1.Realize().RealizedValue is V3ParserPlayground.AlphaNumericRealized.A);
+            Assert.IsTrue(name._1.Realize().RealizedValue is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.Realized.A);
 
             var secondCharacterNode = name.Node;
             Assert.IsTrue(secondCharacterNode.Element.Value.TryGetValue(out var secondCharacter));
-            Assert.IsTrue(secondCharacter is V3ParserPlayground.AlphaNumericRealized.A);
+            Assert.IsTrue(secondCharacter is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.Realized.A);
 
             var thirdCharacterNode = secondCharacterNode.Next;
             Assert.IsTrue(thirdCharacterNode.Element.Value.TryGetValue(out var thirdCharacter));
-            Assert.IsTrue(thirdCharacter is V3ParserPlayground.AlphaNumericRealized.A);
+            Assert.IsTrue(thirdCharacter is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.Realized.A);
 
             var fourthCharacterNode = thirdCharacterNode.Next;
             Assert.IsTrue(fourthCharacterNode.Element.Value.TryGetValue(out var fourthCharacter));
-            Assert.IsTrue(fourthCharacter is V3ParserPlayground.AlphaNumericRealized.A);
+            Assert.IsTrue(fourthCharacter is V3ParserPlayground.AlphaNumeric<ParseMode.Realized>.Realized.A);
 
             var potentialFifthCharacterNode = fourthCharacterNode.Next;
             Assert.IsFalse(potentialFifthCharacterNode.Element.Value.TryGetValue(out var potentialFifthCharacter));
