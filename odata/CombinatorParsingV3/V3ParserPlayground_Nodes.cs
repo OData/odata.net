@@ -171,6 +171,12 @@
 
                 public abstract class Visitor<TResult, TContext>
                 {
+                    public TResult Visit(AlphaNumeric<ParseMode.Realized> node, TContext context)
+                    {
+                        //// TODO is there a way to avoid this cast?
+                        return (node as AlphaNumeric<TMode>.Realized)!.Dispatch(this, context);
+                    }
+
                     public TResult Visit(AlphaNumeric<TMode>.Realized node, TContext context)
                     {
                         return node.Dispatch(this, context);

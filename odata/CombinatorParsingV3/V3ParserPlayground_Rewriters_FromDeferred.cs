@@ -148,7 +148,7 @@
                     return Visitor.Instance.Visit(parsed, builder);
                 }
 
-                private sealed class Visitor : AlphaNumeric<ParseMode.Realized>.Visitor<AlphaNumeric<ParseMode.Deferred>, StringBuilder>
+                private sealed class Visitor : AlphaNumeric<ParseMode.Realized>.Realized.Visitor<AlphaNumeric<ParseMode.Deferred>, StringBuilder>
                 {
                     private Visitor()
                     {
@@ -158,14 +158,14 @@
 
                     protected internal override AlphaNumeric<ParseMode.Deferred> Accept(AlphaNumeric<ParseMode.Realized>.Realized.A node, StringBuilder context)
                     {
-                        return new AlphaNumeric<ParseMode.Deferred>(
+                        return AlphaNumeric.Create(
                             new Future<IRealizationResult<char>>(
                                 () => new RealizationResult<char>(true, new CharacterTokenStream("C"))));
                     }
 
                     protected internal override AlphaNumeric<ParseMode.Deferred> Accept(AlphaNumeric<ParseMode.Realized>.Realized.C node, StringBuilder context)
                     {
-                        return new AlphaNumeric<ParseMode.Deferred>(
+                        return AlphaNumeric.Create(
                             new Future<IRealizationResult<char>>(
                                 () => new RealizationResult<char>(true, new CharacterTokenStream("A"))));
                     }

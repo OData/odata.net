@@ -68,12 +68,12 @@
 
             public static OptionValueRewriter Instance { get; } = new OptionValueRewriter();
 
-            private static ManyRewriter2<AlphaNumericDeferred, AlphaNumericRealized> CharactersRewriter { get; } = new ManyRewriter2<AlphaNumericDeferred, AlphaNumericRealized>(AlphaNumericRewriter2.Instance);
+            private static ManyRewriter2<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new ManyRewriter2<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter2.Instance);
 
             public OptionValue<ParseMode.Deferred> Transcribe(OptionValue<ParseMode.Realized> value, StringBuilder builder)
             {
                 return new OptionValue<ParseMode.Deferred>(
-                    new Future<Many<AlphaNumericDeferred, AlphaNumericRealized, ParseMode.Deferred>>(
+                    new Future<Many<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(
                         () => CharactersRewriter.Transcribe(value.Characters, builder)));
             }
         }
@@ -100,12 +100,12 @@
 
             public static OptionNameRewriter Instance { get; } = new OptionNameRewriter();
 
-            private static AtLeastOneRewriter2<AlphaNumericDeferred, AlphaNumericRealized> CharactersRewriter { get; } = new AtLeastOneRewriter2<AlphaNumericDeferred, AlphaNumericRealized>(AlphaNumericRewriter2.Instance);
+            private static AtLeastOneRewriter2<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter2<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter2.Instance);
 
             public OptionName<ParseMode.Deferred> Transcribe(OptionName<ParseMode.Realized> value, StringBuilder builder)
             {
                 return new OptionName<ParseMode.Deferred>(
-                    new Future<AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, ParseMode.Deferred>>(
+                    new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(
                         () => CharactersRewriter.Transcribe(value.Characters, builder)));
             }
         }
@@ -124,7 +124,7 @@
             }
         }
 
-        public sealed class AlphaNumericRewriter2 : IFromRealizedRewriter<AlphaNumericRealized, AlphaNumericDeferred>
+        public sealed class AlphaNumericRewriter2 : IFromRealizedRewriter<AlphaNumeric<ParseMode.Realized>, AlphaNumeric<ParseMode.Deferred>>
         {
             private AlphaNumericRewriter2()
             {
@@ -132,12 +132,12 @@
 
             public static AlphaNumericRewriter2 Instance { get; } = new AlphaNumericRewriter2();
 
-            public AlphaNumericDeferred Transcribe(AlphaNumericRealized value, StringBuilder builder)
+            public AlphaNumeric<ParseMode.Deferred> Transcribe(AlphaNumeric<ParseMode.Realized> value, StringBuilder builder)
             {
                 return Visitor.Instance.Visit(value, builder);
             }
 
-            private sealed class Visitor : AlphaNumericRealized.Visitor<AlphaNumericDeferred, StringBuilder>
+            private sealed class Visitor : AlphaNumeric<ParseMode.Realized>.Realized.Visitor<AlphaNumeric<ParseMode.Deferred>, StringBuilder>
             {
                 private Visitor()
                 {
@@ -145,16 +145,16 @@
 
                 public static Visitor Instance { get; } = new Visitor();
 
-                protected internal override AlphaNumericDeferred Accept(AlphaNumericRealized.A node, StringBuilder context)
+                protected internal override AlphaNumeric<ParseMode.Deferred> Accept(AlphaNumeric<ParseMode.Realized>.Realized.A node, StringBuilder context)
                 {
-                    return new AlphaNumericDeferred(
+                    return AlphaNumeric.Create(
                         new Future<IRealizationResult<char>>(
                             () => new RealizationResult<char>(true, new CharacterTokenStream("C"))));
                 }
 
-                protected internal override AlphaNumericDeferred Accept(AlphaNumericRealized.C node, StringBuilder context)
+                protected internal override AlphaNumeric<ParseMode.Deferred> Accept(AlphaNumeric<ParseMode.Realized>.Realized.C node, StringBuilder context)
                 {
-                    return new AlphaNumericDeferred(
+                    return AlphaNumeric.Create(
                         new Future<IRealizationResult<char>>(
                             () => new RealizationResult<char>(true, new CharacterTokenStream("A"))));
                 }
@@ -183,14 +183,14 @@
 
             public static SegmentRewriter Instance { get; } = new SegmentRewriter();
 
-            private static AtLeastOneRewriter2<AlphaNumericDeferred, AlphaNumericRealized> CharactersRewriter { get; } = new AtLeastOneRewriter2<AlphaNumericDeferred, AlphaNumericRealized>(AlphaNumericRewriter2.Instance);
+            private static AtLeastOneRewriter2<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>> CharactersRewriter { get; } = new AtLeastOneRewriter2<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>>(AlphaNumericRewriter2.Instance);
 
             public Segment<ParseMode.Deferred> Transcribe(Segment<ParseMode.Realized> value, StringBuilder builder)
             {
                 return Segment.Create(
                     new Future<Slash<ParseMode.Deferred>>(
                         () => SlashRewriter.Instance.Transcribe(value.Slash, builder)),
-                    new Future<AtLeastOne<AlphaNumericDeferred, AlphaNumericRealized, ParseMode.Deferred>>(
+                    new Future<AtLeastOne<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>, ParseMode.Deferred>>(
                         () => CharactersRewriter.Transcribe(value.Characters, builder)));
             }
 		}
