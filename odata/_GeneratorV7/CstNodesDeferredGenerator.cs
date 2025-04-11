@@ -392,11 +392,11 @@ else
                 var elementType = toTranslate.Substring(ienumerable.Length);
                 elementType = elementType.Substring(0, elementType.Length - 1);
 
-                if (IsDiscriminatedUnion(elementType, rules, inners))
+                /*if (IsDiscriminatedUnion(elementType, rules, inners))
                 {
                     elementTypes = ($"{elementType}Deferred", $"{elementType}Realized", elementType);
                 }
-                else
+                else*/
                 {
                     elementTypes = ($"{elementType}<ParseMode.Deferred>", $"{elementType}<ParseMode.Realized>", elementType);
                 }
@@ -412,11 +412,11 @@ else
                 var elementType = toTranslate.Substring(atleastone.Length);
                 elementType = elementType.Substring(0, elementType.Length - 1);
 
-                if (IsDiscriminatedUnion(elementType, rules, inners))
+                /*if (IsDiscriminatedUnion(elementType, rules, inners))
                 {
                     elementTypes = ($"{elementType}Deferred", $"{elementType}Realized", elementType);
                 }
-                else
+                else*/
                 {
                     elementTypes = ($"{elementType}<ParseMode.Deferred>", $"{elementType}<ParseMode.Realized>", elementType);
                 }
