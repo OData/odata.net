@@ -51,7 +51,7 @@
 
             public static OptionValueTranscriber Instance { get; } = new OptionValueTranscriber();
 
-            private static ManyTranscriber<AlphaNumericDeferred, AlphaNumericRealized> CharactersTranscriber { get; } = new ManyTranscriber<AlphaNumericDeferred, AlphaNumericRealized>(AlphaNumericTranscriber.Instance);
+            private static ManyTranscriber<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>> CharactersTranscriber { get; } = new ManyTranscriber<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>>(AlphaNumericTranscriber.Instance);
 
             public void Transcribe(OptionValue<ParseMode.Realized> value, StringBuilder builder)
             {
@@ -81,7 +81,7 @@
 
             public static OptionNameTranscriber Instance { get; } = new OptionNameTranscriber();
 
-            private static AtLeastOneTranscriber<AlphaNumericDeferred, AlphaNumericRealized> CharactersTranscriber { get; } = new AtLeastOneTranscriber<AlphaNumericDeferred, AlphaNumericRealized>(AlphaNumericTranscriber.Instance);
+            private static AtLeastOneTranscriber<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>> CharactersTranscriber { get; } = new AtLeastOneTranscriber<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>>(AlphaNumericTranscriber.Instance);
 
             public void Transcribe(OptionName<ParseMode.Realized> value, StringBuilder builder)
             {
@@ -103,7 +103,7 @@
             }
         }
 
-        public sealed class AlphaNumericTranscriber : ITranscriber<AlphaNumericRealized>
+        public sealed class AlphaNumericTranscriber : ITranscriber<AlphaNumeric<ParseMode.Realized>>
         {
             private AlphaNumericTranscriber()
             {
@@ -111,12 +111,12 @@
 
             public static AlphaNumericTranscriber Instance { get; } = new AlphaNumericTranscriber();
 
-            public void Transcribe(AlphaNumericRealized value, StringBuilder builder)
+            public void Transcribe(AlphaNumeric<ParseMode.Realized> value, StringBuilder builder)
             {
                 Visitor.Instance.Visit(value, builder);
             }
 
-            private sealed class Visitor : AlphaNumericRealized.Visitor<Nothing, StringBuilder>
+            private sealed class Visitor : AlphaNumeric<ParseMode.Realized>.Realized.Visitor<Nothing, StringBuilder>
             {
                 private Visitor()
                 {
@@ -124,14 +124,14 @@
 
                 public static Visitor Instance { get; } = new Visitor();
 
-                protected internal override Nothing Accept(AlphaNumericRealized.A node, StringBuilder context)
+                protected internal override Nothing Accept(AlphaNumeric<ParseMode.Realized>.Realized.A node, StringBuilder context)
                 {
                     context.Append('A');
 
                     return default;
                 }
 
-                protected internal override Nothing Accept(AlphaNumericRealized.C node, StringBuilder context)
+                protected internal override Nothing Accept(AlphaNumeric<ParseMode.Realized>.Realized.C node, StringBuilder context)
                 {
                     context.Append('C');
 
@@ -162,7 +162,7 @@
 
             public static SegmentTranscriber Instance { get; } = new SegmentTranscriber();
 
-            private static AtLeastOneTranscriber<AlphaNumericDeferred, AlphaNumericRealized> CharactersTranscriber { get; } = new AtLeastOneTranscriber<AlphaNumericDeferred, AlphaNumericRealized>(AlphaNumericTranscriber.Instance);
+            private static AtLeastOneTranscriber<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>> CharactersTranscriber { get; } = new AtLeastOneTranscriber<AlphaNumeric<ParseMode.Deferred>, AlphaNumeric<ParseMode.Realized>>(AlphaNumericTranscriber.Instance);
 
             public void Transcribe(Segment<ParseMode.Realized> value, StringBuilder builder)
             {
