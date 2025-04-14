@@ -62,6 +62,277 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             protected abstract TResult Dispatch<TResult, TContext>(_Ⰳx00ⲻFF<TMode>.Realized.Visitor<TResult, TContext> visitor, TContext context);
             
+            public abstract class Visitor<TResult, TContext>
+            {
+                public TResult Visit(_Ⰳx00ⲻFF<TMode>.Realized node, TContext context)
+                {
+                    return node.Dispatch(this, context);
+                }
+                
+                public TResult Visit(_Ⰳx00ⲻFF<ParseMode.Realized> node, TContext context)
+                {
+                    //// TODO is there a way to avoid this cast?
+return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
+                }
+                
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._00 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._01 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._02 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._03 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._04 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._05 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._06 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._07 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._08 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._09 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._0A node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._0B node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._0C node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._0D node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._0E node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._0F node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._10 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._11 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._12 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._13 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._14 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._15 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._16 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._17 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._18 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._19 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._1A node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._1B node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._1C node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._1D node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._1E node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._1F node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._20 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._21 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._22 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._23 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._24 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._25 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._26 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._27 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._28 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._29 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._2A node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._2B node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._2C node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._2D node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._2E node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._2F node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._30 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._31 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._32 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._33 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._34 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._35 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._36 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._37 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._38 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._39 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._3A node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._3B node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._3C node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._3D node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._3E node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._3F node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._40 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._41 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._42 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._43 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._44 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._45 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._46 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._47 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._48 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._49 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._4A node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._4B node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._4C node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._4D node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._4E node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._4F node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._50 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._51 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._52 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._53 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._54 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._55 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._56 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._57 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._58 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._59 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._5A node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._5B node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._5C node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._5D node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._5E node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._5F node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._60 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._61 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._62 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._63 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._64 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._65 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._66 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._67 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._68 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._69 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._6A node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._6B node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._6C node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._6D node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._6E node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._6F node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._70 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._71 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._72 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._73 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._74 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._75 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._76 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._77 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._78 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._79 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._7A node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._7B node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._7C node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._7D node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._7E node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._7F node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._80 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._81 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._82 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._83 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._84 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._85 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._86 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._87 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._88 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._89 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._8A node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._8B node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._8C node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._8D node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._8E node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._8F node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._90 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._91 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._92 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._93 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._94 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._95 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._96 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._97 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._98 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._99 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._9A node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._9B node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._9C node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._9D node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._9E node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._9F node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._A0 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._A1 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._A2 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._A3 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._A4 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._A5 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._A6 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._A7 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._A8 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._A9 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._AA node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._AB node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._AC node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._AD node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._AE node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._AF node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._B0 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._B1 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._B2 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._B3 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._B4 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._B5 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._B6 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._B7 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._B8 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._B9 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._BA node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._BB node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._BC node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._BD node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._BE node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._BF node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._C0 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._C1 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._C2 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._C3 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._C4 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._C5 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._C6 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._C7 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._C8 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._C9 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._CA node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._CB node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._CC node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._CD node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._CE node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._CF node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._D0 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._D1 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._D2 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._D3 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._D4 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._D5 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._D6 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._D7 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._D8 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._D9 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._DA node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._DB node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._DC node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._DD node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._DE node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._DF node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._E0 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._E1 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._E2 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._E3 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._E4 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._E5 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._E6 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._E7 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._E8 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._E9 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._EA node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._EB node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._EC node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._ED node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._EE node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._EF node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._F0 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._F1 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._F2 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._F3 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._F4 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._F5 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._F6 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._F7 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._F8 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._F9 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._FA node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._FB node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._FC node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._FD node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._FE node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx00ⲻFF<TMode>.Realized._FF node, TContext context);
+            }
+            
             public sealed class _00 : _Ⰳx00ⲻFF<TMode>.Realized
             {
                 public override _Ⰳx00ⲻFF<ParseMode.Deferred> Convert()
@@ -4667,20 +4938,6 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     throw new Exception("TODO");
-                }
-            }
-            
-            public abstract class Visitor<TResult, TContext>
-            {
-                public TResult Visit(_Ⰳx00ⲻFF<ParseMode.Realized> node, TContext context)
-                {
-                    //// TODO is there a way to avoid this cast?
-return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
-                }
-                
-                public TResult Visit(_Ⰳx00ⲻFF<TMode>.Realized node, TContext context)
-                {
-                    return node.Dispatch(this, context);
                 }
             }
         }

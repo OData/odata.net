@@ -62,6 +62,23 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             protected abstract TResult Dispatch<TResult, TContext>(_BIT<TMode>.Realized.Visitor<TResult, TContext> visitor, TContext context);
             
+            public abstract class Visitor<TResult, TContext>
+            {
+                public TResult Visit(_BIT<TMode>.Realized node, TContext context)
+                {
+                    return node.Dispatch(this, context);
+                }
+                
+                public TResult Visit(_BIT<ParseMode.Realized> node, TContext context)
+                {
+                    //// TODO is there a way to avoid this cast?
+return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
+                }
+                
+                protected internal abstract TResult Accept(_BIT<TMode>.Realized._ʺx30ʺ node, TContext context);
+                protected internal abstract TResult Accept(_BIT<TMode>.Realized._ʺx31ʺ node, TContext context);
+            }
+            
             public sealed class _ʺx30ʺ : _BIT<TMode>.Realized
             {
                 public override _BIT<ParseMode.Deferred> Convert()
@@ -95,20 +112,6 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     throw new Exception("TODO");
-                }
-            }
-            
-            public abstract class Visitor<TResult, TContext>
-            {
-                public TResult Visit(_BIT<ParseMode.Realized> node, TContext context)
-                {
-                    //// TODO is there a way to avoid this cast?
-return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
-                }
-                
-                public TResult Visit(_BIT<TMode>.Realized node, TContext context)
-                {
-                    return node.Dispatch(this, context);
                 }
             }
         }

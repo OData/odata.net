@@ -62,6 +62,23 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             protected abstract TResult Dispatch<TResult, TContext>(_alphaNumeric<TMode>.Realized.Visitor<TResult, TContext> visitor, TContext context);
             
+            public abstract class Visitor<TResult, TContext>
+            {
+                public TResult Visit(_alphaNumeric<TMode>.Realized node, TContext context)
+                {
+                    return node.Dispatch(this, context);
+                }
+                
+                public TResult Visit(_alphaNumeric<ParseMode.Realized> node, TContext context)
+                {
+                    //// TODO is there a way to avoid this cast?
+return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
+                }
+                
+                protected internal abstract TResult Accept(_alphaNumeric<TMode>.Realized._ʺx41ʺ node, TContext context);
+                protected internal abstract TResult Accept(_alphaNumeric<TMode>.Realized._ʺx43ʺ node, TContext context);
+            }
+            
             public sealed class _ʺx41ʺ : _alphaNumeric<TMode>.Realized
             {
                 public override _alphaNumeric<ParseMode.Deferred> Convert()
@@ -95,20 +112,6 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     throw new Exception("TODO");
-                }
-            }
-            
-            public abstract class Visitor<TResult, TContext>
-            {
-                public TResult Visit(_alphaNumeric<ParseMode.Realized> node, TContext context)
-                {
-                    //// TODO is there a way to avoid this cast?
-return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
-                }
-                
-                public TResult Visit(_alphaNumeric<TMode>.Realized node, TContext context)
-                {
-                    return node.Dispatch(this, context);
                 }
             }
         }

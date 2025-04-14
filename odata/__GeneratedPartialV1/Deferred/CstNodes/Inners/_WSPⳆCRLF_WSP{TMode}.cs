@@ -62,6 +62,23 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             protected abstract TResult Dispatch<TResult, TContext>(_WSPⳆCRLF_WSP<TMode>.Realized.Visitor<TResult, TContext> visitor, TContext context);
             
+            public abstract class Visitor<TResult, TContext>
+            {
+                public TResult Visit(_WSPⳆCRLF_WSP<TMode>.Realized node, TContext context)
+                {
+                    return node.Dispatch(this, context);
+                }
+                
+                public TResult Visit(_WSPⳆCRLF_WSP<ParseMode.Realized> node, TContext context)
+                {
+                    //// TODO is there a way to avoid this cast?
+return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
+                }
+                
+                protected internal abstract TResult Accept(_WSPⳆCRLF_WSP<TMode>.Realized._WSP node, TContext context);
+                protected internal abstract TResult Accept(_WSPⳆCRLF_WSP<TMode>.Realized._CRLF_WSP node, TContext context);
+            }
+            
             public sealed class _WSP : _WSPⳆCRLF_WSP<TMode>.Realized
             {
                 public override _WSPⳆCRLF_WSP<ParseMode.Deferred> Convert()
@@ -95,20 +112,6 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     throw new Exception("TODO");
-                }
-            }
-            
-            public abstract class Visitor<TResult, TContext>
-            {
-                public TResult Visit(_WSPⳆCRLF_WSP<ParseMode.Realized> node, TContext context)
-                {
-                    //// TODO is there a way to avoid this cast?
-return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
-                }
-                
-                public TResult Visit(_WSPⳆCRLF_WSP<TMode>.Realized node, TContext context)
-                {
-                    return node.Dispatch(this, context);
                 }
             }
         }

@@ -62,6 +62,47 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             protected abstract TResult Dispatch<TResult, TContext>(_Ⰳx41ⲻ5A<TMode>.Realized.Visitor<TResult, TContext> visitor, TContext context);
             
+            public abstract class Visitor<TResult, TContext>
+            {
+                public TResult Visit(_Ⰳx41ⲻ5A<TMode>.Realized node, TContext context)
+                {
+                    return node.Dispatch(this, context);
+                }
+                
+                public TResult Visit(_Ⰳx41ⲻ5A<ParseMode.Realized> node, TContext context)
+                {
+                    //// TODO is there a way to avoid this cast?
+return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
+                }
+                
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._41 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._42 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._43 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._44 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._45 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._46 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._47 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._48 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._49 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._4A node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._4B node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._4C node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._4D node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._4E node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._4F node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._50 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._51 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._52 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._53 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._54 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._55 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._56 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._57 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._58 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._59 node, TContext context);
+                protected internal abstract TResult Accept(_Ⰳx41ⲻ5A<TMode>.Realized._5A node, TContext context);
+            }
+            
             public sealed class _41 : _Ⰳx41ⲻ5A<TMode>.Realized
             {
                 public override _Ⰳx41ⲻ5A<ParseMode.Deferred> Convert()
@@ -527,20 +568,6 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     throw new Exception("TODO");
-                }
-            }
-            
-            public abstract class Visitor<TResult, TContext>
-            {
-                public TResult Visit(_Ⰳx41ⲻ5A<ParseMode.Realized> node, TContext context)
-                {
-                    //// TODO is there a way to avoid this cast?
-return (node as _Ⰳx41ⲻ5A<TMode>.Realized)!.Dispatch(this, context);
-                }
-                
-                public TResult Visit(_Ⰳx41ⲻ5A<TMode>.Realized node, TContext context)
-                {
-                    return node.Dispatch(this, context);
                 }
             }
         }

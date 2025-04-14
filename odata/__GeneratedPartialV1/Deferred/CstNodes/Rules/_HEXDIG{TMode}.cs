@@ -62,6 +62,28 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             protected abstract TResult Dispatch<TResult, TContext>(_HEXDIG<TMode>.Realized.Visitor<TResult, TContext> visitor, TContext context);
             
+            public abstract class Visitor<TResult, TContext>
+            {
+                public TResult Visit(_HEXDIG<TMode>.Realized node, TContext context)
+                {
+                    return node.Dispatch(this, context);
+                }
+                
+                public TResult Visit(_HEXDIG<ParseMode.Realized> node, TContext context)
+                {
+                    //// TODO is there a way to avoid this cast?
+return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
+                }
+                
+                protected internal abstract TResult Accept(_HEXDIG<TMode>.Realized._DIGIT node, TContext context);
+                protected internal abstract TResult Accept(_HEXDIG<TMode>.Realized._ʺx41ʺ node, TContext context);
+                protected internal abstract TResult Accept(_HEXDIG<TMode>.Realized._ʺx42ʺ node, TContext context);
+                protected internal abstract TResult Accept(_HEXDIG<TMode>.Realized._ʺx43ʺ node, TContext context);
+                protected internal abstract TResult Accept(_HEXDIG<TMode>.Realized._ʺx44ʺ node, TContext context);
+                protected internal abstract TResult Accept(_HEXDIG<TMode>.Realized._ʺx45ʺ node, TContext context);
+                protected internal abstract TResult Accept(_HEXDIG<TMode>.Realized._ʺx46ʺ node, TContext context);
+            }
+            
             public sealed class _DIGIT : _HEXDIG<TMode>.Realized
             {
                 public override _HEXDIG<ParseMode.Deferred> Convert()
@@ -185,20 +207,6 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     throw new Exception("TODO");
-                }
-            }
-            
-            public abstract class Visitor<TResult, TContext>
-            {
-                public TResult Visit(_HEXDIG<ParseMode.Realized> node, TContext context)
-                {
-                    //// TODO is there a way to avoid this cast?
-return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
-                }
-                
-                public TResult Visit(_HEXDIG<TMode>.Realized node, TContext context)
-                {
-                    return node.Dispatch(this, context);
                 }
             }
         }
