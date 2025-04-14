@@ -62,6 +62,42 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             protected abstract TResult Dispatch<TResult, TContext>(_ALPHA<TMode>.Realized.Visitor<TResult, TContext> visitor, TContext context);
             
+            public sealed class _Ⰳx41ⲻ5A : _ALPHA<TMode>.Realized
+            {
+                public override _ALPHA<ParseMode.Deferred> Convert()
+                {
+                    throw new Exception("TODO");
+                }
+                
+                public override IRealizationResult<char, _ALPHA<ParseMode.Realized>> Realize()
+                {
+                    throw new Exception("TODO");
+                }
+                
+                protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    throw new Exception("TODO");
+                }
+            }
+            
+            public sealed class _Ⰳx61ⲻ7A : _ALPHA<TMode>.Realized
+            {
+                public override _ALPHA<ParseMode.Deferred> Convert()
+                {
+                    throw new Exception("TODO");
+                }
+                
+                public override IRealizationResult<char, _ALPHA<ParseMode.Realized>> Realize()
+                {
+                    throw new Exception("TODO");
+                }
+                
+                protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    throw new Exception("TODO");
+                }
+            }
+            
             public abstract class Visitor<TResult, TContext>
             {
                 public TResult Visit(_ALPHA<ParseMode.Realized> node, TContext context)

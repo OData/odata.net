@@ -62,6 +62,42 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             protected abstract TResult Dispatch<TResult, TContext>(_WSPⳆCRLF_WSP<TMode>.Realized.Visitor<TResult, TContext> visitor, TContext context);
             
+            public sealed class _WSP : _WSPⳆCRLF_WSP<TMode>.Realized
+            {
+                public override _WSPⳆCRLF_WSP<ParseMode.Deferred> Convert()
+                {
+                    throw new Exception("TODO");
+                }
+                
+                public override IRealizationResult<char, _WSPⳆCRLF_WSP<ParseMode.Realized>> Realize()
+                {
+                    throw new Exception("TODO");
+                }
+                
+                protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    throw new Exception("TODO");
+                }
+            }
+            
+            public sealed class _CRLF_WSP : _WSPⳆCRLF_WSP<TMode>.Realized
+            {
+                public override _WSPⳆCRLF_WSP<ParseMode.Deferred> Convert()
+                {
+                    throw new Exception("TODO");
+                }
+                
+                public override IRealizationResult<char, _WSPⳆCRLF_WSP<ParseMode.Realized>> Realize()
+                {
+                    throw new Exception("TODO");
+                }
+                
+                protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    throw new Exception("TODO");
+                }
+            }
+            
             public abstract class Visitor<TResult, TContext>
             {
                 public TResult Visit(_WSPⳆCRLF_WSP<ParseMode.Realized> node, TContext context)
