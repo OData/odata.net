@@ -40,7 +40,7 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             public override _Ⰳx21ⲻ7E<ParseMode.Deferred> Convert()
             {
-                throw new Exception("TODO");
+                return this;
             }
             
             public override IRealizationResult<char, _Ⰳx21ⲻ7E<ParseMode.Realized>> Realize()

@@ -40,7 +40,7 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             public override _WSP<ParseMode.Deferred> Convert()
             {
-                throw new Exception("TODO");
+                return this;
             }
             
             public override IRealizationResult<char, _WSP<ParseMode.Realized>> Realize()

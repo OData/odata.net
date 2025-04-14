@@ -40,7 +40,7 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             public override _HEXDIG<ParseMode.Deferred> Convert()
             {
-                throw new Exception("TODO");
+                return this;
             }
             
             public override IRealizationResult<char, _HEXDIG<ParseMode.Realized>> Realize()

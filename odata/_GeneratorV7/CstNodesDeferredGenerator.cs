@@ -594,7 +594,7 @@ return new {{toTranslate.Name}}<ParseMode.Deferred>.Deferred(previousNodeRealiza
                                 Enumerable.Empty<MethodParameter>(),
                         //// TODO you are here
 """
-throw new Exception("TODO");
+return this;
 """
                                 ),
                             new MethodDefinition(

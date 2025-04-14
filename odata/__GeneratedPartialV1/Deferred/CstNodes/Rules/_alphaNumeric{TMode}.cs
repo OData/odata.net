@@ -40,7 +40,7 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             public override _alphaNumeric<ParseMode.Deferred> Convert()
             {
-                throw new Exception("TODO");
+                return this;
             }
             
             public override IRealizationResult<char, _alphaNumeric<ParseMode.Realized>> Realize()
