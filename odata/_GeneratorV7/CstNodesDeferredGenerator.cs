@@ -793,7 +793,7 @@ throw new Exception("TODO");
                                                 new PropertyDefinition(
                                                     AccessModifier.Private,
                                                     false,
-                                                    $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>.Realized.{nestedClass.Name}>",
+                                                    $"IRealizationResult<char, {toTranslate.Name}<TMode>.Realized.{nestedClass.Name}>",
                                                     "realizationResult",
                                                     true,
                                                     false,
