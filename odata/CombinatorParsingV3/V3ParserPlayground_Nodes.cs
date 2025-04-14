@@ -195,11 +195,6 @@
                 {
                     internal static IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.Realized.A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                     {
-
-                        /*if (!_CRLF_1.Success)
-                        {
-                            return new RealizationResult<char, _WSPⳆCRLF_WSP<TMode>.Realized._CRLF_WSP>(false, default, _CRLF_1.RemainingTokens);
-                        }*/
                         var output = previousNodeRealizationResult.Value;
                         if (!output.Success)
                         {
