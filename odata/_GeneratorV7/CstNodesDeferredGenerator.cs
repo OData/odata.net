@@ -511,7 +511,6 @@ else
             builder.AppendLine($"return new RealizationResult<char, {returnType}>(false, default, {property.Name}.RemainingTokens);");
             builder.AppendLine("}");
             builder.AppendLine();
-            //// TODO add if statements
         }
 
         private string GenerateRealizeImplBodyForDiscriminatedUnion(IEnumerable<Class> duMembers, string returnType)
@@ -716,7 +715,6 @@ return this.realizationResult.Value;
                                 Enumerable.Empty<string>(),
                                 "RealizeImpl",
                                 Enumerable.Empty<MethodParameter>(),
-                                //// TODO you are here implement realizeimpl for deferred
                                 GenerateRealizeImplBodyForDiscriminatedUnion(
                                     toTranslate
                                         .NestedClasses
