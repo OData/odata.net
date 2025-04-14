@@ -190,6 +190,53 @@ namespace odata.tests
             var potentialSixthCharacterNode = potentialFifthCharacterNode.Next;
             Assert.IsFalse(potentialSixthCharacterNode.Element.Value.TryGetValue(out var potentialSixCharacter));
         }
+
+        [TestMethod]
+        public void DeferredList()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAA";
+
+            var indexes = new List<int>();
+            var input = new InstrumentedStringInput(url, indexes);
+
+            var odataUri = GeneratedOdataUri.Create(input);
+
+            Assert.AreEqual(0, indexes.Count);
+
+            var slash = odataUri._segment_1._1._slash_1.Realize();
+
+            Assert.AreEqual(1, indexes.Count);
+            Assert.AreEqual(0, indexes[0]);
+
+            var secondSegment = odataUri._segment_1.Node.Element.Realize();
+            Assert.AreEqual(5, indexes.Max());
+
+            var thirdSegment = odataUri._segment_1.Node.Next.Realize();
+
+            Assert.AreEqual(9, indexes.Max());
+        }
+
+        [TestMethod]
+        public void DeferredList2()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAA";
+
+            var indexes = new List<int>();
+            var input = new InstrumentedStringInput(url, indexes);
+
+            var odataUri = GeneratedOdataUri.Create(input);
+
+            Assert.AreEqual(0, indexes.Count);
+
+            var slash = odataUri._segment_1._1._slash_1.Realize();
+
+            Assert.AreEqual(1, indexes.Count);
+            Assert.AreEqual(0, indexes[0]);
+
+            var secondAndThirdSegments = odataUri._segment_1.Node.Realize();
+
+            Assert.AreEqual(9, indexes.Max());
+        }
     }
 
     public static class GeneratedOdataUri
