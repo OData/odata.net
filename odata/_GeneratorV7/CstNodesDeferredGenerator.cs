@@ -482,7 +482,13 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Create(previousNodeRealizationRe
                     "TMode",
                 },
                 $"IAstNode<char, {toTranslate.Name}<ParseMode.Realized>>, IFromRealizedable<{toTranslate.Name}<ParseMode.Deferred>> where TMode : ParseMode", //// TODO generic type constraints should be built into `class`
-                Enumerable.Empty<ConstructorDefinition>(),
+                new[]
+                {
+                    new ConstructorDefinition(
+                        AccessModifier.Private, 
+                        Enumerable.Empty<MethodParameter>(),
+                        Enumerable.Empty<string>()),
+                },
                 new[]
                 {
                     new MethodDefinition(
@@ -504,27 +510,23 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Deferred.Create(previousNodeReal
                         ),
                     new MethodDefinition(
                         AccessModifier.Public,
-                        ClassModifier.None,
+                        ClassModifier.Abstract,
                         false,
                         $"{toTranslate.Name}<ParseMode.Deferred>",
                         Enumerable.Empty<string>(),
                         "Convert",
                         Enumerable.Empty<MethodParameter>(),
-$$"""
-throw new System.Exception("TODO");
-"""
+                        null
                         ),
                     new MethodDefinition(
                         AccessModifier.Public,
-                        ClassModifier.None,
+                        ClassModifier.Abstract,
                         false,
                         $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>",
                         Enumerable.Empty<string>(),
                         "Realize",
                         Enumerable.Empty<MethodParameter>(),
-$$"""
-throw new System.Exception("TODO");
-"""
+                        null
                         ),
                 },
                 new[]
