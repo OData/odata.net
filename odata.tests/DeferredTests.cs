@@ -237,6 +237,28 @@ namespace odata.tests
 
             Assert.AreEqual(9, indexes.Max());
         }
+
+        [TestMethod]
+        public void DeferredList3()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAA";
+
+            var indexes = new List<int>();
+            var input = new InstrumentedStringInput(url, indexes);
+
+            var odataUri = GeneratedOdataUri.Create(input);
+
+            Assert.AreEqual(0, indexes.Count);
+
+            var slash = odataUri._segment_1._1._slash_1.Realize();
+
+            Assert.AreEqual(1, indexes.Count);
+            Assert.AreEqual(0, indexes[0]);
+
+            var segments = odataUri._segment_1.Realize();
+
+            Assert.AreEqual(9, indexes.Max());
+        }
     }
 
     public static class GeneratedOdataUri
