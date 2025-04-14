@@ -53,6 +53,29 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
                 throw new Exception("TODO");
             }
         }
+        
+        public abstract class Realized : _WSPⳆCRLF_WSP<ParseMode.Realized>
+        {
+            private Realized()
+            {
+            }
+            
+            protected abstract TResult Dispatch<TResult, TContext>(_WSPⳆCRLF_WSP<TMode>.Realized.Visitor<TResult, TContext> visitor, TContext context);
+            
+            public abstract class Visitor<TResult, TContext>
+            {
+                public TResult Visit(_WSPⳆCRLF_WSP<ParseMode.Realized> node, TContext context)
+                {
+                    //// TODO is there a way to avoid this cast?
+return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
+                }
+                
+                public TResult Visit(_WSPⳆCRLF_WSP<TMode>.Realized node, TContext context)
+                {
+                    return node.Dispatch(this, context);
+                }
+            }
+        }
     }
     
 }

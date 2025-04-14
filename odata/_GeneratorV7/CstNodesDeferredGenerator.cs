@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.Linq;
+    using System.Security.Cryptography.X509Certificates;
     using System.Security.Principal;
     using System.Text;
     using __GeneratedOdata.Trancsribers.Rules;
@@ -604,7 +606,6 @@ return this;
                                 Enumerable.Empty<string>(),
                                 "Realize",
                                 Enumerable.Empty<MethodParameter>(),
-                        //// TODO you are here
 """
 return this.realizationResult.Value;
 """
@@ -643,6 +644,108 @@ throw new Exception("TODO");
                                 null),
                         }),
                     //// TODO implement realized
+                    new Class(
+                        AccessModifier.Public, 
+                        ClassModifier.Abstract,
+                        "Realized",
+                        Enumerable.Empty<string>(),
+                        $"{toTranslate.Name}<ParseMode.Realized>",
+                        new[]
+                        {
+                            new ConstructorDefinition(
+                                AccessModifier.Private,
+                                Enumerable.Empty<MethodParameter>(),
+                                Enumerable.Empty<string>()),
+                        },
+                        new[]
+                        {
+                            new MethodDefinition(
+                                AccessModifier.Protected,
+                                ClassModifier.Abstract,
+                                false,
+                                "TResult",
+                                new[]
+                                {
+                                    "TResult",
+                                    "TContext",
+                                },
+                                "Dispatch",
+                                new[]
+                                {
+                                    new MethodParameter(
+                                        $"{toTranslate.Name}<TMode>.Realized.Visitor<TResult, TContext>",
+                                        "visitor"),
+                                    new MethodParameter(
+                                        "TContext",
+                                        "context"),
+                                },
+                                null),
+                        },
+                        new[]
+                        {
+                            new Class(
+                                AccessModifier.Public, 
+                                ClassModifier.Abstract,
+                                "Visitor",
+                                new[]
+                                {
+                                    "TResult",
+                                    "TContext",
+                                },
+                                null,
+                                Enumerable.Empty<ConstructorDefinition>(),
+                                new[]
+                                {
+                                    new MethodDefinition(
+                                        AccessModifier.Public, 
+                                        ClassModifier.None, 
+                                        false,
+                                        "TResult",
+                                        Enumerable.Empty<string>(),
+                                        "Visit",
+                                        new[]
+                                        {
+                                            new MethodParameter(
+                                                $"{toTranslate.Name}<ParseMode.Realized>",
+                                                "node"),
+                                            new MethodParameter(
+                                                "TContext",
+                                                "context"),
+                                        },
+$$"""
+//// TODO is there a way to avoid this cast?
+return (node as {{toTranslate.Name}}<TMode>.Realized)!.Dispatch(this, context);
+"""
+                                        ),
+                                    new MethodDefinition(
+                                        AccessModifier.Public, 
+                                        ClassModifier.None, 
+                                        false,
+                                        "TResult",
+                                        Enumerable.Empty<string>(),
+                                        "Visit",
+                                        new[]
+                                        {
+                                            new MethodParameter(
+                                                $"{toTranslate.Name}<TMode>.Realized",
+                                                "node"),
+                                            new MethodParameter(
+                                                "TContext",
+                                                "context"),
+                                        },
+"""
+return node.Dispatch(this, context);
+"""
+                                        ),
+                                    //// TODO add accept methods
+                                },
+                                Enumerable.Empty<Class>(),
+                                Enumerable.Empty<PropertyDefinition>()),
+                            //// TODO implement du members
+                            //// TODO finish implementing visitor
+                        },
+                        Enumerable.Empty<PropertyDefinition>()),
+                    //// TODO implement realizeimpl for deferred
                 },
                 Enumerable.Empty<PropertyDefinition>());
 
