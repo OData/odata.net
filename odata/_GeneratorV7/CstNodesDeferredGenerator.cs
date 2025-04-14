@@ -732,8 +732,8 @@ if (typeof(TMode) != typeof(ParseMode.Realized))
                                                 "Convert",
                                                 Enumerable.Empty<MethodParameter>(),
                                                 //// TODo implement these methods
-"""
-throw new Exception("TODO");
+$$"""
+return new {{toTranslate.Name}}<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
 """
                                                 ),
                                             new MethodDefinition(

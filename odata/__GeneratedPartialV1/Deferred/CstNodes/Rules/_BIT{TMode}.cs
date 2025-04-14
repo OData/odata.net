@@ -96,7 +96,7 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _BIT<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _BIT<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _BIT<ParseMode.Realized>> Realize()
@@ -127,7 +127,7 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _BIT<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _BIT<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _BIT<ParseMode.Realized>> Realize()

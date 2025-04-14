@@ -101,7 +101,7 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _HEXDIG<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _HEXDIG<ParseMode.Realized>> Realize()
@@ -132,7 +132,7 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _HEXDIG<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _HEXDIG<ParseMode.Realized>> Realize()
@@ -163,7 +163,7 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _HEXDIG<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _HEXDIG<ParseMode.Realized>> Realize()
@@ -194,7 +194,7 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _HEXDIG<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _HEXDIG<ParseMode.Realized>> Realize()
@@ -225,7 +225,7 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _HEXDIG<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _HEXDIG<ParseMode.Realized>> Realize()
@@ -256,7 +256,7 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _HEXDIG<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _HEXDIG<ParseMode.Realized>> Realize()
@@ -287,7 +287,7 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _HEXDIG<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _HEXDIG<ParseMode.Realized>> Realize()

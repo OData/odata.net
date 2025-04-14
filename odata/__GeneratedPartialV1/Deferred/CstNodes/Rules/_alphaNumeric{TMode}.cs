@@ -96,7 +96,7 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _alphaNumeric<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _alphaNumeric<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _alphaNumeric<ParseMode.Realized>> Realize()
@@ -127,7 +127,7 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _alphaNumeric<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _alphaNumeric<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _alphaNumeric<ParseMode.Realized>> Realize()

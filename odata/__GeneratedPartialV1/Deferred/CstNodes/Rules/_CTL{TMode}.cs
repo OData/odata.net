@@ -96,7 +96,7 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _CTL<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _CTL<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _CTL<ParseMode.Realized>> Realize()
@@ -127,7 +127,7 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _CTL<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _CTL<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _CTL<ParseMode.Realized>> Realize()

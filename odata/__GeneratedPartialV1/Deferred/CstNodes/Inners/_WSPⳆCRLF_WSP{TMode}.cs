@@ -96,7 +96,7 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _WSPⳆCRLF_WSP<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _WSPⳆCRLF_WSP<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _WSPⳆCRLF_WSP<ParseMode.Realized>> Realize()
@@ -129,7 +129,7 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _WSPⳆCRLF_WSP<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _WSPⳆCRLF_WSP<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _WSPⳆCRLF_WSP<ParseMode.Realized>> Realize()

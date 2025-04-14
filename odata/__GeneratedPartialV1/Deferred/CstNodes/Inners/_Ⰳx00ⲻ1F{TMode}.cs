@@ -128,7 +128,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -161,7 +161,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -194,7 +194,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -227,7 +227,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -260,7 +260,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -293,7 +293,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -326,7 +326,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -359,7 +359,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -392,7 +392,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -425,7 +425,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -458,7 +458,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -491,7 +491,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -524,7 +524,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -557,7 +557,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -590,7 +590,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -623,7 +623,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -656,7 +656,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -689,7 +689,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -722,7 +722,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -755,7 +755,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -788,7 +788,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -821,7 +821,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -854,7 +854,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -887,7 +887,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -920,7 +920,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -953,7 +953,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -986,7 +986,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -1019,7 +1019,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -1052,7 +1052,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -1085,7 +1085,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -1118,7 +1118,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
@@ -1151,7 +1151,7 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                 
                 public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
                 {
-                    throw new Exception("TODO");
+                    return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
                 }
                 
                 public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
