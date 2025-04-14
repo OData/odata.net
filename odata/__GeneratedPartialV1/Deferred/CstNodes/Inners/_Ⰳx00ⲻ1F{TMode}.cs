@@ -117,6 +117,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__0_2 = _0_2;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._00>(true, this, nextTokens);
                 }
                 
@@ -150,6 +152,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__1_1 = _1_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._01>(true, this, nextTokens);
                 }
                 
@@ -183,6 +187,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__2_1 = _2_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._02>(true, this, nextTokens);
                 }
                 
@@ -216,6 +222,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__3_1 = _3_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._03>(true, this, nextTokens);
                 }
                 
@@ -249,6 +257,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__4_1 = _4_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._04>(true, this, nextTokens);
                 }
                 
@@ -282,6 +292,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__5_1 = _5_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._05>(true, this, nextTokens);
                 }
                 
@@ -315,6 +327,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__6_1 = _6_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._06>(true, this, nextTokens);
                 }
                 
@@ -348,6 +362,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__7_1 = _7_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._07>(true, this, nextTokens);
                 }
                 
@@ -381,6 +397,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__8_1 = _8_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._08>(true, this, nextTokens);
                 }
                 
@@ -414,6 +432,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__9_1 = _9_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._09>(true, this, nextTokens);
                 }
                 
@@ -447,6 +467,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__A_1 = _A_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._0A>(true, this, nextTokens);
                 }
                 
@@ -480,6 +502,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__B_1 = _B_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._0B>(true, this, nextTokens);
                 }
                 
@@ -513,6 +537,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__C_1 = _C_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._0C>(true, this, nextTokens);
                 }
                 
@@ -546,6 +572,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__D_1 = _D_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._0D>(true, this, nextTokens);
                 }
                 
@@ -579,6 +607,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__E_1 = _E_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._0E>(true, this, nextTokens);
                 }
                 
@@ -612,6 +642,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__0_1 = _0_1;
+                    this.__F_1 = _F_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._0F>(true, this, nextTokens);
                 }
                 
@@ -645,6 +677,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__0_1 = _0_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._10>(true, this, nextTokens);
                 }
                 
@@ -678,6 +712,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__1_2 = _1_2;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._11>(true, this, nextTokens);
                 }
                 
@@ -711,6 +747,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__2_1 = _2_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._12>(true, this, nextTokens);
                 }
                 
@@ -744,6 +782,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__3_1 = _3_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._13>(true, this, nextTokens);
                 }
                 
@@ -777,6 +817,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__4_1 = _4_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._14>(true, this, nextTokens);
                 }
                 
@@ -810,6 +852,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__5_1 = _5_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._15>(true, this, nextTokens);
                 }
                 
@@ -843,6 +887,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__6_1 = _6_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._16>(true, this, nextTokens);
                 }
                 
@@ -876,6 +922,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__7_1 = _7_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._17>(true, this, nextTokens);
                 }
                 
@@ -909,6 +957,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__8_1 = _8_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._18>(true, this, nextTokens);
                 }
                 
@@ -942,6 +992,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__9_1 = _9_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._19>(true, this, nextTokens);
                 }
                 
@@ -975,6 +1027,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__A_1 = _A_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._1A>(true, this, nextTokens);
                 }
                 
@@ -1008,6 +1062,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__B_1 = _B_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._1B>(true, this, nextTokens);
                 }
                 
@@ -1041,6 +1097,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__C_1 = _C_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._1C>(true, this, nextTokens);
                 }
                 
@@ -1074,6 +1132,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__D_1 = _D_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._1D>(true, this, nextTokens);
                 }
                 
@@ -1107,6 +1167,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__E_1 = _E_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._1E>(true, this, nextTokens);
                 }
                 
@@ -1140,6 +1202,8 @@ return (node as _Ⰳx00ⲻ1F<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__1_1 = _1_1;
+                    this.__F_1 = _F_1;
                     this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻ1F<TMode>.Realized._1F>(true, this, nextTokens);
                 }
                 

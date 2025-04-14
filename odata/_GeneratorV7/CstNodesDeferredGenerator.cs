@@ -715,7 +715,7 @@ if (typeof(TMode) != typeof(ParseMode.Realized))
 }
 """.Split(Environment.NewLine)
                                                 .Concat(
-                                                    toTranslate
+                                                    nestedClass
                                                         .Properties
                                                         .Select(
                                                             property =>

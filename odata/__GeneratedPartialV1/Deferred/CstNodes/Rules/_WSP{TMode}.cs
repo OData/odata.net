@@ -87,6 +87,7 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__SP_1 = _SP_1;
                     this.realizationResult = new RealizationResult<char, _WSP<TMode>.Realized._SP>(true, this, nextTokens);
                 }
                 
@@ -118,6 +119,7 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__HTAB_1 = _HTAB_1;
                     this.realizationResult = new RealizationResult<char, _WSP<TMode>.Realized._HTAB>(true, this, nextTokens);
                 }
                 

@@ -87,6 +87,7 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__ʺx30ʺ_1 = _ʺx30ʺ_1;
                     this.realizationResult = new RealizationResult<char, _BIT<TMode>.Realized._ʺx30ʺ>(true, this, nextTokens);
                 }
                 
@@ -118,6 +119,7 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__ʺx31ʺ_1 = _ʺx31ʺ_1;
                     this.realizationResult = new RealizationResult<char, _BIT<TMode>.Realized._ʺx31ʺ>(true, this, nextTokens);
                 }
                 

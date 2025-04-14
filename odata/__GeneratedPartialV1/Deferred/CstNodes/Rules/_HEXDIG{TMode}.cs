@@ -92,6 +92,7 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__DIGIT_1 = _DIGIT_1;
                     this.realizationResult = new RealizationResult<char, _HEXDIG<TMode>.Realized._DIGIT>(true, this, nextTokens);
                 }
                 
@@ -123,6 +124,7 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__ʺx41ʺ_1 = _ʺx41ʺ_1;
                     this.realizationResult = new RealizationResult<char, _HEXDIG<TMode>.Realized._ʺx41ʺ>(true, this, nextTokens);
                 }
                 
@@ -154,6 +156,7 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__ʺx42ʺ_1 = _ʺx42ʺ_1;
                     this.realizationResult = new RealizationResult<char, _HEXDIG<TMode>.Realized._ʺx42ʺ>(true, this, nextTokens);
                 }
                 
@@ -185,6 +188,7 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__ʺx43ʺ_1 = _ʺx43ʺ_1;
                     this.realizationResult = new RealizationResult<char, _HEXDIG<TMode>.Realized._ʺx43ʺ>(true, this, nextTokens);
                 }
                 
@@ -216,6 +220,7 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__ʺx44ʺ_1 = _ʺx44ʺ_1;
                     this.realizationResult = new RealizationResult<char, _HEXDIG<TMode>.Realized._ʺx44ʺ>(true, this, nextTokens);
                 }
                 
@@ -247,6 +252,7 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__ʺx45ʺ_1 = _ʺx45ʺ_1;
                     this.realizationResult = new RealizationResult<char, _HEXDIG<TMode>.Realized._ʺx45ʺ>(true, this, nextTokens);
                 }
                 
@@ -278,6 +284,7 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__ʺx46ʺ_1 = _ʺx46ʺ_1;
                     this.realizationResult = new RealizationResult<char, _HEXDIG<TMode>.Realized._ʺx46ʺ>(true, this, nextTokens);
                 }
                 

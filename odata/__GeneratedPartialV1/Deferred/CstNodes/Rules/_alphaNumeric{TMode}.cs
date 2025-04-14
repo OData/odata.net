@@ -87,6 +87,7 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__ʺx41ʺ_1 = _ʺx41ʺ_1;
                     this.realizationResult = new RealizationResult<char, _alphaNumeric<TMode>.Realized._ʺx41ʺ>(true, this, nextTokens);
                 }
                 
@@ -118,6 +119,7 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__ʺx43ʺ_1 = _ʺx43ʺ_1;
                     this.realizationResult = new RealizationResult<char, _alphaNumeric<TMode>.Realized._ʺx43ʺ>(true, this, nextTokens);
                 }
                 

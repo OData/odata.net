@@ -87,6 +87,7 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__Ⰳx00ⲻ1F_1 = _Ⰳx00ⲻ1F_1;
                     this.realizationResult = new RealizationResult<char, _CTL<TMode>.Realized._Ⰳx00ⲻ1F>(true, this, nextTokens);
                 }
                 
@@ -118,6 +119,7 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.__Ⰳx7F_1 = _Ⰳx7F_1;
                     this.realizationResult = new RealizationResult<char, _CTL<TMode>.Realized._Ⰳx7F>(true, this, nextTokens);
                 }
                 
