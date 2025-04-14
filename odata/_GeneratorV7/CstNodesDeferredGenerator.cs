@@ -721,7 +721,7 @@ if (typeof(TMode) != typeof(ParseMode.Realized))
                                                             property =>
                                                                 $"this._{property.Name} = {property.Name};"))
                                                 .Append(
-                                                    $"this.realizationResult = new RealizationResult<char, {toTranslate.Name}<TMode>.Realized.A>(true, this, nextTokens);")),
+                                                    $"this.realizationResult = new RealizationResult<char, {toTranslate.Name}<TMode>.Realized.{nestedClass.Name}>(true, this, nextTokens);")),
                                         },
                                         new[]
                                         {
