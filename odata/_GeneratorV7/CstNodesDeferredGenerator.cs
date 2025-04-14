@@ -472,7 +472,6 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Create(previousNodeRealizationRe
                 Enumerable.Empty<Class>(),
                 Enumerable.Empty<PropertyDefinition>());
 
-            //// TODO actually implement this
             yield return new Class(
                 AccessModifier.Public,
                 ClassModifier.Abstract,
@@ -531,6 +530,7 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Deferred.Create(previousNodeReal
                 },
                 new[]
                 {
+                    //// TODO implement these
                     new Class(
                         AccessModifier.Public,
                         ClassModifier.Sealed,
