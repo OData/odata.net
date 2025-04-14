@@ -12,6 +12,36 @@ using System.Threading.Tasks;
 
 namespace odata.tests
 {
+    public static class GeneratedOdataUri
+    {
+        public static __GeneratedPartialV1.Deferred.CstNodes.Rules._odataUri<ParseMode.Deferred> Create(ITokenStream<char> input)
+        {
+            return __GeneratedPartialV1.Deferred.CstNodes.Rules._odataUri.Create(Future.Create(() => new RealizationResult<char>(true, input)));
+        }
+    }
+
+    [TestClass]
+    public sealed class DeferredTestsV2
+    {
+        [TestMethod]
+        public void Test1()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAA";
+
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
+
+            var odataUri = GeneratedOdataUri.Create(input);
+
+            var segOutput = odataUri._segment_1.Realize();
+            if (segOutput.Success)
+            {
+                var segments = segOutput.RealizedValue;
+            }
+
+            var realUri = odataUri.Parse();
+        }
+    }
+
     [TestClass]
     public sealed class DeferredTests
     {
