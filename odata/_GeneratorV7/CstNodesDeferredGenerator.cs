@@ -450,8 +450,6 @@ else
                 throw new Exception("TODO");
             }
 
-            return "throw new Exception(\"TODO\");";
-
             var builder = new StringBuilder();
             GenerateDisciminatedUnionFactoryMethodBodyPropertyInitialization(properties[0], "previousNodeRealizationResult", rules, inners, builder);
             builder.AppendLine();
@@ -459,16 +457,21 @@ else
             {
                 GenerateDisciminatedUnionFactoryMethodBodyPropertyInitialization(
                     properties[i],
-                    $"Future.Create(() => {properties[i - 1].Name}.Value.Realize())",
+                    $"Future.Create(() => {properties[i - 1].Name}.RealizedValue)",
                     rules,
                     inners,
                     builder);
                 builder.AppendLine();
             }
 
-            builder.Append($"return new {toTranslate.Name}<ParseMode.Deferred>(");
-            builder.AppendJoin(", ", properties.Select(property => property.Name));
+            builder.Append($"var node = new {toTranslate.Name}(");
+            builder.AppendJoin(", ", properties.Select(property => $"{property.Name}.RealizedValue"));
+            builder.Append(", ");
+            builder.Append(properties.Last().Name);
+            builder.Append(".RemainingTokens");
             builder.Append(");");
+            builder.AppendLine();
+            builder.Append("return node.realizationResult;");
 
             return builder.ToString();
         }
@@ -480,7 +483,7 @@ else
             Namespace inners,
             StringBuilder builder)
         {
-            builder.Append($"var {property.Name} = Future.Create(() => ");
+            builder.Append($"var {property.Name} = ");
 
             TranslateType(property.Type, rules, inners, out var translatedType, out var factoryType, out var elementTypes);
 
@@ -488,16 +491,19 @@ else
             var many = "CombinatorParsingV3.Many<";
             if (translatedType.StartsWith(atleastone)) //// TODO what about other ranges?
             {
-                builder.Append($"CombinatorParsingV3.AtLeastOne.Create<{elementTypes.Value.DeferredElementType}, {elementTypes.Value.RealizedElementType}>({previousNodeRealizationResult}, input => {elementTypes.Value.FactoryType}.Create(input)));");
+                builder.Append($"CombinatorParsingV3.AtLeastOne.Create<{elementTypes.Value.DeferredElementType}, {elementTypes.Value.RealizedElementType}>({previousNodeRealizationResult}, input => {elementTypes.Value.FactoryType}.Create(input))");
             }
             else if (translatedType.StartsWith(many))
             {
-                builder.Append($"CombinatorParsingV3.Many.Create<{elementTypes.Value.DeferredElementType}, {elementTypes.Value.RealizedElementType}>(input => {elementTypes.Value.FactoryType}.Create(input), {previousNodeRealizationResult}));");
+                builder.Append($"CombinatorParsingV3.Many.Create<{elementTypes.Value.DeferredElementType}, {elementTypes.Value.RealizedElementType}>(input => {elementTypes.Value.FactoryType}.Create(input), {previousNodeRealizationResult})");
             }
             else
             {
-                builder.Append($"{factoryType}.Create({previousNodeRealizationResult}));");
+                builder.Append($"{factoryType}.Create({previousNodeRealizationResult})");
             }
+
+            builder.Append(".Realize();");
+            //// TODO add if statements
         }
 
         private IEnumerable<Class> TranslateDiscriminatedUnion(Class toTranslate, Namespace rules, Namespace inners)
@@ -758,9 +764,12 @@ throw new Exception("TODO");
                                                     .Properties
                                                     .Select(
                                                         property =>
-                                                            new MethodParameter(
-                                                                $"{TranslateType(property.Type, rules, inners)}",
-                                                                property.Name))
+                                                        {
+                                                            TranslateType(property.Type, rules, inners, out var translated, out var factoryType, out var elementTypes);
+                                                            return new MethodParameter(
+                                                                $"{factoryType}<ParseMode.Realized>", //// TODO you never really got `translatetype` working in a general way, so this is a super hack
+                                                                property.Name);
+                                                        })
                                                     .Append(
                                                         new MethodParameter(
                                                             "ITokenStream<char>?",
@@ -786,7 +795,7 @@ if (typeof(TMode) != typeof(ParseMode.Realized))
                                                 AccessModifier.Internal,
                                                 ClassModifier.Static,
                                                 false,
-                                                $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>.Realized.{nestedClass.Name}>",
+                                                $"IRealizationResult<char, {toTranslate.Name}<TMode>.Realized.{nestedClass.Name}>",
                                                 Enumerable.Empty<string>(),
                                                 "Create",
                                                 new[]
@@ -852,14 +861,17 @@ return visitor.Accept(this, context);
                                             .Properties
                                             .Select(
                                                 property =>
-                                                    new PropertyDefinition(
+                                                {
+                                                    TranslateType(property.Type, rules, inners, out var translated, out var factoryType, out var elementTypes);
+                                                    return new PropertyDefinition(
                                                         AccessModifier.Public,
                                                         false,
-                                                        TranslateType(property.Type, rules, inners),
+                                                        $"{factoryType}<ParseMode.Realized>", //// TODO you never really got `translatetype` working in a general way, so this is a super hack
                                                         property.Name,
                                                         true,
                                                         false,
-                                                        null))
+                                                        null);
+                                                })
                                             .Prepend(
                                                 new PropertyDefinition(
                                                     AccessModifier.Private,

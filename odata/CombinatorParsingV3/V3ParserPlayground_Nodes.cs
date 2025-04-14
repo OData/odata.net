@@ -193,6 +193,19 @@
 
                 public sealed class A : AlphaNumeric<TMode>.Realized
                 {
+                    /*
+                    internal static IRealizationResult<char, _alphaNumeric<ParseMode.Realized>.Realized._ʺx41ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    var _ʺx41ʺ_1 = __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ.Create(previousNodeRealizationResult).Realize();
+                    if (!_ʺx41ʺ_1.Success)
+                    {
+                        return new RealizationResult<char, _alphaNumeric<ParseMode.Realized>.Realized._ʺx41ʺ>(false, default, previousNodeRealizationResult.Value.RemainingTokens);
+                    }
+
+                    var node = new _ʺx41ʺ(_ʺx41ʺ_1.RealizedValue, _ʺx41ʺ_1.RemainingTokens);
+                    return node.realizationResult;
+                }
+                    */
                     internal static IRealizationResult<char, AlphaNumeric<ParseMode.Realized>.Realized.A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
                     {
                         var output = previousNodeRealizationResult.Value;
