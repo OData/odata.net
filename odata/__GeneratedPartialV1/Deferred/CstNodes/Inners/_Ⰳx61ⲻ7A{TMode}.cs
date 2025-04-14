@@ -132,7 +132,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -165,7 +165,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -198,7 +198,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -231,7 +231,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -264,7 +264,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -297,7 +297,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -330,7 +330,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -363,7 +363,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -396,7 +396,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -429,7 +429,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -462,7 +462,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -495,7 +495,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -528,7 +528,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -561,7 +561,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -594,7 +594,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -627,7 +627,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -660,7 +660,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -693,7 +693,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -726,7 +726,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -759,7 +759,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -792,7 +792,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -825,7 +825,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -858,7 +858,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -891,7 +891,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -924,7 +924,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -957,7 +957,7 @@ return (node as _Ⰳx61ⲻ7A<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
         }

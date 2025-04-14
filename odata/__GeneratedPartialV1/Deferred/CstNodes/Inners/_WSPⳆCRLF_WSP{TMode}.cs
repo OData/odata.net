@@ -106,7 +106,7 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
             
@@ -139,7 +139,7 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
                 
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
-                    throw new Exception("TODO");
+                    return visitor.Accept(this, context);
                 }
             }
         }

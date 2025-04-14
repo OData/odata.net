@@ -767,9 +767,8 @@ return this.realizationResult;
                                                         "TContext",
                                                         "context"),
                                                 },
-                                                //// TODo implement these methods
 """
-throw new Exception("TODO");
+return visitor.Accept(this, context);
 """
                                                 ),
                                             //// TODO implement create
