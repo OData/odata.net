@@ -18,10 +18,10 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
         }
         private _B(IFuture<IRealizationResult<char, _B<ParseMode.Realized>>> realizationResult)
         {
-            if (typeof(TMode) != typeof(ParseMode.Realized))
+            /*if (typeof(TMode) != typeof(ParseMode.Realized))
             {
                 throw new ArgumentException("TODO");
-            }
+            }*/
             
             this.realizationResult = realizationResult;
         }
