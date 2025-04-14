@@ -259,6 +259,23 @@ namespace odata.tests
 
             Assert.AreEqual(9, indexes.Max());
         }
+
+        [TestMethod]
+        public void TranscribeTest()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAAC";
+
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
+
+            var deferredOdataUri = GeneratedOdataUri.Create(input);
+
+            var odataUri = deferredOdataUri.Parse();
+
+            var stringBuilder = new StringBuilder();
+            CombinatorParsingV3.TranscribersUsingGeneratedNodes.OdataUriTranscriber.Instance.Transcribe(odataUri, stringBuilder);
+
+            Assert.AreEqual(url, stringBuilder.ToString());
+        }
     }
 
     public static class GeneratedOdataUri
