@@ -81,6 +81,14 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx30ʺ : _BIT<TMode>.Realized
             {
+                private _ʺx30ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ<TMode>> _ʺx30ʺ_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _BIT<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -99,6 +107,14 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx31ʺ : _BIT<TMode>.Realized
             {
+                private _ʺx31ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ<TMode>> _ʺx31ʺ_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _BIT<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");

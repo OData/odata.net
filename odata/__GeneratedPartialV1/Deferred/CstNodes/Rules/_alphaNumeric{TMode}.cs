@@ -81,6 +81,14 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx41ʺ : _alphaNumeric<TMode>.Realized
             {
+                private _ʺx41ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode>> _ʺx41ʺ_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _alphaNumeric<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -99,6 +107,14 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx43ʺ : _alphaNumeric<TMode>.Realized
             {
+                private _ʺx43ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode>> _ʺx43ʺ_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _alphaNumeric<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");

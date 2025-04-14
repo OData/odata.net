@@ -81,6 +81,14 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _Ⰳx00ⲻ1F : _CTL<TMode>.Realized
             {
+                private _Ⰳx00ⲻ1F(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx00ⲻ1F<TMode>> _Ⰳx00ⲻ1F_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _CTL<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -99,6 +107,14 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _Ⰳx7F : _CTL<TMode>.Realized
             {
+                private _Ⰳx7F(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx7F<TMode>> _Ⰳx7F_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _CTL<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");

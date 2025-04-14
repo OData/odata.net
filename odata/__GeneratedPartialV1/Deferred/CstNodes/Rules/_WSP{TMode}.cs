@@ -81,6 +81,14 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _SP : _WSP<TMode>.Realized
             {
+                private _SP(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._SP<TMode>> _SP_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _WSP<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -99,6 +107,14 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _HTAB : _WSP<TMode>.Realized
             {
+                private _HTAB(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB<TMode>> _HTAB_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _WSP<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");

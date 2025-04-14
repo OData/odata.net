@@ -86,6 +86,14 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _DIGIT : _HEXDIG<TMode>.Realized
             {
+                private _DIGIT(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._DIGIT<TMode>> _DIGIT_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -104,6 +112,14 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx41ʺ : _HEXDIG<TMode>.Realized
             {
+                private _ʺx41ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode>> _ʺx41ʺ_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -122,6 +138,14 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx42ʺ : _HEXDIG<TMode>.Realized
             {
+                private _ʺx42ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx42ʺ<TMode>> _ʺx42ʺ_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -140,6 +164,14 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx43ʺ : _HEXDIG<TMode>.Realized
             {
+                private _ʺx43ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode>> _ʺx43ʺ_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -158,6 +190,14 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx44ʺ : _HEXDIG<TMode>.Realized
             {
+                private _ʺx44ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx44ʺ<TMode>> _ʺx44ʺ_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -176,6 +216,14 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx45ʺ : _HEXDIG<TMode>.Realized
             {
+                private _ʺx45ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx45ʺ<TMode>> _ʺx45ʺ_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");
@@ -194,6 +242,14 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx46ʺ : _HEXDIG<TMode>.Realized
             {
+                private _ʺx46ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx46ʺ<TMode>> _ʺx46ʺ_1, ITokenStream<char>? nextTokens)
+                {
+                    if (typeof(TMode) != typeof(ParseMode.Realized))
+                    {
+                        throw new Exception("tODO");
+                    }
+                }
+                
                 public override _HEXDIG<ParseMode.Deferred> Convert()
                 {
                     throw new Exception("TODO");

@@ -67,7 +67,7 @@
             }
             else if (toTranslate.NestedClasses.Where(nestedClass => nestedClass.Name == "Visitor").Any())
             {
-                return TranslateDiscriminatedUnion(toTranslate);
+                return TranslateDiscriminatedUnion(toTranslate, rules, inners);
             }
             else
             {
@@ -441,7 +441,7 @@ else
             return translated;
         }
 
-        private IEnumerable<Class> TranslateDiscriminatedUnion(Class toTranslate)
+        private IEnumerable<Class> TranslateDiscriminatedUnion(Class toTranslate, Namespace rules, Namespace inners)
         {
             // the factory methods for the cst node
             yield return new Class(
@@ -694,7 +694,36 @@ throw new Exception("TODO");
                                         $"{toTranslate.Name}<TMode>.Realized",
                                         //// TODO finis the rest of this class initialization
                                         //// TODO implement realizeimpl for deferred
-                                        Enumerable.Empty<ConstructorDefinition>(),
+                                        new[]
+                                        {
+                                            new ConstructorDefinition(
+                                                AccessModifier.Private,
+                                                nestedClass
+                                                    .Properties
+                                                    .Select(
+                                                        property =>
+                                                            new MethodParameter(
+                                                                $"IFuture<{TranslateType(property.Type, rules, inners)}>",
+                                                                property.Name))
+                                                    .Append(
+                                                        new MethodParameter(
+                                                            "ITokenStream<char>?",
+                                                            "nextTokens")),
+"""
+if (typeof(TMode) != typeof(ParseMode.Realized))
+{
+    throw new Exception("tODO");
+}
+""".Split(Environment.NewLine)
+                                                /*.Concat(
+                                                    toTranslate
+                                                        .Properties
+                                                        .Select(
+                                                            property =>
+                                                                $"this._{property.Name} = {property.Name};"))
+                                                .Append(
+                                                    $"this.RealizationResult = new RealizationResult<char, {toTranslate.Name}<TMode>.Realized.A>(true, this, nextTokens);")*/),
+                                        },
                                         new[]
                                         {
                                             new MethodDefinition(
