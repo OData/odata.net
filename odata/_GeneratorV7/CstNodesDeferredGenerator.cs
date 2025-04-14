@@ -788,7 +788,6 @@ throw new Exception("TODO");
                                                         false,
                                                         null))
                                             .Prepend(
-                                                //// TODO this should be a field
                                                 new PropertyDefinition(
                                                     AccessModifier.Private,
                                                     false,
