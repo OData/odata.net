@@ -87,10 +87,11 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _alphaNumeric<TMode>.Realized._ʺx41ʺ>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode>> __ʺx41ʺ_1 { get; }
-                private IFuture<IRealizationResult<char, _alphaNumeric<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _alphaNumeric<TMode>.Realized._ʺx41ʺ> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode> _ʺx41ʺ_1 { get; }
                 
                 public override _alphaNumeric<ParseMode.Deferred> Convert()
@@ -117,10 +118,11 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _alphaNumeric<TMode>.Realized._ʺx43ʺ>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode>> __ʺx43ʺ_1 { get; }
-                private IFuture<IRealizationResult<char, _alphaNumeric<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _alphaNumeric<TMode>.Realized._ʺx43ʺ> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode> _ʺx43ʺ_1 { get; }
                 
                 public override _alphaNumeric<ParseMode.Deferred> Convert()

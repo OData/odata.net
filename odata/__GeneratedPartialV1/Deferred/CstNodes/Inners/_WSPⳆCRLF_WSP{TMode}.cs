@@ -87,10 +87,11 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _WSPⳆCRLF_WSP<TMode>.Realized._WSP>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<TMode>> __WSP_1 { get; }
-                private IFuture<IRealizationResult<char, _WSPⳆCRLF_WSP<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _WSPⳆCRLF_WSP<TMode>.Realized._WSP> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<TMode> _WSP_1 { get; }
                 
                 public override _WSPⳆCRLF_WSP<ParseMode.Deferred> Convert()
@@ -117,11 +118,12 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _WSPⳆCRLF_WSP<TMode>.Realized._CRLF_WSP>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._CRLF<TMode>> __CRLF_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<TMode>> __WSP_1 { get; }
-                private IFuture<IRealizationResult<char, _WSPⳆCRLF_WSP<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _WSPⳆCRLF_WSP<TMode>.Realized._CRLF_WSP> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._CRLF<TMode> _CRLF_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<TMode> _WSP_1 { get; }
                 

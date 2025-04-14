@@ -87,10 +87,11 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _WSP<TMode>.Realized._SP>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._SP<TMode>> __SP_1 { get; }
-                private IFuture<IRealizationResult<char, _WSP<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _WSP<TMode>.Realized._SP> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._SP<TMode> _SP_1 { get; }
                 
                 public override _WSP<ParseMode.Deferred> Convert()
@@ -117,10 +118,11 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _WSP<TMode>.Realized._HTAB>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB<TMode>> __HTAB_1 { get; }
-                private IFuture<IRealizationResult<char, _WSP<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _WSP<TMode>.Realized._HTAB> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB<TMode> _HTAB_1 { get; }
                 
                 public override _WSP<ParseMode.Deferred> Convert()

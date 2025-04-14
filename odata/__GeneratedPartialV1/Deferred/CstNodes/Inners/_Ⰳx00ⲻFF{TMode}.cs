@@ -341,11 +341,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._00>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._00> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_2 { get; }
                 
@@ -373,11 +374,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._01>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._01> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -405,11 +407,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._02>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._02> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -437,11 +440,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._03>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._03> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -469,11 +473,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._04>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._04> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -501,11 +506,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._05>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._05> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -533,11 +539,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._06>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._06> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -565,11 +572,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._07>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._07> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -597,11 +605,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._08>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._08> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -629,11 +638,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._09>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._09> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -661,11 +671,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._0A>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._0A> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -693,11 +704,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._0B>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._0B> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -725,11 +737,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._0C>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._0C> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -757,11 +770,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._0D>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._0D> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -789,11 +803,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._0E>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._0E> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -821,11 +836,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._0F>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._0F> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -853,11 +869,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._10>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._10> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -885,11 +902,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._11>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._11> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_2 { get; }
                 
@@ -917,11 +935,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._12>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._12> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -949,11 +968,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._13>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._13> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -981,11 +1001,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._14>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._14> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -1013,11 +1034,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._15>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._15> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -1045,11 +1067,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._16>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._16> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -1077,11 +1100,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._17>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._17> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -1109,11 +1133,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._18>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._18> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -1141,11 +1166,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._19>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._19> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -1173,11 +1199,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._1A>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._1A> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -1205,11 +1232,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._1B>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._1B> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -1237,11 +1265,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._1C>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._1C> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -1269,11 +1298,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._1D>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._1D> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -1301,11 +1331,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._1E>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._1E> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -1333,11 +1364,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._1F>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._1F> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -1365,11 +1397,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._20>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._20> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -1397,11 +1430,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._21>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._21> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -1429,11 +1463,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._22>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._22> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_2 { get; }
                 
@@ -1461,11 +1496,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._23>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._23> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -1493,11 +1529,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._24>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._24> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -1525,11 +1562,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._25>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._25> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -1557,11 +1595,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._26>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._26> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -1589,11 +1628,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._27>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._27> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -1621,11 +1661,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._28>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._28> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -1653,11 +1694,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._29>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._29> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -1685,11 +1727,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._2A>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._2A> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -1717,11 +1760,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._2B>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._2B> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -1749,11 +1793,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._2C>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._2C> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -1781,11 +1826,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._2D>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._2D> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -1813,11 +1859,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._2E>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._2E> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -1845,11 +1892,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._2F>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._2F> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -1877,11 +1925,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._30>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._30> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -1909,11 +1958,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._31>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._31> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -1941,11 +1991,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._32>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._32> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -1973,11 +2024,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._33>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._33> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_2 { get; }
                 
@@ -2005,11 +2057,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._34>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._34> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -2037,11 +2090,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._35>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._35> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -2069,11 +2123,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._36>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._36> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -2101,11 +2156,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._37>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._37> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -2133,11 +2189,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._38>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._38> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -2165,11 +2222,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._39>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._39> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -2197,11 +2255,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._3A>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._3A> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -2229,11 +2288,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._3B>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._3B> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -2261,11 +2321,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._3C>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._3C> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -2293,11 +2354,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._3D>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._3D> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -2325,11 +2387,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._3E>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._3E> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -2357,11 +2420,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._3F>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._3F> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -2389,11 +2453,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._40>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._40> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -2421,11 +2486,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._41>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._41> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -2453,11 +2519,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._42>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._42> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -2485,11 +2552,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._43>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._43> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -2517,11 +2585,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._44>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._44> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_2 { get; }
                 
@@ -2549,11 +2618,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._45>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._45> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -2581,11 +2651,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._46>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._46> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -2613,11 +2684,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._47>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._47> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -2645,11 +2717,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._48>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._48> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -2677,11 +2750,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._49>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._49> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -2709,11 +2783,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._4A>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._4A> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -2741,11 +2816,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._4B>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._4B> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -2773,11 +2849,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._4C>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._4C> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -2805,11 +2882,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._4D>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._4D> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -2837,11 +2915,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._4E>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._4E> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -2869,11 +2948,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._4F>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._4F> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -2901,11 +2981,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._50>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._50> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -2933,11 +3014,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._51>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._51> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -2965,11 +3047,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._52>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._52> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -2997,11 +3080,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._53>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._53> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -3029,11 +3113,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._54>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._54> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -3061,11 +3146,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._55>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._55> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_2 { get; }
                 
@@ -3093,11 +3179,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._56>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._56> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -3125,11 +3212,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._57>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._57> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -3157,11 +3245,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._58>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._58> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -3189,11 +3278,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._59>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._59> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -3221,11 +3311,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._5A>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._5A> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -3253,11 +3344,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._5B>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._5B> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -3285,11 +3377,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._5C>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._5C> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -3317,11 +3410,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._5D>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._5D> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -3349,11 +3443,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._5E>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._5E> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -3381,11 +3476,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._5F>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._5F> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -3413,11 +3509,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._60>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._60> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -3445,11 +3542,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._61>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._61> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -3477,11 +3575,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._62>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._62> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -3509,11 +3608,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._63>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._63> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -3541,11 +3641,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._64>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._64> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -3573,11 +3674,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._65>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._65> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -3605,11 +3707,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._66>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._66> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_2 { get; }
                 
@@ -3637,11 +3740,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._67>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._67> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -3669,11 +3773,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._68>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._68> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -3701,11 +3806,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._69>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._69> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -3733,11 +3839,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._6A>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._6A> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -3765,11 +3872,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._6B>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._6B> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -3797,11 +3905,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._6C>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._6C> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -3829,11 +3938,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._6D>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._6D> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -3861,11 +3971,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._6E>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._6E> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -3893,11 +4004,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._6F>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._6F> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -3925,11 +4037,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._70>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._70> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -3957,11 +4070,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._71>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._71> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -3989,11 +4103,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._72>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._72> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -4021,11 +4136,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._73>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._73> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -4053,11 +4169,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._74>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._74> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -4085,11 +4202,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._75>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._75> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -4117,11 +4235,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._76>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._76> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -4149,11 +4268,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._77>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._77> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_2 { get; }
                 
@@ -4181,11 +4301,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._78>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._78> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -4213,11 +4334,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._79>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._79> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -4245,11 +4367,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._7A>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._7A> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -4277,11 +4400,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._7B>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._7B> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -4309,11 +4433,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._7C>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._7C> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -4341,11 +4466,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._7D>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._7D> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -4373,11 +4499,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._7E>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._7E> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -4405,11 +4532,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._7F>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._7F> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -4437,11 +4565,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._80>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._80> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -4469,11 +4598,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._81>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._81> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -4501,11 +4631,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._82>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._82> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -4533,11 +4664,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._83>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._83> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -4565,11 +4697,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._84>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._84> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -4597,11 +4730,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._85>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._85> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -4629,11 +4763,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._86>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._86> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -4661,11 +4796,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._87>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._87> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -4693,11 +4829,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._88>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._88> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_2 { get; }
                 
@@ -4725,11 +4862,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._89>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._89> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -4757,11 +4895,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._8A>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._8A> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -4789,11 +4928,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._8B>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._8B> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -4821,11 +4961,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._8C>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._8C> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -4853,11 +4994,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._8D>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._8D> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -4885,11 +5027,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._8E>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._8E> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -4917,11 +5060,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._8F>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._8F> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -4949,11 +5093,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._90>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._90> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -4981,11 +5126,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._91>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._91> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -5013,11 +5159,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._92>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._92> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -5045,11 +5192,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._93>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._93> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -5077,11 +5225,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._94>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._94> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -5109,11 +5258,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._95>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._95> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -5141,11 +5291,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._96>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._96> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -5173,11 +5324,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._97>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._97> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -5205,11 +5357,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._98>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._98> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -5237,11 +5390,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._99>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._99> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_2 { get; }
                 
@@ -5269,11 +5423,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._9A>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._9A> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -5301,11 +5456,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._9B>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._9B> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -5333,11 +5489,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._9C>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._9C> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -5365,11 +5522,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._9D>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._9D> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -5397,11 +5555,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._9E>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._9E> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -5429,11 +5588,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._9F>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._9F> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -5461,11 +5621,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A0>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A0> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -5493,11 +5654,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A1>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A1> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -5525,11 +5687,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A2>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A2> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -5557,11 +5720,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A3>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A3> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -5589,11 +5753,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A4>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A4> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -5621,11 +5786,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A5>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A5> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -5653,11 +5819,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A6>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A6> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -5685,11 +5852,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A7>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A7> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -5717,11 +5885,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A8>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A8> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -5749,11 +5918,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A9>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._A9> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -5781,11 +5951,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._AA>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._AA> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_2 { get; }
                 
@@ -5813,11 +5984,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._AB>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._AB> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -5845,11 +6017,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._AC>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._AC> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -5877,11 +6050,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._AD>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._AD> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -5909,11 +6083,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._AE>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._AE> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -5941,11 +6116,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._AF>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._AF> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -5973,11 +6149,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B0>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B0> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -6005,11 +6182,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B1>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B1> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -6037,11 +6215,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B2>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B2> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -6069,11 +6248,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B3>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B3> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -6101,11 +6281,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B4>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B4> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -6133,11 +6314,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B5>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B5> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -6165,11 +6347,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B6>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B6> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -6197,11 +6380,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B7>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B7> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -6229,11 +6413,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B8>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B8> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -6261,11 +6446,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B9>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._B9> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -6293,11 +6479,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._BA>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._BA> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -6325,11 +6512,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._BB>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._BB> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_2 { get; }
                 
@@ -6357,11 +6545,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._BC>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._BC> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -6389,11 +6578,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._BD>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._BD> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -6421,11 +6611,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._BE>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._BE> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -6453,11 +6644,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._BF>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._BF> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -6485,11 +6677,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C0>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C0> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -6517,11 +6710,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C1>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C1> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -6549,11 +6743,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C2>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C2> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -6581,11 +6776,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C3>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C3> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -6613,11 +6809,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C4>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C4> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -6645,11 +6842,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C5>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C5> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -6677,11 +6875,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C6>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C6> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -6709,11 +6908,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C7>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C7> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -6741,11 +6941,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C8>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C8> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -6773,11 +6974,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C9>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._C9> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -6805,11 +7007,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._CA>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._CA> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -6837,11 +7040,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._CB>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._CB> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -6869,11 +7073,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._CC>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._CC> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_2 { get; }
                 
@@ -6901,11 +7106,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._CD>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._CD> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -6933,11 +7139,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._CE>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._CE> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -6965,11 +7172,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._CF>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._CF> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -6997,11 +7205,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D0>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D0> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -7029,11 +7238,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D1>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D1> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -7061,11 +7271,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D2>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D2> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -7093,11 +7304,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D3>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D3> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -7125,11 +7337,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D4>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D4> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -7157,11 +7370,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D5>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D5> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -7189,11 +7403,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D6>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D6> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -7221,11 +7436,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D7>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D7> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -7253,11 +7469,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D8>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D8> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -7285,11 +7502,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D9>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._D9> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -7317,11 +7535,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._DA>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._DA> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -7349,11 +7568,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._DB>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._DB> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -7381,11 +7601,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._DC>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._DC> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -7413,11 +7634,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._DD>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._DD> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_2 { get; }
                 
@@ -7445,11 +7667,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._DE>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._DE> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -7477,11 +7700,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._DF>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._DF> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -7509,11 +7733,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E0>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E0> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -7541,11 +7766,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E1>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E1> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -7573,11 +7799,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E2>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E2> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -7605,11 +7832,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E3>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E3> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -7637,11 +7865,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E4>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E4> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -7669,11 +7898,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E5>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E5> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -7701,11 +7931,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E6>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E6> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -7733,11 +7964,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E7>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E7> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -7765,11 +7997,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E8>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E8> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -7797,11 +8030,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E9>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._E9> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -7829,11 +8063,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._EA>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._EA> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -7861,11 +8096,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._EB>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._EB> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -7893,11 +8129,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._EC>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._EC> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -7925,11 +8162,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._ED>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._ED> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -7957,11 +8195,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._EE>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._EE> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_2 { get; }
                 
@@ -7989,11 +8228,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._EF>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._EF> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 
@@ -8021,11 +8261,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F0>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F0> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
                 
@@ -8053,11 +8294,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F1>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode>> __1_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F1> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._1<TMode> _1_1 { get; }
                 
@@ -8085,11 +8327,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F2>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode>> __2_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F2> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._2<TMode> _2_1 { get; }
                 
@@ -8117,11 +8360,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F3>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode>> __3_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F3> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._3<TMode> _3_1 { get; }
                 
@@ -8149,11 +8393,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F4>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode>> __4_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F4> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._4<TMode> _4_1 { get; }
                 
@@ -8181,11 +8426,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F5>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode>> __5_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F5> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._5<TMode> _5_1 { get; }
                 
@@ -8213,11 +8459,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F6>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode>> __6_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F6> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._6<TMode> _6_1 { get; }
                 
@@ -8245,11 +8492,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F7>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode>> __7_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F7> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._7<TMode> _7_1 { get; }
                 
@@ -8277,11 +8525,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F8>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode>> __8_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F8> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._8<TMode> _8_1 { get; }
                 
@@ -8309,11 +8558,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F9>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode>> __9_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._F9> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._9<TMode> _9_1 { get; }
                 
@@ -8341,11 +8591,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._FA>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._FA> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
                 
@@ -8373,11 +8624,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._FB>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode>> __B_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._FB> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._B<TMode> _B_1 { get; }
                 
@@ -8405,11 +8657,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._FC>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode>> __C_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._FC> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._C<TMode> _C_1 { get; }
                 
@@ -8437,11 +8690,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._FD>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode>> __D_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._FD> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._D<TMode> _D_1 { get; }
                 
@@ -8469,11 +8723,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._FE>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode>> __E_1 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._FE> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._E<TMode> _E_1 { get; }
                 
@@ -8501,11 +8756,12 @@ return (node as _Ⰳx00ⲻFF<TMode>.Realized)!.Dispatch(this, context);
                     {
                         throw new Exception("tODO");
                     }
+                    this.realizationResult = new RealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._FF>(true, this, nextTokens);
                 }
                 
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_1 { get; }
                 private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode>> __F_2 { get; }
-                private IFuture<IRealizationResult<char, _Ⰳx00ⲻFF<ParseMode.Realized>>> realizationResult { get; }
+                private IRealizationResult<char, _Ⰳx00ⲻFF<TMode>.Realized._FF> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._F<TMode> _F_2 { get; }
                 
