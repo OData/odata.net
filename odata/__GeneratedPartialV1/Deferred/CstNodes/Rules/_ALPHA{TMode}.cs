@@ -94,6 +94,11 @@ return (node as _ALPHA<TMode>.Realized)!.Dispatch(this, context);
                 private IRealizationResult<char, _ALPHA<TMode>.Realized._Ⰳx41ⲻ5A> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx41ⲻ5A<TMode> _Ⰳx41ⲻ5A_1 { get; }
                 
+                internal static IRealizationResult<char, _ALPHA<ParseMode.Realized>.Realized._Ⰳx41ⲻ5A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception("TODO");
+                }
+                
                 public override _ALPHA<ParseMode.Deferred> Convert()
                 {
                     return new _ALPHA<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
@@ -107,11 +112,6 @@ return (node as _ALPHA<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
-                }
-                
-                internal static IRealizationResult<char, _ALPHA<ParseMode.Realized>.Realized._Ⰳx41ⲻ5A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
-                {
-                    throw new Exception();
                 }
             }
             
@@ -130,6 +130,11 @@ return (node as _ALPHA<TMode>.Realized)!.Dispatch(this, context);
                 private IRealizationResult<char, _ALPHA<TMode>.Realized._Ⰳx61ⲻ7A> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx61ⲻ7A<TMode> _Ⰳx61ⲻ7A_1 { get; }
                 
+                internal static IRealizationResult<char, _ALPHA<ParseMode.Realized>.Realized._Ⰳx61ⲻ7A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception("TODO");
+                }
+                
                 public override _ALPHA<ParseMode.Deferred> Convert()
                 {
                     return new _ALPHA<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
@@ -143,11 +148,6 @@ return (node as _ALPHA<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
-                }
-                
-                internal static IRealizationResult<char, _ALPHA<ParseMode.Realized>.Realized._Ⰳx61ⲻ7A> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
-                {
-                    throw new Exception();
                 }
             }
         }

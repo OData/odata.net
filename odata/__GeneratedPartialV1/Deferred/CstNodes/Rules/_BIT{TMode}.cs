@@ -94,6 +94,11 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                 private IRealizationResult<char, _BIT<TMode>.Realized._ʺx30ʺ> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ<TMode> _ʺx30ʺ_1 { get; }
                 
+                internal static IRealizationResult<char, _BIT<ParseMode.Realized>.Realized._ʺx30ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception("TODO");
+                }
+                
                 public override _BIT<ParseMode.Deferred> Convert()
                 {
                     return new _BIT<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
@@ -107,11 +112,6 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
-                }
-                
-                internal static IRealizationResult<char, _BIT<ParseMode.Realized>.Realized._ʺx30ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
-                {
-                    throw new Exception();
                 }
             }
             
@@ -130,6 +130,11 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                 private IRealizationResult<char, _BIT<TMode>.Realized._ʺx31ʺ> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ<TMode> _ʺx31ʺ_1 { get; }
                 
+                internal static IRealizationResult<char, _BIT<ParseMode.Realized>.Realized._ʺx31ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception("TODO");
+                }
+                
                 public override _BIT<ParseMode.Deferred> Convert()
                 {
                     return new _BIT<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
@@ -143,11 +148,6 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
-                }
-                
-                internal static IRealizationResult<char, _BIT<ParseMode.Realized>.Realized._ʺx31ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
-                {
-                    throw new Exception();
                 }
             }
         }

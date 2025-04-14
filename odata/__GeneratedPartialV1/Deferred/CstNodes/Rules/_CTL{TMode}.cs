@@ -94,6 +94,11 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                 private IRealizationResult<char, _CTL<TMode>.Realized._Ⰳx00ⲻ1F> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx00ⲻ1F<TMode> _Ⰳx00ⲻ1F_1 { get; }
                 
+                internal static IRealizationResult<char, _CTL<ParseMode.Realized>.Realized._Ⰳx00ⲻ1F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception("TODO");
+                }
+                
                 public override _CTL<ParseMode.Deferred> Convert()
                 {
                     return new _CTL<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
@@ -107,11 +112,6 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
-                }
-                
-                internal static IRealizationResult<char, _CTL<ParseMode.Realized>.Realized._Ⰳx00ⲻ1F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
-                {
-                    throw new Exception();
                 }
             }
             
@@ -130,6 +130,11 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                 private IRealizationResult<char, _CTL<TMode>.Realized._Ⰳx7F> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._Ⰳx7F<TMode> _Ⰳx7F_1 { get; }
                 
+                internal static IRealizationResult<char, _CTL<ParseMode.Realized>.Realized._Ⰳx7F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception("TODO");
+                }
+                
                 public override _CTL<ParseMode.Deferred> Convert()
                 {
                     return new _CTL<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
@@ -143,11 +148,6 @@ return (node as _CTL<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
-                }
-                
-                internal static IRealizationResult<char, _CTL<ParseMode.Realized>.Realized._Ⰳx7F> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
-                {
-                    throw new Exception();
                 }
             }
         }

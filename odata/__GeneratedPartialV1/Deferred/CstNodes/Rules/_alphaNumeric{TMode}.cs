@@ -94,6 +94,11 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
                 private IRealizationResult<char, _alphaNumeric<TMode>.Realized._ʺx41ʺ> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode> _ʺx41ʺ_1 { get; }
                 
+                internal static IRealizationResult<char, _alphaNumeric<ParseMode.Realized>.Realized._ʺx41ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception("TODO");
+                }
+                
                 public override _alphaNumeric<ParseMode.Deferred> Convert()
                 {
                     return new _alphaNumeric<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
@@ -107,11 +112,6 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
-                }
-                
-                internal static IRealizationResult<char, _alphaNumeric<ParseMode.Realized>.Realized._ʺx41ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
-                {
-                    throw new Exception();
                 }
             }
             
@@ -130,6 +130,11 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
                 private IRealizationResult<char, _alphaNumeric<TMode>.Realized._ʺx43ʺ> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode> _ʺx43ʺ_1 { get; }
                 
+                internal static IRealizationResult<char, _alphaNumeric<ParseMode.Realized>.Realized._ʺx43ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception("TODO");
+                }
+                
                 public override _alphaNumeric<ParseMode.Deferred> Convert()
                 {
                     return new _alphaNumeric<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
@@ -143,11 +148,6 @@ return (node as _alphaNumeric<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
-                }
-                
-                internal static IRealizationResult<char, _alphaNumeric<ParseMode.Realized>.Realized._ʺx43ʺ> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
-                {
-                    throw new Exception();
                 }
             }
         }

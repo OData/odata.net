@@ -94,6 +94,11 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                 private IRealizationResult<char, _WSP<TMode>.Realized._SP> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._SP<TMode> _SP_1 { get; }
                 
+                internal static IRealizationResult<char, _WSP<ParseMode.Realized>.Realized._SP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception("TODO");
+                }
+                
                 public override _WSP<ParseMode.Deferred> Convert()
                 {
                     return new _WSP<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
@@ -107,11 +112,6 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
-                }
-                
-                internal static IRealizationResult<char, _WSP<ParseMode.Realized>.Realized._SP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
-                {
-                    throw new Exception();
                 }
             }
             
@@ -130,6 +130,11 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                 private IRealizationResult<char, _WSP<TMode>.Realized._HTAB> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB<TMode> _HTAB_1 { get; }
                 
+                internal static IRealizationResult<char, _WSP<ParseMode.Realized>.Realized._HTAB> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception("TODO");
+                }
+                
                 public override _WSP<ParseMode.Deferred> Convert()
                 {
                     return new _WSP<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
@@ -143,11 +148,6 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
-                }
-                
-                internal static IRealizationResult<char, _WSP<ParseMode.Realized>.Realized._HTAB> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
-                {
-                    throw new Exception();
                 }
             }
         }

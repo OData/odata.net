@@ -441,6 +441,65 @@ else
             return translated;
         }
 
+        private string GenerateDisciminatedUnionFactoryMethodBody(Class toTranslate, Namespace rules, Namespace inners)
+        {
+            var properties = toTranslate.Properties.ToList();
+
+            if (properties.Count == 0)
+            {
+                throw new Exception("TODO");
+            }
+
+            return "throw new Exception(\"TODO\");";
+
+            var builder = new StringBuilder();
+            GenerateDisciminatedUnionFactoryMethodBodyPropertyInitialization(properties[0], "previousNodeRealizationResult", rules, inners, builder);
+            builder.AppendLine();
+            for (int i = 1; i < properties.Count; ++i)
+            {
+                GenerateDisciminatedUnionFactoryMethodBodyPropertyInitialization(
+                    properties[i],
+                    $"Future.Create(() => {properties[i - 1].Name}.Value.Realize())",
+                    rules,
+                    inners,
+                    builder);
+                builder.AppendLine();
+            }
+
+            builder.Append($"return new {toTranslate.Name}<ParseMode.Deferred>(");
+            builder.AppendJoin(", ", properties.Select(property => property.Name));
+            builder.Append(");");
+
+            return builder.ToString();
+        }
+
+        private void GenerateDisciminatedUnionFactoryMethodBodyPropertyInitialization(
+            PropertyDefinition property,
+            string previousNodeRealizationResult,
+            Namespace rules,
+            Namespace inners,
+            StringBuilder builder)
+        {
+            builder.Append($"var {property.Name} = Future.Create(() => ");
+
+            TranslateType(property.Type, rules, inners, out var translatedType, out var factoryType, out var elementTypes);
+
+            var atleastone = "CombinatorParsingV3.AtLeastOne<";
+            var many = "CombinatorParsingV3.Many<";
+            if (translatedType.StartsWith(atleastone)) //// TODO what about other ranges?
+            {
+                builder.Append($"CombinatorParsingV3.AtLeastOne.Create<{elementTypes.Value.DeferredElementType}, {elementTypes.Value.RealizedElementType}>({previousNodeRealizationResult}, input => {elementTypes.Value.FactoryType}.Create(input)));");
+            }
+            else if (translatedType.StartsWith(many))
+            {
+                builder.Append($"CombinatorParsingV3.Many.Create<{elementTypes.Value.DeferredElementType}, {elementTypes.Value.RealizedElementType}>(input => {elementTypes.Value.FactoryType}.Create(input), {previousNodeRealizationResult}));");
+            }
+            else
+            {
+                builder.Append($"{factoryType}.Create({previousNodeRealizationResult}));");
+            }
+        }
+
         private IEnumerable<Class> TranslateDiscriminatedUnion(Class toTranslate, Namespace rules, Namespace inners)
         {
             // the factory methods for the cst node
@@ -724,6 +783,22 @@ if (typeof(TMode) != typeof(ParseMode.Realized))
                                         new[]
                                         {
                                             new MethodDefinition(
+                                                AccessModifier.Internal,
+                                                ClassModifier.Static,
+                                                false,
+                                                $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>.Realized.{nestedClass.Name}>",
+                                                Enumerable.Empty<string>(),
+                                                "Create",
+                                                new[]
+                                                {
+                                                    new MethodParameter(
+                                                        "IFuture<IRealizationResult<char>>",
+                                                        "previousNodeRealizationResult"),
+                                                },
+                                                GenerateDisciminatedUnionFactoryMethodBody(nestedClass, rules, inners)),
+                                            //// TODO implement create
+                                            //// TODO implement realizeimpl for deferred
+                                            new MethodDefinition(
                                                 AccessModifier.Public,
                                                 ClassModifier.None,
                                                 true,
@@ -771,22 +846,6 @@ return this.realizationResult;
 return visitor.Accept(this, context);
 """
                                                 ),
-                                            new MethodDefinition(
-                                                AccessModifier.Internal, 
-                                                ClassModifier.Static, 
-                                                false,
-                                                $"IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>.Realized.{nestedClass.Name}>",
-                                                Enumerable.Empty<string>(),
-                                                "Create",
-                                                new[]
-                                                {
-                                                    new MethodParameter(
-                                                        "IFuture<IRealizationResult<char>>",
-                                                        "previousNodeRealizationResult"),
-                                                },
-                                                "throw new Exception();"),
-                                            //// TODO implement create
-                                            //// TODO implement realizeimpl for deferred
                                         },
                                         Enumerable.Empty<Class>(),
                                         nestedClass

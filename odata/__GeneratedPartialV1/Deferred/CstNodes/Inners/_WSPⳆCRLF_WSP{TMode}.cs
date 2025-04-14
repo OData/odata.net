@@ -94,6 +94,11 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
                 private IRealizationResult<char, _WSPⳆCRLF_WSP<TMode>.Realized._WSP> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<TMode> _WSP_1 { get; }
                 
+                internal static IRealizationResult<char, _WSPⳆCRLF_WSP<ParseMode.Realized>.Realized._WSP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception("TODO");
+                }
+                
                 public override _WSPⳆCRLF_WSP<ParseMode.Deferred> Convert()
                 {
                     return new _WSPⳆCRLF_WSP<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
@@ -107,11 +112,6 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
-                }
-                
-                internal static IRealizationResult<char, _WSPⳆCRLF_WSP<ParseMode.Realized>.Realized._WSP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
-                {
-                    throw new Exception();
                 }
             }
             
@@ -132,6 +132,11 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._CRLF<TMode> _CRLF_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<TMode> _WSP_1 { get; }
                 
+                internal static IRealizationResult<char, _WSPⳆCRLF_WSP<ParseMode.Realized>.Realized._CRLF_WSP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+                {
+                    throw new Exception("TODO");
+                }
+                
                 public override _WSPⳆCRLF_WSP<ParseMode.Deferred> Convert()
                 {
                     return new _WSPⳆCRLF_WSP<ParseMode.Deferred>.Deferred(Future.Create(() => this.realizationResult));
@@ -145,11 +150,6 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
                 protected override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
                 {
                     return visitor.Accept(this, context);
-                }
-                
-                internal static IRealizationResult<char, _WSPⳆCRLF_WSP<ParseMode.Realized>.Realized._CRLF_WSP> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
-                {
-                    throw new Exception();
                 }
             }
         }
