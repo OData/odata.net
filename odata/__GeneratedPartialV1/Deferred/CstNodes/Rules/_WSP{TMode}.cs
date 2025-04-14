@@ -81,17 +81,16 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _SP : _WSP<TMode>.Realized
             {
-                private _SP(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._SP<TMode>> _SP_1, ITokenStream<char>? nextTokens)
+                private _SP(__GeneratedPartialV1.Deferred.CstNodes.Rules._SP<TMode> _SP_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
                         throw new Exception("tODO");
                     }
-                    this.__SP_1 = _SP_1;
+                    this._SP_1 = _SP_1;
                     this.realizationResult = new RealizationResult<char, _WSP<TMode>.Realized._SP>(true, this, nextTokens);
                 }
                 
-                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._SP<TMode>> __SP_1 { get; }
                 private IRealizationResult<char, _WSP<TMode>.Realized._SP> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._SP<TMode> _SP_1 { get; }
                 
@@ -113,17 +112,16 @@ return (node as _WSP<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _HTAB : _WSP<TMode>.Realized
             {
-                private _HTAB(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB<TMode>> _HTAB_1, ITokenStream<char>? nextTokens)
+                private _HTAB(__GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB<TMode> _HTAB_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
                         throw new Exception("tODO");
                     }
-                    this.__HTAB_1 = _HTAB_1;
+                    this._HTAB_1 = _HTAB_1;
                     this.realizationResult = new RealizationResult<char, _WSP<TMode>.Realized._HTAB>(true, this, nextTokens);
                 }
                 
-                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB<TMode>> __HTAB_1 { get; }
                 private IRealizationResult<char, _WSP<TMode>.Realized._HTAB> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._HTAB<TMode> _HTAB_1 { get; }
                 

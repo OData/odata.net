@@ -702,7 +702,7 @@ throw new Exception("TODO");
                                                     .Select(
                                                         property =>
                                                             new MethodParameter(
-                                                                $"IFuture<{TranslateType(property.Type, rules, inners)}>",
+                                                                $"{TranslateType(property.Type, rules, inners)}",
                                                                 property.Name))
                                                     .Append(
                                                         new MethodParameter(
@@ -719,7 +719,7 @@ if (typeof(TMode) != typeof(ParseMode.Realized))
                                                         .Properties
                                                         .Select(
                                                             property =>
-                                                                $"this._{property.Name} = {property.Name};"))
+                                                                $"this.{property.Name} = {property.Name};"))
                                                 .Append(
                                                     $"this.realizationResult = new RealizationResult<char, {toTranslate.Name}<TMode>.Realized.{nestedClass.Name}>(true, this, nextTokens);")),
                                         },
@@ -778,17 +778,16 @@ throw new Exception("TODO");
                                         nestedClass
                                             .Properties
                                             .Select(
-                                                //// TODO these should be fields
                                                 property =>
                                                     new PropertyDefinition(
-                                                        AccessModifier.Private,
+                                                        AccessModifier.Public,
                                                         false,
-                                                        $"IFuture<{TranslateType(property.Type, rules, inners)}>",
-                                                        $"_{property.Name}",
+                                                        TranslateType(property.Type, rules, inners),
+                                                        property.Name,
                                                         true,
                                                         false,
                                                         null))
-                                            .Append(
+                                            .Prepend(
                                                 //// TODO this should be a field
                                                 new PropertyDefinition(
                                                     AccessModifier.Private,
@@ -797,20 +796,7 @@ throw new Exception("TODO");
                                                     "realizationResult",
                                                     true,
                                                     false,
-                                                    null))
-                                            .Concat(
-                                                nestedClass
-                                                    .Properties
-                                                    .Select(
-                                                        property =>
-                                                            new PropertyDefinition(
-                                                                AccessModifier.Public,
-                                                                false,
-                                                                TranslateType(property.Type, rules, inners),
-                                                                property.Name,
-                                                                true, //// TODO need a way to define this getter body
-                                                                false,
-                                                                null)))))
+                                                    null))))
                             .Prepend(
                                 new Class(
                                     AccessModifier.Public, 

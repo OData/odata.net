@@ -86,17 +86,16 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _DIGIT : _HEXDIG<TMode>.Realized
             {
-                private _DIGIT(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._DIGIT<TMode>> _DIGIT_1, ITokenStream<char>? nextTokens)
+                private _DIGIT(__GeneratedPartialV1.Deferred.CstNodes.Rules._DIGIT<TMode> _DIGIT_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
                         throw new Exception("tODO");
                     }
-                    this.__DIGIT_1 = _DIGIT_1;
+                    this._DIGIT_1 = _DIGIT_1;
                     this.realizationResult = new RealizationResult<char, _HEXDIG<TMode>.Realized._DIGIT>(true, this, nextTokens);
                 }
                 
-                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._DIGIT<TMode>> __DIGIT_1 { get; }
                 private IRealizationResult<char, _HEXDIG<TMode>.Realized._DIGIT> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._DIGIT<TMode> _DIGIT_1 { get; }
                 
@@ -118,17 +117,16 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx41ʺ : _HEXDIG<TMode>.Realized
             {
-                private _ʺx41ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode>> _ʺx41ʺ_1, ITokenStream<char>? nextTokens)
+                private _ʺx41ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode> _ʺx41ʺ_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
                         throw new Exception("tODO");
                     }
-                    this.__ʺx41ʺ_1 = _ʺx41ʺ_1;
+                    this._ʺx41ʺ_1 = _ʺx41ʺ_1;
                     this.realizationResult = new RealizationResult<char, _HEXDIG<TMode>.Realized._ʺx41ʺ>(true, this, nextTokens);
                 }
                 
-                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode>> __ʺx41ʺ_1 { get; }
                 private IRealizationResult<char, _HEXDIG<TMode>.Realized._ʺx41ʺ> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx41ʺ<TMode> _ʺx41ʺ_1 { get; }
                 
@@ -150,17 +148,16 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx42ʺ : _HEXDIG<TMode>.Realized
             {
-                private _ʺx42ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx42ʺ<TMode>> _ʺx42ʺ_1, ITokenStream<char>? nextTokens)
+                private _ʺx42ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx42ʺ<TMode> _ʺx42ʺ_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
                         throw new Exception("tODO");
                     }
-                    this.__ʺx42ʺ_1 = _ʺx42ʺ_1;
+                    this._ʺx42ʺ_1 = _ʺx42ʺ_1;
                     this.realizationResult = new RealizationResult<char, _HEXDIG<TMode>.Realized._ʺx42ʺ>(true, this, nextTokens);
                 }
                 
-                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx42ʺ<TMode>> __ʺx42ʺ_1 { get; }
                 private IRealizationResult<char, _HEXDIG<TMode>.Realized._ʺx42ʺ> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx42ʺ<TMode> _ʺx42ʺ_1 { get; }
                 
@@ -182,17 +179,16 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx43ʺ : _HEXDIG<TMode>.Realized
             {
-                private _ʺx43ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode>> _ʺx43ʺ_1, ITokenStream<char>? nextTokens)
+                private _ʺx43ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode> _ʺx43ʺ_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
                         throw new Exception("tODO");
                     }
-                    this.__ʺx43ʺ_1 = _ʺx43ʺ_1;
+                    this._ʺx43ʺ_1 = _ʺx43ʺ_1;
                     this.realizationResult = new RealizationResult<char, _HEXDIG<TMode>.Realized._ʺx43ʺ>(true, this, nextTokens);
                 }
                 
-                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode>> __ʺx43ʺ_1 { get; }
                 private IRealizationResult<char, _HEXDIG<TMode>.Realized._ʺx43ʺ> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx43ʺ<TMode> _ʺx43ʺ_1 { get; }
                 
@@ -214,17 +210,16 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx44ʺ : _HEXDIG<TMode>.Realized
             {
-                private _ʺx44ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx44ʺ<TMode>> _ʺx44ʺ_1, ITokenStream<char>? nextTokens)
+                private _ʺx44ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx44ʺ<TMode> _ʺx44ʺ_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
                         throw new Exception("tODO");
                     }
-                    this.__ʺx44ʺ_1 = _ʺx44ʺ_1;
+                    this._ʺx44ʺ_1 = _ʺx44ʺ_1;
                     this.realizationResult = new RealizationResult<char, _HEXDIG<TMode>.Realized._ʺx44ʺ>(true, this, nextTokens);
                 }
                 
-                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx44ʺ<TMode>> __ʺx44ʺ_1 { get; }
                 private IRealizationResult<char, _HEXDIG<TMode>.Realized._ʺx44ʺ> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx44ʺ<TMode> _ʺx44ʺ_1 { get; }
                 
@@ -246,17 +241,16 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx45ʺ : _HEXDIG<TMode>.Realized
             {
-                private _ʺx45ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx45ʺ<TMode>> _ʺx45ʺ_1, ITokenStream<char>? nextTokens)
+                private _ʺx45ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx45ʺ<TMode> _ʺx45ʺ_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
                         throw new Exception("tODO");
                     }
-                    this.__ʺx45ʺ_1 = _ʺx45ʺ_1;
+                    this._ʺx45ʺ_1 = _ʺx45ʺ_1;
                     this.realizationResult = new RealizationResult<char, _HEXDIG<TMode>.Realized._ʺx45ʺ>(true, this, nextTokens);
                 }
                 
-                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx45ʺ<TMode>> __ʺx45ʺ_1 { get; }
                 private IRealizationResult<char, _HEXDIG<TMode>.Realized._ʺx45ʺ> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx45ʺ<TMode> _ʺx45ʺ_1 { get; }
                 
@@ -278,17 +272,16 @@ return (node as _HEXDIG<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx46ʺ : _HEXDIG<TMode>.Realized
             {
-                private _ʺx46ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx46ʺ<TMode>> _ʺx46ʺ_1, ITokenStream<char>? nextTokens)
+                private _ʺx46ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx46ʺ<TMode> _ʺx46ʺ_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
                         throw new Exception("tODO");
                     }
-                    this.__ʺx46ʺ_1 = _ʺx46ʺ_1;
+                    this._ʺx46ʺ_1 = _ʺx46ʺ_1;
                     this.realizationResult = new RealizationResult<char, _HEXDIG<TMode>.Realized._ʺx46ʺ>(true, this, nextTokens);
                 }
                 
-                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx46ʺ<TMode>> __ʺx46ʺ_1 { get; }
                 private IRealizationResult<char, _HEXDIG<TMode>.Realized._ʺx46ʺ> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx46ʺ<TMode> _ʺx46ʺ_1 { get; }
                 

@@ -81,17 +81,16 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _WSP : _WSPⳆCRLF_WSP<TMode>.Realized
             {
-                private _WSP(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<TMode>> _WSP_1, ITokenStream<char>? nextTokens)
+                private _WSP(__GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<TMode> _WSP_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
                         throw new Exception("tODO");
                     }
-                    this.__WSP_1 = _WSP_1;
+                    this._WSP_1 = _WSP_1;
                     this.realizationResult = new RealizationResult<char, _WSPⳆCRLF_WSP<TMode>.Realized._WSP>(true, this, nextTokens);
                 }
                 
-                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<TMode>> __WSP_1 { get; }
                 private IRealizationResult<char, _WSPⳆCRLF_WSP<TMode>.Realized._WSP> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<TMode> _WSP_1 { get; }
                 
@@ -113,19 +112,17 @@ return (node as _WSPⳆCRLF_WSP<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _CRLF_WSP : _WSPⳆCRLF_WSP<TMode>.Realized
             {
-                private _CRLF_WSP(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._CRLF<TMode>> _CRLF_1, IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<TMode>> _WSP_1, ITokenStream<char>? nextTokens)
+                private _CRLF_WSP(__GeneratedPartialV1.Deferred.CstNodes.Rules._CRLF<TMode> _CRLF_1, __GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<TMode> _WSP_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
                         throw new Exception("tODO");
                     }
-                    this.__CRLF_1 = _CRLF_1;
-                    this.__WSP_1 = _WSP_1;
+                    this._CRLF_1 = _CRLF_1;
+                    this._WSP_1 = _WSP_1;
                     this.realizationResult = new RealizationResult<char, _WSPⳆCRLF_WSP<TMode>.Realized._CRLF_WSP>(true, this, nextTokens);
                 }
                 
-                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._CRLF<TMode>> __CRLF_1 { get; }
-                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<TMode>> __WSP_1 { get; }
                 private IRealizationResult<char, _WSPⳆCRLF_WSP<TMode>.Realized._CRLF_WSP> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._CRLF<TMode> _CRLF_1 { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Rules._WSP<TMode> _WSP_1 { get; }

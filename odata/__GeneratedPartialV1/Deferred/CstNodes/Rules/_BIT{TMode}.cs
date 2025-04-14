@@ -81,17 +81,16 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx30ʺ : _BIT<TMode>.Realized
             {
-                private _ʺx30ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ<TMode>> _ʺx30ʺ_1, ITokenStream<char>? nextTokens)
+                private _ʺx30ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ<TMode> _ʺx30ʺ_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
                         throw new Exception("tODO");
                     }
-                    this.__ʺx30ʺ_1 = _ʺx30ʺ_1;
+                    this._ʺx30ʺ_1 = _ʺx30ʺ_1;
                     this.realizationResult = new RealizationResult<char, _BIT<TMode>.Realized._ʺx30ʺ>(true, this, nextTokens);
                 }
                 
-                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ<TMode>> __ʺx30ʺ_1 { get; }
                 private IRealizationResult<char, _BIT<TMode>.Realized._ʺx30ʺ> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx30ʺ<TMode> _ʺx30ʺ_1 { get; }
                 
@@ -113,17 +112,16 @@ return (node as _BIT<TMode>.Realized)!.Dispatch(this, context);
             
             public sealed class _ʺx31ʺ : _BIT<TMode>.Realized
             {
-                private _ʺx31ʺ(IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ<TMode>> _ʺx31ʺ_1, ITokenStream<char>? nextTokens)
+                private _ʺx31ʺ(__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ<TMode> _ʺx31ʺ_1, ITokenStream<char>? nextTokens)
                 {
                     if (typeof(TMode) != typeof(ParseMode.Realized))
                     {
                         throw new Exception("tODO");
                     }
-                    this.__ʺx31ʺ_1 = _ʺx31ʺ_1;
+                    this._ʺx31ʺ_1 = _ʺx31ʺ_1;
                     this.realizationResult = new RealizationResult<char, _BIT<TMode>.Realized._ʺx31ʺ>(true, this, nextTokens);
                 }
                 
-                private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ<TMode>> __ʺx31ʺ_1 { get; }
                 private IRealizationResult<char, _BIT<TMode>.Realized._ʺx31ʺ> realizationResult { get; }
                 public __GeneratedPartialV1.Deferred.CstNodes.Inners._ʺx31ʺ<TMode> _ʺx31ʺ_1 { get; }
                 
