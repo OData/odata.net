@@ -50,7 +50,12 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
             
             private IRealizationResult<char, _alphaNumeric<ParseMode.Realized>> RealizeImpl()
             {
-                throw new Exception("TODO");
+                if (!this.previousNodeRealizationResult.Value.Success)
+{
+return new RealizationResult<char, _alphaNumeric<ParseMode.Realized>>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
+}
+return new RealizationResult<char, _alphaNumeric<ParseMode.Realized>>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
+
             }
         }
         

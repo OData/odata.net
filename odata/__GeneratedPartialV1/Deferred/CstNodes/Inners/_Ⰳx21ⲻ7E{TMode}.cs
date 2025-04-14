@@ -50,7 +50,12 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             
             private IRealizationResult<char, _Ⰳx21ⲻ7E<ParseMode.Realized>> RealizeImpl()
             {
-                throw new Exception("TODO");
+                if (!this.previousNodeRealizationResult.Value.Success)
+{
+return new RealizationResult<char, _Ⰳx21ⲻ7E<ParseMode.Realized>>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
+}
+return new RealizationResult<char, _Ⰳx21ⲻ7E<ParseMode.Realized>>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);
+
             }
         }
         

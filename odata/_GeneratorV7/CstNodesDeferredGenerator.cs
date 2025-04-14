@@ -514,6 +514,21 @@ else
             //// TODO add if statements
         }
 
+        private string GenerateRealizeImplBodyForDiscriminatedUnion(IEnumerable<Class> duMembers, string returnType)
+        {
+            var builder = new StringBuilder();
+            builder.AppendLine("if (!this.previousNodeRealizationResult.Value.Success)");
+            builder.AppendLine("{");
+            builder.AppendLine($"return new RealizationResult<char, {returnType}>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);");
+            builder.AppendLine("}");
+
+            builder.AppendLine($"return new RealizationResult<char, {returnType}>(false, default, this.previousNodeRealizationResult.Value.RemainingTokens);");
+
+            return builder.ToString();
+        }
+
+        //// TODO it'd be really good if you can get fully qualified type names in the newly generated code
+
         private IEnumerable<Class> TranslateDiscriminatedUnion(Class toTranslate, Namespace rules, Namespace inners)
         {
             // the factory methods for the cst node
@@ -692,10 +707,13 @@ return this.realizationResult.Value;
                                 "RealizeImpl",
                                 Enumerable.Empty<MethodParameter>(),
                                 //// TODO you are here implement realizeimpl for deferred
-"""
-throw new Exception("TODO");
-"""
-                                ),
+                                GenerateRealizeImplBodyForDiscriminatedUnion(
+                                    toTranslate
+                                        .NestedClasses
+                                        .Where(
+                                            nestedClass => 
+                                                !string.Equals(nestedClass.Name, "Visitor", StringComparison.Ordinal)),
+                                    $"{toTranslate.Name}<ParseMode.Realized>")),
                         },
                         Enumerable.Empty<Class>(),
                         new[]
