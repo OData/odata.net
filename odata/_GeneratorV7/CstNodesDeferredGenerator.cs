@@ -691,8 +691,6 @@ throw new Exception("TODO");
                                         nestedClass.Name,
                                         Enumerable.Empty<string>(),
                                         $"{toTranslate.Name}<TMode>.Realized",
-                                        //// TODO finis the rest of this class initialization
-                                        //// TODO implement realizeimpl for deferred
                                         new[]
                                         {
                                             new ConstructorDefinition(
@@ -733,6 +731,7 @@ if (typeof(TMode) != typeof(ParseMode.Realized))
                                                 Enumerable.Empty<string>(),
                                                 "Convert",
                                                 Enumerable.Empty<MethodParameter>(),
+                                                //// TODo implement these methods
 """
 throw new Exception("TODO");
 """
@@ -773,6 +772,8 @@ throw new Exception("TODO");
 throw new Exception("TODO");
 """
                                                 ),
+                                            //// TODO implement create
+                                            //// TODO implement realizeimpl for deferred
                                         },
                                         Enumerable.Empty<Class>(),
                                         nestedClass
