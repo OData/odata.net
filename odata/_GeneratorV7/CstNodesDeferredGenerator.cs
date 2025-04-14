@@ -536,7 +536,6 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Deferred.Create(previousNodeReal
                         "Deferred",
                         Enumerable.Empty<string>(),
                         $"{toTranslate.Name}<ParseMode.Deferred>",
-                        //// TODO you are here
                         new[]
                         {
                             new ConstructorDefinition(
@@ -593,6 +592,7 @@ return new {{toTranslate.Name}}<ParseMode.Deferred>.Deferred(previousNodeRealiza
                                 Enumerable.Empty<string>(),
                                 "Convert",
                                 Enumerable.Empty<MethodParameter>(),
+                        //// TODO you are here
 """
 throw new Exception("TODO");
 """
@@ -623,7 +623,25 @@ throw new Exception("TODO");
                                 ),
                         },
                         Enumerable.Empty<Class>(),
-                        Enumerable.Empty<PropertyDefinition>()),
+                        new[]
+                        {
+                            new PropertyDefinition(
+                                AccessModifier.Private,
+                                false,
+                                "IFuture<IRealizationResult<char>>",
+                                "previousNodeRealizationResult",
+                                true,
+                                false,
+                                null),
+                            new PropertyDefinition(
+                                AccessModifier.Private,
+                                false,
+                                $"IFuture<IRealizationResult<char, {toTranslate.Name}<ParseMode.Realized>>>",
+                                "realizationResult",
+                                true,
+                                false,
+                                null),
+                        }),
                     //// TODO implement realized
                 },
                 Enumerable.Empty<PropertyDefinition>());

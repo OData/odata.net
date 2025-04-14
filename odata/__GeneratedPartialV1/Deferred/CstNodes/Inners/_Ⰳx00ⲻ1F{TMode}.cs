@@ -19,9 +19,23 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
         
         public sealed class Deferred : _Ⰳx00ⲻ1F<ParseMode.Deferred>
         {
+            private Deferred(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+            {
+                this.previousNodeRealizationResult = previousNodeRealizationResult;
+                
+                this.realizationResult = Future.Create(() => this.RealizeImpl());
+            }
+            internal Deferred(IFuture<IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>>> realizationResult)
+            {
+                this.realizationResult = realizationResult;
+            }
+            
+            private IFuture<IRealizationResult<char>> previousNodeRealizationResult { get; }
+            private IFuture<IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>>> realizationResult { get; }
+            
             internal static _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
             {
-                return _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred.Create(previousNodeRealizationResult);
+                return new _Ⰳx00ⲻ1F<ParseMode.Deferred>.Deferred(previousNodeRealizationResult);
             }
             
             public override _Ⰳx00ⲻ1F<ParseMode.Deferred> Convert()
@@ -30,6 +44,11 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
             }
             
             public override IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> Realize()
+            {
+                throw new Exception("TODO");
+            }
+            
+            private IRealizationResult<char, _Ⰳx00ⲻ1F<ParseMode.Realized>> RealizeImpl()
             {
                 throw new Exception("TODO");
             }
