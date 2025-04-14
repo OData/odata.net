@@ -12,11 +12,43 @@ using System.Threading.Tasks;
 
 namespace odata.tests
 {
-    public static class GeneratedOdataUri
+    public sealed class InstrumentedStringInput : ITokenStream<char>
     {
-        public static __GeneratedPartialV1.Deferred.CstNodes.Rules._odataUri<ParseMode.Deferred> Create(ITokenStream<char> input)
+        private readonly string input;
+        private readonly List<int> indexes;
+        private readonly int index;
+
+        public InstrumentedStringInput(string input, List<int> indexes)
+            : this(input, indexes, 0)
         {
-            return __GeneratedPartialV1.Deferred.CstNodes.Rules._odataUri.Create(Future.Create(() => new RealizationResult<char>(true, input)));
+        }
+
+        private InstrumentedStringInput(string input, List<int> indexes, int index)
+        {
+            this.input = input;
+            this.indexes = indexes;
+            this.index = index;
+        }
+
+        public char Current
+        {
+            get
+            {
+                this.indexes.Add(this.index);
+
+                return this.input[this.index];
+            }
+        }
+
+        public ITokenStream<char>? Next()
+        {
+            var newIndex = this.index + 1;
+            if (newIndex >= this.input.Length)
+            {
+                return null;
+            }
+
+            return new InstrumentedStringInput(this.input, this.indexes, newIndex);
         }
     }
 
@@ -39,6 +71,132 @@ namespace odata.tests
             }
 
             var realUri = odataUri.Parse();
+        }
+
+        [TestMethod]
+        public void Test2()
+        {
+            var url = "B/AA/A/AAA?AAAA=AAAAA";
+
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
+
+            var odataUri = GeneratedOdataUri.Create(input);
+
+            Assert.ThrowsException<InvalidDataException>(() => odataUri.Parse());
+        }
+
+        [TestMethod]
+        public void DeferredTest()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAA";
+
+            var indexes = new List<int>();
+            var input = new InstrumentedStringInput(url, indexes);
+
+            var odataUri = GeneratedOdataUri.Create(input);
+
+            Assert.AreEqual(0, indexes.Count);
+
+            var slash = odataUri._segment_1._1._slash_1.Realize();
+
+            Assert.AreEqual(1, indexes.Count);
+            Assert.AreEqual(0, indexes[0]);
+
+            var questionMark = odataUri._questionMark_1.Realize();
+
+            //// TODO it would actually be expected that this assertion would fail because of some amount of backtracking, but it fails because the actual count is 343, which seems way too high
+            //// Assert.AreEqual(10, indexes.Count);
+
+            Assert.AreEqual(9, indexes.Max());
+        }
+
+        [TestMethod]
+        public void SupportCCharacter()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAAC";
+
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
+
+            var odataUri = GeneratedOdataUri.Create(input);
+
+            var segOutput = odataUri._segment_1.Realize();
+            if (segOutput.Success)
+            {
+                var segments = segOutput.RealizedValue;
+            }
+
+            var realUri = odataUri.Parse();
+        }
+
+        [TestMethod]
+        public void Test3()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAAB";
+
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
+
+            var odataUri = GeneratedOdataUri.Create(input);
+
+            var segOutput = odataUri._segment_1.Realize();
+            if (segOutput.Success)
+            {
+                var segments = segOutput.RealizedValue;
+            }
+
+            Assert.ThrowsException<InvalidOperationException>(() => odataUri.Parse());
+        }
+
+        [TestMethod]
+        public void Test4()
+        {
+            var url = "/AA/A/AAA?AAAA=AAAAAC";
+
+            var input = new CombinatorParsingV3.CharacterTokenStream(url);
+
+            var odataUri = GeneratedOdataUri.Create(input);
+
+            var segOutput = odataUri._segment_1.Realize();
+            if (segOutput.Success)
+            {
+                var segments = segOutput.RealizedValue;
+            }
+
+            var realUri = odataUri.Parse();
+
+            Assert.IsTrue(realUri._queryOption_1.Node.Element.Value.TryGetValue(out var queryOption));
+
+            var name = queryOption._optionName_1._alphaNumeric_1;
+
+            Assert.IsTrue(name._1.Realize().RealizedValue is __GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Realized>.Realized._ʺx41ʺ);
+
+            var secondCharacterNode = name.Node;
+            Assert.IsTrue(secondCharacterNode.Element.Value.TryGetValue(out var secondCharacter));
+            Assert.IsTrue(secondCharacter is __GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Realized>.Realized._ʺx41ʺ);
+
+            var thirdCharacterNode = secondCharacterNode.Next;
+            Assert.IsTrue(thirdCharacterNode.Element.Value.TryGetValue(out var thirdCharacter));
+            Assert.IsTrue(thirdCharacter is __GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Realized>.Realized._ʺx41ʺ);
+
+            var fourthCharacterNode = thirdCharacterNode.Next;
+            Assert.IsTrue(fourthCharacterNode.Element.Value.TryGetValue(out var fourthCharacter));
+            Assert.IsTrue(fourthCharacter is __GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Realized>.Realized._ʺx41ʺ);
+
+            var potentialFifthCharacterNode = fourthCharacterNode.Next;
+            Assert.IsFalse(potentialFifthCharacterNode.Element.Value.TryGetValue(out var potentialFifthCharacter));
+
+            // NOTE: it *is* a bit strange that `Next` will always give you back something, and the caller has to check if there's a value on that element; however, this is necessary because:
+            // 1. in deferred mode, we don't know how many elements there will be, and we have no way to communicate this to the caller because we don't know the answer; if the caller wants to realize the sixth node, only at that time can we notice that there are only 4; to make this clear, we would need to have a different type for `manynode` when it's realized vs when it's deferred
+            // 2. if we use parsemode anywhere in the AST, we have to use it everywhere; in this case, for example, if `manynode` had a deferred type and a realized type, then in `segment`, for example, `characters` would need to be `atleastone<alphanumericholder, alphanumeric<parsemode.realized>, tmode>` for deferred and `atleastone<alphanumeric<parsemode.realized>, alphanumeric<parsemode.realized>, tmode>` for realized; this would require `segment` itself to also have two variants, one for realized and one for deferred, and this would propagate through the entire AST
+            var potentialSixthCharacterNode = potentialFifthCharacterNode.Next;
+            Assert.IsFalse(potentialSixthCharacterNode.Element.Value.TryGetValue(out var potentialSixCharacter));
+        }
+    }
+
+    public static class GeneratedOdataUri
+    {
+        public static __GeneratedPartialV1.Deferred.CstNodes.Rules._odataUri<ParseMode.Deferred> Create(ITokenStream<char> input)
+        {
+            return __GeneratedPartialV1.Deferred.CstNodes.Rules._odataUri.Create(Future.Create(() => new RealizationResult<char>(true, input)));
         }
     }
 
@@ -248,46 +406,6 @@ namespace odata.tests
             var segments = odataUri.Segments.Realize();
 
             Assert.AreEqual(9, indexes.Max());
-        }
-
-        private sealed class InstrumentedStringInput : ITokenStream<char>
-        {
-            private readonly string input;
-            private readonly List<int> indexes;
-            private readonly int index;
-
-            public InstrumentedStringInput(string input, List<int> indexes)
-                : this(input, indexes, 0)
-            {
-            }
-
-            private InstrumentedStringInput(string input, List<int> indexes, int index)
-            {
-                this.input = input;
-                this.indexes = indexes;
-                this.index = index;
-            }
-
-            public char Current
-            {
-                get
-                {
-                    this.indexes.Add(this.index);
-
-                    return this.input[this.index];
-                }
-            }
-
-            public ITokenStream<char>? Next()
-            {
-                var newIndex = this.index + 1;
-                if (newIndex >= this.input.Length)
-                {
-                    return null;
-                }
-
-                return new InstrumentedStringInput(this.input, this.indexes, newIndex);
-            }
         }
 
         [TestMethod]
