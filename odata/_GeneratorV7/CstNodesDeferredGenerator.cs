@@ -530,7 +530,7 @@ return {{toTranslate.Name}}<ParseMode.Deferred>.Deferred.Create(previousNodeReal
                 },
                 new[]
                 {
-                    //// TODO implement these
+                    //// TODO implement deferred
                     new Class(
                         AccessModifier.Public,
                         ClassModifier.Sealed,
@@ -584,6 +584,7 @@ throw new Exception("TODO");
                         },
                         Enumerable.Empty<Class>(),
                         Enumerable.Empty<PropertyDefinition>()),
+                    //// TODO implement realized
                 },
                 Enumerable.Empty<PropertyDefinition>());
 
