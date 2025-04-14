@@ -1,0 +1,14 @@
+namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
+{
+    using System;
+    using CombinatorParsingV3;
+    
+    public static class _2
+    {
+        public static _2<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
+        {
+            return _2<ParseMode.Deferred>.Create(previousNodeRealizationResult);
+        }
+    }
+    
+}
