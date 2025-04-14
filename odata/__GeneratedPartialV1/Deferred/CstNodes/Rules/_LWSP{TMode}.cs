@@ -18,7 +18,10 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
         
         private IFuture<CombinatorParsingV3.Many<Inners._ⲤWSPⳆCRLF_WSPↃ<ParseMode.Deferred>, Inners._ⲤWSPⳆCRLF_WSPↃ<ParseMode.Realized>, TMode>> __ⲤWSPⳆCRLF_WSPↃ_1 { get; }
         private IFuture<IRealizationResult<char, _LWSP<ParseMode.Realized>>> realizationResult { get; }
-        public CombinatorParsingV3.Many<Inners._ⲤWSPⳆCRLF_WSPↃ<ParseMode.Deferred>, Inners._ⲤWSPⳆCRLF_WSPↃ<ParseMode.Realized>, TMode> _ⲤWSPⳆCRLF_WSPↃ_1 { get; }
+        public CombinatorParsingV3.Many<Inners._ⲤWSPⳆCRLF_WSPↃ<ParseMode.Deferred>, Inners._ⲤWSPⳆCRLF_WSPↃ<ParseMode.Realized>, TMode> _ⲤWSPⳆCRLF_WSPↃ_1 { get{
+        return this.__ⲤWSPⳆCRLF_WSPↃ_1.Value;
+        }
+        }
         
         internal static _LWSP<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
         {

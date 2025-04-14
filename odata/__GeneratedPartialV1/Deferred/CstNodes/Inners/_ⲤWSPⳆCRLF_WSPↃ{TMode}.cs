@@ -18,7 +18,10 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
         
         private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._WSPⳆCRLF_WSP<TMode>> __WSPⳆCRLF_WSP_1 { get; }
         private IFuture<IRealizationResult<char, _ⲤWSPⳆCRLF_WSPↃ<ParseMode.Realized>>> realizationResult { get; }
-        public __GeneratedPartialV1.Deferred.CstNodes.Inners._WSPⳆCRLF_WSP<TMode> _WSPⳆCRLF_WSP_1 { get; }
+        public __GeneratedPartialV1.Deferred.CstNodes.Inners._WSPⳆCRLF_WSP<TMode> _WSPⳆCRLF_WSP_1 { get{
+        return this.__WSPⳆCRLF_WSP_1.Value;
+        }
+        }
         
         internal static _ⲤWSPⳆCRLF_WSPↃ<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
         {

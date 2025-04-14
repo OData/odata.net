@@ -18,7 +18,10 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
         
         private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._x31<TMode>> __x31_1 { get; }
         private IFuture<IRealizationResult<char, _ʺx31ʺ<ParseMode.Realized>>> realizationResult { get; }
-        public __GeneratedPartialV1.Deferred.CstNodes.Inners._x31<TMode> _x31_1 { get; }
+        public __GeneratedPartialV1.Deferred.CstNodes.Inners._x31<TMode> _x31_1 { get{
+        return this.__x31_1.Value;
+        }
+        }
         
         internal static _ʺx31ʺ<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
         {

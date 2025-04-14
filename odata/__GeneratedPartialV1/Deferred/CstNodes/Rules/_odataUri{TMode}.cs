@@ -24,9 +24,18 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
         private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._questionMark<TMode>> __questionMark_1 { get; }
         private IFuture<CombinatorParsingV3.Many<__GeneratedPartialV1.Deferred.CstNodes.Rules._queryOption<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._queryOption<ParseMode.Realized>, TMode>> __queryOption_1 { get; }
         private IFuture<IRealizationResult<char, _odataUri<ParseMode.Realized>>> realizationResult { get; }
-        public CombinatorParsingV3.AtLeastOne<__GeneratedPartialV1.Deferred.CstNodes.Rules._segment<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._segment<ParseMode.Realized>, TMode> _segment_1 { get; }
-        public __GeneratedPartialV1.Deferred.CstNodes.Rules._questionMark<TMode> _questionMark_1 { get; }
-        public CombinatorParsingV3.Many<__GeneratedPartialV1.Deferred.CstNodes.Rules._queryOption<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._queryOption<ParseMode.Realized>, TMode> _queryOption_1 { get; }
+        public CombinatorParsingV3.AtLeastOne<__GeneratedPartialV1.Deferred.CstNodes.Rules._segment<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._segment<ParseMode.Realized>, TMode> _segment_1 { get{
+        return this.__segment_1.Value;
+        }
+        }
+        public __GeneratedPartialV1.Deferred.CstNodes.Rules._questionMark<TMode> _questionMark_1 { get{
+        return this.__questionMark_1.Value;
+        }
+        }
+        public CombinatorParsingV3.Many<__GeneratedPartialV1.Deferred.CstNodes.Rules._queryOption<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._queryOption<ParseMode.Realized>, TMode> _queryOption_1 { get{
+        return this.__queryOption_1.Value;
+        }
+        }
         
         internal static _odataUri<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
         {

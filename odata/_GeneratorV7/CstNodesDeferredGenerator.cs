@@ -380,7 +380,11 @@ else
                                         false,
                                         TranslateType(property.Type, rules, inners),
                                         property.Name,
-                                        true, //// TODO need a way to define this getter body
+                                        new GetterDefinition(
+                                            new[]
+                                            {
+                                                $"return this._{property.Name}.Value;",
+                                            }), //// TODO need a way to define this getter body
                                         false,
                                         null)))
                 );

@@ -21,8 +21,14 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
         private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._CR<TMode>> __CR_1 { get; }
         private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._LF<TMode>> __LF_1 { get; }
         private IFuture<IRealizationResult<char, _CRLF<ParseMode.Realized>>> realizationResult { get; }
-        public __GeneratedPartialV1.Deferred.CstNodes.Rules._CR<TMode> _CR_1 { get; }
-        public __GeneratedPartialV1.Deferred.CstNodes.Rules._LF<TMode> _LF_1 { get; }
+        public __GeneratedPartialV1.Deferred.CstNodes.Rules._CR<TMode> _CR_1 { get{
+        return this.__CR_1.Value;
+        }
+        }
+        public __GeneratedPartialV1.Deferred.CstNodes.Rules._LF<TMode> _LF_1 { get{
+        return this.__LF_1.Value;
+        }
+        }
         
         internal static _CRLF<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
         {

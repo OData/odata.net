@@ -21,8 +21,14 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Inners
         private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode>> __0_1 { get; }
         private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode>> __A_1 { get; }
         private IFuture<IRealizationResult<char, _Ⰳx0A<ParseMode.Realized>>> realizationResult { get; }
-        public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get; }
-        public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get; }
+        public __GeneratedPartialV1.Deferred.CstNodes.Inners._0<TMode> _0_1 { get{
+        return this.__0_1.Value;
+        }
+        }
+        public __GeneratedPartialV1.Deferred.CstNodes.Inners._A<TMode> _A_1 { get{
+        return this.__A_1.Value;
+        }
+        }
         
         internal static _Ⰳx0A<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
         {

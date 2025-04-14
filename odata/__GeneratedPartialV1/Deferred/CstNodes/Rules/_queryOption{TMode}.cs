@@ -24,9 +24,18 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
         private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._equalsSign<TMode>> __equalsSign_1 { get; }
         private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._optionValue<TMode>> __optionValue_1 { get; }
         private IFuture<IRealizationResult<char, _queryOption<ParseMode.Realized>>> realizationResult { get; }
-        public __GeneratedPartialV1.Deferred.CstNodes.Rules._optionName<TMode> _optionName_1 { get; }
-        public __GeneratedPartialV1.Deferred.CstNodes.Rules._equalsSign<TMode> _equalsSign_1 { get; }
-        public __GeneratedPartialV1.Deferred.CstNodes.Rules._optionValue<TMode> _optionValue_1 { get; }
+        public __GeneratedPartialV1.Deferred.CstNodes.Rules._optionName<TMode> _optionName_1 { get{
+        return this.__optionName_1.Value;
+        }
+        }
+        public __GeneratedPartialV1.Deferred.CstNodes.Rules._equalsSign<TMode> _equalsSign_1 { get{
+        return this.__equalsSign_1.Value;
+        }
+        }
+        public __GeneratedPartialV1.Deferred.CstNodes.Rules._optionValue<TMode> _optionValue_1 { get{
+        return this.__optionValue_1.Value;
+        }
+        }
         
         internal static _queryOption<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
         {

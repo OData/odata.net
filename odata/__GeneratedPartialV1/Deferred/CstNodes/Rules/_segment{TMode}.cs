@@ -21,8 +21,14 @@ namespace __GeneratedPartialV1.Deferred.CstNodes.Rules
         private IFuture<__GeneratedPartialV1.Deferred.CstNodes.Rules._slash<TMode>> __slash_1 { get; }
         private IFuture<CombinatorParsingV3.AtLeastOne<__GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Realized>, TMode>> __alphaNumeric_1 { get; }
         private IFuture<IRealizationResult<char, _segment<ParseMode.Realized>>> realizationResult { get; }
-        public __GeneratedPartialV1.Deferred.CstNodes.Rules._slash<TMode> _slash_1 { get; }
-        public CombinatorParsingV3.AtLeastOne<__GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Realized>, TMode> _alphaNumeric_1 { get; }
+        public __GeneratedPartialV1.Deferred.CstNodes.Rules._slash<TMode> _slash_1 { get{
+        return this.__slash_1.Value;
+        }
+        }
+        public CombinatorParsingV3.AtLeastOne<__GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Deferred>, __GeneratedPartialV1.Deferred.CstNodes.Rules._alphaNumeric<ParseMode.Realized>, TMode> _alphaNumeric_1 { get{
+        return this.__alphaNumeric_1.Value;
+        }
+        }
         
         internal static _segment<ParseMode.Deferred> Create(IFuture<IRealizationResult<char>> previousNodeRealizationResult)
         {
